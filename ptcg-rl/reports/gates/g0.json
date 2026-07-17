@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "record_id": "gate-g0-20260717",
+  "created_at_utc": "2026-07-17T14:27:56Z",
+  "updated_at_utc": "2026-07-17T17:00:00Z",
+  "source_path": "PROGRESS_REPORT.md",
+  "producer": "local-codex",
+  "gate_id": "G0",
+  "title": "Repository and environment",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "technical_checks": [
+    {"name": "asset provenance", "status": "PASS", "evidence": "PROGRESS_REPORT.md"},
+    {"name": "lint", "status": "PASS", "evidence": "PROGRESS_REPORT.md"},
+    {"name": "unit tests", "status": "PASS", "evidence": "PROGRESS_REPORT.md"},
+    {"name": "native lifecycle to terminal", "status": "PASS", "evidence": "runs/preflight/g0-doctor-python311.json"},
+    {"name": "history-free private repository", "status": "PASS", "evidence": "reports/incidents/G0_REPOSITORY_REMEDIATION_REPORT.md"},
+    {"name": "fresh clone", "status": "PASS", "evidence": "reports/incidents/G0_REPOSITORY_REMEDIATION_REPORT.md"},
+    {"name": "result sentinel regression", "status": "PASS", "evidence": "tests/unit/test_native_probe.py"},
+    {"name": "Python 3.11 primary profile", "status": "PASS", "evidence": "runs/preflight/g0-doctor-python311.json"},
+    {"name": "GitHub Packages audit", "status": "WAIVED", "evidence": "reports/incidents/G0_REPOSITORY_REMEDIATION_REPORT.md"},
+    {"name": "sole active private repository", "status": "PASS", "evidence": "REPOSITORY_CONSOLIDATION_REPORT.md"}
+  ],
+  "blockers": [],
+  "warnings": [
+    "GitHub Packages audit permission gap is explicitly waived for agent development.",
+    "Exact official Python patch and timeout remain deferred submission-qualification work."
+  ],
+  "approved_next_action": "Implement the exact CABT environment/action contract and tensor schema; keep meaningful training off the local machine.",
+  "cost_usd": 0,
+  "g1_started": false
+}

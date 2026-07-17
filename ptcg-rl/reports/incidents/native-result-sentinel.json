@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "record_id": "incident-native-result-sentinel-20260717",
+  "created_at_utc": "2026-07-17T14:27:56Z",
+  "updated_at_utc": "2026-07-17T15:51:27Z",
+  "source_path": "tests/unit/test_native_probe.py",
+  "producer": "local-codex",
+  "incident_id": "INC-G0-NATIVE-SENTINEL",
+  "gate_id": "G0",
+  "severity": "HIGH",
+  "classification": "INFRASTRUCTURE_FAILURE",
+  "state": "SUCCEEDED",
+  "title": "Ongoing result sentinel was interpreted as truthy terminal state",
+  "impact": "The first smoke skipped required selection and did not prove a terminal lifecycle.",
+  "containment": "Selection is now gated only by result == -1 and terminal results are checked first.",
+  "corrective_action": "Drive the native smoke until declared terminal result 0, 1 or 2.",
+  "regression_test": "Seven unit tests pass; native smoke made 15 selections, observed stale terminal selection data, made zero post-terminal selections and ended with result 0."
+}

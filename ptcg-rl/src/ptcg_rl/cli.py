@@ -26,8 +26,19 @@ def _parser() -> argparse.ArgumentParser:
     doctor = commands.add_parser("doctor")
     doctor.add_argument("--json", type=Path)
     doctor.add_argument("--cloud", action="store_true")
+    doctor.add_argument("--policy", choices=("development", "submission"), default="development")
     commands.add_parser("provenance")
     commands.add_parser("audit-staged")
+    dashboard = commands.add_parser("dashboard").add_subparsers(dest="dashboard_command", required=True)
+    dashboard.add_parser("doctor")
+    ingest = dashboard.add_parser("ingest")
+    ingest.add_argument("--once", action="store_true", required=True)
+    dashboard.add_parser("rebuild")
+    serve = dashboard.add_parser("serve")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8765)
+    export = dashboard.add_parser("export-snapshot")
+    export.add_argument("--format", choices=("json",), default="json")
     return parser
 
 
@@ -41,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
             issues = verify_assets(repo)
             result = {"status": "fail" if issues else "pass", "issues": issues}
         elif args.command == "doctor":
-            result = run_doctor(repo, args.cloud)
+            result = run_doctor(repo, args.cloud, args.policy)
             if args.json:
                 output = args.json if args.json.is_absolute() else repo / args.json
                 output.parent.mkdir(parents=True, exist_ok=True)
@@ -49,6 +60,10 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "provenance":
             path = repo / "asset_hashes.redacted.json"
             result = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"status": "missing"}
+        elif args.command == "dashboard":
+            from .dashboard.cli import run_dashboard
+
+            result = run_dashboard(args, repo)
         else:
             restricted = audit_repository(repo)
             result = {"status": "fail" if restricted else "pass", "restricted_paths": restricted}
@@ -57,4 +72,3 @@ def main(argv: list[str] | None = None) -> int:
     except (AssetError, OSError, ValueError, json.JSONDecodeError) as error:
         print(json.dumps({"status": "fail", "error": str(error)}, indent=2))
         return 1
-

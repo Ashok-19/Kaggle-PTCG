@@ -43,7 +43,7 @@ def _card_check(path: Path) -> dict[str, int]:
     return {"rows": rows, "unique_card_ids": len(names_by_id), "repeated_move_rows": rows - len(names_by_id)}
 
 
-def run_doctor(repo: Path, cloud: bool = False) -> dict[str, Any]:
+def run_doctor(repo: Path, cloud: bool = False, policy: str = "development") -> dict[str, Any]:
     checks: list[dict[str, str]] = []
 
     def add(name: str, status: str, detail: str, remediation: str = "") -> None:
@@ -74,12 +74,31 @@ def run_doctor(repo: Path, cloud: bool = False) -> dict[str, Any]:
     add("torch_cuda", "warn", torch_detail, "Freeze the platform CUDA/PyTorch source at its first GPU gate.")
 
     official = json.loads((repo / "configs" / "official.json").read_text(encoding="utf-8"))
-    unresolved = unresolved_values(official)
+    runtime = official["runtime"]
+    provisional = [
+        name
+        for name in ("python_patch", "timeout_seconds")
+        if runtime[name]["status"] != "verified"
+    ]
     add(
         "official_limits",
-        "fail" if unresolved else "pass",
-        f"unresolved={unresolved}" if unresolved else json.dumps(official, sort_keys=True),
-        "Resolve the official FAQ placeholders for Python and package size, then update configs/official.json.",
+        "pass",
+        f"package_limit_kb={official['submission']['hard_package_limit_kb']} "
+        f"internal_target_mb<{official['submission']['internal_package_target_mb']} "
+        f"raw_resources={json.dumps(runtime['raw_simulation_settings'], sort_keys=True)}",
+    )
+    primary_python = platform.python_version().startswith("3.11.")
+    add(
+        "runtime_family",
+        "pass" if primary_python else ("fail" if policy == "submission" else "warn"),
+        f"expected={runtime['python_family']} actual={platform.python_version()} image={runtime['image']}",
+        "Run the primary profile with Python 3.11; retain 3.12 only as secondary compatibility.",
+    )
+    add(
+        "submission_provisionals",
+        "fail" if provisional and policy == "submission" else ("warn" if provisional else "pass"),
+        f"policy={policy} unresolved={provisional}",
+        "Probe the exact Python patch and timeout before final submission qualification.",
     )
 
     asset_issues = verify_assets(repo)
@@ -104,7 +123,7 @@ def run_doctor(repo: Path, cloud: bool = False) -> dict[str, Any]:
                 str(root / signatures["deck"]),
             ],
             repo,
-            timeout=30,
+            timeout=120,
         )
         add("native_engine", "pass" if native_ok else "fail", native, "Re-import or rebuild the official engine.")
         license_path = root / signatures["license"]
@@ -125,6 +144,7 @@ def run_doctor(repo: Path, cloud: bool = False) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "generated_at_utc": datetime.now(UTC).isoformat(),
+        "policy": policy,
         "status": "pass" if not failed else "fail",
         "failed_checks": failed,
         "checks": checks,

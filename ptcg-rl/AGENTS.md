@@ -15,6 +15,7 @@ Maximize the probability of a top-20/gold finish in the 2026 Pokemon TCG AI Batt
 ## Safety and legal boundaries
 
 - Keep the repository private.
+- Treat `Ashok-19/Kaggle-PTCG` as the sole active project repository.
 - Never commit/push the official engine, native libraries, card data, sample notebooks, raw replays, checkpoints, submissions, credentials or signed URLs.
 - Read and obey the competition-only engine license; do not change or redistribute engine semantics/source.
 - Do not submit, launch paid compute or mutate external services without explicit user authorization.
@@ -50,8 +51,8 @@ Maximize the probability of a top-20/gold finish in the 2026 Pokemon TCG AI Batt
 - Small commits by milestone; never claim a gate without raw evidence.
 - Every costly job has run ID, limits, checkpoint/resume, kill command and artifact destination.
 - Stop on invalid/fallback, unexplained crash, NaN/Inf, unbounded memory, data/cost cap, checkpoint failure or train/submission parity mismatch.
+- Keep local compute to development, metadata, filtered acquisition, unit/contract tests, tiny engine smoke, packaging and final-model inference tests. Use Colab/Kaggle for small training smoke and Modal for meaningful self-play, PPO/league training, large evaluation and long jobs.
 
 ## Handoff after each gate
 
 Update `PROJECT_STATUS.md` and fill `PROGRESS_REPORT.md` with exact commit, commands, tests, throughput, reliability, metrics, cost and artifacts. Stop before the next compute-heavy phase and request review.
-

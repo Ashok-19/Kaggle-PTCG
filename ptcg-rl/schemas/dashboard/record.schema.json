@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/ptcg/dashboard-record.schema.json",
+  "title": "PTCG dashboard record envelope",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "record_id", "created_at_utc", "source_path", "producer"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "record_id": {"type": "string", "minLength": 3},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "updated_at_utc": {"type": "string", "format": "date-time"},
+    "source_path": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "producer": {"type": "string", "minLength": 1},
+    "producer_version": {"type": "string"},
+    "run_id": {"type": "string"},
+    "experiment_id": {"type": "string"},
+    "gate_id": {"type": "string"},
+    "status": {
+      "enum": ["PLANNED", "QUEUED", "RUNNING", "SUCCEEDED", "FAILED", "BLOCKED", "INVALID", "ABANDONED", "SUPERSEDED", "CANCELLED", "UNKNOWN"]
+    },
+    "decision": {"enum": ["NOT_REVIEWED", "PASS", "CONDITIONAL_PASS", "BLOCKED", "FAIL", "WAIVED"]},
+    "verdict": {"enum": ["POSITIVE", "NEGATIVE", "INCONCLUSIVE", "INVALID_EVIDENCE", "NOT_EVALUATED"]}
+  }
+}

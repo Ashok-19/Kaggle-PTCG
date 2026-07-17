@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "ptcg-rl"
 version = "0.1.0"
 description = "Pokemon TCG AI Battle recurrent RL specialist"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.11,<3.13"
 dependencies = []
 
 [project.scripts]
@@ -17,6 +17,10 @@ local = []
 dev = [
   "pytest==8.4.1",
   "ruff==0.12.4",
+]
+dashboard = [
+  "fastapi==0.116.1",
+  "uvicorn==0.35.0",
 ]
 colab = []
 kaggle = []
@@ -32,5 +36,4 @@ addopts = "--strict-markers"
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
-
+target-version = "py311"

@@ -1,0 +1,54 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g0-audit-20260717",
+    "created_at_utc": "2026-07-17T14:27:56Z",
+    "source_path": "reports/incidents/G0_PUBLIC_HISTORY_AUDIT_2026-07-17.md",
+    "producer": "local-codex",
+    "kind": "INCIDENT",
+    "severity": "CRITICAL",
+    "gate_id": "G0",
+    "title": "Public-history exposure confirmed",
+    "summary": "Seven restricted sample-agent blobs were reachable from legacy main.",
+    "status_after": "BLOCKED"
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g0-remediation-20260717",
+    "created_at_utc": "2026-07-17T15:45:00Z",
+    "source_path": "reports/incidents/G0_REPOSITORY_REMEDIATION_REPORT.md",
+    "producer": "local-codex",
+    "kind": "REMEDIATION",
+    "severity": "INFO",
+    "gate_id": "G0",
+    "title": "Sanitized private source of truth established",
+    "summary": "Both repositories are private and the new remote has one clean root lineage.",
+    "status_after": "BLOCKED"
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g0-runtime-20260717",
+    "created_at_utc": "2026-07-17T15:51:27Z",
+    "source_path": "runs/preflight/g0-doctor-python311.json",
+    "producer": "local-codex",
+    "kind": "CHECK",
+    "severity": "INFO",
+    "gate_id": "G0",
+    "title": "Python 3.11 native lifecycle passed",
+    "summary": "Development doctor passed; submission policy remains blocked on exact patch and timeout.",
+    "status_after": "BLOCKED"
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-repository-consolidation-20260717",
+    "created_at_utc": "2026-07-17T17:00:00Z",
+    "source_path": "REPOSITORY_CONSOLIDATION_REPORT.md",
+    "producer": "local-codex",
+    "kind": "REMEDIATION",
+    "severity": "INFO",
+    "gate_id": "G0",
+    "title": "Existing private repository restored as sole source of truth",
+    "summary": "Clean lineage and dashboard consolidated into Ashok-19/Kaggle-PTCG; Packages gap waived for development.",
+    "status_after": "SUCCEEDED"
+  }
+]

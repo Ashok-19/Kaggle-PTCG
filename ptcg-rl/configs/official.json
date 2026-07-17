@@ -1,18 +1,78 @@
 {
+  "schema_version": 2,
   "competition": "pokemon-tcg-ai-battle",
+  "competition_id": 116727,
   "verified_at_utc": "2026-07-17T14:25:32Z",
   "official_url": "https://www.kaggle.com/competitions/pokemon-tcg-ai-battle",
   "close_instant_utc": "2026-08-16T23:59:00Z",
   "entry_and_team_merger_deadline_utc": "2026-08-09T23:59:00Z",
   "max_daily_submissions": 5,
   "active_submissions": 2,
-  "submission_format": ".tar.gz with main.py at archive root and deck.csv",
-  "environment_version": "kaggle-environments 1.14.10; cabt 1.0.0",
-  "submission_cpu": "1.6 vCPU; CPU only",
-  "submission_ram_bytes": 8589934592,
-  "agent_total_time_seconds": 600,
-  "environment_run_timeout_seconds": 2000,
-  "current_simulation_base_image": "gcr.io/kaggle-images/python:v163",
-  "submission_python": "REQUIRED_VERIFIED_SUBMISSION_PYTHON",
-  "max_package_bytes": "REQUIRED_VERIFIED_PACKAGE_LIMIT"
+  "submission": {
+    "archive_format": ".tar.gz",
+    "required_root_files": ["main.py", "deck.csv"],
+    "hard_package_limit_kb": 202400,
+    "internal_package_target_mb": 190,
+    "internal_target_comparison": "strictly_less_than"
+  },
+  "runtime": {
+    "image": "gcr.io/kaggle-images/python:v163",
+    "python_family": "3.11.x",
+    "python_patch": {
+      "value": null,
+      "status": "provisional",
+      "raw_field": "sys.version",
+      "source": "pending official-runtime probe"
+    },
+    "timeout_seconds": {
+      "value": null,
+      "status": "conflict",
+      "raw_field": "actTimeout/remainingOverageTime",
+      "source": "pending supplied-package validation episode"
+    },
+    "raw_simulation_settings": {
+      "agentDiskKb": 12388608,
+      "agentRamKb": 12815744,
+      "agentCpuCoresPercent": 200,
+      "enableInternet": false
+    }
+  },
+  "source_receipts": [
+    {
+      "fields": ["close_instant_utc", "entry_and_team_merger_deadline_utc"],
+      "source": "Kaggle competition timeline",
+      "url": "https://www.kaggle.com/competitions/pokemon-tcg-ai-battle/overview/timeline",
+      "accessed_at_utc": "2026-07-17T14:25:32Z"
+    },
+    {
+      "fields": ["submission.archive_format", "submission.required_root_files"],
+      "source": "Kaggle competition submission instructions",
+      "url": "https://www.kaggle.com/competitions/pokemon-tcg-ai-battle/overview/how-to-submit-to-this-competition",
+      "accessed_at_utc": "2026-07-17T14:25:32Z"
+    },
+    {
+      "fields": [
+        "submission.hard_package_limit_kb",
+        "runtime.raw_simulation_settings.agentDiskKb",
+        "runtime.raw_simulation_settings.agentRamKb",
+        "runtime.raw_simulation_settings.agentCpuCoresPercent",
+        "runtime.raw_simulation_settings.enableInternet"
+      ],
+      "source": "Kaggle HostService GetCompetitionSimulationSettings",
+      "raw_fields": [
+        "submissionSizeLimitKb",
+        "agentDiskKb",
+        "agentRamKb",
+        "agentCpuCoresPercent",
+        "enableInternet"
+      ],
+      "accessed_at_utc": "2026-07-17T14:25:32Z"
+    },
+    {
+      "fields": ["runtime.image", "runtime.python_family"],
+      "source": "Kaggle environments Dockerfile and Python image v163 release",
+      "url": "https://github.com/Kaggle/kaggle-environments/blob/master/docker/Dockerfile",
+      "accessed_at_utc": "2026-07-17T14:25:32Z"
+    }
+  ]
 }

@@ -1,5 +1,11 @@
 .env
 .venv/
+dashboard/frontend/node_modules/
+dashboard/frontend/test-results/
+dashboard/frontend/playwright-report/
+dashboard/frontend/*.tsbuildinfo
+dashboard/frontend/vite.config.js
+dashboard/frontend/vite.config.d.ts
 private/
 data/raw/
 data/cache/
