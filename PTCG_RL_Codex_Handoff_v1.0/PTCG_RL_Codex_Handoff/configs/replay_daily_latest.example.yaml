@@ -1,0 +1,85 @@
+source:
+  index_dataset: kaggle/pokemon-tcg-ai-battle-episodes-index
+  profile_type: standing_daily_incremental
+  provider: mcp_inbox
+  resolve_latest_index: true
+  pin_resolved_versions_in_plan: true
+  index_filename: manifest.csv
+  daily_manifest_filename: manifest.csv
+  episode_filename_template: "{episode_id}.json"
+
+window:
+  mode: latest_published
+  anchor: latest_published_index_date
+  days: 1
+
+selection:
+  profile: daily_latest_published
+  seed: 20260717
+  strata:
+    - name: elite_pair
+      fraction: 0.60
+      where:
+        avg_score_daily_quantile_gte: 0.85
+        min_score_daily_quantile_gte: 0.70
+      sample: uniform_without_replacement
+    - name: high_average
+      fraction: 0.25
+      where:
+        avg_score_daily_quantile_gte: 0.85
+      exclude_already_selected_in_plan: true
+      sample: uniform_without_replacement
+    - name: time_breadth
+      fraction: 0.15
+      exclude_already_selected_in_plan: true
+      time_blocks: 8
+      sample: uniform_without_replacement_within_time_block
+  quantile_population: all_structurally_valid_manifest_rows_before_filters
+  day_allocation: equal_per_day_then_round_robin_remainder
+  max_episodes_total: 100
+  max_episodes_per_day: 100
+  max_download_bytes_total: 786432000  # 750 MiB
+  max_download_bytes_per_day: 786432000
+  byte_budget_basis: manifest_content_size_bytes
+  max_single_file_bytes: 67108864
+  exclude_already_verified: true
+  do_not_optimize_for_small_files: true
+  insufficient_stratum_redistribution: time_breadth
+  byte_cap_resolution: deterministic_proportional_resampling_by_day_and_stratum
+  record_stratum_populations_thresholds_inclusion_probabilities: true
+  completed_watermark_fields: [manifest_hash, selection_profile_hash, planner_version]
+  completed_watermark_behavior: skip_unless_backfill_or_refresh
+
+download:
+  dry_run_default: true
+  require_plan_hash_confirmation: true
+  concurrency: 2
+  retry_count: 4
+  partial_suffix: .partial
+  verify_extracted_json_size_against_manifest: true
+  verify_json_episode_id: true
+  maximum_archive_expanded_bytes: 67108864
+  reject_unexpected_archive_members: true
+  account_for_temporary_and_cache_duplication: true
+  minimum_free_disk_bytes: 8589934592
+  forbid_whole_dataset_download: true
+
+retention:
+  raw_hard_cap_bytes: 10737418240
+  normalized_hard_cap_bytes: 8589934592
+  raw_policy: compress
+  delete_requires_verified_backup_receipt: true
+  backup_target: null
+
+meta:
+  include_quality_classes: [VALID_DECISIVE, VALID_DRAW]
+  analyze_other_quality_classes_separately: true
+  frequency_outputs:
+    - raw_downloaded_mixture_share
+    - inclusion_weighted_eligible_host_corpus_share
+  forbid_ladder_prevalence_claim: true
+
+data_boundary:
+  provenance: PUBLIC_REPLAY
+  allow_policy_action_labels: false
+  allow_value_targets: false

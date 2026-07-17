@@ -1,0 +1,89 @@
+run:
+  name: modal-main-league
+  platform: modal
+  exact_main_canonical_deck_hash: REQUIRED_AFTER_D1
+  exact_main_deck_file_sha256: REQUIRED_AFTER_D1
+  campaign_maximum_wall_seconds: 216000
+  chunk_maximum_wall_seconds: 21600
+  resume_between_chunks: true
+  maximum_cost_usd: 24.0
+  budget_scope: single_modal_account_campaign
+  account_budget_ledger_required: true
+  account_campaign_cap_formula: "min(24, 28 - verified_account_spend_to_date)"
+  continuation_on_second_account_requires_tested_export_import: true
+  stop_before_cost_fraction: 0.95
+  verified_price_snapshot: REQUIRED_AT_PREFLIGHT
+  maximum_resource_seconds_by_sku: REQUIRED_AT_PREFLIGHT
+
+policies:
+  current_policy_version_lag_max: 0
+  exactly_one_learner_policy_version_per_batch: true
+  policy_version_fixed_for_complete_episode: true
+  finish_active_episodes_before_policy_publish: true
+  never_carry_hidden_state_across_policy_versions: true
+  immutable_historical_checkpoints: true
+  champion_promoted_only_by_evaluation: true
+  historical_capacity_min: 16
+  historical_capacity_max: 32
+  snapshot_interval_non_forced_learner_choices: 5000000
+
+matchmaking:
+  opponent_fixed_for_episode: true
+  balance_player_slots: true
+  policy_controls_first_player_choice: true
+  balance_deck_archetype: true
+  pfsp:
+    enabled: true
+    formula: "epsilon + (4 * win_rate * (1 - win_rate)) ** alpha"
+    epsilon: 0.05
+    alpha: 1.0
+    minimum_games_for_estimate: 200
+    beta_prior_alpha: 1.0
+    beta_prior_beta: 1.0
+    draws_count_as_half_win: true
+    balance_player_slots: true
+    statistic_key: [learner_policy_version, opponent_policy_id, learner_deck_hash, opponent_deck_hash, player_slot]
+    new_version_initialization: parent_posterior_then_refresh_distinct_record
+    forbid_pooling_materially_different_versions: true
+    maximum_single_opponent_probability: 0.20
+  mature_mixture:
+    activate_only_after_required_pools_are_nonempty: true
+    required_pools: [rule_regression_anchors, frozen_current_version_mirror, pfsp_history, uniform_history, champion]
+    rule_regression_anchors: 0.10
+    frozen_current_version_mirror: 0.25
+    pfsp_history: 0.40
+    uniform_history: 0.10
+    champion: 0.10
+    alternate_deck_specialists: 0.05
+    exploiters: 0.00
+    empty_optional_pool_redistribution:
+      alternate_deck_specialists: champion
+      exploiters: pfsp_history
+    validate_weights_sum_to_one_after_declared_redistribution: true
+  exploiters_enabled_after_gate: false
+
+rollout:
+  truncation_bootstrap: next_non_forced_learner_choice_after_recurrent_fold
+  zero_bootstrap_only_on_true_terminal: true
+  forced_definition: exactly_one_legal_ordered_submitted_list
+
+inference_protocol:
+  request_key: [episode_uuid, player, policy_id, selection_seq]
+  cache_exact_duplicate_response: true
+  reject_stale_or_out_of_order: true
+  require_reset_ack_before_environment_id_reuse: true
+
+reliability:
+  abort_on_invalid: true
+  abort_on_fallback: true
+  abort_on_nan_or_inf: true
+  maximum_checkpoint_age_seconds: 1800
+  maximum_queue_lag_seconds: 5
+
+checkpoint:
+  every_seconds: 900
+  atomic: true
+  persistent_volume: REQUIRED
+  include_optimizer: true
+  include_league_registry: true
+  forced_restart_test_required: true

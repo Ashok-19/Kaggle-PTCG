@@ -1,0 +1,23 @@
+project:
+  name: ptcg-rl-gold
+  target: top20
+  deadline: "REQUIRED_VERIFIED_OFFICIAL_CLOSE_INSTANT"
+  require_clean_git: true
+  allow_replay_action_supervision: false
+  allow_out_of_pocket_spend: false
+  cloud_credit_runs_require_explicit_user_confirmation: true
+
+reproducibility:
+  seed: 20260717
+  strict_unknown_config_keys: true
+  save_resolved_config: true
+  save_git_diff_when_dirty: true
+  require_asset_hash_match: true
+
+safety:
+  fail_loud_development: true
+  submission_legal_fallback: true
+  abort_on_fallback_during_training: true
+  abort_on_nan_or_inf: true
+  abort_on_invalid_action: true
+  one_battle_per_process: true

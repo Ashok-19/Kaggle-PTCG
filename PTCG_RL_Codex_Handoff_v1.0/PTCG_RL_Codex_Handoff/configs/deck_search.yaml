@@ -1,0 +1,56 @@
+meta:
+  primary_window_days: 7
+  emergence_window_days: 3
+  stability_window_days: 14
+  stability_window_requires_explicit_days_8_through_14_coverage: true
+  insufficient_coverage_result: INSUFFICIENT_COVERAGE
+  snapshot_hash: REQUIRED
+  source_label: sampled_elite_replay_corpus
+
+candidates:
+  initial_families_min: 6
+  initial_families_max: 10
+  finalists_min: 3
+  finalists_max: 5
+  keep_archetype_diversity: true
+  exact_legal_deck_required: true
+
+simulator_screen:
+  successive_halving: true
+  balance_player_slots_natural_mode: true
+  forced_seat_diagnostic: true
+  official_rule_agents_native_decks_only: true
+  generic_candidate_pilot_required_for_mutated_decks: true
+  skip_tier_if_generic_pilot_coverage_fails: true
+  mutation_card_count_min: 1
+  mutation_card_count_max: 4
+  cache_results: true
+  rule_agents_are_screeners_not_final_truth: true
+
+rl_bakeoff:
+  identical_code_commit: REQUIRED
+  model_config_hash: REQUIRED
+  ppo_config_hash: REQUIRED
+  training_opponent_population_hash: REQUIRED
+  heldout_evaluation_population_hash: REQUIRED
+  non_forced_learner_choices_per_candidate_seed_by_round: REQUIRED
+  successive_halving_seed_schedule:
+    broad_round: [20260717]
+    survivor_round: [20260717, 20260718]
+    final_unresolved_round: [20260717, 20260718, 20260719]
+  equal_budget_within_each_round: true
+  final_selection_requires_equal_cumulative_budget: true
+  successive_halving: true
+  public_action_supervision: false
+
+selection:
+  reliability_required: true
+  catastrophic_rule:
+    type: absolute_important_matchup_floor
+    important_matchups: REQUIRED
+    minimum_win_rate_or_lower_bound: REQUIRED_BEFORE_EVALUATION
+  primary_metric: meta_weighted_expected_match_score
+  confidence_method: stratified_dirichlet_multinomial_posterior_simulation
+  confidence_level: 0.95
+  tie_breaks: [latency, seed_variance, operational_simplicity]
+  forbid_blended_score: true

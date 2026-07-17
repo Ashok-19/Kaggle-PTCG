@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ptcg-rl"
+version = "0.1.0"
+description = "Pokemon TCG AI Battle recurrent RL specialist"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.scripts]
+ptcg = "ptcg_rl.cli:main"
+
+[dependency-groups]
+local = []
+dev = [
+  "pytest==8.4.1",
+  "ruff==0.12.4",
+]
+colab = []
+kaggle = []
+modal = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["unit: fast G0 unit test"]
+addopts = "--strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+

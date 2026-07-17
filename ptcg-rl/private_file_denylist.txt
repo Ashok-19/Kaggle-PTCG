@@ -1,0 +1,24 @@
+# Repository paths that must never be tracked or staged.
+libcg*
+cg.dll
+Export.cpp
+EN_Card_Data.csv
+JP_Card_Data.csv
+Card_ID*
+*.ckpt
+*.safetensors
+*.pt
+*.pth
+*.parquet
+*.duckdb
+*.sqlite*
+private/**
+data/raw/**
+data/replays/inbox/**
+checkpoints/**
+submissions/**
+**/.env
+**/kaggle.json
+**/access_token
+*.ipynb
+

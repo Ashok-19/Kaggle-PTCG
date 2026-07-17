@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/ptcg/run_manifest.schema.json",
+  "title": "PTCG RL run manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "run_kind",
+    "purpose",
+    "started_at_utc",
+    "git",
+    "config",
+    "assets",
+    "platform",
+    "limits",
+    "data_provenance",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "minLength": 8},
+    "run_kind": {
+      "enum": [
+        "ASSET_IMPORT",
+        "DOCTOR",
+        "REPLAY_SYNC",
+        "REPLAY_ANALYSIS",
+        "TOY_TEST",
+        "ENGINE_GAME",
+        "BENCHMARK",
+        "TRAINING",
+        "EVALUATION",
+        "SUBMISSION"
+      ]
+    },
+    "decision_context": {
+      "enum": [
+        "NONE",
+        "ENGINEERING_SMOKE",
+        "DECK_BAKEOFF",
+        "CHAMPION_TRAINING",
+        "PROMOTION",
+        "FINAL_SELECTION",
+        "LADDER_SMOKE"
+      ]
+    },
+    "parent_run_id": {"type": ["string", "null"]},
+    "purpose": {"type": "string", "minLength": 3},
+    "question": {"type": "string"},
+    "started_at_utc": {"type": "string", "format": "date-time"},
+    "ended_at_utc": {"type": ["string", "null"], "format": "date-time"},
+    "git": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": {"type": "string", "minLength": 7},
+        "dirty": {"type": "boolean"},
+        "diff_sha256": {"type": ["string", "null"]}
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolved_path", "sha256"],
+      "properties": {
+        "resolved_path": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "overrides": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {"type": "string"},
+      "required": ["official_package_sha256", "engine_sha256", "card_data_sha256"],
+      "properties": {
+        "official_package_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "engine_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "card_data_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "deck": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["canonical_deck_hash", "deck_file_sha256", "role"],
+      "properties": {
+        "canonical_deck_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "deck_file_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "path": {"type": "string"},
+        "role": {"enum": ["engineering_baseline", "candidate", "main", "challenger", "opponent"]}
+      }
+    },
+    "model": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "architecture": {"type": "string"},
+        "parameters": {"type": "integer", "minimum": 0, "maximum": 1999999},
+        "checkpoint_input_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "checkpoint_output_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "policy_version": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "python", "host"],
+      "properties": {
+        "name": {"enum": ["local", "colab", "kaggle", "modal", "submission"]},
+        "host": {"type": "string"},
+        "image": {"type": ["string", "null"]},
+        "python": {"type": "string"},
+        "pytorch": {"type": ["string", "null"]},
+        "cuda": {"type": ["string", "null"]},
+        "cpu": {"type": ["string", "null"]},
+        "gpu": {"type": ["string", "null"]},
+        "worker_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_wall_seconds", "max_cost_usd"],
+      "properties": {
+        "max_wall_seconds": {"type": "integer", "minimum": 1},
+        "max_cost_usd": {"type": "number", "minimum": 0},
+        "max_non_forced_learner_choices": {"type": ["integer", "null"], "minimum": 1},
+        "max_games": {"type": ["integer", "null"], "minimum": 1},
+        "max_download_bytes": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "data_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["training_source", "public_replay_action_supervision"],
+      "properties": {
+        "training_source": {"enum": ["NONE", "SELF_ROLLOUT"]},
+        "public_replay_action_supervision": {"const": false},
+        "replay_index_version": {"type": ["integer", "null"]},
+        "replay_meta_snapshot_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "opponent_population_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "heldout_evaluation_population_sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "seeds": {
+      "type": "object",
+      "additionalProperties": {"type": "integer"}
+    },
+    "metrics_summary": {
+      "type": "object",
+      "additionalProperties": {"type": ["number", "integer", "string", "null"]}
+    },
+    "reliability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "invalid_actions": {"type": "integer", "minimum": 0},
+        "crashes": {"type": "integer", "minimum": 0},
+        "timeouts": {"type": "integer", "minimum": 0},
+        "fallbacks": {"type": "integer", "minimum": 0}
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "estimated_usd": {"type": ["number", "null"], "minimum": 0},
+        "actual_usd": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "sha256"],
+        "properties": {
+          "kind": {"type": "string"},
+          "path": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "status": {"enum": ["PLANNED", "RUNNING", "COMPLETED", "FAILED", "ABORTED"]},
+    "failure_reason": {"type": ["string", "null"]}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "run_kind": {
+            "enum": ["ENGINE_GAME", "TRAINING", "EVALUATION", "SUBMISSION"]
+          }
+        },
+        "required": ["run_kind"]
+      },
+      "then": {
+        "required": ["deck"],
+        "properties": {"deck": {"type": "object"}}
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "run_kind": {"enum": ["TRAINING", "EVALUATION", "SUBMISSION"]}
+        },
+        "required": ["run_kind"]
+      },
+      "then": {
+        "required": ["model", "decision_context"],
+        "properties": {
+          "model": {
+            "type": "object",
+            "required": ["architecture", "parameters", "policy_version"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "run_kind": {"enum": ["TRAINING", "EVALUATION"]}
+        },
+        "required": ["run_kind"]
+      },
+      "then": {
+        "properties": {
+          "data_provenance": {
+            "required": ["opponent_population_sha256"],
+            "properties": {
+              "opponent_population_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision_context": {"enum": ["DECK_BAKEOFF", "PROMOTION", "FINAL_SELECTION"]}
+        },
+        "required": ["decision_context"]
+      },
+      "then": {
+        "properties": {
+          "data_provenance": {
+            "required": ["replay_meta_snapshot_sha256", "heldout_evaluation_population_sha256"],
+            "properties": {
+              "replay_meta_snapshot_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "heldout_evaluation_population_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

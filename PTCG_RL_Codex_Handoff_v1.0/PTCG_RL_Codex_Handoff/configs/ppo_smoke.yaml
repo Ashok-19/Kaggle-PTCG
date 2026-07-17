@@ -1,0 +1,90 @@
+run:
+  name: ppo-smoke
+  platform: local
+  seed: 20260717
+  maximum_wall_seconds: 7200
+  maximum_non_forced_learner_choices: 100000
+  maximum_cost_usd: 0.0
+
+environment:
+  deck_path: private/assets/official/sample_submission/deck.csv
+  deck_role: engineering_baseline_only
+  workers: 4
+  one_battle_per_process: true
+  development_fail_loud: true
+  submission_fallback_enabled: false
+
+reward:
+  win: 1.0
+  draw: 0.0
+  loss: -1.0
+  shaping: false
+
+rollout:
+  non_forced_learner_choices_per_update: 16384
+  recurrent_sequence_length_non_forced_nodes: 64
+  fold_intervening_forced_engine_calls_within_transition: true
+  store_all_intervening_forced_calls_without_truncation: true
+  detach_recurrent_state_at_sequence_start: true
+  sequence_may_not_cross_terminal_or_policy_version: true
+  policy_version_lag_max: 0
+  exactly_one_learner_policy_version_per_batch: true
+  policy_version_fixed_for_complete_episode: true
+  finish_active_episodes_before_policy_publish: true
+  never_carry_hidden_state_across_policy_versions: true
+  truncation_bootstrap: next_non_forced_learner_choice_after_recurrent_fold
+  zero_bootstrap_only_on_true_terminal: true
+  store_compound_subchoices: true
+  process_forced_in_recurrent_stream: true
+  include_forced_in_value_gae_nodes: false
+  gae_time_axis: non_forced_learner_choice_points
+  attach_terminal_boundary_to_both_player_streams: true
+  include_forced_in_policy_loss: false
+  forced_definition: exactly_one_legal_ordered_submitted_list
+
+inference_protocol:
+  request_key: [episode_uuid, player, policy_id, selection_seq]
+  cache_exact_duplicate_response: true
+  reject_stale_or_out_of_order: true
+  require_reset_ack_before_environment_id_reuse: true
+
+ppo:
+  optimizer: adam
+  adam_epsilon: 0.00001
+  learning_rate: 0.0003
+  learning_rate_schedule: linear
+  gamma: 1.0
+  gae_lambda: 0.95
+  clip_coefficient: 0.2
+  value_clip_coefficient: 0.2
+  value_coefficient: 0.5
+  entropy_coefficient: 0.01
+  normalize_entropy_by_context: true
+  decoder_entropy_reduction: mean_normalized_by_log_valid_count
+  maximum_gradient_norm: 0.5
+  epochs: 3
+  value_clipping: true
+  value_loss: maximum_of_clipped_and_unclipped_squared_error
+  target_approx_kl: 0.02
+  stop_epoch_approx_kl: 0.03
+  rollback_clip_fraction_threshold: 0.30
+  preupdate_ratio_tolerance: 0.00001
+  mixed_precision: false
+
+opponents:
+  fixed_for_episode: true
+  mixture:
+    random_legal: 0.50
+    rule_agents: 0.50
+
+checkpoint:
+  every_seconds: 900
+  atomic: true
+  retain_last: 5
+  test_resume: true
+
+logging:
+  interval_non_forced_learner_choices: 10000
+  tensorboard: true
+  metrics_jsonl: true
+  log_entropy_by_selection_type: true

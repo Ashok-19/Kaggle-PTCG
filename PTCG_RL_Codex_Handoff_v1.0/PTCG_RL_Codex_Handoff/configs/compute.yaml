@@ -1,0 +1,40 @@
+local:
+  workers_to_benchmark: [1, 2, 4, 8]
+  maximum_ram_fraction: 0.75
+  minimum_free_disk_gb: 8
+
+colab:
+  role: smoke_and_validation
+  maximum_uncheckpointed_minutes: 15
+  main_training_allowed: false
+
+kaggle:
+  total_gpu_hours: 45
+  budget_hours:
+    smoke: 6
+    deck_bakeoff: 8
+    challenger: 10
+    final_evaluation: 10
+    emergency_reserve: 11
+  tpu_used_for_v0: false
+
+modal:
+  maximum_budget_per_account_usd: 28
+  use_second_account_only_if_current_terms_permit: true
+  account_a_budget_usd:
+    preflight_canary: 4
+    initial_main_league: 24
+  account_b_budget_usd:
+    approved_continuation_or_hard_matchups: 12
+    evaluation_and_exploiters: 10
+    reserve: 6
+  account_b_requires_tested_checkpoint_export_import: true
+  cross_account_volume_assumption_forbidden: true
+  paid_overage_requires_explicit_user_approval: true
+  main_run_requires_gate_g4: true
+  compare_actor_local_cpu_and_central_gpu: true
+  initial_actor_processes_to_test: [1, 2, 4, 8, 16, 32]
+  forbid_remote_rpc_per_engine_decision: true
+  checkpoint_every_minutes: 10
+  require_cost_kill_switch: true
+  require_forced_resume_test: true

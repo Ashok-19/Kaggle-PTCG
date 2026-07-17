@@ -1,0 +1,18 @@
+{
+  "competition": "pokemon-tcg-ai-battle",
+  "verified_at_utc": "2026-07-17T14:25:32Z",
+  "official_url": "https://www.kaggle.com/competitions/pokemon-tcg-ai-battle",
+  "close_instant_utc": "2026-08-16T23:59:00Z",
+  "entry_and_team_merger_deadline_utc": "2026-08-09T23:59:00Z",
+  "max_daily_submissions": 5,
+  "active_submissions": 2,
+  "submission_format": ".tar.gz with main.py at archive root and deck.csv",
+  "environment_version": "kaggle-environments 1.14.10; cabt 1.0.0",
+  "submission_cpu": "1.6 vCPU; CPU only",
+  "submission_ram_bytes": 8589934592,
+  "agent_total_time_seconds": 600,
+  "environment_run_timeout_seconds": 2000,
+  "current_simulation_base_image": "gcr.io/kaggle-images/python:v163",
+  "submission_python": "REQUIRED_VERIFIED_SUBMISSION_PYTHON",
+  "max_package_bytes": "REQUIRED_VERIFIED_PACKAGE_LIMIT"
+}

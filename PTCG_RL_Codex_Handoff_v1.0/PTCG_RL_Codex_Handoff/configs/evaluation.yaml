@@ -1,0 +1,55 @@
+population:
+  registry_hash: REQUIRED
+  meta_snapshot_hash: REQUIRED
+  include_rule_anchors: true
+  include_random_smoke_only: true
+  historical_checkpoints_target: 12
+  include_heldout_deck_variants: true
+  include_exploiters: true
+
+protocol:
+  tier: serious_promotion
+  primary_mode: natural_deployment
+  balance_player_slots: true
+  policy_controls_first_player_choice: true
+  forced_seat_diagnostic_enabled: true
+  forced_seat_results_are_not_primary: true
+  opponent_fixed_for_episode: true
+  engine_seed_pairing_claimed: false
+  target_total_games: 2000
+  minimum_games_per_important_archetype: 200
+  draw_reporting: separate_win_draw_loss
+  aggregate_score: "(wins + 0.5 * draws) / games"
+  interval_method: dirichlet_multinomial_posterior_simulation
+  dirichlet_prior_win_draw_loss: [0.5, 0.5, 0.5]
+  interval_level: 0.95
+  stratified_meta_uncertainty: posterior_simulation_from_dirichlet_multinomial_cells
+  posterior_simulation_draws: 10000
+  sensitivity_meta_windows_days: [3, 7, 14]
+  sensitivity_window_requires_declared_coverage: true
+  insufficient_coverage_result: INSUFFICIENT_COVERAGE
+  primary_meta_window_days: 7
+  equal_weight_player_slots_within_archetype: true
+
+eligibility:
+  invalid_actions_max: 0
+  crashes_max: 0
+  timeouts_max: 0
+  fallbacks_max: 0
+  official_latency_limit_ms: REQUIRED
+  latency_safety_fraction: 0.80
+  catastrophic_rule: REQUIRED_BEFORE_RUN
+
+promotion:
+  primary_metric: meta_weighted_expected_match_score_difference_vs_anchor
+  require_positive_interval: true
+  positive_interval_definition: candidate_minus_anchor_95pct_lower_bound_gt_zero
+  minimum_meaningful_effect_percentage_points: REQUIRED_BEFORE_RUN
+  tie_breaks: [latency, seed_variance, operational_simplicity]
+  forbid_blended_score: true
+
+outputs:
+  complete_matchup_matrix: true
+  seat_split: true
+  latency_percentiles: [50, 95, 99]
+  preserve_loss_capsules: true

@@ -1,0 +1,36 @@
+{
+  "assets": {
+    "official": {
+      "file_count": 60,
+      "signature_sha256": {
+        "card_data": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+        "deck": "42068a1803902756badcfd418f6f348b7901365a281d78af0692cbf2589f0799",
+        "engine_library": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+        "license": "0bc3060e440432fa9481071ee9531d0d34e7212b1b6ffe595e38b9c9cd9c081b",
+        "wrapper": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced"
+      },
+      "source_sha256": "09ad210b15476f5064c1509addb32a459c777d92d4e4e7db470f9d0c039c3282",
+      "total_bytes": 327589562,
+      "version": "ptcgProgram 22"
+    },
+    "research": {
+      "file_count": 9,
+      "signature_sha256": {
+        "research_file": "9fe0ea78a7d25f923b2b74881252b370a5b946a7c0e69a0ed5b469c4a71f443f"
+      },
+      "source_sha256": "cf0e86e7736e711e42a870f81bba5c676c67391a32f5c1cff06dcf0dc4c63678",
+      "total_bytes": 104255,
+      "version": "unversioned"
+    },
+    "sample_agents": {
+      "file_count": 6,
+      "signature_sha256": {
+        "sample_notebook": "ebc2881a9d8139c053b36157f94b3f992973d61b0b9b3607fa330baebaa60235"
+      },
+      "source_sha256": "ba6e7ea62d58bd38373e16df30e070631d3b4f5ad6c7d223575e01565490cd41",
+      "total_bytes": 415961,
+      "version": "unversioned"
+    }
+  },
+  "schema_version": 1
+}

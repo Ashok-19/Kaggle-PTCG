@@ -1,0 +1,397 @@
+{
+  "files": [
+    {
+      "bytes": 82,
+      "path": ".gitignore",
+      "sha256": "7105bbb4b872b6998cd9d42b10ccdbc72e24249c36f3d5fc7ddb9d5211cbc991"
+    },
+    {
+      "bytes": 9885,
+      "path": "01_MASTER_PLAN.md",
+      "sha256": "e00076caf44603b6037731c506ca40c3677bd98835e683413df2fc2f1911855f"
+    },
+    {
+      "bytes": 4603,
+      "path": "CODEX_MASTER_PROMPT.md",
+      "sha256": "f65b206d43817375f0f77f8cdbbc8705954c19bf13afc4c4b4566a9134e2f08a"
+    },
+    {
+      "bytes": 4603,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/CODEX_MASTER_PROMPT.md",
+      "sha256": "f65b206d43817375f0f77f8cdbbc8705954c19bf13afc4c4b4566a9134e2f08a"
+    },
+    {
+      "bytes": 2040,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/QA_REPORT.md",
+      "sha256": "cf5d96e81c066fad4d78484096d9a99c06a5694494c5bb6d77c4d9a4eccd7163"
+    },
+    {
+      "bytes": 5029,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/README.md",
+      "sha256": "4df7799a25da496eebc62c3842753269856bd11e4a6f3e5f8b8b06ae0edbd180"
+    },
+    {
+      "bytes": 635,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/base.yaml",
+      "sha256": "21e84a22ee10a5e754939ed3d0cb3a0818829e83c04a40ca55fc20b6511c909c"
+    },
+    {
+      "bytes": 1121,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/compute.yaml",
+      "sha256": "a152d54017977f9932807bdb4b63d0c53ddd2baf68b06e551edbae26f248dcc6"
+    },
+    {
+      "bytes": 1890,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/deck_search.yaml",
+      "sha256": "2112637ff6a443b3bddf09eca405e1ed02fbe9a493f89704166c9f1c2cb85282"
+    },
+    {
+      "bytes": 1876,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/evaluation.yaml",
+      "sha256": "18832ce3fa088ecc7249b7bfcb527e57488f18e5403e9b5daf6f225c48f1aebf"
+    },
+    {
+      "bytes": 3200,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/league_main.yaml",
+      "sha256": "29bde73041de903966171f553ed94ef8271b0bd73822575b29799ebfdb70d43d"
+    },
+    {
+      "bytes": 1569,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/model_v0.yaml",
+      "sha256": "de823b78a4cfc98e4f94dc4d9c50083e9e7bd174520b21f55bf75908e9c86b46"
+    },
+    {
+      "bytes": 2629,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/ppo_smoke.yaml",
+      "sha256": "bb270d4f6133648aa1839a73f71b731d524b0349b1aa006b89e4ebfbcafbb97b"
+    },
+    {
+      "bytes": 2786,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/replay_daily_latest.example.yaml",
+      "sha256": "95e1e587de6585b9839ee2edf1bc2e9794340222426bb70f69c32302bb68250f"
+    },
+    {
+      "bytes": 3096,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/replay_filter.example.yaml",
+      "sha256": "bb3bb19668ab25efd89f003d1a2744361ff7828c9cc166025f1bac175b96f68c"
+    },
+    {
+      "bytes": 2306,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/replay_schema_probe.yaml",
+      "sha256": "b555b7e0b80466adc5af36b0ea146d65fcd36241e4a9b694fd2282e8d313aeb0"
+    },
+    {
+      "bytes": 2734,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/configs/replay_stability_extension.example.yaml",
+      "sha256": "a13dca9cc49936707b95537ce467fe2f442602c62a6cd518001f5dd3bd7a2732"
+    },
+    {
+      "bytes": 5310,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/00_DECISION_RECORD.md",
+      "sha256": "e256a79cbd1537dccf82157ca40ee47a87fbeab5dc952b5224ec90201ba07c59"
+    },
+    {
+      "bytes": 9885,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/01_MASTER_PLAN.md",
+      "sha256": "e00076caf44603b6037731c506ca40c3677bd98835e683413df2fc2f1911855f"
+    },
+    {
+      "bytes": 10610,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/02_REPOSITORY_ENVIRONMENT.md",
+      "sha256": "6bd29136d10c72c47d3fe6cd78bf8e1926f6074352e48aaa6f3099f8672863f1"
+    },
+    {
+      "bytes": 8415,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/03_ENGINE_CONTRACT_TESTS.md",
+      "sha256": "b7eaade69c3cb569772003a303e7778a14b9672dba0a0880edfe5d55a922c484"
+    },
+    {
+      "bytes": 21444,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/04_REPLAY_META_PIPELINE.md",
+      "sha256": "12fe8763e2a038f8b5f42d567ecf92392b2fd38eb726b937d7b5c062fce22739"
+    },
+    {
+      "bytes": 9636,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/05_DECK_DISCOVERY.md",
+      "sha256": "3037f39d7d6c75a1cd04ff0b7f812efc9db30fa7bd2e5d4f63d3b7d74edee0d1"
+    },
+    {
+      "bytes": 11176,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/06_MODEL_ACTION_SCHEMA.md",
+      "sha256": "2cc88dba1b892843823ca581f326966b0bbf80ccb8781aa6555d09d348f4405a"
+    },
+    {
+      "bytes": 15706,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/07_PPO_LEAGUE.md",
+      "sha256": "452d57469d7f4ca732001d5bc9f76d4fa9b2374dff8c7ee1c73fc7688e2badc8"
+    },
+    {
+      "bytes": 11110,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/08_COMPUTE_RUNBOOKS.md",
+      "sha256": "c695af95e6b4ad46ecc7229aab2f164821e6d92b7cdd79458d74b80d82892d26"
+    },
+    {
+      "bytes": 8996,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/09_EVALUATION_SUBMISSION.md",
+      "sha256": "ff1a9737c3359035b587313bebb288a42ffb93f333ec4723e3723f0e9fffbb64"
+    },
+    {
+      "bytes": 3947,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/10_SCHEDULE_GATES.md",
+      "sha256": "20b02df9c956bc163bbc87439af43a3c0031584231db4505a439235d1c9d70f5"
+    },
+    {
+      "bytes": 4834,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/11_RISK_REGISTER.md",
+      "sha256": "f20902ecb1d7f69e9f9feaf44bd9525fc3b3c066c4e60c62cb87f3feb6468f58"
+    },
+    {
+      "bytes": 5063,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/12_FIRST_WEEK_EXECUTION.md",
+      "sha256": "e36456a9c1dd3dc1a42072b3e9dc30237e5666f9791cd4aef5780d3e03ab504e"
+    },
+    {
+      "bytes": 2255,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/docs/LOCAL_KAGGLE_MCP_NOTES.md",
+      "sha256": "4db7b4aa0eb18af8e911ee4110917e0bdc3de4c929ad6b9e0da36f324341cdb5"
+    },
+    {
+      "bytes": 8362,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/schemas/run_manifest.schema.json",
+      "sha256": "bf0b8a44b8de97a001b0b9e9c1f77af495f8aad397538df390207a45bf974978"
+    },
+    {
+      "bytes": 815,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/templates/.env.example",
+      "sha256": "18c760d27312b4eaffdcd207cb551c520bcaa87c4b8603e56130f44d52ce4b5e"
+    },
+    {
+      "bytes": 300,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/templates/.gitignore",
+      "sha256": "f1b45dbee6a85e917a9bc783af2c63d2fb01ecc5d73ec29eaa12e6590f71c058"
+    },
+    {
+      "bytes": 3334,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/templates/AGENTS.md",
+      "sha256": "a7f357550aacbfa97d59426cc0c0040aa4e58d99101753cd84778c126ca8a579"
+    },
+    {
+      "bytes": 2405,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/templates/PROGRESS_REPORT.md",
+      "sha256": "5a665ae51502690b8641cb2ea67d40506d60b93ea5c94a911620a1c3330ac05c"
+    },
+    {
+      "bytes": 1827,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/templates/PROJECT_STATUS.md",
+      "sha256": "4fc365481716d90350f7754a14faa2cfd7d5d2fea6829479ac4f7071cdaba6fe"
+    },
+    {
+      "bytes": 445,
+      "path": "PTCG_RL_Codex_Handoff_v1.0/PTCG_RL_Codex_Handoff/templates/private_file_denylist.txt",
+      "sha256": "1308525fd9c64a97bc3c688ff693cf77f1b21ed95df1630d9510b50f7d057bc6"
+    },
+    {
+      "bytes": 14,
+      "path": "README.md",
+      "sha256": "8b87e4fb355d90b57232405b87508c5ba6e7a3ed3477d3b5430af020105b1613"
+    },
+    {
+      "bytes": 466,
+      "path": "ptcg-rl/.env.example",
+      "sha256": "f1e8c91eae0c73f3d73521e0af1f505972e9a5ca8a584d3b7c2789416823812a"
+    },
+    {
+      "bytes": 312,
+      "path": "ptcg-rl/.gitignore",
+      "sha256": "163def1afb9528cd9c275edf7ecbec83c0f35df9f071ee0c39ae8e4ee11bef87"
+    },
+    {
+      "bytes": 6,
+      "path": "ptcg-rl/.python-version",
+      "sha256": "9ea280e4c89d3f302c1e8b3e5e7db91c46bec0fe761356ae90f32aaf0dbe0e8b"
+    },
+    {
+      "bytes": 3342,
+      "path": "ptcg-rl/AGENTS.md",
+      "sha256": "3041dff07d03fb2201a1a819c07ee2d84d9a948f96159113440121609fc6df16"
+    },
+    {
+      "bytes": 683,
+      "path": "ptcg-rl/LICENSE-NOTES.md",
+      "sha256": "a333e53ad409b7d6253a8ff51dbcd0bd79efcd3c3957adff0201a0e7b1aa4399"
+    },
+    {
+      "bytes": 5267,
+      "path": "ptcg-rl/PROGRESS_REPORT.md",
+      "sha256": "4cb10b67fed8be3c950c5c6e882432dce1b966f80480608540584926512df4cd"
+    },
+    {
+      "bytes": 5103,
+      "path": "ptcg-rl/PROJECT_STATUS.md",
+      "sha256": "41b85c5c64fd379884dde1e6c2761997a9ad6b95d756c19bbd9bab75f7518b20"
+    },
+    {
+      "bytes": 601,
+      "path": "ptcg-rl/README.md",
+      "sha256": "965085e80d5651ec2be5a285715e7aa012513eb5d792702759b759426a08e290"
+    },
+    {
+      "bytes": 1390,
+      "path": "ptcg-rl/asset_hashes.redacted.json",
+      "sha256": "b8b77cb6a6fb20416e75707d0eff903b1804efe3f927b872907cbdda5fb5296a"
+    },
+    {
+      "bytes": 830,
+      "path": "ptcg-rl/configs/official.json",
+      "sha256": "66aee60958769f88ee7031ace850d9479bcbb99c6b7eba868824df33d118c198"
+    },
+    {
+      "bytes": 486,
+      "path": "ptcg-rl/locks/README.md",
+      "sha256": "4bcdafc78ded195358f22dafcf0890abc5c439b43ee14772e8f9369003dca6ae"
+    },
+    {
+      "bytes": 186,
+      "path": "ptcg-rl/locks/colab-cuda.txt",
+      "sha256": "8044a2e79f82d2e841d3844d34537b71450540c88f58ae7305856b9f25f208e6"
+    },
+    {
+      "bytes": 188,
+      "path": "ptcg-rl/locks/kaggle-cuda.txt",
+      "sha256": "a2b025b9a5eb58f7c98131a6931374ee824bf5fcae1d93b6ea74e41bedea4a57"
+    },
+    {
+      "bytes": 415,
+      "path": "ptcg-rl/locks/local-cpu.txt",
+      "sha256": "11b126550c1d8bbf991730bb69346c4ee360e71daeb60b32f5e0352ff3017f87"
+    },
+    {
+      "bytes": 186,
+      "path": "ptcg-rl/locks/modal-cuda.txt",
+      "sha256": "c42ce28c71c6b8eecaa0aeb0746e015c6de9edec000ddaa66589d0c1463dbf38"
+    },
+    {
+      "bytes": 309,
+      "path": "ptcg-rl/private_file_denylist.txt",
+      "sha256": "0877c5211bd87580e2b32b158c365ffd9828ed632e973dd40d0ac22ec5ec0659"
+    },
+    {
+      "bytes": 628,
+      "path": "ptcg-rl/pyproject.toml",
+      "sha256": "2e49c38fb74b7b381a0b1e9faac78ef8680d2a6cb658eac9391e33ad47f59282"
+    },
+    {
+      "bytes": 8362,
+      "path": "ptcg-rl/schemas/run_manifest.schema.json",
+      "sha256": "bf0b8a44b8de97a001b0b9e9c1f77af495f8aad397538df390207a45bf974978"
+    },
+    {
+      "bytes": 139,
+      "path": "ptcg-rl/scripts/bootstrap_assets.py",
+      "sha256": "2d0dc2e9ae625249ec1d89d02f3e6434c7fab9e2a67807a924b062242db67e61"
+    },
+    {
+      "bytes": 55,
+      "path": "ptcg-rl/src/ptcg_rl/__init__.py",
+      "sha256": "613690890663fcfb6b6d309b7b8b7867a4830a35f9b784c6e354ad5402e1bcc7"
+    },
+    {
+      "bytes": 49,
+      "path": "ptcg-rl/src/ptcg_rl/__main__.py",
+      "sha256": "76fa916e93e0ae1a6c1bb51dcc0bcf289c014e9f760a47165f8a84401ccf41d7"
+    },
+    {
+      "bytes": 10783,
+      "path": "ptcg-rl/src/ptcg_rl/assets.py",
+      "sha256": "ede5eaac4449d78ce59c26e01812333d5c118ecb008c7bc2a53a221df7192a5f"
+    },
+    {
+      "bytes": 1146,
+      "path": "ptcg-rl/src/ptcg_rl/audit.py",
+      "sha256": "63e420c2dc717b472c9ba21b8c54aae21edbac02e6ce424a9e6f154bfcb31572"
+    },
+    {
+      "bytes": 2608,
+      "path": "ptcg-rl/src/ptcg_rl/cli.py",
+      "sha256": "7125873127ec7bf10951e71b4531eef02e3bed26730edb937f2ba28900e7af93"
+    },
+    {
+      "bytes": 5697,
+      "path": "ptcg-rl/src/ptcg_rl/doctor.py",
+      "sha256": "639539f24787148961d70dce74964389a907aaab50e355761543ffbe1e17d7cb"
+    },
+    {
+      "bytes": 2548,
+      "path": "ptcg-rl/src/ptcg_rl/native_probe.py",
+      "sha256": "c1449a353666e0487868dc9c0df0af0c5d845262fc67a468f57c942c13f762e8"
+    },
+    {
+      "bytes": 1606,
+      "path": "ptcg-rl/tests/unit/test_assets.py",
+      "sha256": "b6c7ff39c8cce7ce61083c6d5a45e4c3296a9dff03755bd32f2f51d7b13e8e89"
+    },
+    {
+      "bytes": 488,
+      "path": "ptcg-rl/tests/unit/test_audit.py",
+      "sha256": "680c3492d981b0f69b6878cdb0ebb23108439b607ca7af1c031e494fc91dafea"
+    },
+    {
+      "bytes": 301,
+      "path": "ptcg-rl/tests/unit/test_doctor.py",
+      "sha256": "a82156e3c3ef7dbc04907c44687a1b100a6a2201a2fa1bf15e70bad99006dd7d"
+    },
+    {
+      "bytes": 10554,
+      "path": "ptcg-rl/uv.lock",
+      "sha256": "0097f4b9dc7ebfd5d59e1601868d6775dd489d0eabedd4dce2901438327de1dd"
+    },
+    {
+      "bytes": 17824,
+      "path": "research-docs/2nd-research.md",
+      "sha256": "9fe0ea78a7d25f923b2b74881252b370a5b946a7c0e69a0ed5b469c4a71f443f"
+    },
+    {
+      "bytes": 20636,
+      "path": "research-docs/Initial-research.md",
+      "sha256": "98b55a2fb1b094379ad540e2bdd8f86d8800872ea2281734ec1516ff6ecffda6"
+    },
+    {
+      "bytes": 7254,
+      "path": "research-docs/competition_overview.md",
+      "sha256": "bd4ed83c5bb10dc186b648673183dc99bef67eda64b4ba4c05c639e061ce7704"
+    },
+    {
+      "bytes": 9284,
+      "path": "research-docs/game_engine_and_agent_api.md",
+      "sha256": "93bae820674630b12d2c8bfefd1564fffaf0412a5b362ac10937521186d5624a"
+    },
+    {
+      "bytes": 7085,
+      "path": "research-docs/game_rules_and_simulator_quirks.md",
+      "sha256": "804cd4630a1b2ef200bdf9c4520a78c1966018bd572ade1e63272ef64bd0c0d7"
+    },
+    {
+      "bytes": 9051,
+      "path": "research-docs/replay_data_and_meta.md",
+      "sha256": "95ee2f365baa31c41ace488a5bc9752b45ccca630dc324dc1faa967add3952c7"
+    },
+    {
+      "bytes": 9542,
+      "path": "research-docs/research_index.md",
+      "sha256": "e359fc1ddcb510db589f736043a4d3b970268a2186aa3f46c72766040e9fb7c6"
+    },
+    {
+      "bytes": 16163,
+      "path": "research-docs/rl_and_agent_improvement.md",
+      "sha256": "9279738db045327bceb129c81f9f6b82b14cceb83faf3c5640a2fa22b5dc4ec5"
+    },
+    {
+      "bytes": 7416,
+      "path": "research-docs/submission_evaluation_and_ladder.md",
+      "sha256": "ad35577e3c3ae2eb42058e248dc613a03bd74f8797bc613f083d0f3d0db4cd7b"
+    }
+  ],
+  "manifest_sha256": "20e5635e6ff9bce5852f7b786c516c4549c8ee3f1b32b6f4cca81337b35a7640",
+  "schema_version": 1,
+  "source_commit": "e5308b5b410f14ce84adce0ca4fd3582f8118f19"
+}

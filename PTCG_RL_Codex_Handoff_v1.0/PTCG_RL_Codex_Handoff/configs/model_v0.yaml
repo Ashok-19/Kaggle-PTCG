@@ -1,0 +1,64 @@
+schema:
+  observation_version: v0
+  action_version: v0
+  card_table_hash: REQUIRED
+  hidden_information_policy: public_only
+  silent_truncation_allowed: false
+
+entity_encoder:
+  card_id_embedding_dim: 96
+  model_dim: 128
+  attention_blocks: 2
+  attention_heads: 4
+  feedforward_dim: 256
+  dropout: 0.0
+  use_raw_card_text: false
+  use_card_id: true
+  use_structured_metadata: true
+  physical_card_identity: [relative_owner, serial]
+  embed_serial_number: false
+
+event_encoder:
+  type: gru
+  hidden_dim: 64
+  preserve_order: true
+  process_all_events_without_truncation: true
+  raw_log_strings_allowed: false
+
+memory:
+  type: gru
+  hidden_dim: 160
+  separate_per_player: true
+  update_on_forced_choice: true
+  reset_on_initial_deck_request: true
+
+action_decoder:
+  type: ragged_semantic_pointer
+  option_dim: 128
+  selection_hidden_dim: 80
+  score_all_legal_options: true
+  include_raw_option_index: false
+  permute_options_during_training: true
+  multi_select: ordered_autoregressive_without_replacement
+  one_engine_request_is_one_ppo_action: true
+  update_main_memory_during_decoder: false
+  enable_stop_only_after_min_count: true
+  cache_state_encoder_within_compound_action: true
+
+critic:
+  observation: public
+  share_actor_trunk: true
+  output_dim: 1
+
+limits:
+  target_trainable_parameters: 1200000
+  max_trainable_parameters: 1999999
+  fail_on_entity_overflow: true
+  fail_on_option_overflow: true
+
+checkpoint:
+  require_engine_hash: true
+  require_card_hash: true
+  require_canonical_deck_hash: true
+  record_deck_file_sha256: true
+  require_schema_match: true
