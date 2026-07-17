@@ -1,0 +1,90 @@
+{
+  "code_sha256": "c502400e7a307c9bbe9f34e723d39d727fbb8eeb5b3028fcc3f13a41d7beee80",
+  "config": {
+    "games": 50,
+    "request_cap": 20000,
+    "roles": "random-legal and deterministic-first-legal alternate player seats",
+    "seed": 17,
+    "training": false,
+    "wall_seconds": 1800
+  },
+  "config_sha256": "470795d9b4ac8a2cf729bd5e47ba3f44870f6e4f320ad05059311d92a01d0ed8",
+  "created_at_utc": "2026-07-17T20:01:59.084890+00:00",
+  "gate_id": "G1",
+  "guaranteed_capacities_source": "contracts/native_inventory.v1.json",
+  "kind": "run",
+  "local_cost_usd": 0.0,
+  "metrics": {
+    "engine_requests": 2219,
+    "failures": 0,
+    "forced_requests": 232,
+    "games_completed": 50,
+    "games_started": 50,
+    "invalid_selections": 0,
+    "max_observed_options": 52,
+    "max_observed_select_count": 3,
+    "meaningful_choices": 1987,
+    "multi_select_requests": 59,
+    "option_type_coverage": {
+      "ATTACH": 5119,
+      "ATTACK": 1899,
+      "CARD": 1491,
+      "END": 1555,
+      "ENERGY": 109,
+      "EVOLVE": 524,
+      "NO": 50,
+      "NUMBER": 89,
+      "PLAY": 1517,
+      "RETREAT": 304,
+      "YES": 50
+    },
+    "post_terminal_actions": 0,
+    "selection_type_coverage": {
+      "CARD": 543,
+      "COUNT": 36,
+      "ENERGY": 35,
+      "MAIN": 1555,
+      "YES_NO": 50
+    },
+    "timeouts": 0,
+    "unseen_option_types": [
+      "ABILITY",
+      "DISCARD",
+      "ENERGY_CARD",
+      "SKILL",
+      "SPECIAL_CONDITION",
+      "TOOL_CARD"
+    ],
+    "unseen_selection_types": [
+      "ATTACHED_CARD",
+      "ATTACK",
+      "CARD_OR_ATTACHED_CARD",
+      "EVOLVE",
+      "SKILL",
+      "SPECIAL_CONDITION"
+    ]
+  },
+  "observed_not_guaranteed": {
+    "max_options": 52,
+    "max_select_count": 3
+  },
+  "producer": "ptcg.g1.smoke",
+  "producer_version": "1",
+  "purpose": "Bounded CABT environment/action contract correctness smoke",
+  "record_id": "run-g1-native-smoke",
+  "run_id": "g1-native-smoke",
+  "schema_metadata": {
+    "action_schema_sha256": "c35f3618ac4c35a847f048a61ad8b669ea5194f8a6f9da77a532697818f207f3",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "observation_schema_sha256": "0b1ffde016ee688a41d3313ae781aaadbd6d1d5da4f5853ccdfa6b2ecbc572f6",
+    "schema_version": 1,
+    "trajectory_schema_sha256": "cc2f2a55ac59095c019e2cdcc3da59e9b88138eb0c567df350d7d06df322f694"
+  },
+  "schema_version": 1,
+  "source_path": "reports/runs/g1-native-smoke.json",
+  "status": "PASS",
+  "training_performed": false,
+  "updated_at_utc": "2026-07-17T20:01:59.084890+00:00",
+  "wall_seconds": 1.5926344330000575
+}

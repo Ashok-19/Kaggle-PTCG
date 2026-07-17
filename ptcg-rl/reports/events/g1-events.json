@@ -1,0 +1,38 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g1-contract-implemented",
+    "created_at_utc": "2026-07-18T00:00:00Z",
+    "source_path": "reports/events/g1-events.json",
+    "producer": "local-codex",
+    "gate_id": "G1",
+    "kind": "GATE",
+    "severity": "INFO",
+    "summary": "Versioned public observation, semantic option, compound action, trajectory and ragged numeric contracts implemented."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g1-native-smoke-pass",
+    "created_at_utc": "2026-07-18T00:00:01Z",
+    "source_path": "reports/events/g1-events.json",
+    "producer": "local-codex",
+    "run_id": "g1-native-smoke",
+    "gate_id": "G1",
+    "kind": "RUN",
+    "severity": "INFO",
+    "status": "PASS",
+    "summary": "Bounded 50-game native smoke completed with zero invalid selections and zero post-terminal actions."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g1-pass-recommended",
+    "created_at_utc": "2026-07-18T00:00:02Z",
+    "source_path": "reports/events/g1-events.json",
+    "producer": "local-codex",
+    "gate_id": "G1",
+    "kind": "GATE",
+    "severity": "INFO",
+    "status": "PASS",
+    "summary": "G1 exit criteria satisfied; replay/meta and deck-discovery work is the recommended next phase."
+  }
+]

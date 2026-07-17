@@ -1,19 +1,62 @@
 {
   "schema_version": 1,
-  "record_id": "gate-g1-20260717",
-  "created_at_utc": "2026-07-17T17:00:00Z",
-  "updated_at_utc": "2026-07-17T17:00:00Z",
-  "source_path": "PROJECT_STATUS.md",
+  "record_id": "gate-g1-20260718",
+  "created_at_utc": "2026-07-18T00:00:00Z",
+  "updated_at_utc": "2026-07-18T00:00:00Z",
+  "source_path": "reports/gates/g1.json",
   "producer": "local-codex",
+  "producer_version": "1",
   "gate_id": "G1",
-  "title": "Engine contract and tensor schema",
-  "status": "PLANNED",
-  "decision": "NOT_REVIEWED",
-  "technical_checks": [],
+  "title": "CABT environment and action contract",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "technical_checks": [
+    {
+      "name": "native lifecycle and terminal regression",
+      "status": "PASS",
+      "evidence": "tests/unit/test_g1_environment.py"
+    },
+    {
+      "name": "semantic observation and legal-action contracts",
+      "status": "PASS",
+      "evidence": "tests/unit/test_g1_contracts.py"
+    },
+    {
+      "name": "bounded native smoke",
+      "status": "PASS",
+      "evidence": "reports/runs/g1-native-smoke.json"
+    },
+    {
+      "name": "dashboard artifact ingestion",
+      "status": "PASS",
+      "evidence": "tests/integration/test_g1_dashboard_ingestion.py"
+    },
+    {
+      "name": "cloud validation entry point",
+      "status": "PASS",
+      "evidence": "scripts/g1_cloud_validate.sh"
+    }
+  ],
   "blockers": [],
   "warnings": [
-    "No meaningful self-play, PPO, league training or large evaluation may run locally."
+    "Unseen native selection/option types are reported in the smoke manifest and covered only by official definitions plus synthetic structural tests.",
+    "Observed maxima are not engine guarantees; legal options and logs remain ragged and untruncated.",
+    "No meaningful self-play, PPO, league training or large evaluation ran locally."
   ],
-  "approved_next_action": "Implement the exact CABT environment/action contract and tensor schema with unit/contract tests and tiny local engine smoke only.",
+  "unresolved_questions": [
+    {
+      "question": "Official binding exposes no semantic engine version string.",
+      "impact": "Non-blocking; the engine-library SHA-256 is the compatibility key."
+    },
+    {
+      "question": "BattleStart errorType numeric meanings are not published in the binding.",
+      "impact": "Non-blocking; numeric values are retained in bounded local diagnostics."
+    },
+    {
+      "question": "The official actor observation exposes no phase field.",
+      "impact": "Non-blocking and privacy-safe; V1 does not invent or encode one."
+    }
+  ],
+  "approved_next_action": "After G1 review, implement the filtered replay/meta pipeline together with quantitative deck discovery; keep the first training smoke on Colab/Kaggle.",
   "cost_usd": 0
 }

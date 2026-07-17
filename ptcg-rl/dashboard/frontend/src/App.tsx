@@ -57,6 +57,7 @@ function CommandCenter({ data, onEvidence }: { data: Overview; onEvidence: (path
   const resources = (runtime.raw_simulation_settings ?? {}) as RecordValue;
   const blockers = (gate.blockers ?? []) as string[];
   const warnings = (gate.warnings ?? []) as string[];
+  const unresolved = (gate.unresolved_questions ?? []) as RecordValue[];
   const checks = (gate.technical_checks ?? []) as RecordValue[];
   const deadline = new Date(asText(data.runtime.close_instant_utc));
   const days = Number.isNaN(deadline.valueOf()) ? null : Math.max(0, Math.floor((deadline.valueOf() - Date.now()) / 86_400_000));
@@ -69,7 +70,7 @@ function CommandCenter({ data, onEvidence }: { data: Overview; onEvidence: (path
       <div><span>Verified close</span><strong>{days === null ? "DEADLINE NOT VERIFIED" : `${days} days`}</strong><small>{asText(data.runtime.close_instant_utc)}</small></div>
       <div><span>Agent package</span><strong>{String(submission.hard_package_limit_kb ?? "UNKNOWN")} KB</strong><small>internal target &lt; {String(submission.internal_package_target_mb ?? "UNKNOWN")} MB</small></div>
       <div><span>Active jobs</span><strong>{data.active_jobs}</strong><small>No training has begun</small></div>
-      <div><span>Verified cost</span><strong>USD 0</strong><small>local G0 only</small></div>
+      <div><span>Verified cost</span><strong>USD 0</strong><small>local validation only</small></div>
     </section>
     <div className="content-grid two-one">
       <section className="panel">
@@ -80,14 +81,15 @@ function CommandCenter({ data, onEvidence }: { data: Overview; onEvidence: (path
         </div>
       </section>
       <section className="panel attention">
-        <header><div><p className="eyebrow">Attention queue</p><h2>{blockers.length + warnings.length} items</h2></div><ShieldAlert size={20} /></header>
+        <header><div><p className="eyebrow">Attention queue</p><h2>{blockers.length + warnings.length + unresolved.length} items</h2></div><ShieldAlert size={20} /></header>
         {blockers.map((item) => <div className="attention-row critical" key={item}><AlertTriangle size={16} /><div><strong>BLOCKER</strong><p>{item}</p></div></div>)}
-        {warnings.map((item) => <div className="attention-row warning" key={item}><Clock3 size={16} /><div><strong>UNRESOLVED</strong><p>{item}</p></div></div>)}
+        {unresolved.map((item) => <div className="attention-row warning" key={asText(item.question)}><Clock3 size={16} /><div><strong>UNKNOWN</strong><p>{asText(item.question)} {asText(item.impact)}</p></div></div>)}
+        {warnings.map((item) => <div className="attention-row warning" key={item}><Clock3 size={16} /><div><strong>NOTE</strong><p>{item}</p></div></div>)}
       </section>
     </div>
     <div className="content-grid equal">
       <section className="panel">
-        <header><div><p className="eyebrow">Approved next action</p><h2>Begin {gateId}</h2></div><ChevronRight size={20} /></header>
+        <header><div><p className="eyebrow">Approved next action</p><h2>{gate.status === "SUCCEEDED" ? "Next phase" : `Begin ${gateId}`}</h2></div><ChevronRight size={20} /></header>
         <p className="next-action">{asText(gate.approved_next_action)}</p>
         <EvidenceButton path={gate.source_path} onOpen={onEvidence} />
       </section>
@@ -109,8 +111,14 @@ function ReviewInbox({ items, onEvidence }: { items: RecordValue[]; onEvidence: 
 
 function Gates({ gates, onEvidence }: { gates: RecordValue[]; onEvidence: (path: string) => void }) {
   const current = gates.find((gate) => ["PLANNED", "QUEUED", "RUNNING", "BLOCKED"].includes(asText(gate.status)));
-  const currentId = asText(current?.gate_id, "G1");
-  return <section><div className="page-heading"><div><p className="eyebrow">Evidence-gated plan</p><h1>Gates & Roadmap</h1></div></div><div className="roadmap">{roadmap.map((gate, index) => <div className={`roadmap-step ${gate === currentId ? "current" : "future"}`} key={gate}><span>{index + 1}</span><div><strong>{gate}</strong><small>{gate === "G0" ? "Passed" : gate === currentId ? "Approved next" : "Not started"}</small></div></div>)}</div>{current && <section className="panel"><header><div><p className="eyebrow">Current gate</p><h2>{asText(current.title)}</h2></div><Status value={current.status} /></header><p className="next-action">{asText(current.approved_next_action)}</p><EvidenceButton path={current.source_path} onOpen={onEvidence} /></section>}</section>;
+  const records = new Map(gates.map((gate) => [asText(gate.gate_id), gate]));
+  const latest = current ?? [...roadmap].reverse().map((gate) => records.get(gate)).find(Boolean);
+  return <section><div className="page-heading"><div><p className="eyebrow">Evidence-gated plan</p><h1>Gates & Roadmap</h1></div></div><div className="roadmap">{roadmap.map((gate, index) => {
+    const record = records.get(gate);
+    const passed = ["PASS", "SUCCEEDED"].includes(asText(record?.decision, asText(record?.status)));
+    const active = Boolean(record && record === current);
+    return <div className={`roadmap-step ${passed ? "passed" : active ? "current" : "future"}`} key={gate}><span>{index + 1}</span><div><strong>{gate}</strong><small>{passed ? "Passed" : active ? "Approved next" : "Not started"}</small></div></div>;
+  })}</div>{latest && <section className="panel"><header><div><p className="eyebrow">{current ? "Current gate" : "Latest gate"}</p><h2>{asText(latest.title)}</h2></div><Status value={latest.status} /></header><p className="next-action">{asText(latest.approved_next_action)}</p><EvidenceButton path={latest.source_path} onOpen={onEvidence} /></section>}</section>;
 }
 
 function Timeline({ events, onEvidence }: { events: RecordValue[]; onEvidence: (path: string) => void }) {

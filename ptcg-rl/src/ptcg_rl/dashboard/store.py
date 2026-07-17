@@ -60,6 +60,7 @@ class DashboardStore:
             "reports/gates/*",
             "reports/incidents/*",
             "reports/events/*.json",
+            "reports/runs/*.json",
             "runs/*/run_manifest.json",
             "jobs/*/*.json",
         ):

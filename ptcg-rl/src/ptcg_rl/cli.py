@@ -39,6 +39,9 @@ def _parser() -> argparse.ArgumentParser:
     serve.add_argument("--port", type=int, default=8765)
     export = dashboard.add_parser("export-snapshot")
     export.add_argument("--format", choices=("json",), default="json")
+    from .g1.cli import add_g1_parsers
+
+    add_g1_parsers(commands)
     return parser
 
 
@@ -64,6 +67,10 @@ def main(argv: list[str] | None = None) -> int:
             from .dashboard.cli import run_dashboard
 
             result = run_dashboard(args, repo)
+        elif args.command == "g1":
+            from .g1.cli import run_g1
+
+            result = run_g1(args, repo)
         else:
             restricted = audit_repository(repo)
             result = {"status": "fail" if restricted else "pass", "restricted_paths": restricted}

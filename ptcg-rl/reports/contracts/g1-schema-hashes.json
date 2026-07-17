@@ -1,0 +1,595 @@
+{
+  "action": {
+    "option_features": [
+      "selection_type",
+      "selection_context",
+      "option_type",
+      "number",
+      "area",
+      "index",
+      "player_index",
+      "tool_index",
+      "energy_index",
+      "count",
+      "in_play_area",
+      "in_play_index",
+      "attack_id",
+      "card_id",
+      "special_condition_type",
+      "source_entity_index",
+      "target_entity_index"
+    ],
+    "records": {
+      "contract_version": 1,
+      "records": {
+        "CompoundActionV1": [
+          {
+            "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "request_id",
+            "type": "str"
+          },
+          {
+            "name": "steps",
+            "type": "tuple[SubSelectionV1, ...]"
+          },
+          {
+            "name": "submitted_original_indices",
+            "type": "tuple[int, ...]"
+          },
+          {
+            "name": "stopped_early",
+            "type": "bool"
+          },
+          {
+            "name": "policy_loss_mask",
+            "type": "int"
+          },
+          {
+            "name": "log_probability_sum",
+            "type": "float | None"
+          }
+        ],
+        "LegalOptionV1": [
+          {
+            "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "original_index",
+            "type": "int"
+          },
+          {
+            "name": "selection_type",
+            "type": "int"
+          },
+          {
+            "name": "selection_context",
+            "type": "int"
+          },
+          {
+            "name": "option_type",
+            "type": "int"
+          },
+          {
+            "name": "option_name",
+            "type": "str | None"
+          },
+          {
+            "name": "number",
+            "type": "int | None"
+          },
+          {
+            "name": "area",
+            "type": "int | None"
+          },
+          {
+            "name": "index",
+            "type": "int | None"
+          },
+          {
+            "name": "player_index",
+            "type": "int | None"
+          },
+          {
+            "name": "tool_index",
+            "type": "int | None"
+          },
+          {
+            "name": "energy_index",
+            "type": "int | None"
+          },
+          {
+            "name": "count",
+            "type": "int | None"
+          },
+          {
+            "name": "in_play_area",
+            "type": "int | None"
+          },
+          {
+            "name": "in_play_index",
+            "type": "int | None"
+          },
+          {
+            "name": "attack_id",
+            "type": "int | None"
+          },
+          {
+            "name": "card_id",
+            "type": "int | None"
+          },
+          {
+            "name": "serial",
+            "type": "int | None"
+          },
+          {
+            "name": "special_condition_type",
+            "type": "int | None"
+          },
+          {
+            "name": "source_entity_key",
+            "type": "str | None"
+          },
+          {
+            "name": "target_entity_key",
+            "type": "str | None"
+          },
+          {
+            "name": "available",
+            "type": "bool"
+          },
+          {
+            "name": "semantic_fingerprint",
+            "type": "str"
+          }
+        ],
+        "SelectionRequestV1": [
+          {
+            "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "request_id",
+            "type": "str"
+          },
+          {
+            "name": "acting_player",
+            "type": "int"
+          },
+          {
+            "name": "selection_type",
+            "type": "int"
+          },
+          {
+            "name": "selection_context",
+            "type": "int"
+          },
+          {
+            "name": "min_count",
+            "type": "int"
+          },
+          {
+            "name": "max_count",
+            "type": "int"
+          },
+          {
+            "name": "remain_damage_counter",
+            "type": "int | None"
+          },
+          {
+            "name": "remain_energy_cost",
+            "type": "int | None"
+          },
+          {
+            "name": "context_card_id",
+            "type": "int | None"
+          },
+          {
+            "name": "effect_card_id",
+            "type": "int | None"
+          },
+          {
+            "name": "options",
+            "type": "tuple[LegalOptionV1, ...]"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "action_schema_sha256": "c35f3618ac4c35a847f048a61ad8b669ea5194f8a6f9da77a532697818f207f3",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "observation_schema_sha256": "0b1ffde016ee688a41d3313ae781aaadbd6d1d5da4f5853ccdfa6b2ecbc572f6",
+    "schema_version": 1,
+    "trajectory_schema_sha256": "cc2f2a55ac59095c019e2cdcc3da59e9b88138eb0c567df350d7d06df322f694"
+  },
+  "observation": {
+    "entity_features": [
+      "card_id",
+      "owner",
+      "zone",
+      "position",
+      "hp",
+      "max_hp",
+      "damage",
+      "appear_this_turn",
+      "attached_energy_count",
+      "attached_tool_count",
+      "evolution_depth"
+    ],
+    "event_features": [
+      "event_type",
+      "player_index",
+      "card_id",
+      "value",
+      "count",
+      "result"
+    ],
+    "global_features": [
+      "acting_player",
+      "turn",
+      "turn_action_count",
+      "first_player",
+      "supporter_played",
+      "stadium_played",
+      "energy_attached",
+      "retreated",
+      "terminal_result",
+      "min_count",
+      "max_count",
+      "remain_damage_counter",
+      "remain_energy_cost",
+      "self_deck_count",
+      "self_hand_count",
+      "self_prize_count",
+      "opponent_deck_count",
+      "opponent_hand_count",
+      "opponent_prize_count"
+    ],
+    "records": {
+      "contract_version": 1,
+      "records": {
+        "EngineObservationV1": [
+          {
+            "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "battle_id",
+            "type": "str"
+          },
+          {
+            "name": "transition_id",
+            "type": "int"
+          },
+          {
+            "name": "acting_player",
+            "type": "int | None"
+          },
+          {
+            "name": "terminal_result",
+            "type": "int | None"
+          },
+          {
+            "name": "turn",
+            "type": "int | None"
+          },
+          {
+            "name": "turn_action_count",
+            "type": "int | None"
+          },
+          {
+            "name": "first_player",
+            "type": "int | None"
+          },
+          {
+            "name": "supporter_played",
+            "type": "bool | None"
+          },
+          {
+            "name": "stadium_played",
+            "type": "bool | None"
+          },
+          {
+            "name": "energy_attached",
+            "type": "bool | None"
+          },
+          {
+            "name": "retreated",
+            "type": "bool | None"
+          },
+          {
+            "name": "players",
+            "type": "tuple[PlayerViewV1, ...]"
+          },
+          {
+            "name": "entities",
+            "type": "tuple[VisibleEntityV1, ...]"
+          },
+          {
+            "name": "public_events",
+            "type": "tuple[PublicEventV1, ...]"
+          },
+          {
+            "name": "previous_request_ref",
+            "type": "str | None"
+          },
+          {
+            "name": "previous_action_ref",
+            "type": "str | None"
+          }
+        ],
+        "NumericTensorV1": [
+          {
+            "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "entity_feature_names",
+            "type": "tuple[str, ...]"
+          },
+          {
+            "name": "entity_values",
+            "type": "tuple[tuple[float, ...], ...]"
+          },
+          {
+            "name": "entity_missing_masks",
+            "type": "tuple[tuple[bool, ...], ...]"
+          },
+          {
+            "name": "entity_length",
+            "type": "int"
+          },
+          {
+            "name": "option_feature_names",
+            "type": "tuple[str, ...]"
+          },
+          {
+            "name": "option_values",
+            "type": "tuple[tuple[float, ...], ...]"
+          },
+          {
+            "name": "option_missing_masks",
+            "type": "tuple[tuple[bool, ...], ...]"
+          },
+          {
+            "name": "option_available_mask",
+            "type": "tuple[bool, ...]"
+          },
+          {
+            "name": "option_offsets",
+            "type": "tuple[int, ...]"
+          },
+          {
+            "name": "option_length",
+            "type": "int"
+          },
+          {
+            "name": "event_feature_names",
+            "type": "tuple[str, ...]"
+          },
+          {
+            "name": "event_values",
+            "type": "tuple[tuple[float, ...], ...]"
+          },
+          {
+            "name": "event_missing_masks",
+            "type": "tuple[tuple[bool, ...], ...]"
+          },
+          {
+            "name": "event_length",
+            "type": "int"
+          },
+          {
+            "name": "global_feature_names",
+            "type": "tuple[str, ...]"
+          },
+          {
+            "name": "global_values",
+            "type": "tuple[float, ...]"
+          },
+          {
+            "name": "global_missing_mask",
+            "type": "tuple[bool, ...]"
+          }
+        ],
+        "VisibleEntityV1": [
+          {
+            "name": "entity_key",
+            "type": "str"
+          },
+          {
+            "name": "card_id",
+            "type": "int | None"
+          },
+          {
+            "name": "metadata_ref",
+            "type": "str | None"
+          },
+          {
+            "name": "owner",
+            "type": "int"
+          },
+          {
+            "name": "zone",
+            "type": "int"
+          },
+          {
+            "name": "position",
+            "type": "int | None"
+          },
+          {
+            "name": "parent_entity_key",
+            "type": "str | None"
+          },
+          {
+            "name": "hp",
+            "type": "int | None"
+          },
+          {
+            "name": "max_hp",
+            "type": "int | None"
+          },
+          {
+            "name": "damage",
+            "type": "int | None"
+          },
+          {
+            "name": "appear_this_turn",
+            "type": "bool | None"
+          },
+          {
+            "name": "energy_types",
+            "type": "tuple[int, ...]"
+          },
+          {
+            "name": "attached_energy_count",
+            "type": "int"
+          },
+          {
+            "name": "attached_tool_count",
+            "type": "int"
+          },
+          {
+            "name": "evolution_depth",
+            "type": "int"
+          },
+          {
+            "name": "statuses",
+            "type": "tuple[int, ...]"
+          },
+          {
+            "name": "visible",
+            "type": "bool"
+          }
+        ]
+      }
+    }
+  },
+  "schema_version": 1,
+  "trajectory": {
+    "contract_version": 1,
+    "records": {
+      "EpisodeSummaryV1": [
+        {
+          "name": "schema_version",
+          "type": "int"
+        },
+        {
+          "name": "episode_id",
+          "type": "str"
+        },
+        {
+          "name": "terminal_result",
+          "type": "int | None"
+        },
+        {
+          "name": "player_rewards",
+          "type": "tuple[float, float] | None"
+        },
+        {
+          "name": "engine_requests",
+          "type": "int"
+        },
+        {
+          "name": "meaningful_choices",
+          "type": "int"
+        },
+        {
+          "name": "forced_requests",
+          "type": "int"
+        },
+        {
+          "name": "transition_records",
+          "type": "int"
+        },
+        {
+          "name": "invalid_selections",
+          "type": "int"
+        },
+        {
+          "name": "post_terminal_actions",
+          "type": "int"
+        },
+        {
+          "name": "failure_kind",
+          "type": "str | None"
+        },
+        {
+          "name": "selection_type_counts",
+          "type": "Mapping[str, int]"
+        },
+        {
+          "name": "option_type_counts",
+          "type": "Mapping[str, int]"
+        },
+        {
+          "name": "multi_select_requests",
+          "type": "int"
+        },
+        {
+          "name": "max_observed_options",
+          "type": "int"
+        },
+        {
+          "name": "max_observed_select_count",
+          "type": "int"
+        },
+        {
+          "name": "wall_seconds",
+          "type": "float"
+        },
+        {
+          "name": "schema_metadata",
+          "type": "SchemaMetadataV1"
+        }
+      ],
+      "TransitionRecordV1": [
+        {
+          "name": "schema_version",
+          "type": "int"
+        },
+        {
+          "name": "episode_id",
+          "type": "str"
+        },
+        {
+          "name": "sequence_index",
+          "type": "int"
+        },
+        {
+          "name": "observation",
+          "type": "EngineObservationV1"
+        },
+        {
+          "name": "request",
+          "type": "SelectionRequestV1 | None"
+        },
+        {
+          "name": "action",
+          "type": "CompoundActionV1 | None"
+        },
+        {
+          "name": "terminal_result",
+          "type": "int | None"
+        },
+        {
+          "name": "reward",
+          "type": "float | None"
+        },
+        {
+          "name": "policy_loss_mask",
+          "type": "int"
+        },
+        {
+          "name": "schema_metadata",
+          "type": "SchemaMetadataV1"
+        }
+      ]
+    }
+  }
+}

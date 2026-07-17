@@ -1,11 +1,11 @@
 # Project Status
 
-Last updated UTC: 2026-07-17  
+Last updated UTC: 2026-07-18  
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
-Current gate: G1 Engine contract and tensor schema  
-Gate status: planned and authorized next work  
-Next review required before: meaningful cloud training or a material architecture change
+Current gate: G1 CABT environment and action contract  
+Gate status: implementation complete; PASS recommended  
+Next review required before: replay/meta plus deck-discovery implementation
 
 ## Mission Clock
 
@@ -39,7 +39,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | Gate | Status | Evidence | Review decision |
 |---|---|---|---|
 | G0 Repository/environment | passed | `REPOSITORY_CONSOLIDATION_REPORT.md`, G0 reports | PASS with Packages waiver |
-| G1 Engine contract/tensor schema | planned | `reports/gates/g1.json` | authorized next work |
+| G1 Engine contract/tensor schema | passed | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | PASS recommended |
 | R1 Replay/meta pipeline | not started | | |
 | G2 Model/action schema | not started | | |
 | G3a PPO correctness smoke | not started | | cloud smoke only |
@@ -51,7 +51,9 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 
 ## Active Experiments And Jobs
 
-None. Verified project compute cost remains USD `0`.
+No active jobs. The bounded G1 smoke completed 50/50 games and 2,219 engine
+requests in under one local second with zero invalid or post-terminal actions.
+Verified project compute cost remains USD `0`.
 
 ## Open Blockers
 
@@ -77,6 +79,6 @@ submission-qualification notes, not G1 blockers.
 
 ## Immediate Next Actions
 
-1. Implement the exact CABT environment/action contract and tensor schema.
-2. Build replay index/filter/download and dashboard metadata integration.
+1. Review and close G1 from `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md`.
+2. Combine filtered replay/meta acquisition with quantitative deck discovery.
 3. Keep the first training smoke on Colab/Kaggle and main training on Modal.

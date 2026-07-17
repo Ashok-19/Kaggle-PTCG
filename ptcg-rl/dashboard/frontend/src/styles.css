@@ -125,6 +125,8 @@ nav button.active { background: #29363c; color: #fff; box-shadow: inset 3px 0 #6
 .roadmap-step small { margin-top: 5px; color: var(--muted); font-size: 9px; line-height: 1.25; }
 .roadmap-step.current { background: var(--red-bg); }
 .roadmap-step.current > span { border-color: var(--red); color: var(--red); }
+.roadmap-step.passed { background: var(--green-bg); }
+.roadmap-step.passed > span { border-color: var(--green); color: var(--green); }
 .timeline { position: relative; max-width: 940px; margin-left: 110px; border-left: 1px solid var(--border); }
 .timeline article { position: relative; min-height: 130px; padding: 0 0 24px 32px; display: grid; grid-template-columns: minmax(0, 1fr); }
 .timeline time { position: absolute; right: calc(100% + 32px); top: 2px; width: 108px; color: var(--muted); font-size: 10px; text-align: right; }

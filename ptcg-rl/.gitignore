@@ -12,6 +12,8 @@ data/cache/
 data/derived/
 data/replays/inbox/
 runs/
+!reports/runs/
+!reports/runs/*.json
 checkpoints/
 build/
 dist/
