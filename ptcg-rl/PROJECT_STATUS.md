@@ -3,9 +3,9 @@
 Last updated UTC: 2026-07-18  
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
-Current gate: G1 CABT environment and action contract  
-Gate status: implementation complete; PASS recommended  
-Next review required before: replay/meta plus deck-discovery implementation
+Current gate: G1R environment/action/recurrent contract recertification  
+Gate status: BLOCKED / NOT_REVIEWED  
+Next review required before: G2, replay episode acquisition, or training
 
 ## Mission Clock
 
@@ -39,7 +39,8 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | Gate | Status | Evidence | Review decision |
 |---|---|---|---|
 | G0 Repository/environment | passed | `REPOSITORY_CONSOLIDATION_REPORT.md`, G0 reports | PASS with Packages waiver |
-| G1 Engine contract/tensor schema | passed | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | PASS recommended |
+| G1 Engine contract/tensor schema | superseded | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | historical smoke only |
+| G1R Contract recertification | blocked | `reports/gates/g1r.json`, `contracts/g1r_acceptance_plan.v1.json` | NOT_REVIEWED |
 | R1 Replay/meta pipeline | not started | | |
 | G2 Model/action schema | not started | | |
 | G3a PPO correctness smoke | not started | | cloud smoke only |
@@ -51,14 +52,20 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 
 ## Active Experiments And Jobs
 
-No active jobs. The bounded G1 smoke completed 50/50 games and 2,219 engine
-requests in under one local second with zero invalid or post-terminal actions.
-Verified project compute cost remains USD `0`.
+No active long-running jobs. G1R contract repair, the one-million-operation
+corpus, exact rule-baseline integration, source build/load, and local verification
+are complete. Qualifying long acceptance runs have not started. Verified project
+compute cost remains USD `0`.
 
 ## Open Blockers
 
-None for agent implementation. The exact Python patch and timeout remain final
-submission-qualification notes, not G1 blockers.
+- Four independently recalculated G1R criteria remain missing: the 10,000-game
+  arena, 1,000-game-per-library parity corpus, qualifying throughput matrix, and
+  six-hour RSS soak. See `reports/gates/g1r.json`.
+- Matchup-cell, shipped/built tolerance, and RSS thresholds await the single
+  preregistration decision in `docs/G1R_THRESHOLD_DECISION_PROPOSAL.md`.
+- The exact Python patch and timeout remain final submission-qualification notes,
+  not G1R blockers.
 
 ## Decision Log
 
@@ -77,8 +84,16 @@ submission-qualification notes, not G1 blockers.
 - Expected effect: protect local time/resources while keeping correctness fast.
 - Stop condition: any local command proposes meaningful self-play or training.
 
+### DEC-008 - Reopen G1 as G1R
+
+- Decision: retain the former G1 report as historical evidence and require the
+  original handbook acceptance criteria plus independent recalculation.
+- Evidence: `docs/decisions/DEC-008_G1_REOPENED.md`.
+- Stop condition: any missing criterion keeps G1R blocked.
+
 ## Immediate Next Actions
 
-1. Review and close G1 from `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md`.
-2. Combine filtered replay/meta acquisition with quantitative deck discovery.
-3. Keep the first training smoke on Colab/Kaggle and main training on Modal.
+1. Approve or revise `docs/G1R_THRESHOLD_DECISION_PROPOSAL.md` once.
+2. Run the four remaining qualifying acceptance jobs using
+   `docs/G1R_ACCEPTANCE_COMMANDS.md` and retained immutable manifests.
+3. Run R0 manifest-only work only while a qualifying long G1R job is active.

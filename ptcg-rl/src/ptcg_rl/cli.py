@@ -75,7 +75,11 @@ def main(argv: list[str] | None = None) -> int:
             restricted = audit_repository(repo)
             result = {"status": "fail" if restricted else "pass", "restricted_paths": restricted}
         print(json.dumps(result, indent=2, sort_keys=True))
-        return int(result.get("status") == "fail")
+        return int(str(result.get("status", "")).lower() in {"fail", "failed", "invalid"})
     except (AssetError, OSError, ValueError, json.JSONDecodeError) as error:
         print(json.dumps({"status": "fail", "error": str(error)}, indent=2))
         return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

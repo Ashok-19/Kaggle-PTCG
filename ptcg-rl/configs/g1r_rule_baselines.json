@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "shared_engine_dataset": {
+    "dataset_id": 8608793,
+    "version_id": 16051738
+  },
+  "baselines": [
+    {
+      "id": "dragapult-ex",
+      "dataset_id": 8609480,
+      "version_id": 16051418,
+      "source_id": 15160303,
+      "notebook": "a-sample-rule-based-agent-dragapult-ex-deck.ipynb",
+      "notebook_sha256": "ebc2881a9d8139c053b36157f94b3f992973d61b0b9b3607fa330baebaa60235",
+      "deck_bytes": 321,
+      "deck_sha256": "30c8c7365c75f38fd6e7e1d8543c42ce7055ed6fd1c6e9eb244e44484b78e724"
+    },
+    {
+      "id": "iono",
+      "dataset_id": 8609518,
+      "version_id": 16051407,
+      "source_id": 15160292,
+      "notebook": "a-sample-rule-based-agent-iono-s-deck.ipynb",
+      "notebook_sha256": "2ee5547b44628b6d9c010ba83275c92ee8e886f9eb2086d2efa7af4a3f1402ee",
+      "deck_bytes": 279,
+      "deck_sha256": "e36d46c5bcafdef8a5d0e6caeb34dd8db09119c62d8fb67c99e89e7eed39f974"
+    },
+    {
+      "id": "mega-abomasnow-ex",
+      "dataset_id": 9708464,
+      "version_id": 16052487,
+      "source_id": 15161271,
+      "notebook": "a-sample-rule-based-agent-mega-abomasnow-ex-deck.ipynb",
+      "notebook_sha256": "26fb8081500415744786d391041f88b5c65ea78ec02279cd2dd2856823e2bf79",
+      "deck_bytes": 248,
+      "deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd"
+    },
+    {
+      "id": "mega-lucario-ex",
+      "dataset_id": 9978832,
+      "version_id": 16528032,
+      "source_id": 15595312,
+      "notebook": "a-sample-rule-based-agent-mega-lucario-ex-deck.ipynb",
+      "notebook_sha256": "48fd4a56d6f1b3cfac0d8638dd627969714269c54ac2fd472e8a5e6d1b07e635",
+      "deck_bytes": 305,
+      "deck_sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee"
+    }
+  ]
+}

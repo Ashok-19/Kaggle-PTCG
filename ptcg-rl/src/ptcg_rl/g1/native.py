@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import importlib
+import platform
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -31,9 +32,24 @@ class NativeCABTTransport:
         root = sample_submission_root.resolve()
         if not (root / "cg" / "game.py").is_file():
             raise NativeEngineError(f"cg/game.py not found under {root}")
+        existing = sys.modules.get("cg.game")
+        if existing is not None and not Path(existing.__file__).resolve().is_relative_to(root):
+            raise NativeEngineError("a different cg wrapper is already loaded in this process")
         if str(root) not in sys.path:
             sys.path.insert(0, str(root))
         self._game: ModuleType = importlib.import_module("cg.game")
+        if not Path(self._game.__file__).resolve().is_relative_to(root):
+            raise NativeEngineError("loaded cg.game does not come from the requested engine root")
+        sim = importlib.import_module("cg.sim")
+        library_name = (
+            "libcg-arm64.so" if platform.machine() in {"arm64", "aarch64"} else "libcg.so"
+        )
+        expected_library = (root / "cg" / library_name).resolve()
+        loaded_library = Path(sim.lib._name).resolve()
+        if loaded_library != expected_library:
+            raise NativeEngineError("loaded native library differs from the requested engine root")
+        self.root = root
+        self.library_path = loaded_library
         self._started = False
 
     def start(self, deck0: Sequence[int], deck1: Sequence[int]) -> Mapping[str, Any]:
@@ -52,6 +68,13 @@ class NativeCABTTransport:
     def select(self, original_indices: Sequence[int]) -> Mapping[str, Any]:
         if not self._started:
             raise NativeEngineError("cannot select without an active battle")
+        if any(
+            isinstance(index, bool) or not isinstance(index, int) or index < 0
+            for index in original_indices
+        ):
+            raise NativeEngineError("native selection indices must be nonnegative integers")
+        if len(original_indices) != len(set(original_indices)):
+            raise NativeEngineError("native selection indices must be unique")
         return self._game.battle_select(list(original_indices))
 
     def finish(self) -> None:
@@ -61,4 +84,3 @@ class NativeCABTTransport:
             finally:
                 self._started = False
                 NativeCABTTransport._active_battle = False
-

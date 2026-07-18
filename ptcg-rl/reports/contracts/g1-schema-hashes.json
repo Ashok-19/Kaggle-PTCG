@@ -15,16 +15,32 @@
       "in_play_index",
       "attack_id",
       "card_id",
+      "serial",
       "special_condition_type",
+      "source_kind",
       "source_entity_index",
-      "target_entity_index"
+      "target_kind",
+      "target_entity_index",
+      "choice_role"
     ],
     "records": {
-      "contract_version": 1,
+      "contract_version": 2,
       "records": {
         "CompoundActionV1": [
           {
             "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "episode_uuid",
+            "type": "str"
+          },
+          {
+            "name": "acting_player",
+            "type": "int"
+          },
+          {
+            "name": "selection_seq",
             "type": "int"
           },
           {
@@ -49,7 +65,7 @@
           },
           {
             "name": "log_probability_sum",
-            "type": "float | None"
+            "type": "float"
           }
         ],
         "LegalOptionV1": [
@@ -130,6 +146,26 @@
             "type": "int | None"
           },
           {
+            "name": "source_kind",
+            "type": "str"
+          },
+          {
+            "name": "source_ref",
+            "type": "str | None"
+          },
+          {
+            "name": "target_kind",
+            "type": "str"
+          },
+          {
+            "name": "target_ref",
+            "type": "str | None"
+          },
+          {
+            "name": "choice_role",
+            "type": "str"
+          },
+          {
             "name": "source_entity_key",
             "type": "str | None"
           },
@@ -149,6 +185,14 @@
         "SelectionRequestV1": [
           {
             "name": "schema_version",
+            "type": "int"
+          },
+          {
+            "name": "episode_uuid",
+            "type": "str"
+          },
+          {
+            "name": "selection_seq",
             "type": "int"
           },
           {
@@ -192,6 +236,10 @@
             "type": "int | None"
           },
           {
+            "name": "ordering",
+            "type": "str"
+          },
+          {
             "name": "options",
             "type": "tuple[LegalOptionV1, ...]"
           }
@@ -200,34 +248,60 @@
     }
   },
   "metadata": {
-    "action_schema_sha256": "c35f3618ac4c35a847f048a61ad8b669ea5194f8a6f9da77a532697818f207f3",
+    "action_schema_sha256": "711964b2e52f70dc6bada8ea1f263957aca58ec05e482ebc3cb10642b76a4b3b",
     "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
     "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
-    "observation_schema_sha256": "0b1ffde016ee688a41d3313ae781aaadbd6d1d5da4f5853ccdfa6b2ecbc572f6",
-    "schema_version": 1,
-    "trajectory_schema_sha256": "cc2f2a55ac59095c019e2cdcc3da59e9b88138eb0c567df350d7d06df322f694"
+    "observation_schema_sha256": "15ae066097c4b0bf29cee0de46f1c8bec11c9b0269eb1103013230fb0570bf72",
+    "schema_version": 2,
+    "trajectory_schema_sha256": "d404dce955e2f9214e0b6958121c2e5b2bd9a01c7d8efe8aba027e11bf176224"
   },
   "observation": {
     "entity_features": [
       "card_id",
+      "serial",
       "owner",
       "zone",
       "position",
+      "parent_entity_index",
       "hp",
       "max_hp",
       "damage",
       "appear_this_turn",
       "attached_energy_count",
       "attached_tool_count",
-      "evolution_depth"
+      "evolution_depth",
+      "visible",
+      "status_poisoned",
+      "status_burned",
+      "status_asleep",
+      "status_paralyzed",
+      "status_confused"
     ],
     "event_features": [
       "event_type",
-      "player_index",
-      "card_id",
+      "playerIndex",
+      "hasBasicPokemon",
+      "cardId",
+      "serial",
+      "fromArea",
+      "toArea",
+      "cardIdActive",
+      "serialActive",
+      "cardIdBench",
+      "serialBench",
+      "cardIdBefore",
+      "serialBefore",
+      "cardIdAfter",
+      "serialAfter",
+      "cardIdTarget",
+      "serialTarget",
+      "attackId",
       "value",
-      "count",
-      "result"
+      "putDamageCounter",
+      "isRecover",
+      "head",
+      "result",
+      "reason"
     ],
     "global_features": [
       "acting_player",
@@ -241,6 +315,11 @@
       "terminal_result",
       "min_count",
       "max_count",
+      "selection_type",
+      "selection_context",
+      "request_ordered",
+      "context_card_id",
+      "effect_card_id",
       "remain_damage_counter",
       "remain_energy_cost",
       "self_deck_count",
@@ -250,8 +329,136 @@
       "opponent_hand_count",
       "opponent_prize_count"
     ],
+    "numeric_drop_allowlist": {
+      "EngineObservationV1.battle_id": "sequence ownership metadata",
+      "EngineObservationV1.previous_action_ref": "trajectory integrity metadata",
+      "EngineObservationV1.previous_request_ref": "trajectory integrity metadata",
+      "EngineObservationV1.transition_id": "sequence ownership metadata",
+      "LegalOptionV1.option_name": "derived from option_type",
+      "LegalOptionV1.original_index": "transport-only mapping; raw option position is forbidden as a model feature",
+      "LegalOptionV1.semantic_fingerprint": "integrity metadata, not game information",
+      "PublicEventV1.event_name": "derived from event_type",
+      "SelectionRequestV1.episode_uuid": "sequence ownership metadata",
+      "SelectionRequestV1.request_id": "trajectory integrity metadata",
+      "SelectionRequestV1.selection_seq": "sequence ownership metadata",
+      "VisibleEntityV1.entity_key": "derived from owner and engine serial",
+      "VisibleEntityV1.metadata_ref": "derived from card_id and card-data hash"
+    },
+    "numeric_field_coverage": {
+      "EngineObservationV1": {
+        "acting_player": "global.acting_player",
+        "battle_id": "drop_allowlist",
+        "energy_attached": "global.energy_attached",
+        "entities": "entity rows",
+        "first_player": "global.first_player",
+        "players": "player rows",
+        "previous_action_ref": "drop_allowlist",
+        "previous_request_ref": "drop_allowlist",
+        "public_events": "event rows",
+        "retreated": "global.retreated",
+        "schema_version": "tensor.schema_version",
+        "stadium_played": "global.stadium_played",
+        "supporter_played": "global.supporter_played",
+        "terminal_result": "global.terminal_result",
+        "transition_id": "drop_allowlist",
+        "turn": "global.turn",
+        "turn_action_count": "global.turn_action_count"
+      },
+      "LegalOptionV1": {
+        "area": "option.area",
+        "attack_id": "option.attack_id",
+        "available": "option_available_mask",
+        "card_id": "option.card_id",
+        "choice_role": "option.choice_role",
+        "count": "option.count",
+        "energy_index": "option.energy_index",
+        "in_play_area": "option.in_play_area",
+        "in_play_index": "option.in_play_index",
+        "index": "option.index",
+        "number": "option.number",
+        "option_name": "drop_allowlist",
+        "option_type": "option.option_type",
+        "original_index": "drop_allowlist",
+        "player_index": "option.player_index",
+        "schema_version": "tensor.schema_version",
+        "selection_context": "option.selection_context",
+        "selection_type": "option.selection_type",
+        "semantic_fingerprint": "drop_allowlist",
+        "serial": "option.serial",
+        "source_entity_key": "option.source_entity_index",
+        "source_kind": "option.source_kind",
+        "source_ref": "source kind plus entity/raw positional fields",
+        "special_condition_type": "option.special_condition_type",
+        "target_entity_key": "option.target_entity_index",
+        "target_kind": "option.target_kind",
+        "target_ref": "target kind plus entity/raw positional fields",
+        "tool_index": "option.tool_index"
+      },
+      "PlayerViewV1": {
+        "bench_max": "player.bench_max",
+        "deck_count": "player.deck_count",
+        "facedown_active_count": "player.facedown_active_count",
+        "hand_count": "player.hand_count",
+        "hand_visible": "player.hand_visible",
+        "player_index": "player.player_index",
+        "prize_count": "player.prize_count",
+        "visible_prize_count": "player.visible_prize_count"
+      },
+      "PublicEventV1": {
+        "event_name": "drop_allowlist",
+        "event_type": "event.event_type",
+        "fields": "event.*"
+      },
+      "SelectionRequestV1": {
+        "acting_player": "global.acting_player",
+        "context_card_id": "global.context_card_id",
+        "effect_card_id": "global.effect_card_id",
+        "episode_uuid": "drop_allowlist",
+        "max_count": "global.max_count",
+        "min_count": "global.min_count",
+        "options": "option rows",
+        "ordering": "global.request_ordered",
+        "remain_damage_counter": "global.remain_damage_counter",
+        "remain_energy_cost": "global.remain_energy_cost",
+        "request_id": "drop_allowlist",
+        "schema_version": "tensor.schema_version",
+        "selection_context": "global.selection_context",
+        "selection_seq": "drop_allowlist",
+        "selection_type": "global.selection_type"
+      },
+      "VisibleEntityV1": {
+        "appear_this_turn": "entity.appear_this_turn",
+        "attached_energy_count": "entity.attached_energy_count",
+        "attached_tool_count": "entity.attached_tool_count",
+        "card_id": "entity.card_id",
+        "damage": "entity.damage",
+        "energy_types": "entity_energy_values/offsets",
+        "entity_key": "drop_allowlist",
+        "evolution_depth": "entity.evolution_depth",
+        "hp": "entity.hp",
+        "max_hp": "entity.max_hp",
+        "metadata_ref": "drop_allowlist",
+        "owner": "entity.owner",
+        "parent_entity_key": "entity.parent_entity_index",
+        "position": "entity.position",
+        "serial": "entity.serial",
+        "statuses": "entity.status_*",
+        "visible": "entity.visible",
+        "zone": "entity.zone"
+      }
+    },
+    "player_features": [
+      "player_index",
+      "bench_max",
+      "deck_count",
+      "hand_count",
+      "prize_count",
+      "visible_prize_count",
+      "hand_visible",
+      "facedown_active_count"
+    ],
     "records": {
-      "contract_version": 1,
+      "contract_version": 2,
       "records": {
         "EngineObservationV1": [
           {
@@ -329,6 +536,22 @@
             "type": "int"
           },
           {
+            "name": "player_feature_names",
+            "type": "tuple[str, ...]"
+          },
+          {
+            "name": "player_values",
+            "type": "tuple[tuple[float, ...], ...]"
+          },
+          {
+            "name": "player_missing_masks",
+            "type": "tuple[tuple[bool, ...], ...]"
+          },
+          {
+            "name": "player_length",
+            "type": "int"
+          },
+          {
             "name": "entity_feature_names",
             "type": "tuple[str, ...]"
           },
@@ -343,6 +566,14 @@
           {
             "name": "entity_length",
             "type": "int"
+          },
+          {
+            "name": "entity_energy_values",
+            "type": "tuple[int, ...]"
+          },
+          {
+            "name": "entity_energy_offsets",
+            "type": "tuple[int, ...]"
           },
           {
             "name": "option_feature_names",
@@ -404,6 +635,10 @@
           },
           {
             "name": "card_id",
+            "type": "int | None"
+          },
+          {
+            "name": "serial",
             "type": "int | None"
           },
           {
@@ -472,7 +707,7 @@
   },
   "schema_version": 1,
   "trajectory": {
-    "contract_version": 1,
+    "contract_version": 2,
     "records": {
       "EpisodeSummaryV1": [
         {
@@ -482,6 +717,10 @@
         {
           "name": "episode_id",
           "type": "str"
+        },
+        {
+          "name": "first_player",
+          "type": "int | None"
         },
         {
           "name": "terminal_result",
@@ -513,6 +752,10 @@
         },
         {
           "name": "post_terminal_actions",
+          "type": "int"
+        },
+        {
+          "name": "fallback_actions",
           "type": "int"
         },
         {

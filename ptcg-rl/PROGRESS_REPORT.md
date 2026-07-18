@@ -1,26 +1,31 @@
 # Progress Report
 
-Current gate: **G1 CABT environment and action contract**  
-Outcome: **PASS recommended**  
+Current gate: **G1R contract recertification**  
+Outcome: **BLOCKED / NOT_REVIEWED**  
 Cost: **USD 0**
 
-Implemented versioned public observations, semantic legal options, reversible option
-permutation, ordered compound multi-select traces, ragged numeric tensors, terminal-only
-episode lifecycle, redacted failures, random/deterministic legal baselines, native inventory,
-schema export and a contract-only cloud validation entry point.
+The reviewed false-pass, loaded-asset provenance, adapter-boundary validation,
+terminal parsing, fail-closed semantic, STOP trace, recurrent lifecycle, failure-mode,
+and evidence-reproducibility defects are repaired and regression tested.
 
-The bounded local smoke completed 50/50 games and 2,219 engine requests with 1,987
-meaningful choices, 232 forced requests, zero invalid selections, zero crashes/timeouts and
-zero post-terminal actions. Maximum observed options was 52 and maximum observed compound
-selection length was 3; neither is treated as an engine guarantee.
+Current retained evidence includes 57 passing Python tests, Ruff, dashboard tests/build,
+asset and contract validation, a 1,000,000-valid-operation corpus, a 257-event log burst,
+forced worker replacement, all four exact rule-agent/deck bindings, a clean 25-game
+integration matrix, a clean 50-game native smoke, Ubuntu 22.04 source build/load, profiling,
+and interrupted-run resume proof. These are technical successes, not a gate `PASS`.
 
 Authoritative evidence:
 
-- `contracts/native_inventory.v1.json`
-- `reports/contracts/g1-schema-hashes.json`
-- `reports/runs/g1-native-smoke.json`
-- `reports/gates/g1.json`
-- `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md`
+- `reports/gates/g1r.json`
+- `contracts/g1r_acceptance_plan.v1.json`
+- `docs/decisions/DEC-008_G1_REOPENED.md`
+- ignored raw preflight evidence under `runs/g1r-preflight-20260718T115802Z/`
+- ignored one-million corpus and verification manifests under `runs/`
+- `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md`
 
-No training or meaningful self-play ran locally. After review, proceed to filtered
-replay/meta acquisition and quantitative deck discovery before the first cloud smoke.
+Independent recalculation leaves G1R blocked on the qualifying 10,000-game arena,
+shipped-versus-built corpus, throughput matrix, and six-hour RSS soak. Threshold approval
+is still required before launching those long jobs. A checked, resumable unattended runner
+now executes those four jobs and automatically recalculates the gate and refreshes the
+dashboard. R0 has transferred zero files because no qualifying long run is active. No
+training or meaningful self-play ran locally.

@@ -1,0 +1,179 @@
+{
+  "schema_version": 2,
+  "contract_id": "cabt-native-inventory-v2",
+  "official_archive_sha256": "09ad210b15476f5064c1509addb32a459c777d92d4e4e7db470f9d0c039c3282",
+  "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "engine_version": null,
+  "engine_version_status": "UNKNOWN_NO_VERSION_FIELD_IN_OFFICIAL_BINDING",
+  "source_revision": {
+    "state_header_sha256": "a12bc5669b4b79c122899142f86616f8d9926684d9029392220c5c886de2a33c",
+    "card_implementation_sha256": "286a51820d36f9b60b5b13c58bc2edff352eb4050581ddadf1960f13fd6f21a9",
+    "team_rocket_energy_owner_index_assertion": "SOURCE_HASH_AND_SYNTHETIC_ADAPTER_REGRESSION",
+    "evidence": [
+      "ptcg_engine/ptcgProgram 22/State.h:1300-1325",
+      "ptcg_engine/ptcgProgram 22/CardImpl.h:4180-4210",
+      "tests/unit/test_g1_contracts.py::test_attached_energy_resolution_uses_engine_owner_and_index_not_actor",
+      "tests/integration/test_official_july17_revision.py"
+    ]
+  },
+  "lifecycle": {
+    "one_live_battle_per_process": true,
+    "start": "battle_start(deck0[60], deck1[60]) -> (observation, StartData)",
+    "select": "battle_select(list[int original_option_index]) -> next observation",
+    "finish": "battle_finish() releases the global battle pointer",
+    "observation_fetches_per_transition": 1,
+    "recurrent_owner": "(episode_uuid, player, policy_id)",
+    "request_identity": "monotonic selection_seq plus request_id",
+    "reset_boundaries": ["deck/start", "terminal", "error", "worker replacement"],
+    "evidence": [
+      "sample_submission/cg/game.py:7-68",
+      "sample_submission/cg/sim.py:5-44",
+      "src/ptcg_rl/g1/native.py",
+      "src/ptcg_rl/g1/recurrent.py"
+    ]
+  },
+  "result_values": {
+    "-1": "ONGOING",
+    "0": "PLAYER_0_WIN",
+    "1": "PLAYER_1_WIN",
+    "2": "DRAW",
+    "evidence": [
+      "sample_submission/cg/api.py:376",
+      "ptcg_engine/ptcgProgram 22/ToJson.h:270-299"
+    ]
+  },
+  "acting_player": {
+    "field": "current.yourIndex",
+    "values": [0, 1],
+    "evidence": ["sample_submission/cg/api.py:366-380", "ptcg_engine/ptcgProgram 22/ToJson.h:270-299"]
+  },
+  "select_types": {
+    "0": "MAIN",
+    "1": "CARD",
+    "2": "ATTACHED_CARD",
+    "3": "CARD_OR_ATTACHED_CARD",
+    "4": "ENERGY",
+    "5": "SKILL",
+    "6": "ATTACK",
+    "7": "EVOLVE",
+    "8": "COUNT",
+    "9": "YES_NO",
+    "10": "SPECIAL_CONDITION",
+    "evidence": ["sample_submission/cg/api.py:55-66", "ptcg_engine/ptcgProgram 22/ApiType.h:9-36"]
+  },
+  "select_contexts": {
+    "minimum": 0,
+    "maximum": 48,
+    "names": [
+      "MAIN", "SETUP_ACTIVE_POKEMON", "SETUP_BENCH_POKEMON", "SWITCH", "TO_ACTIVE",
+      "TO_BENCH", "TO_FIELD", "TO_HAND", "DISCARD", "TO_DECK", "TO_DECK_BOTTOM",
+      "TO_PRIZE", "NOT_MOVE", "DAMAGE_COUNTER", "DAMAGE_COUNTER_ANY", "DAMAGE",
+      "REMOVE_DAMAGE_COUNTER", "HEAL", "EVOLVES_FROM", "EVOLVES_TO", "DEVOLVE",
+      "ATTACH_FROM", "ATTACH_TO", "DETACH_FROM", "LOOK", "EFFECT_TARGET",
+      "DISCARD_ENERGY_CARD", "DISCARD_TOOL_CARD", "SWITCH_ENERGY_CARD",
+      "DISCARD_CARD_OR_ATTACHED_CARD", "DISCARD_ENERGY", "TO_HAND_ENERGY",
+      "TO_DECK_ENERGY", "SWITCH_ENERGY", "SKILL_ORDER", "ATTACK", "DISABLE_ATTACK",
+      "EVOLVE", "DRAW_COUNT", "DAMAGE_COUNTER_COUNT", "REMOVE_DAMAGE_COUNTER_COUNT",
+      "IS_FIRST", "MULLIGAN", "ACTIVATE", "FIRST_EFFECT", "MORE_DEVOLVE", "COIN_HEAD",
+      "AFFECT_SPECIAL_CONDITION", "RECOVER_SPECIAL_CONDITION"
+    ],
+    "future_values": "FAIL_CLOSED_UNTIL_INVENTORIED",
+    "evidence": ["sample_submission/cg/api.py:68-117", "ptcg_engine/ptcgProgram 22/ApiType.h:39-142"]
+  },
+  "option_types": {
+    "0": {"name": "NUMBER", "required_fields": ["number"]},
+    "1": {"name": "YES", "required_fields": []},
+    "2": {"name": "NO", "required_fields": []},
+    "3": {"name": "CARD", "required_fields": ["area", "index", "playerIndex"]},
+    "4": {"name": "TOOL_CARD", "required_fields": ["area", "index", "playerIndex", "toolIndex"]},
+    "5": {"name": "ENERGY_CARD", "required_fields": ["area", "index", "playerIndex", "energyIndex"]},
+    "6": {"name": "ENERGY", "required_fields": ["area", "index", "playerIndex", "energyIndex", "count"]},
+    "7": {"name": "PLAY", "required_fields": ["index"]},
+    "8": {"name": "ATTACH", "required_fields": ["area", "index", "inPlayArea", "inPlayIndex"]},
+    "9": {"name": "EVOLVE", "required_fields": ["area", "index", "inPlayArea", "inPlayIndex"]},
+    "10": {"name": "ABILITY", "required_fields": ["area", "index"]},
+    "11": {"name": "DISCARD", "required_fields": ["area", "index"]},
+    "12": {"name": "RETREAT", "required_fields": []},
+    "13": {"name": "ATTACK", "required_fields": ["attackId"]},
+    "14": {"name": "END", "required_fields": []},
+    "15": {"name": "SKILL", "required_fields": ["cardId", "serial"]},
+    "16": {"name": "SPECIAL_CONDITION", "required_fields": ["specialConditionType"]},
+    "future_values": "FAIL_CLOSED_UNTIL_INVENTORIED",
+    "evidence": [
+      "sample_submission/cg/api.py:120-186",
+      "ptcg_engine/ptcgProgram 22/ApiJson.h:11-142",
+      "ptcg_engine/ptcgProgram 22/AddOption.h:10-121"
+    ]
+  },
+  "request_rules": {
+    "minimum": "minCount >= 0",
+    "maximum": "minCount <= maxCount <= number of available options",
+    "empty": "legal exactly when minCount == 0",
+    "forced": "one legal compound outcome remains in recurrence and has policy_loss_mask=0",
+    "multi_select": "one ordered compound action, without replacement",
+    "stop": "legal when chosen_count >= minCount and chosen_count < maxCount",
+    "submit": "ordered unique original option indices",
+    "raw_option_position_model_feature": false,
+    "evidence": [
+      "sample_submission/cg/game.py:48-68",
+      "ptcg_engine/ptcgProgram 22/State.h:432-518",
+      "src/ptcg_rl/g1/actions.py"
+    ]
+  },
+  "areas": {
+    "actor_binding_values": {"1": "DECK", "2": "HAND", "3": "DISCARD", "4": "ACTIVE", "5": "BENCH", "6": "PRIZE", "7": "STADIUM", "8": "ENERGY", "9": "TOOL", "10": "PRE_EVOLUTION", "11": "PLAYER", "12": "LOOKING"},
+    "source_only_values": {"13": "PLAYING", "14": "DECK_BOTTOM", "15": "ME", "16": "EFFECTED", "17": "EFFECTED_PRE_TARGET", "18": "SELECTED_LIST", "19": "TRIGGER_SUBJECT", "20": "TRIGGER_OBJECT", "21": "ATTACH", "22": "TURN_PLAY", "23": "ATTACK_PRE_MY_TURN", "24": "TEMPORARY"},
+    "source_only_emission_guarantee": false,
+    "evidence": ["sample_submission/cg/api.py:10-22", "ptcg_engine/ptcgProgram 22/Types.h:661-692"]
+  },
+  "observation": {
+    "public_source": "one actor-facing GetBattleData JSON result",
+    "opponent_hand": "must be null",
+    "facedown_slots": "explicit hidden slot entities with no card id or serial",
+    "selection_local": ["select.deck", "current.looking", "select.contextCard", "select.effect"],
+    "excluded": ["search_begin_input", "visualizer data", "SearchState", "engine-internal phase"],
+    "numeric_contract": "ragged, masked, field-covered; intentional drops require versioned rationale",
+    "evidence": [
+      "sample_submission/cg/api.py:332-445",
+      "ptcg_engine/ptcgProgram 22/ToJson.h:185-299",
+      "src/ptcg_rl/g1/semantic.py"
+    ]
+  },
+  "public_events": {
+    "types": {"0": "SHUFFLE", "1": "HAS_BASIC_POKEMON", "2": "TURN_START", "3": "TURN_END", "4": "DRAW", "5": "DRAW_REVERSE", "6": "MOVE_CARD", "7": "MOVE_CARD_REVERSE", "8": "SWITCH", "9": "CHANGE", "10": "PLAY", "11": "ATTACH", "12": "EVOLVE", "13": "DEVOLVE", "14": "MOVE_ATTACHED", "15": "ATTACK", "16": "HP_CHANGE", "17": "POISONED", "18": "BURNED", "19": "ASLEEP", "20": "PARALYZED", "21": "CONFUSED", "22": "COIN", "23": "RESULT"},
+    "delivery": "events since the prior selection; retrieved once per transition",
+    "future_values": "FAIL_CLOSED_UNTIL_INVENTORIED",
+    "evidence": ["sample_submission/cg/api.py:189-216,412-439", "ptcg_engine/ptcgProgram 22/ApiJson.h:145-385"]
+  },
+  "guaranteed_capacities": {
+    "players": 2,
+    "deck_cards_per_player": 60,
+    "active_slots_per_player": 1,
+    "bench_default": 5,
+    "bench_hard_maximum": 8,
+    "initial_prizes_per_player": 6,
+    "initial_hand_per_player": 7,
+    "evidence": ["ptcg_engine/ptcgProgram 22/Core.h", "ptcg_engine/ptcgProgram 22/PlayerState.h"]
+  },
+  "dynamic_unbounded_by_contract": [
+    "legal option count",
+    "event-log burst length",
+    "total visible entity count across selection-local views"
+  ],
+  "native_errors": {
+    "BattleStart": {"null_pointer": "inspect StartData.errorPlayer and errorType"},
+    "Select": {"4": "invalid count", "5": "index out of range", "6": "duplicate index", "30": "broken battle pointer"},
+    "binding_behavior": "game.py preserves 30 as ValueError and collapses other nonzero Select errors to IndexError",
+    "evidence": ["sample_submission/cg/game.py:19-68", "ptcg_engine/ptcgProgram 22/Export.cpp"]
+  },
+  "unknowns": [
+    "No semantic engine version string is exposed; content hashes are the version key.",
+    "No global legal-option, event-log, or visible-entity maximum is declared.",
+    "No public phase field exists.",
+    "BattleStart.errorType numeric meanings are not declared in the Python binding.",
+    "Source-only area sentinels are supported structurally but are not guaranteed to be emitted by actor JSON."
+  ]
+}
+

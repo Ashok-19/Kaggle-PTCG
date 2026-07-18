@@ -1,0 +1,67 @@
+{
+  "approved_next_action": "Complete only the blocked G1R acceptance criteria.",
+  "blockers": [
+    "10,000 complete balanced natural-deployment games",
+    "Ubuntu 22.04 shipped-versus-built comparison",
+    "raw/encoded/rule throughput at 1/2/4/8 workers",
+    "six-hour RSS soak with slope confidence interval"
+  ],
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-18T12:00:00Z",
+  "decision": "NOT_REVIEWED",
+  "gate_id": "G1R",
+  "producer": "ptcg.g1r.verdict",
+  "producer_version": "1",
+  "record_id": "gate-g1r-20260718",
+  "schema_version": 1,
+  "source_path": "reports/gates/g1r.json",
+  "status": "BLOCKED",
+  "technical_checks": [
+    {
+      "evidence": "runs/g1r-verification-20260718T135155.229380Z-56fd3e32cee6/run_manifest.json",
+      "name": "contract regressions and complete verification suite",
+      "status": "SUCCEEDED"
+    },
+    {
+      "evidence": "runs/g1r-contract-acceptance-20260718T125639.823874Z-ff31e3be7e05/run_manifest.json",
+      "name": "1,000,000 valid operations; malformed rejections separate",
+      "status": "SUCCEEDED"
+    },
+    {
+      "evidence": "runs/g1r-contract-acceptance-20260718T125639.823874Z-ff31e3be7e05/run_manifest.json",
+      "name": ">200 log burst and worker replacement",
+      "status": "SUCCEEDED"
+    },
+    {
+      "evidence": "runs/g1r-preflight-20260718T115802Z/rule-baseline-arena-25-v2/run_manifest.json",
+      "name": "four exact rule-agent/deck integrations",
+      "status": "SUCCEEDED"
+    },
+    {
+      "evidence": null,
+      "name": "10,000 complete balanced natural-deployment games",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "Ubuntu 22.04 shipped-versus-built comparison",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "raw/encoded/rule throughput at 1/2/4/8 workers",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "six-hour RSS soak with slope confidence interval",
+      "status": "BLOCKED"
+    }
+  ],
+  "title": "G1 environment/action/recurrent contract recertification",
+  "updated_at_utc": "2026-07-18T13:52:34.788969+00:00",
+  "warnings": [
+    "Native engine trajectories are nondeterministic; no paired-seed claim is made.",
+    "Observed coverage and maxima are not engine guarantees."
+  ]
+}

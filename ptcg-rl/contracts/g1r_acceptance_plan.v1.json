@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "plan_id": "g1r-acceptance-v1",
+  "created_at_utc": "2026-07-18T12:00:00Z",
+  "gate_id": "G1R",
+  "status": "BLOCKED_PENDING_THRESHOLD_APPROVAL",
+  "governing_sources": [
+    "handoff/docs/01_MASTER_PLAN.md",
+    "handoff/docs/03_ENGINE_CONTRACT_TESTS.md"
+  ],
+  "immutable_evidence": {
+    "unique_run_directories": true,
+    "append_only_command_journal": true,
+    "periodic_sealed_manifests": true,
+    "independent_verdict": true,
+    "overwrite_forbidden": true
+  },
+  "selection_corpus": {
+    "minimum_valid_operations": 1000000,
+    "malformed_rejections_count_separately": true,
+    "zero_adapter_invalids": true,
+    "required_classes": [
+      "every observed selection type",
+      "every observed option type",
+      "min boundary",
+      "max boundary",
+      "optional STOP",
+      "ordered permutation",
+      "unordered permutation",
+      "forced choice",
+      "selection-local deck and looking references",
+      "SKILL cardId=0 and player/pseudo/temp sentinels",
+      "face-down setup",
+      "max-count select-all"
+    ]
+  },
+  "games": {
+    "minimum_complete_games": 10000,
+    "zero_invalid_actions": true,
+    "zero_failures": true,
+    "zero_timeouts": true,
+    "zero_post_terminal_dispatches": true,
+    "zero_development_fallbacks": true,
+    "natural_deployment_only_for_primary_estimate": true,
+    "baselines": [
+      "random-legal",
+      "first-legal",
+      "dragapult-ex-rule",
+      "iono-rule",
+      "mega-abomasnow-ex-rule",
+      "mega-lucario-ex-rule"
+    ],
+    "ordered_player_slot_cells": 36,
+    "proposed_minimum_games_per_cell": 280,
+    "proposed_total_games": 10080,
+    "realized_first_player_reported_separately": true,
+    "forced_first_player_diagnostics_excluded_from_primary": true,
+    "threshold_approval_required": true
+  },
+  "shipped_vs_built": {
+    "platform": "Ubuntu 22.04",
+    "official_source_unmodified": true,
+    "exact_trajectory_equality_forbidden": true,
+    "proposed_games_per_library": 1000,
+    "required_exact_equalities": [
+      "ABI inventory",
+      "zero invalid/failure/timeout/post-terminal counters",
+      "observed selection-type set",
+      "observed option-type set"
+    ],
+    "proposed_distribution_tolerance": {
+      "two_sample_ks_max": 0.10,
+      "mean_relative_difference_max": 0.10,
+      "mean_standard_error_floor_multiplier": 2.0
+    },
+    "threshold_approval_required": true
+  },
+  "logging_and_restart": {
+    "minimum_log_burst_events": 201,
+    "zero_loss_or_truncation": true,
+    "forced_worker_death": true,
+    "replacement_required": true,
+    "episode_must_be_classified": true,
+    "diagnostics_must_be_retained": true
+  },
+  "throughput": {
+    "workers": [1, 2, 4, 8],
+    "modes": ["raw-engine", "encoded-observation", "rule-policy"],
+    "report": [
+      "games_per_second",
+      "choices_per_second",
+      "action_latency_p50_ms",
+      "action_latency_p95_ms",
+      "action_latency_p99_ms",
+      "cpu_percent",
+      "peak_rss_bytes"
+    ],
+    "encoded_to_raw_minimum_ratio": 0.70,
+    "profile_required_if_ratio_missed": true
+  },
+  "rss_soak": {
+    "duration_seconds": 21600,
+    "proposed_sample_period_seconds": 60,
+    "proposed_warmup_exclusion_seconds": 1800,
+    "proposed_peak_bytes_per_worker": 2147483648,
+    "proposed_slope_estimator": "Theil-Sen with deterministic bootstrap 95% CI",
+    "proposed_slope_upper_ci_mib_per_hour_per_worker": 1.0,
+    "threshold_approval_required": true
+  },
+  "execution": {
+    "local_training": false,
+    "durable_managed_runner_required": true,
+    "resume_metadata_required": true,
+    "disk_preflight_required": true,
+    "time_preflight_required": true
+  }
+}
+

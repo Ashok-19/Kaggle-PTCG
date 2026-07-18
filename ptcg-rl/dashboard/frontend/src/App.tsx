@@ -35,7 +35,7 @@ const nav = [
   ["work", "Runs & Experiments", Beaker],
 ] as const;
 
-const roadmap = ["G0", "G1", "R1", "G2", "G3a", "G3b", "D1", "G4", "G5", "G6"];
+const roadmap = ["G0", "G1R", "R1", "G2", "G3a", "G3b", "D1", "G4", "G5", "G6"];
 
 function Status({ value }: { value: unknown }) {
   const text = asText(value);
@@ -77,7 +77,7 @@ function CommandCenter({ data, onEvidence }: { data: Overview; onEvidence: (path
         <header><div><p className="eyebrow">Gate evidence</p><h2>Technical checks</h2></div><Status value={gate.status} /></header>
         <div className="check-list">
           {checks.map((check) => <div className="check-row" key={asText(check.name)}><Status value={check.status} /><span>{asText(check.name)}</span><EvidenceButton path={check.evidence} onOpen={onEvidence} /></div>)}
-          {!checks.length && <p className="empty-note">No G1 checks have run yet.</p>}
+          {!checks.length && <p className="empty-note">No G1R checks have run yet.</p>}
         </div>
       </section>
       <section className="panel attention">

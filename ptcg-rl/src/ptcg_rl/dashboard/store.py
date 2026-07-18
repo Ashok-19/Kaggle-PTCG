@@ -141,6 +141,25 @@ class DashboardStore:
         for value in values:
             if not isinstance(value, dict):
                 raise SourceError("JSON record must be an object")
+            if relative.endswith("run_manifest.json"):
+                run_id = str(value.get("run_id", path.parent.name))
+                original_status = str(value.get("status", "UNKNOWN")).upper()
+                value = {
+                    **value,
+                    "record_id": value.get("record_id", f"run-{run_id}"),
+                    "created_at_utc": value.get(
+                        "created_at_utc", datetime.fromtimestamp(path.stat().st_mtime, UTC).isoformat()
+                    ),
+                    "source_path": relative,
+                    "producer": value.get("producer", "legacy-g1r-run-adapter"),
+                    "run_id": run_id,
+                    "gate_id": value.get("gate_id", "G1R"),
+                    "status": {
+                        "PASS": "SUCCEEDED", "FAIL": "FAILED"
+                    }.get(original_status, original_status),
+                    "decision": value.get("decision", "NOT_REVIEWED"),
+                    "internal_verdict": value.get("internal_verdict", original_status),
+                }
             value = {**value, "source_sha256": digest}
             RecordEnvelope.model_validate(value)
             records.append((self._json_kind(relative, value), value))
