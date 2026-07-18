@@ -53,6 +53,18 @@ def test_ongoing_and_every_terminal_result_branch_before_selection() -> None:
         assert request is None
 
 
+def test_transient_knockout_preserves_negative_native_hp() -> None:
+    raw = raw_observation()
+    raw["current"]["players"][0]["bench"] = [{
+        "id": 100, "serial": 10, "playerIndex": 0, "hp": -10, "maxHp": 30,
+        "appearThisTurn": False, "energies": [], "energyCards": [], "tools": [],
+        "preEvolution": [],
+    }]
+    observation, _ = semantic_snapshot(raw, "battle", 0, CARD_HASH)
+    pokemon = next(entity for entity in observation.entities if entity.serial == 10)
+    assert (pokemon.hp, pokemon.max_hp, pokemon.damage) == (-10, 30, 40)
+
+
 def test_forced_and_optional_empty_policy_masks() -> None:
     _, forced = snapshot(options=[{"type": 1}], min_count=1, max_count=1)
     assert forced is not None

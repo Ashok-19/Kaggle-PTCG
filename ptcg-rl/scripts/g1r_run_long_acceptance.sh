@@ -140,9 +140,13 @@ run_step() {
       command+=(--resume)
       echo "[$name] resuming existing evidence."
     else
-      echo "[$name] has incomplete non-resumable output: $output" >&2
-      echo "Use a new --run-dir so the partial evidence remains untouched." >&2
-      return 1
+      local original_output=$output attempt=2 index
+      while [[ -e ${original_output}-attempt-${attempt} ]]; do ((attempt++)); done
+      output=${original_output}-attempt-${attempt}
+      for index in "${!command[@]}"; do
+        [[ ${command[$index]} == "$original_output" ]] && command[$index]=$output
+      done
+      echo "[$name] preserving the failed attempt and retrying in $output."
     fi
   fi
 

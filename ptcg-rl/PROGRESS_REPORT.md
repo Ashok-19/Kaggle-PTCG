@@ -23,9 +23,10 @@ Authoritative evidence:
 - ignored one-million corpus and verification manifests under `runs/`
 - `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md`
 
-Independent recalculation leaves G1R blocked on the qualifying 10,000-game arena,
-shipped-versus-built corpus, throughput matrix, and six-hour RSS soak. Threshold approval
-is still required before launching those long jobs. A checked, resumable unattended runner
-now executes those four jobs and automatically recalculates the gate and refreshes the
-dashboard. R0 has transferred zero files because no qualifying long run is active. No
-training or meaningful self-play ran locally.
+The unattended run passed the 1,000-game-per-library shipped/built comparison. Its
+benchmark attempt retained 71 failures caused by an overly strict negative-HP check during
+native knockout cleanup; the contract fix and focused reruns now pass. Independent
+recalculation leaves G1R blocked on the throughput matrix, 10,000-game arena, and six-hour
+RSS soak. Re-running the same command skips comparison, retries benchmark, and then runs
+the remaining jobs before refreshing the dashboard. R0 still contains zero episode JSON
+files. No training or meaningful self-play ran locally.

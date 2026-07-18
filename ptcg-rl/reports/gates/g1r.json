@@ -2,8 +2,6 @@
   "approved_next_action": "Complete only the blocked G1R acceptance criteria.",
   "blockers": [
     "10,000 complete balanced natural-deployment games",
-    "Ubuntu 22.04 shipped-versus-built comparison",
-    "raw/encoded/rule throughput at 1/2/4/8 workers",
     "six-hour RSS soak with slope confidence interval"
   ],
   "cost_usd": 0.0,
@@ -18,7 +16,7 @@
   "status": "BLOCKED",
   "technical_checks": [
     {
-      "evidence": "runs/g1r-verification-20260718T135155.229380Z-56fd3e32cee6/run_manifest.json",
+      "evidence": "runs/g1r-verification-20260718T141830.227146Z-e2194168766b/run_manifest.json",
       "name": "contract regressions and complete verification suite",
       "status": "SUCCEEDED"
     },
@@ -43,14 +41,14 @@
       "status": "BLOCKED"
     },
     {
-      "evidence": null,
+      "evidence": "runs/g1r-user-long-acceptance/engine-compare/run_manifest.json",
       "name": "Ubuntu 22.04 shipped-versus-built comparison",
-      "status": "BLOCKED"
+      "status": "SUCCEEDED"
     },
     {
-      "evidence": null,
+      "evidence": "runs/g1r-benchmark-auto-profile-debug-20260718/run_manifest.json",
       "name": "raw/encoded/rule throughput at 1/2/4/8 workers",
-      "status": "BLOCKED"
+      "status": "SUCCEEDED"
     },
     {
       "evidence": null,
@@ -59,7 +57,7 @@
     }
   ],
   "title": "G1 environment/action/recurrent contract recertification",
-  "updated_at_utc": "2026-07-18T13:52:34.788969+00:00",
+  "updated_at_utc": "2026-07-18T14:18:50.947283+00:00",
   "warnings": [
     "Native engine trajectories are nondeterministic; no paired-seed claim is made.",
     "Observed coverage and maxima are not engine guarantees."

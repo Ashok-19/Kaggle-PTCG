@@ -59,11 +59,11 @@ compute cost remains USD `0`.
 
 ## Open Blockers
 
-- Four independently recalculated G1R criteria remain missing: the 10,000-game
-  arena, 1,000-game-per-library parity corpus, qualifying throughput matrix, and
-  six-hour RSS soak. See `reports/gates/g1r.json`.
-- Matchup-cell, shipped/built tolerance, and RSS thresholds await the single
-  preregistration decision in `docs/G1R_THRESHOLD_DECISION_PROPOSAL.md`.
+- Three independently recalculated G1R criteria remain missing: the 10,000-game
+  arena, qualifying throughput matrix, and six-hour RSS soak. The 1,000-game-per-library
+  shipped/built comparison passed. See `reports/gates/g1r.json`.
+- Matchup-cell, shipped/built tolerance, and RSS thresholds were accepted through the
+  unattended runner's explicit approval flag.
 - The exact Python patch and timeout remain final submission-qualification notes,
   not G1R blockers.
 

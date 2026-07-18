@@ -325,8 +325,13 @@ def _visible_entities(
                 key = _entity_key(player_index, serial)
                 hp = _integer(pokemon["hp"], "pokemon.hp")
                 max_hp = _integer(pokemon["maxHp"], "pokemon.maxHp")
-                if hp < 0 or max_hp <= 0 or hp > max_hp:
-                    raise ContractViolation("Pokemon HP fields are impossible")
+                # Native cleanup can expose an over-knocked-out Pokemon briefly.
+                if max_hp <= 0 or hp > max_hp:
+                    raise ContractViolation(
+                        "Pokemon HP fields are impossible: "
+                        f"hp={hp}, max_hp={max_hp}, owner={player_index}, "
+                        f"zone={zone_name}, position={position}"
+                    )
                 energy_types = tuple(_nonnegative(item, "pokemon.energies[]") for item in pokemon["energies"])
                 entity = VisibleEntityV1(
                     entity_key=key,

@@ -21,18 +21,18 @@ complete, but four original acceptance criteria still lack qualifying evidence.
 
 | Criterion | Result | Retained evidence |
 |---|---|---|
-| Lifecycle, action, semantic, recurrent, failure, and provenance regressions | SUCCEEDED | latest `g1r-verification-*` manifest; 57 tests |
+| Lifecycle, action, semantic, recurrent, failure, and provenance regressions | SUCCEEDED | latest `g1r-verification-*` manifest; 58 tests |
 | 1,000,000 valid legal-selection operations | SUCCEEDED | `g1r-contract-acceptance-20260718T125639.823874Z-ff31e3be7e05` |
 | Malformed cases counted separately | SUCCEEDED | 4 rejected forgeries, excluded from the million |
 | Log burst larger than 200 | SUCCEEDED | 257 ordered events, zero loss/truncation |
 | Worker death/replacement and recurrent isolation | SUCCEEDED | forced exit 23, replacement ready, lifecycle tests |
 | Four exact native rule-agent/deck integrations | SUCCEEDED | 25/25 integration games, zero invalid/failure/fallback/post-terminal events |
 | Ubuntu 22.04 source build/load | SUCCEEDED | unmodified July 17 source compiled and loaded; built library hash below |
-| Shipped-versus-built qualifying comparison | BLOCKED | only a 20+20 development probe exists; 1,000 games/library not run |
-| Balanced random/rule arena | BLOCKED | 10,080 proposed games not run; threshold approval pending |
-| 1/2/4/8 throughput matrix | BLOCKED | harness/profile exist; qualifying sample not run |
+| Shipped-versus-built qualifying comparison | SUCCEEDED | 1,000 games/library; ABI, type sets, distributions, and zero-error checks passed |
+| Balanced random/rule arena | BLOCKED | 10,080 games not reached because the first runner stopped at benchmark |
+| 1/2/4/8 throughput matrix | BLOCKED | first qualifying attempt exposed and retained a transient-negative-HP validator defect |
 | Six-hour RSS soak | BLOCKED | runner/resume proof exists; six-hour run not launched |
-| Independent artifact verdict | BLOCKED | recalculator correctly reports the four missing criteria |
+| Independent artifact verdict | BLOCKED | recalculator correctly reports the three missing criteria |
 
 ## Contract Repair
 
@@ -108,11 +108,21 @@ serialization as the dominant encoded overhead. A larger qualifying matrix remai
   never as gate `PASS`.
 - Independent recalculation source: `ptcg g1 recalculate-gate` and
   `reports/gates/g1r.json`.
+- First unattended receipt:
+  `runs/g1r-user-long-acceptance/completion-receipt-20260718T140302Z.json`.
+- Receipt review/fix journal:
+  `runs/g1r-receipt-review-20260718T1420Z/command-journal.jsonl`; repaired source hash
+  `5a98d55f542d0bfafd333a94ba146b292691bfd1c6a907c21a4da167cd8ac6f8`.
 
 ## Deviations And Residual Risk
 
-- The matchup, parity, and RSS thresholds remain proposals awaiting the user's one
-  preregistration decision. No qualifying long run was launched without it.
+- The user accepted the preregistered thresholds by invoking the runner's explicit
+  `--accept-proposed-thresholds` flag.
+- The first unattended run completed engine comparison, then stopped after 71 of 2,400
+  benchmark games exposed native transient negative HP during knockout cleanup. The
+  failed benchmark remains immutable. The validator now preserves that legal observation,
+  a regression covers it, and 100 focused rule games plus a 12-point development
+  benchmark passed before retry.
 - The unattended host runner `scripts/g1r_run_long_acceptance.sh` is resumable for
   interrupted arena/soak work, journals every command, and refreshes the independent
   verdict and dashboard on exit. The separate Docker launcher remains available if a

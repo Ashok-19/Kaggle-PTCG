@@ -18,6 +18,10 @@ decided before `select`, `select.deck`, or any other selection-local field is re
 
 ## Public Observation
 
+Native HP is preserved as observed. During knockout cleanup the engine can briefly expose
+a public in-play Pokemon with negative current HP; `max_hp` remains positive and derived
+damage may therefore exceed it. This is an observed transient, not a declared lower bound.
+
 Only actor-facing JSON is accepted. A non-null opponent hand fails closed. Face-down
 active/prize slots are represented by masked slot entities without card identity or
 serial. Visible cards retain engine serials for semantic reference resolution. Search,
@@ -66,4 +70,3 @@ initial prizes, and seven initial hand cards are source guarantees. Legal-option
 event burst length, and total selection-local visible entities have no declared global
 bound. Observed maxima remain observations. The binding exposes no engine semantic version,
 public phase, or documented `BattleStart.errorType` mapping.
-

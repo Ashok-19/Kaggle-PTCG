@@ -38,8 +38,9 @@ bash scripts/g1r_run_long_acceptance.sh --accept-proposed-thresholds
 The approval flag is an explicit acceptance of the preregistered proposal. The
 runner preserves immutable per-step evidence, emits a completion receipt, then
 recalculates G1R and rebuilds/health-checks the dashboard even when a step
-fails. Re-run the same command to resume the arena or RSS soak. Use a new
-`--run-dir` after a partial non-resumable comparison or benchmark.
+fails. Re-run the same command to resume the arena or RSS soak. Failed
+non-resumable comparison/benchmark evidence is preserved and retried in a numbered
+attempt directory; completed steps are not repeated.
 
 ```bash
 .venv/bin/ptcg g1 engine-compare \

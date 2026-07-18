@@ -159,6 +159,27 @@ def run_benchmark(args, repo: Path) -> dict[str, Any]:
     engine_root = args.engine_root.resolve(strict=True)
     card_data = args.card_data.resolve(strict=True)
     default_deck = args.default_deck.resolve(strict=True)
+    private_baselines = args.private_baselines.resolve(strict=True)
+    profile_path = args.profile_evidence.resolve(strict=True) if args.profile_evidence else None
+    profile_command = None
+    if profile_path is None:
+        profile_path = run_dir / "encoded-observation.pstats"
+        profile_command = [
+            sys.executable, "-m", "cProfile", "-o", str(profile_path), "-m", "ptcg_rl",
+            "g1", "arena-one", "--engine-root", str(engine_root),
+            "--card-data", str(card_data), "--default-deck", str(default_deck),
+            "--private-baselines", str(private_baselines), "--policy0", "first",
+            "--policy1", "first", "--seed", str(args.seed), "--request-cap",
+            str(args.request_cap), "--game-timeout", str(args.game_timeout),
+            "--game-id", f"profile-{run_id}", "--failure-directory",
+            str(run_dir / "profile-failure"),
+        ]
+        captured = subprocess.run(
+            profile_command, cwd=repo, text=True, capture_output=True,
+            timeout=args.game_timeout + 10, check=False,
+        )
+        if captured.returncode:
+            raise ValueError("encoded observation profile capture failed")
     config = {
         "workers": workers, "games_per_point": args.games_per_point,
         "rule_policy": args.rule_policy, "request_cap": args.request_cap,
@@ -179,13 +200,10 @@ def run_benchmark(args, repo: Path) -> dict[str, Any]:
     complete = all(point["games_completed"] == args.games_per_point and point["failures"] == 0
                    for point in points)
     needs_profile = any(ratio < 0.70 for ratio in ratios.values())
-    profile_sha256 = None
-    if args.profile_evidence:
-        profile_path = args.profile_evidence.resolve(strict=True)
-        profile = pstats.Stats(str(profile_path))
-        if not any(function == "semantic_snapshot" for _, _, function in profile.stats):
-            raise ValueError("profile evidence does not contain encoded observation work")
-        profile_sha256 = sha256_file(profile_path)
+    profile = pstats.Stats(str(profile_path))
+    if not any(function == "semantic_snapshot" for _, _, function in profile.stats):
+        raise ValueError("profile evidence does not contain encoded observation work")
+    profile_sha256 = sha256_file(profile_path)
     passed = complete and (not needs_profile or profile_sha256 is not None)
     manifest_path = run_dir / "run_manifest.json"
     manifest = {
@@ -197,6 +215,7 @@ def run_benchmark(args, repo: Path) -> dict[str, Any]:
         "encoded_to_raw_choices_per_second_ratio": ratios,
         "profile_required": needs_profile,
         "profile_evidence_sha256": profile_sha256,
+        "profile_capture_command": profile_command,
         "config": config, "config_sha256": stable_hash(config),
         "repository": git_state(repo), "platform": platform_record(),
         "source_sha256": source_tree_hash(repo), "command": list(sys.argv),
