@@ -5,7 +5,7 @@ test("parallel R1 and G2 work is visible in the command center", async ({ page }
   await expect(page.getByRole("heading", { name: "Active workstreams" })).toBeVisible();
   await expect(page.getByText("R1", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("G2", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/Verify index and daily replay manifests/)).toBeVisible();
+  await expect(page.getByText(/Transfer and parse approved episode files/)).toBeVisible();
   await expect(page.getByText("USD 0.00", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/command-center.png", fullPage: true });
 });
@@ -15,7 +15,8 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   await page.getByRole("button", { name: "Gates & Roadmap" }).click();
   await expect(page.getByRole("heading", { name: "Gates & Roadmap" })).toBeVisible();
   await expect(page.getByText("Passed", { exact: true }).nth(1)).toBeVisible();
-  await expect(page.getByText("QUEUED", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("RUNNING", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("BLOCKED", { exact: true }).first()).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/gates-roadmap.png", fullPage: true });
 
   await page.getByRole("button", { name: "Evidence", exact: true }).click();
@@ -24,12 +25,30 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   await expect(page.getByText("DEC-010 · Authorize G2/R1 and strict evaluation")).toBeVisible();
 });
 
-test("learning lab explains boundaries from durable records", async ({ page }) => {
+test("learning lab explains boundaries and provides interactive simulators", async ({ page }) => {
   await page.goto("/#learning");
   await page.getByRole("button", { name: "Learning Lab" }).click();
   await expect(page.getByRole("heading", { name: "Learning Lab" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Turn and prize-race planner" })).toBeVisible();
+  await expect(page.getByText("Projected winner")).toBeVisible();
+
+  await page.getByRole("tab", { name: "Damage math" }).click();
+  await expect(page.getByRole("heading", { name: "Damage and knockout sandbox" })).toBeVisible();
+  await expect(page.getByText("Remaining HP", { exact: true })).toBeVisible();
+
+  await page.getByRole("tab", { name: "Deck odds" }).click();
+  await expect(page.getByRole("heading", { name: "Opening consistency calculator" })).toBeVisible();
+  await expect(page.getByText("See at least one")).toBeVisible();
+
+  await page.getByRole("tab", { name: "Agent choices" }).click();
+  await expect(page.getByRole("heading", { name: "Legal-option and multi-select lab" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /STOP/ })).toBeDisabled();
+  await page.getByRole("button", { name: "Bench slot A" }).click();
+  await expect(page.getByRole("button", { name: /STOP/ })).toBeEnabled();
+
   await expect(page.getByRole("heading", { name: "What G1R proved" })).toBeVisible();
-  await expect(page.getByText("No episode JSON transfer before the immutable R1 plan is reviewed.")).toBeVisible();
+  await expect(page.getByText("No PPO training before G2 and evaluation implementation review.")).toBeVisible();
+  await page.screenshot({ path: "../../reports/dashboard/screenshots/learning-lab.png", fullPage: true });
 });
 
 test("mobile command center has no overlapping primary controls", async ({ page }) => {

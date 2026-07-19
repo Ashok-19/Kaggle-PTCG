@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "record_id": "learning-interactive-simulators-v1",
+  "created_at_utc": "2026-07-19T09:36:00Z",
+  "updated_at_utc": "2026-07-19T09:36:00Z",
+  "source_path": "reports/learning/interactive-simulators.json",
+  "producer": "chatgpt-local-agent",
+  "title": "Interactive PTCG reasoning simulators",
+  "status": "CURRENT",
+  "audience": "Beginner to advanced",
+  "sections": [
+    {
+      "id": "prize-race",
+      "title": "Prize-race planning",
+      "summary": "A deterministic turn timeline shows how attacks per knockout, prizes per knockout and initiative change the shortest projected route to zero prizes.",
+      "why_it_matters": "The best move can be the move that changes the prize race, not the move with the largest immediate damage number."
+    },
+    {
+      "id": "damage-thresholds",
+      "title": "Damage and knockout thresholds",
+      "summary": "A simplified damage sandbox exposes existing damage, modifiers, weakness, resistance, remaining HP and hits to knockout.",
+      "why_it_matters": "Threshold effects can make a small modifier strategically decisive even when average damage changes little."
+    },
+    {
+      "id": "deck-consistency",
+      "title": "Exact deck-draw odds",
+      "summary": "A hypergeometric calculator gives the exact probability of drawing zero or more copies of a key card from a 60-card deck.",
+      "why_it_matters": "Deck ideas should balance consistency against the opportunity cost of each extra copy."
+    },
+    {
+      "id": "semantic-decisions",
+      "title": "Semantic legal-option decisions",
+      "summary": "An option-scoring and STOP-aware multi-select lab demonstrates temperature, masks, semantic identity and engine-list permutation invariance.",
+      "why_it_matters": "The submitted policy must score the legal options it receives without treating an arbitrary list index as the meaning of an action."
+    }
+  ],
+  "boundaries": [
+    "The simulators are educational approximations and do not replace the competition engine.",
+    "Damage-effect ordering, card text, legality and terminal outcomes remain engine-authoritative.",
+    "Simulator observations are hypothesis prompts, not evaluation evidence or permission to train."
+  ]
+}

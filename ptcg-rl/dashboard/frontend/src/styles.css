@@ -247,3 +247,93 @@ nav button.active { background: #29363c; color: #fff; box-shadow: inset 3px 0 #6
   .timeline time { position: static; display: block; width: auto; margin-bottom: 8px; text-align: left; }
   .report-list summary > div { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Learning Lab simulators */
+.learning-simulators { margin-bottom: 18px; }
+.sim-heading { margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; }
+.sim-heading h2 { margin-bottom: 5px; font-size: 20px; }
+.sim-heading p:not(.eyebrow) { max-width: 800px; margin-bottom: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.sim-disclaimer { padding: 5px 8px; flex: 0 0 auto; border: 1px solid var(--amber); border-radius: 4px; background: var(--amber-bg); color: var(--amber); font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.sim-tabs { margin-bottom: -1px; display: flex; gap: 4px; overflow-x: auto; }
+.sim-tabs button { min-width: max-content; padding: 9px 13px; border: 1px solid var(--border); border-bottom-color: var(--border); border-radius: 5px 5px 0 0; background: var(--surface-2); color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 700; }
+.sim-tabs button.active { position: relative; z-index: 2; border-bottom-color: var(--surface); background: var(--surface); color: var(--strong); }
+.simulator-shell { min-height: 520px; border-top-left-radius: 0; }
+.simulator-layout { display: grid; grid-template-columns: minmax(250px, .72fr) minmax(0, 1.28fr); gap: 20px; }
+.sim-controls { display: grid; align-content: start; gap: 10px; }
+.sim-control { padding: 10px; display: grid; gap: 8px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-2); }
+.sim-control > span { display: flex; justify-content: space-between; gap: 10px; color: var(--text); font-size: 11px; }
+.sim-control output { color: var(--blue); font-weight: 800; }
+.sim-control input[type="range"] { width: 100%; accent-color: var(--blue); }
+.sim-check { min-height: 38px; padding: 9px 10px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 5px; color: var(--text); font-size: 11px; }
+.sim-check input { accent-color: var(--blue); }
+.sim-output { min-width: 0; display: grid; align-content: start; gap: 14px; }
+.sim-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+.sim-metrics > div { min-width: 0; padding: 13px; border-right: 1px solid var(--border); background: var(--surface-2); }
+.sim-metrics > div:last-child { border-right: 0; }
+.sim-metrics span, .sim-metrics strong { display: block; }
+.sim-metrics span { color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.sim-metrics strong { margin-top: 5px; color: var(--strong); font-size: 20px; overflow-wrap: anywhere; }
+.prize-track { min-height: 250px; display: grid; align-content: start; gap: 7px; }
+.prize-event { padding: 10px 12px; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 10px; border: 1px solid var(--border); border-left-width: 4px; border-radius: 5px; background: var(--surface); }
+.prize-event.ours { border-left-color: var(--green); }
+.prize-event.theirs { border-left-color: var(--red); }
+.prize-event span, .prize-event small { color: var(--muted); font-size: 10px; }
+.prize-event strong { color: var(--strong); font-size: 12px; }
+.sim-lesson, .sim-note { margin: 0; padding: 11px 12px; border: 1px solid var(--border); border-radius: 5px; background: var(--blue-bg); color: var(--text); font-size: 11px; line-height: 1.55; }
+.sim-note { background: var(--surface-2); color: var(--muted); }
+.pokemon-card-visual { position: relative; min-height: 270px; padding: 22px; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: linear-gradient(145deg, var(--surface-2), var(--surface)); }
+.pokemon-card-visual > div:first-child span, .pokemon-card-visual > div:first-child strong { display: block; }
+.pokemon-card-visual > div:first-child span { color: var(--muted); font-size: 10px; text-transform: uppercase; }
+.pokemon-card-visual > div:first-child strong { margin-top: 6px; color: var(--strong); font-size: 21px; }
+.hp-track { position: absolute; left: 22px; right: 22px; bottom: 25px; height: 14px; overflow: hidden; border: 1px solid var(--border); border-radius: 999px; background: var(--green-bg); }
+.hp-track span { display: block; height: 100%; background: var(--red); opacity: .75; transition: width .18s ease; }
+.damage-burst { position: absolute; inset: 82px auto auto 50%; width: 138px; height: 138px; transform: translateX(-50%); display: grid; place-content: center; border: 2px solid var(--red); border-radius: 50%; background: var(--red-bg); color: var(--red); font-size: 35px; font-weight: 900; text-align: center; }
+.damage-burst small { display: block; font-size: 10px; text-transform: uppercase; }
+.probability-bars { display: grid; gap: 9px; }
+.probability-bars > div { display: grid; grid-template-columns: 70px minmax(0, 1fr) 54px; align-items: center; gap: 10px; font-size: 11px; }
+.probability-bars > div > span { color: var(--muted); }
+.probability-bars > div > div { height: 12px; overflow: hidden; border-radius: 999px; background: var(--surface-2); }
+.probability-bars i { display: block; height: 100%; border-radius: inherit; background: var(--blue); }
+.probability-bars strong { color: var(--strong); text-align: right; }
+.decision-lab { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.decision-panel { min-width: 0; }
+.decision-panel > h3 { margin-top: 0; color: var(--strong); }
+.decision-panel > p { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.decision-toolbar { margin-bottom: 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: stretch; }
+.decision-toolbar > button, .target-grid button, .stop-action { padding: 9px 11px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-2); cursor: pointer; font-size: 11px; font-weight: 700; }
+.option-stack { display: grid; gap: 8px; }
+.option-stack article { padding: 10px; display: grid; grid-template-columns: minmax(130px, 1fr) minmax(120px, 1fr) 52px; align-items: center; gap: 10px; border: 1px solid var(--border); border-left-width: 4px; border-radius: 5px; }
+.option-stack article.best { border-left-color: var(--green); background: var(--green-bg); }
+.option-stack article div span, .option-stack article div strong { display: block; }
+.option-stack article div span { color: var(--muted); font-size: 9px; }
+.option-stack article div strong { margin-top: 3px; color: var(--strong); font-size: 11px; }
+.option-stack article label { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 9px; }
+.option-stack article input { min-width: 0; width: 100%; accent-color: var(--blue); }
+.option-stack article > b { color: var(--blue); font-size: 12px; text-align: right; }
+.target-grid { margin: 14px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.target-grid button.selected { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.stop-action { width: 100%; border-color: var(--blue); background: var(--blue-bg); color: var(--blue); }
+.stop-action:disabled { border-color: var(--border); background: var(--surface-2); color: var(--muted); cursor: not-allowed; }
+.selection-sequence { margin: 10px 0; padding: 10px; border: 1px dashed var(--border); border-radius: 5px; color: var(--strong); font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+@media (max-width: 1050px) {
+  .simulator-layout, .decision-lab { grid-template-columns: 1fr; }
+  .sim-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .sim-heading { align-items: flex-start; flex-direction: column; }
+  .sim-disclaimer { align-self: flex-start; }
+  .simulator-shell { min-height: 0; }
+  .sim-controls { grid-template-columns: 1fr; }
+  .sim-metrics { grid-template-columns: 1fr; }
+  .sim-metrics > div { border-right: 0; border-bottom: 1px solid var(--border); }
+  .sim-metrics > div:last-child { border-bottom: 0; }
+  .prize-event { grid-template-columns: 38px minmax(0, 1fr); }
+  .prize-event small { grid-column: 2; }
+  .decision-toolbar { grid-template-columns: 1fr; }
+  .option-stack article { grid-template-columns: 1fr 52px; }
+  .option-stack article label { grid-column: 1; }
+  .option-stack article > b { grid-column: 2; grid-row: 1 / span 2; }
+}

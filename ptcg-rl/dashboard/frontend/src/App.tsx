@@ -36,6 +36,7 @@ import {
   RecordValue,
   statusClass,
 } from "./api";
+import { LearningSimulators } from "./LearningSimulators";
 
 type PageName =
   | "command"
@@ -370,6 +371,7 @@ function Learning({ data }: { data: DashboardState }) {
   return (
     <section>
       <div className="page-heading"><div><p className="eyebrow">Beginner-first reference</p><h1>Learning Lab</h1></div><span className="count">Evidence boundaries included</span></div>
+      <LearningSimulators />
       {data.learning.map((record) => (
         <div key={asText(record.record_id)}>
           <section className="panel learning-intro"><header><div><p className="eyebrow">{asText(record.audience)}</p><h2>{asText(record.title)}</h2></div><Status value={record.status} /></header><p>This page explains the project from the game contract through training and evaluation. It is documentation, not proof of future strength.</p></section>
