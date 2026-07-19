@@ -1,11 +1,12 @@
 # Project Status
 
-Last updated UTC: 2026-07-18  
+Last updated UTC: 2026-07-19  
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
-Current gate: G1R environment/action/recurrent contract recertification  
-Gate status: BLOCKED / NOT_REVIEWED  
-Next review required before: G2, replay episode acquisition, or training
+Last completed gate: G1R environment/action/recurrent contract recertification (`PASS`)  
+Current gate: G2 plus parallel R1 work-order review  
+Gate status: NOT_STARTED / REVIEW_REQUIRED  
+Next review required before: G2 or R1 implementation; training remains unauthorized
 
 ## Mission Clock
 
@@ -40,7 +41,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 |---|---|---|---|
 | G0 Repository/environment | passed | `REPOSITORY_CONSOLIDATION_REPORT.md`, G0 reports | PASS with Packages waiver |
 | G1 Engine contract/tensor schema | superseded | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | historical smoke only |
-| G1R Contract recertification | blocked | `reports/gates/g1r.json`, `contracts/g1r_acceptance_plan.v1.json` | NOT_REVIEWED |
+| G1R Contract recertification | passed | `reports/gates/g1r.json`, `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md` | PASS |
 | R1 Replay/meta pipeline | not started | | |
 | G2 Model/action schema | not started | | |
 | G3a PPO correctness smoke | not started | | cloud smoke only |
@@ -52,18 +53,14 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 
 ## Active Experiments And Jobs
 
-No active long-running jobs. G1R contract repair, the one-million-operation
-corpus, exact rule-baseline integration, source build/load, and local verification
-are complete. Qualifying long acceptance runs have not started. Verified project
-compute cost remains USD `0`.
+No active long-running jobs. G1R contract repair, one-million-operation corpus,
+final-source parity, 10,080-game arena, throughput matrix, six-hour RSS soak, and
+independent raw-artifact review are complete. Verified project compute cost remains USD `0`.
 
 ## Open Blockers
 
-- Three independently recalculated G1R criteria remain missing: the 10,000-game
-  arena, qualifying throughput matrix, and six-hour RSS soak. The 1,000-game-per-library
-  shipped/built comparison passed. See `reports/gates/g1r.json`.
-- Matchup-cell, shipped/built tolerance, and RSS thresholds were accepted through the
-  unattended runner's explicit approval flag.
+- G1R has no open blocker. R0/R1 replay acquisition remains not started and transferred
+  zero episode JSON files.
 - The exact Python patch and timeout remain final submission-qualification notes,
   not G1R blockers.
 
@@ -91,9 +88,16 @@ compute cost remains USD `0`.
 - Evidence: `docs/decisions/DEC-008_G1_REOPENED.md`.
 - Stop condition: any missing criterion keeps G1R blocked.
 
+### DEC-009 - Close G1R
+
+- Decision: accept the final-source qualifying evidence and independent raw-artifact
+  recalculation; close G1R as `SUCCEEDED / PASS`.
+- Evidence: `docs/decisions/DEC-009_G1R_CLOSED.md`.
+- Next boundary: G2 plus parallel R1 require a fresh reviewed work order; training remains
+  unauthorized.
+
 ## Immediate Next Actions
 
-1. Approve or revise `docs/G1R_THRESHOLD_DECISION_PROPOSAL.md` once.
-2. Run the four remaining qualifying acceptance jobs using
-   `docs/G1R_ACCEPTANCE_COMMANDS.md` and retained immutable manifests.
-3. Run R0 manifest-only work only while a qualifying long G1R job is active.
+1. Review and authorize the G2 model/action-schema work order.
+2. Run R1 replay/meta manifest implementation in parallel under explicit transfer caps.
+3. After G2 review, launch the first small Colab/Kaggle training smoke; keep main training on Modal.

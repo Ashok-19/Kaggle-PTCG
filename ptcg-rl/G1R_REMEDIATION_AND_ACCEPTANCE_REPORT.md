@@ -2,18 +2,19 @@
 
 ## Outcome And Recommendation
 
-**Outcome: PARTIAL / BLOCKED / NOT_REVIEWED.** Keep G1R open. Do not begin G2,
-episode replay acquisition, PPO, deck promotion, or training. Contract remediation is
-complete, but four original acceptance criteria still lack qualifying evidence.
+**Outcome: SUCCEEDED / PASS.** Close G1R. The repaired contract and every original
+acceptance criterion passed an independent raw-artifact recalculation. Recommend G2
+deck/replay-meta implementation with parallel R1, but do not begin either in this work order.
 
 ## Repository State
 
 - Active repository: `Ashok-19/Kaggle-PTCG` only.
-- Evidence source commit: `7fee6493c2ea3f6181438265d141c879e464d2ab`.
-- Worktree at evidence collection: dirty with intentional G1R changes plus the
-  pre-existing untracked root `PTCG.zip` and root instruction file.
-- Local commits at report generation: none yet; the final response records any
-  intentional local commit created after restricted-file review.
+- Acceptance source commit: `c2540459428cfe99b2c587ab3a361abfacfd2db7`.
+- Acceptance source hash: `5a98d55f542d0bfafd333a94ba146b292691bfd1c6a907c21a4da167cd8ac6f8`.
+- Worktree during qualifying runs: dirty only because of the pre-existing untracked
+  root `PTCG.zip`; the manifest records its dirty digest.
+- Local implementation commits: `656b30af8d78b80aa8abe7e8d1adb68413269f6b` and
+  `c2540459428cfe99b2c587ab3a361abfacfd2db7`.
 - External mutations, pushes, submissions, paid jobs, and training: none.
 - Cost: USD `0`.
 
@@ -29,10 +30,10 @@ complete, but four original acceptance criteria still lack qualifying evidence.
 | Four exact native rule-agent/deck integrations | SUCCEEDED | 25/25 integration games, zero invalid/failure/fallback/post-terminal events |
 | Ubuntu 22.04 source build/load | SUCCEEDED | unmodified July 17 source compiled and loaded; built library hash below |
 | Shipped-versus-built qualifying comparison | SUCCEEDED | 1,000 games/library; ABI, type sets, distributions, and zero-error checks passed |
-| Balanced random/rule arena | BLOCKED | 10,080 games not reached because the first runner stopped at benchmark |
-| 1/2/4/8 throughput matrix | BLOCKED | first qualifying attempt exposed and retained a transient-negative-HP validator defect |
-| Six-hour RSS soak | BLOCKED | runner/resume proof exists; six-hour run not launched |
-| Independent artifact verdict | BLOCKED | recalculator correctly reports the three missing criteria |
+| Balanced random/rule arena | SUCCEEDED | 10,080/10,080 games, 36 ordered cells at 280 each, all error counters zero |
+| 1/2/4/8 throughput matrix | SUCCEEDED | 2,400/2,400 games across 12 points, zero failures, retained profile |
+| Six-hour RSS soak | SUCCEEDED | 21,600 active seconds, 1,693,121 games, zero unexpected failures, leak thresholds passed |
+| Independent artifact verdict | PASS | sealed raw evidence recomputed by `review/g1r_acceptance_review.py` |
 
 ## Contract Repair
 
@@ -65,34 +66,61 @@ complete, but four original acceptance criteria still lack qualifying evidence.
 
 ## Bounded Results
 
-- Current native smoke: 50/50 games; 2,475 requests; 2,253 meaningful choices;
-  222 forced requests; 46 multi-select requests; zero invalids, failures, timeouts,
-  fallbacks, or post-terminal actions. Observed maxima were 42 options and 3 selected.
-- Exact-rule integration: 25/25 complete with all error counters zero.
+- Qualifying arena: 10,080/10,080 games across 36 ordered policy-slot cells at 280
+  games each; 1,075,936 engine requests; player 0/1 realized first-player counts
+  7,518/2,562; zero invalid, failure, fallback, timeout, or post-terminal events.
+- Arena aggregate: 19.85 games/s, 2,117.78 choices/s; action latency p50/p95/p99
+  `0.579/1.013/2.338 ms`; peak RSS 149.32 MiB.
 - Valid-operation corpus: 1,000,000 operations across 935 structural cases in
   63.74 seconds; all 11 selection and 17 option enums covered synthetically.
-- Resume proof: an intentionally interrupted soak resumed from its immutable plan,
-  preserved earlier RSS samples, classified the forced worker death, and completed
-  with 222 games and zero unexpected failures.
-- Short RSS diagnostic only: 6.24 seconds, 247 games, peak 41,635,840 bytes. Its
-  short-window slopes and confidence intervals are not leak evidence and do not
-  substitute for the six-hour criterion.
+- Final-source engine comparison: 1,000 games/library; request-count KS `0.034`
+  against `0.10`; mean delta `2.19` against allowed `4.5514`; ABI, observed selection
+  and option sets, and error-counter checks all passed.
+- Throughput benchmark: 2,400/2,400 games, zero failures. Raw/encoded/rule choices/s
+  were worker 1 `404.12/325.86/451.54`, worker 2 `826.60/669.13/859.44`, worker 4
+  `1638.68/1062.35/1600.66`, and worker 8 `1976.12/1827.82/2545.20`.
+- Benchmark p99 action latency stayed at or below `0.307 ms` raw, `0.207 ms` encoded,
+  and `2.188 ms` rule-policy. Profile SHA-256 is
+  `79dcda2d169495c590d76b1f190fa14bd17a1507c59b7a8c61c2fb7ab99cf4dc`.
+- RSS soak: exactly 21,600 active seconds and 1,693,121 complete games; zero invalid,
+  failure, fallback, post-terminal, or unexpected worker-death events; one forced death
+  and replacement; peak RSS 43.51 MiB against 2 GiB/worker.
+- Four eligible worker slope estimates were `-0.0851`, `0.0435`, `0.0993`, and
+  `0.0018 MiB/hour`; worst 95% upper bound was `0.1627`, below `1.0 MiB/hour`.
+- Acceptance elapsed about 6 hours 59 minutes including the intentional interruption;
+  qualifying soak active time was exactly six hours. Independent final-source comparison,
+  raw review, and final verification added about two minutes. Local cost remained USD `0`.
+- Config hashes: arena
+  `11ce92f1890beca4446642ee3abdbb6977a115807d909a5b10a7996ab2541106`, benchmark
+  `08c247693e761af3272d7ee26f7e28a223d865317d06436819cf232b773d444b`, soak
+  `6597408501b400cf0abc73f6decaf1cdc372a9d7224a3616fc7f0239c25b21be`, comparison
+  `bfad694243d3ebdc3944e289ddee530d3ea962210a7ffcee60fcc3995a57c672`.
 
-The one-game-per-point throughput diagnostic is not a qualifying benchmark. Choices/s
-for raw, encoded, and rule modes respectively were: worker 1 `1541.68/163.95/429.09`,
-worker 2 `279.66/155.63/414.96`, worker 4 `1387.16/211.17/failed`, and worker 8
-`185.13/192.89/433.52`. The sample is too small and includes one rule-worker failure.
-The retained profile (`34ed45a2584dc769dc6a34534a8a6894141e9e02a61e8f82b4ec0f1d72c52214`)
-identifies recursive `dataclasses.asdict`
-serialization as the dominant encoded overhead. A larger qualifying matrix remains due.
+Qualifying benchmark values (exact floats remain in the sealed manifest):
+
+| Workers | Mode | Games/s | Choices/s | p50 ms | p95 ms | p99 ms |
+|---:|---|---:|---:|---:|---:|---:|
+| 1 | raw-engine | 10.292 | 404.116 | 0.129414 | 0.178721 | 0.210219 |
+| 1 | encoded-observation | 7.387 | 325.861 | 0.045745 | 0.088976 | 0.140239 |
+| 1 | rule-policy | 2.841 | 451.542 | 0.443066 | 0.653006 | 1.266691 |
+| 2 | raw-engine | 21.484 | 826.604 | 0.127528 | 0.175508 | 0.206936 |
+| 2 | encoded-observation | 15.365 | 669.133 | 0.043231 | 0.077173 | 0.117192 |
+| 2 | rule-policy | 5.690 | 859.442 | 0.450609 | 0.686180 | 1.288132 |
+| 4 | raw-engine | 36.419 | 1638.684 | 0.131858 | 0.184029 | 0.214968 |
+| 4 | encoded-observation | 27.264 | 1062.351 | 0.055803 | 0.100849 | 0.157280 |
+| 4 | rule-policy | 10.073 | 1600.657 | 0.496145 | 0.754484 | 1.510016 |
+| 8 | raw-engine | 47.474 | 1976.115 | 0.145617 | 0.235222 | 0.307436 |
+| 8 | encoded-observation | 41.956 | 1827.818 | 0.072844 | 0.121033 | 0.207077 |
+| 8 | rule-policy | 16.741 | 2545.203 | 0.578137 | 0.961630 | 2.188235 |
 
 ## R0 Disposition
 
 - Index manifests transferred: `0` files, `0` bytes.
 - Daily manifests transferred: `0` files, `0` bytes.
 - Episode JSON transferred: `0` files, `0` bytes.
-- Reason: the work order permits R0 implementation only while a qualifying long G1R
-  run is active. No such run was authorized or launched.
+- One read-only Kaggle metadata query confirmed index dataset version 32; the user then
+  explicitly paused all work until the acceptance run finished. No manifest transfer was
+  attempted, so R0 remains a next-gate task rather than evidence for G1R.
 - Replay action alignment remains an unresolved behavior-cloning blocker, not a fact.
 
 ## Evidence And Dashboard
@@ -103,16 +131,25 @@ serialization as the dominant encoded overhead. A larger qualifying matrix remai
 - Every journal entry records UTC time, argv, exit code, duration, and stdout/stderr
   hashes. Signed query strings are redacted.
 - Raw run directories are unique and ignored. Completed manifests have sidecar seals.
-- The dashboard rebuild ingested 24 records with zero quarantine before final
-  verification; legacy self-verdicts are projected as `SUCCEEDED / NOT_REVIEWED`,
-  never as gate `PASS`.
+- Final dashboard tests, production build, rebuild (36 records, zero quarantine), and
+  doctor all passed; legacy
+  self-verdicts remain projected as `SUCCEEDED / NOT_REVIEWED` unless a reviewed gate
+  decision exists.
 - Independent recalculation source: `ptcg g1 recalculate-gate` and
   `reports/gates/g1r.json`.
 - First unattended receipt:
   `runs/g1r-user-long-acceptance/completion-receipt-20260718T140302Z.json`.
+- Final unattended receipt:
+  `runs/g1r-user-long-acceptance/completion-receipt-20260718T205756Z.json`; journal
+  14 entries, SHA-256
+  `94989e7f97a024ebf29a993fe7f038dddb221a93b6e39c65093f46384693cb61`.
 - Receipt review/fix journal:
   `runs/g1r-receipt-review-20260718T1420Z/command-journal.jsonl`; repaired source hash
   `5a98d55f542d0bfafd333a94ba146b292691bfd1c6a907c21a4da167cd8ac6f8`.
+- Independent raw review:
+  `runs/g1r-independent-review-pass-20260719/run_manifest.json`; all six review groups
+  passed. The first review attempt is retained and records a reviewer-only flattened-record
+  parsing defect corrected before the passing attempt.
 
 ## Deviations And Residual Risk
 
@@ -123,6 +160,9 @@ serialization as the dominant encoded overhead. A larger qualifying matrix remai
   failed benchmark remains immutable. The validator now preserves that legal observation,
   a regression covers it, and 100 focused rule games plus a 12-point development
   benchmark passed before retry.
+- The original comparison preceded that contract fix. A final-source 1,000-game/library
+  comparison was therefore rerun during review and passed; no old-source comparison is
+  used for the final decision.
 - The unattended host runner `scripts/g1r_run_long_acceptance.sh` is resumable for
   interrupted arena/soak work, journals every command, and refreshes the independent
   verdict and dashboard on exit. The separate Docker launcher remains available if a
@@ -132,8 +172,7 @@ serialization as the dominant encoded overhead. A larger qualifying matrix remai
 
 ## Next Action
 
-Approve or revise `docs/G1R_THRESHOLD_DECISION_PROPOSAL.md`, then run
-`bash scripts/g1r_run_long_acceptance.sh --accept-proposed-thresholds`. It executes only
-the four blocked repetitive jobs and updates the dashboard automatically. Run R0's two
-manifest-only transfers concurrently with one of those long jobs. Independently review
-the retained artifacts; proceed to G2 only if every criterion passes.
+Close G1R. The next reviewed gate is G2: replay/meta manifest implementation plus
+quantitative deck discovery, with R1 replay acquisition permitted under its own explicit
+caps. After G2 review, run the first small Colab/Kaggle training smoke. Do not begin PPO,
+deck promotion, or Modal training from this report alone.

@@ -1,18 +1,17 @@
 # Progress Report
 
 Current gate: **G1R contract recertification**  
-Outcome: **BLOCKED / NOT_REVIEWED**  
+Outcome: **SUCCEEDED / PASS**  
 Cost: **USD 0**
 
 The reviewed false-pass, loaded-asset provenance, adapter-boundary validation,
 terminal parsing, fail-closed semantic, STOP trace, recurrent lifecycle, failure-mode,
 and evidence-reproducibility defects are repaired and regression tested.
 
-Current retained evidence includes 57 passing Python tests, Ruff, dashboard tests/build,
-asset and contract validation, a 1,000,000-valid-operation corpus, a 257-event log burst,
-forced worker replacement, all four exact rule-agent/deck bindings, a clean 25-game
-integration matrix, a clean 50-game native smoke, Ubuntu 22.04 source build/load, profiling,
-and interrupted-run resume proof. These are technical successes, not a gate `PASS`.
+Current retained evidence includes 58 passing Python tests, Ruff, dashboard tests/build,
+asset and contract validation, 1,000,000 valid operations, a 257-event log burst, final-source
+engine parity, 10,080 arena games, 2,400 benchmark games, and a six-hour RSS soak with
+1,693,121 games. All required error counters are zero and the independent raw review passed.
 
 Authoritative evidence:
 
@@ -23,10 +22,9 @@ Authoritative evidence:
 - ignored one-million corpus and verification manifests under `runs/`
 - `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md`
 
-The unattended run passed the 1,000-game-per-library shipped/built comparison. Its
-benchmark attempt retained 71 failures caused by an overly strict negative-HP check during
-native knockout cleanup; the contract fix and focused reruns now pass. Independent
-recalculation leaves G1R blocked on the throughput matrix, 10,000-game arena, and six-hour
-RSS soak. Re-running the same command skips comparison, retries benchmark, and then runs
-the remaining jobs before refreshing the dashboard. R0 still contains zero episode JSON
-files. No training or meaningful self-play ran locally.
+The first benchmark attempt exposed a transient-negative-HP contract defect; its evidence
+is retained, the fix is regression tested, and the qualifying retry passed. Final-source
+parity and the independent raw-artifact recalculation also passed. R0 transferred zero
+manifest or episode files because the user paused work during the permitted window. No
+training or meaningful self-play ran locally. Next recommendation: G2 plus parallel R1
+replay/meta implementation under a fresh reviewed work order.

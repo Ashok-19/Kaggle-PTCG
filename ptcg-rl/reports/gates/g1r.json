@@ -1,22 +1,20 @@
 {
-  "approved_next_action": "Complete only the blocked G1R acceptance criteria.",
-  "blockers": [
-    "10,000 complete balanced natural-deployment games",
-    "six-hour RSS soak with slope confidence interval"
-  ],
+  "acceptance_source_sha256": "5a98d55f542d0bfafd333a94ba146b292691bfd1c6a907c21a4da167cd8ac6f8",
+  "approved_next_action": "G2 plus parallel R1 replay/meta implementation after review",
+  "blockers": [],
   "cost_usd": 0.0,
   "created_at_utc": "2026-07-18T12:00:00Z",
-  "decision": "NOT_REVIEWED",
+  "decision": "PASS",
   "gate_id": "G1R",
   "producer": "ptcg.g1r.verdict",
   "producer_version": "1",
   "record_id": "gate-g1r-20260718",
   "schema_version": 1,
   "source_path": "reports/gates/g1r.json",
-  "status": "BLOCKED",
+  "status": "SUCCEEDED",
   "technical_checks": [
     {
-      "evidence": "runs/g1r-verification-20260718T141830.227146Z-e2194168766b/run_manifest.json",
+      "evidence": "runs/g1r-verification-20260719T051957.381405Z-7515a886887f/run_manifest.json",
       "name": "contract regressions and complete verification suite",
       "status": "SUCCEEDED"
     },
@@ -31,33 +29,38 @@
       "status": "SUCCEEDED"
     },
     {
-      "evidence": "runs/g1r-preflight-20260718T115802Z/rule-baseline-arena-25-v2/run_manifest.json",
+      "evidence": "runs/g1r-user-long-acceptance/arena/run_manifest.json",
       "name": "four exact rule-agent/deck integrations",
       "status": "SUCCEEDED"
     },
     {
-      "evidence": null,
+      "evidence": "runs/g1r-user-long-acceptance/arena/run_manifest.json",
       "name": "10,000 complete balanced natural-deployment games",
-      "status": "BLOCKED"
+      "status": "SUCCEEDED"
     },
     {
-      "evidence": "runs/g1r-user-long-acceptance/engine-compare/run_manifest.json",
+      "evidence": "runs/g1r-engine-compare-final-source-20260719/run_manifest.json",
       "name": "Ubuntu 22.04 shipped-versus-built comparison",
       "status": "SUCCEEDED"
     },
     {
-      "evidence": "runs/g1r-benchmark-auto-profile-debug-20260718/run_manifest.json",
+      "evidence": "runs/g1r-user-long-acceptance/benchmark-attempt-2/run_manifest.json",
       "name": "raw/encoded/rule throughput at 1/2/4/8 workers",
       "status": "SUCCEEDED"
     },
     {
-      "evidence": null,
+      "evidence": "runs/g1r-user-long-acceptance/rss-soak/run_manifest.json",
       "name": "six-hour RSS soak with slope confidence interval",
-      "status": "BLOCKED"
+      "status": "SUCCEEDED"
+    },
+    {
+      "evidence": "runs/g1r-independent-review-pass-20260719/run_manifest.json",
+      "name": "independent raw-artifact recalculation",
+      "status": "SUCCEEDED"
     }
   ],
   "title": "G1 environment/action/recurrent contract recertification",
-  "updated_at_utc": "2026-07-18T14:18:50.947283+00:00",
+  "updated_at_utc": "2026-07-19T05:28:01Z",
   "warnings": [
     "Native engine trajectories are nondeterministic; no paired-seed claim is made.",
     "Observed coverage and maxima are not engine guarantees."
