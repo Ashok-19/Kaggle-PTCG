@@ -53,6 +53,18 @@ def test_ongoing_and_every_terminal_result_branch_before_selection() -> None:
         assert request is None
 
 
+def test_pending_first_player_sentinel_is_normalized_to_missing() -> None:
+    raw = raw_observation()
+    raw["current"]["firstPlayer"] = -1
+    observation, request = semantic_snapshot(raw, "pregame", 0, CARD_HASH)
+    assert request is not None
+    assert observation.first_player is None
+
+    raw["current"]["firstPlayer"] = 2
+    with pytest.raises(ContractViolation, match="player 0 or 1"):
+        semantic_snapshot(raw, "invalid-first-player", 0, CARD_HASH)
+
+
 def test_transient_knockout_preserves_negative_native_hp() -> None:
     raw = raw_observation()
     raw["current"]["players"][0]["bench"] = [{

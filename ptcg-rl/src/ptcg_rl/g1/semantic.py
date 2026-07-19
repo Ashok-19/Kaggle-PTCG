@@ -252,6 +252,12 @@ def _player(value: Any, field: str) -> int:
     return result
 
 
+def _optional_player(value: Any, field: str) -> int | None:
+    if value is None or value == -1:
+        return None
+    return _player(value, field)
+
+
 def _entity_key(owner: int, serial: int) -> str:
     return f"p{owner}:s{serial}"
 
@@ -685,7 +691,7 @@ def semantic_snapshot(
         terminal_result=terminal_result,
         turn=_nonnegative(current["turn"], "current.turn"),
         turn_action_count=_nonnegative(current["turnActionCount"], "current.turnActionCount"),
-        first_player=_optional_integer(current.get("firstPlayer"), "current.firstPlayer"),
+        first_player=_optional_player(current.get("firstPlayer"), "current.firstPlayer"),
         supporter_played=_boolean(current["supporterPlayed"], "current.supporterPlayed"),
         stadium_played=_boolean(current["stadiumPlayed"], "current.stadiumPlayed"),
         energy_attached=_boolean(current["energyAttached"], "current.energyAttached"),
