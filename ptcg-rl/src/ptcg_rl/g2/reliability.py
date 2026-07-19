@@ -122,8 +122,10 @@ class AuditedRecurrentLedgerV1(RecurrentRequestLedger):
 
     def audit_record(self) -> dict[str, Any]:
         return {
-            "active_keys_after": self.active_keys,
-            "reset_events": self.reset_events,
+            "active_keys_after": [list(key) for key in self.active_keys],
+            "reset_events": [
+                [list(key), reason] for key, reason in self.reset_events
+            ],
             "stale_requests": self.stale_requests,
             "out_of_order_requests": self.out_of_order_requests,
             "ownership_violations": self.ownership_violations,
@@ -458,10 +460,11 @@ def validate_game_record(record: Mapping[str, Any]) -> list[str]:
     for field_name in ZERO_TOLERANCE_LEDGER_FIELDS:
         if ledger.get(field_name) != 0:
             failures.append(f"ledger {field_name} is nonzero")
-    if ledger.get("active_keys_after") != []:
+    active_keys_after = ledger.get("active_keys_after")
+    if not isinstance(active_keys_after, (list, tuple)) or active_keys_after:
         failures.append("recurrent ledger retains active keys")
     reset_events = ledger.get("reset_events")
-    if not isinstance(reset_events, list) or len(reset_events) != 4:
+    if not isinstance(reset_events, (list, tuple)) or len(reset_events) != 4:
         failures.append("recurrent ledger reset event count differs")
     else:
         reasons = [

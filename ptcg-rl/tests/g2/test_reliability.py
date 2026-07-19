@@ -300,6 +300,28 @@ def test_execute_inference_batch_rejects_nonfinite_outputs(
         )
 
 
+def test_ledger_evidence_is_canonical_in_memory_and_accepts_empty_tuple_legacy_shape() -> None:
+    ledger = AuditedRecurrentLedgerV1()
+    ledger.reset_episode("episode", 0, "policy", reason="start")
+    ledger.reset_episode("episode", 1, "policy", reason="start")
+    ledger.reset_episode("episode", 0, "policy", reason="terminal")
+    ledger.reset_episode("episode", 1, "policy", reason="terminal")
+    evidence = ledger.audit_record()
+    assert evidence["active_keys_after"] == []
+    assert evidence["reset_events"] == [
+        [["episode", 0, "policy"], "start"],
+        [["episode", 1, "policy"], "start"],
+        [["episode", 0, "policy"], "terminal"],
+        [["episode", 1, "policy"], "terminal"],
+    ]
+    record = valid_game_record()
+    record["ledger"]["active_keys_after"] = ()
+    record["ledger"]["reset_events"] = tuple(
+        tuple(event) for event in record["ledger"]["reset_events"]
+    )
+    assert validate_game_record(record) == []
+
+
 def test_validate_game_record_accepts_exact_record_and_rejects_each_zero_counter() -> None:
     record = valid_game_record()
     assert validate_game_record(record) == []
