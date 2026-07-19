@@ -1,0 +1,47 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "hypothesis-h001",
+    "created_at_utc": "2026-07-19T06:30:00Z",
+    "source_path": "reports/hypotheses/current.json",
+    "producer": "chatgpt-local-agent",
+    "hypothesis_id": "H001",
+    "title": "Compact semantic recurrence is sufficient for G2",
+    "status": "ACTIVE",
+    "priority": 1,
+    "statement": "A roughly one-million-parameter entity-attention plus GRU policy can score the complete legal option set, preserve public history and meet strict CPU reliability limits.",
+    "evidence_for": "G1R provides a complete semantic option, compound action and recurrent lifecycle boundary; Orbit Wars solutions show small inference models can be strong when representation and rollout systems are efficient.",
+    "evidence_against": "No neural model or CABT learning result exists in this repository.",
+    "next_test": "Implement the model-facing projection and measure parameter count, permutation parity, gradients, CPU latency and complete-game reliability."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "hypothesis-h002",
+    "created_at_utc": "2026-07-19T06:30:00Z",
+    "source_path": "reports/hypotheses/current.json",
+    "producer": "chatgpt-local-agent",
+    "hypothesis_id": "H002",
+    "title": "Recent replay intelligence will improve deck selection",
+    "status": "QUEUED",
+    "priority": 2,
+    "statement": "A version-pinned, bias-labeled seven-day replay sample will produce a more defensible deck shortlist and evaluation population than choosing from sample-agent decks alone.",
+    "evidence_for": "The competition publishes daily episode datasets with exact deck submissions recoverable from valid replays.",
+    "evidence_against": "Daily top episodes are selected and may not represent the full ladder; no current corpus has been transferred.",
+    "next_test": "Verify the current manifests, execute the approved capped sample and report exact deck/archetype coverage with selection-bias warnings."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "hypothesis-h003",
+    "created_at_utc": "2026-07-19T06:30:00Z",
+    "source_path": "reports/hypotheses/current.json",
+    "producer": "chatgpt-local-agent",
+    "hypothesis_id": "H003",
+    "title": "Strict recurrent PPO can reach anchor competence",
+    "status": "QUEUED",
+    "priority": 3,
+    "statement": "Terminal-reward recurrent PPO can exceed the strict G3b thresholds within five million non-forced choices per seed when trained against exact rule anchors and frozen policies.",
+    "evidence_for": "The action space is legality-filtered and the fixed-deck specialist reduces the learning problem.",
+    "evidence_against": "No PPO implementation or learning curve exists; public reports include PPO failures and collapse cases.",
+    "next_test": "Only after G2 passes, run the preregistered three-seed G3a and G3b stages in private Kaggle notebooks."
+  }
+]

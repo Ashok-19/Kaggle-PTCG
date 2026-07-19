@@ -1,0 +1,28 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "decision-dec-009",
+    "created_at_utc": "2026-07-19T05:28:01Z",
+    "source_path": "docs/decisions/DEC-009_G1R_CLOSED.md",
+    "producer": "decision-sidecar",
+    "decision_id": "DEC-009",
+    "title": "Close G1R",
+    "status": "ACCEPTED",
+    "decision": "Accept the independently recalculated G1R environment, action, recurrent, failure-mode and provenance contract as SUCCEEDED / PASS.",
+    "rationale": "All original G1 criteria and remediation requirements passed on final-source evidence.",
+    "revisit_trigger": "A reproducible environment or action-contract defect appears in later work."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "decision-dec-010",
+    "created_at_utc": "2026-07-19T06:30:00Z",
+    "source_path": "docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md",
+    "producer": "decision-sidecar",
+    "decision_id": "DEC-010",
+    "title": "Authorize G2/R1 and strict evaluation",
+    "status": "ACCEPTED",
+    "decision": "Implement G2 and parallel R1, expand the dashboard fully, use Kaggle notebooks for heavy workflows and enforce strict gold-oriented evaluation thresholds.",
+    "rationale": "G1R is closed; the remaining schedule requires parallel model and meta intelligence work without weakening evidence gates.",
+    "revisit_trigger": "A threshold is proven infeasible for reasons unrelated to policy strength, or the competition/runtime contract changes."
+  }
+]

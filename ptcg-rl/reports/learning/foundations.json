@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "record_id": "learning-foundations-v1",
+  "created_at_utc": "2026-07-19T06:30:00Z",
+  "updated_at_utc": "2026-07-19T06:30:00Z",
+  "source_path": "reports/learning/foundations.json",
+  "producer": "chatgpt-local-agent",
+  "title": "PTCG RL campaign foundations",
+  "status": "CURRENT",
+  "audience": "Beginner",
+  "sections": [
+    {
+      "id": "mission",
+      "title": "What the agent must do",
+      "summary": "The submitted program returns one fixed 60-card deck, then repeatedly chooses indices from the engine's current legal option list. The final objective is game outcome, not prize margin.",
+      "why_it_matters": "The policy should rank the legal options it actually receives instead of learning a huge fixed action vocabulary."
+    },
+    {
+      "id": "partial-observation",
+      "title": "Why memory is required",
+      "summary": "Opponent hands, prizes and deck order are hidden. Public logs and previous reveals may disappear from the current snapshot, so separate recurrent memory is kept for each player and episode.",
+      "why_it_matters": "A stateless policy can forget revealed cards, prior actions and public context that change the best move."
+    },
+    {
+      "id": "g1r",
+      "title": "What G1R proved",
+      "summary": "The environment now checks terminal state first, preserves every legal option and log event, validates compound actions, isolates recurrent state and retains auditable evidence.",
+      "why_it_matters": "Training on a wrong action or lifecycle contract would create convincing but unusable learning curves."
+    },
+    {
+      "id": "g2",
+      "title": "What G2 must build",
+      "summary": "G2 converts public cards, players, events and legal options into model-ready tensors, then adds a compact entity-attention encoder, GRU memory, semantic option scorer, STOP-aware multi-select decoder and value head.",
+      "why_it_matters": "G2 is the bridge between a correct simulator adapter and any valid PPO trajectory."
+    },
+    {
+      "id": "r1",
+      "title": "Why replay data is separated",
+      "summary": "Public replays are used for deck/meta intelligence, context coverage and diagnosis. Their actions are not PPO samples or behavior-cloning labels in v0.",
+      "why_it_matters": "This prevents selected public behavior from silently changing the approved reward-only learning boundary."
+    },
+    {
+      "id": "evaluation",
+      "title": "Why strict gates are used",
+      "summary": "Reliability and important-matchup floors are checked before aggregate strength. A newer checkpoint is not automatically better, and unresolved evidence cannot replace the trusted anchor.",
+      "why_it_matters": "Self-play and small match samples can produce false improvements, cycles and catastrophic matchup regressions."
+    },
+    {
+      "id": "compute",
+      "title": "Where work runs",
+      "summary": "Local work handles correctness and small tests. Private Kaggle notebooks handle heavy validation and bounded training smoke. Modal is reserved for approved main training.",
+      "why_it_matters": "The compute plan preserves budget while keeping every heavy result tied to committed code and durable artifacts."
+    }
+  ],
+  "boundaries": [
+    "No episode JSON transfer before the immutable R1 plan is reviewed.",
+    "No PPO training before G2 and evaluation implementation review.",
+    "No Modal execution, deck freeze, submission or Git push without explicit approval."
+  ]
+}

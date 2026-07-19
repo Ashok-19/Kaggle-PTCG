@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "record_id": "cost-project-20260719",
+  "created_at_utc": "2026-07-19T06:30:00Z",
+  "updated_at_utc": "2026-07-19T06:30:00Z",
+  "source_path": "reports/costs/project.json",
+  "producer": "chatgpt-local-agent",
+  "title": "Verified project compute cost",
+  "status": "VERIFIED",
+  "actual_usd": 0.0,
+  "platform_breakdown": {
+    "local": 0.0,
+    "kaggle": 0.0,
+    "colab": 0.0,
+    "modal": 0.0
+  },
+  "note": "Quota availability is not recorded as spend. No paid compute or training has run."
+}
