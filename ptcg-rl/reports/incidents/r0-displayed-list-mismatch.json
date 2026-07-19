@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "record_id": "incident-r0-displayed-list-mismatch-20260719",
+  "created_at_utc": "2026-07-19T09:40:00Z",
+  "updated_at_utc": "2026-07-19T10:06:14Z",
+  "source_path": "reports/incidents/r0-displayed-list-mismatch.json",
+  "producer": "chatgpt-local-agent",
+  "incident_id": "INC-R1-R0-DISPLAYED-LIST-MISMATCH",
+  "gate_id": "R1",
+  "severity": "HIGH",
+  "classification": "AUTHORIZATION_PRESENTATION_MISMATCH",
+  "state": "SUCCEEDED",
+  "title": "Manually displayed episode list differed from the hash-bound R0 plan",
+  "impact": "The prior chat summary showed incorrect episode filenames. Fail-closed revalidation occurred before any episode transfer, so zero incorrect files were downloaded and no private or tracked artifact was contaminated.",
+  "containment": "Transfer was paused; remote dataset versions, manifest hashes, plan hash and canonical selected_items were revalidated. The planner hash implementation was inspected and proved to bind every selected filename and declared byte count.",
+  "root_cause": "The human-readable list was manually transcribed instead of being generated directly from the canonical plan artifact.",
+  "corrective_action": "Acquire only the selected_items embedded in the approved plan whose SHA-256 is eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934 and record an exact-set acquisition audit.",
+  "regression_test": "The acquisition verifier rejects missing, extra, partial, size-drifted, malformed, nonterminal, misaligned or unresolvable files. The completed audit found 20 expected files, 20 observed files, zero extras, zero missing files and audit SHA-256 603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe.",
+  "prevention": "Future approval displays must be rendered from the immutable plan artifact and include its recalculated hash; manually maintained filename lists are non-authoritative.",
+  "wrong_files_downloaded": 0,
+  "evidence": [
+    "private/replays/plans/r0-2026-07-18.json",
+    "src/ptcg_rl/replay/planner.py",
+    "reports/replays/r0-acquisition-summary.json"
+  ]
+}

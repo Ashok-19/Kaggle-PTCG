@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "record_id": "learning-replay-r0-findings-20260719",
+  "created_at_utc": "2026-07-19T10:06:14Z",
+  "updated_at_utc": "2026-07-19T10:06:14Z",
+  "source_path": "reports/learning/replay-r0-findings.json",
+  "producer": "chatgpt-local-agent",
+  "title": "How the approved replay sample is organized",
+  "status": "CURRENT",
+  "audience": "Beginner to advanced",
+  "sections": [
+    {
+      "id": "episode-shape",
+      "title": "Episode and step structure",
+      "summary": "Each replay is a completed two-agent episode. The approved sample contains 20 episodes and 3,039 environment steps, with both agents marked DONE at the end.",
+      "why_it_matters": "A replay is a time-ordered interaction, not a flat list of independent game positions."
+    },
+    {
+      "id": "initialization",
+      "title": "Initialization is separate from gameplay",
+      "summary": "Step 0 is an empty active initialization record for both agents. Step 1 contains each agent's 60-card deck action. Gameplay choices begin after that transition.",
+      "why_it_matters": "Deck initialization must not be mistaken for an ordinary legal-option decision."
+    },
+    {
+      "id": "lagged-actions",
+      "title": "Actions are lag-aligned",
+      "summary": "The action recorded at step t answers the selection request shown in the same agent's preceding active record at step t-1, not the select object stored beside that action.",
+      "why_it_matters": "Training on same-row observation/action pairs would create incorrect supervision even though the JSON parses successfully."
+    },
+    {
+      "id": "semantic-decoding",
+      "title": "Transport integers are not action meaning",
+      "summary": "Recorded actions are integer lists while legal options are structured objects containing fields such as type, area, index, attackId or in-play position. The integer encoding varies by request family.",
+      "why_it_matters": "The loader must resolve each transport integer to the correct semantic option before using replay decisions for analysis or learning."
+    },
+    {
+      "id": "sample-bias",
+      "title": "The sample is useful but biased",
+      "summary": "The daily dataset is selected by episode ratings and capped. It is valuable for format discovery and elite-play hypotheses but is not an unbiased estimate of the hidden evaluation distribution.",
+      "why_it_matters": "Ideas learned from these episodes still require controlled engine evaluation against the frozen benchmark suite."
+    }
+  ],
+  "observed_limits": {
+    "episodes": 20,
+    "total_steps": 3039,
+    "minimum_steps": 46,
+    "maximum_steps": 217,
+    "maximum_legal_options": 34,
+    "maximum_selection_count": 14,
+    "empty_but_legal_selections": 17
+  },
+  "boundaries": [
+    "Replay bodies remain private and are not served by the dashboard.",
+    "This structural audit does not claim that behavior-cloning supervision is ready.",
+    "No additional episode download or training is authorized by this learning record."
+  ]
+}

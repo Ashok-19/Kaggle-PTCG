@@ -2,13 +2,17 @@
   "schema_version": 1,
   "record_id": "replay-r0-plan-summary-20260719",
   "created_at_utc": "2026-07-19T08:01:00Z",
-  "updated_at_utc": "2026-07-19T08:01:00Z",
+  "updated_at_utc": "2026-07-19T10:06:14Z",
   "source_path": "reports/replays/r0-plan-summary.json",
   "producer": "chatgpt-local-agent",
-  "title": "R0 immutable episode dry-run",
-  "status": "BLOCKED",
+  "title": "R0 immutable episode acquisition",
+  "status": "SUCCEEDED",
   "gate_id": "R1",
-  "blocker": "Explicit user approval is required before transferring any selected episode JSON.",
+  "authorization": {
+    "state": "USER_APPROVED",
+    "approved_plan_sha256": "eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934",
+    "approval_received_at_utc": "2026-07-19T09:24:00Z"
+  },
   "planner_commit": "c832fd1916c7c561ef34cdcb1b217acc69e79aa1",
   "planner_version": "r0-stratified-v1",
   "plan_sha256": "eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934",
@@ -45,10 +49,22 @@
   },
   "verification": {
     "plan_hash_recalculated": "PASS",
+    "remote_versions_revalidated": "PASS",
     "file_count_cap": "PASS",
     "total_byte_cap": "PASS",
     "per_file_cap": "PASS",
-    "episode_json_transferred": 0
+    "episode_json_transferred": 20,
+    "observed_bytes": 83981423,
+    "exact_file_set": "PASS",
+    "exact_declared_sizes": "PASS",
+    "json_parse": "PASS",
+    "terminal_contract": "PASS",
+    "lagged_action_alignment": "PASS",
+    "selection_count_violations": 0,
+    "unresolvable_actions": 0,
+    "idempotent_read_only_reaudit": "PASS",
+    "audit_sha256": "603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe",
+    "evidence": "reports/replays/r0-acquisition-summary.json"
   },
   "cost_usd": 0.0
 }

@@ -1,0 +1,446 @@
+{
+  "acquisition": {
+    "expected_files": 20,
+    "extra_files": 0,
+    "json_parse_failures": 0,
+    "max_file_bytes": 6303684,
+    "missing_files": 0,
+    "observed_files": 20,
+    "partial_files": 0,
+    "size_mismatches": 0,
+    "total_bytes": 83981423
+  },
+  "audit_sha256": "603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe",
+  "audit_version": "r0-acquisition-v1",
+  "created_at_utc": "2026-07-19T10:06:14Z",
+  "files": [
+    {
+      "declared_bytes": 5667711,
+      "episode_id": "86594879",
+      "filename": "86594879.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 5667711,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "b17036f17705c65eec88f19c7c1fbcce7e54541e594afd013a77f258205dc64b",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 193
+    },
+    {
+      "declared_bytes": 4706913,
+      "episode_id": "86599658",
+      "filename": "86599658.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4706913,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "04f7a8da28128ecde181118686656e6e716b8b171b613fea0cac38eee50e3145",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 171
+    },
+    {
+      "declared_bytes": 3043849,
+      "episode_id": "86616329",
+      "filename": "86616329.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 3043849,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "4a945ea8b7ceea86d467980acb1a640163cca574c69ee8545d74f1424fce94a5",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 118
+    },
+    {
+      "declared_bytes": 4403573,
+      "episode_id": "86638305",
+      "filename": "86638305.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4403573,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "b54aa202abfee6b9db76b26dd15b9ab4e6b76849a11f9b9603ce5a2f63013e9e",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 158
+    },
+    {
+      "declared_bytes": 4781882,
+      "episode_id": "86648505",
+      "filename": "86648505.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4781882,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "fcbac06548d061bd535a49706790ab5f700968d0c43bca4b72fd40d6c534cfcb",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 167
+    },
+    {
+      "declared_bytes": 2909962,
+      "episode_id": "86651689",
+      "filename": "86651689.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 2909962,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "197ff0fa84128284f84dd345f9fd56fefcdbe89e87f4910a9af84412911267ee",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 111
+    },
+    {
+      "declared_bytes": 3512991,
+      "episode_id": "86661298",
+      "filename": "86661298.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 3512991,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "90f1e24426273f1912a2c20ef07c916e29b564c8549d2488ca97ebf78d27850b",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 131
+    },
+    {
+      "declared_bytes": 4115998,
+      "episode_id": "86669768",
+      "filename": "86669768.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4115998,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "997e8c1ed94ac8a8b78e91394d16b26d7c574377f59ccd21d3bc1fe142666e77",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 146
+    },
+    {
+      "declared_bytes": 4987452,
+      "episode_id": "86676250",
+      "filename": "86676250.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4987452,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "ad64f150de14ae858e917070aaf2803da51a48d21c1dc0216be965a83a2b0753",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 177
+    },
+    {
+      "declared_bytes": 977115,
+      "episode_id": "86694466",
+      "filename": "86694466.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 977115,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "13d8abb554891a85d1eb37881586ac8a92ff6a735f6eb3a3a2d976476e2d7caf",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 46
+    },
+    {
+      "declared_bytes": 3101376,
+      "episode_id": "86715249",
+      "filename": "86715249.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 3101376,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "c2f76a6c665740dd6f0765ad5cf799be4b8d059d09a9e41392f669fef6c5a34d",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 122
+    },
+    {
+      "declared_bytes": 4970971,
+      "episode_id": "86716291",
+      "filename": "86716291.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4970971,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "fa11fc7a9bfbbd9088ccf2e12f2b039d2502032366640467347459aead6b31c1",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 178
+    },
+    {
+      "declared_bytes": 5350405,
+      "episode_id": "86716846",
+      "filename": "86716846.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 5350405,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "6aebb2dbb0f2e8885ee769acb6b74f4cdc3bbce781511574bb99a31b7b9e69cc",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 192
+    },
+    {
+      "declared_bytes": 3388578,
+      "episode_id": "86725912",
+      "filename": "86725912.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 3388578,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "fb80049d93e5125b415fa5836138b86ff6241c82c134405b66ce48f48c600789",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 124
+    },
+    {
+      "declared_bytes": 3079406,
+      "episode_id": "86726544",
+      "filename": "86726544.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 3079406,
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "sha256": "4dd651d708001acafec9990bbf52261c258972a2e2664faf011d389e1bbe9690",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 125
+    },
+    {
+      "declared_bytes": 4638193,
+      "episode_id": "86727053",
+      "filename": "86727053.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4638193,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "44ebd89038b6643d4363744223766ea5e36492f19e5ab3ede579f9d0c0224231",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 158
+    },
+    {
+      "declared_bytes": 5189812,
+      "episode_id": "86749604",
+      "filename": "86749604.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 5189812,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "befa74a7132f5d48fd7f00d68bc6a4788c13f9baf7c9ad48c46b5a24b4104db5",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 175
+    },
+    {
+      "declared_bytes": 6303684,
+      "episode_id": "86758626",
+      "filename": "86758626.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 6303684,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "ff4cf9e231b04ed58783d3f11c713145172a870ee79aa09cc6a416daa1874a84",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 217
+    },
+    {
+      "declared_bytes": 4923637,
+      "episode_id": "86774071",
+      "filename": "86774071.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 4923637,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "4c192e5278db8d8ad6039beb618a7f325792cb57fea03485d597ad2c5d8711d4",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 180
+    },
+    {
+      "declared_bytes": 3927915,
+      "episode_id": "86777480",
+      "filename": "86777480.json",
+      "module_version": "1.32.0",
+      "observed_bytes": 3927915,
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "sha256": "a2c975ff4b520d1f9b0db94bab09937c06417aa308426bc73cf7fb1a8c580285",
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 150
+    }
+  ],
+  "gate_id": "R1",
+  "plan_sha256": "eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934",
+  "producer": "ptcg-replay-audit-acquisition",
+  "provider": "kaggle-mcp-signed-url-python-urllib",
+  "record_id": "replay-r0-acquisition-summary-20260719",
+  "replay_contract": {
+    "action_alignment": "Action at step t resolves against the preceding active record's observation.select request.",
+    "active_selection_requests": 2999,
+    "empty_lagged_selections": 17,
+    "episodes_terminal_for_both_agents": 20,
+    "initial_60_card_actions": 40,
+    "max_legal_options": 34,
+    "max_selection_count": 14,
+    "max_steps": 217,
+    "min_steps": 46,
+    "module_versions": {
+      "1.32.0": 20
+    },
+    "nonempty_lagged_selections": 2982,
+    "reward_orientations": {
+      "[-1, 1]": 11,
+      "[1, -1]": 9
+    },
+    "schema_versions": {
+      "1": 20
+    },
+    "selection_count_violations": 0,
+    "top_level_key_variants": 1,
+    "total_steps": 3039,
+    "unique_internal_ids": 20,
+    "unresolvable_actions": 0
+  },
+  "schema_version": 1,
+  "source": {
+    "daily": {
+      "dataset_owner": "kaggle",
+      "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-18",
+      "dataset_version": 1,
+      "manifest_bytes": 399310,
+      "manifest_filename": "manifest.csv",
+      "manifest_sha256": "c25c2dd24ccbef7fc5e41448f9e42bbfacdfd484503e2173d5015b3638cad67a",
+      "provider": "kaggle-mcp-download-dataset",
+      "retrieved_at_utc": "2026-07-19T07:53:51.141380+00:00"
+    },
+    "index": {
+      "dataset_owner": "kaggle",
+      "dataset_slug": "pokemon-tcg-ai-battle-episodes-index",
+      "dataset_version": 33,
+      "manifest_bytes": 5869,
+      "manifest_filename": "manifest.csv",
+      "manifest_sha256": "c150c6f6c1cdc08afb3f4aae1cf65dfa8a7fbb181fbf6a7523824fd8cba80b96",
+      "provider": "kaggle-mcp-download-dataset",
+      "retrieved_at_utc": "2026-07-19T07:52:46.836686+00:00"
+    },
+    "index_episode_bytes": 21471735255,
+    "index_episode_count": 4811,
+    "source_date": "2026-07-18"
+  },
+  "source_path": "reports/replays/r0-acquisition-summary.json",
+  "status": "PASS",
+  "title": "Approved R0 replay acquisition audit",
+  "updated_at_utc": "2026-07-19T10:06:14Z",
+  "warnings": [
+    "The replay top-level id is an internal identifier; the Kaggle episode id is carried by the filename.",
+    "The daily dataset is elite, rating-selected and capped, so this is not an unbiased ladder sample.",
+    "Transport action integers require semantic decoding before they can be used as model supervision.",
+    "Replay bodies remain ignored private data and are not included in this report."
+  ]
+}

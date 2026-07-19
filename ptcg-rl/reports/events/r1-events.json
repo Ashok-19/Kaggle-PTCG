@@ -24,5 +24,44 @@
     "status_after": "BLOCKED",
     "title": "Immutable R0 episode plan awaits approval",
     "summary": "The verified 20-file plan totals 83,981,423 bytes and transfers zero episode JSON until explicit approval."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-plan-approved-20260719",
+    "created_at_utc": "2026-07-19T09:24:00Z",
+    "source_path": "reports/replays/r0-plan-summary.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "AUTHORIZATION",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Hash-bound R0 plan approved",
+    "summary": "The user explicitly approved plan eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934. Revalidation bound the transfer to the canonical selected_items in that plan."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-display-list-incident-resolved-20260719",
+    "created_at_utc": "2026-07-19T09:40:00Z",
+    "source_path": "reports/incidents/r0-displayed-list-mismatch.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "INCIDENT",
+    "severity": "WARNING",
+    "status_after": "RUNNING",
+    "title": "Displayed replay list mismatch contained before transfer",
+    "summary": "A prior manually transcribed chat list did not match the canonical plan. Fail-closed revalidation detected it before transfer; zero wrong files were downloaded, and only the hash-bound canonical list was acquired."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-r0-acquisition-passed-20260719",
+    "created_at_utc": "2026-07-19T10:06:14Z",
+    "source_path": "reports/replays/r0-acquisition-summary.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "CHECK",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Approved R0 acquisition and structural audit passed",
+    "summary": "All 20 canonical files totaling 83,981,423 bytes passed exact-set, exact-size, JSON, terminal, initialization, lagged-action and legal-selection checks. Audit SHA-256 is 603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe."
   }
 ]
