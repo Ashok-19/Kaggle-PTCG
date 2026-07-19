@@ -316,8 +316,14 @@ def audit_acquisition(
     total_bytes = sum(row["observed_bytes"] for row in file_rows)
     report = {
         "schema_version": 1,
-        "audit_version": "r0-acquisition-v1",
+        "record_id": "replay-r0-acquisition-summary-20260719",
         "created_at_utc": timestamp,
+        "updated_at_utc": timestamp,
+        "source_path": "reports/replays/r0-acquisition-summary.json",
+        "producer": "ptcg-replay-audit-acquisition",
+        "title": "Approved R0 replay acquisition audit",
+        "gate_id": "R1",
+        "audit_version": "r0-acquisition-v1",
         "plan_sha256": verified["plan_sha256"],
         "status": "PASS",
         "provider": provider,

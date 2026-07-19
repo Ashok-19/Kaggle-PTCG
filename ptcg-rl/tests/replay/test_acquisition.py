@@ -80,6 +80,9 @@ def test_acquisition_audit_validates_lagged_actions_and_terminal_contract(tmp_pa
         acquired_at_utc="2026-07-19T00:00:00Z",
     )
     assert report["status"] == "PASS"
+    assert report["record_id"] == "replay-r0-acquisition-summary-20260719"
+    assert report["source_path"] == "reports/replays/r0-acquisition-summary.json"
+    assert report["producer"] == "ptcg-replay-audit-acquisition"
     assert report["acquisition"]["observed_files"] == 1
     assert report["replay_contract"]["initial_60_card_actions"] == 2
     assert report["replay_contract"]["active_selection_requests"] == 2
