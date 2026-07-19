@@ -3,9 +3,9 @@
 Last updated UTC: 2026-07-19  
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
-Last completed gate: G1R environment/action/recurrent contract recertification (`PASS`)  
-Current gates: G2 qualification plus R1 semantic replay loading  
-Gate status: G2 RUNNING / R1 RUNNING  
+Last completed gate: R1 version-pinned semantic replay pipeline (`PASS`)  
+Current gate: G2 model qualification  
+Gate status: G2 RUNNING / R1 PASS  
 Next review required before: any additional episode JSON transfer, G3 training, Modal execution, deck freeze, or submission
 
 ## Mission Clock
@@ -45,7 +45,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | G0 Repository/environment | passed | `REPOSITORY_CONSOLIDATION_REPORT.md`, G0 reports | PASS with Packages waiver |
 | G1 Engine contract/tensor schema | superseded | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | historical smoke only |
 | G1R Contract recertification | passed | `reports/gates/g1r.json`, `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md` | PASS |
-| R1 Replay/meta pipeline | running | `reports/replays/r0-acquisition-summary.json`, `reports/gates/r1.json` | approved R0 acquisition PASS; semantic loader and independent review pending |
+| R1 Replay/meta pipeline | passed | `reports/replays/r1-semantic-loader.json`, `reports/replays/r1-independent-review.json`, `reports/gates/r1.json` | PASS after independent semantic stream and aggregate recalculation |
 | G2 Model/action schema | running | `reports/artifacts/g2-model-schema-v1.json`, `reports/artifacts/g2-card-table-v1.json`, `reports/artifacts/g2-policy-v1.json`, `reports/gates/g2.json` | projection, static table and compact model PASS; Kaggle parity and 10k-game reliability pending; training blocked |
 | G3a PPO correctness smoke | not started | strict thresholds in `DEC-010` | Kaggle/Colab smoke only after review |
 | G3b PPO competence | not started | strict thresholds in `DEC-010` | cloud only |
@@ -64,12 +64,12 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 - G1R has no open blocker.
 - The approved R0 plan SHA-256 `eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934` is fully consumed: 20 files, 83,981,423 bytes, largest 6,303,684 bytes and audit SHA-256 `603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe`.
-- R1 may implement the streaming lag-aligned semantic loader over those 20 private files. Additional replay retrieval remains unauthorized.
+- R1 is closed as PASS: 2,999 decisions and 3,275 selected options were decoded from the preceding active request; 21 STOP markers and 16 ordered requests were reconstructed. Semantic stream SHA-256 is `68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4`, independent review found zero mismatches, and peak loader RSS was 64.546875 MiB. Additional replay retrieval and action-supervision training remain unauthorized.
 - G2 may implement and qualify the model/action contract. It may not start PPO training.
 - G2 model schema v1 is sealed at `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`; raw serial magnitude and option transport order are outside actor features.
 - G2 private card table v1 is sealed at `7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0`; names and effect text are excluded from model metadata.
 - G2 compact policy v1 is corrected and sealed at 970,022 trainable parameters; architecture SHA-256 is `aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf`.
-- The private CPU/GPU qualification bundle is bound to clean-source commit `16240fa65fd35f395fc46a6ff7b5eabc9516d70f` with SHA-256 `aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6`; training code is absent.
+- The previous private CPU/GPU qualification bundle is bound to clean-source commit `16240fa65fd35f395fc46a6ff7b5eabc9516d70f` with SHA-256 `aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6`; training code is absent. It must be rebuilt from the latest clean source because the G1 semantic adapter changed at commit `1719c8cea48102f0589a956b50cc383449d031e5`.
 - The exact Python patch and final effective timeout remain submission-qualification notes, not current blockers.
 - Main Modal training, deck freeze, Kaggle submissions and active-submission changes require explicit user approval.
 
@@ -106,6 +106,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Implement and independently review the streaming lag-aligned R1 semantic replay loader over the 20 approved private files; do not retrieve more replay data.
-2. Run the commit-bound G2 bundle in bounded private Kaggle CPU and GPU notebooks and compare outputs and selected gradients within `1e-5`.
+1. Rebuild the no-training G2 qualification bundle from the latest clean source and seal its new source and archive hashes.
+2. Run the rebuilt bundle in bounded private Kaggle CPU and GPU notebooks and compare outputs and selected gradients within `1e-5`.
 3. After parity passes, implement the checkpoint package contract and execute the 10,000-game neural-policy reliability gate without PPO training.

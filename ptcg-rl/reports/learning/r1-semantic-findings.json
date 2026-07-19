@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "record_id": "learning-r1-semantic-findings-20260719",
+  "created_at_utc": "2026-07-19T11:30:00Z",
+  "updated_at_utc": "2026-07-19T11:30:00Z",
+  "source_path": "reports/learning/r1-semantic-findings.json",
+  "producer": "chatgpt-local-agent",
+  "title": "What the approved replay sample teaches us",
+  "gate_id": "R1",
+  "status": "SUCCEEDED",
+  "summary": "All 20 approved elite episodes were converted into 2,999 deterministic semantic decisions with an independently reproduced stream hash.",
+  "facts": [
+    "An action stored at step t answers the same agent's active selection request at step t-1.",
+    "Replay actions use zero-based native option indices; they are not card IDs or semantic field values.",
+    "A STOP marker is reconstructed only when the submitted option count is below max_count.",
+    "The pregame firstPlayer value -1 means the opening player is not known yet and is normalized to missing.",
+    "The loader keeps one episode resident at a time and observed 64.546875 MiB peak RSS under a 256 MiB ceiling.",
+    "Execution order is retained for the 16 ordered requests, while transport position remains excluded from actor features."
+  ],
+  "coverage": {
+    "episodes": 20,
+    "decisions": 2999,
+    "chosen_options": 3275,
+    "stop_markers": 21,
+    "ordered_requests": 16,
+    "max_legal_options": 34,
+    "max_selected_options": 14
+  },
+  "semantic_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
+  "evidence": [
+    "reports/replays/r1-semantic-loader.json",
+    "reports/replays/r1-independent-review.json"
+  ],
+  "boundaries": [
+    "This is an elite, rating-selected and capped sample, not an unbiased ladder distribution.",
+    "Replay actions are available for diagnostics and meta understanding but are not authorized for imitation-learning supervision.",
+    "No additional replay retrieval is authorized by this gate closure."
+  ]
+}

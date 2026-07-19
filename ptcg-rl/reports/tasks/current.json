@@ -70,16 +70,23 @@
     "schema_version": 1,
     "record_id": "task-r1-004",
     "created_at_utc": "2026-07-19T10:06:14Z",
-    "updated_at_utc": "2026-07-19T10:49:23Z",
+    "updated_at_utc": "2026-07-19T11:30:00Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-R1-004",
-    "title": "Implement the lag-aligned semantic replay loader",
+    "title": "Implement and independently review the lag-aligned semantic replay loader",
     "phase": "R1",
     "priority": 4,
-    "status": "READY",
+    "status": "SUCCEEDED",
     "depends_on": ["T-R1-003", "G2_MODEL_SCHEMA_V1"],
     "done_when": "All approved episodes stream deterministically, actions resolve against the preceding active request, semantic options match the sealed G2 representation and independent review records zero unresolved decisions.",
+    "completion_evidence": [
+      "reports/replays/r1-semantic-loader.json",
+      "reports/replays/r1-independent-review.json"
+    ],
+    "implementation_commit": "225f23aa705b061a6f98e24796cbb68ea0fc51f0",
+    "review_commit": "ce19b581c61d87e66b32118f3e63a7b2076aad50",
+    "semantic_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
     "approved_boundary": "No additional replay download and no action-supervision training."
   },
   {
@@ -138,6 +145,7 @@
     "done_when": "Commit-bound private CPU and GPU notebooks complete, outputs and selected gradients match within 1e-5, and Kaggle CPU latency is recorded.",
     "bundle_sha256": "aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6",
     "bundle_source_commit": "16240fa65fd35f395fc46a6ff7b5eabc9516d70f",
+    "rebuild_required_before_run": "The G1 semantic adapter changed at commit 1719c8cea48102f0589a956b50cc383449d031e5; rebuild the private bundle from the latest clean source before launching Kaggle notebooks.",
     "no_training": true
   },
   {

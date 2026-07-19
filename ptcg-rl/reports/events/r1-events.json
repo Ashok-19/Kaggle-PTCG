@@ -63,5 +63,31 @@
     "status_after": "RUNNING",
     "title": "Approved R0 acquisition and structural audit passed",
     "summary": "All 20 canonical files totaling 83,981,423 bytes passed exact-set, exact-size, JSON, terminal, initialization, lagged-action and legal-selection checks. Audit SHA-256 is 603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-semantic-loader-passed-20260719",
+    "created_at_utc": "2026-07-19T11:24:00Z",
+    "source_path": "reports/replays/r1-semantic-loader.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "CHECK",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Streaming lag-aligned semantic loader passed",
+    "summary": "The committed loader converted 2,999 decisions from all 20 approved episodes into the sealed G1/G2 representation, reconstructed 21 STOP markers, preserved 16 ordered requests and stayed below the 256 MiB RSS limit."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-independent-review-closed-20260719",
+    "created_at_utc": "2026-07-19T11:30:00Z",
+    "source_path": "reports/replays/r1-independent-review.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "REVIEW",
+    "severity": "INFO",
+    "status_after": "SUCCEEDED",
+    "title": "Independent semantic recalculation closes R1",
+    "summary": "Separate reviewer code reproduced semantic stream SHA-256 68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4 and every aggregate with zero mismatches. R1 is accepted as PASS."
   }
 ]
