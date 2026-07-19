@@ -123,29 +123,32 @@ def create_app(repo: Path, refresh_interval_seconds: float = 2.0) -> FastAPI:
     def state() -> dict[str, Any]:
         store.sync_if_needed()
         gates = ordered_gates()
-        kinds = (
-            "event",
-            "decision",
-            "report",
-            "task",
-            "hypothesis",
-            "experiment",
-            "run",
-            "replay",
-            "deck",
-            "evaluation",
-            "submission",
-            "job",
-            "artifact",
-            "learning",
-        )
-        collections = {kind: page(kind, 500)["items"] for kind in kinds}
+        collection_names = {
+            "event": "events",
+            "decision": "decisions",
+            "report": "reports",
+            "task": "tasks",
+            "hypothesis": "hypotheses",
+            "experiment": "experiments",
+            "run": "runs",
+            "replay": "replays",
+            "deck": "decks",
+            "evaluation": "evaluations",
+            "submission": "submissions",
+            "job": "jobs",
+            "artifact": "artifacts",
+            "learning": "learning",
+        }
+        collections = {
+            plural: page(kind, 500)["items"]
+            for kind, plural in collection_names.items()
+        }
         return {
             "generated_at_utc": store.health().get("last_scan_utc"),
             "overview": overview_payload(),
             "review": review_items(gates),
             "gates": gates,
-            **{f"{kind}s": values for kind, values in collections.items()},
+            **collections,
             "costs": cost_summary(gates),
         }
 

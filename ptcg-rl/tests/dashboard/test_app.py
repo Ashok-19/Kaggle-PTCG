@@ -70,6 +70,8 @@ def test_state_reports_parallel_active_gates_and_auto_refresh(tmp_path: Path) ->
     assert [item["gate_id"] for item in state["overview"]["active_gates"]] == ["R1", "G2"]
     assert state["overview"]["latest_completed_gate"]["gate_id"] == "G1R"
     assert len(state["review"]) == 2
+    assert "hypotheses" in state
+    assert "hypothesiss" not in state
 
     g2_path = tmp_path / "reports" / "gates" / "g2.json"
     value = gate("G2", "RUNNING", "NOT_REVIEWED", "2026-07-19T00:00:01Z")
