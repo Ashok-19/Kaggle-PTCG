@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-projection-sealed-20260719",
+    "created_at_utc": "2026-07-19T08:13:00Z",
+    "source_path": "reports/artifacts/g2-model-schema-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "CONTRACT",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "G2 model-facing projection v1 sealed",
+    "summary": "Schema 61f6f710...bf68 separates transport metadata from actor inputs, removes raw serial magnitude and passes serial-renumbering and option-permutation tests."
+  }
+]

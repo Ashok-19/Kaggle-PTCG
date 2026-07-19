@@ -2,21 +2,53 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T06:30:00Z",
+  "updated_at_utc": "2026-07-19T08:13:00Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "1",
+  "producer_version": "2",
   "gate_id": "G2",
   "title": "Model-facing tensors, recurrent policy and semantic action scorer",
-  "status": "QUEUED",
+  "status": "RUNNING",
   "decision": "NOT_REVIEWED",
   "authorization": "APPROVED_TO_IMPLEMENT",
-  "technical_checks": [],
+  "technical_checks": [
+    {
+      "name": "versioned model-facing schema",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g2-model-schema-v1.json"
+    },
+    {
+      "name": "raw serial magnitude excluded from actor features",
+      "status": "PASS",
+      "evidence": "tests/g2/test_projection.py"
+    },
+    {
+      "name": "option transport index separated from actor features",
+      "status": "PASS",
+      "evidence": "tests/g2/test_projection.py"
+    },
+    {
+      "name": "semantic active and bench positions only",
+      "status": "PASS",
+      "evidence": "tests/g2/test_projection.py"
+    },
+    {
+      "name": "option permutation equivariance at projection boundary",
+      "status": "PASS",
+      "evidence": "tests/g2/test_projection.py"
+    },
+    {
+      "name": "static card table and compact recurrent policy",
+      "status": "RUNNING",
+      "evidence": "reports/tasks/current.json"
+    }
+  ],
   "blockers": [],
   "warnings": [
     "Training remains unauthorized; G2 implementation and qualification only.",
-    "Heavy numerical and accelerator validation should run in bounded private Kaggle notebooks."
+    "The projection contract is not a strength result and does not yet include the neural model.",
+    "Heavy CPU/GPU parity and qualification must run in a bounded private Kaggle notebook."
   ],
-  "approved_next_action": "Implement the strict G2 contract from DEC-010 in incremental reviewed commits; do not begin PPO training.",
+  "approved_next_action": "Build the exact-hash static card table and under-2M recurrent semantic policy; preserve the sealed model schema or record a version bump.",
   "cost_usd": 0.0
 }
