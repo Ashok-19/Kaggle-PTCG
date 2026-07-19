@@ -84,6 +84,32 @@ def test_malformed_source_is_quarantined_without_hiding_valid_record(tmp_path: P
     assert result["quarantined"] == 1
 
 
+def test_audit_reports_are_first_class_dashboard_records(tmp_path: Path) -> None:
+    path = tmp_path / "reports" / "audits" / "complete.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "record_id": "audit-complete",
+                "created_at_utc": "2026-07-19T00:00:00Z",
+                "source_path": "reports/audits/complete.json",
+                "producer": "test",
+                "kind": "AUDIT",
+                "status": "SUCCEEDED",
+                "decision": "PASS",
+            }
+        ),
+        encoding="utf-8",
+    )
+    dashboard = DashboardStore(tmp_path)
+    result = dashboard.ingest(rebuild=True)
+    assert result["quarantined"] == 0
+    audit = dashboard.list("audit")["items"][0]
+    assert audit["record_id"] == "audit-complete"
+    assert audit["status"] == "SUCCEEDED"
+
+
 def test_auto_sync_detects_new_modified_and_deleted_sources(tmp_path: Path) -> None:
     write_gate(tmp_path)
     store = DashboardStore(tmp_path, refresh_interval_seconds=0)

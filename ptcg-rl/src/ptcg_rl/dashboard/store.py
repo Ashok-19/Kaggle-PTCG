@@ -38,6 +38,7 @@ REPORT_KIND_DIRECTORIES = {
     "costs": "cost",
     "artifacts": "artifact",
     "learning": "learning",
+    "audits": "audit",
 }
 
 
@@ -108,6 +109,7 @@ class DashboardStore:
             "reports/costs/*.json",
             "reports/artifacts/*.json",
             "reports/learning/*.json",
+            "reports/audits/*.json",
             "experiments/*/manifest.json",
             "runs/*/run_manifest.json",
             "jobs/*/*.json",

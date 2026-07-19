@@ -63,6 +63,21 @@ def test_state_reports_parallel_active_gates_and_auto_refresh(tmp_path: Path) ->
         "g2.json",
         gate("G2", "QUEUED", "NOT_REVIEWED", "2026-07-19T00:00:01Z"),
     )
+    write_record(
+        tmp_path,
+        "audits",
+        "complete.json",
+        {
+            "schema_version": 1,
+            "record_id": "audit-complete",
+            "created_at_utc": "2026-07-19T00:00:02Z",
+            "source_path": "reports/audits/complete.json",
+            "producer": "test",
+            "kind": "AUDIT",
+            "status": "SUCCEEDED",
+            "decision": "PASS",
+        },
+    )
 
     app = create_app(tmp_path, refresh_interval_seconds=0)
     state_endpoint = endpoint(app, "/api/v1/state")
@@ -72,6 +87,9 @@ def test_state_reports_parallel_active_gates_and_auto_refresh(tmp_path: Path) ->
     assert len(state["review"]) == 2
     assert "hypotheses" in state
     assert "hypothesiss" not in state
+    assert state["audits"][0]["record_id"] == "audit-complete"
+    audits_endpoint = endpoint(app, "/api/v1/audits")
+    assert audits_endpoint(limit=100, offset=0)["items"][0]["decision"] == "PASS"
 
     g2_path = tmp_path / "reports" / "gates" / "g2.json"
     value = gate("G2", "RUNNING", "NOT_REVIEWED", "2026-07-19T00:00:01Z")

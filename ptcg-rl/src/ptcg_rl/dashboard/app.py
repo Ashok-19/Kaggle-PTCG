@@ -138,6 +138,7 @@ def create_app(repo: Path, refresh_interval_seconds: float = 2.0) -> FastAPI:
             "job": "jobs",
             "artifact": "artifacts",
             "learning": "learning",
+            "audit": "audits",
         }
         collections = {
             plural: page(kind, 500)["items"]
@@ -188,6 +189,12 @@ def create_app(repo: Path, refresh_interval_seconds: float = 2.0) -> FastAPI:
         limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)
     ) -> dict[str, Any]:
         return page("report", limit, offset)
+
+    @app.get("/api/v1/audits")
+    def audits(
+        limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)
+    ) -> dict[str, Any]:
+        return page("audit", limit, offset)
 
     @app.get("/api/v1/tasks")
     def tasks() -> dict[str, Any]:
