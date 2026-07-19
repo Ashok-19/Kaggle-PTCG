@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-card-table-sealed-20260719",
+    "created_at_utc": "2026-07-19T08:28:46Z",
+    "source_path": "reports/artifacts/g2-card-table-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "ARTIFACT",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Exact-hash numeric card table sealed",
+    "summary": "The private table reconciles 1,267 cards and 1,556 attacks against the exact CSV and native engine while excluding all names and effect text from model metadata."
+  }
+]

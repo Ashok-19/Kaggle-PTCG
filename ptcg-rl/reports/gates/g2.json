@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T08:13:00Z",
+  "updated_at_utc": "2026-07-19T08:28:46Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
   "producer_version": "2",
@@ -38,7 +38,12 @@
       "evidence": "tests/g2/test_projection.py"
     },
     {
-      "name": "static card table and compact recurrent policy",
+      "name": "exact-hash numeric static card and attack table",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g2-card-table-v1.json"
+    },
+    {
+      "name": "compact recurrent policy and value model",
       "status": "RUNNING",
       "evidence": "reports/tasks/current.json"
     }
@@ -46,9 +51,9 @@
   "blockers": [],
   "warnings": [
     "Training remains unauthorized; G2 implementation and qualification only.",
-    "The projection contract is not a strength result and does not yet include the neural model.",
+    "The projection and static table are not strength results and do not yet include the neural model.",
     "Heavy CPU/GPU parity and qualification must run in a bounded private Kaggle notebook."
   ],
-  "approved_next_action": "Build the exact-hash static card table and under-2M recurrent semantic policy; preserve the sealed model schema or record a version bump.",
+  "approved_next_action": "Implement and qualify the under-2M recurrent semantic policy using the sealed projection and private table; preserve both contracts or record a version bump.",
   "cost_usd": 0.0
 }

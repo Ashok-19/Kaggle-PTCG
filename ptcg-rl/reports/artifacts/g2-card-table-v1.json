@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g2-card-table-v1",
+  "created_at_utc": "2026-07-19T08:28:46Z",
+  "updated_at_utc": "2026-07-19T08:28:46Z",
+  "source_path": "reports/artifacts/g2-card-table-v1.json",
+  "producer": "ptcg-rl.g2.card_table",
+  "producer_version": "1",
+  "artifact_id": "g2-card-table-v1",
+  "kind": "PRIVATE_DERIVED_SCHEMA",
+  "title": "G2 numeric-only static card and attack table",
+  "status": "SUCCEEDED",
+  "gate_id": "G2",
+  "source_commit": "bc7f1433fc710c33c2c27d41463d201f1183194a",
+  "private_output": "private/g2/card-table-v1.json",
+  "private_output_tracked": false,
+  "private_output_bytes": 1056442,
+  "table_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "wrapper_api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+  "counts": {
+    "csv_rows": 2022,
+    "cards": 1267,
+    "attacks": 1556,
+    "ambiguous_csv_type_cards": 196,
+    "max_skills_per_card": 2,
+    "max_attacks_per_card": 2,
+    "max_attack_energy_cost": 5,
+    "max_base_damage": 350
+  },
+  "card_type_counts": {
+    "pokemon": 1056,
+    "item": 77,
+    "tool": 27,
+    "supporter": 61,
+    "stadium": 26,
+    "basic_energy": 8,
+    "special_energy": 12
+  },
+  "structured_flags": {
+    "basic": 600,
+    "stage1": 345,
+    "stage2": 116,
+    "ex": 121,
+    "mega_ex": 30,
+    "tera": 32,
+    "ace_spec": 29,
+    "ancient": 14,
+    "future": 10,
+    "fossil": 5,
+    "technical_machine": 1,
+    "trainers_pokemon": 148
+  },
+  "content_boundary": {
+    "included": [
+      "numeric IDs",
+      "native enum metadata",
+      "HP and retreat",
+      "stage and structured category flags",
+      "skill and attack counts",
+      "attack IDs, base damage and energy-count vectors"
+    ],
+    "excluded": [
+      "card names",
+      "move names",
+      "rule text",
+      "move text",
+      "effect explanations",
+      "raw CSV rows"
+    ]
+  },
+  "reconciliation": {
+    "card_id_set": "PASS",
+    "card_type": "PASS",
+    "stage_flags": "PASS",
+    "hp": "PASS",
+    "retreat": "PASS",
+    "weakness": "PASS",
+    "resistance": "PASS",
+    "unambiguous_energy_types": "PASS",
+    "attack_references": "PASS",
+    "canonical_hash_reverification": "PASS"
+  },
+  "note": "The 196 ambiguous CSV Type values include non-applicable trainer fields and special symbols. Native engine energyType is retained as operational truth; no guessed mapping entered the table."
+}
