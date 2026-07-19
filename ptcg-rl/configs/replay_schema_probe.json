@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "planner_version": "r0-stratified-v1",
+  "seed": 20260719,
+  "source_date": "2026-07-18",
+  "index_dataset": {
+    "owner": "kaggle",
+    "slug": "pokemon-tcg-ai-battle-episodes-index",
+    "version": 33
+  },
+  "daily_dataset": {
+    "owner": "kaggle",
+    "slug": "pokemon-tcg-ai-battle-episodes-2026-07-18",
+    "version": 1
+  },
+  "caps": {
+    "max_files": 20,
+    "max_total_bytes": 262144000,
+    "max_file_bytes": 67108864
+  },
+  "quotas": {
+    "elite_dual": 12,
+    "elite_avg": 5,
+    "broad_time": 3
+  },
+  "time_blocks": 6,
+  "quantiles": {
+    "avg_score": 0.85,
+    "min_score": 0.70
+  }
+}
