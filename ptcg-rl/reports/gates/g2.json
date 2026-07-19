@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T18:04:13Z",
+  "updated_at_utc": "2026-07-19T18:53:38Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "7",
+  "producer_version": "8",
   "gate_id": "G2",
   "title": "Model-facing tensors, recurrent policy and semantic action scorer",
   "status": "RUNNING",
@@ -68,6 +68,11 @@
       "evidence": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json"
     },
     {
+      "name": "deterministic fail-closed checkpoint package",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g2-policy-checkpoint-v1.json"
+    },
+    {
       "name": "10,000 complete neural-policy games",
       "status": "QUEUED",
       "evidence": "reports/tasks/current.json"
@@ -80,8 +85,9 @@
     "Current-source bundle v4 and strict Kaggle CPU/T4 parity are qualified; historical bundles remain audit evidence only.",
     "Kaggle GPU T4 x2 must be selected manually because an automatic CLI GPU launch received a rejected Tesla P100.",
     "GPU version 1 records the active Tesla T4 but predates explicit visible-device-count and outbound-HTTP probes; future GPU runs record topology.",
+    "Checkpoint package v1 is private and pickle-free; its public report exposes hashes and validation counts, not tensor values or private card-table contents.",
     "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item."
   ],
-  "approved_next_action": "Implement the checkpoint package contract and run the 10,000-complete-game neural-policy reliability qualification without PPO training; keep G2 RUNNING until both pass and are independently reviewed.",
+  "approved_next_action": "Implement and execute the 10,000-complete-game neural-policy reliability qualification without PPO training; keep G2 RUNNING until it passes and all G2 evidence is independently reviewed.",
   "cost_usd": 0.0
 }

@@ -76,7 +76,7 @@ def test_gate_and_task_close_only_the_parity_slice() -> None:
 
     policy_task = next(item for item in tasks if item.get("task_id") == "T-G2-002")
     assert policy_task["status"] == "RUNNING"
-    assert policy_task["remaining_work"] == [
-        "checkpoint package contract",
-        "10,000 complete neural-policy games",
-    ]
+    assert policy_task["checkpoint_evidence"] == (
+        "reports/artifacts/g2-policy-checkpoint-v1.json"
+    )
+    assert policy_task["remaining_work"] == ["10,000 complete neural-policy games"]

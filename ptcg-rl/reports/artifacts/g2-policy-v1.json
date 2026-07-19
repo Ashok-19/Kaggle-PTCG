@@ -30,16 +30,17 @@
     "warning": "Local latency is a functional smoke only; Kaggle CPU latency is the qualification source of truth."
   },
   "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
+  "external_qualification": {
+    "checkpoint_package": "reports/artifacts/g2-policy-checkpoint-v1.json",
+    "cpu_gpu_parity": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json"
+  },
   "not_yet_qualified": [
-    "CPU/GPU numerical parity on Kaggle",
-    "Kaggle batch-1 CPU latency percentiles",
     "10,000 complete neural-policy games",
-    "checkpoint package contract",
     "submission-runtime parity",
     "policy strength or learning"
   ],
   "producer": "ptcg-rl.g2.network",
-  "producer_version": "2",
+  "producer_version": "3",
   "qualification": {
     "decoder_masking": "PASS",
     "gradient_reach_nonzero": "PASS",
@@ -61,5 +62,5 @@
   "target_trainable_parameters": 1250000,
   "title": "Compact recurrent semantic policy v1",
   "trainable_parameters": 970022,
-  "updated_at_utc": "2026-07-19T10:49:23Z"
+  "updated_at_utc": "2026-07-19T18:53:38Z"
 }

@@ -113,7 +113,7 @@
     "schema_version": 1,
     "record_id": "task-g2-002",
     "created_at_utc": "2026-07-19T06:30:00Z",
-    "updated_at_utc": "2026-07-19T18:04:13Z",
+    "updated_at_utc": "2026-07-19T18:53:38Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G2-002",
@@ -127,9 +127,10 @@
     "implementation_commit": "ac25a8807c8351c5ae4c9071c3bdcdbe521b0eae",
     "qualification_bundle": "reports/artifacts/g2-policy-qualification-bundle-v4.json",
     "qualification_evidence": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json",
+    "checkpoint_evidence": "reports/artifacts/g2-policy-checkpoint-v1.json",
+    "checkpoint_implementation_commit": "6b3a3b4829b205d62e210fae7e396db33fdb9a5a",
     "historical_qualification_bundle": "reports/artifacts/g2-policy-qualification-bundle-v1.json",
     "remaining_work": [
-      "checkpoint package contract",
       "10,000 complete neural-policy games"
     ]
   },
@@ -157,6 +158,29 @@
     "historical_bundle_sha256": "aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6",
     "audit_evidence": "reports/audits/pre-g2-complete-audit-20260719.json",
     "no_training": true
+  },
+  {
+    "schema_version": 1,
+    "record_id": "task-g2-004",
+    "created_at_utc": "2026-07-19T18:27:58Z",
+    "updated_at_utc": "2026-07-19T18:53:38Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G2-004",
+    "title": "Implement and qualify the deterministic checkpoint package",
+    "phase": "G2",
+    "priority": 3,
+    "status": "SUCCEEDED",
+    "depends_on": ["T-G2-003"],
+    "done_when": "A commit-bound pickle-free package builds deterministically, loads in isolated source, reproduces actor/value/recurrent/decoder/log-probability outputs within 1e-5 and fails closed under corruption and incompatibility.",
+    "completed_at_utc": "2026-07-19T18:53:38Z",
+    "implementation_commit": "6b3a3b4829b205d62e210fae7e396db33fdb9a5a",
+    "completion_evidence": "reports/artifacts/g2-policy-checkpoint-v1.json",
+    "package_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+    "qualification_state_sha256": "531b799b29830954dce62cd7d1b455eb30d5189cf670158723ee01b3e2ed6ab0",
+    "adversarial_fail_closed_branches": 25,
+    "no_training": true,
+    "kaggle_run_performed": false
   },
   {
     "schema_version": 1,

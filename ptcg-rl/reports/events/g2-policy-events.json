@@ -63,5 +63,18 @@
     "status_after": "RUNNING",
     "title": "Current-source Kaggle CPU/T4 strict parity passed",
     "summary": "Bundle v4 at source c660f74 passed zero-failure CPU/T4 parity across 1,596 numeric values and seven selected gradients at atol=rtol=1e-5. CPU batch-1 p99 was 8.802885 ms; optimizer creation and training remained absent."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-checkpoint-package-v1-passed-20260719",
+    "created_at_utc": "2026-07-19T18:53:38Z",
+    "source_path": "reports/artifacts/g2-policy-checkpoint-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "CHECKPOINT_PACKAGE",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Deterministic G2 checkpoint package v1 passed",
+    "summary": "The 5,429,190-byte pickle-free package at commit 6b3a3b48 built byte-identically twice, matched the Kaggle parity state, reproduced 1,150 numeric and 16 exact reference values with zero drift in current and isolated source, and failed closed across 25 adversarial branches without training or Kaggle execution."
   }
 ]

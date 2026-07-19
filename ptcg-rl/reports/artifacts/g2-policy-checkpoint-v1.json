@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g2-policy-checkpoint-v1",
+  "created_at_utc": "2026-07-19T18:53:38Z",
+  "updated_at_utc": "2026-07-19T18:53:38Z",
+  "source_path": "reports/artifacts/g2-policy-checkpoint-v1.json",
+  "producer": "scripts/g2_checkpoint_package.py",
+  "producer_version": "1",
+  "artifact_id": "g2-policy-checkpoint-v1",
+  "gate_id": "G2",
+  "kind": "CHECKPOINT_PACKAGE",
+  "status": "SUCCEEDED",
+  "title": "Deterministic fail-closed G2 policy checkpoint package v1",
+  "implementation_commit": "6b3a3b4829b205d62e210fae7e396db33fdb9a5a",
+  "qualification_source_commit": "6b3a3b4829b205d62e210fae7e396db33fdb9a5a",
+  "model": {
+    "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+    "config_sha256": "bc261bcc82a44b50db0734e7518c8ee7773abcbc809d8831c3563a7bcd6875cd",
+    "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
+    "card_table_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "qualification_state_sha256": "531b799b29830954dce62cd7d1b455eb30d5189cf670158723ee01b3e2ed6ab0",
+    "trainable_parameters": 970022
+  },
+  "private_artifacts": {
+    "package": {
+      "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+      "bytes": 5429190,
+      "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+      "manifest_sha256": "1185c97d1fca8cb795e2c5f84f5d0a915cf41fac242aefed888b4e0dd84b267c"
+    },
+    "qualification_receipt": {
+      "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1-receipt.json",
+      "bytes": 3965,
+      "sha256": "fbf73b7f8344691e69ba7e56864bed03142a660f0ab47a7ca2ba445342678d93"
+    },
+    "second_verification": {
+      "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1-verification-2.json",
+      "bytes": 44414,
+      "sha256": "ba872f8d2c47a4bb8ed74cf203eb1ca5e7796cd09961dddb32b4e9edbabe32f8"
+    },
+    "adversarial_audit": {
+      "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1-adversarial-audit.json",
+      "bytes": 3947,
+      "sha256": "97b236267b9425f2f4a76a16acf70a004a6b85a8d1baa61626c5e66a46a25c97"
+    }
+  },
+  "format_decision": {
+    "archive": "sorted fixed-metadata ZIP_STORED with exactly four regular-file entries",
+    "state": "pickle-free canonical little-endian tensor stream v1",
+    "supported_state_dtypes": [
+      "float32",
+      "int64",
+      "bool"
+    ],
+    "state_entries": 141,
+    "selection_evidence": {
+      "torch_save": {
+        "bytes": 4356389,
+        "repeatable_same_order": true,
+        "insertion_order_independent": false
+      },
+      "numpy_npz": {
+        "bytes": 4354410,
+        "repeatable_same_order": true,
+        "insertion_order_independent": false
+      },
+      "numpy_npz_compressed": {
+        "bytes": 3549212,
+        "repeatable_same_order": true,
+        "insertion_order_independent": false
+      },
+      "canonical_tensor_stream": {
+        "bytes": 4324105,
+        "repeatable_same_order": true,
+        "insertion_order_independent": true
+      },
+      "safetensors_available_in_locked_environment": false,
+      "decision": "Use the dependency-free canonical tensor stream and ZIP_STORED; compression saved about 1.84 MiB in the probe but was about 50 times slower and introduced unnecessary zlib byte-identity risk."
+    }
+  },
+  "qualification": {
+    "duplicate_build_byte_match": true,
+    "source_files_verified": 13,
+    "model_relevant_files_unchanged_since_kaggle_parity": 11,
+    "parity_evidence_path": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json",
+    "parity_evidence_sha256": "a7c2cdecfac257122ec197b5b076b7aa9465054951028c84490b637f575f6d7b",
+    "state_matches_kaggle_parity": true,
+    "reference_fixture_sha256": "0996a5ac886c8b8b424edaaa2edabdf31b7f4eb2280c2c6fe3fec7e8da6416c7",
+    "reference_numeric_values": 1150,
+    "reference_exact_values": 16,
+    "reference_max_absolute_difference": 0.0,
+    "compound_log_probability": -3.2377066612243652,
+    "compound_log_probability_tolerance": 0.00001,
+    "current_tree_verifications": 2,
+    "isolated_clean_runtime_verification": "PASS",
+    "isolated_module_origins_under_copied_source": 7,
+    "adversarial_fail_closed_branches": 25,
+    "unit_and_contract_tests": 27,
+    "full_python_suite": {
+      "passed": 159,
+      "failed": 0
+    },
+    "status": "PASS"
+  },
+  "fail_closed_scope": [
+    "wrong package hash or source commit",
+    "missing, extra, duplicate, unsorted, compressed, symlink, wrong-mode or wrong-timestamp archive entries",
+    "payload corruption, malformed or noncanonical JSON and unexpected manifest keys",
+    "invalid config, schema, parameter ceiling or optimizer authorization",
+    "semantically corrupted card table",
+    "changed, missing or symlinked source files",
+    "bad state magic, truncation, trailing bytes, unsupported dtype, NaN or infinity",
+    "unexpected state keys during strict model load",
+    "actor, value, recurrent, decoder or compound-log-probability numerical drift"
+  ],
+  "privacy": {
+    "package_ignored": true,
+    "receipts_ignored": true,
+    "numeric_card_table_private": true,
+    "card_names_or_effect_text_in_public_report": false,
+    "raw_tensor_values_in_public_report": false
+  },
+  "authorization": {
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "training_loop_ran": false,
+    "training_state_included": false,
+    "pickle_used": false,
+    "kaggle_run_performed": false,
+    "external_service_mutated": false
+  },
+  "remaining_g2_work": [
+    "10,000 complete neural-policy games",
+    "independent review before the G2 PASS decision"
+  ],
+  "cost_usd": 0.0
+}
