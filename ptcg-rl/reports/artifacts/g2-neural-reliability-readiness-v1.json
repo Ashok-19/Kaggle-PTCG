@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "record_id": "g2-neural-reliability-readiness-v1",
+  "created_at_utc": "2026-07-19T20:46:00Z",
+  "source_path": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+  "producer": "chatgpt-local-agent",
+  "status": "SUCCEEDED",
+  "decision": "READY_FOR_MANUAL_KAGGLE_RUN",
+  "gate_id": "G2",
+  "source_commit": "b536f3ac66796cdabc382f318126a99b0eeeae85",
+  "implementation_commits": [
+    "e4c12479d87162342c13bbc8a9b705715af08bf5",
+    "ba89a0d74a8c1519761567a4872053866a460788",
+    "b536f3ac66796cdabc382f318126a99b0eeeae85"
+  ],
+  "implementation": {
+    "runner": "scripts/g2_neural_reliability.py",
+    "core": "src/ptcg_rl/g2/reliability.py",
+    "tests": [
+      "tests/g2/test_reliability.py",
+      "tests/g2/test_reliability_script.py"
+    ],
+    "python_tests_passed": 202,
+    "targeted_lint": "PASS",
+    "training_performed": false,
+    "optimizer_created": false,
+    "ppo_performed": false
+  },
+  "selected_topology": {
+    "inference_servers": 2,
+    "devices": [
+      "cuda:0",
+      "cuda:1"
+    ],
+    "required_accelerator": "GPU T4 x2",
+    "workers_per_device": 8,
+    "total_engine_workers": 16,
+    "max_batch": 8,
+    "batch_wait_ms": 2.0,
+    "games": 10000,
+    "internet": "OFF"
+  },
+  "exact_topology_local_smoke": {
+    "games": 32,
+    "engine_requests": 3892,
+    "meaningful_choices": 3720,
+    "forced_requests": 172,
+    "multi_select_requests": 61,
+    "max_observed_options": 51,
+    "max_observed_select_count": 3,
+    "allocated_inference_p99_ms_per_game": 859.4080450590159,
+    "roundtrip_p99_ms_per_game": 6100.149849138688,
+    "peak_process_rss_mib": 351.9140625,
+    "server_decisions": 3892,
+    "zero_tolerance_failures": 0,
+    "games_jsonl": {
+      "bytes": 91929,
+      "sha256": "d594b7d3b372007a95566cd5cc6a83aece3a717920e1e35ebab27b6555808187"
+    },
+    "receipt": {
+      "bytes": 13677,
+      "sha256": "d58dd38f0320fb27ca59e60b1d181e0476bfcad9e0b12e9dd5b84e4c348243f6"
+    },
+    "independent_review": {
+      "bytes": 2652,
+      "sha256": "807f80a6722569fb9c9cd16b752510e6a8689e0cba0eee78268cfa8cbbb9e89f",
+      "status": "PASS"
+    }
+  },
+  "live_fail_closed_audit": {
+    "branch_count": 7,
+    "branches": [
+      "malformed worker deck input",
+      "global run timeout",
+      "per-game timeout",
+      "games JSONL tampering",
+      "receipt aggregate drift",
+      "engine worker SIGKILL",
+      "inference server SIGKILL"
+    ],
+    "failure_audit": {
+      "bytes": 1900,
+      "sha256": "27880ee59a6d65e6a5213bf0cc35de07e2ee7635af4a47a6fa142b7e0bb202b0"
+    },
+    "process_death_audit": {
+      "bytes": 1413,
+      "sha256": "2291090c689e7b0b9941706e2ce1b50a5dbeb71b02d475ce3d4afc30678219fc"
+    },
+    "all_branches_completed": true,
+    "partial_fail_receipts_retained": true
+  },
+  "sealed_input": {
+    "archive": {
+      "bytes": 12088771,
+      "sha256": "d4fa4a09e5c86cc3a2c93461b2127634dc197a7241d99d36f78bc35ce878b6ec",
+      "duplicate_build_byte_match": true,
+      "member_count": 11
+    },
+    "manifest": {
+      "bytes": 2634,
+      "sha256": "7b1c1c180e85aad7a4850dc4d72f8093c6896402eeabf6cdf86b5f9ea90855f2"
+    },
+    "input_record": {
+      "bytes": 572,
+      "sha256": "ac825256d492edd5697af7be88d399739be34eac06234a638e6d0db46b7483bd"
+    },
+    "offline_source_commit": "b536f3ac66796cdabc382f318126a99b0eeeae85",
+    "offline_source_tree": "3757fc9523117c498ccfa668a8832ddeffbf70f0"
+  },
+  "manual_notebook": {
+    "filename": "kptcg-g2-neural-reliability-v1.ipynb",
+    "bytes": 26805,
+    "sha256": "93e44db3edbc729cb3bc42a2347edc0d868b4e895465e88b431063e8853527c3",
+    "canonical_code_sha256": "ba426abf047e5cdfac0ccb0f48aaf3b17ef1fc3b2462af15df6101ef2591e2e3",
+    "code_cell_exact_match": true,
+    "local_full_path_validation": {
+      "status": "PASS",
+      "games": 4,
+      "output_manifest_sha256": "a3f7d3d0b1568aa972b06f80899a780cedd875b7e75c4f3b59402d8b1b93e532",
+      "notebook_receipt_sha256": "f6059d78db7247a940d07f531050ef7288e5fd53b2c9d3587dfe78c9b362370d"
+    },
+    "assistant_launched_kaggle_run": false
+  },
+  "kaggle_dataset": {
+    "target": "ashok205/g2-neural-reliability-inputs",
+    "status": "NOT_CREATED",
+    "reason": "The available execution interfaces blocked the external dataset-create transaction before network access.",
+    "local_dataset_directory_ready": true,
+    "notebook_requires_dataset_attachment": true
+  },
+  "remaining_work": [
+    "Create the private Kaggle dataset from the sealed local dataset directory.",
+    "User manually imports the notebook, attaches the exact dataset version, selects GPU T4 x2, keeps internet off and runs all cells.",
+    "Download and independently recalculate the complete 10,000-game outputs.",
+    "Perform independent G2 evidence review before any PASS decision."
+  ],
+  "qualification_not_claimed": [
+    "10,000 complete neural-policy games",
+    "G2 PASS",
+    "policy strength or learning",
+    "training readiness"
+  ],
+  "cost_usd": 0.0
+}

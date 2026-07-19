@@ -59,10 +59,18 @@ def test_gate_and_task_close_only_the_parity_slice() -> None:
         "status": "PASS",
         "evidence": PARITY_REPORT,
     }
-    assert checks["10,000 complete neural-policy games"]["status"] == "QUEUED"
+    reliability = checks["10,000 complete neural-policy games"]
+    assert reliability == {
+        "name": "10,000 complete neural-policy games",
+        "status": "READY_FOR_USER_RUN",
+        "evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+    }
+    assert reliability["status"] != "PASS"
     assert gate["status"] == "RUNNING"
     assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["blockers"] == []
+    assert gate["blockers"] == [
+        "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
+    ]
 
     parity_task = next(item for item in tasks if item.get("task_id") == "T-G2-003")
     assert parity_task["status"] == "SUCCEEDED"

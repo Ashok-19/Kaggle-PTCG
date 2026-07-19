@@ -76,5 +76,19 @@
     "status_after": "RUNNING",
     "title": "Deterministic G2 checkpoint package v1 passed",
     "summary": "The 5,429,190-byte pickle-free package at commit 6b3a3b48 built byte-identically twice, matched the Kaggle parity state, reproduced 1,150 numeric and 16 exact reference values with zero drift in current and isolated source, and failed closed across 25 adversarial branches without training or Kaggle execution."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-neural-reliability-ready-20260719",
+    "created_at_utc": "2026-07-19T20:46:00Z",
+    "source_path": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "RELIABILITY_READINESS",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "G2 neural reliability harness ready for manual T4 x2 run",
+    "summary": "Source b536f3a passes 202 tests, an exact two-server/sixteen-worker 32-game smoke with independent review, seven completed live fail-closed branches, a byte-repeatable 12,088,771-byte offline input archive and a locally validated notebook. The 10,000-game criterion remains open; the assistant launched no Kaggle notebook, and the private dataset create transaction remains blocked before network access."
   }
+
 ]

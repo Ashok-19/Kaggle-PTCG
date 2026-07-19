@@ -113,7 +113,7 @@
     "schema_version": 1,
     "record_id": "task-g2-002",
     "created_at_utc": "2026-07-19T06:30:00Z",
-    "updated_at_utc": "2026-07-19T18:53:38Z",
+    "updated_at_utc": "2026-07-19T20:46:00Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G2-002",
@@ -129,6 +129,8 @@
     "qualification_evidence": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json",
     "checkpoint_evidence": "reports/artifacts/g2-policy-checkpoint-v1.json",
     "checkpoint_implementation_commit": "6b3a3b4829b205d62e210fae7e396db33fdb9a5a",
+    "reliability_readiness_evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+    "reliability_source_commit": "b536f3ac66796cdabc382f318126a99b0eeeae85",
     "historical_qualification_bundle": "reports/artifacts/g2-policy-qualification-bundle-v1.json",
     "remaining_work": [
       "10,000 complete neural-policy games"
@@ -181,6 +183,32 @@
     "adversarial_fail_closed_branches": 25,
     "no_training": true,
     "kaggle_run_performed": false
+  },
+  {
+    "schema_version": 1,
+    "record_id": "task-g2-005",
+    "created_at_utc": "2026-07-19T20:46:00Z",
+    "updated_at_utc": "2026-07-19T20:46:00Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G2-005",
+    "title": "Qualify 10,000 complete neural-policy games",
+    "phase": "G2",
+    "priority": 3,
+    "status": "AWAITING_USER_ACTION",
+    "depends_on": [
+      "T-G2-004"
+    ],
+    "done_when": "A manually selected private Kaggle T4 x2 run completes exactly 10,000 games with zero invalid selections, crashes, timeouts, fallbacks, stale or out-of-order requests, post-terminal dispatches, nonfinite outputs, transport mismatches or recurrent ownership/reset violations, and an independent review passes.",
+    "readiness_evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+    "implementation_commit": "b536f3ac66796cdabc382f318126a99b0eeeae85",
+    "notebook_sha256": "93e44db3edbc729cb3bc42a2347edc0d868b4e895465e88b431063e8853527c3",
+    "input_bundle_sha256": "d4fa4a09e5c86cc3a2c93461b2127634dc197a7241d99d36f78bc35ce878b6ec",
+    "kaggle_dataset_target": "ashok205/g2-neural-reliability-inputs",
+    "kaggle_dataset_status": "NOT_CREATED",
+    "blocker": "Dataset creation was blocked by the available execution interface before network access; the sealed local dataset directory is ready for a manual create transaction.",
+    "no_training": true,
+    "assistant_kaggle_run_performed": false
   },
   {
     "schema_version": 1,

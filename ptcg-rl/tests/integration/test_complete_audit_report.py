@@ -46,4 +46,8 @@ def test_complete_pre_g2_audit_is_cryptographically_consistent() -> None:
     assert checks["latest-clean-source qualification bundle"] == "PASS"
     assert checks["Kaggle CPU/GPU numerical and latency qualification"] == "PASS"
     assert gate["status"] == "RUNNING"
-    assert gate["blockers"] == []
+    assert checks["10,000 complete neural-policy games"] == "READY_FOR_USER_RUN"
+    assert gate["decision"] == "NOT_REVIEWED"
+    assert gate["blockers"] == [
+        "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
+    ]

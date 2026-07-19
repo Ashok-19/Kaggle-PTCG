@@ -101,10 +101,18 @@ def test_gate_and_tasks_close_checkpoint_only_and_keep_g2_running() -> None:
         "status": "PASS",
         "evidence": REPORT_PATH,
     }
-    assert checks["10,000 complete neural-policy games"]["status"] == "QUEUED"
+    reliability = checks["10,000 complete neural-policy games"]
+    assert reliability == {
+        "name": "10,000 complete neural-policy games",
+        "status": "READY_FOR_USER_RUN",
+        "evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+    }
+    assert reliability["status"] != "PASS"
     assert gate["status"] == "RUNNING"
     assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["blockers"] == []
+    assert gate["blockers"] == [
+        "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
+    ]
 
     checkpoint_task = next(item for item in tasks if item.get("task_id") == "T-G2-004")
     assert checkpoint_task["status"] == "SUCCEEDED"
