@@ -1,5 +1,5 @@
 {
-  "card_data_sha256": "ef119ba253a22dcb2ef3d34500ea91c318a6088555e1e86cac91d4e1b37b1e53",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
   "checks": {
     "aggregate_coverage_match": "PASS",
     "exact_file_set_and_sizes": "PASS",
@@ -10,7 +10,7 @@
     "stream_sha256_match": "PASS",
     "zero_based_transport_indices": "PASS"
   },
-  "created_at_utc": "2026-07-19T11:28:00Z",
+  "created_at_utc": "2026-07-19T12:13:00Z",
   "decision": "PASS",
   "gate_id": "R1",
   "mismatches": [],
@@ -81,16 +81,16 @@
     "unordered_requests": 2983
   },
   "record_id": "replay-r1-independent-review-20260719",
-  "review_sha256": "51068b258f7360be2ce02a1c8615fb7f86711c614f2086d9ea66f84620adae0b",
-  "reviewed_audit_sha256": "25bcac5eab91711a3770464ec08f87f48b8a2a6bae84f7aa4477c9824d9c51e9",
+  "review_sha256": "54693ff3a562a579d9885977532beddd27bf460d1c361641bbe25b4e0bc6f83b",
+  "reviewed_audit_sha256": "67b90e8612ee13634dd0ee7aaa918b04e4a66cc137445677012e0b7feb214294",
   "reviewed_record_id": "replay-r1-semantic-loader-20260719",
   "schema_version": 1,
-  "semantic_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
-  "source_commit": "ce19b581c61d87e66b32118f3e63a7b2076aad50",
+  "semantic_stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806",
+  "source_commit": "f12dc389f2b644aa24accad8bd6b5486e9a58656",
   "source_path": "reports/replays/r1-independent-review.json",
   "status": "PASS",
   "title": "Independent R1 semantic replay recalculation",
-  "updated_at_utc": "2026-07-19T11:28:00Z",
+  "updated_at_utc": "2026-07-19T12:13:00Z",
   "warnings": [
     "This review independently recalculates structure and semantics but does not establish policy strength.",
     "The elite replay sample remains biased and is not authorized as imitation-learning supervision."

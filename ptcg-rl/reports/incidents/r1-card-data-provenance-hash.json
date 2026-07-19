@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "record_id": "incident-r1-card-data-provenance-hash-20260719",
+  "created_at_utc": "2026-07-19T11:54:26Z",
+  "updated_at_utc": "2026-07-19T12:15:00Z",
+  "source_path": "reports/incidents/r1-card-data-provenance-hash.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "gate_id": "R1",
+  "kind": "INCIDENT",
+  "severity": "WARNING",
+  "status": "RESOLVED",
+  "title": "R1 semantic provenance hash corrected",
+  "summary": "The original R1 semantic reports embedded a syntactically valid SHA-256 that did not identify any project file. A complete audit detected the mismatch, rebound semantic metadata to the verified official EN_Card_Data.csv hash, reproduced the stream twice and passed an independent recalculation.",
+  "root_cause": "The replay CLI accepted a manually supplied lowercase SHA-256 without verifying it against the official asset record and file bytes.",
+  "impact": {
+    "raw_episode_files_changed": false,
+    "action_alignment_changed": false,
+    "decision_count_changed": false,
+    "coverage_changed": false,
+    "semantic_metadata_references_changed": true,
+    "semantic_stream_hash_changed": true,
+    "training_or_submission_affected": false
+  },
+  "before": {
+    "unresolved_card_data_sha256": "ef119ba253a22dcb2ef3d34500ea91c318a6088555e1e86cac91d4e1b37b1e53",
+    "semantic_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
+    "semantic_audit_sha256": "25bcac5eab91711a3770464ec08f87f48b8a2a6bae84f7aa4477c9824d9c51e9",
+    "independent_review_sha256": "51068b258f7360be2ce02a1c8615fb7f86711c614f2086d9ea66f84620adae0b"
+  },
+  "after": {
+    "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "semantic_stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806",
+    "semantic_audit_sha256": "67b90e8612ee13634dd0ee7aaa918b04e4a66cc137445677012e0b7feb214294",
+    "independent_review_sha256": "54693ff3a562a579d9885977532beddd27bf460d1c361641bbe25b4e0bc6f83b",
+    "source_commit": "f12dc389f2b644aa24accad8bd6b5486e9a58656"
+  },
+  "verification": {
+    "asset_record_matches_private_file": "PASS",
+    "semantic_stream_repeatability": "PASS",
+    "coverage_unchanged": "PASS",
+    "independent_review": "PASS",
+    "cli_asset_binding_added": "PASS",
+    "report_contract_test_added": "PASS"
+    ,"final_commit_bound_regeneration": "PASS"
+  },
+  "evidence": [
+    "asset_hashes.redacted.json",
+    "reports/artifacts/g2-card-table-v1.json",
+    "reports/replays/r1-semantic-loader.json",
+    "reports/replays/r1-independent-review.json",
+    "reports/audits/pre-g2-complete-audit-20260719.json",
+    "tests/replay/test_r1_reports.py"
+  ]
+}

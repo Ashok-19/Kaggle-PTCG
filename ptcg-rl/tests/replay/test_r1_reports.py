@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 
-STREAM_SHA256 = "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4"
+STREAM_SHA256 = "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806"
 
 
 def canonical(value: Any) -> bytes:
@@ -42,6 +42,12 @@ def test_r1_loader_and_independent_review_are_cryptographically_consistent() -> 
     assert semantic["semantic_stream_sha256"] == STREAM_SHA256
     assert review["semantic_stream_sha256"] == STREAM_SHA256
     assert review["reviewed_audit_sha256"] == semantic["audit_sha256"]
+    assets = load(root, "asset_hashes.redacted.json")
+    official_card_hash = assets["assets"]["official"]["signature_sha256"]["card_data"]
+    private_card_data = root / "private" / "assets" / "official" / "EN_Card_Data.csv"
+    assert hashlib.sha256(private_card_data.read_bytes()).hexdigest() == official_card_hash
+    assert semantic["card_data_sha256"] == official_card_hash
+    assert review["card_data_sha256"] == official_card_hash
     assert review["recalculated_coverage"] == semantic["coverage"]
     assert set(review["checks"].values()) == {"PASS"}
     assert review["mismatches"] == []
@@ -65,7 +71,8 @@ def test_r1_gate_and_task_close_only_on_full_evidence() -> None:
     assert task["status"] == "SUCCEEDED"
     assert task["semantic_stream_sha256"] == STREAM_SHA256
     assert task["implementation_commit"] == "225f23aa705b061a6f98e24796cbb68ea0fc51f0"
-    assert task["review_commit"] == "ce19b581c61d87e66b32118f3e63a7b2076aad50"
+    assert task["review_commit"] == "f12dc389f2b644aa24accad8bd6b5486e9a58656"
+    assert task["provenance_hardening_commit"] == task["review_commit"]
 
     assert learning["status"] == "SUCCEEDED"
     assert learning["coverage"]["decisions"] == 2999

@@ -87,7 +87,20 @@
     "kind": "REVIEW",
     "severity": "INFO",
     "status_after": "SUCCEEDED",
-    "title": "Independent semantic recalculation closes R1",
-    "summary": "Separate reviewer code reproduced semantic stream SHA-256 68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4 and every aggregate with zero mismatches. R1 is accepted as PASS."
+    "title": "Initial independent semantic recalculation closed R1",
+    "summary": "The initial independent review reproduced semantic stream SHA-256 68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4 and every aggregate. A later complete audit found that the embedded card-data provenance hash did not identify a project file; the structural coverage remained valid but this stream hash was superseded."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-card-data-provenance-corrected-20260719",
+    "created_at_utc": "2026-07-19T11:59:00Z",
+    "source_path": "reports/incidents/r1-card-data-provenance-hash.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "INCIDENT",
+    "severity": "WARNING",
+    "status_after": "SUCCEEDED",
+    "title": "R1 semantic provenance hash corrected and re-audited",
+    "summary": "Complete audit rebound semantic metadata to verified official card-data SHA-256 a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373. The corrected stream 7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806 reproduced twice and passed independent review with unchanged coverage."
   }
 ]

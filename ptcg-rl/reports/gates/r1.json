@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-r1-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T11:30:00Z",
+  "updated_at_utc": "2026-07-19T12:15:00Z",
   "source_path": "reports/gates/r1.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "4",
+  "producer_version": "6",
   "gate_id": "R1",
   "title": "Version-pinned filtered replay and current-meta pipeline",
   "status": "SUCCEEDED",
@@ -48,9 +48,19 @@
       "evidence": "reports/replays/r1-semantic-loader.json"
     },
     {
+      "name": "official card-data provenance matches asset record and private file bytes",
+      "status": "PASS",
+      "evidence": "reports/incidents/r1-card-data-provenance-hash.json"
+    },
+    {
       "name": "independent semantic stream and aggregate recalculation",
       "status": "PASS",
       "evidence": "reports/replays/r1-independent-review.json"
+    }
+    ,{
+      "name": "complete pre-G2 audit and corrected evidence contract",
+      "status": "PASS",
+      "evidence": "reports/audits/pre-g2-complete-audit-20260719.json"
     }
   ],
   "blockers": [],
@@ -59,7 +69,8 @@
     "Manifest scores are episode-level and must not be attributed to one seat or deck.",
     "Replay action at step t belongs to the preceding active agent request, not the same observation record.",
     "The top-level replay id is an internal UUID; the Kaggle episode id is the filename.",
-    "Actions are decoded for structural and meta analysis but remain unauthorized as imitation-learning supervision."
+    "Actions are decoded for structural and meta analysis but remain unauthorized as imitation-learning supervision.",
+    "A complete audit corrected the semantic metadata provenance hash; coverage and action alignment were unchanged, and the corrected stream passed repeat and independent review."
   ],
   "approved_next_action": "Use the closed R1 loader for deterministic replay and meta diagnostics. Do not retrieve additional episodes or use replay actions for training without a new decision; rebuild the G2 qualification bundle from the latest clean source and run bounded private Kaggle CPU/GPU qualification.",
   "cost_usd": 0.0

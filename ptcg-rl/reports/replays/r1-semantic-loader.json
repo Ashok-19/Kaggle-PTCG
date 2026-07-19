@@ -1,6 +1,6 @@
 {
-  "audit_sha256": "25bcac5eab91711a3770464ec08f87f48b8a2a6bae84f7aa4477c9824d9c51e9",
-  "card_data_sha256": "ef119ba253a22dcb2ef3d34500ea91c318a6088555e1e86cac91d4e1b37b1e53",
+  "audit_sha256": "67b90e8612ee13634dd0ee7aaa918b04e4a66cc137445677012e0b7feb214294",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
   "coverage": {
     "chosen_options": 3275,
     "decisions": 2999,
@@ -63,13 +63,13 @@
     "stop_markers": 21,
     "unordered_requests": 2983
   },
-  "created_at_utc": "2026-07-19T11:24:00Z",
+  "created_at_utc": "2026-07-19T12:12:00Z",
   "determinism": {
     "first_decision_sha256": "abef4b406551057b420dcda4a76f5b233b70a87bb370f552e8727fe4eeec8a3f",
-    "last_decision_sha256": "afe7767b8bdf984c8638b002deb91ca3e25ff2957ad81e586723e366e6760ae9",
-    "stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4"
+    "last_decision_sha256": "06022d3e08677964af46438a365085470d810b9ed2bc6c2c63383759d055987e",
+    "stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806"
   },
-  "expected_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
+  "expected_stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806",
   "expected_stream_sha256_match": true,
   "gate_id": "R1",
   "loader_contract": {
@@ -83,7 +83,7 @@
   },
   "memory": {
     "max_peak_rss_mib": 256.0,
-    "peak_rss_mib": 64.546875,
+    "peak_rss_mib": 68.17578125,
     "within_limit": true
   },
   "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
@@ -92,11 +92,11 @@
   "producer_version": "r1-semantic-loader-v1",
   "record_id": "replay-r1-semantic-loader-20260719",
   "schema_version": 1,
-  "semantic_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
+  "semantic_stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806",
   "source_path": "reports/replays/r1-semantic-loader.json",
   "status": "PASS",
   "title": "R1 streaming lag-aligned semantic replay loader",
-  "updated_at_utc": "2026-07-19T11:24:00Z",
+  "updated_at_utc": "2026-07-19T12:12:00Z",
   "warnings": [
     "The approved daily dataset is elite, rating-selected and capped; it is not an unbiased ladder sample.",
     "Replay actions are observational evidence and are not authorized as imitation-learning supervision.",

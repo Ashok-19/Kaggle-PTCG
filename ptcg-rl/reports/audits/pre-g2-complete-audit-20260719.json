@@ -1,0 +1,165 @@
+{
+  "approved_next_action": "Rebuild and reseal the no-training G2 qualification bundle from the latest clean source; do not launch the existing stale archive.",
+  "audit_sha256": "f96f16d0c664078998ddef299368d487ff30533de6cfeaba6b8f857d5535b1de",
+  "authorization_boundaries": [
+    "No additional replay retrieval was performed.",
+    "Replay actions remain unauthorized for imitation-learning supervision.",
+    "No PPO, league, self-play training or large evaluation was started.",
+    "No Kaggle qualification notebook was launched from the stale bundle.",
+    "No Modal work, submission action or Git push was performed."
+  ],
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-19T12:15:00Z",
+  "decision": "PASS",
+  "findings": [
+    {
+      "evidence": "dashboard/frontend/tests/dashboard.spec.ts",
+      "impact": "The application state was correct; two browser assertions were stale.",
+      "resolution": "Assertions now target the current R1 PASS, G2 RUNNING and future G3a states while retaining resolved-incident history coverage.",
+      "severity": "WARNING",
+      "status": "RESOLVED",
+      "title": "Dashboard browser tests contained pre-R1-closure assertions"
+    },
+    {
+      "evidence": "reports/incidents/r1-card-data-provenance-hash.json",
+      "impact": "Replay files, action alignment and aggregate coverage were unchanged, but model-visible metadata references and the stream hash required correction.",
+      "resolution": "The loader and reviewer now bind to the official asset record and actual EN_Card_Data.csv bytes. The corrected stream reproduced repeatedly and passed independent review.",
+      "severity": "WARNING",
+      "status": "RESOLVED",
+      "title": "R1 semantic reports used an unverified card-data provenance identifier"
+    },
+    {
+      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v1.json",
+      "impact": "The archive is byte-valid for its recorded source commit but must not be launched for current-source CPU/GPU qualification.",
+      "resolution": "Rebuild and reseal the no-training bundle from the latest clean source before any Kaggle notebook launch.",
+      "severity": "BLOCKER",
+      "status": "OPEN",
+      "title": "Existing G2 qualification bundle does not match current HEAD"
+    }
+  ],
+  "gate_id": "G2",
+  "kind": "AUDIT",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "record_id": "audit-pre-g2-complete-20260719",
+  "remaining_blockers": [
+    "Rebuild and reseal the no-training G2 qualification bundle from the latest clean source.",
+    "Run bounded private Kaggle CPU/GPU parity only after the rebuilt bundle is verified.",
+    "Submission Python patch and effective timeout remain provisional until final packaging qualification."
+  ],
+  "schema_version": 1,
+  "scope": [
+    "Git and source integrity",
+    "Python 3.11 and Python 3.12 syntax compatibility",
+    "whole-repository lint and warning-free tests",
+    "R0 acquisition and raw episode byte hashes",
+    "R1 semantic replay decoding, determinism and independent review",
+    "G1 and G2 boundary and corruption cases",
+    "G2 no-training forward, recurrent, decoder and gradient qualification",
+    "sealed qualification archive byte, path, privacy and provenance integrity",
+    "dashboard ingestion, unit tests, production build and browser flows"
+  ],
+  "source_commit": "689cd4cc748a0ceb54300d8515a3500dce47b57a",
+  "source_path": "reports/audits/pre-g2-complete-audit-20260719.json",
+  "status": "SUCCEEDED",
+  "test_matrix": {
+    "dashboard": {
+      "browser_flows": 4,
+      "browser_status": "PASS",
+      "doctor": "PASS",
+      "frontend_unit_tests": 7,
+      "ingested_records": 88,
+      "live_g2_parity_status": "BLOCKED",
+      "live_g2_status": "RUNNING",
+      "live_r1_decision": "PASS",
+      "live_r1_status": "SUCCEEDED",
+      "production_build": "PASS",
+      "quarantined_records": 0
+    },
+    "doctor": {
+      "expected_warnings": [
+        "Local CPU environment has no CUDA.",
+        "Exact submission Python patch remains provisional.",
+        "Exact effective submission timeout remains provisional."
+      ],
+      "status": "PASS"
+    },
+    "g2_model": {
+      "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+      "input_sha256": "0996a5ac886c8b8b424edaaa2edabdf31b7f4eb2280c2c6fe3fec7e8da6416c7",
+      "masked_decoder_and_stop": "PASS",
+      "mixed_ragged_batch": "PASS",
+      "more_than_64_options": "PASS",
+      "no_optimizer_or_training_loop": true,
+      "nonzero_selected_gradient_components": 7,
+      "permutation_equivariance": "PASS",
+      "repeat_gradients_exact": true,
+      "repeat_outputs_exact": true,
+      "state_dict_sha256": "245db7802c2082bb54a335c12086fc6c420dc428ec53806cd3d406bc32a64f8e",
+      "trainable_parameters": 970022,
+      "zero_option_request": "PASS"
+    },
+    "python": {
+      "distinct_python_hash_seeds": true,
+      "python_development_mode": true,
+      "ruff_whole_repository": "PASS",
+      "strict_runs": 2,
+      "tests_passed_each_run": 123,
+      "warnings_as_errors": true
+    },
+    "replay": {
+      "acquisition_audit_reproduced": true,
+      "all_file_sha256_match_acquisition_report": true,
+      "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "chosen_options": 3275,
+      "episode_bytes": 83981423,
+      "episode_files": 20,
+      "focused_status": "PASS",
+      "focused_tests": 30,
+      "independent_checks_passed": 8,
+      "independent_review_sha256": "54693ff3a562a579d9885977532beddd27bf460d1c361641bbe25b4e0bc6f83b",
+      "ordered_requests": 16,
+      "peak_rss_mib": 68.17578125,
+      "rss_ceiling_mib": 256.0,
+      "semantic_audit_sha256": "67b90e8612ee13634dd0ee7aaa918b04e4a66cc137445677012e0b7feb214294",
+      "semantic_decisions": 2999,
+      "semantic_stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806",
+      "stop_markers": 21
+    },
+    "replay_edge_cases": {
+      "action_after_nonactive_record": "REJECTED",
+      "duplicate_bool_out_of_range_unavailable_indices": "REJECTED",
+      "exact_max_without_stop": "PASS",
+      "invalid_initialization_or_deck_action": "REJECTED",
+      "invalid_terminal_status_or_rewards": "REJECTED",
+      "malformed_json": "REJECTED",
+      "optional_zero_choice_stop": "PASS",
+      "ordered_multiselect": "PASS",
+      "partial_missing_extra_and_size_drift": "REJECTED",
+      "terminal_record_mismatch": "REJECTED",
+      "wrong_card_data_override": "REJECTED"
+    },
+    "sealed_bundle": {
+      "all_bytes_match_recorded_source_commit": true,
+      "archive_integrity": "PASS",
+      "bundle_bytes": 66828,
+      "bundle_sha256": "aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6",
+      "card_names_or_effect_text_present": false,
+      "current_head_match": false,
+      "launch_disposition": "BLOCKED_REBUILD_REQUIRED",
+      "manifest_entries": 11,
+      "path_safety": "PASS",
+      "private_numeric_table_matches": true
+    },
+    "source_integrity": {
+      "git_diff_check": "PASS",
+      "git_fsck": "PASS",
+      "python_3_11_compileall": "PASS",
+      "python_3_12_compileall": "PASS",
+      "uv_lock_check": "PASS"
+    }
+  },
+  "title": "Complete pre-G2 source, replay, model and dashboard audit",
+  "updated_at_utc": "2026-07-19T12:28:00Z",
+  "verdict": "PASS_WITH_CORRECTIONS"
+}

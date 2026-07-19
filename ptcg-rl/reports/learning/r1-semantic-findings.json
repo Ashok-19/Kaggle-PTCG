@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_id": "learning-r1-semantic-findings-20260719",
   "created_at_utc": "2026-07-19T11:30:00Z",
-  "updated_at_utc": "2026-07-19T11:30:00Z",
+  "updated_at_utc": "2026-07-19T12:15:00Z",
   "source_path": "reports/learning/r1-semantic-findings.json",
   "producer": "chatgpt-local-agent",
   "title": "What the approved replay sample teaches us",
@@ -14,7 +14,8 @@
     "Replay actions use zero-based native option indices; they are not card IDs or semantic field values.",
     "A STOP marker is reconstructed only when the submitted option count is below max_count.",
     "The pregame firstPlayer value -1 means the opening player is not known yet and is normalized to missing.",
-    "The loader keeps one episode resident at a time and observed 64.546875 MiB peak RSS under a 256 MiB ceiling.",
+    "Semantic metadata references are bound to the verified official EN_Card_Data.csv SHA-256, not a manually supplied identifier.",
+    "The loader keeps one episode resident at a time and observed 68.17578125 MiB peak RSS under a 256 MiB ceiling.",
     "Execution order is retained for the 16 ordered requests, while transport position remains excluded from actor features."
   ],
   "coverage": {
@@ -26,10 +27,13 @@
     "max_legal_options": 34,
     "max_selected_options": 14
   },
-  "semantic_stream_sha256": "68da24b6d530f206987840079acffbe01e6d398bbc993427ae5a55e37d47c9a4",
+  "semantic_stream_sha256": "7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
   "evidence": [
     "reports/replays/r1-semantic-loader.json",
-    "reports/replays/r1-independent-review.json"
+    "reports/replays/r1-independent-review.json",
+    "reports/incidents/r1-card-data-provenance-hash.json",
+    "reports/audits/pre-g2-complete-audit-20260719.json"
   ],
   "boundaries": [
     "This is an elite, rating-selected and capped sample, not an unbiased ladder distribution.",

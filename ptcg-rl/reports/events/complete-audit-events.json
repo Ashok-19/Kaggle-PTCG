@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-complete-pre-g2-audit-20260719",
+    "created_at_utc": "2026-07-19T12:15:00Z",
+    "source_path": "reports/audits/pre-g2-complete-audit-20260719.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "AUDIT",
+    "severity": "WARNING",
+    "status_after": "RUNNING",
+    "title": "Complete pre-G2 audit passed with corrections",
+    "summary": "Source, replay, model, archive and dashboard checks passed after correcting stale browser assertions and R1 card-data provenance. The historical G2 bundle is byte-valid but blocked from launch until rebuilt from current clean source."
+  }
+]
