@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T08:35:34Z",
+  "updated_at_utc": "2026-07-19T10:49:23Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "2",
+  "producer_version": "3",
   "gate_id": "G2",
   "title": "Model-facing tensors, recurrent policy and semantic action scorer",
   "status": "RUNNING",
@@ -49,18 +49,32 @@
     },
     {
       "name": "compact recurrent policy and value model",
-      "status": "RUNNING",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g2-policy-v1.json"
+    },
+    {
+      "name": "commit-bound private qualification bundle and packaged-source smoke",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v1.json"
+    },
+    {
+      "name": "Kaggle CPU/GPU numerical and latency qualification",
+      "status": "READY",
+      "evidence": "configs/kaggle/g2_policy_cpu_qualification.json"
+    },
+    {
+      "name": "10,000 complete neural-policy games",
+      "status": "QUEUED",
       "evidence": "reports/tasks/current.json"
     }
   ],
   "blockers": [],
   "warnings": [
     "Training remains unauthorized; G2 implementation and qualification only.",
-    "The projection and static table are not strength results and do not yet include the neural model.",
-    "Heavy CPU/GPU parity and qualification must run in a bounded private Kaggle notebook."
-,
+    "The sealed model is an architecture/correctness result, not a policy-strength or learning result.",
+    "Local latency is a functional smoke only; bounded private Kaggle CPU latency is the qualification source of truth.",
     "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item."
   ],
-  "approved_next_action": "Implement and qualify the under-2M recurrent semantic policy using the sealed projection and private table; preserve both contracts or record a version bump.",
+  "approved_next_action": "Run the commit-bound bundle in bounded private Kaggle CPU and GPU notebooks, compare forward, recurrent, decoder and gradient outputs within 1e-5, and do not start PPO training.",
   "cost_usd": 0.0
 }

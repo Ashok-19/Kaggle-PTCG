@@ -1,0 +1,65 @@
+{
+  "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+  "artifact_id": "g2-policy-v1",
+  "card_table_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "components": [
+    "numeric static card and attack catalog encoder",
+    "two entity self-attention blocks with CLS pooling",
+    "public event GRU",
+    "public recurrent GRU state",
+    "ragged semantic option scorer",
+    "public value head",
+    "separate STOP-aware autoregressive selection GRU"
+  ],
+  "config_sha256": "bc261bcc82a44b50db0734e7518c8ee7773abcbc809d8831c3563a7bcd6875cd",
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-19T09:05:00Z",
+  "dependencies": {
+    "numpy": "2.0.2",
+    "torch": "2.10.0+cpu"
+  },
+  "gate_id": "G2",
+  "hard_parameter_ceiling": 2000000,
+  "kind": "MODEL_ARCHITECTURE",
+  "local_packaged_smoke": {
+    "batch1_five_options_p99_ms": 7.63121,
+    "batch8_mixed_options_p99_ms": 12.642437,
+    "input_sha256": "0996a5ac886c8b8b424edaaa2edabdf31b7f4eb2280c2c6fe3fec7e8da6416c7",
+    "state_dict_sha256": "245db7802c2082bb54a335c12086fc6c420dc428ec53806cd3d406bc32a64f8e",
+    "status": "PASS",
+    "warning": "Local latency is a functional smoke only; Kaggle CPU latency is the qualification source of truth."
+  },
+  "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
+  "not_yet_qualified": [
+    "CPU/GPU numerical parity on Kaggle",
+    "Kaggle batch-1 CPU latency percentiles",
+    "10,000 complete neural-policy games",
+    "checkpoint package contract",
+    "submission-runtime parity",
+    "policy strength or learning"
+  ],
+  "producer": "ptcg-rl.g2.network",
+  "producer_version": "2",
+  "qualification": {
+    "decoder_masking": "PASS",
+    "gradient_reach_nonzero": "PASS",
+    "more_than_64_options": "PASS",
+    "option_permutation_equivariance": "PASS",
+    "packaged_source_cpu_smoke": "PASS",
+    "public_memory_not_advanced_inside_decoder": "PASS",
+    "ragged_batching": "PASS",
+    "sealed_g1_fixture_contract": "PASS",
+    "state_dict_round_trip": "PASS",
+    "state_invariance_to_option_order": "PASS",
+    "strict_json_masked_infinity": "PASS"
+  },
+  "record_id": "artifact-g2-policy-v1",
+  "schema_version": 1,
+  "source_commit": "ac25a8807c8351c5ae4c9071c3bdcdbe521b0eae",
+  "source_path": "reports/artifacts/g2-policy-v1.json",
+  "status": "SUCCEEDED",
+  "target_trainable_parameters": 1250000,
+  "title": "Compact recurrent semantic policy v1",
+  "trainable_parameters": 970022,
+  "updated_at_utc": "2026-07-19T10:49:23Z"
+}

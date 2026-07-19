@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "record_id": "incident-g2-entity-width-drift-20260719",
+  "created_at_utc": "2026-07-19T10:39:00Z",
+  "updated_at_utc": "2026-07-19T10:49:23Z",
+  "source_path": "reports/incidents/g2-entity-width-drift.json",
+  "producer": "chatgpt-local-agent",
+  "incident_id": "INC-G2-ENTITY-WIDTH-DRIFT",
+  "gate_id": "G2",
+  "severity": "HIGH",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "state": "SUCCEEDED",
+  "title": "Policy entity numeric layer drifted from the sealed schema",
+  "impact": "The committed policy expected 28 numeric-plus-missing inputs while schema v1 emits 26, causing every neural forward pass with entities to fail before any Kaggle qualification or training.",
+  "containment": "No cloud qualification, training, checkpoint promotion or submission used the defective forward path.",
+  "root_cause": "Numeric layer widths were handwritten constants instead of being derived from the sealed feature-name tuples.",
+  "corrective_action": "Derive player, entity, option and global numeric layer widths from their schema constants and strengthen qualification fixtures, serialization and recurrent-gradient checks.",
+  "regression_test": "The full suite passes 97 tests; the exact committed bundle executes end-to-end and records nonzero gradients for all seven selected components.",
+  "resolution_commit": "ac25a8807c8351c5ae4c9071c3bdcdbe521b0eae"
+}

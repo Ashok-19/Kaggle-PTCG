@@ -1,0 +1,28 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-policy-v1-sealed-20260719",
+    "created_at_utc": "2026-07-19T09:05:00Z",
+    "source_path": "reports/artifacts/g2-policy-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "MODEL",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Compact recurrent semantic policy v1 sealed",
+    "summary": "The corrected 970,022-parameter policy passes ragged, permutation, nonzero-gradient, decoder, serialization and packaged-source qualification; Kaggle parity and complete-game reliability remain open."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-qualification-baseline-repaired-20260719",
+    "created_at_utc": "2026-07-19T10:49:23Z",
+    "source_path": "reports/artifacts/g2-policy-qualification-bundle-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "CHECK",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "G2 qualification baseline repaired and packaged",
+    "summary": "All 97 tests pass and bundle aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6 executes from isolated packaged source without training."
+  }
+]

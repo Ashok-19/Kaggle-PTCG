@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g2-policy-qualification-bundle-v1",
+  "created_at_utc": "2026-07-19T10:53:17Z",
+  "updated_at_utc": "2026-07-19T10:49:23Z",
+  "source_path": "reports/artifacts/g2-policy-qualification-bundle-v1.json",
+  "producer": "scripts/kaggle/build_g2_qualification_bundle.py",
+  "producer_version": "1",
+  "artifact_id": "g2-policy-qualification-bundle-v1",
+  "gate_id": "G2",
+  "kind": "QUALIFICATION_BUNDLE",
+  "status": "SUCCEEDED",
+  "title": "Private G2 CPU/GPU qualification bundle",
+  "source_commit": "16240fa65fd35f395fc46a6ff7b5eabc9516d70f",
+  "bundle_bytes": 66828,
+  "bundle_sha256": "aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6",
+  "included_files": 11,
+  "tracked_source_files": 10,
+  "private_numeric_tables": 1,
+  "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+  "card_table_content_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "packaged_source_smoke": {
+    "device": "local CPU",
+    "no_optimizer": true,
+    "no_training_loop": true,
+    "nonzero_selected_gradients": 7,
+    "status": "PASS"
+  },
+  "privacy": {
+    "archive_ignored": true,
+    "card_names_or_effect_text_included": false,
+    "internet_required": false,
+    "notebook_visibility": "PRIVATE"
+  },
+  "cost_usd": 0.0
+}
