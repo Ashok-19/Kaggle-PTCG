@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .acquisition import audit_acquisition, load_verified_plan, write_acquisition_records
+from .independent_review import independently_review_semantic_report, write_review_report
 from .semantic_loader import audit_semantic_loader, write_semantic_report
 from .planner import ReplayPlanError, build_plan, load_config, verify_plan, write_plan
 
@@ -41,6 +42,14 @@ def add_replay_parsers(commands: argparse._SubParsersAction[Any]) -> None:
     semantic.add_argument("--created-at-utc")
     semantic.add_argument("--expected-stream-sha256")
     semantic.add_argument("--max-peak-rss-mib", type=float, default=256.0)
+
+    review = subcommands.add_parser("review-semantic")
+    review.add_argument("--plan", type=Path, required=True)
+    review.add_argument("--episodes", type=Path, required=True)
+    review.add_argument("--semantic-report", type=Path, required=True)
+    review.add_argument("--review-report", type=Path, required=True)
+    review.add_argument("--created-at-utc")
+    review.add_argument("--source-commit")
 
 
 def _resolve(repo: Path, path: Path) -> Path:
@@ -90,6 +99,31 @@ def run_replay(args: argparse.Namespace, repo: Path) -> dict[str, object]:
             "report_path": str(report_path.relative_to(repo)) if report_path.is_relative_to(repo) else str(report_path),
             **dict(report["acquisition"]),
             **dict(report["replay_contract"]),
+        }
+
+    if args.replay_command == "review-semantic":
+        plan = load_verified_plan(_resolve(repo, args.plan))
+        semantic_report = json.loads(
+            _resolve(repo, args.semantic_report).read_text(encoding="utf-8")
+        )
+        review = independently_review_semantic_report(
+            plan,
+            _resolve(repo, args.episodes),
+            semantic_report,
+            created_at_utc=args.created_at_utc,
+            source_commit=args.source_commit,
+        )
+        review_path = _resolve(repo, args.review_report)
+        write_review_report(review, review_path)
+        return {
+            "status": review["status"],
+            "decision": review["decision"],
+            "semantic_stream_sha256": review["semantic_stream_sha256"],
+            "review_sha256": review["review_sha256"],
+            "review_report": str(review_path.relative_to(repo))
+            if review_path.is_relative_to(repo)
+            else str(review_path),
+            **dict(review["recalculated_coverage"]),
         }
 
     if args.replay_command == "audit-semantic":
