@@ -23,6 +23,7 @@ Next review required before: any episode JSON transfer, G3 training, Modal execu
 - The GitHub Packages permission gap is recorded and waived for agent development.
 - Exact submission Python patch and timeout verification are deferred to final packaging/model compatibility; the submission doctor continues to enforce them.
 - Dashboard dependencies remain isolated in the `dashboard` dependency group.
+- The full read-only dashboard expansion is complete at commit `e35b4d07f8cad02edbb9ab6a3b986f9f8416113d`; source changes auto-sync and the browser refreshes every 15 seconds.
 - ROGII is a read-only dashboard/workflow reference and must not be modified.
 
 ## Compute Roles
@@ -99,7 +100,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Synchronize and expand the dashboard so machine-readable progress auto-updates in the server and browser.
-2. Retrieve and verify the official episode-index manifest and one selected daily manifest through the Kaggle MCP.
-3. Generate the immutable capped episode plan and present it for user approval before any episode JSON transfer.
-4. Implement G2 model-facing tensor and neural-policy foundations in small commits; use a private Kaggle notebook for heavy CPU/GPU parity and qualification workflows.
+1. Retrieve and verify the official episode-index manifest and one selected daily manifest through the Kaggle MCP.
+2. Generate the immutable capped episode plan and present it for user approval before any episode JSON transfer.
+3. Implement G2 model-facing tensor and neural-policy foundations in small commits; use a private Kaggle notebook for heavy CPU/GPU parity and qualification workflows.
