@@ -90,6 +90,8 @@ def test_bundle_builder_uses_an_explicit_source_allowlist() -> None:
     text = script.read_text(encoding="utf-8")
     assert "TRACKED_FILES" in text
     assert "PRIVATE_TABLE" in text
+    assert "--untracked-files=no" in text
+    assert "qualification bundle source files differ from HEAD" in text
     assert "rglob" not in text
     assert "glob(" not in text
     assert any(isinstance(node, ast.Tuple) for node in ast.walk(tree))

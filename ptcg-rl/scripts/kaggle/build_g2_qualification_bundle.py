@@ -42,6 +42,20 @@ def main() -> None:
     ).splitlines()
     if sorted(tracked) != sorted(TRACKED_FILES):
         raise SystemExit("qualification bundle source list is not fully tracked")
+    dirty = subprocess.check_output(
+        [
+            "git",
+            "status",
+            "--porcelain",
+            "--untracked-files=no",
+            "--",
+            *TRACKED_FILES,
+        ],
+        cwd=root,
+        text=True,
+    ).splitlines()
+    if dirty:
+        raise SystemExit("qualification bundle source files differ from HEAD")
     paths = [root / relative for relative in TRACKED_FILES]
     private_table = root / PRIVATE_TABLE
     if not private_table.is_file():
