@@ -33,6 +33,32 @@ GRADIENT_PARAMETERS = (
     "stop_embedding",
 )
 
+QUALIFICATION_STATE_ALGORITHM = "sha256-name-lcg24-v1"
+_LCG_MULTIPLIER = np.uint64(6_364_136_223_846_793_005)
+_LCG_MASK = np.uint64((1 << 24) - 1)
+
+
+def initialize_qualification_state(model: torch.nn.Module) -> None:
+    """Assign a byte-stable state independent of PyTorch build defaults."""
+    with torch.no_grad():
+        for name, parameter in model.named_parameters():
+            name_seed = np.uint64(
+                int.from_bytes(hashlib.sha256(name.encode("utf-8")).digest()[:8], "little")
+            )
+            indices = np.arange(parameter.numel(), dtype=np.uint64)
+            raw = (indices * _LCG_MULTIPLIER + name_seed) & _LCG_MASK
+            centered = raw.astype(np.float32) / np.float32(1 << 24) - np.float32(0.5)
+            if parameter.ndim == 1 and name.endswith(".weight"):
+                values = np.float32(1.0) + centered / np.float32(512.0)
+            elif name.endswith("bias"):
+                values = centered / np.float32(512.0)
+            else:
+                values = centered / np.float32(16.0)
+            tensor = torch.from_numpy(values.reshape(tuple(parameter.shape))).to(
+                dtype=parameter.dtype
+            )
+            parameter.copy_(tensor)
+
 
 def raw_observation(options: list[dict[str, Any]]) -> dict[str, Any]:
     def player(hand: list[dict[str, Any]] | None) -> dict[str, Any]:
@@ -243,8 +269,11 @@ def main() -> None:
     np.random.seed(SEED)
     torch.use_deterministic_algorithms(True)
     torch.set_num_threads(1)
+    if device.type == "cuda":
+        torch.backends.cudnn.enabled = False
     table = load_card_table(bundle_root / "card-table-v1.json")
     model = PTCGPolicyV1(table)
+    initialize_qualification_state(model)
     initial_state = {name: value.detach().clone() for name, value in model.state_dict().items()}
     state_hash = tensor_sha256(initial_state)
     model = model.to(device)
@@ -314,6 +343,11 @@ def main() -> None:
             "machine": platform.machine(),
             "threads": torch.get_num_threads(),
             "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            "cudnn_enabled": torch.backends.cudnn.enabled,
+        },
+        "qualification_state": {
+            "algorithm": QUALIFICATION_STATE_ALGORITHM,
+            "state_dict_sha256": state_hash,
         },
         "model": metadata,
         "state_dict_sha256": state_hash,
@@ -343,6 +377,9 @@ def main() -> None:
             "no_training_loop": True,
             "gradient_pass_training_mode": gradient_pass_training_mode,
             "latency_pass_evaluation_mode": latency_pass_evaluation_mode,
+            "fixed_qualification_state": True,
+            "cudnn_disabled_for_gpu_parity": device.type != "cuda"
+            or not torch.backends.cudnn.enabled,
         },
     }
     if not all(payload["checks"].values()):

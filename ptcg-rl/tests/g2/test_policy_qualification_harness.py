@@ -45,6 +45,48 @@ def test_policy_qualification_fixture_matches_the_sealed_g1_contract() -> None:
     assert len(card.model.option_available_mask) == 1
 
 
+def test_qualification_state_is_independent_of_torch_default_initialization() -> None:
+    root = Path(__file__).resolve().parents[2]
+    namespace = runpy.run_path(
+        str(root / "scripts" / "kaggle" / "g2_policy_qualification.py")
+    )
+    torch = namespace["torch"]
+    initialize = namespace["initialize_qualification_state"]
+    tensor_sha256 = namespace["tensor_sha256"]
+
+    torch.manual_seed(1)
+    first = torch.nn.Sequential(
+        torch.nn.Linear(7, 5),
+        torch.nn.LayerNorm(5),
+        torch.nn.Linear(5, 3),
+    )
+    torch.manual_seed(999)
+    second = torch.nn.Sequential(
+        torch.nn.Linear(7, 5),
+        torch.nn.LayerNorm(5),
+        torch.nn.Linear(5, 3),
+    )
+    initialize(first)
+    initialize(second)
+    assert tensor_sha256(first.state_dict()) == tensor_sha256(second.state_dict())
+
+
+def test_gpu_parity_path_disables_cudnn_and_records_fixed_state() -> None:
+    root = Path(__file__).resolve().parents[2]
+    text = (
+        root / "scripts" / "kaggle" / "g2_policy_qualification.py"
+    ).read_text(encoding="utf-8")
+    main_text = text[text.index("def main() -> None:") :]
+    assert main_text.index("torch.backends.cudnn.enabled = False") < main_text.index(
+        "first_output, output"
+    )
+    assert main_text.index("initialize_qualification_state(model)") < main_text.index(
+        "initial_state ="
+    )
+    assert '"fixed_qualification_state"' in main_text
+    assert '"cudnn_disabled_for_gpu_parity"' in main_text
+
+
 def test_policy_qualification_serializes_masked_infinities_without_allowing_nan() -> None:
     root = Path(__file__).resolve().parents[2]
     namespace = runpy.run_path(
