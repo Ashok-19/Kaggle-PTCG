@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable
@@ -306,6 +307,64 @@ def test_independent_review_rejects_output_hash_and_receipt_drift(tmp_path: Path
     )
     assert result["status"] == "FAIL"
     assert result["receipt_comparison_failures"] == ["engine_requests"]
+
+
+def test_checkpoint_context_binds_tracked_policy_config(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2]
+    module = load_script(root)
+    package = tmp_path / "private/checkpoint.zip"
+    package.parent.mkdir(parents=True)
+    package.write_bytes(b"checkpoint")
+    config = module.PolicyConfigV1()
+    config_path = tmp_path / "configs/g2_policy_v1.json"
+    config_path.parent.mkdir(parents=True)
+    config_path.write_text(
+        json.dumps(
+            {
+                "policy_config": asdict(config),
+                "card_table_sha256": "c" * 64,
+                "model_schema_sha256": "m" * 64,
+            }
+        )
+    )
+    report_path = tmp_path / module.CHECKPOINT_REPORT
+    report_path.parent.mkdir(parents=True)
+    report_path.write_text(
+        json.dumps(
+            {
+                "status": "SUCCEEDED",
+                "model": {
+                    "config_sha256": config.config_sha256,
+                    "card_table_sha256": "c" * 64,
+                    "model_schema_sha256": "m" * 64,
+                    "qualification_state_sha256": "q" * 64,
+                },
+                "private_artifacts": {
+                    "package": {
+                        "path": package.relative_to(tmp_path).as_posix(),
+                        "bytes": package.stat().st_size,
+                        "sha256": hashlib.sha256(package.read_bytes()).hexdigest(),
+                    }
+                },
+            }
+        )
+    )
+    parity_path = tmp_path / module.PARITY_REPORT
+    parity_path.parent.mkdir(parents=True)
+    parity_path.write_text(
+        json.dumps(
+            {
+                "status": "SUCCEEDED",
+                "decision": "PASS",
+                "identity": {"qualification_state_sha256": "q" * 64},
+            }
+        )
+    )
+    context = module.checkpoint_context(tmp_path)
+    assert context["config"]["public_hidden"] == 160
+    assert module.PolicyConfigV1(**context["config"]).config_sha256 == context["model"][
+        "config_sha256"
+    ]
 
 
 def test_initial_receipt_preserves_no_training_boundary(tmp_path: Path) -> None:

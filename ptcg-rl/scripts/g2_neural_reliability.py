@@ -26,6 +26,7 @@ from ptcg_rl.g1.evidence import sha256_file
 from ptcg_rl.g1.models import SchemaMetadataV1
 from ptcg_rl.g1.native import NativeCABTTransport, load_deck
 from ptcg_rl.g2.checkpoint import load_checkpoint_package
+from ptcg_rl.g2.network import PolicyConfigV1
 from ptcg_rl.g2.reliability import (
     AuditedRecurrentLedgerV1,
     PolicyAuditV1,
@@ -173,6 +174,20 @@ def checkpoint_context(root: Path) -> dict[str, Any]:
         "qualification_state_sha256"
     ):
         raise RunnerError("checkpoint state differs from parity state")
+    config_record = read_json(root / "configs/g2_policy_v1.json")
+    policy_config = config_record.get("policy_config")
+    if not isinstance(policy_config, Mapping):
+        raise RunnerError("tracked policy configuration is missing")
+    try:
+        verified_config = PolicyConfigV1(**dict(policy_config))
+    except (TypeError, ValueError) as error:
+        raise RunnerError("tracked policy configuration is invalid") from error
+    if verified_config.config_sha256 != model.get("config_sha256"):
+        raise RunnerError("tracked policy configuration hash differs from checkpoint report")
+    if config_record.get("card_table_sha256") != model.get("card_table_sha256"):
+        raise RunnerError("tracked card table hash differs from checkpoint report")
+    if config_record.get("model_schema_sha256") != model.get("model_schema_sha256"):
+        raise RunnerError("tracked model schema hash differs from checkpoint report")
     return {
         "report": report,
         "report_path": report_path,
@@ -180,6 +195,7 @@ def checkpoint_context(root: Path) -> dict[str, Any]:
         "package_path": package_path,
         "package": dict(package),
         "model": dict(model),
+        "config": dict(policy_config),
         "parity_path": parity_path,
         "parity_sha256": sha256_file(parity_path),
     }
@@ -752,7 +768,7 @@ def run_command(args: argparse.Namespace) -> dict[str, Any]:
     servers: list[mp.Process] = []
     workers: list[mp.Process] = []
     worker_id = 0
-    hidden_size = int(checkpoint["model"]["config"]["public_hidden"])
+    hidden_size = int(checkpoint["config"]["public_hidden"])
     for server_id, device in enumerate(args.devices):
         server_connections = [pair[0] for pair in server_pairs[server_id]]
         server = context.Process(
