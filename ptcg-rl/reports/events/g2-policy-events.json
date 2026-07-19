@@ -37,5 +37,31 @@
     "status_after": "RUNNING",
     "title": "Current-source G2 qualification bundle v2 resealed",
     "summary": "Bundle 3718b493e4b218117456c0c2b3eccc8ba76ac9516c37cd75a44e5a0f12eb2e6e is bound to commit 76951fb392fa6e3b8f65cb014d9cb7dba0bddf33. Duplicate builds match, every archive entry matches its manifest and source bytes, and two isolated packaged CPU runs reproduce all stable outputs and seven selected gradients without training."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-kaggle-cli-p100-rejected-20260719",
+    "created_at_utc": "2026-07-19T17:58:00Z",
+    "source_path": "reports/incidents/g2-kaggle-cli-p100-assignment.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "INCIDENT",
+    "severity": "WARNING",
+    "status_after": "RUNNING",
+    "title": "Automatic non-T4 Kaggle assignment rejected",
+    "summary": "A CLI GPU launch received a Tesla P100 and failed closed before qualification. Future GPU evidence requires manual Kaggle T4 x2 selection and records topology while executing on CUDA device 0."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-current-v4-strict-parity-passed-20260719",
+    "created_at_utc": "2026-07-19T18:04:13Z",
+    "source_path": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "EVALUATION",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Current-source Kaggle CPU/T4 strict parity passed",
+    "summary": "Bundle v4 at source c660f74 passed zero-failure CPU/T4 parity across 1,596 numeric values and seven selected gradients at atol=rtol=1e-5. CPU batch-1 p99 was 8.802885 ms; optimizer creation and training remained absent."
   }
 ]

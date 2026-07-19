@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "record_id": "job-g2-policy-cpu-qualification-v4",
+  "created_at_utc": "2026-07-19T18:01:00Z",
+  "updated_at_utc": "2026-07-19T18:04:13Z",
+  "source_path": "reports/jobs/g2-policy-cpu-qualification-v4.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "job_id": "g2-policy-cpu-qualification-v4",
+  "gate_id": "G2",
+  "kind": "QUALIFICATION_JOB",
+  "title": "Private Kaggle G2 CPU numerical and latency qualification",
+  "status": "SUCCEEDED",
+  "platform": "Kaggle notebook",
+  "notebook": {
+    "ref": "ashok205/kptcg-g2-current-v4-qualification",
+    "version": 4,
+    "script_version_id": 336517420,
+    "kernel_id": 127911048,
+    "private": true
+  },
+  "requested": {
+    "accelerator": "CPU",
+    "internet": false,
+    "dataset_ref": "ashok205/g2-policy-cuda-qualification-v3",
+    "dataset_version": 3,
+    "external_model_ref": null,
+    "no_training": true
+  },
+  "observed": {
+    "active_device_name": "x86_64",
+    "active_device_type": "cpu",
+    "cuda_available": false,
+    "visible_cuda_device_count": 0,
+    "python": "3.12.13",
+    "torch": "2.10.0+cpu",
+    "numpy": "2.0.2",
+    "deterministic_algorithms": true,
+    "threads": 1
+  },
+  "identity": {
+    "source_commit": "c660f74b26fca74915931091ac0fe365f7f005f5",
+    "bundle_sha256": "56b4e93671609a8d24887480cbf1d0dfc0c38b60e1cad55d0cf95f4e50744506",
+    "qualification_input_sha256": "0996a5ac886c8b8b424edaaa2edabdf31b7f4eb2280c2c6fe3fec7e8da6416c7",
+    "qualification_state_sha256": "531b799b29830954dce62cd7d1b455eb30d5189cf670158723ee01b3e2ed6ab0"
+  },
+  "checks": {
+    "required_checks": 10,
+    "all_checks": true,
+    "selected_gradient_records": 7,
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "training_loop_ran": false
+  },
+  "internet_evidence": {
+    "configured_disabled": true,
+    "external_http_probe": "BLOCKED",
+    "attempts": 2,
+    "attempt_error_type": "URLError"
+  },
+  "latency_ms": {
+    "batch1_five_options": {
+      "samples": 200,
+      "mean": 7.063809525,
+      "p50": 6.913881,
+      "p95": 8.070116,
+      "p99": 8.802885,
+      "max": 9.089489
+    },
+    "batch8_mixed_options": {
+      "samples": 100,
+      "mean": 17.14119623,
+      "p50": 16.724287,
+      "p95": 19.473858,
+      "p99": 20.976342,
+      "max": 20.982313
+    }
+  },
+  "output": {
+    "raw_result": {
+      "filename": "g2-policy-cpu-qualification-v4.json",
+      "bytes": 47893,
+      "sha256": "33064df7c642bfb56a219ae71a5a1f332b5ecce5b0626390d9243f97cf48d756"
+    },
+    "receipt": {
+      "filename": "g2-policy-cpu-qualification-v4-receipt.json",
+      "bytes": 3869,
+      "sha256": "63fccfaa8e4734c1832b214a5f18c4335a90bc0f66b30c8bde653d7196d00949"
+    },
+    "tracked": false
+  },
+  "verdict": "PASS_FOR_G2_NUMERICAL_AND_LATENCY_QUALIFICATION",
+  "warnings": [
+    "This is a Kaggle development CPU host, not final submission-runtime compatibility evidence.",
+    "This is numerical qualification only and does not establish policy strength."
+  ],
+  "cost_usd": 0.0
+}

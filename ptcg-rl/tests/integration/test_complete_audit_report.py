@@ -44,5 +44,6 @@ def test_complete_pre_g2_audit_is_cryptographically_consistent() -> None:
     assert incident["after"]["source_commit"] == review["source_commit"]
     checks = {item["name"]: item["status"] for item in gate["technical_checks"]}
     assert checks["latest-clean-source qualification bundle"] == "PASS"
-    assert checks["Kaggle CPU/GPU numerical and latency qualification"] == "READY"
+    assert checks["Kaggle CPU/GPU numerical and latency qualification"] == "PASS"
+    assert gate["status"] == "RUNNING"
     assert gate["blockers"] == []

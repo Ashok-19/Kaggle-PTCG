@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T12:44:54Z",
+  "updated_at_utc": "2026-07-19T18:04:13Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "6",
+  "producer_version": "7",
   "gate_id": "G2",
   "title": "Model-facing tensors, recurrent policy and semantic action scorer",
   "status": "RUNNING",
@@ -60,12 +60,12 @@
     {
       "name": "latest-clean-source qualification bundle",
       "status": "PASS",
-      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v2.json"
+      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v4.json"
     },
     {
       "name": "Kaggle CPU/GPU numerical and latency qualification",
-      "status": "READY",
-      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v2.json"
+      "status": "PASS",
+      "evidence": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json"
     },
     {
       "name": "10,000 complete neural-policy games",
@@ -77,10 +77,11 @@
   "warnings": [
     "Training remains unauthorized; G2 implementation and qualification only.",
     "The sealed model is an architecture/correctness result, not a policy-strength or learning result.",
-    "Local latency is a functional smoke only; bounded private Kaggle CPU latency is the qualification source of truth.",
-    "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item.",
-    "Historical bundle v1 remains auditable for its old source commit but must not be used for current qualification; v2 is the active source-bound archive."
+    "Current-source bundle v4 and strict Kaggle CPU/T4 parity are qualified; historical bundles remain audit evidence only.",
+    "Kaggle GPU T4 x2 must be selected manually because an automatic CLI GPU launch received a rejected Tesla P100.",
+    "GPU version 1 records the active Tesla T4 but predates explicit visible-device-count and outbound-HTTP probes; future GPU runs record topology.",
+    "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item."
   ],
-  "approved_next_action": "Run bundle v2 in bounded private Kaggle CPU and GPU notebooks, compare forward, recurrent, decoder and selected-gradient outputs within 1e-5, record Kaggle CPU latency, and do not start PPO training.",
+  "approved_next_action": "Implement the checkpoint package contract and run the 10,000-complete-game neural-policy reliability qualification without PPO training; keep G2 RUNNING until both pass and are independently reviewed.",
   "cost_usd": 0.0
 }

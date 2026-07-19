@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "record_id": "incident-g2-kaggle-cli-p100-assignment-20260719",
+  "created_at_utc": "2026-07-19T17:58:00Z",
+  "updated_at_utc": "2026-07-19T18:04:13Z",
+  "source_path": "reports/incidents/g2-kaggle-cli-p100-assignment.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "gate_id": "G2",
+  "kind": "INCIDENT",
+  "severity": "WARNING",
+  "status": "RESOLVED",
+  "title": "Automatic Kaggle GPU assignment rejected for G2 qualification",
+  "summary": "A CLI-launched GPU rerun was assigned a Tesla P100 instead of the required Kaggle T4 session. The notebook failed closed before numerical qualification because the device was not a T4 and its compute capability was incompatible with the installed PyTorch build.",
+  "trigger": {
+    "notebook_ref": "ashok205/kptcg-g2-current-v4-qualification",
+    "version": 3,
+    "requested": "GPU through Kaggle CLI",
+    "observed": "Tesla P100-PCIE-16GB",
+    "result": "ERROR_BEFORE_QUALIFICATION"
+  },
+  "impact": {
+    "official_t4_evidence_changed": false,
+    "parity_decision_changed": false,
+    "training_ran": false,
+    "optimizer_created": false,
+    "output_promoted": false,
+    "compute_cost_usd": 0.0
+  },
+  "resolution": {
+    "required_gpu_workflow": "User manually selects Kaggle GPU T4 x2; notebook accepts and records one or two visible T4 devices and executes on CUDA device 0.",
+    "automatic_cli_gpu_assignment_accepted": false,
+    "successful_gpu_evidence": "reports/jobs/g2-policy-cuda-qualification-v4.json",
+    "matching_cpu_evidence": "reports/jobs/g2-policy-cpu-qualification-v4.json"
+  },
+  "prevention": [
+    "Do not rely on the Kaggle CLI GPU toggle to obtain T4 hardware.",
+    "Fail closed unless every visible CUDA device is a T4.",
+    "Record accelerator topology in all future qualification receipts.",
+    "Keep numerical qualification on CUDA device 0 unless a separately reviewed multi-GPU contract is introduced."
+  ]
+}

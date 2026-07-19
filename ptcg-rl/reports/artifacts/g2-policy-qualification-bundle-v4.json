@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g2-policy-qualification-bundle-v4",
+  "created_at_utc": "2026-07-19T18:04:13Z",
+  "updated_at_utc": "2026-07-19T18:04:13Z",
+  "source_path": "reports/artifacts/g2-policy-qualification-bundle-v4.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "artifact_id": "g2-policy-qualification-bundle-v4",
+  "gate_id": "G2",
+  "kind": "QUALIFICATION_BUNDLE",
+  "status": "SUCCEEDED",
+  "title": "Current-source private G2 CPU/GPU qualification bundle v4",
+  "source_commit": "c660f74b26fca74915931091ac0fe365f7f005f5",
+  "bundle_version": 4,
+  "bundle_bytes": 67540,
+  "bundle_sha256": "56b4e93671609a8d24887480cbf1d0dfc0c38b60e1cad55d0cf95f4e50744506",
+  "manifest_bytes": 3056,
+  "manifest_sha256": "827cf0f6ebb3f36676540280367e599bfd2e88312f070b3b0a8686d69f788ad1",
+  "included_files": 11,
+  "harness_sha256": "b49d5de6631bddd1a4006d7fa78c76482c17f692616390d9e3154f835b03f345",
+  "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+  "card_table_content_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "qualification_input_sha256": "0996a5ac886c8b8b424edaaa2edabdf31b7f4eb2280c2c6fe3fec7e8da6416c7",
+  "qualification_state_sha256": "531b799b29830954dce62cd7d1b455eb30d5189cf670158723ee01b3e2ed6ab0",
+  "archive_validation": {
+    "entry_hashes_match_manifest": "PASS",
+    "tracked_bytes_match_source_commit": "PASS",
+    "private_table_bytes_match": "PASS",
+    "zip_path_safety": "PASS",
+    "unexpected_files": 0
+  },
+  "local_preflight": {
+    "status": "PASS",
+    "raw_result_bytes": 47951,
+    "raw_result_sha256": "1541066b28baa7ab42e3acbe9eb23ab8f1f45b37145a579dfec6a1fa081fe423",
+    "required_checks": 10,
+    "all_checks": true,
+    "selected_gradient_records": 7,
+    "optimizer_created": false,
+    "training_loop_ran": false
+  },
+  "kaggle_input": {
+    "dataset_ref": "ashok205/g2-policy-cuda-qualification-v3",
+    "dataset_version": 3,
+    "dataset_private": true,
+    "input_receipt_sha256": "11c6f57527ff8e757db369f72b8f6b6d5c2ae1dfe8b4409018aa07580e2ac2df",
+    "external_model_ref": null
+  },
+  "privacy": {
+    "bundle_and_raw_outputs_ignored": true,
+    "signed_urls_tracked": false,
+    "card_names_or_effect_text_included": false,
+    "notebook_visibility": "PRIVATE"
+  },
+  "authorization": {
+    "numerical_qualification_only": true,
+    "training_included": false,
+    "optimizer_created": false,
+    "kaggle_launch_performed": true
+  },
+  "cost_usd": 0.0
+}

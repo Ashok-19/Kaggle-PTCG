@@ -46,7 +46,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | G1 Engine contract/tensor schema | superseded | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | historical smoke only |
 | G1R Contract recertification | passed | `reports/gates/g1r.json`, `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md` | PASS |
 | R1 Replay/meta pipeline | passed | `reports/replays/r1-semantic-loader.json`, `reports/replays/r1-independent-review.json`, `reports/gates/r1.json` | PASS after independent semantic stream and aggregate recalculation |
-| G2 Model/action schema | running | `reports/artifacts/g2-model-schema-v1.json`, `reports/artifacts/g2-card-table-v1.json`, `reports/artifacts/g2-policy-v1.json`, `reports/gates/g2.json` | projection, static table and compact model PASS; Kaggle parity and 10k-game reliability pending; training blocked |
+| G2 Model/action schema | running | `reports/artifacts/g2-model-schema-v1.json`, `reports/artifacts/g2-card-table-v1.json`, `reports/artifacts/g2-policy-v1.json`, `reports/evaluations/g2-policy-cpu-gpu-parity-v4.json`, `reports/gates/g2.json` | projection, static table, compact model and strict Kaggle CPU/T4 parity PASS; checkpoint package and 10k-game reliability pending; training blocked |
 | G3a PPO correctness smoke | not started | strict thresholds in `DEC-010` | Kaggle/Colab smoke only after review |
 | G3b PPO competence | not started | strict thresholds in `DEC-010` | cloud only |
 | D1 Deck selection | not started | strict thresholds in `DEC-010` | deck freeze requires approval |
@@ -69,7 +69,9 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 - G2 model schema v1 is sealed at `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`; raw serial magnitude and option transport order are outside actor features.
 - G2 private card table v1 is sealed at `7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0`; names and effect text are excluded from model metadata.
 - G2 compact policy v1 is corrected and sealed at 970,022 trainable parameters; architecture SHA-256 is `aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf`.
-- Current-source private qualification bundle v2 is bound to commit `76951fb392fa6e3b8f65cb014d9cb7dba0bddf33` with SHA-256 `3718b493e4b218117456c0c2b3eccc8ba76ac9516c37cd75a44e5a0f12eb2e6e`. Duplicate builds match; all 11 entries match manifest and source bytes; two isolated packaged CPU runs reproduce all stable outputs and seven selected gradients. Training code and optimizer creation are absent. Historical bundle v1 remains retained only as evidence for its old source commit.
+- Current-source private qualification bundle v4 is bound to commit `c660f74b26fca74915931091ac0fe365f7f005f5` with SHA-256 `56b4e93671609a8d24887480cbf1d0dfc0c38b60e1cad55d0cf95f4e50744506`. All 11 entries match the manifest and source bytes; local preflight passed all 10 checks with seven selected gradients and no optimizer or training loop. Historical bundles remain retained only as audit evidence for their recorded source commits.
+- Private Kaggle GPU version 1 (`336514431`) on Tesla T4 and CPU version 4 (`336517420`) passed strict combined `atol=rtol=1e-5` parity across 1,596 numeric values with zero failures. The maximum absolute difference was `1.52587890625e-05` and maximum tolerance ratio was `0.4138225953505397`. CPU batch-1 p99 latency was `8.802885 ms`; external HTTP was blocked in both CPU probe attempts.
+- Kaggle GPU sessions must be selected manually as `GPU T4 x2`. An automatic CLI launch received a Tesla P100 and was rejected before qualification. Future receipts record one or two visible T4 devices and execute deterministically on CUDA device 0.
 - The exact Python patch and final effective timeout remain submission-qualification notes, not current blockers.
 - Main Modal training, deck freeze, Kaggle submissions and active-submission changes require explicit user approval.
 
@@ -106,6 +108,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Run qualification bundle v2 in bounded private Kaggle CPU and GPU notebooks and compare outputs and selected gradients within `1e-5`.
-2. Record Kaggle batch-1 CPU latency percentiles and close the CPU/GPU parity check only if every numerical contract passes.
-3. After parity passes, implement the checkpoint package contract and execute the 10,000-game neural-policy reliability gate without PPO training.
+1. Implement and verify the checkpoint package contract without starting PPO training.
+2. Execute the 10,000-complete-game neural-policy reliability gate with zero tolerance for invalid selections, crashes, timeouts, fallbacks, stale requests, post-terminal dispatches or recurrent ownership/reset violations.
+3. Independently review checkpoint and reliability evidence before any G2 `PASS` decision; training remains blocked.
