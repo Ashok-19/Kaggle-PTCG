@@ -218,15 +218,25 @@ def audit_acquisition(
                 ]
             )
 
+        if len(parsed_steps) < 2:
+            raise ReplayAcquisitionError(f"{filename} must contain initialization and deck-action steps")
         for agent_index, record in enumerate(parsed_steps[0]):
             action = _validate_action(record.get("action"), f"{filename}.steps[0][{agent_index}]")
+            if action or record.get("status") != "ACTIVE" or _selection_request(
+                record, f"{filename}.steps[0][{agent_index}]"
+            ) is not None:
+                raise ReplayAcquisitionError(
+                    f"{filename}.steps[0][{agent_index}] must be the empty active initialization record"
+                )
+        for agent_index, record in enumerate(parsed_steps[1]):
+            action = _validate_action(record.get("action"), f"{filename}.steps[1][{agent_index}]")
             if len(action) != 60:
                 raise ReplayAcquisitionError(
-                    f"{filename}.steps[0][{agent_index}] must contain the 60-card initial action"
+                    f"{filename}.steps[1][{agent_index}] must contain the 60-card deck action"
                 )
             initial_deck_actions += 1
 
-        for step_index in range(1, len(parsed_steps)):
+        for step_index in range(2, len(parsed_steps)):
             current_step = parsed_steps[step_index]
             previous_step = parsed_steps[step_index - 1]
             for agent_index, current_record in enumerate(current_step):

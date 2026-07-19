@@ -55,8 +55,8 @@ def replay() -> dict[str, Any]:
         "statuses": ["DONE", "DONE"],
         "rewards": [1, -1],
         "steps": [
-            [record("ACTIVE", list(range(60)), None), record("ACTIVE", list(range(60)), None)],
-            [record("ACTIVE", [], request_one), record("INACTIVE", [], request_one)],
+            [record("ACTIVE", [], None), record("ACTIVE", [], None)],
+            [record("ACTIVE", list(range(60)), request_one), record("INACTIVE", list(range(60)), None)],
             [record("INACTIVE", [0], request_one), record("ACTIVE", [], request_zero)],
             [record("DONE", [], request_one, 1), record("DONE", [], request_zero, -1)],
         ],
