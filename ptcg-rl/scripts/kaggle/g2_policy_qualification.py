@@ -207,26 +207,9 @@ def benchmark(
     return percentiles(timings)
 
 
-def main() -> None:
-    bundle_root = Path(os.environ.get("PTCG_BUNDLE_ROOT", Path.cwd())).resolve()
-    device_name = os.environ.get("PTCG_DEVICE", "cpu")
-    run_id = os.environ.get("PTCG_RUN_ID", f"g2-policy-{device_name}-qualification-v1")
-    device = torch.device(device_name)
-    if device.type == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA qualification requested but CUDA is unavailable")
-
-    torch.manual_seed(SEED)
-    np.random.seed(SEED)
-    torch.use_deterministic_algorithms(True)
-    torch.set_num_threads(1)
-    table = load_card_table(bundle_root / "card-table-v1.json")
-    model = PTCGPolicyV1(table).eval()
-    initial_state = {name: value.detach().clone() for name, value in model.state_dict().items()}
-    state_hash = tensor_sha256(initial_state)
-    model = model.to(device)
-
-    small, large, card = projected_decisions()
-    batch = collate_projected((small, large, card), device=device)
+def qualification_forward(
+    model: PTCGPolicyV1, batch: Any, device: torch.device
+) -> tuple[Any, Any, torch.Tensor, torch.Tensor, torch.Tensor]:
     hidden = model.initial_hidden(batch.batch_size, device)
     first_output = model(batch, hidden)
     output = model(batch, first_output.hidden)
@@ -245,7 +228,41 @@ def main() -> None:
         + decoder_logits[torch.isfinite(decoder_logits)].sum()
         + advanced.square().mean()
     )
-    loss.backward()
+    return first_output, output, decoder_logits, advanced, loss
+
+
+def main() -> None:
+    bundle_root = Path(os.environ.get("PTCG_BUNDLE_ROOT", Path.cwd())).resolve()
+    device_name = os.environ.get("PTCG_DEVICE", "cpu")
+    run_id = os.environ.get("PTCG_RUN_ID", f"g2-policy-{device_name}-qualification-v1")
+    device = torch.device(device_name)
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA qualification requested but CUDA is unavailable")
+
+    torch.manual_seed(SEED)
+    np.random.seed(SEED)
+    torch.use_deterministic_algorithms(True)
+    torch.set_num_threads(1)
+    table = load_card_table(bundle_root / "card-table-v1.json")
+    model = PTCGPolicyV1(table)
+    initial_state = {name: value.detach().clone() for name, value in model.state_dict().items()}
+    state_hash = tensor_sha256(initial_state)
+    model = model.to(device)
+
+    small, large, card = projected_decisions()
+    batch = collate_projected((small, large, card), device=device)
+
+    model.eval()
+    with torch.inference_mode():
+        first_output, output, decoder_logits, advanced, inference_loss = qualification_forward(
+            model, batch, device
+        )
+
+    model.train()
+    gradient_pass_training_mode = model.training
+    model.zero_grad(set_to_none=True)
+    _, _, _, _, gradient_loss = qualification_forward(model, batch, device)
+    gradient_loss.backward()
 
     gradients: dict[str, Any] = {}
     named = dict(model.named_parameters())
@@ -263,6 +280,8 @@ def main() -> None:
         }
 
     model.zero_grad(set_to_none=True)
+    model.eval()
+    latency_pass_evaluation_mode = not model.training
     single = collate_projected((small,), device=device)
     batch8 = collate_projected((small, large, card, small, large, card, small, card), device=device)
     single_hidden = model.initial_hidden(1, device)
@@ -306,7 +325,7 @@ def main() -> None:
             "hidden": tensor_values(output.hidden),
             "decoder_logits": tensor_values(decoder_logits),
             "decoder_advanced": tensor_values(advanced),
-            "loss": float(loss.detach().cpu()),
+            "loss": float(inference_loss.detach().cpu()),
         },
         "gradients": gradients,
         "latency": {
@@ -322,6 +341,8 @@ def main() -> None:
             "target_parameter_budget": metadata["trainable_parameters"] < 1_250_000,
             "no_optimizer_created": True,
             "no_training_loop": True,
+            "gradient_pass_training_mode": gradient_pass_training_mode,
+            "latency_pass_evaluation_mode": latency_pass_evaluation_mode,
         },
     }
     if not all(payload["checks"].values()):

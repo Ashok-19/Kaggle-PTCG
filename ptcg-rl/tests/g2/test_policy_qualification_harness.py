@@ -26,6 +26,12 @@ def test_policy_qualification_harness_is_bounded_and_has_no_optimizer() -> None:
     )
     assert "samples=200" in text
     assert "samples=100" in text
+    main_text = text[text.index("def main() -> none:") :]
+    assert main_text.index("model.eval()") < main_text.index("with torch.inference_mode():")
+    assert main_text.index("model.train()") < main_text.index("gradient_loss.backward()")
+    assert main_text.rindex("model.eval()") < main_text.index("single_latency = benchmark")
+    assert '"gradient_pass_training_mode"' in main_text
+    assert '"latency_pass_evaluation_mode"' in main_text
 
 
 def test_policy_qualification_fixture_matches_the_sealed_g1_contract() -> None:
