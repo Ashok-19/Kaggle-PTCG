@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "run_id": "g2-kaggle-environment-probe-v163",
+  "question": "Which Python and PyTorch versions are available in the Kaggle image used for the G2 numerical model path?",
+  "private": true,
+  "internet": false,
+  "gpu": false,
+  "tpu": false,
+  "requested_docker_image": "gcr.io/kaggle-images/python:v163",
+  "timeout_seconds": 600,
+  "source_script": "scripts/kaggle/g2_environment_probe.py",
+  "expected_outputs": [
+    "g2_environment_probe.json"
+  ],
+  "stop_conditions": [
+    "PyTorch import fails",
+    "execution exceeds 600 seconds",
+    "notebook is not private",
+    "internet or accelerator is unexpectedly enabled"
+  ]
+}
