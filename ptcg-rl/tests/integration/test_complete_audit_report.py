@@ -42,5 +42,7 @@ def test_complete_pre_g2_audit_is_cryptographically_consistent() -> None:
     assert matrix["replay"]["semantic_audit_sha256"] == semantic["audit_sha256"]
     assert matrix["replay"]["independent_review_sha256"] == review["review_sha256"]
     assert incident["after"]["source_commit"] == review["source_commit"]
-    assert gate["technical_checks"][-3]["status"] == "BLOCKED"
-    assert gate["blockers"]
+    checks = {item["name"]: item["status"] for item in gate["technical_checks"]}
+    assert checks["latest-clean-source qualification bundle"] == "PASS"
+    assert checks["Kaggle CPU/GPU numerical and latency qualification"] == "READY"
+    assert gate["blockers"] == []

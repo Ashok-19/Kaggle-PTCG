@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g2-policy-qualification-bundle-v2",
+  "created_at_utc": "2026-07-19T12:42:02Z",
+  "updated_at_utc": "2026-07-19T12:44:54Z",
+  "source_path": "reports/artifacts/g2-policy-qualification-bundle-v2.json",
+  "producer": "scripts/kaggle/build_g2_qualification_bundle.py",
+  "producer_version": "1",
+  "artifact_id": "g2-policy-qualification-bundle-v2",
+  "gate_id": "G2",
+  "kind": "QUALIFICATION_BUNDLE",
+  "status": "SUCCEEDED",
+  "title": "Current-source private G2 CPU/GPU qualification bundle v2",
+  "source_commit": "76951fb392fa6e3b8f65cb014d9cb7dba0bddf33",
+  "private_bundle_path": "private/g2/qualification-v2/g2-policy-qualification-bundle-v2.zip",
+  "private_manifest_path": "private/g2/qualification-v2/g2-policy-qualification-bundle-v2.manifest.json",
+  "bundle_bytes": 66851,
+  "bundle_sha256": "3718b493e4b218117456c0c2b3eccc8ba76ac9516c37cd75a44e5a0f12eb2e6e",
+  "included_files": 11,
+  "tracked_source_files": 10,
+  "private_numeric_tables": 1,
+  "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+  "card_table_content_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "archive_validation": {
+    "deterministic_duplicate_build": "PASS",
+    "entry_hashes_match_manifest": "PASS",
+    "tracked_bytes_match_source_commit": "PASS",
+    "private_table_bytes_match": "PASS",
+    "zip_path_safety": "PASS",
+    "unexpected_card_table_strings": 0
+  },
+  "packaged_source_smoke": {
+    "device": "local CPU",
+    "runs": 2,
+    "stable_payload_match": true,
+    "trainable_parameters": 970022,
+    "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+    "state_dict_sha256": "245db7802c2082bb54a335c12086fc6c420dc428ec53806cd3d406bc32a64f8e",
+    "input_sha256": "0996a5ac886c8b8b424edaaa2edabdf31b7f4eb2280c2c6fe3fec7e8da6416c7",
+    "nonzero_selected_gradients": 7,
+    "all_checks": true,
+    "no_optimizer": true,
+    "no_training_loop": true,
+    "batch1_p99_ms_runs": [
+      5.780731,
+      5.338465
+    ],
+    "status": "PASS",
+    "warning": "Local latency is a packaged-source smoke only; Kaggle CPU latency remains the qualification source of truth."
+  },
+  "privacy": {
+    "archive_ignored": true,
+    "manifest_ignored": true,
+    "card_names_or_effect_text_included": false,
+    "internet_required": false,
+    "notebook_visibility": "PRIVATE"
+  },
+  "authorization": {
+    "training_included": false,
+    "optimizer_created": false,
+    "kaggle_launch_performed": false
+  },
+  "cost_usd": 0.0
+}

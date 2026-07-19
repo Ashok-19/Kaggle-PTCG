@@ -69,7 +69,7 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 - G2 model schema v1 is sealed at `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`; raw serial magnitude and option transport order are outside actor features.
 - G2 private card table v1 is sealed at `7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0`; names and effect text are excluded from model metadata.
 - G2 compact policy v1 is corrected and sealed at 970,022 trainable parameters; architecture SHA-256 is `aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf`.
-- The previous private CPU/GPU qualification bundle is bound to clean-source commit `16240fa65fd35f395fc46a6ff7b5eabc9516d70f` with SHA-256 `aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6`; training code is absent. It must be rebuilt from the latest clean source because the G1 semantic adapter changed at commit `1719c8cea48102f0589a956b50cc383449d031e5`.
+- Current-source private qualification bundle v2 is bound to commit `76951fb392fa6e3b8f65cb014d9cb7dba0bddf33` with SHA-256 `3718b493e4b218117456c0c2b3eccc8ba76ac9516c37cd75a44e5a0f12eb2e6e`. Duplicate builds match; all 11 entries match manifest and source bytes; two isolated packaged CPU runs reproduce all stable outputs and seven selected gradients. Training code and optimizer creation are absent. Historical bundle v1 remains retained only as evidence for its old source commit.
 - The exact Python patch and final effective timeout remain submission-qualification notes, not current blockers.
 - Main Modal training, deck freeze, Kaggle submissions and active-submission changes require explicit user approval.
 
@@ -106,6 +106,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Rebuild the no-training G2 qualification bundle from the latest clean source and seal its new source and archive hashes.
-2. Run the rebuilt bundle in bounded private Kaggle CPU and GPU notebooks and compare outputs and selected gradients within `1e-5`.
+1. Run qualification bundle v2 in bounded private Kaggle CPU and GPU notebooks and compare outputs and selected gradients within `1e-5`.
+2. Record Kaggle batch-1 CPU latency percentiles and close the CPU/GPU parity check only if every numerical contract passes.
 3. After parity passes, implement the checkpoint package contract and execute the 10,000-game neural-policy reliability gate without PPO training.

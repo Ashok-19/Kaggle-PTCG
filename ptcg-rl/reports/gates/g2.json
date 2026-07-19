@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T12:15:00Z",
+  "updated_at_utc": "2026-07-19T12:44:54Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "5",
+  "producer_version": "6",
   "gate_id": "G2",
   "title": "Model-facing tensors, recurrent policy and semantic action scorer",
   "status": "RUNNING",
@@ -59,13 +59,13 @@
     },
     {
       "name": "latest-clean-source qualification bundle",
-      "status": "BLOCKED",
-      "evidence": "reports/audits/pre-g2-complete-audit-20260719.json"
+      "status": "PASS",
+      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v2.json"
     },
     {
       "name": "Kaggle CPU/GPU numerical and latency qualification",
-      "status": "BLOCKED",
-      "evidence": "reports/tasks/current.json"
+      "status": "READY",
+      "evidence": "reports/artifacts/g2-policy-qualification-bundle-v2.json"
     },
     {
       "name": "10,000 complete neural-policy games",
@@ -73,16 +73,14 @@
       "evidence": "reports/tasks/current.json"
     }
   ],
-  "blockers": [
-    "The existing qualification bundle is byte-valid for source commit 16240fa65fd35f395fc46a6ff7b5eabc9516d70f but differs from current HEAD. Rebuild and reseal it before any Kaggle launch."
-  ],
+  "blockers": [],
   "warnings": [
     "Training remains unauthorized; G2 implementation and qualification only.",
     "The sealed model is an architecture/correctness result, not a policy-strength or learning result.",
     "Local latency is a functional smoke only; bounded private Kaggle CPU latency is the qualification source of truth.",
     "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item.",
-    "Complete-audit validation confirmed the old bundle must not be launched because its bundled G1 semantic source predates current HEAD."
+    "Historical bundle v1 remains auditable for its old source commit but must not be used for current qualification; v2 is the active source-bound archive."
   ],
-  "approved_next_action": "Rebuild and reseal the no-training G2 qualification bundle from the latest clean source. Only then run bounded private Kaggle CPU and GPU notebooks and compare outputs within 1e-5.",
+  "approved_next_action": "Run bundle v2 in bounded private Kaggle CPU and GPU notebooks, compare forward, recurrent, decoder and selected-gradient outputs within 1e-5, record Kaggle CPU latency, and do not start PPO training.",
   "cost_usd": 0.0
 }

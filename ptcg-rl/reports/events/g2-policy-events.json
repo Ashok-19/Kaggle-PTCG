@@ -24,5 +24,18 @@
     "status_after": "RUNNING",
     "title": "G2 qualification baseline repaired and packaged",
     "summary": "All 97 tests pass and bundle aa109e4e523d2f287e2a9f9e182669971a38cd53ac93e8d40b16b4a939cdbbb6 executes from isolated packaged source without training."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-qualification-bundle-v2-resealed-20260719",
+    "created_at_utc": "2026-07-19T12:44:54Z",
+    "source_path": "reports/artifacts/g2-policy-qualification-bundle-v2.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "CHECK",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Current-source G2 qualification bundle v2 resealed",
+    "summary": "Bundle 3718b493e4b218117456c0c2b3eccc8ba76ac9516c37cd75a44e5a0f12eb2e6e is bound to commit 76951fb392fa6e3b8f65cb014d9cb7dba0bddf33. Duplicate builds match, every archive entry matches its manifest and source bytes, and two isolated packaged CPU runs reproduce all stable outputs and seven selected gradients without training."
   }
 ]
