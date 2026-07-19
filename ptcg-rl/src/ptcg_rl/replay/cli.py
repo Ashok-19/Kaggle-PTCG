@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .acquisition import audit_acquisition, load_verified_plan, write_acquisition_records
 from .planner import ReplayPlanError, build_plan, load_config, verify_plan, write_plan
 
 
@@ -22,6 +23,14 @@ def add_replay_parsers(commands: argparse._SubParsersAction[Any]) -> None:
 
     verify = subcommands.add_parser("verify-plan")
     verify.add_argument("--plan", type=Path, required=True)
+
+    audit = subcommands.add_parser("audit-acquisition")
+    audit.add_argument("--plan", type=Path, required=True)
+    audit.add_argument("--episodes", type=Path, required=True)
+    audit.add_argument("--receipt", type=Path, required=True)
+    audit.add_argument("--report", type=Path, required=True)
+    audit.add_argument("--provider", required=True)
+    audit.add_argument("--acquired-at-utc")
 
 
 def _resolve(repo: Path, path: Path) -> Path:
@@ -46,6 +55,31 @@ def run_replay(args: argparse.Namespace, repo: Path) -> dict[str, object]:
             "plan_sha256": plan["plan_sha256"],
             **dict(plan["summary"]),
             "selected_items": plan["selected_items"],
+        }
+
+    if args.replay_command == "audit-acquisition":
+        plan = load_verified_plan(_resolve(repo, args.plan))
+        report = audit_acquisition(
+            plan,
+            _resolve(repo, args.episodes),
+            provider=args.provider,
+            acquired_at_utc=args.acquired_at_utc,
+        )
+        receipt_path = _resolve(repo, args.receipt)
+        report_path = _resolve(repo, args.report)
+        write_acquisition_records(
+            report,
+            receipt_path=receipt_path,
+            report_path=report_path,
+        )
+        return {
+            "status": report["status"],
+            "plan_sha256": report["plan_sha256"],
+            "audit_sha256": report["audit_sha256"],
+            "receipt_path": str(receipt_path.relative_to(repo)) if receipt_path.is_relative_to(repo) else str(receipt_path),
+            "report_path": str(report_path.relative_to(repo)) if report_path.is_relative_to(repo) else str(report_path),
+            **dict(report["acquisition"]),
+            **dict(report["replay_contract"]),
         }
 
     path = _resolve(repo, args.plan)
