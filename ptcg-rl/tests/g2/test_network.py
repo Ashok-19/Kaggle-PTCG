@@ -117,7 +117,8 @@ def test_backward_reaches_catalog_attention_recurrence_policy_value_and_decoder(
 ) -> None:
     policy = model(tmp_path).train()
     batch = collate_projected((card_decision(),))
-    output = policy(batch)
+    first = policy(batch)
+    output = policy(batch, first.hidden)
     prefix = policy.decoder_initial(output.hidden[0])
     decoder_logits = policy.decoder_logits(
         prefix,
@@ -144,11 +145,12 @@ def test_backward_reaches_catalog_attention_recurrence_policy_value_and_decoder(
         "stop_embedding",
     }
     gradients = {
-        name
+        name: float(torch.linalg.vector_norm(parameter.grad))
         for name, parameter in policy.named_parameters()
         if parameter.grad is not None and torch.isfinite(parameter.grad).all()
     }
-    assert required <= gradients
+    assert required <= gradients.keys()
+    assert all(gradients[name] > 0 for name in required)
 
 
 def test_decoder_masks_options_and_stop_without_advancing_public_memory(tmp_path: Path) -> None:

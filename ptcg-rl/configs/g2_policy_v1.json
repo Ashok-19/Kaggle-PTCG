@@ -1,0 +1,23 @@
+{
+  "card_table_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
+  "numpy_version": "2.0.2",
+  "policy_config": {
+    "attack_id_dim": 32,
+    "card_id_dim": 64,
+    "entity_ff_width": 256,
+    "entity_heads": 4,
+    "entity_layers": 2,
+    "event_hidden": 64,
+    "event_width": 64,
+    "max_trainable_parameters": 2000000,
+    "model_width": 128,
+    "option_width": 128,
+    "public_hidden": 160,
+    "schema_version": 1,
+    "selection_hidden": 96,
+    "target_trainable_parameters": 1250000
+  },
+  "schema_version": 1,
+  "torch_version": "2.10.0+cpu"
+}

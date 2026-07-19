@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "run_id": "g2-policy-cpu-qualification-v1",
+  "question": "Does the sealed G2 policy produce finite deterministic CPU outputs and safe batch-1 latency on Kaggle?",
+  "private": true,
+  "internet": false,
+  "gpu": false,
+  "tpu": false,
+  "timeout_seconds": 900,
+  "source_script": "scripts/kaggle/g2_policy_qualification.py",
+  "expected_output": "g2-policy-cpu-qualification-v1.json",
+  "no_training": true
+}

@@ -10,7 +10,13 @@ from torch import Tensor, nn
 from ptcg_rl.g1.models import ContractViolation, stable_hash
 
 from .card_table import CardTableV1
-from .models import ProjectedDecisionV1
+from .models import (
+    ENTITY_NUMERIC_NAMES,
+    GLOBAL_NUMERIC_NAMES,
+    OPTION_NUMERIC_NAMES,
+    PLAYER_NUMERIC_NAMES,
+    ProjectedDecisionV1,
+)
 
 CARD_STATIC_FEATURE_WIDTH = 7 + 12 + 13 + 13 + 4 + 16
 ENTITY_NONCARD_FEATURE_WIDTH = 4 + 16 + 8 + 64
@@ -441,7 +447,9 @@ class PTCGPolicyV1(nn.Module):
         self.reason = SafeEmbedding(255, 8)
 
         self.player_numeric = nn.Sequential(
-            nn.Linear(12, 32), nn.GELU(), nn.LayerNorm(32)
+            nn.Linear(2 * len(PLAYER_NUMERIC_NAMES), 32),
+            nn.GELU(),
+            nn.LayerNorm(32),
         )
         self.player_projection = nn.Sequential(
             nn.Linear(40, 64), nn.GELU(), nn.LayerNorm(64)
@@ -450,7 +458,9 @@ class PTCGPolicyV1(nn.Module):
             nn.Linear(128, 64), nn.GELU(), nn.LayerNorm(64)
         )
         self.entity_numeric = nn.Sequential(
-            nn.Linear(28, 64), nn.GELU(), nn.LayerNorm(64)
+            nn.Linear(2 * len(ENTITY_NUMERIC_NAMES), 64),
+            nn.GELU(),
+            nn.LayerNorm(64),
         )
         self.entity_projection = nn.Sequential(
             nn.Linear(
@@ -490,7 +500,9 @@ class PTCGPolicyV1(nn.Module):
         self.empty_event = nn.Parameter(torch.zeros(self.config.event_hidden))
 
         self.global_numeric = nn.Sequential(
-            nn.Linear(24, 64), nn.GELU(), nn.LayerNorm(64)
+            nn.Linear(2 * len(GLOBAL_NUMERIC_NAMES), 64),
+            nn.GELU(),
+            nn.LayerNorm(64),
         )
         self.global_projection = nn.Sequential(
             nn.Linear(
@@ -507,7 +519,9 @@ class PTCGPolicyV1(nn.Module):
         self.public_gru = nn.GRUCell(128, self.config.public_hidden)
 
         self.option_numeric = nn.Sequential(
-            nn.Linear(4, 16), nn.GELU(), nn.LayerNorm(16)
+            nn.Linear(2 * len(OPTION_NUMERIC_NAMES), 16),
+            nn.GELU(),
+            nn.LayerNorm(16),
         )
         self.option_attack = nn.Linear(self.config.attack_id_dim + 16, 16)
         self.option_projection = nn.Sequential(

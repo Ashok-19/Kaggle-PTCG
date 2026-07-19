@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "run_id": "g2-policy-gpu-qualification-v1",
+  "question": "Do the sealed G2 policy's forward, recurrent, decoder and gradient outputs match CPU within 1e-5 on a Kaggle GPU?",
+  "private": true,
+  "internet": false,
+  "gpu": true,
+  "tpu": false,
+  "timeout_seconds": 900,
+  "source_script": "scripts/kaggle/g2_policy_qualification.py",
+  "expected_output": "g2-policy-gpu-qualification-v1.json",
+  "parity_absolute_tolerance": 0.00001,
+  "parity_relative_tolerance": 0.00001,
+  "no_training": true
+}
