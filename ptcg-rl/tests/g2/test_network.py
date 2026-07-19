@@ -66,6 +66,15 @@ def card_decision():
     return project_decision(observation, request)
 
 
+def zero_option_decision():
+    raw = raw_observation(options=[], min_count=0, max_count=0)
+    raw["select"].update({"type": 8, "context": 38})
+    observation, request = semantic_snapshot(raw, "zero-option-decision", 0, CARD_HASH)
+    assert request is not None
+    assert request.has_only_one_outcome
+    return project_decision(observation, request)
+
+
 def model(tmp_path: Path) -> PTCGPolicyV1:
     return PTCGPolicyV1(build_fixture(tmp_path / "cards.csv"))
 
@@ -91,6 +100,24 @@ def test_forward_supports_ragged_batches_and_more_than_64_options(tmp_path: Path
     assert output.option_offsets.tolist() == [0, 70, 71]
     assert torch.isfinite(output.option_logits).all()
     assert torch.isfinite(output.values).all()
+
+
+def test_forward_supports_zero_option_and_mixed_ragged_batches(tmp_path: Path) -> None:
+    policy = model(tmp_path).eval()
+    empty = zero_option_decision()
+    one = card_decision()
+    with torch.no_grad():
+        empty_output = policy(collate_projected((empty,)))
+        mixed_output = policy(collate_projected((empty, one)))
+    assert empty_output.option_logits.shape == (0,)
+    assert empty_output.option_embeddings.shape == (0, policy.config.option_width)
+    assert empty_output.option_offsets.tolist() == [0, 0]
+    assert torch.isfinite(empty_output.values).all()
+    assert torch.isfinite(empty_output.hidden).all()
+    assert mixed_output.option_logits.shape == (1,)
+    assert mixed_output.option_offsets.tolist() == [0, 0, 1]
+    assert torch.isfinite(mixed_output.option_logits).all()
+    assert torch.isfinite(mixed_output.values).all()
 
 
 def test_option_permutation_is_equivariant_and_state_is_invariant(tmp_path: Path) -> None:

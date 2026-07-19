@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import hashlib
 import json
 from pathlib import Path
@@ -7,11 +9,14 @@ from typing import Any
 
 import pytest
 
+from ptcg_rl.g1.semantic import semantic_snapshot
+
 from ptcg_rl.replay.semantic_loader import (
     ReplaySemanticError,
     SemanticReplayLoader,
     audit_semantic_loader,
     decode_replay_action,
+    load_verified_official_card_data_sha256,
 )
 from ..g1_fixtures import raw_observation
 
@@ -189,6 +194,38 @@ def test_decode_replay_action_rejects_duplicates_range_and_count(tmp_path: Path)
         decode_replay_action(request, ())
 
 
+def test_decode_replay_action_handles_optional_exact_max_and_invalid_types(tmp_path: Path) -> None:
+    plan, episodes = write_fixture(tmp_path)
+    request = next(iter(SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH))).request
+
+    exact_max = decode_replay_action(request, (0, 1))
+    assert exact_max.stopped_early is False
+    assert exact_max.decoder_trace == tuple(
+        f"OPTION:{request.options[index].semantic_fingerprint}" for index in (0, 1)
+    )
+
+    optional = raw_observation(options=[{"type": 1}], min_count=0, max_count=1)
+    optional["current"]["firstPlayer"] = -1
+    observation, optional_request = semantic_snapshot(optional, "optional", 0, CARD_HASH)
+    assert observation.first_player is None
+    assert optional_request is not None
+    stopped = decode_replay_action(optional_request, ())
+    assert stopped.stopped_early is True
+    assert stopped.decoder_trace == ("STOP",)
+
+    with pytest.raises(ReplaySemanticError, match="only integers"):
+        decode_replay_action(request, (True,))
+    unavailable = replace(request.options[0], available=False)
+    unavailable_request = replace(
+        request,
+        min_count=1,
+        max_count=1,
+        options=(unavailable, request.options[1]),
+    )
+    with pytest.raises(ReplaySemanticError, match="unavailable"):
+        decode_replay_action(unavailable_request, (0,))
+
+
 def test_loader_rejects_corrupted_transport_and_extra_files(tmp_path: Path) -> None:
     plan, episodes = write_fixture(tmp_path, replay([9]))
     with pytest.raises(ReplaySemanticError, match="out-of-range"):
@@ -196,6 +233,79 @@ def test_loader_rejects_corrupted_transport_and_extra_files(tmp_path: Path) -> N
     (episodes / "extra.json").write_text("{}", encoding="utf-8")
     with pytest.raises(ReplaySemanticError, match="file set differs"):
         SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH)
+
+
+@pytest.mark.parametrize(
+    ("mutate", "message"),
+    [
+        (lambda value: value.__setitem__("statuses", ["ACTIVE", "DONE"]), "terminal for both"),
+        (lambda value: value.__setitem__("rewards", [0, 0]), "unsupported terminal rewards"),
+        (lambda value: value["steps"].__setitem__(0, [value["steps"][0][0]]), "two agent records"),
+        (lambda value: value["steps"][0][0].__setitem__("action", [0]), "empty active initialization"),
+        (lambda value: value["steps"][1][0].__setitem__("action", [0] * 59), "60-card deck action"),
+        (lambda value: value["steps"][2][1].__setitem__("action", [0]), "acts after a non-active"),
+        (lambda value: value["steps"][-1][0].__setitem__("reward", -1), "terminal records differ"),
+    ],
+)
+def test_loader_fails_closed_on_structural_corruption(
+    tmp_path: Path, mutate, message: str
+) -> None:
+    value = replay()
+    mutate(value)
+    plan, episodes = write_fixture(tmp_path, value)
+    with pytest.raises(ReplaySemanticError, match=message):
+        list(SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH))
+
+
+def test_loader_rejects_partial_missing_size_drift_malformed_json_and_bad_hash(
+    tmp_path: Path,
+) -> None:
+    plan, episodes = write_fixture(tmp_path)
+    path = episodes / "90000001.json"
+
+    (episodes / "pending.partial").write_text("partial", encoding="utf-8")
+    with pytest.raises(ReplaySemanticError, match="partials"):
+        SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH)
+    (episodes / "pending.partial").unlink()
+
+    original = path.read_text(encoding="utf-8")
+    path.write_text(original + " ", encoding="utf-8")
+    with pytest.raises(ReplaySemanticError, match="byte count differs"):
+        list(SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH))
+    path.write_text(original, encoding="utf-8")
+
+    path.write_text("{" + " " * (path.stat().st_size - 1), encoding="utf-8")
+    with pytest.raises(ReplaySemanticError, match="cannot parse replay"):
+        list(SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH))
+
+    path.unlink()
+    with pytest.raises(ReplaySemanticError, match="missing"):
+        SemanticReplayLoader(plan, episodes, card_data_sha256=CARD_HASH)
+    with pytest.raises(ReplaySemanticError, match="lowercase SHA-256"):
+        SemanticReplayLoader(plan, episodes, card_data_sha256="C" * 64)
+
+
+def test_official_card_data_hash_requires_record_and_file_byte_parity(tmp_path: Path) -> None:
+    card_data = tmp_path / "EN_Card_Data.csv"
+    card_data.write_bytes(b"verified-card-data")
+    expected = hashlib.sha256(card_data.read_bytes()).hexdigest()
+    asset_hashes = tmp_path / "asset_hashes.redacted.json"
+    asset_hashes.write_text(
+        json.dumps(
+            {
+                "assets": {
+                    "official": {
+                        "signature_sha256": {"card_data": expected}
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert load_verified_official_card_data_sha256(asset_hashes, card_data) == expected
+    card_data.write_bytes(b"drifted-card-data")
+    with pytest.raises(ReplaySemanticError, match="differs from asset record"):
+        load_verified_official_card_data_sha256(asset_hashes, card_data)
 
 
 def test_semantic_audit_is_deterministic_and_expected_hash_fails_closed(

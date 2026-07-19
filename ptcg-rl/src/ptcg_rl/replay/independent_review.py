@@ -76,6 +76,7 @@ def independently_review_semantic_report(
     *,
     created_at_utc: str | None = None,
     source_commit: str | None = None,
+    expected_card_data_sha256: str | None = None,
 ) -> dict[str, Any]:
     if semantic_report.get("status") != "PASS":
         raise ReplayReviewError("semantic loader report is not PASS")
@@ -84,6 +85,13 @@ def independently_review_semantic_report(
     card_data_sha256 = semantic_report.get("card_data_sha256")
     if not isinstance(card_data_sha256, str) or len(card_data_sha256) != 64:
         raise ReplayReviewError("semantic loader report card-data SHA-256 is invalid")
+    if (
+        expected_card_data_sha256 is not None
+        and card_data_sha256 != expected_card_data_sha256
+    ):
+        raise ReplayReviewError(
+            "semantic loader report card-data SHA-256 differs from verified official asset"
+        )
     expected = _expected_files(plan)
     actual = {path.name for path in episodes_dir.glob("*.json") if path.is_file()}
     if actual != set(expected):

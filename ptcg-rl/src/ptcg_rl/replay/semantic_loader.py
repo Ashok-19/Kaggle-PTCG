@@ -91,6 +91,39 @@ def _canonical_bytes(value: Any) -> bytes:
     ).encode("utf-8")
 
 
+def _lowercase_sha256(value: Any, label: str) -> str:
+    if not isinstance(value, str) or len(value) != 64 or any(
+        character not in "0123456789abcdef" for character in value
+    ):
+        raise ReplaySemanticError(f"{label} must be a lowercase SHA-256")
+    return value
+
+
+def load_verified_official_card_data_sha256(
+    asset_hashes_path: Path,
+    card_data_path: Path,
+) -> str:
+    """Return the official card-data hash only after record and file-byte parity."""
+    try:
+        asset_hashes = json.loads(asset_hashes_path.read_text(encoding="utf-8"))
+        recorded = asset_hashes["assets"]["official"]["signature_sha256"]["card_data"]
+    except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError) as error:
+        raise ReplaySemanticError(
+            f"cannot resolve official card-data hash from {asset_hashes_path}: {error}"
+        ) from error
+    expected = _lowercase_sha256(recorded, "official card-data hash")
+    try:
+        observed = hashlib.sha256(card_data_path.read_bytes()).hexdigest()
+    except OSError as error:
+        raise ReplaySemanticError(f"cannot hash official card-data file {card_data_path}: {error}") from error
+    if observed != expected:
+        raise ReplaySemanticError(
+            "official card-data file SHA-256 differs from asset record: "
+            f"expected {expected}, observed {observed}"
+        )
+    return expected
+
+
 def _integer(value: Any, label: str, *, minimum: int = 0) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
         raise ReplaySemanticError(f"{label} must be an integer >= {minimum}")
@@ -193,10 +226,7 @@ class SemanticReplayLoader:
         *,
         card_data_sha256: str,
     ) -> None:
-        if len(card_data_sha256) != 64 or any(
-            character not in "0123456789abcdef" for character in card_data_sha256
-        ):
-            raise ReplaySemanticError("card_data_sha256 must be a lowercase SHA-256")
+        _lowercase_sha256(card_data_sha256, "card_data_sha256")
         self.plan = plan
         self.episodes_dir = episodes_dir
         self.card_data_sha256 = card_data_sha256

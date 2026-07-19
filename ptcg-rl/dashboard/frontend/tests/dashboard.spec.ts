@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("parallel R1 and G2 work is visible in the command center", async ({ page }) => {
+test("current G2 work is visible after R1 closure", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Active workstreams" })).toBeVisible();
-  await expect(page.getByText("R1", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("G2", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/Transfer and parse approved episode files/)).toBeVisible();
+  await expect(page.getByText(/Implement the compact recurrent semantic policy/)).toBeVisible();
+  await expect(page.getByText(/Launch recurrent PPO correctness smoke/)).toBeVisible();
   await expect(page.getByText("USD 0.00", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/command-center.png", fullPage: true });
 });
@@ -14,14 +14,17 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   await page.goto("/#roadmap");
   await page.getByRole("button", { name: "Gates & Roadmap" }).click();
   await expect(page.getByRole("heading", { name: "Gates & Roadmap" })).toBeVisible();
-  await expect(page.getByText("Passed", { exact: true }).nth(1)).toBeVisible();
-  await expect(page.getByText("RUNNING", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("BLOCKED", { exact: true }).first()).toBeVisible();
+  const r1Step = page.locator(".roadmap-step").filter({ hasText: "R1" });
+  const g2Step = page.locator(".roadmap-step").filter({ hasText: "G2" });
+  const g3Step = page.locator(".roadmap-step").filter({ hasText: "G3a" });
+  await expect(r1Step.getByText("Passed", { exact: true })).toBeVisible();
+  await expect(g2Step.getByText("RUNNING", { exact: true })).toBeVisible();
+  await expect(g3Step.getByText("Not started", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/gates-roadmap.png", fullPage: true });
 
   await page.getByRole("button", { name: "Evidence", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Evidence & Decisions" })).toBeVisible();
-  await expect(page.getByText("Public-history exposure confirmed")).toBeVisible();
+  await expect(page.getByText("Displayed replay list mismatch contained before transfer")).toBeVisible();
   await expect(page.getByText("DEC-010 · Authorize G2/R1 and strict evaluation")).toBeVisible();
 });
 

@@ -7,7 +7,12 @@ from typing import Any
 
 from .acquisition import audit_acquisition, load_verified_plan, write_acquisition_records
 from .independent_review import independently_review_semantic_report, write_review_report
-from .semantic_loader import audit_semantic_loader, write_semantic_report
+from .semantic_loader import (
+    ReplaySemanticError,
+    audit_semantic_loader,
+    load_verified_official_card_data_sha256,
+    write_semantic_report,
+)
 from .planner import ReplayPlanError, build_plan, load_config, verify_plan, write_plan
 
 
@@ -37,7 +42,13 @@ def add_replay_parsers(commands: argparse._SubParsersAction[Any]) -> None:
     semantic = subcommands.add_parser("audit-semantic")
     semantic.add_argument("--plan", type=Path, required=True)
     semantic.add_argument("--episodes", type=Path, required=True)
-    semantic.add_argument("--card-data-sha256", required=True)
+    semantic.add_argument("--asset-hashes", type=Path, default=Path("asset_hashes.redacted.json"))
+    semantic.add_argument(
+        "--card-data-file",
+        type=Path,
+        default=Path("private/assets/official/EN_Card_Data.csv"),
+    )
+    semantic.add_argument("--card-data-sha256")
     semantic.add_argument("--report", type=Path, required=True)
     semantic.add_argument("--created-at-utc")
     semantic.add_argument("--expected-stream-sha256")
@@ -50,10 +61,29 @@ def add_replay_parsers(commands: argparse._SubParsersAction[Any]) -> None:
     review.add_argument("--review-report", type=Path, required=True)
     review.add_argument("--created-at-utc")
     review.add_argument("--source-commit")
+    review.add_argument("--asset-hashes", type=Path, default=Path("asset_hashes.redacted.json"))
+    review.add_argument(
+        "--card-data-file",
+        type=Path,
+        default=Path("private/assets/official/EN_Card_Data.csv"),
+    )
 
 
 def _resolve(repo: Path, path: Path) -> Path:
     return path if path.is_absolute() else repo / path
+
+
+def _official_card_data_sha256(args: argparse.Namespace, repo: Path) -> str:
+    verified = load_verified_official_card_data_sha256(
+        _resolve(repo, args.asset_hashes),
+        _resolve(repo, args.card_data_file),
+    )
+    supplied = getattr(args, "card_data_sha256", None)
+    if supplied is not None and supplied != verified:
+        raise ReplaySemanticError(
+            "supplied card-data SHA-256 differs from verified official asset"
+        )
+    return verified
 
 
 def run_replay(args: argparse.Namespace, repo: Path) -> dict[str, object]:
@@ -106,12 +136,14 @@ def run_replay(args: argparse.Namespace, repo: Path) -> dict[str, object]:
         semantic_report = json.loads(
             _resolve(repo, args.semantic_report).read_text(encoding="utf-8")
         )
+        official_card_data_sha256 = _official_card_data_sha256(args, repo)
         review = independently_review_semantic_report(
             plan,
             _resolve(repo, args.episodes),
             semantic_report,
             created_at_utc=args.created_at_utc,
             source_commit=args.source_commit,
+            expected_card_data_sha256=official_card_data_sha256,
         )
         review_path = _resolve(repo, args.review_report)
         write_review_report(review, review_path)
@@ -131,7 +163,7 @@ def run_replay(args: argparse.Namespace, repo: Path) -> dict[str, object]:
         report = audit_semantic_loader(
             plan,
             _resolve(repo, args.episodes),
-            card_data_sha256=args.card_data_sha256,
+            card_data_sha256=_official_card_data_sha256(args, repo),
             created_at_utc=args.created_at_utc,
             expected_stream_sha256=args.expected_stream_sha256,
             max_peak_rss_mib=args.max_peak_rss_mib,

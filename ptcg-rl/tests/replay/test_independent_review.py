@@ -82,3 +82,20 @@ def test_independent_reviewer_does_not_import_loader_implementation() -> None:
     assert "semantic_loader" not in source
     assert all("semantic_loader" not in name for name in imported_modules)
     assert all(name is None or "semantic_loader" not in name for name in imported_from)
+
+
+def test_independent_review_rejects_nonofficial_card_data_provenance(tmp_path: Path) -> None:
+    plan, episodes = write_fixture(tmp_path)
+    semantic_report = audit_semantic_loader(
+        plan,
+        episodes,
+        card_data_sha256=CARD_HASH,
+        created_at_utc="2026-07-19T00:00:00Z",
+    )
+    with pytest.raises(ReplayReviewError, match="verified official asset"):
+        independently_review_semantic_report(
+            plan,
+            episodes,
+            semantic_report,
+            expected_card_data_sha256="d" * 64,
+        )
