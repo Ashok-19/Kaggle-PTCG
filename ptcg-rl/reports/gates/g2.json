@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "record_id": "gate-g2-20260719",
+  "created_at_utc": "2026-07-19T06:30:00Z",
+  "updated_at_utc": "2026-07-19T06:30:00Z",
+  "source_path": "reports/gates/g2.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "gate_id": "G2",
+  "title": "Model-facing tensors, recurrent policy and semantic action scorer",
+  "status": "QUEUED",
+  "decision": "NOT_REVIEWED",
+  "authorization": "APPROVED_TO_IMPLEMENT",
+  "technical_checks": [],
+  "blockers": [],
+  "warnings": [
+    "Training remains unauthorized; G2 implementation and qualification only.",
+    "Heavy numerical and accelerator validation should run in bounded private Kaggle notebooks."
+  ],
+  "approved_next_action": "Implement the strict G2 contract from DEC-010 in incremental reviewed commits; do not begin PPO training.",
+  "cost_usd": 0.0
+}

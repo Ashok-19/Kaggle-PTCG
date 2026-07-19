@@ -39,13 +39,15 @@ Reports and dashboards are not proof merely because they say `PASS`. Never lower
 
 ### Current state (dated checkpoint; update only when evidence changes)
 
-As of 2026-07-18:
+As of 2026-07-19:
 
-- `G0`: substantially implemented, but machine-specific asset paths and environment portability need verification in the active checkout.
-- `G1`: **reopened and blocking as `G1R`**. Contract defects are repaired and the one-million-operation plus exact-baseline integration evidence exists; the qualifying parity, 10,000-game, throughput, and six-hour RSS criteria remain missing.
-- `R1`, `G2`, recurrent PPO, actor/learner workers, league, deck bakeoff, Modal scale training, champion selection, and learned submission packaging: not implemented.
-- The only approved overlap with `G1R` is a manifest-only replay schema probe (`R0`) with zero episode JSON downloads.
-- Do not begin PPO, model-strength work, paid compute, or main-deck freeze until `G1R` is independently closed.
+- `G0`: `SUCCEEDED / PASS`.
+- `G1R`: `SUCCEEDED / PASS`; independently closed by `docs/decisions/DEC-009_G1R_CLOSED.md` and `reports/gates/g1r.json`.
+- `G2` model/action-schema implementation and parallel `R1` replay/meta implementation are authorized under `docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md`.
+- `R1` uses a two-stage transfer rule: retrieve the official index manifest and one version-pinned daily manifest, then present the exact capped episode plan for user review before downloading any episode JSON.
+- The dashboard is authorized for a full ROGII-style evidence, experiment, hypothesis, learning, submission, and roadmap expansion, while remaining read-only and excluding private assets.
+- Heavy workflows and GPU validation should use bounded, private Kaggle notebooks by default. Main Modal training, paid compute, deck freeze, Kaggle submissions, and active-submission changes remain approval-gated.
+- Recurrent PPO, actor/learner workers, league, deck bakeoff, champion selection, and learned submission packaging are not implemented. Training remains unauthorized until G2 and the strict evaluation implementation are reviewed.
 
 When a gate verdict changes, update only this dated checkpoint plus the corresponding decision record/evidence link. Do not opportunistically rewrite durable mission, safety, data, or evaluation policy.
 
@@ -65,7 +67,7 @@ The approved compute-conscious direction, once its prerequisites close, is:
 
 Do not build a universal multi-deck actor for v0. Training and evaluation opponents should cover several decks, but each submitted checkpoint is bound to one exact 60-card deck. Do not copy the sample RL/MCTS notebook as production architecture; it is pedagogical and violates several production action, belief, and training requirements.
 
-Before G2/G3 work begins, create and approve a versioned evaluation decision record that numerically defines “competent,” promotion eligibility, catastrophic-matchup floors, uncertainty handling, compute parity, and the G3b pivot trigger. Do not invent those thresholds during an experiment. If the learned policy then misses the approved G3b threshold, diagnose representation and opponent curriculum for at most one bounded cycle. If it still fails, preserve budget and pivot to the strongest validated rule agent plus narrowly measured improvements instead of blindly scaling PPO.
+The strict evaluation contract is frozen in `docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md`. Implement those thresholds in versioned configuration and tests before G3 training. Do not weaken or reinterpret them after seeing results. If the learned policy misses the approved G3b threshold, diagnose representation and opponent curriculum for at most one bounded cycle. If it still fails, preserve budget and pivot to the strongest validated rule agent plus narrowly measured improvements instead of blindly scaling PPO.
 
 ## Competition and runtime contract
 

@@ -1,0 +1,28 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-r1-authorized-20260719",
+    "created_at_utc": "2026-07-19T06:30:00Z",
+    "source_path": "docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2+R1",
+    "kind": "DECISION",
+    "severity": "INFO",
+    "status_after": "QUEUED",
+    "title": "G2 and parallel R1 implementation authorized",
+    "summary": "Strict evaluation was selected; replay transfer remains manifest-first and training remains unauthorized."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-dashboard-full-scope-20260719",
+    "created_at_utc": "2026-07-19T06:30:01Z",
+    "source_path": "docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "DASHBOARD",
+    "kind": "DECISION",
+    "severity": "INFO",
+    "status_after": "QUEUED",
+    "title": "Full evidence dashboard expansion authorized",
+    "summary": "The PTCG dashboard may adopt ROGII-style auto-sync, research, learning, experiment and submission views while ROGII remains read-only."
+  }
+]
