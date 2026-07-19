@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .acquisition import audit_acquisition, load_verified_plan, write_acquisition_records
+from .semantic_loader import audit_semantic_loader, write_semantic_report
 from .planner import ReplayPlanError, build_plan, load_config, verify_plan, write_plan
 
 
@@ -31,6 +32,15 @@ def add_replay_parsers(commands: argparse._SubParsersAction[Any]) -> None:
     audit.add_argument("--report", type=Path, required=True)
     audit.add_argument("--provider", required=True)
     audit.add_argument("--acquired-at-utc")
+
+    semantic = subcommands.add_parser("audit-semantic")
+    semantic.add_argument("--plan", type=Path, required=True)
+    semantic.add_argument("--episodes", type=Path, required=True)
+    semantic.add_argument("--card-data-sha256", required=True)
+    semantic.add_argument("--report", type=Path, required=True)
+    semantic.add_argument("--created-at-utc")
+    semantic.add_argument("--expected-stream-sha256")
+    semantic.add_argument("--max-peak-rss-mib", type=float, default=256.0)
 
 
 def _resolve(repo: Path, path: Path) -> Path:
@@ -80,6 +90,30 @@ def run_replay(args: argparse.Namespace, repo: Path) -> dict[str, object]:
             "report_path": str(report_path.relative_to(repo)) if report_path.is_relative_to(repo) else str(report_path),
             **dict(report["acquisition"]),
             **dict(report["replay_contract"]),
+        }
+
+    if args.replay_command == "audit-semantic":
+        plan = load_verified_plan(_resolve(repo, args.plan))
+        report = audit_semantic_loader(
+            plan,
+            _resolve(repo, args.episodes),
+            card_data_sha256=args.card_data_sha256,
+            created_at_utc=args.created_at_utc,
+            expected_stream_sha256=args.expected_stream_sha256,
+            max_peak_rss_mib=args.max_peak_rss_mib,
+        )
+        report_path = _resolve(repo, args.report)
+        write_semantic_report(report, report_path)
+        return {
+            "status": report["status"],
+            "plan_sha256": report["plan_sha256"],
+            "semantic_stream_sha256": report["semantic_stream_sha256"],
+            "audit_sha256": report["audit_sha256"],
+            "report_path": str(report_path.relative_to(repo))
+            if report_path.is_relative_to(repo)
+            else str(report_path),
+            **dict(report["coverage"]),
+            **dict(report["memory"]),
         }
 
     path = _resolve(repo, args.plan)
