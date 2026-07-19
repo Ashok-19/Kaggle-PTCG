@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-kaggle-environment-probe-complete-20260719",
+    "created_at_utc": "2026-07-19T08:35:34Z",
+    "source_path": "reports/jobs/g2-kaggle-environment-probe-v163.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "CLOUD_CHECK",
+    "severity": "WARNING",
+    "status_after": "RUNNING",
+    "title": "Kaggle G2 development environment measured",
+    "summary": "Private CPU-only notebook version 1 completed with Python 3.12.13 and PyTorch 2.10.0+cpu; exact submission-runtime parity remains unresolved."
+  }
+]

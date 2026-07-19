@@ -2,7 +2,7 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T08:28:46Z",
+  "updated_at_utc": "2026-07-19T08:35:34Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
   "producer_version": "2",
@@ -43,6 +43,11 @@
       "evidence": "reports/artifacts/g2-card-table-v1.json"
     },
     {
+      "name": "Kaggle development PyTorch environment probe",
+      "status": "PASS",
+      "evidence": "reports/jobs/g2-kaggle-environment-probe-v163.json"
+    },
+    {
       "name": "compact recurrent policy and value model",
       "status": "RUNNING",
       "evidence": "reports/tasks/current.json"
@@ -53,6 +58,8 @@
     "Training remains unauthorized; G2 implementation and qualification only.",
     "The projection and static table are not strength results and do not yet include the neural model.",
     "Heavy CPU/GPU parity and qualification must run in a bounded private Kaggle notebook."
+,
+    "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item."
   ],
   "approved_next_action": "Implement and qualify the under-2M recurrent semantic policy using the sealed projection and private table; preserve both contracts or record a version bump.",
   "cost_usd": 0.0

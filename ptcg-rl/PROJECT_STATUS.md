@@ -22,6 +22,7 @@ Next review required before: any episode JSON transfer, G3 training, Modal execu
 - `Ashok-19/Kaggle-PTCG-RL` is a private, inactive migration backup.
 - The GitHub Packages permission gap is recorded and waived for agent development.
 - Exact submission Python patch and timeout verification are deferred to final packaging/model compatibility; the submission doctor continues to enforce them.
+- A private Kaggle development probe observed Python `3.12.13` and PyTorch `2.10.0+cpu`; this does not resolve the separate provisional submission-runtime Python `3.11.x` record.
 - Dashboard dependencies remain isolated in the `dashboard` dependency group.
 - The full read-only dashboard expansion is complete at commit `e35b4d07f8cad02edbb9ab6a3b986f9f8416113d`; source changes auto-sync and the browser refreshes every 15 seconds.
 - ROGII is a read-only dashboard/workflow reference and must not be modified.

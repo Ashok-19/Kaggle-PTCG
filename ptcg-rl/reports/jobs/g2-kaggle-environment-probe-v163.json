@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "record_id": "job-g2-kaggle-environment-probe-v163",
+  "created_at_utc": "2026-07-19T08:33:52Z",
+  "updated_at_utc": "2026-07-19T08:35:34Z",
+  "source_path": "reports/jobs/g2-kaggle-environment-probe-v163.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "job_id": "g2-kaggle-environment-probe-v163",
+  "title": "Private Kaggle G2 environment probe",
+  "status": "SUCCEEDED",
+  "gate_id": "G2",
+  "platform": "Kaggle notebook",
+  "notebook": {
+    "owner": "ashok205",
+    "slug": "ptcg-g2-environment-probe-v163",
+    "version": 1,
+    "kernel_id": 127863914,
+    "private": true
+  },
+  "source_commit": "6d24196c1767d9fbd132bea8f9f769d2e6a72e02",
+  "requested": {
+    "docker_image": "gcr.io/kaggle-images/python:v163",
+    "internet": false,
+    "gpu": false,
+    "tpu": false,
+    "timeout_seconds": 600
+  },
+  "observed": {
+    "python": "3.12.13",
+    "torch": "2.10.0+cpu",
+    "numpy": "2.0.2",
+    "pydantic": "2.12.3",
+    "machine": "x86_64",
+    "cuda_available": false,
+    "torch_threads": 2,
+    "torch_interop_threads": 2,
+    "kernel_run_type": "Batch"
+  },
+  "output": {
+    "private_path": "private/kaggle/runs/g2-environment-probe-v163/g2_environment_probe.json",
+    "bytes": 922,
+    "sha256": "8566dd8565cb6fd4b00b14406fe40eee2678fdf0c69554d870bd514b354d8b83",
+    "tracked": false
+  },
+  "verdict": "PASS_FOR_KAGGLE_DEVELOPMENT_ONLY",
+  "warnings": [
+    "Observed Python 3.12.13 conflicts with the tracked provisional submission family of Python 3.11.x.",
+    "The requested docker image label did not prove exact submission-runtime pinning through the notebook service.",
+    "This run does not qualify final submission compatibility or the exact official Python patch and timeout."
+  ],
+  "approved_use": "Use PyTorch 2.10-compatible APIs for G2 development and separate CPU/GPU notebook parity; retain a later exact submission-runtime qualification gate.",
+  "cost_usd": 0.0
+}
