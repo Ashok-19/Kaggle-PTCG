@@ -2,21 +2,50 @@
   "schema_version": 1,
   "record_id": "gate-r1-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T06:30:00Z",
+  "updated_at_utc": "2026-07-19T08:01:00Z",
   "source_path": "reports/gates/r1.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "1",
+  "producer_version": "2",
   "gate_id": "R1",
   "title": "Version-pinned filtered replay and current-meta pipeline",
-  "status": "QUEUED",
+  "status": "BLOCKED",
   "decision": "NOT_REVIEWED",
-  "authorization": "APPROVED_TO_IMPLEMENT",
-  "technical_checks": [],
-  "blockers": [],
-  "warnings": [
-    "Only the index manifest and one daily manifest may be transferred before the episode plan review.",
-    "No whole-dataset fallback and no episode JSON transfer before explicit plan approval."
+  "authorization": "USER_PLAN_APPROVAL_REQUIRED",
+  "technical_checks": [
+    {
+      "name": "index dataset version and manifest receipt",
+      "status": "PASS",
+      "evidence": "reports/replays/r0-manifest-probe.json"
+    },
+    {
+      "name": "daily dataset version and manifest receipt",
+      "status": "PASS",
+      "evidence": "reports/replays/r0-manifest-probe.json"
+    },
+    {
+      "name": "manifest schema, row count and declared byte parity",
+      "status": "PASS",
+      "evidence": "reports/replays/r0-manifest-probe.json"
+    },
+    {
+      "name": "deterministic capped no-transfer plan",
+      "status": "PASS",
+      "evidence": "reports/replays/r0-plan-summary.json"
+    },
+    {
+      "name": "episode JSON transfer",
+      "status": "BLOCKED",
+      "evidence": "reports/replays/r0-plan-summary.json"
+    }
   ],
-  "approved_next_action": "Retrieve and verify the two version-pinned manifests, then produce the exact 20-file/250-MiB dry-run for user review.",
+  "blockers": [
+    "Explicit user approval of plan eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934 is required before any episode JSON transfer."
+  ],
+  "warnings": [
+    "The daily host dataset is elite, rating-selected and capped; it is not an unbiased ladder sample.",
+    "Manifest scores are episode-level and must not be attributed to one seat or deck.",
+    "Three source files exceed the 64 MiB per-file cap and are excluded."
+  ],
+  "approved_next_action": "Present the exact 20 filenames and declared bytes for user approval; if approved, transfer only those version-pinned files and prove zero-byte idempotent rerun.",
   "cost_usd": 0.0
 }

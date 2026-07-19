@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "record_id": "replay-r0-plan-summary-20260719",
+  "created_at_utc": "2026-07-19T08:01:00Z",
+  "updated_at_utc": "2026-07-19T08:01:00Z",
+  "source_path": "reports/replays/r0-plan-summary.json",
+  "producer": "chatgpt-local-agent",
+  "title": "R0 immutable episode dry-run",
+  "status": "BLOCKED",
+  "gate_id": "R1",
+  "blocker": "Explicit user approval is required before transferring any selected episode JSON.",
+  "planner_commit": "c832fd1916c7c561ef34cdcb1b217acc69e79aa1",
+  "planner_version": "r0-stratified-v1",
+  "plan_sha256": "eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934",
+  "source_date": "2026-07-18",
+  "daily_dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-18",
+  "daily_dataset_version": 1,
+  "caps": {
+    "max_files": 20,
+    "max_total_bytes": 262144000,
+    "max_file_bytes": 67108864
+  },
+  "selection": {
+    "selected_files": 20,
+    "selected_bytes": 83981423,
+    "max_selected_file_bytes": 6303684,
+    "eligible_manifest_rows": 4808,
+    "oversize_rows_rejected": 3,
+    "avg_score_q85_threshold": 1179.703404,
+    "min_score_q70_threshold": 1124.109752,
+    "strata": {
+      "elite_dual": 12,
+      "elite_avg": 5,
+      "broad_time": 3
+    },
+    "source_day_time_blocks": {
+      "0": 3,
+      "1": 3,
+      "2": 3,
+      "3": 4,
+      "4": 4,
+      "5": 3
+    },
+    "algorithm": "Nearest-rank thresholds over all structurally valid manifest rows, deterministic hash sampling balanced across six source-day time blocks, no preference for smaller files."
+  },
+  "verification": {
+    "plan_hash_recalculated": "PASS",
+    "file_count_cap": "PASS",
+    "total_byte_cap": "PASS",
+    "per_file_cap": "PASS",
+    "episode_json_transferred": 0
+  },
+  "cost_usd": 0.0
+}

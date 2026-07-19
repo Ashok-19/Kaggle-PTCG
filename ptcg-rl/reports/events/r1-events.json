@@ -1,0 +1,28 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-manifests-verified-20260719",
+    "created_at_utc": "2026-07-19T07:53:51Z",
+    "source_path": "reports/replays/r0-manifest-probe.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "CHECK",
+    "severity": "INFO",
+    "status_after": "RUNNING",
+    "title": "Version-pinned R0 manifests verified",
+    "summary": "Index v33 and daily 2026-07-18 v1 manifests passed version, filename, byte, hash, schema, row-count and declared-byte checks; zero episode JSON transferred."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-r1-plan-awaiting-approval-20260719",
+    "created_at_utc": "2026-07-19T08:01:00Z",
+    "source_path": "reports/replays/r0-plan-summary.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "R1",
+    "kind": "REVIEW",
+    "severity": "INFO",
+    "status_after": "BLOCKED",
+    "title": "Immutable R0 episode plan awaits approval",
+    "summary": "The verified 20-file plan totals 83,981,423 bytes and transfers zero episode JSON until explicit approval."
+  }
+]

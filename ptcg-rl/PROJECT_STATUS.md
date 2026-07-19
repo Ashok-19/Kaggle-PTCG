@@ -4,8 +4,8 @@ Last updated UTC: 2026-07-19
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
 Last completed gate: G1R environment/action/recurrent contract recertification (`PASS`)  
-Current gates: G2 implementation plus parallel R1 manifest/schema work  
-Gate status: AUTHORIZED / QUEUED  
+Current gates: G2 implementation plus R1 episode-plan review  
+Gate status: G2 QUEUED / R1 BLOCKED ON USER APPROVAL  
 Next review required before: any episode JSON transfer, G3 training, Modal execution, deck freeze, or submission
 
 ## Mission Clock
@@ -44,7 +44,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | G0 Repository/environment | passed | `REPOSITORY_CONSOLIDATION_REPORT.md`, G0 reports | PASS with Packages waiver |
 | G1 Engine contract/tensor schema | superseded | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | historical smoke only |
 | G1R Contract recertification | passed | `reports/gates/g1r.json`, `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md` | PASS |
-| R1 Replay/meta pipeline | queued | `reports/gates/r1.json`, `DEC-010` | implementation authorized; episode JSON blocked pending plan review |
+| R1 Replay/meta pipeline | blocked on plan approval | `reports/replays/r0-manifest-probe.json`, `reports/replays/r0-plan-summary.json` | manifests and plan PASS; episode JSON transfer requires approval |
 | G2 Model/action schema | queued | `reports/gates/g2.json`, `DEC-010` | implementation authorized; training blocked |
 | G3a PPO correctness smoke | not started | strict thresholds in `DEC-010` | Kaggle/Colab smoke only after review |
 | G3b PPO competence | not started | strict thresholds in `DEC-010` | cloud only |
@@ -63,6 +63,7 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 - G1R has no open blocker.
 - R1 may retrieve the official index manifest and one selected daily manifest. It may not retrieve episode JSON until the exact capped plan is reviewed.
+- The verified R0 plan SHA-256 is `eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934`: 20 files, 83,981,423 bytes, largest 6,303,684 bytes, zero episode JSON transferred.
 - G2 may implement and qualify the model/action contract. It may not start PPO training.
 - The exact Python patch and final effective timeout remain submission-qualification notes, not current blockers.
 - Main Modal training, deck freeze, Kaggle submissions and active-submission changes require explicit user approval.
@@ -100,6 +101,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Retrieve and verify the official episode-index manifest and one selected daily manifest through the Kaggle MCP.
-2. Generate the immutable capped episode plan and present it for user approval before any episode JSON transfer.
-3. Implement G2 model-facing tensor and neural-policy foundations in small commits; use a private Kaggle notebook for heavy CPU/GPU parity and qualification workflows.
+1. Present the exact immutable R0 file plan for user approval; do not transfer episode JSON before approval.
+2. Implement G2 model-facing tensor and neural-policy foundations in small commits; use a private Kaggle notebook for heavy CPU/GPU parity and qualification workflows.
+3. After plan approval, transfer only the exact version-pinned episode files, verify receipts/hashes, parse them and prove a zero-byte idempotent rerun.

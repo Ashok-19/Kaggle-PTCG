@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "record_id": "replay-r0-manifest-probe-20260719",
+  "created_at_utc": "2026-07-19T07:53:51Z",
+  "updated_at_utc": "2026-07-19T07:53:51Z",
+  "source_path": "reports/replays/r0-manifest-probe.json",
+  "producer": "chatgpt-local-agent",
+  "title": "R0 version-pinned manifest probe",
+  "status": "SUCCEEDED",
+  "gate_id": "R1",
+  "index": {
+    "dataset": "kaggle/pokemon-tcg-ai-battle-episodes-index",
+    "version": 33,
+    "manifest_bytes": 5869,
+    "manifest_sha256": "c150c6f6c1cdc08afb3f4aae1cf65dfa8a7fbb181fbf6a7523824fd8cba80b96",
+    "rows": 33,
+    "columns": [
+      "date",
+      "daily_dataset_slug",
+      "daily_dataset_url",
+      "episode_count",
+      "total_bytes",
+      "top_avg_score",
+      "median_avg_score"
+    ]
+  },
+  "daily": {
+    "source_date": "2026-07-18",
+    "dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-18",
+    "version": 1,
+    "manifest_bytes": 399310,
+    "manifest_sha256": "c25c2dd24ccbef7fc5e41448f9e42bbfacdfd484503e2173d5015b3638cad67a",
+    "rows": 4811,
+    "declared_episode_bytes": 21471735255,
+    "columns": [
+      "episode_id",
+      "create_time",
+      "avg_score",
+      "min_score",
+      "sum_score",
+      "agent_count",
+      "size_bytes"
+    ],
+    "size_bytes_summary": {
+      "min": 245927,
+      "median": 4443555,
+      "p95": 6419424,
+      "max": 232463554
+    }
+  },
+  "checks": [
+    "Integer dataset versions were resolved before retrieval",
+    "Only manifest.csv was requested from each dataset",
+    "Receipts retain provider, version, filename, byte count, hash and retrieval time",
+    "Daily row count and sum(size_bytes) exactly match the selected index row",
+    "No signed URL is persisted in the repository or tracked evidence",
+    "No episode JSON was transferred"
+  ],
+  "episode_json_transferred": 0,
+  "cost_usd": 0.0
+}
