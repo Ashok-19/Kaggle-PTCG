@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "card_csv": "private/assets/official/EN_Card_Data.csv",
+  "expected_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "sample_submission_root": "private/assets/official/sample_submission/sample_submission",
+  "output": "private/g2/card-table-v1.json"
+}

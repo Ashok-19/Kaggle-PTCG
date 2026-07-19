@@ -42,6 +42,9 @@ def _parser() -> argparse.ArgumentParser:
     from .g1.cli import add_g1_parsers
 
     add_g1_parsers(commands)
+    from .g2.cli import add_g2_parsers
+
+    add_g2_parsers(commands)
     from .replay.cli import add_replay_parsers
 
     add_replay_parsers(commands)
@@ -74,6 +77,10 @@ def main(argv: list[str] | None = None) -> int:
             from .g1.cli import run_g1
 
             result = run_g1(args, repo)
+        elif args.command == "g2":
+            from .g2.cli import run_g2
+
+            result = run_g2(args, repo)
         elif args.command == "replay":
             from .replay.cli import run_replay
 
