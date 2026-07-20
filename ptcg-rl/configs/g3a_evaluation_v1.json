@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "contract_id": "g3a-evaluation-v1",
+  "kind": "KPTCG_STRICT_EVALUATION_CONTRACT",
+  "status": "FROZEN",
+  "decision_source": {
+    "path": "docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md",
+    "sha256": "c29fdfdfa60720794a825bdb08449da5ae8f7990741fbdad698a3dccab6f86b0"
+  },
+  "authorization": {
+    "purpose": "evaluation_contract_only",
+    "training_authorized": false,
+    "kaggle_launch_authorized": false,
+    "modal_authorized": false,
+    "submission_authorized": false
+  },
+  "randomness": {
+    "engine_trajectory_reproduction_claimed": false,
+    "paired_engine_seeds_claimed": false,
+    "toy_seed_derivation": "sha256-first-u32-big-endian",
+    "toy_seed_namespace": "g3a-evaluation-v1",
+    "declared_toy_seeds": [1197953491, 20344180, 1491619630],
+    "natural_deployment_primary": true,
+    "balance_player_slots": true,
+    "policy_controls_first_player_choice": true,
+    "forced_actual_first_second_diagnostics_separate": true
+  },
+  "g3a": {
+    "pass_rule": "ALL_TASKS_PASS_IN_ALL_DECLARED_SEEDS",
+    "budget": {
+      "minimum_non_forced_choices_per_seed": 25000,
+      "maximum_non_forced_choices_per_seed": 100000,
+      "exact_budget_required_before_run": true,
+      "same_budget_across_seeds": true,
+      "maximum_relative_budget_difference": 0.0025,
+      "task_allocation_required_before_run": true
+    },
+    "tasks": {
+      "masked-bandit-v1": {
+        "kind": "masked_bandit",
+        "legal_mask_required": true,
+        "invalid_action_is_failure": true,
+        "pass_definition": "VERSIONED_TASK_CONTRACT_PASS_WITH_ZERO_FAILED_EVALUATION_CASES"
+      },
+      "recurrent-cue-v1": {
+        "kind": "recurrent_partial_observation",
+        "cue_values": [0, 1],
+        "decision_observation_identical_across_cues": true,
+        "stateless_theoretical_ceiling": 0.5,
+        "recurrent_oracle_ceiling": 1.0,
+        "minimum_recurrent_score": 0.85,
+        "minimum_margin_vs_stateless": 0.25,
+        "margin_required_every_seed": true,
+        "pass_definition": "VERSIONED_TASK_CONTRACT_PASS_WITH_ZERO_FAILED_EVALUATION_CASES"
+      },
+      "variable-option-multiselect-v1": {
+        "kind": "variable_option_multi_select",
+        "ordered_unique_selection_required": true,
+        "stop_is_first_class": true,
+        "variable_option_count_required": true,
+        "variable_min_max_count_required": true,
+        "invalid_action_is_failure": true,
+        "pass_definition": "VERSIONED_TASK_CONTRACT_PASS_WITH_ZERO_FAILED_EVALUATION_CASES"
+      }
+    },
+    "probability_replay": {
+      "checked_before_first_update": true,
+      "maximum_old_compound_log_probability_absolute_error": 0.00001,
+      "maximum_initial_ratio_absolute_error_from_one": 0.00001
+    },
+    "zero_tolerance_counters": [
+      "crashes",
+      "fallbacks",
+      "hidden_state_cross_owner_events",
+      "invalid_actions",
+      "nan_inf",
+      "stale_inference_requests",
+      "timeouts",
+      "unclassified_truncations"
+    ],
+    "checkpoint_resume": {
+      "required_components": [
+        "counters",
+        "league",
+        "model",
+        "optimizer",
+        "rollout_boundary",
+        "scheduler_or_scaler"
+      ],
+      "restore_all_available_rng_states": true,
+      "fixed_tensor_atol": 0.00001,
+      "fixed_tensor_rtol": 0.0
+    },
+    "strength_claim_allowed": false
+  },
+  "future_strength": {
+    "score_formula": "(wins + 0.5 * draws) / games",
+    "posterior": {
+      "method": "dirichlet_multinomial_posterior_simulation",
+      "prior_win_draw_loss": [0.5, 0.5, 0.5],
+      "credible_level": 0.95,
+      "simulation_draws": 10000,
+      "primary_meta_window_days": 7,
+      "sensitivity_meta_window_days": [3, 7, 14],
+      "insufficient_coverage_result": "INSUFFICIENT_COVERAGE"
+    },
+    "g3b": {
+      "broad_screen_non_forced_choices_per_seed": 1000000,
+      "confirmation_cumulative_non_forced_choices_per_seed": 5000000,
+      "declared_seed_count": 3,
+      "maximum_choice_budget_relative_difference": 0.0025,
+      "random_anchor_minimum_games": 1000,
+      "random_anchor_lower_bound_minimum": 0.85,
+      "rule_anchor_count": 4,
+      "rule_anchors_required_above_even": 3,
+      "rule_anchor_lower_bound_strictly_greater_than": 0.5,
+      "rule_anchor_probability_above_even_minimum": 0.975,
+      "remaining_rule_anchor_lower_bound_minimum": 0.35,
+      "aggregate_lower_bound_strictly_greater_than": 0.52,
+      "minimum_seed_point_estimate": 0.5,
+      "report_across_seed_standard_deviation": true,
+      "reliability_zero_tolerance": true
+    },
+    "d1": {
+      "important_matchup_lower_bound_minimum": 0.4,
+      "important_matchup_probability_below_floor_maximum": 0.025,
+      "same_deck_regression_magnitude": 0.03,
+      "same_deck_probability_regression_exceeds_magnitude_maximum": 0.025,
+      "same_deck_absolute_lower_bound_minimum": 0.4,
+      "minimum_unresolved_finalist_seeds": 3,
+      "equal_cumulative_non_forced_choice_budgets": true,
+      "reliability_zero_tolerance": true
+    },
+    "champion": {
+      "minimum_frozen_population_games": 3000,
+      "minimum_games_per_important_archetype_where_feasible": 300,
+      "probability_meta_weighted_improvement_positive_minimum": 0.99,
+      "candidate_minus_anchor_lower_bound_minimum": 0.02,
+      "candidate_minus_anchor_mean_minimum": 0.03,
+      "all_absolute_and_relative_matchup_floors_required": true,
+      "runtime_package_checkpoint_parity_required": true,
+      "no_verified_immediate_exploiter_collapse_required": true,
+      "reliability_zero_tolerance": true
+    },
+    "promotion_order": [
+      "contract_and_reliability",
+      "catastrophic_matchup_floors",
+      "meta_weighted_strength",
+      "runtime_and_package",
+      "exploiter_defense"
+    ],
+    "forbid_blended_score": true
+  },
+  "run_manifest_requirements": {
+    "required_identity_fields": [
+      "artifact_hashes",
+      "card_data_hash",
+      "config_hash",
+      "deck_hashes",
+      "engine_hash",
+      "opponent_population_hash",
+      "policy_hash",
+      "source_commit"
+    ],
+    "population_and_weights_frozen_before_run": true,
+    "opponent_fixed_for_episode": true,
+    "complete_matchup_matrix_required": true,
+    "seat_split_required": true,
+    "forced_seat_results_separate": true,
+    "loss_capsules_required": true,
+    "latency_percentiles": [50, 95, 99],
+    "zero_tolerance_evidence_required": true,
+    "independent_review_required": true
+  }
+}
