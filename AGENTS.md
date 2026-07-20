@@ -39,15 +39,16 @@ Reports and dashboards are not proof merely because they say `PASS`. Never lower
 
 ### Current state (dated checkpoint; update only when evidence changes)
 
-As of 2026-07-19:
+As of 2026-07-20:
 
 - `G0`: `SUCCEEDED / PASS`.
 - `G1R`: `SUCCEEDED / PASS`; independently closed by `docs/decisions/DEC-009_G1R_CLOSED.md` and `reports/gates/g1r.json`.
-- `G2` model/action-schema implementation and parallel `R1` replay/meta implementation are authorized under `docs/decisions/DEC-010_G2_R1_AND_STRICT_EVALUATION.md`.
-- `R1` uses a two-stage transfer rule: retrieve the official index manifest and one version-pinned daily manifest, then present the exact capped episode plan for user review before downloading any episode JSON.
-- The dashboard is authorized for a full ROGII-style evidence, experiment, hypothesis, learning, submission, and roadmap expansion, while remaining read-only and excluding private assets.
-- Heavy workflows and GPU validation should use bounded, private Kaggle notebooks by default. Main Modal training, paid compute, deck freeze, Kaggle submissions, and active-submission changes remain approval-gated.
-- Recurrent PPO, actor/learner workers, league, deck bakeoff, champion selection, and learned submission packaging are not implemented. Training remains unauthorized until G2 and the strict evaluation implementation are reviewed.
+- `R1`: `SUCCEEDED / PASS`; the approved capped replay transfer and semantic independent review are complete, while additional replay retrieval and action-supervision training remain unauthorized.
+- `G2`: `SUCCEEDED / PASS`; model, checkpoint, CPU/GPU parity and the exact 10,000-game T4 x2 neural reliability qualification passed.
+- The strict G3a evaluation contract is frozen at `configs/g3a_evaluation_v1.json`, independently reviewed in `reports/artifacts/g3a-evaluation-contract-v1.json`, and bound to implementation commit `6ca84cf7ccd79e49341998314da6d32aa8f1de45`.
+- `G3a` remains `BLOCKED / NOT_REVIEWED`: the PPO correctness harness, versioned toy tasks, exact bounded three-seed run plan and explicit user training approval are still required.
+- The dashboard remains read-only and excludes private assets. Heavy workflows should use bounded private Kaggle notebooks by default; Modal, paid compute, deck freeze, submissions and active-submission changes remain approval-gated.
+- Recurrent PPO, actor/learner workers, league, deck bakeoff, champion selection and learned submission packaging are not implemented. Freezing an evaluation contract does not authorize training or establish policy strength.
 
 When a gate verdict changes, update only this dated checkpoint plus the corresponding decision record/evidence link. Do not opportunistically rewrite durable mission, safety, data, or evaluation policy.
 

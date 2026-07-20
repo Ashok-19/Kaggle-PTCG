@@ -20,7 +20,7 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   const g3Step = page.locator(".roadmap-step").filter({ hasText: "G3a" });
   await expect(r1Step.getByText("Passed", { exact: true })).toBeVisible();
   await expect(g2Step.getByText("Passed", { exact: true })).toBeVisible();
-  await expect(g3Step.getByText("Not started", { exact: true })).toBeVisible();
+  await expect(g3Step.getByText("BLOCKED", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/gates-roadmap.png", fullPage: true });
 
   await page.getByRole("button", { name: "Evidence", exact: true }).click();

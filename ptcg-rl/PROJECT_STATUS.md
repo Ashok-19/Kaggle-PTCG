@@ -3,10 +3,10 @@
 Last updated UTC: 2026-07-20  
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
-Last completed gate: G2 model and neural-policy reliability qualification (`PASS`)  
+Last completed milestone: G3a strict evaluation contract frozen and independently audited  
 Current gate: G3a PPO correctness preparation  
 Gate status: G2 PASS / R1 PASS / G3a BLOCKED  
-Next review required before: evaluation-config freeze, any training, additional episode JSON transfer, Modal execution, deck freeze, or submission
+Next review required before: any bounded PPO smoke or training, additional episode JSON transfer, Modal execution, deck freeze, or submission
 
 ## Mission Clock
 
@@ -47,7 +47,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | G1R Contract recertification | passed | `reports/gates/g1r.json`, `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md` | PASS |
 | R1 Replay/meta pipeline | passed | `reports/replays/r1-semantic-loader.json`, `reports/replays/r1-independent-review.json`, `reports/gates/r1.json` | PASS after independent semantic stream and aggregate recalculation |
 | G2 Model/action schema | passed | `reports/artifacts/g2-model-schema-v1.json`, `reports/artifacts/g2-card-table-v1.json`, `reports/artifacts/g2-policy-v1.json`, `reports/evaluations/g2-policy-cpu-gpu-parity-v4.json`, `reports/artifacts/g2-policy-checkpoint-v1.json`, `reports/evaluations/g2-neural-reliability-v1.json`, `reports/gates/g2.json` | PASS after exact 10,000-game T4 x2 reliability qualification and independent downloaded-artifact recalculation; training remains separately unauthorized |
-| G3a PPO correctness smoke | not started | strict thresholds in `DEC-010` | Kaggle/Colab smoke only after review |
+| G3a PPO correctness smoke | blocked | `configs/g3a_evaluation_v1.json`, `reports/artifacts/g3a-evaluation-contract-v1.json`, `reports/gates/g3a.json` | Contract frozen; PPO harness, exact bounded plan and explicit launch approval remain open |
 | G3b PPO competence | not started | strict thresholds in `DEC-010` | cloud only |
 | D1 Deck selection | not started | strict thresholds in `DEC-010` | deck freeze requires approval |
 | G4 Modal readiness | not started | | Modal canary requires approval |
@@ -65,7 +65,8 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 - G1R has no open blocker.
 - The approved R0 plan SHA-256 `eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934` is fully consumed: 20 files, 83,981,423 bytes, largest 6,303,684 bytes and audit SHA-256 `603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe`.
 - R1 is closed as PASS after complete-audit correction: 2,999 decisions and 3,275 selected options were decoded from the preceding active request; 21 STOP markers and 16 ordered requests were reconstructed. Metadata now binds to official card-data SHA-256 `a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373`; semantic stream SHA-256 is `7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806`, independent review found zero mismatches, and peak loader RSS was 68.17578125 MiB. The resolved provenance incident is recorded at `reports/incidents/r1-card-data-provenance-hash.json`. Additional replay retrieval and action-supervision training remain unauthorized.
-- G2 is closed as `SUCCEEDED / PASS`. PPO training remains unauthorized until the frozen G3a evaluation configuration is implemented/reviewed and the user gives explicit training approval.
+- G2 is closed as `SUCCEEDED / PASS`.
+- The strict G3a evaluation contract is frozen at implementation commit `6ca84cf7ccd79e49341998314da6d32aa8f1de45`. Config SHA-256 is `51f5d0d800a0a3832cc0ea8873828f6c68262eb4f24e55a8b11ae4143a2dae72` and semantic SHA-256 is `bd3e0e6b5331fe6f6028df65403ecf2446250ebb8f375961544de26cf0ffc3b6`. Eighty-three implementation edge-case tests and the 286-test implementation suite passed; final promotion validation passed 86 focused G3 tests, the 289-test full Python suite, Ruff, dashboard ingestion with 107 records and zero quarantine, dashboard doctor, seven frontend unit tests, the production build and four browser tests. Ten independent contract-mutation branches and 17 independent evidence-failure branches passed or failed closed as expected. This closes only the evaluation-config prerequisite; PPO training remains unauthorized, and the PPO implementation is not complete.
 - G2 model schema v1 is sealed at `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`; raw serial magnitude and option transport order are outside actor features.
 - G2 private card table v1 is sealed at `7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0`; names and effect text are excluded from model metadata.
 - G2 compact policy v1 is corrected and sealed at 970,022 trainable parameters; architecture SHA-256 is `aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf`.
@@ -111,6 +112,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Implement and review the strict frozen G3a evaluation configuration without running training.
-2. Present the bounded three-seed PPO correctness-smoke plan for explicit user approval; do not launch it automatically.
-3. Keep additional replay retrieval, action-supervision training, Modal execution, deck freeze and submission blocked until their separate approval gates.
+1. Implement and locally exhaustively test the PPO correctness primitives and versioned toy environments without meaningful self-play.
+2. Compare viable bounded smoke allocations using measured throughput, then present one exact three-seed Kaggle/Colab plan with per-task choices, wall-time cap, checkpoint cadence, artifact destination and stop conditions for explicit user approval.
+3. Launch nothing automatically; keep additional replay retrieval, action-supervision training, Modal execution, deck freeze and submission blocked until their separate approval gates.

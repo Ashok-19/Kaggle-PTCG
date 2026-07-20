@@ -1,30 +1,49 @@
 # Progress Report
 
-Current gate: **G1R contract recertification**  
-Outcome: **SUCCEEDED / PASS**  
+Current gate: **G3a recurrent PPO correctness preparation**  
+Current verdict: **BLOCKED / NOT_REVIEWED**  
+Latest completed milestone: **strict evaluation contract frozen and independently audited**  
 Cost: **USD 0**
 
-The reviewed false-pass, loaded-asset provenance, adapter-boundary validation,
-terminal parsing, fail-closed semantic, STOP trace, recurrent lifecycle, failure-mode,
-and evidence-reproducibility defects are repaired and regression tested.
+The evaluation-only G3a contract is implemented at
+`configs/g3a_evaluation_v1.json` and bound to implementation commit
+`6ca84cf7ccd79e49341998314da6d32aa8f1de45`. It freezes the exact
+three-seed toy-task rules, recurrent-over-stateless margin, probability-replay
+tolerances, zero-tolerance counters, checkpoint-resume requirements and the
+accepted G3b, D1 and champion thresholds without adding PPO hyperparameters or
+authorizing training.
 
-Current retained evidence includes 58 passing Python tests, Ruff, dashboard tests/build,
-asset and contract validation, 1,000,000 valid operations, a 257-event log burst, final-source
-engine parity, 10,080 arena games, 2,400 benchmark games, and a six-hour RSS soak with
-1,693,121 games. All required error counters are zero and the independent raw review passed.
+Evidence used to select the design:
+
+- the legacy evaluation YAML covered none of nine checked G3a criteria, none of
+  nine sampled future thresholds and contained five unresolved placeholders;
+- a G3a-only contract was rejected because it would permit future threshold drift;
+- the selected exact versioned contract covers all checked current and future
+  criteria and structurally forbids paired-engine-seed claims, blended promotion
+  scores and unauthorized training;
+- the recurrent cue task has an exhaustive stateless ceiling of `0.50`, recurrent
+  oracle ceiling of `1.00`, frozen minimum recurrent score of `0.85` and minimum
+  per-seed margin of `0.25`.
+
+Validation completed:
+
+- 83 implementation-focused G3a edge-case tests passed before the implementation commit;
+- final promotion validation passed 86 focused G3 tests and 289 complete Python tests;
+- Ruff passed;
+- dashboard rebuild ingested 107 records with zero quarantine, dashboard doctor passed,
+  seven frontend unit tests passed, the production build passed and all four browser tests passed;
+- an independent committed-tree audit rejected 10 contract mutations and 17
+  evidence-failure branches and accepted a separately constructed valid record;
+- no training, Kaggle/Colab launch, Modal use, submission or external mutation occurred.
 
 Authoritative evidence:
 
-- `reports/gates/g1r.json`
-- `contracts/g1r_acceptance_plan.v1.json`
-- `docs/decisions/DEC-008_G1_REOPENED.md`
-- ignored raw preflight evidence under `runs/g1r-preflight-20260718T115802Z/`
-- ignored one-million corpus and verification manifests under `runs/`
-- `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md`
+- `reports/artifacts/g3a-evaluation-contract-v1.json`
+- `reports/gates/g3a.json`
+- `tests/g3/test_evaluation.py`
+- `tests/g3/test_evaluation_script.py`
 
-The first benchmark attempt exposed a transient-negative-HP contract defect; its evidence
-is retained, the fix is regression tested, and the qualifying retry passed. Final-source
-parity and the independent raw-artifact recalculation also passed. R0 transferred zero
-manifest or episode files because the user paused work during the permitted window. No
-training or meaningful self-play ran locally. Next recommendation: G2 plus parallel R1
-replay/meta implementation under a fresh reviewed work order.
+The remaining G3a blockers are the PPO correctness implementation, versioned toy
+environments, measured smoke allocation, exact bounded three-seed run plan and
+explicit user approval before launch. The next work is local correctness code and
+tests only; it must not be described as training progress or policy strength.

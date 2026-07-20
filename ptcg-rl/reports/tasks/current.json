@@ -231,9 +231,35 @@
   },
   {
     "schema_version": 1,
+    "record_id": "task-g3-eval-001",
+    "created_at_utc": "2026-07-20T14:55:27Z",
+    "updated_at_utc": "2026-07-20T14:55:27Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G3-EVAL-001",
+    "title": "Freeze the strict G3a evaluation contract",
+    "phase": "G3a",
+    "priority": 4,
+    "status": "SUCCEEDED",
+    "depends_on": ["G2_PASS", "DEC-010"],
+    "done_when": "The exact G3a, G3b, D1 and champion acceptance rules are versioned, fail closed under adversarial review and preserve the no-training authorization boundary.",
+    "completed_at_utc": "2026-07-20T14:55:27Z",
+    "completion_commit": "6ca84cf7ccd79e49341998314da6d32aa8f1de45",
+    "completion_evidence": "reports/artifacts/g3a-evaluation-contract-v1.json",
+    "config_path": "configs/g3a_evaluation_v1.json",
+    "config_file_sha256": "51f5d0d800a0a3832cc0ea8873828f6c68262eb4f24e55a8b11ae4143a2dae72",
+    "config_semantic_sha256": "bd3e0e6b5331fe6f6028df65403ecf2446250ebb8f375961544de26cf0ffc3b6",
+    "focused_edge_case_tests": 83,
+    "independent_contract_mutations_rejected": 10,
+    "independent_evidence_failure_branches_rejected": 17,
+    "no_training": true,
+    "external_service_mutated": false
+  },
+  {
+    "schema_version": 1,
     "record_id": "task-g3-001",
     "created_at_utc": "2026-07-19T06:30:00Z",
-    "updated_at_utc": "2026-07-20T12:04:42Z",
+    "updated_at_utc": "2026-07-20T14:55:27Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G3-001",
@@ -241,8 +267,14 @@
     "phase": "G3a",
     "priority": 5,
     "status": "BLOCKED",
-    "depends_on": ["G2_PASS", "EVALUATION_CONFIG_IMPLEMENTED", "USER_TRAINING_APPROVAL"],
-    "done_when": "A bounded private Kaggle notebook proves the strict three-seed G3a contract.",
-    "blocker": "G2 is PASS; the frozen evaluation configuration and explicit user training approval remain open."
+    "depends_on": [
+      "G2_PASS",
+      "T-G3-EVAL-001",
+      "PPO_CORRECTNESS_HARNESS_IMPLEMENTED",
+      "USER_TRAINING_APPROVAL"
+    ],
+    "done_when": "A bounded private Kaggle or Colab run proves the strict three-seed G3a contract.",
+    "evaluation_contract_evidence": "reports/artifacts/g3a-evaluation-contract-v1.json",
+    "blocker": "The evaluation contract is frozen. The PPO correctness harness, exact bounded run plan and explicit user training approval remain open."
   }
 ]

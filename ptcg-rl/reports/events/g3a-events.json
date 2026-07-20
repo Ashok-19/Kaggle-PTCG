@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g3a-evaluation-contract-frozen-20260720",
+    "created_at_utc": "2026-07-20T14:55:27Z",
+    "source_path": "reports/artifacts/g3a-evaluation-contract-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G3a",
+    "kind": "EVALUATION_CONTRACT",
+    "severity": "INFO",
+    "status_after": "BLOCKED",
+    "title": "G3a strict evaluation contract frozen",
+    "summary": "Implementation commit 6ca84cf7 freezes the exact three-seed G3a correctness criteria and the accepted future strength thresholds. Eighty-three focused edge-case tests, the 286-test full suite, Ruff, 10 independent contract mutations and 17 independent evidence-failure branches passed or failed closed as expected. PPO is not implemented and training remains unauthorized."
+  }
+]

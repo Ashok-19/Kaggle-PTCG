@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "record_id": "gate-g3a-20260720",
+  "created_at_utc": "2026-07-20T14:55:27Z",
+  "updated_at_utc": "2026-07-20T14:55:27Z",
+  "source_path": "reports/gates/g3a.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "gate_id": "G3a",
+  "title": "Recurrent PPO correctness proof",
+  "status": "BLOCKED",
+  "decision": "NOT_REVIEWED",
+  "authorization": "EVALUATION_CONTRACT_FROZEN_TRAINING_NOT_AUTHORIZED",
+  "technical_checks": [
+    {
+      "name": "strict evaluation contract frozen",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3a-evaluation-contract-v1.json"
+    },
+    {
+      "name": "exact contract loader and fail-closed independent reviewer",
+      "status": "PASS",
+      "evidence": "tests/g3/test_evaluation.py"
+    },
+    {
+      "name": "standalone review command exit and artifact semantics",
+      "status": "PASS",
+      "evidence": "tests/g3/test_evaluation_script.py"
+    },
+    {
+      "name": "PPO correctness harness and versioned toy task implementations",
+      "status": "BLOCKED",
+      "evidence": null
+    },
+    {
+      "name": "bounded three-seed private correctness smoke",
+      "status": "BLOCKED",
+      "evidence": null
+    }
+  ],
+  "blockers": [
+    "The recurrent PPO correctness harness and versioned toy task implementations are not yet implemented and reviewed.",
+    "The exact per-task choice allocation, wall-time cap, checkpoint cadence, artifact destination and stop conditions have not yet been preregistered.",
+    "Explicit user approval to launch a bounded private Kaggle or Colab training smoke has not been granted."
+  ],
+  "warnings": [
+    "A frozen evaluation contract does not establish PPO correctness, learning or policy strength.",
+    "The official engine uses system entropy; the contract does not claim paired seeds or deterministic game trajectories.",
+    "Natural-deployment player-slot balancing remains primary and forced actual-first/actual-second results remain separate diagnostics.",
+    "No training, Kaggle launch, Colab launch, Modal use or submission occurred while freezing this contract."
+  ],
+  "approved_next_action": "Implement and locally exhaustively test the PPO correctness primitives and versioned toy environments without meaningful self-play, benchmark alternative smoke allocations, then present one exact bounded three-seed private Kaggle/Colab run plan for explicit user approval. Do not launch it automatically.",
+  "cost_usd": 0.0
+}
