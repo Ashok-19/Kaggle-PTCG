@@ -2,3 +2,9 @@ pokemon-tcg-ai-battle.zip
 pokemon-tcg-ai-battle/
 sample-agents.zip
 sample-agents/
+PTCG.zip
+scratch/
+ptcg-rl/scratch/
+.chatgpt/handoffs/
+.chatgpt/operations/
+.chatgpt/workspace-locks/
