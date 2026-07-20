@@ -1,11 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-test("current G2 work is visible after R1 closure", async ({ page }) => {
+test("G3a approval boundary is visible after G2 closure", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Active workstreams" })).toBeVisible();
-  await expect(page.getByText("G2", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/Implement the compact recurrent semantic policy/)).toBeVisible();
+  await expect(page.getByText("PASS", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Launch recurrent PPO correctness smoke/)).toBeVisible();
+  await expect(page.getByText("G3a", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/training remains unauthorized/)).toBeVisible();
   await expect(page.getByText("USD 0.00", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/command-center.png", fullPage: true });
 });
@@ -18,7 +19,7 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   const g2Step = page.locator(".roadmap-step").filter({ hasText: "G2" });
   const g3Step = page.locator(".roadmap-step").filter({ hasText: "G3a" });
   await expect(r1Step.getByText("Passed", { exact: true })).toBeVisible();
-  await expect(g2Step.getByText("RUNNING", { exact: true })).toBeVisible();
+  await expect(g2Step.getByText("Passed", { exact: true })).toBeVisible();
   await expect(g3Step.getByText("Not started", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/gates-roadmap.png", fullPage: true });
 

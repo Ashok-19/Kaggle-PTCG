@@ -2,15 +2,15 @@
   "schema_version": 1,
   "record_id": "gate-g2-20260719",
   "created_at_utc": "2026-07-19T06:30:00Z",
-  "updated_at_utc": "2026-07-19T20:46:00Z",
+  "updated_at_utc": "2026-07-20T12:04:42Z",
   "source_path": "reports/gates/g2.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "9",
+  "producer_version": "10",
   "gate_id": "G2",
   "title": "Model-facing tensors, recurrent policy and semantic action scorer",
-  "status": "RUNNING",
-  "decision": "NOT_REVIEWED",
-  "authorization": "APPROVED_TO_IMPLEMENT",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "authorization": "QUALIFICATION_COMPLETE_TRAINING_NOT_AUTHORIZED",
   "technical_checks": [
     {
       "name": "versioned model-facing schema",
@@ -74,25 +74,18 @@
     },
     {
       "name": "10,000 complete neural-policy games",
-      "status": "READY_FOR_USER_RUN",
-      "evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json"
+      "status": "PASS",
+      "evidence": "reports/evaluations/g2-neural-reliability-v1.json"
     }
   ],
-  "blockers": [
-    "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
-  ],
+  "blockers": [],
   "warnings": [
-    "Training remains unauthorized; G2 implementation and qualification only.",
-    "The sealed model is an architecture/correctness result, not a policy-strength or learning result.",
-    "Current-source bundle v4 and strict Kaggle CPU/T4 parity are qualified; historical bundles remain audit evidence only.",
-    "Kaggle GPU T4 x2 must be selected manually because an automatic CLI GPU launch received a rejected Tesla P100.",
-    "GPU version 1 records the active Tesla T4 but predates explicit visible-device-count and outbound-HTTP probes; future GPU runs record topology.",
-    "Checkpoint package v1 is private and pickle-free; its public report exposes hashes and validation counts, not tensor values or private card-table contents.",
-    "The reliability harness is source-bound at b536f3a, passes 202 tests, exact two-server/sixteen-worker local smoke, seven completed fail-closed live branches and a sealed full-path notebook preflight.",
-    "The 10,000-game criterion remains open; no Kaggle reliability notebook has been launched by the assistant.",
-    "The sealed dataset directory and notebook are ready locally, but dataset creation must complete before the user can attach the exact version.",
-    "The Kaggle notebook service observed Python 3.12.13, so exact submission Python/runtime parity remains a separate qualification item."
+    "Training remains unauthorized; G2 closes architecture, numerical, packaging and reliability qualification only.",
+    "The sealed model is not yet a policy-strength, learning-progress or competitive-win-rate result.",
+    "The user manually selected GPU T4 x2 and ran the private notebook with internet off; the assistant downloaded and independently recalculated the saved outputs but did not launch or rerun the notebook.",
+    "The final reliability run used source b536f3a, two Tesla T4 servers, 32 engine workers and 10,000 complete games with zero tolerance failures across 1,213,203 neural decisions.",
+    "Exact submission-runtime Python and final effective timeout remain separate final-package qualification items."
   ],
-  "approved_next_action": "Create the single private reliability input dataset from the sealed local directory, then have the user manually import the exact notebook, attach that dataset version, select GPU T4 x2, keep internet off and run all cells. Download and independently recalculate the 10,000-game outputs before any G2 PASS decision.",
+  "approved_next_action": "Implement and review the frozen G3a evaluation configuration, then obtain explicit user approval before any bounded private PPO correctness smoke. Do not start training, additional replay retrieval, Modal execution, deck freeze or submission automatically.",
   "cost_usd": 0.0
 }

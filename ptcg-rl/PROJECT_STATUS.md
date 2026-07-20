@@ -1,12 +1,12 @@
 # Project Status
 
-Last updated UTC: 2026-07-19  
+Last updated UTC: 2026-07-20  
 Active repository: `https://github.com/Ashok-19/Kaggle-PTCG` (`PRIVATE`)  
 Clean lineage root: `08be5cec0fac9a954a3fe127a3f51122be4736d1`  
-Last completed gate: R1 version-pinned semantic replay pipeline (`PASS`)  
-Current gate: G2 model qualification  
-Gate status: G2 RUNNING / R1 PASS  
-Next review required before: any additional episode JSON transfer, G3 training, Modal execution, deck freeze, or submission
+Last completed gate: G2 model and neural-policy reliability qualification (`PASS`)  
+Current gate: G3a PPO correctness preparation  
+Gate status: G2 PASS / R1 PASS / G3a BLOCKED  
+Next review required before: evaluation-config freeze, any training, additional episode JSON transfer, Modal execution, deck freeze, or submission
 
 ## Mission Clock
 
@@ -46,7 +46,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 | G1 Engine contract/tensor schema | superseded | `G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md` | historical smoke only |
 | G1R Contract recertification | passed | `reports/gates/g1r.json`, `G1R_REMEDIATION_AND_ACCEPTANCE_REPORT.md` | PASS |
 | R1 Replay/meta pipeline | passed | `reports/replays/r1-semantic-loader.json`, `reports/replays/r1-independent-review.json`, `reports/gates/r1.json` | PASS after independent semantic stream and aggregate recalculation |
-| G2 Model/action schema | running | `reports/artifacts/g2-model-schema-v1.json`, `reports/artifacts/g2-card-table-v1.json`, `reports/artifacts/g2-policy-v1.json`, `reports/evaluations/g2-policy-cpu-gpu-parity-v4.json`, `reports/artifacts/g2-policy-checkpoint-v1.json`, `reports/artifacts/g2-neural-reliability-readiness-v1.json`, `reports/gates/g2.json` | projection, static table, compact model, strict Kaggle CPU/T4 parity, deterministic checkpoint and reliability-runner readiness PASS; 10k-game result pending; training blocked |
+| G2 Model/action schema | passed | `reports/artifacts/g2-model-schema-v1.json`, `reports/artifacts/g2-card-table-v1.json`, `reports/artifacts/g2-policy-v1.json`, `reports/evaluations/g2-policy-cpu-gpu-parity-v4.json`, `reports/artifacts/g2-policy-checkpoint-v1.json`, `reports/evaluations/g2-neural-reliability-v1.json`, `reports/gates/g2.json` | PASS after exact 10,000-game T4 x2 reliability qualification and independent downloaded-artifact recalculation; training remains separately unauthorized |
 | G3a PPO correctness smoke | not started | strict thresholds in `DEC-010` | Kaggle/Colab smoke only after review |
 | G3b PPO competence | not started | strict thresholds in `DEC-010` | cloud only |
 | D1 Deck selection | not started | strict thresholds in `DEC-010` | deck freeze requires approval |
@@ -56,7 +56,7 @@ No meaningful self-play, PPO, league training or large evaluation may run locall
 
 ## Active Experiments And Jobs
 
-No active long-running jobs. G1R contract repair, one-million-operation corpus, final-source parity, 10,080-game arena, throughput matrix, six-hour RSS soak and independent raw-artifact review are complete. Verified project compute cost remains USD `0`.
+No active long-running jobs. G1R contract repair, one-million-operation corpus, final-source parity, 10,080-game arena, throughput matrix, six-hour RSS soak, independent raw-artifact review and the G2 10,000-game T4 x2 neural reliability qualification are complete. Verified project compute cost remains USD `0`.
 
 The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45 GPU hours and 20 TPU hours available for the current quota period, with only seconds consumed. This is capacity information, not authorization to train.
 
@@ -65,16 +65,16 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 - G1R has no open blocker.
 - The approved R0 plan SHA-256 `eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934` is fully consumed: 20 files, 83,981,423 bytes, largest 6,303,684 bytes and audit SHA-256 `603df727f237982ea64e70b0f5f4ff5e497fdbf8f2c20188007077df284f4bfe`.
 - R1 is closed as PASS after complete-audit correction: 2,999 decisions and 3,275 selected options were decoded from the preceding active request; 21 STOP markers and 16 ordered requests were reconstructed. Metadata now binds to official card-data SHA-256 `a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373`; semantic stream SHA-256 is `7174dbc493bfee05c5a308b3c551658e8fb9d5e2736a318c56a3e9495fd76806`, independent review found zero mismatches, and peak loader RSS was 68.17578125 MiB. The resolved provenance incident is recorded at `reports/incidents/r1-card-data-provenance-hash.json`. Additional replay retrieval and action-supervision training remain unauthorized.
-- G2 may implement and qualify the model/action contract. It may not start PPO training.
+- G2 is closed as `SUCCEEDED / PASS`. PPO training remains unauthorized until the frozen G3a evaluation configuration is implemented/reviewed and the user gives explicit training approval.
 - G2 model schema v1 is sealed at `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`; raw serial magnitude and option transport order are outside actor features.
 - G2 private card table v1 is sealed at `7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0`; names and effect text are excluded from model metadata.
 - G2 compact policy v1 is corrected and sealed at 970,022 trainable parameters; architecture SHA-256 is `aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf`.
 - Current-source private qualification bundle v4 is bound to commit `c660f74b26fca74915931091ac0fe365f7f005f5` with SHA-256 `56b4e93671609a8d24887480cbf1d0dfc0c38b60e1cad55d0cf95f4e50744506`. All 11 entries match the manifest and source bytes; local preflight passed all 10 checks with seven selected gradients and no optimizer or training loop. Historical bundles remain retained only as audit evidence for their recorded source commits.
 - Private Kaggle GPU version 1 (`336514431`) on Tesla T4 and CPU version 4 (`336517420`) passed strict combined `atol=rtol=1e-5` parity across 1,596 numeric values with zero failures. The maximum absolute difference was `1.52587890625e-05` and maximum tolerance ratio was `0.4138225953505397`. CPU batch-1 p99 latency was `8.802885 ms`; external HTTP was blocked in both CPU probe attempts.
-- Kaggle GPU sessions must be selected manually as `GPU T4 x2`. An automatic CLI launch received a Tesla P100 and was rejected before qualification. Future receipts record one or two visible T4 devices and execute deterministically on CUDA device 0.
+- Kaggle GPU sessions must be selected manually as `GPU T4 x2`. An automatic CLI launch received a Tesla P100 and was rejected before qualification. The final user-run reliability receipt records exactly two visible Tesla T4 devices and executes one centralized inference server on each GPU.
 - G2 checkpoint package v1 is bound to implementation commit `6b3a3b4829b205d62e210fae7e396db33fdb9a5a` and SHA-256 `4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827`. It is a 5,429,190-byte sorted `ZIP_STORED` archive containing a pickle-free canonical tensor stream, numeric card table, manifest and fixed reference. Duplicate builds match exactly; current and isolated-source verification reproduced 1,150 numeric and 16 exact actor/value/recurrent/decoder/log-probability values with zero drift; 25 adversarial branches failed closed. No optimizer, training loop, Kaggle run or external mutation occurred.
-- G2 neural reliability readiness is sealed at source commit `b536f3ac66796cdabc382f318126a99b0eeeae85`. The harness passes 202 repository tests, an independently reviewed 32-game exact two-server/sixteen-worker smoke with 3,892 engine requests and zero error counters, and seven completed live fail-closed branches including worker/server SIGKILL. The 12,088,771-byte offline input archive SHA-256 is `d4fa4a09e5c86cc3a2c93461b2127634dc197a7241d99d36f78bc35ce878b6ec`; duplicate outer builds match. The importable notebook SHA-256 is `93e44db3edbc729cb3bc42a2347edc0d868b4e895465e88b431063e8853527c3`, and its complete local clone/copy/run/review path passes.
-- The target private dataset is `ashok205/g2-neural-reliability-inputs`. It does not yet exist because all available external-create interfaces were blocked before network access. The exact four-file local dataset directory is ready; no Kaggle reliability notebook was launched by the assistant.
+- G2 neural reliability readiness is sealed at source commit `b536f3ac66796cdabc382f318126a99b0eeeae85`. The harness passes 202 repository tests, independently reviewed local smokes and seven live fail-closed branches. Private dataset `ashok205/g2-neural-reliability-inputs` version 1 is `READY`; its sealed archive is 12,088,771 bytes with SHA-256 `d4fa4a09e5c86cc3a2c93461b2127634dc197a7241d99d36f78bc35ce878b6ec`.
+- Final G2 reliability evidence is `reports/evaluations/g2-neural-reliability-v1.json`. The user manually ran `ashok205/kptcg-g2-neural-reliability-v1` (script version id `336684242`) with internet off and two Tesla T4 GPUs. Exactly 10,000 games, 1,213,203 engine requests and 20,791 multi-select requests completed with zero invalid selections, fallbacks, post-terminal actions, recurrent-state violations, nonfinite outputs, crashes or timeouts. The 28,783,333-byte games ledger SHA-256 is `39d7d43d142bec64bcace5da5151ca6bccba2bd533c47d1957a4ad7505cc918f`; all downloaded manifest hashes matched and 21 review fields matched the assistant's independent recalculation exactly. The assistant did not launch or rerun the notebook.
 - The exact Python patch and final effective timeout remain submission-qualification notes, not current blockers.
 - Main Modal training, deck freeze, Kaggle submissions and active-submission changes require explicit user approval.
 
@@ -111,6 +111,6 @@ The Kaggle MCP is connected. On 2026-07-19 the account reported approximately 45
 
 ## Immediate Next Actions
 
-1. Create the single private Kaggle dataset `ashok205/g2-neural-reliability-inputs` from `ptcg-rl/private/kaggle/datasets/g2-neural-reliability-inputs`; verify the uploaded version by downloading it and matching all local hashes.
-2. Have the user import `ptcg-rl/private/kaggle/notebooks/kptcg-g2-neural-reliability-v1.ipynb`, attach that exact dataset version, select `GPU T4 x2`, keep internet off and run all cells. The assistant must never launch or rerun this notebook.
-3. Download the notebook outputs and independently recalculate all 10,000-game zero-tolerance, process-accounting, topology, latency and RSS metrics before any G2 `PASS` decision; training remains blocked.
+1. Implement and review the strict frozen G3a evaluation configuration without running training.
+2. Present the bounded three-seed PPO correctness-smoke plan for explicit user approval; do not launch it automatically.
+3. Keep additional replay retrieval, action-supervision training, Modal execution, deck freeze and submission blocked until their separate approval gates.

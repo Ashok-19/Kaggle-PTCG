@@ -89,7 +89,7 @@ def test_checkpoint_report_records_completed_reference_and_adversarial_validatio
     )
 
 
-def test_gate_and_tasks_close_checkpoint_only_and_keep_g2_running() -> None:
+def test_checkpoint_slice_remains_bound_after_final_g2_reliability_pass() -> None:
     root = Path(__file__).resolve().parents[2]
     gate = load(root, "reports/gates/g2.json")
     tasks = load(root, "reports/tasks/current.json")
@@ -101,18 +101,14 @@ def test_gate_and_tasks_close_checkpoint_only_and_keep_g2_running() -> None:
         "status": "PASS",
         "evidence": REPORT_PATH,
     }
-    reliability = checks["10,000 complete neural-policy games"]
-    assert reliability == {
+    assert checks["10,000 complete neural-policy games"] == {
         "name": "10,000 complete neural-policy games",
-        "status": "READY_FOR_USER_RUN",
-        "evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+        "status": "PASS",
+        "evidence": "reports/evaluations/g2-neural-reliability-v1.json",
     }
-    assert reliability["status"] != "PASS"
-    assert gate["status"] == "RUNNING"
-    assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["blockers"] == [
-        "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
-    ]
+    assert gate["status"] == "SUCCEEDED"
+    assert gate["decision"] == "PASS"
+    assert gate["blockers"] == []
 
     checkpoint_task = next(item for item in tasks if item.get("task_id") == "T-G2-004")
     assert checkpoint_task["status"] == "SUCCEEDED"
@@ -125,10 +121,15 @@ def test_gate_and_tasks_close_checkpoint_only_and_keep_g2_running() -> None:
     assert checkpoint_task["kaggle_run_performed"] is False
 
     policy_task = next(item for item in tasks if item.get("task_id") == "T-G2-002")
-    assert policy_task["status"] == "RUNNING"
+    assert policy_task["status"] == "SUCCEEDED"
     assert policy_task["checkpoint_evidence"] == REPORT_PATH
-    assert policy_task["remaining_work"] == ["10,000 complete neural-policy games"]
+    assert policy_task["reliability_evidence"] == (
+        "reports/evaluations/g2-neural-reliability-v1.json"
+    )
+    assert policy_task["no_training"] is True
 
+    # This sealed policy report predates the final reliability run and remains
+    # historical evidence rather than being rewritten retroactively.
     assert policy["external_qualification"] == {
         "checkpoint_package": REPORT_PATH,
         "cpu_gpu_parity": "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json",

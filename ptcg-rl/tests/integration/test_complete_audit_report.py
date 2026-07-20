@@ -38,16 +38,27 @@ def test_complete_pre_g2_audit_is_cryptographically_consistent() -> None:
     review = load(root, "reports/replays/r1-independent-review.json")
     incident = load(root, "reports/incidents/r1-card-data-provenance-hash.json")
     gate = load(root, "reports/gates/g2.json")
+    reliability = load(root, "reports/evaluations/g2-neural-reliability-v1.json")
     assert matrix["replay"]["semantic_stream_sha256"] == semantic["semantic_stream_sha256"]
     assert matrix["replay"]["semantic_audit_sha256"] == semantic["audit_sha256"]
     assert matrix["replay"]["independent_review_sha256"] == review["review_sha256"]
     assert incident["after"]["source_commit"] == review["source_commit"]
-    checks = {item["name"]: item["status"] for item in gate["technical_checks"]}
-    assert checks["latest-clean-source qualification bundle"] == "PASS"
-    assert checks["Kaggle CPU/GPU numerical and latency qualification"] == "PASS"
-    assert gate["status"] == "RUNNING"
-    assert checks["10,000 complete neural-policy games"] == "READY_FOR_USER_RUN"
-    assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["blockers"] == [
-        "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
-    ]
+
+    checks = {item["name"]: item for item in gate["technical_checks"]}
+    assert checks["latest-clean-source qualification bundle"]["status"] == "PASS"
+    assert checks["Kaggle CPU/GPU numerical and latency qualification"]["status"] == "PASS"
+    assert checks["10,000 complete neural-policy games"] == {
+        "name": "10,000 complete neural-policy games",
+        "status": "PASS",
+        "evidence": "reports/evaluations/g2-neural-reliability-v1.json",
+    }
+    assert gate["status"] == "SUCCEEDED"
+    assert gate["decision"] == "PASS"
+    assert gate["blockers"] == []
+    assert reliability["status"] == "SUCCEEDED"
+    assert reliability["decision"] == "PASS"
+    assert reliability["results"]["observed_games"] == 10_000
+    assert reliability["independent_recalculation"][
+        "all_compared_fields_exact_match"
+    ] is True
+    assert reliability["execution"]["training_loop_ran"] is False

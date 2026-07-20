@@ -90,5 +90,19 @@
     "title": "G2 neural reliability harness ready for manual T4 x2 run",
     "summary": "Source b536f3a passes 202 tests, an exact two-server/sixteen-worker 32-game smoke with independent review, seven completed live fail-closed branches, a byte-repeatable 12,088,771-byte offline input archive and a locally validated notebook. The 10,000-game criterion remains open; the assistant launched no Kaggle notebook, and the private dataset create transaction remains blocked before network access."
   }
+,
+  {
+    "schema_version": 1,
+    "record_id": "event-g2-neural-reliability-passed-20260720",
+    "created_at_utc": "2026-07-20T12:04:42Z",
+    "source_path": "reports/evaluations/g2-neural-reliability-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G2",
+    "kind": "EVALUATION",
+    "severity": "INFO",
+    "status_after": "SUCCEEDED",
+    "title": "G2 10,000-game neural reliability qualification passed",
+    "summary": "The user-run private Kaggle T4 x2 notebook completed exactly 10,000 games and 1,213,203 neural decisions with zero invalid selections, fallbacks, post-terminal actions, recurrent violations, nonfinite outputs, worker/server failures or timeouts. Downloaded hashes and 21 summary fields matched an independent local recalculation exactly; no optimizer or training loop ran."
+  }
 
 ]

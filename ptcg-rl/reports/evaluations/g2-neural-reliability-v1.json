@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "record_id": "evaluation-g2-neural-reliability-v1",
+  "created_at_utc": "2026-07-20T12:04:42Z",
+  "updated_at_utc": "2026-07-20T12:04:42Z",
+  "source_path": "reports/evaluations/g2-neural-reliability-v1.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "evaluation_id": "g2-neural-reliability-v1",
+  "gate_id": "G2",
+  "kind": "EVALUATION",
+  "title": "G2 complete neural-policy reliability qualification",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "scope": "Exactly 10,000 complete native-engine games using the sealed recurrent neural policy, two manually selected Tesla T4 devices, centralized batched inference, zero-tolerance action/state/process checks and an independent downloaded-artifact recalculation; no optimizer or training loop.",
+  "identity": {
+    "source_commit": "b536f3ac66796cdabc382f318126a99b0eeeae85",
+    "source_tree": "3757fc9523117c498ccfa668a8832ddeffbf70f0",
+    "checkpoint_package_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+    "notebook_ref": "ashok205/kptcg-g2-neural-reliability-v1",
+    "script_version_id": 336684242,
+    "service_status": "COMPLETE",
+    "notebook_file_sha256": "58abcac4b975dae048e07f6419c039f14922ef28044ab13d6074ecf131b36b21",
+    "canonical_notebook_source_bytes": 24082,
+    "canonical_notebook_source_sha256": "d15820fe5b758ef17fdad9d6429999de96a3d1d9f0baebfc130c9277a4ff0316",
+    "saved_notebook_source_bytes": 24086,
+    "saved_notebook_source_sha256": "b79f1098f1761f4bddc309473036f37659ef6ca0c3d0ac009ccfbff6516069f6",
+    "saved_source_matches_canonical_after_surrounding_whitespace": true
+  },
+  "input": {
+    "dataset_ref": "ashok205/g2-neural-reliability-inputs",
+    "dataset_id": 11268425,
+    "dataset_version": 1,
+    "dataset_status": "READY",
+    "archive_bytes": 12088771,
+    "archive_sha256": "d4fa4a09e5c86cc3a2c93461b2127634dc197a7241d99d36f78bc35ce878b6ec",
+    "manifest_sha256": "7b1c1c180e85aad7a4850dc4d72f8093c6896402eeabf6cdf86b5f9ea90855f2",
+    "input_record_sha256": "ac825256d492edd5697af7be88d399739be34eac06234a638e6d0db46b7483bd"
+  },
+  "execution": {
+    "manual_user_run": true,
+    "assistant_launched_kaggle_run": false,
+    "internet": "BLOCKED",
+    "visible_cuda_device_count": 2,
+    "visible_cuda_device_names": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "devices": [
+      "cuda:0",
+      "cuda:1"
+    ],
+    "inference_servers": 2,
+    "workers_per_device": 16,
+    "total_engine_workers": 32,
+    "max_batch": 16,
+    "batch_wait_ms": 1.0,
+    "multiprocessing_start_method": "spawn",
+    "game_timeout_seconds": 300.0,
+    "run_timeout_seconds": 36000.0,
+    "runner_wall_seconds": 5058.581121050001,
+    "notebook_wall_seconds": 5129.846986251,
+    "games_per_second": 1.9768389120790295,
+    "average_inference_batch_size": 9.25762882585903,
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "training_loop_ran": false,
+    "ppo_ran": false
+  },
+  "results": {
+    "expected_games": 10000,
+    "observed_games": 10000,
+    "complete_game_index_set": true,
+    "duplicate_indices": [],
+    "missing_index_count": 0,
+    "unexpected_index_count": 0,
+    "failing_game_count": 0,
+    "engine_requests": 1213203,
+    "meaningful_choices": 1156383,
+    "forced_requests": 56820,
+    "multi_select_requests": 20791,
+    "max_observed_options": 53,
+    "max_observed_select_count": 3,
+    "zero_tolerance": {
+      "summary": {
+        "invalid_selections": 0,
+        "fallback_actions": 0,
+        "post_terminal_actions": 0
+      },
+      "ledger": {
+        "stale_requests": 0,
+        "out_of_order_requests": 0,
+        "ownership_violations": 0,
+        "invalid_identities": 0
+      },
+      "policy": {
+        "ownership_violations": 0,
+        "stale_policy_requests": 0,
+        "transport_violations": 0,
+        "server_errors": 0,
+        "invalid_responses": 0,
+        "nonfinite_outputs": 0,
+        "invalid_distributions": 0,
+        "reset_error": 0
+      }
+    },
+    "process_evidence": {
+      "status": "PASS",
+      "expected_workers": 32,
+      "observed_workers": 32,
+      "expected_servers": 2,
+      "observed_servers": 2,
+      "expected_engine_requests": 1213203,
+      "server_decisions": 1213203,
+      "failures": [],
+      "peak_process_rss_limit_mib": 6144.0,
+      "max_observed_process_rss_mib": 1234.1328125
+    },
+    "allocated_inference_ms_per_game": {
+      "p50": 756.1250989176536,
+      "p95": 980.4645376728928,
+      "p99": 1258.6000098652828,
+      "max": 3734.8177509893503
+    },
+    "roundtrip_ms_per_game": {
+      "p50": 13451.040441002988,
+      "p95": 16621.961276002367,
+      "p99": 17799.129116997392,
+      "max": 23847.37897899504
+    },
+    "projected_cpu_host_inference_limit": {
+      "p99_limit_ms": 120000.0,
+      "observed_allocated_p99_ms": 1258.6000098652828,
+      "pass": true
+    }
+  },
+  "artifacts": {
+    "games_jsonl": {
+      "bytes": 28783333,
+      "sha256": "39d7d43d142bec64bcace5da5151ca6bccba2bd533c47d1957a4ad7505cc918f"
+    },
+    "runner_receipt": {
+      "bytes": 17843,
+      "sha256": "9afc97ffe2df08dcb84ebe087e993649b868719e547204efb04c51b776f7c3e7"
+    },
+    "runner_review": {
+      "bytes": 2344,
+      "sha256": "e5d1d99e38b06cc3d3e0effe58042edc7f7ff55c6fc0bcf408e9019aab91a5a5"
+    },
+    "kaggle_independent_review": {
+      "bytes": 2577,
+      "sha256": "a7da0e7579561a18abbbc1433a221896a43f202df65ba5dd53d83e145d675218"
+    },
+    "notebook_receipt": {
+      "bytes": 2322,
+      "sha256": "b2bff8365997d89073835208438973089744ccbef4aeb538dcdc5cd864b71fc8"
+    },
+    "output_manifest": {
+      "bytes": 1834,
+      "sha256": "fb4c8e80e966f0551d55e6001782047cafe3d151e2f9402f719b668ced0548d1",
+      "declared_file_count": 9,
+      "downloaded_file_mismatch_count": 0
+    },
+    "stderr_files_empty": true,
+    "raw_outputs_tracked": false
+  },
+  "independent_recalculation": {
+    "status": "PASS",
+    "download_method": "Kaggle notebook output download via repository MCP",
+    "canonical_game_records_streamed": 10000,
+    "compared_summary_fields": 21,
+    "all_compared_fields_exact_match": true,
+    "process_accounting_recalculated": true,
+    "assistant_review_sha256": "7a1f77f452db96015a18c54631952b3d67b8bcd7cea7314372f3e45003681e6e"
+  },
+  "warnings": [
+    "This is a reliability, numerical and systems qualification result; it does not demonstrate policy strength, learning progress or competitive win rate.",
+    "G3 training remains unauthorized and requires both the frozen evaluation configuration and explicit user approval.",
+    "Exact submission-runtime Python and final package timeout remain later qualification items."
+  ],
+  "cost_usd": 0.0
+}

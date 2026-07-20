@@ -7,6 +7,7 @@ from pathlib import Path
 BUNDLE_SHA256 = "56b4e93671609a8d24887480cbf1d0dfc0c38b60e1cad55d0cf95f4e50744506"
 SOURCE_COMMIT = "c660f74b26fca74915931091ac0fe365f7f005f5"
 PARITY_REPORT = "reports/evaluations/g2-policy-cpu-gpu-parity-v4.json"
+RELIABILITY_REPORT = "reports/evaluations/g2-neural-reliability-v1.json"
 
 
 def load(root: Path, relative: str):
@@ -43,7 +44,7 @@ def test_current_source_bundle_report_is_sealed_and_no_training() -> None:
     }
 
 
-def test_gate_and_task_close_only_the_parity_slice() -> None:
+def test_bundle_parity_checkpoint_and_reliability_slices_close_g2() -> None:
     root = Path(__file__).resolve().parents[2]
     gate = load(root, "reports/gates/g2.json")
     tasks = load(root, "reports/tasks/current.json")
@@ -59,18 +60,19 @@ def test_gate_and_task_close_only_the_parity_slice() -> None:
         "status": "PASS",
         "evidence": PARITY_REPORT,
     }
-    reliability = checks["10,000 complete neural-policy games"]
-    assert reliability == {
-        "name": "10,000 complete neural-policy games",
-        "status": "READY_FOR_USER_RUN",
-        "evidence": "reports/artifacts/g2-neural-reliability-readiness-v1.json",
+    assert checks["deterministic fail-closed checkpoint package"] == {
+        "name": "deterministic fail-closed checkpoint package",
+        "status": "PASS",
+        "evidence": "reports/artifacts/g2-policy-checkpoint-v1.json",
     }
-    assert reliability["status"] != "PASS"
-    assert gate["status"] == "RUNNING"
-    assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["blockers"] == [
-        "The private Kaggle reliability input dataset has not been created because the available execution interfaces blocked the external create transaction before network access."
-    ]
+    assert checks["10,000 complete neural-policy games"] == {
+        "name": "10,000 complete neural-policy games",
+        "status": "PASS",
+        "evidence": RELIABILITY_REPORT,
+    }
+    assert gate["status"] == "SUCCEEDED"
+    assert gate["decision"] == "PASS"
+    assert gate["blockers"] == []
 
     parity_task = next(item for item in tasks if item.get("task_id") == "T-G2-003")
     assert parity_task["status"] == "SUCCEEDED"
@@ -83,8 +85,13 @@ def test_gate_and_task_close_only_the_parity_slice() -> None:
     assert parity_task["no_training"] is True
 
     policy_task = next(item for item in tasks if item.get("task_id") == "T-G2-002")
-    assert policy_task["status"] == "RUNNING"
+    assert policy_task["status"] == "SUCCEEDED"
     assert policy_task["checkpoint_evidence"] == (
         "reports/artifacts/g2-policy-checkpoint-v1.json"
     )
-    assert policy_task["remaining_work"] == ["10,000 complete neural-policy games"]
+    assert policy_task["reliability_evidence"] == RELIABILITY_REPORT
+    assert policy_task["no_training"] is True
+
+    training_task = next(item for item in tasks if item.get("task_id") == "T-G3-001")
+    assert training_task["status"] == "BLOCKED"
+    assert "explicit user training approval" in training_task["blocker"]
