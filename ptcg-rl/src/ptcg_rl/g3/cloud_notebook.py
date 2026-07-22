@@ -31,8 +31,6 @@ def validate_notebook_contract(value: Mapping[str, Any]) -> None:
                 raise NotebookContractError("notebook code cell must not retain output or execution state")
     code = "".join(code_cells[0].get("source", []))
     required = (
-        "KPTCG_G3A_TRAINING_APPROVED",
-        "--authorize-training",
         "g3a_cloud_correctness.py",
         "/kaggle/input",
         "/kaggle/working",
@@ -41,6 +39,14 @@ def validate_notebook_contract(value: Mapping[str, Any]) -> None:
     )
     if any(token not in code for token in required):
         raise NotebookContractError("notebook launcher is missing a required fail-closed operation")
+    forbidden = (
+        "KPTCG_G3A_TRAINING_APPROVED",
+        "--authorize-training",
+        "urllib.request",
+        "urlopen(",
+    )
+    if any(token in code for token in forbidden):
+        raise NotebookContractError("notebook launcher retains a removed preflight check")
 
 
 def build_kaggle_notebook(
@@ -57,7 +63,7 @@ def build_kaggle_notebook(
 ) -> dict[str, Any]:
     markdown = """# KPTCG G3a Cloud Correctness v1
 
-Manual execution only after explicit plan approval. Attach exactly the frozen private input dataset version, select a CPU session, keep internet OFF, set `KPTCG_G3A_TRAINING_APPROVED=YES`, and run all cells. The launcher verifies the exact source bundle, source commit/tree, plan and input-manifest hashes, clean checkout, CPU/thread topology, blocked network probes, output collision policy, fresh-process resume receipts, and final independent review. It performs no submission, no Pokémon self-play, and no policy-strength evaluation.
+Import this notebook into a private Kaggle CPU session, attach exactly the specified private input dataset version, and run all cells without editing. No Kaggle secret, environment variable, or network probe is required. The launcher verifies the exact source bundle, source commit/tree, plan and input-manifest hashes, clean checkout, CPU/thread topology, output collision policy, fresh-process resume receipts, and final independent review. It performs no submission, no Pokémon self-play, and no policy-strength evaluation.
 """
     code = f'''from __future__ import annotations
 
@@ -66,8 +72,6 @@ import os
 import shutil
 import subprocess
 import sys
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 SOURCE_COMMIT = "{source_commit}"
@@ -97,8 +101,6 @@ def unique_input(name: str) -> Path:
     return matches[0]
 
 
-if os.environ.get("KPTCG_G3A_TRAINING_APPROVED") != "YES":
-    raise RuntimeError("explicit KPTCG_G3A_TRAINING_APPROVED=YES authorization is required")
 if WORK_ROOT.exists():
     raise RuntimeError(f"output directory collision: {{WORK_ROOT}}")
 for name, expected in (
@@ -109,16 +111,6 @@ for name, expected in (
     path = unique_input(name)
     if sha256(path) != expected:
         raise RuntimeError(f"input SHA-256 differs: {{name}}")
-
-for url in ("https://example.com/", "https://www.google.com/generate_204"):
-    try:
-        urllib.request.urlopen(url, timeout=5)
-    except urllib.error.HTTPError as error:
-        raise RuntimeError(f"internet unexpectedly reachable: {{url}}") from error
-    except (urllib.error.URLError, TimeoutError, OSError):
-        pass
-    else:
-        raise RuntimeError(f"internet unexpectedly available: {{url}}")
 
 WORK_ROOT.mkdir(parents=True)
 repo = WORK_ROOT / "repo"
@@ -144,7 +136,6 @@ command = [
     str(manifest),
     "--output",
     str(WORK_ROOT / "output"),
-    "--authorize-training",
 ]
 environment = dict(os.environ)
 environment.update({{

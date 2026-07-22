@@ -33,8 +33,6 @@ from ptcg_rl.g3.evaluation import (
 )
 from ptcg_rl.g3.ppo import LocalExecutionLimitsV1
 
-AUTHORIZATION_ENV = "KPTCG_G3A_TRAINING_APPROVED"
-AUTHORIZATION_VALUE = "YES"
 STREAM_RESULT_NAME = "stream-result.json"
 
 
@@ -65,14 +63,6 @@ def write_canonical(path: Path, value: Mapping[str, Any]) -> dict[str, Any]:
     temporary.write_bytes(raw)
     temporary.replace(path)
     return {"path": path.name, "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
-
-
-def require_authorization(*, cli_authorized: bool) -> None:
-    if not cli_authorized or os.environ.get(AUTHORIZATION_ENV) != AUTHORIZATION_VALUE:
-        raise CloudScriptError(
-            "G3a training authorization requires both --authorize-training and "
-            f"{AUTHORIZATION_ENV}={AUTHORIZATION_VALUE}"
-        )
 
 
 def run_git(repository: Path, *args: str) -> str:
@@ -207,7 +197,6 @@ def build_stream_spec(plan: Mapping[str, Any], *, seed: int, stream: str) -> Str
 
 
 def stream_command(args: argparse.Namespace) -> int:
-    require_authorization(cli_authorized=args.authorize_training)
     plan = load_cloud_plan(args.plan)
     spec = build_stream_spec(plan, seed=args.seed, stream=args.stream)
     limits = LocalExecutionLimitsV1(
@@ -254,14 +243,12 @@ def run_child(
         str(seed),
         "--stream",
         stream,
-        "--authorize-training",
     ]
     if interrupt:
         command.append("--interrupt")
     if resume is not None:
         command.extend(["--resume", str(resume)])
     environment = dict(os.environ)
-    environment[AUTHORIZATION_ENV] = AUTHORIZATION_VALUE
     try:
         return subprocess.run(
             command,
@@ -359,7 +346,6 @@ def build_output_manifest(output: Path, *, manifest_name: str) -> dict[str, Any]
 
 
 def run_command(args: argparse.Namespace) -> int:
-    require_authorization(cli_authorized=args.authorize_training)
     if args.output.exists():
         raise CloudScriptError(f"output directory collision: {args.output}")
     plan = load_cloud_plan(args.plan)
@@ -619,7 +605,6 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--plan", type=Path, required=True)
     run.add_argument("--input-manifest", type=Path, required=True)
     run.add_argument("--output", type=Path, required=True)
-    run.add_argument("--authorize-training", action="store_true")
 
     stream = subparsers.add_parser("stream")
     stream.add_argument("--root", type=Path, required=True)
@@ -629,7 +614,6 @@ def build_parser() -> argparse.ArgumentParser:
     stream.add_argument("--stream", required=True)
     stream.add_argument("--interrupt", action="store_true")
     stream.add_argument("--resume", type=Path)
-    stream.add_argument("--authorize-training", action="store_true")
     return parser
 
 

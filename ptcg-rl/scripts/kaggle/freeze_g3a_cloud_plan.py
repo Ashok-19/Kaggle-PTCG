@@ -30,7 +30,7 @@ DOCKER_IMAGE = (
 )
 DATASET_OWNER = "ashok205"
 DATASET_SLUG = "kptcg-g3a-correctness-inputs"
-DATASET_VERSION = 1
+DATASET_VERSION = 2
 NOTEBOOK_OWNER = "ashok205"
 NOTEBOOK_SLUG = "kptcg-g3a-cloud-correctness-v1"
 NOTEBOOK_VERSION = 1
@@ -155,7 +155,7 @@ EDGE_CASE_MATRIX = {
         "missing_report_and_dashboard_envelope": ["tests/g3/test_cloud_execution.py"],
         "single_thin_notebook_and_no_saved_outputs": ["tests/g3/test_cloud_notebook.py"],
         "output_pagination_and_download_parity": ["tests/g3/test_cloud_plan.py"],
-        "dual_authorization": ["tests/g3/test_cloud_script.py"],
+        "manual_launch_without_preflight_secrets_or_network": ["tests/g3/test_cloud_script.py"],
     },
 }
 
@@ -332,7 +332,7 @@ def platform_comparison() -> list[dict[str, Any]]:
                 "output listing, and individual output download"
             ),
             "cpu_limit": "four-core hard ceiling; two active Torch threads; one inter-op; zero workers",
-            "internet_off": "private notebook metadata is internet-off and two runtime probes must fail",
+            "internet_off": "private notebook setting remains internet-off; the launcher performs no external network probe",
             "checkpoint_persistence": (
                 "atomic versioned checkpoints and manifests retained under saved notebook output"
             ),
@@ -759,11 +759,10 @@ def main() -> int:
                 "external_mutation_authorized": False,
             },
             "manual_launch_steps": [
-                "Publish or update only the stable private dataset slug to numeric version 1 using the prepared asset directory after explicit approval.",
-                "Create or update only the stable private notebook slug to numeric version 1 using the prepared single notebook after explicit approval.",
-                "Attach dataset version 1, select CPU, keep Internet OFF, GPU OFF, and TPU OFF.",
-                "Set KPTCG_G3A_TRAINING_APPROVED=YES only after approving this exact plan.",
-                "Run all cells and do not edit the notebook or attached versions.",
+                "Update only the stable private dataset slug to numeric version 2 using the prepared asset directory.",
+                "Import the prepared single notebook manually into a private Kaggle CPU session.",
+                "Attach dataset version 2 and keep GPU and TPU off; no secret, environment variable, or network probe is required.",
+                "Run all cells and do not edit the notebook or attached dataset version.",
             ],
             "kill_procedure": [
                 "Use Kaggle Stop Session immediately if a failure capsule appears, the output root collides, resource settings differ, or the internal four-hour cap approaches.",

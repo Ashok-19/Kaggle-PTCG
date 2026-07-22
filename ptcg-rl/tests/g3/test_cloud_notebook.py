@@ -35,11 +35,11 @@ def test_single_notebook_is_thin_private_cpu_launcher(tmp_path: Path) -> None:
     source = "".join(code_cells[0]["source"])
     assert "enable_internet" not in source
     assert "g3a_cloud_correctness.py" in source
-    assert "--authorize-training" in source
-    assert "KPTCG_G3A_TRAINING_APPROVED" in source
+    assert "--authorize-training" not in source
+    assert "KPTCG_G3A_TRAINING_APPROVED" not in source
     assert "kaggle/working" in source
-    assert "urllib.error.HTTPError" in source
-    assert "urllib.error.URLError" in source
+    assert "urllib.request" not in source
+    assert "urlopen(" not in source
 
 
 def test_notebook_contract_rejects_outputs_or_extra_code_cells(tmp_path: Path) -> None:
