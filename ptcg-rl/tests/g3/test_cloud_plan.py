@@ -13,6 +13,7 @@ from ptcg_rl.g3.cloud_plan import (
     validate_cloud_plan,
     validate_download_receipt,
 )
+from ptcg_rl.g3.evaluation import canonical_json_bytes
 
 
 REQUIRED_SEEDS = [1197953491, 20344180, 1491619630]
@@ -259,6 +260,14 @@ def test_valid_plan_binds_one_hundred_thousand_choices_per_seed() -> None:
     for seed in REQUIRED_SEEDS:
         assert sum(plan["work"]["allocations"][str(seed)].values()) == 100_000
         assert set(plan["work"]["allocations"][str(seed)]) == set(STREAMS)
+
+
+def test_canonical_plan_round_trip_preserves_allocation_semantics(tmp_path: Path) -> None:
+    path = tmp_path / "plan.json"
+    path.write_bytes(canonical_json_bytes(plan_fixture()))
+    loaded = load_cloud_plan(path)
+    assert loaded["work"]["aggregate_non_forced_choices_per_seed"] == 100_000
+    assert set(loaded["work"]["allocations"][str(REQUIRED_SEEDS[0])]) == set(STREAMS)
 
 
 def test_plan_rejects_budget_that_excludes_stateless_control() -> None:

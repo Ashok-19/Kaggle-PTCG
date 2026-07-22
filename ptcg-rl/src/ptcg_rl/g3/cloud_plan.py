@@ -364,7 +364,7 @@ def validate_cloud_plan(value: Mapping[str, Any]) -> dict[str, Any]:
         raise CloudPlanError("allocation seed keys differ")
     for seed in REQUIRED_SEEDS:
         seed_allocation = _object(allocations[str(seed)], f"allocation for seed {seed}")
-        if tuple(seed_allocation) != REQUIRED_STREAMS:
+        if set(seed_allocation) != set(REQUIRED_STREAMS):
             raise CloudPlanError(f"allocation streams differ for seed {seed}")
         amounts = [_positive_int(seed_allocation[stream], f"allocation {seed}/{stream}") for stream in REQUIRED_STREAMS]
         if any(amount != 25_000 for amount in amounts) or sum(amounts) != aggregate:

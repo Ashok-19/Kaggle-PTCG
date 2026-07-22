@@ -40,6 +40,44 @@ CONFIG_ASSET_NAME = "g3a-cloud-plan-v1.json"
 INPUT_MANIFEST_NAME = "g3a-cloud-input-manifest-v1.json"
 NOTEBOOK_NAME = "kptcg-g3a-cloud-correctness-v1.ipynb"
 
+COMPLETED_NEGATIVE_RESULTS = [
+    {
+        "attempt": "raw_commit_bundle_ref",
+        "result": "FAILED_CLOSED",
+        "evidence": "git bundle create refused an empty bundle when given only a raw commit object",
+        "resolution": "use symbolic HEAD and verify the advertised head equals the frozen commit",
+        "rerun": "covered by test_build_bundle_is_nonempty_deterministic_and_head_bound",
+    },
+    {
+        "attempt": "default_multithreaded_bundle_pack",
+        "result": "FAILED_CLOSED",
+        "evidence": "two valid default Git bundle builds were not byte-identical",
+        "resolution": "freeze pack.threads=1 and retain duplicate byte comparison",
+        "rerun": "duplicate bundle regression passes",
+    },
+    {
+        "attempt": "stale_recurrent_evidence_path",
+        "result": "FAILED_CLOSED",
+        "evidence": "independent plan review rejected tests/g2/test_neural_policy.py because it does not exist",
+        "resolution": "bind tests/g2/test_reliability.py and validate every evidence-matrix path",
+        "rerun": "edge-case path regression passes",
+    },
+    {
+        "attempt": "canonical_allocation_object_order",
+        "result": "FAILED_CLOSED",
+        "evidence": "clean-bundle review rejected canonical JSON because object key sorting changed iteration order",
+        "resolution": "validate exact allocation membership independently of JSON object order",
+        "rerun": "canonical plan round-trip regression passes",
+    },
+    {
+        "attempt": "full_suite_g2_submicro_precision",
+        "result": "COMPLETED_TRANSIENT_NEGATIVE",
+        "evidence": "one existing G2 permutation test failed once with visually equal tensors at 1e-6 tolerance",
+        "resolution": "no unsupported source change; isolate and repeat before full-suite rerun",
+        "rerun": "isolated test passed six consecutive runs and the complete suite passed",
+    },
+]
+
 CRITICAL_SOURCE_PATHS = (
     "uv.lock",
     "configs/g3a_evaluation_v1.json",
@@ -705,6 +743,7 @@ def main() -> int:
             },
             "independent_review_execution": review_execution,
             "edge_case_matrix": EDGE_CASE_MATRIX,
+            "completed_negative_results": COMPLETED_NEGATIVE_RESULTS,
             "provenance_layers": [
                 "source commit/tree and deterministic Git bundle",
                 "source manifest binding bundle, lock, and critical files",
