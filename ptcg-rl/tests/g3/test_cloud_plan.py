@@ -246,7 +246,7 @@ def plan_fixture() -> dict[str, object]:
         },
         "edge_case_evidence": {
             "compound_action": ["tests/g3/test_ppo.py"],
-            "recurrent_ownership": ["tests/g2/test_neural_policy.py"],
+            "recurrent_ownership": ["tests/g2/test_reliability.py"],
             "checkpoint_resume": ["tests/g3/test_training_checkpoint.py"],
             "cloud_notebook": ["tests/g3/test_cloud_plan.py"],
         },

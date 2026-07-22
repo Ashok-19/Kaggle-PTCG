@@ -52,6 +52,7 @@ CRITICAL_SOURCE_PATHS = (
     "src/ptcg_rl/g3/cloud_notebook.py",
     "scripts/g3a_cloud_correctness.py",
     "scripts/g3a_review.py",
+    "tests/g2/test_reliability.py",
     "tests/g3/test_ppo.py",
     "tests/g3/test_training_checkpoint.py",
     "tests/g3/test_cloud_plan.py",
@@ -74,12 +75,12 @@ EDGE_CASE_MATRIX = {
         "sealed_g2_decoder_probability_replay": ["tests/g3/test_ppo.py"],
     },
     "recurrent_ownership": {
-        "reset_episode_owner_version": ["tests/g2/test_neural_policy.py"],
-        "duplicate_idempotence_stale_and_out_of_order": ["tests/g2/test_neural_policy.py"],
-        "worker_replacement_clears_owner_state": ["tests/g2/test_neural_policy.py"],
+        "reset_episode_owner_version": ["tests/g2/test_reliability.py"],
+        "duplicate_idempotence_stale_and_out_of_order": ["tests/g2/test_reliability.py"],
+        "worker_replacement_clears_owner_state": ["tests/g2/test_reliability.py"],
         "slices_do_not_cross_terminal_or_policy_version": ["tests/g3/test_ppo.py"],
         "long_forced_chains_without_ppo_nodes": ["tests/g3/test_ppo.py"],
-        "policy_version_lag_zero": ["tests/g2/test_neural_policy.py"],
+        "policy_version_lag_zero": ["tests/g2/test_reliability.py"],
     },
     "checkpoint_resume": {
         "atomic_cleanup_hash_mismatch_and_truncation": [
@@ -498,7 +499,7 @@ def build_plan(
         "edge_case_evidence": {
             "compound_action": ["tests/g3/test_ppo.py", "tests/g3/test_toy.py"],
             "recurrent_ownership": [
-                "tests/g2/test_neural_policy.py",
+                "tests/g2/test_reliability.py",
                 "tests/g3/test_ppo.py",
             ],
             "checkpoint_resume": [

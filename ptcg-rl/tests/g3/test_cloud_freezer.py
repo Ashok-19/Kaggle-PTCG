@@ -40,3 +40,18 @@ def test_build_bundle_is_nonempty_deterministic_and_head_bound(tmp_path: Path) -
         text=True,
     )
     assert verification.returncode == 0, verification.stderr
+
+
+def test_freezer_edge_case_matrix_references_existing_files() -> None:
+    root = Path(__file__).resolve().parents[2]
+    freezer = load_freezer(root)
+    missing = sorted(
+        {
+            path
+            for category in freezer.EDGE_CASE_MATRIX.values()
+            for paths in category.values()
+            for path in paths
+            if not (root / path).is_file()
+        }
+    )
+    assert missing == []
