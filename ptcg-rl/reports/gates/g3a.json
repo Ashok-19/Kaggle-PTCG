@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-g3a-20260720",
   "created_at_utc": "2026-07-20T14:55:27Z",
-  "updated_at_utc": "2026-07-22T10:31:05Z",
+  "updated_at_utc": "2026-07-22T16:34:26Z",
   "source_path": "reports/gates/g3a.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "2",
+  "producer_version": "3",
   "gate_id": "G3a",
   "title": "Recurrent PPO correctness proof",
   "status": "BLOCKED",
@@ -38,21 +38,31 @@
       "evidence": "reports/artifacts/g3a-ppo-local-correctness-review-v1.json"
     },
     {
+      "name": "exact private Kaggle CPU plan frozen",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3a-cloud-correctness-plan-v1.json"
+    },
+    {
+      "name": "fresh-process clean-bundle plan review",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3a-cloud-correctness-plan-review-v1.json"
+    },
+    {
       "name": "bounded three-seed private correctness smoke",
       "status": "BLOCKED",
       "evidence": null
     }
   ],
   "blockers": [
-    "The exact private Kaggle or Colab task allocation, 25,000-to-100,000-choice per-seed budget, wall-time cap, checkpoint cadence, artifact destination and stop conditions have not yet been frozen and reviewed.",
-    "Explicit user training approval to launch the bounded private Kaggle or Colab correctness smoke has not been granted."
+    "Explicit user approval to launch the exact immutable private Kaggle CPU correctness plan has not been granted.",
+    "The prepared stable private dataset version 1 and notebook version 1 remain local and unpublished, and no bounded cloud run, checkpoint/resume receipt, output manifest, downloaded artifact set or strict G3a run review exists yet."
   ],
   "warnings": [
-    "The local micro-qualification validates PPO mathematics, recurrent toy learning, ordered multi-select replay, GAE, rollout ownership and checkpoint recovery; it does not complete G3a or establish Pokémon policy strength.",
-    "Local execution used CPU only, two PyTorch threads, one interop thread, zero workers, zero CABT games and at most 1,024 choices per model.",
-    "The authoritative report was generated from a clean isolated checkout of commit cae42da47bc9f3491869e8afd0e1254061b9f585 and now has a complete dashboard envelope.",
-    "No Kaggle launch, Colab launch, Modal use, deck change or submission occurred."
+    "The frozen plan proves only how the bounded toy correctness run will be executed and reviewed; it does not complete G3a or establish Pokemon policy strength.",
+    "The plan uses exactly 100,000 aggregate non-forced choices per seed, split into four 25,000-choice streams including the stateless control, for seeds 1197953491, 20344180 and 1491619630.",
+    "The selected environment is private Kaggle CPU with internet, GPU and TPU off; two active PyTorch threads, one interop thread, zero workers and a four-core hard ceiling.",
+    "No Kaggle or Colab launch, dataset/notebook publication, Modal use, deck change, submission, Git push or other external service mutation occurred."
   ],
-  "approved_next_action": "Freeze and review one exact 25,000-to-100,000-choice-per-seed private Kaggle or Colab G3a plan, including per-task allocation, maximum four CPU cores, wall-time cap, checkpoint cadence, resume proof, artifact destination and fail-closed stop conditions. Present it for explicit user approval and do not launch automatically.",
+  "approved_next_action": "Present the exact immutable private Kaggle CPU G3a plan for one explicit approve-or-reject decision. On approval only, manually publish or update the stable private input dataset and single notebook to the frozen numeric versions, launch the exact CPU/internet-off run, download every manifest-listed output, verify bytes and SHA-256, and run the strict independent review. Do not launch automatically.",
   "cost_usd": 0.0
 }

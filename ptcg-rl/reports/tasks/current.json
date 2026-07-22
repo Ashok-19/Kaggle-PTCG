@@ -296,26 +296,70 @@
   },
   {
     "schema_version": 1,
+    "record_id": "task-g3-plan-001",
+    "created_at_utc": "2026-07-22T15:40:52Z",
+    "updated_at_utc": "2026-07-22T16:34:26Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G3-PLAN-001",
+    "title": "Freeze and independently review the private G3a cloud correctness plan",
+    "phase": "G3a",
+    "priority": 6,
+    "status": "SUCCEEDED",
+    "depends_on": [
+      "G2_PASS",
+      "T-G3-EVAL-001",
+      "T-G3-PPO-001"
+    ],
+    "done_when": "One immutable private cloud correctness plan binds the exact source, platform, environment, three seeds, four-stream allocation, stateless control, budgets, checkpoints, fresh-process resume proof, manifests, output download verification and fail-closed stop conditions, and passes independent clean-bundle review without launch.",
+    "completed_at_utc": "2026-07-22T16:34:26Z",
+    "source_commit": "78633d33769b0771eecb56e788bb90586acd5864",
+    "config_path": "configs/kaggle/g3a_cloud_correctness_v1.json",
+    "config_sha256": "ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e",
+    "completion_evidence": [
+      "reports/artifacts/g3a-cloud-correctness-plan-v1.json",
+      "reports/artifacts/g3a-cloud-correctness-plan-review-v1.json"
+    ],
+    "plan_report_sha256": "b826361bc1443682280936c4fc3bdceacbdf916fc829f02deb7ea1ec71b705d7",
+    "review_report_sha256": "b3340459613a4af46ad2b02602df5641e5b9789f90afefc4e4adbbc95c64c701",
+    "selected_platform": "private-kaggle-cpu",
+    "aggregate_non_forced_choices_per_seed": 100000,
+    "choices_per_stream_per_seed": 25000,
+    "declared_seeds": [
+      1197953491,
+      20344180,
+      1491619630
+    ],
+    "training_launched": false,
+    "external_service_mutated": false,
+    "policy_strength_claimed": false
+  },
+  {
+    "schema_version": 1,
     "record_id": "task-g3-001",
     "created_at_utc": "2026-07-19T06:30:00Z",
-    "updated_at_utc": "2026-07-22T10:31:05Z",
+    "updated_at_utc": "2026-07-22T16:34:26Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G3-001",
     "title": "Launch recurrent PPO correctness smoke",
     "phase": "G3a",
-    "priority": 6,
+    "priority": 7,
     "status": "BLOCKED",
     "depends_on": [
       "G2_PASS",
       "T-G3-EVAL-001",
       "T-G3-PPO-001",
+      "T-G3-PLAN-001",
       "G3A_CLOUD_PLAN_FROZEN",
       "USER_TRAINING_APPROVAL"
     ],
-    "done_when": "A bounded private Kaggle or Colab run proves the strict three-seed G3a contract at the frozen 25,000-to-100,000-choice per-seed budget.",
+    "done_when": "The exact frozen private Kaggle CPU plan completes all three seeds and four streams at 100,000 aggregate non-forced choices per seed, retains the intentional fresh-process resume evidence and downloadable manifests, and passes the strict independent G3a review.",
     "evaluation_contract_evidence": "reports/artifacts/g3a-evaluation-contract-v1.json",
     "local_correctness_evidence": "reports/artifacts/g3a-ppo-local-correctness-v1.json",
-    "blocker": "The evaluation contract and local PPO correctness harness are complete. The exact bounded cloud run plan and explicit user training approval remain open."
+    "cloud_plan_evidence": "reports/artifacts/g3a-cloud-correctness-plan-v1.json",
+    "cloud_plan_review": "reports/artifacts/g3a-cloud-correctness-plan-review-v1.json",
+    "cloud_plan_source_commit": "78633d33769b0771eecb56e788bb90586acd5864",
+    "blocker": "The immutable private Kaggle CPU plan is complete and independently reviewed; explicit user training approval has not been granted, the prepared stable private dataset/notebook versions have not been published, and no cloud run evidence exists."
   }
 ]

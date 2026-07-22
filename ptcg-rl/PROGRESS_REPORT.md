@@ -2,7 +2,7 @@
 
 Current gate: **G3a recurrent PPO correctness proof**  
 Current verdict: **BLOCKED / NOT_REVIEWED**  
-Latest completed milestone: **local PPO correctness harness passed independent micro-qualification**  
+Latest completed milestone: **exact private Kaggle CPU cloud correctness plan frozen and independently reviewed**  
 Cost: **USD 0**
 
 The project-native recurrent PPO correctness implementation is committed at
@@ -66,7 +66,70 @@ Authoritative evidence:
 - `configs/g3a_local_correctness_v1.json`
 - `reports/gates/g3a.json`
 
-This is a toy-only local micro-qualification. It does not satisfy the frozen
-25,000-to-100,000-choice per-seed G3a cloud budget and does not establish policy strength.
-The remaining blockers are an exact reviewed private Kaggle/Colab run plan and
-explicit user training approval before launch.
+This local result remains a toy-only micro-qualification. It does not satisfy the
+frozen cloud budget and does not establish policy strength.
+
+## Frozen Private Kaggle CPU Plan
+
+The complete cloud-plan lifecycle is now finished against clean source commit
+`78633d33769b0771eecb56e788bb90586acd5864`. A fresh Python process cloned the
+exact offline Git bundle, loaded the canonical plan and independently reproduced
+the plan review as `PASS`. No notebook, dataset or model was published and no
+training process was started.
+
+The immutable work allocation is:
+
+- declared seeds: `1197953491`, `20344180`, `1491619630`;
+- exactly `100,000` aggregate non-forced choices per seed;
+- exactly four `25,000`-choice streams per seed: masked bandit, recurrent cue,
+  variable-option ordered multi-select, and recurrent-cue stateless control;
+- evaluation choices excluded from the training budget and no result-dependent extension;
+- `64` choices per update, four PPO epochs, learning rate `0.005`, Adam epsilon
+  `1e-5`, clip/value-clip `0.2`, entropy coefficient `0.01`, value coefficient
+  `0.5` and maximum gradient norm `0.5`.
+
+The selected runtime is one private Kaggle CPU notebook with internet, GPU and
+TPU off; two active PyTorch threads, one interop thread, zero workers and a
+four-core hard ceiling. The exact environment is Python `3.12.13`, PyTorch
+`2.10.0+cpu`, NumPy `2.0.2`, Pydantic `2.12.3`, the frozen `uv.lock`, and Kaggle
+image digest `dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9`.
+The notebook cap is four hours and each child stream cap is 2,400 seconds.
+Measured two-thread local evidence gives a linear twelve-stream estimate near
+4,132 seconds; the frozen operational estimate is 5,400-10,800 seconds.
+
+Atomic checkpoints are written every `4,096` choices or `300` seconds, plus a
+final exact-budget checkpoint. One stream in every seed intentionally stops at
+`12,288` choices and resumes in a fresh child process. The restored model,
+optimizer, scheduler, counters, league, rollout boundary, Python/NumPy/Torch RNG
+states and fixed evaluation must match exactly. Corruption, stale source,
+wrong versions, unexpected network/GPU/core/thread state, budget drift, missing
+outputs, dashboard-envelope failure or download/hash mismatch fails closed.
+
+Frozen identities:
+
+- config: `configs/kaggle/g3a_cloud_correctness_v1.json`, SHA-256
+  `ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e`;
+- source bundle: 5,052,825 bytes, SHA-256
+  `17580d32cb6b7dcc5ebffefccdf4cff8278b2f263a2c2a35558d5c456e85c532`;
+- source manifest SHA-256
+  `c74480148bef75ccb29a214d6c1fabcd00d03542803a6d2882002c145d7ac36c`;
+- input manifest SHA-256
+  `116a3cdebbd2b93becf6472b7ad34a4a1318e597cc8769adca18ea6d8cda036c`;
+- single notebook SHA-256
+  `d09d8c3361ca1f8111aa1b73de863111c26860576ea707501e3f12df8a1ce586`;
+- safe plan report SHA-256
+  `b826361bc1443682280936c4fc3bdceacbdf916fc829f02deb7ea1ec71b705d7`;
+- independent review report SHA-256
+  `b3340459613a4af46ad2b02602df5641e5b9789f90afefc4e4adbbc95c64c701`.
+
+Final validation passed 169 G3 tests, all 372 Python tests, repository-wide Ruff,
+dashboard rebuild with 114 ingested records and zero quarantine, dashboard
+doctor, seven frontend unit tests, the production build and four Playwright
+browser tests. Five failed or transient plan-freeze branches are retained with
+their evidence, correction and successful rerun in the safe plan report.
+
+G3a remains `BLOCKED / NOT_REVIEWED`. The remaining blockers are explicit user
+approval, manual publication or update of the stable private dataset and single
+notebook version `1`, execution of the exact frozen run, complete saved-output
+download and SHA-256 verification, and a passing strict run review. The plan
+itself is readiness evidence only and makes no Pokemon policy-strength claim.
