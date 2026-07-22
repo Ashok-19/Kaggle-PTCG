@@ -18,6 +18,7 @@ def main() -> int:
     report = run_local_correctness(
         root=root,
         config_path=config,
+        output_path=output,
         source_commit=arguments.source_commit,
     )
     write_local_correctness_report(output, report)

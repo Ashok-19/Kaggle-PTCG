@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,7 @@ from ptcg_rl.g3.local_correctness import (
     LocalCorrectnessError,
     expected_local_correctness_config,
     load_local_correctness_config,
+    _git_provenance,
     write_local_correctness_report,
 )
 
@@ -48,6 +50,41 @@ def test_local_correctness_config_tampering_fails_closed(tmp_path: Path) -> None
     path.write_text('{"schema_version":1,"schema_version":2}', encoding="utf-8")
     with pytest.raises(ValueError, match="duplicate"):
         load_local_correctness_config(path)
+
+
+def test_git_provenance_requires_exact_clean_head(monkeypatch, tmp_path: Path) -> None:
+    class Result:
+        def __init__(self, stdout: bytes) -> None:
+            self.stdout = stdout
+
+    calls = []
+
+    def clean_run(command, **kwargs):
+        calls.append(command)
+        if "rev-parse" in command:
+            return Result(b"1" * 40 + b"\n")
+        return Result(b"")
+
+    monkeypatch.setattr("ptcg_rl.g3.local_correctness.subprocess.run", clean_run)
+    assert _git_provenance(tmp_path, "1" * 40) == {
+        "head": "1" * 40,
+        "clean_before_run": True,
+        "status_sha256": hashlib.sha256(b"").hexdigest(),
+    }
+    assert len(calls) == 2
+
+    def dirty_run(command, **kwargs):
+        if "rev-parse" in command:
+            return Result(b"1" * 40 + b"\n")
+        return Result(b"?? report.json\n")
+
+    monkeypatch.setattr("ptcg_rl.g3.local_correctness.subprocess.run", dirty_run)
+    with pytest.raises(LocalCorrectnessError, match="clean Git worktree"):
+        _git_provenance(tmp_path, "1" * 40)
+
+    monkeypatch.setattr("ptcg_rl.g3.local_correctness.subprocess.run", clean_run)
+    with pytest.raises(LocalCorrectnessError, match="differs"):
+        _git_provenance(tmp_path, "2" * 40)
 
 
 def test_local_report_writer_is_atomic_canonical_and_replaces_existing(tmp_path: Path) -> None:

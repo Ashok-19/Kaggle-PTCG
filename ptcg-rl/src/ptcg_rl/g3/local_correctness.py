@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import tempfile
+import subprocess
+from datetime import UTC, datetime
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Mapping
@@ -193,14 +195,55 @@ def _passes(run: Mapping[str, Any], requirements: Mapping[str, Any]) -> bool:
     )
 
 
+def _git_provenance(root: Path, source_commit: str) -> dict[str, Any]:
+    try:
+        head = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+        ).stdout.decode("ascii").strip()
+        status = subprocess.run(
+            ["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"],
+            check=True,
+            capture_output=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError, UnicodeError) as error:
+        raise LocalCorrectnessError(f"cannot verify Git provenance: {error}") from error
+    if head != source_commit:
+        raise LocalCorrectnessError("source commit differs from checked-out Git HEAD")
+    if status:
+        raise LocalCorrectnessError("local correctness runner requires a clean Git worktree")
+    return {
+        "head": head,
+        "clean_before_run": True,
+        "status_sha256": hashlib.sha256(status).hexdigest(),
+    }
+
+
+def _utc_now() -> str:
+    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
 def run_local_correctness(
     *,
     root: Path,
     config_path: Path,
+    output_path: Path,
     source_commit: str,
+    created_at_utc: str | None = None,
 ) -> dict[str, Any]:
     if len(source_commit) != 40 or any(character not in "0123456789abcdef" for character in source_commit):
         raise LocalCorrectnessError("source commit must be a lowercase 40-character Git SHA")
+    resolved_root = root.resolve()
+    resolved_output = output_path.resolve()
+    try:
+        relative_output = resolved_output.relative_to(resolved_root).as_posix()
+    except ValueError as error:
+        raise LocalCorrectnessError("local correctness output must remain inside the project root") from error
+    git = _git_provenance(resolved_root, source_commit)
+    created_at_utc = created_at_utc or _utc_now()
+    if not created_at_utc.endswith("Z"):
+        raise LocalCorrectnessError("created_at_utc must be an explicit UTC timestamp")
     config = load_local_correctness_config(config_path)
     resources = config["resources"]
     limits = LocalExecutionLimitsV1(
@@ -268,11 +311,20 @@ def run_local_correctness(
     )
     report = {
         "schema_version": LOCAL_CORRECTNESS_SCHEMA_VERSION,
+        "record_id": "artifact-g3a-ppo-local-correctness-v1",
+        "created_at_utc": created_at_utc,
+        "source_path": relative_output,
+        "producer": "g3a-local-correctness-runner",
+        "producer_version": "1",
+        "run_id": f"g3a-local-correctness-v1-{source_commit[:12]}",
+        "artifact_id": "g3a-ppo-local-correctness-v1",
+        "gate_id": "G3a",
         "kind": "KPTCG_G3A_LOCAL_CORRECTNESS_REPORT",
         "status": "SUCCEEDED" if selected_pass else "FAILED",
         "decision": "PASS" if selected_pass else "FAIL",
         "scope": "Toy-only local PPO correctness micro-qualification; not G3a qualification or policy strength.",
         "source_commit": source_commit,
+        "git": git,
         "config": {
             "path": config_path.relative_to(root).as_posix(),
             "bytes": config_path.stat().st_size,
