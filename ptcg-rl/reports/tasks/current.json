@@ -44,7 +44,9 @@
     "phase": "R1",
     "priority": 3,
     "status": "SUCCEEDED",
-    "depends_on": ["T-R1-001"],
+    "depends_on": [
+      "T-R1-001"
+    ],
     "done_when": "The exact 20-file, 250-MiB, 64-MiB-per-file plan and SHA-256 are presented for user review.",
     "completion_evidence": "reports/replays/r0-plan-summary.json",
     "plan_sha256": "eee76a723f8e9d89c29ea34da4b84765128c5eba8d452893a311b3fc5b7d6934"
@@ -61,7 +63,10 @@
     "phase": "R1",
     "priority": 4,
     "status": "SUCCEEDED",
-    "depends_on": ["T-R1-002", "USER_PLAN_APPROVAL"],
+    "depends_on": [
+      "T-R1-002",
+      "USER_PLAN_APPROVAL"
+    ],
     "done_when": "Only the exact approved files are transferred, verified, parsed and proven idempotent.",
     "completion_evidence": "reports/replays/r0-acquisition-summary.json",
     "completion_commit": "72f77e19d0d888c131895bd60a5e0ae67fe5ccd2"
@@ -78,7 +83,10 @@
     "phase": "R1",
     "priority": 4,
     "status": "SUCCEEDED",
-    "depends_on": ["T-R1-003", "G2_MODEL_SCHEMA_V1"],
+    "depends_on": [
+      "T-R1-003",
+      "G2_MODEL_SCHEMA_V1"
+    ],
     "done_when": "All approved episodes stream deterministically, actions resolve against the preceding active request, semantic options match the sealed G2 representation and independent review records zero unresolved decisions.",
     "completion_evidence": [
       "reports/replays/r1-semantic-loader.json",
@@ -121,7 +129,9 @@
     "phase": "G2",
     "priority": 3,
     "status": "SUCCEEDED",
-    "depends_on": ["T-G2-001"],
+    "depends_on": [
+      "T-G2-001"
+    ],
     "done_when": "The under-2M model, option scorer, STOP decoder, value head, parity tests and 10,000-game qualification pass.",
     "completed_at_utc": "2026-07-20T12:04:42Z",
     "implementation_evidence": "reports/artifacts/g2-policy-v1.json",
@@ -154,7 +164,9 @@
     "phase": "G2",
     "priority": 3,
     "status": "SUCCEEDED",
-    "depends_on": ["T-G2-002-SOURCE_BASELINE"],
+    "depends_on": [
+      "T-G2-002-SOURCE_BASELINE"
+    ],
     "done_when": "Commit-bound private CPU and GPU notebooks complete, outputs and selected gradients match within 1e-5, and Kaggle CPU latency is recorded.",
     "completed_at_utc": "2026-07-19T18:04:13Z",
     "bundle_report": "reports/artifacts/g2-policy-qualification-bundle-v4.json",
@@ -179,7 +191,9 @@
     "phase": "G2",
     "priority": 3,
     "status": "SUCCEEDED",
-    "depends_on": ["T-G2-003"],
+    "depends_on": [
+      "T-G2-003"
+    ],
     "done_when": "A commit-bound pickle-free package builds deterministically, loads in isolated source, reproduces actor/value/recurrent/decoder/log-probability outputs within 1e-5 and fails closed under corruption and incompatibility.",
     "completed_at_utc": "2026-07-19T18:53:38Z",
     "implementation_commit": "6b3a3b4829b205d62e210fae7e396db33fdb9a5a",
@@ -241,7 +255,10 @@
     "phase": "G3a",
     "priority": 4,
     "status": "SUCCEEDED",
-    "depends_on": ["G2_PASS", "DEC-010"],
+    "depends_on": [
+      "G2_PASS",
+      "DEC-010"
+    ],
     "done_when": "The exact G3a, G3b, D1 and champion acceptance rules are versioned, fail closed under adversarial review and preserve the no-training authorization boundary.",
     "completed_at_utc": "2026-07-20T14:55:27Z",
     "completion_commit": "6ca84cf7ccd79e49341998314da6d32aa8f1de45",
@@ -298,7 +315,7 @@
     "schema_version": 1,
     "record_id": "task-g3-plan-001",
     "created_at_utc": "2026-07-22T15:40:52Z",
-    "updated_at_utc": "2026-07-22T16:34:26Z",
+    "updated_at_utc": "2026-07-22T18:08:15Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G3-PLAN-001",
@@ -313,15 +330,15 @@
     ],
     "done_when": "One immutable private cloud correctness plan binds the exact source, platform, environment, three seeds, four-stream allocation, stateless control, budgets, checkpoints, fresh-process resume proof, manifests, output download verification and fail-closed stop conditions, and passes independent clean-bundle review without launch.",
     "completed_at_utc": "2026-07-22T16:34:26Z",
-    "source_commit": "78633d33769b0771eecb56e788bb90586acd5864",
+    "source_commit": "95651d6c3979f12e5a8a63556b0030745d6fab34",
     "config_path": "configs/kaggle/g3a_cloud_correctness_v1.json",
-    "config_sha256": "ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e",
+    "config_sha256": "617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b",
     "completion_evidence": [
       "reports/artifacts/g3a-cloud-correctness-plan-v1.json",
       "reports/artifacts/g3a-cloud-correctness-plan-review-v1.json"
     ],
-    "plan_report_sha256": "b826361bc1443682280936c4fc3bdceacbdf916fc829f02deb7ea1ec71b705d7",
-    "review_report_sha256": "b3340459613a4af46ad2b02602df5641e5b9789f90afefc4e4adbbc95c64c701",
+    "plan_report_sha256": "f409ab1bb0d0fdffa4a9ddce7df952253485ad605c16ce7deb71f211346afc05",
+    "review_report_sha256": "d7e6b3f41bcd47494a95bf07f964c6caeea27268a244cf152f79edf478913f64",
     "selected_platform": "private-kaggle-cpu",
     "aggregate_non_forced_choices_per_seed": 100000,
     "choices_per_stream_per_seed": 25000,
@@ -332,13 +349,14 @@
     ],
     "training_launched": false,
     "external_service_mutated": false,
-    "policy_strength_claimed": false
+    "policy_strength_claimed": false,
+    "revision_reason": "Removed manual authorization-secret and external-network preflight checks after the first user import failed before training."
   },
   {
     "schema_version": 1,
     "record_id": "task-g3-publish-001",
     "created_at_utc": "2026-07-22T17:28:11Z",
-    "updated_at_utc": "2026-07-22T17:34:58Z",
+    "updated_at_utc": "2026-07-22T18:14:30Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G3-PUBLISH-001",
@@ -350,29 +368,32 @@
       "T-G3-PLAN-001",
       "USER_TRAINING_APPROVAL"
     ],
-    "done_when": "The exact four-file frozen input set is published privately under the stable Kaggle dataset slug, version 1 is READY and independently downloaded byte-for-byte, and the exact single notebook remains locally available without any assistant launch.",
-    "completed_at_utc": "2026-07-22T17:34:58Z",
-    "completion_evidence": "reports/jobs/g3a-cloud-input-publication-v1.json",
-    "completion_evidence_sha256": "6f15d5417a202d8398ffc3ac9f193eab8f140dba00d21ab9298030db93d6b931",
+    "done_when": "The corrected four-file frozen input set is private Kaggle version 2, READY and independently downloaded byte-for-byte, while the corrected single notebook remains local without any assistant launch.",
+    "completed_at_utc": "2026-07-22T18:08:15Z",
+    "completion_evidence": "reports/jobs/g3a-cloud-input-publication-v2.json",
+    "completion_evidence_sha256": "c788a7821285c3debdf0fed36781242a95a638bf3c6361cac0a65997e0e6c708",
     "dataset_ref": "ashok205/kptcg-g3a-correctness-inputs",
     "dataset_id": 11311575,
-    "dataset_version": 1,
+    "dataset_version": 2,
     "dataset_status": "READY",
     "dataset_private": true,
     "remote_download_hashes_match": true,
     "notebook_local_path": "private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb",
-    "notebook_sha256": "d09d8c3361ca1f8111aa1b73de863111c26860576ea707501e3f12df8a1ce586",
+    "notebook_sha256": "1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c",
     "remote_notebook_created": false,
     "training_launched": false,
     "assistant_monitoring_performed": false,
     "external_service_mutated": true,
-    "policy_strength_claimed": false
+    "policy_strength_claimed": false,
+    "previous_completion_evidence": "reports/jobs/g3a-cloud-input-publication-v1.json",
+    "secret_or_environment_authorization_required": false,
+    "network_probe_performed": false
   },
   {
     "schema_version": 1,
     "record_id": "task-g3-001",
     "created_at_utc": "2026-07-19T06:30:00Z",
-    "updated_at_utc": "2026-07-22T17:34:58Z",
+    "updated_at_utc": "2026-07-22T18:08:15Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G3-001",
@@ -394,15 +415,18 @@
     "local_correctness_evidence": "reports/artifacts/g3a-ppo-local-correctness-v1.json",
     "cloud_plan_evidence": "reports/artifacts/g3a-cloud-correctness-plan-v1.json",
     "cloud_plan_review": "reports/artifacts/g3a-cloud-correctness-plan-review-v1.json",
-    "cloud_plan_source_commit": "78633d33769b0771eecb56e788bb90586acd5864",
-    "publication_evidence": "reports/jobs/g3a-cloud-input-publication-v1.json",
+    "cloud_plan_source_commit": "95651d6c3979f12e5a8a63556b0030745d6fab34",
+    "publication_evidence": "reports/jobs/g3a-cloud-input-publication-v2.json",
     "user_training_approval_granted": true,
     "dataset_ref": "ashok205/kptcg-g3a-correctness-inputs",
-    "dataset_version": 1,
+    "dataset_version": 2,
     "dataset_status": "READY",
     "notebook_local_path": "private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb",
     "user_manual_run_required": true,
     "assistant_launch_performed": false,
-    "blocker": "The approved dataset is READY and the local notebook is prepared. The user must import and run the exact notebook, save the completed Kaggle version and provide the resulting outputs; no cloud run or strict G3a run-review evidence exists yet."
+    "blocker": "The corrected dataset version 2 is READY and the corrected local notebook is prepared. The user must import and run the exact notebook, save the completed Kaggle version and provide the resulting outputs; no cloud run or strict G3a run-review evidence exists yet.",
+    "notebook_sha256": "1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c",
+    "secret_or_environment_authorization_required": false,
+    "network_probe_performed": false
   }
 ]

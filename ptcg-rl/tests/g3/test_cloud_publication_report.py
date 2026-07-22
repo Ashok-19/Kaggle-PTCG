@@ -5,26 +5,27 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-REPORT = ROOT / "reports/jobs/g3a-cloud-input-publication-v1.json"
+REPORT = ROOT / "reports/jobs/g3a-cloud-input-publication-v2.json"
+HISTORICAL_REPORT = ROOT / "reports/jobs/g3a-cloud-input-publication-v1.json"
 CONFIG = ROOT / "configs/kaggle/g3a_cloud_correctness_v1.json"
 NOTEBOOK = ROOT / "private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb"
 
 EXPECTED_FILES = {
     "g3a-cloud-input-manifest-v1.json": (
         724,
-        "116a3cdebbd2b93becf6472b7ad34a4a1318e597cc8769adca18ea6d8cda036c",
+        "2c9fa5e441701c2b9ff92e2d05e73513173ddd8ff362565c424c37b5c620ff52",
     ),
     "g3a-cloud-plan-v1.json": (
-        8309,
-        "ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e",
+        8329,
+        "617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b",
     ),
     "g3a-cloud-source-manifest-v1.json": (
         3056,
-        "c74480148bef75ccb29a214d6c1fabcd00d03542803a6d2882002c145d7ac36c",
+        "d7cc817551f79fa5d093111d960bbd4c3958b2a8dd0956d6c3a07e22a8a37cea",
     ),
     "g3a-cloud-source-v1.bundle": (
-        5_052_825,
-        "17580d32cb6b7dcc5ebffefccdf4cff8278b2f263a2c2a35558d5c456e85c532",
+        6_961_132,
+        "102b802fb1d54355308ebf8d19b759909950f507559cdad329f279d47cbe4fe5",
     ),
 }
 
@@ -33,19 +34,33 @@ def load(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_publication_receipt_binds_approval_dataset_and_local_notebook() -> None:
+def notebook_code() -> str:
+    notebook = load(NOTEBOOK)
+    return "".join(
+        "".join(cell["source"])
+        for cell in notebook["cells"]
+        if cell["cell_type"] == "code"
+    )
+
+
+def test_corrective_publication_binds_version_two_and_local_notebook() -> None:
     report = load(REPORT)
     assert report["status"] == "SUCCEEDED"
-    assert report["verdict"] == "PASS_FOR_USER_MANUAL_NOTEBOOK_IMPORT_AND_RUN"
-    authorization = report["authorization"]
-    assert authorization["user_plan_approval_received"] is True
-    assert authorization["dataset_publication_authorized"] is True
-    assert authorization["assistant_training_launch_authorized"] is False
-    assert authorization["assistant_monitoring_authorized"] is False
+    assert report["verdict"] == (
+        "PASS_FOR_USER_MANUAL_NOTEBOOK_IMPORT_AND_RUN_WITH_DATASET_VERSION_2"
+    )
+    assert HISTORICAL_REPORT.is_file()
+
+    correction = report["correction"]
+    assert correction["kaggle_secret_required"] is False
+    assert correction["authorization_environment_variable_required"] is False
+    assert correction["authorization_cli_flag_required"] is False
+    assert correction["external_network_probe_performed"] is False
 
     dataset = report["dataset"]
     assert dataset["ref"] == "ashok205/kptcg-g3a-correctness-inputs"
-    assert dataset["version"] == 1
+    assert dataset["version"] == 2
+    assert dataset["previous_version_retained"] == 1
     assert dataset["private"] is True
     assert dataset["status"] == "READY"
     assert dataset["file_count"] == 4
@@ -61,13 +76,24 @@ def test_publication_receipt_binds_approval_dataset_and_local_notebook() -> None
     assert notebook["state"] == "LOCAL_ONLY_READY"
     assert notebook["remote_notebook_created"] is False
     raw = NOTEBOOK.read_bytes()
-    assert len(raw) == notebook["bytes"] == 5_581
+    assert len(raw) == notebook["bytes"] == 4_787
     assert hashlib.sha256(raw).hexdigest() == notebook["sha256"]
+    code = notebook_code()
+    for forbidden in (
+        "KPTCG_G3A_TRAINING_APPROVED",
+        "--authorize-training",
+        "urllib.request",
+        "urlopen(",
+        "UserSecretsClient",
+        "get_secret(",
+    ):
+        assert forbidden not in code
     assert report["training_launched"] is False
     assert report["notebook_session_created"] is False
     assert report["external_service_mutated"] is True
     assert report["validation"] == {
-        "targeted_publication_state_tests": {"passed": 15, "failed": 0},
+        "pre_freeze_targeted_tests": {"passed": 6, "failed": 0},
+        "post_publication_targeted_tests": {"passed": 17, "failed": 0},
         "focused_g3_tests": {"passed": 172, "failed": 0},
         "full_python_suite": {"passed": 375, "failed": 0},
         "ruff": "PASS",
@@ -80,54 +106,77 @@ def test_publication_receipt_binds_approval_dataset_and_local_notebook() -> None
         "frontend_unit_tests": {"passed": 7, "failed": 0},
         "frontend_build": "PASS",
         "browser_tests": {"passed": 4, "failed": 0},
+        "post_publication_validation_pending": False,
     }
 
 
-def test_preapproval_plan_remains_immutable_and_authorization_is_separate() -> None:
-    config = load(CONFIG)
+def test_revised_plan_and_receipt_bind_the_clean_source_commit() -> None:
+    report = load(REPORT)
+    config_raw = CONFIG.read_bytes()
+    config = json.loads(config_raw)
+    assert hashlib.sha256(config_raw).hexdigest() == (
+        "617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b"
+    )
+    assert report["source"]["plan_config_sha256"] == hashlib.sha256(
+        config_raw
+    ).hexdigest()
+    assert report["source"]["executable_source_commit"] == (
+        "95651d6c3979f12e5a8a63556b0030745d6fab34"
+    )
+    assert config["source"]["commit"] == report["source"]["executable_source_commit"]
+    assert config["assets"]["dataset"]["version"] == 2
     assert config["authorization"] == {
         "external_mutation_authorized": False,
         "submission_authorized": False,
         "training_launch_authorized": False,
     }
-    report = load(REPORT)
-    assert report["source"]["plan_config_sha256"] == hashlib.sha256(
-        CONFIG.read_bytes()
-    ).hexdigest()
-    assert len(report["completed_negative_results"]) == 2
+    assert len(report["completed_negative_results"]) == 3
     assert all(
         item["mutation_occurred"] is False
         for item in report["completed_negative_results"]
     )
+    assert all(
+        item["training_started"] is False
+        for item in report["completed_negative_results"]
+    )
 
 
-def test_gate_and_task_ledger_require_the_user_run_and_outputs() -> None:
+def test_gate_and_task_ledgers_require_only_the_user_run_and_outputs() -> None:
     gate = load(ROOT / "reports/gates/g3a.json")
     tasks = load(ROOT / "reports/tasks/current.json")
     assert gate["status"] == "BLOCKED"
     assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["authorization"] == (
-        "USER_APPROVAL_RECORDED_DATASET_READY_ASSISTANT_LAUNCH_NOT_PERFORMED"
-    )
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["explicit user training approval recorded"]["status"] == "PASS"
     assert checks[
-        "private Kaggle input dataset version 1 ready and byte verified"
+        "private Kaggle input dataset version 2 ready and byte verified"
     ]["status"] == "PASS"
     assert checks["single local notebook frozen and ready for user import"]["status"] == "PASS"
     assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"
     assert len(gate["blockers"]) == 1
+    assert "version 2" in gate["approved_next_action"]
+    assert "secret" in gate["approved_next_action"]
+    assert "network probe" in gate["approved_next_action"]
 
     publication = next(item for item in tasks if item.get("task_id") == "T-G3-PUBLISH-001")
     assert publication["status"] == "SUCCEEDED"
-    assert publication["dataset_version"] == 1
+    assert publication["dataset_version"] == 2
     assert publication["dataset_status"] == "READY"
     assert publication["remote_download_hashes_match"] is True
+    assert publication["secret_or_environment_authorization_required"] is False
+    assert publication["network_probe_performed"] is False
     assert publication["training_launched"] is False
+    assert publication["completion_evidence"] == REPORT.relative_to(ROOT).as_posix()
+    assert publication["completion_evidence_sha256"] == hashlib.sha256(
+        REPORT.read_bytes()
+    ).hexdigest()
 
     launch = next(item for item in tasks if item.get("task_id") == "T-G3-001")
     assert launch["status"] == "BLOCKED"
     assert launch["user_training_approval_granted"] is True
+    assert launch["dataset_version"] == 2
     assert launch["dataset_status"] == "READY"
     assert launch["user_manual_run_required"] is True
     assert launch["assistant_launch_performed"] is False
+    assert launch["secret_or_environment_authorization_required"] is False
+    assert launch["network_probe_performed"] is False

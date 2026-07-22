@@ -2,7 +2,7 @@
 
 Current gate: **G3a recurrent PPO correctness proof**  
 Current verdict: **BLOCKED / NOT_REVIEWED**  
-Latest completed milestone: **approved private Kaggle input dataset version 1 published and independently byte-verified; exact notebook ready locally**  
+Latest completed milestone: **corrected private Kaggle input dataset version 2 published and independently byte-verified; exact notebook no longer requires secret or network preflight checks**  
 Cost: **USD 0**
 
 The project-native recurrent PPO correctness implementation is committed at
@@ -72,7 +72,7 @@ frozen cloud budget and does not establish policy strength.
 ## Frozen Private Kaggle CPU Plan
 
 The complete cloud-plan lifecycle is now finished against clean source commit
-`78633d33769b0771eecb56e788bb90586acd5864`. A fresh Python process cloned the
+`95651d6c3979f12e5a8a63556b0030745d6fab34`. A fresh Python process cloned the
 exact offline Git bundle, loaded the canonical plan and independently reproduced
 the plan review as `PASS`. No notebook, dataset or model was published and no
 training process was started.
@@ -102,25 +102,25 @@ final exact-budget checkpoint. One stream in every seed intentionally stops at
 `12,288` choices and resumes in a fresh child process. The restored model,
 optimizer, scheduler, counters, league, rollout boundary, Python/NumPy/Torch RNG
 states and fixed evaluation must match exactly. Corruption, stale source,
-wrong versions, unexpected network/GPU/core/thread state, budget drift, missing
+wrong versions, unexpected GPU/core/thread state, budget drift, missing
 outputs, dashboard-envelope failure or download/hash mismatch fails closed.
 
 Frozen identities:
 
 - config: `configs/kaggle/g3a_cloud_correctness_v1.json`, SHA-256
-  `ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e`;
-- source bundle: 5,052,825 bytes, SHA-256
-  `17580d32cb6b7dcc5ebffefccdf4cff8278b2f263a2c2a35558d5c456e85c532`;
+  `617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b`;
+- source bundle: 6,961,132 bytes, SHA-256
+  `102b802fb1d54355308ebf8d19b759909950f507559cdad329f279d47cbe4fe5`;
 - source manifest SHA-256
-  `c74480148bef75ccb29a214d6c1fabcd00d03542803a6d2882002c145d7ac36c`;
+  `d7cc817551f79fa5d093111d960bbd4c3958b2a8dd0956d6c3a07e22a8a37cea`;
 - input manifest SHA-256
-  `116a3cdebbd2b93becf6472b7ad34a4a1318e597cc8769adca18ea6d8cda036c`;
+  `2c9fa5e441701c2b9ff92e2d05e73513173ddd8ff362565c424c37b5c620ff52`;
 - single notebook SHA-256
-  `d09d8c3361ca1f8111aa1b73de863111c26860576ea707501e3f12df8a1ce586`;
+  `1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c`;
 - safe plan report SHA-256
-  `b826361bc1443682280936c4fc3bdceacbdf916fc829f02deb7ea1ec71b705d7`;
+  `f409ab1bb0d0fdffa4a9ddce7df952253485ad605c16ce7deb71f211346afc05`;
 - independent review report SHA-256
-  `b3340459613a4af46ad2b02602df5641e5b9789f90afefc4e4adbbc95c64c701`.
+  `d7e6b3f41bcd47494a95bf07f964c6caeea27268a244cf152f79edf478913f64`.
 
 Final validation passed 172 G3 tests, all 375 Python tests, repository-wide Ruff,
 dashboard rebuild with 115 ingested records and zero quarantine, dashboard
@@ -130,21 +130,22 @@ their evidence, correction and successful rerun in the safe plan report.
 
 ## Approved Publication State
 
-Explicit user approval is recorded in
-`reports/jobs/g3a-cloud-input-publication-v1.json`. The assistant created the
-private dataset `ashok205/kptcg-g3a-correctness-inputs`; numeric version `1` is
-`READY`. Kaggle exposes exactly the four frozen files, and an independent remote
-download reproduced every local byte count and SHA-256. The publication receipt
-SHA-256 is `6f15d5417a202d8398ffc3ac9f193eab8f140dba00d21ab9298030db93d6b931`.
+The corrective publication is recorded in
+`reports/jobs/g3a-cloud-input-publication-v2.json`. The private dataset
+`ashok205/kptcg-g3a-correctness-inputs` version `2` is `READY`; version `1` is
+retained only for audit. Kaggle exposes exactly the four corrected files, and an
+independent remote download reproduced every local byte count and SHA-256.
 
-The exact notebook remains local-only at
-`private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb`, 5,581 bytes,
-SHA-256 `d09d8c3361ca1f8111aa1b73de863111c26860576ea707501e3f12df8a1ce586`.
-The assistant did not create, launch or monitor a Kaggle notebook session.
+The corrected notebook remains local-only at
+`private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb`, 4,787 bytes,
+SHA-256 `1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c`.
+It contains no Kaggle secret lookup, authorization environment-variable check,
+authorization CLI flag or external URL request. The assistant did not create,
+launch or monitor a Kaggle notebook session.
 
-G3a remains `BLOCKED / NOT_REVIEWED`. The user must import the exact notebook,
-attach only dataset version `1`, select CPU with internet/GPU/TPU off, set
-`KPTCG_G3A_TRAINING_APPROVED=YES`, run and save the completed version. The
+G3a remains `BLOCKED / NOT_REVIEWED`. The user imports the corrected notebook,
+attaches only dataset version `2`, selects CPU and runs all cells without adding
+a secret, environment variable, authorization cell or network probe. The
 remaining evidence is the complete saved-output download, byte/SHA-256
 verification and passing strict run review. Neither the plan nor dataset
 publication makes a Pokemon policy-strength claim.

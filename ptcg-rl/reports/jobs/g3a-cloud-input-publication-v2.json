@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "record_id": "job-g3a-cloud-input-publication-v2",
+  "created_at_utc": "2026-07-22T18:08:15Z",
+  "updated_at_utc": "2026-07-22T18:14:30Z",
+  "source_path": "reports/jobs/g3a-cloud-input-publication-v2.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "job_id": "g3a-cloud-input-publication-v2",
+  "gate_id": "G3a",
+  "kind": "PRIVATE_DATASET_CORRECTIVE_PUBLICATION",
+  "title": "Remove Kaggle preflight checks and publish corrected G3a inputs",
+  "status": "SUCCEEDED",
+  "trigger": {
+    "manual_run_failure": "Kaggle secret lookup failed with a name-resolution ConnectionError before the correctness runner started.",
+    "user_direction": "Remove the internet probe and KPTCG_G3A_TRAINING_APPROVED check; the user manually imports, runs and monitors the notebook.",
+    "training_started_before_correction": false
+  },
+  "authorization": {
+    "user_plan_approval_received": true,
+    "dataset_version_update_authorized": true,
+    "assistant_notebook_publication_authorized": false,
+    "assistant_training_launch_authorized": false,
+    "assistant_monitoring_authorized": false,
+    "submission_authorized": false
+  },
+  "correction": {
+    "kaggle_secret_required": false,
+    "authorization_environment_variable_required": false,
+    "authorization_cli_flag_required": false,
+    "external_network_probe_performed": false,
+    "removed_tokens": [
+      "KPTCG_G3A_TRAINING_APPROVED",
+      "--authorize-training",
+      "urllib.request",
+      "urlopen("
+    ],
+    "checks_retained": [
+      "exact source bundle SHA-256",
+      "source commit and tree identity",
+      "runtime plan and input-manifest SHA-256",
+      "clean source checkout",
+      "CPU and thread envelope",
+      "output collision prevention",
+      "checkpoint and fresh-process resume integrity",
+      "output manifests and strict independent review"
+    ]
+  },
+  "source": {
+    "correction_commit": "95651d6c3979f12e5a8a63556b0030745d6fab34",
+    "executable_source_commit": "95651d6c3979f12e5a8a63556b0030745d6fab34",
+    "executable_source_tree": "2e34c4ce92c97163b88b3747f94b5a614378e73b",
+    "plan_config_path": "configs/kaggle/g3a_cloud_correctness_v1.json",
+    "plan_config_sha256": "617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b",
+    "plan_report_sha256": "f409ab1bb0d0fdffa4a9ddce7df952253485ad605c16ce7deb71f211346afc05",
+    "plan_review_sha256": "d7e6b3f41bcd47494a95bf07f964c6caeea27268a244cf152f79edf478913f64"
+  },
+  "dataset": {
+    "ref": "ashok205/kptcg-g3a-correctness-inputs",
+    "dataset_id": 11311575,
+    "version": 2,
+    "previous_version_retained": 1,
+    "private": true,
+    "status": "READY",
+    "title": "KPTCG G3a Correctness Inputs",
+    "license": "other",
+    "file_count": 4,
+    "extra_remote_files": 0,
+    "remote_download_verified": true,
+    "files": [
+      {
+        "name": "g3a-cloud-input-manifest-v1.json",
+        "bytes": 724,
+        "sha256": "2c9fa5e441701c2b9ff92e2d05e73513173ddd8ff362565c424c37b5c620ff52"
+      },
+      {
+        "name": "g3a-cloud-plan-v1.json",
+        "bytes": 8329,
+        "sha256": "617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b"
+      },
+      {
+        "name": "g3a-cloud-source-manifest-v1.json",
+        "bytes": 3056,
+        "sha256": "d7cc817551f79fa5d093111d960bbd4c3958b2a8dd0956d6c3a07e22a8a37cea"
+      },
+      {
+        "name": "g3a-cloud-source-v1.bundle",
+        "bytes": 6961132,
+        "sha256": "102b802fb1d54355308ebf8d19b759909950f507559cdad329f279d47cbe4fe5"
+      }
+    ]
+  },
+  "notebook": {
+    "local_path": "private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb",
+    "bytes": 4787,
+    "sha256": "1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c",
+    "state": "LOCAL_ONLY_READY",
+    "remote_notebook_created": false,
+    "saved_outputs_present": false,
+    "manual_setup": [
+      "Import the exact notebook into a private Kaggle CPU session.",
+      "Attach only ashok205/kptcg-g3a-correctness-inputs version 2.",
+      "Run all cells without adding a secret, environment variable or authorization cell.",
+      "The notebook performs no external network probe."
+    ]
+  },
+  "verification": {
+    "kaggle_cli_version": "1.7.4.5",
+    "dataset_version_two_created": true,
+    "dataset_status_ready": true,
+    "remote_file_names_and_sizes_match": true,
+    "independent_remote_download_matches_local_bytes": true,
+    "local_notebook_hash_matches_revised_plan": true,
+    "version_one_deleted": false
+  },
+  "completed_negative_results": [
+    {
+      "attempt": "manual_kaggle_secret_lookup",
+      "result": "FAILED_BEFORE_RUN",
+      "mutation_occurred": false,
+      "training_started": false,
+      "evidence": "Kaggle UserSecretsClient raised ConnectionError after DNS resolution failed.",
+      "resolution": "Remove the secret and environment-variable requirement from both the notebook launcher and bundled runner."
+    },
+    {
+      "attempt": "notebook_external_network_probe",
+      "result": "REMOVED_BEFORE_RERUN",
+      "mutation_occurred": false,
+      "training_started": false,
+      "resolution": "Remove urllib imports and all external URL requests; network state is not inspected by the notebook."
+    },
+    {
+      "attempt": "connector_version_two_file_list",
+      "result": "TOOL_ERROR_NO_MUTATION",
+      "mutation_occurred": false,
+      "training_started": false,
+      "resolution": "Use authenticated Kaggle CLI status/files/download and compare the downloaded current version byte-for-byte."
+    }
+  ],
+  "validation": {
+    "pre_freeze_targeted_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "post_publication_targeted_tests": {
+      "passed": 17,
+      "failed": 0
+    },
+    "focused_g3_tests": {
+      "passed": 172,
+      "failed": 0
+    },
+    "full_python_suite": {
+      "passed": 375,
+      "failed": 0
+    },
+    "ruff": "PASS",
+    "dashboard_rebuild": {
+      "ingested": 115,
+      "quarantined": 0,
+      "status": "PASS"
+    },
+    "dashboard_doctor": "PASS",
+    "frontend_unit_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontend_build": "PASS",
+    "browser_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "post_publication_validation_pending": false
+  },
+  "external_service_mutated": true,
+  "training_launched": false,
+  "notebook_session_created": false,
+  "submission_created": false,
+  "policy_strength_established": false,
+  "cost_usd": 0.0,
+  "verdict": "PASS_FOR_USER_MANUAL_NOTEBOOK_IMPORT_AND_RUN_WITH_DATASET_VERSION_2",
+  "warnings": [
+    "Dataset version 1 is retained only for audit and must not be attached to the next run.",
+    "Dataset publication does not complete G3a and does not establish Pokemon policy strength.",
+    "The assistant did not create, launch or monitor a Kaggle notebook session."
+  ]
+}
