@@ -368,6 +368,10 @@ def build_dashboard_report(
 ) -> dict[str, Any]:
     frozen = validate_cloud_plan(plan)
     now = datetime.now(UTC).isoformat()
+    review_status = review.get("status")
+    review_decision = review.get("decision")
+    if review_decision is None:
+        review_decision = "PASS" if review_status == "PASS" else "FAIL"
     return {
         "schema_version": 1,
         "record_id": "artifact-g3a-cloud-correctness-plan-v1",
@@ -379,8 +383,8 @@ def build_dashboard_report(
         "run_id": f"g3a-cloud-plan-v1-{source_commit[:12]}",
         "gate_id": "G3a",
         "kind": "KPTCG_G3A_CLOUD_CORRECTNESS_PLAN_REPORT",
-        "status": "SUCCEEDED" if review.get("status") == "PASS" else "FAILED",
-        "decision": review.get("decision", "FAIL"),
+        "status": "SUCCEEDED" if review_status == "PASS" else "FAILED",
+        "decision": review_decision,
         "source_commit": source_commit,
         "plan_id": frozen["plan_id"],
         "plan_semantic_sha256": semantic_sha256(frozen),

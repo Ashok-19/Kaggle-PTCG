@@ -203,6 +203,20 @@ def test_independent_review_hash_binding_is_stable() -> None:
     ).hexdigest()
 
 
+def test_dashboard_report_maps_status_only_plan_review_to_pass() -> None:
+    report = build_dashboard_report(
+        source_path="reports/artifacts/g3a-cloud-correctness-plan-v1.json",
+        source_commit="1" * 40,
+        plan=plan_fixture(),
+        review={"status": "PASS", "failures": []},
+        notebook={"path": "private/kaggle/notebooks/notebook.ipynb", "bytes": 1, "sha256": "7" * 64},
+        input_manifest={"path": "private/kaggle/assets/manifest.json", "bytes": 1, "sha256": "8" * 64},
+        runtime_estimate={"lower_seconds": 5_400, "upper_seconds": 10_800},
+    )
+    assert report["status"] == "SUCCEEDED"
+    assert report["decision"] == "PASS"
+
+
 def test_dashboard_report_has_valid_envelope() -> None:
     report = build_dashboard_report(
         source_path="reports/artifacts/g3a-cloud-correctness-plan-v1.json",
