@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "config_id": "g3a-local-correctness-v1",
+  "purpose": "toy_only_local_correctness_micro_qualification",
+  "authorization": {
+    "cabt_games_allowed": false,
+    "cloud_launch_allowed": false,
+    "meaningful_self_play_allowed": false,
+    "policy_strength_claim_allowed": false
+  },
+  "resources": {
+    "device": "cpu",
+    "maximum_cpu_threads": 2,
+    "maximum_worker_processes": 0,
+    "maximum_non_forced_choices_per_model": 4096,
+    "maximum_wall_seconds_per_model": 300
+  },
+  "declared_seeds": [1197953491, 20344180, 1491619630],
+  "candidate_seed": 1197953491,
+  "candidates": [
+    {
+      "candidate_id": "a-512-lr5e3",
+      "total_non_forced_choices": 512,
+      "choices_per_update": 64,
+      "ppo_epochs": 4,
+      "learning_rate": 0.005
+    },
+    {
+      "candidate_id": "b-1024-lr5e3",
+      "total_non_forced_choices": 1024,
+      "choices_per_update": 64,
+      "ppo_epochs": 4,
+      "learning_rate": 0.005
+    },
+    {
+      "candidate_id": "c-1024-lr1e2",
+      "total_non_forced_choices": 1024,
+      "choices_per_update": 64,
+      "ppo_epochs": 4,
+      "learning_rate": 0.01
+    }
+  ],
+  "selected_candidate_id": "b-1024-lr5e3",
+  "fixed_ppo": {
+    "adam_epsilon": 0.00001,
+    "clip_coefficient": 0.2,
+    "value_clip_coefficient": 0.2,
+    "value_coefficient": 0.5,
+    "entropy_coefficient": 0.01,
+    "maximum_gradient_norm": 0.5
+  },
+  "pass_requirements": {
+    "masked_bandit_score": 1.0,
+    "variable_option_multiselect_score": 1.0,
+    "minimum_recurrent_score": 0.85,
+    "maximum_stateless_score": 0.5,
+    "minimum_recurrent_margin": 0.25,
+    "maximum_probability_replay_error": 0.00001,
+    "maximum_initial_ratio_error": 0.00001,
+    "zero_tolerance_total": 0,
+    "checkpoint_restore_required": true
+  }
+}
