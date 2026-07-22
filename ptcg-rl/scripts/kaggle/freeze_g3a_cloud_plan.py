@@ -170,7 +170,15 @@ def build_bundle(repository: Path, output: Path, commit: str) -> dict[str, Any]:
     for candidate in (first, second):
         candidate.unlink(missing_ok=True)
         completed = subprocess.run(
-            ["git", "bundle", "create", str(candidate), commit],
+            [
+                "git",
+                "-c",
+                "pack.threads=1",
+                "bundle",
+                "create",
+                str(candidate),
+                "HEAD",
+            ],
             cwd=repository,
             check=False,
             capture_output=True,
@@ -187,6 +195,15 @@ def build_bundle(repository: Path, output: Path, commit: str) -> dict[str, Any]:
         )
         if verify.returncode:
             raise RuntimeError(f"Git bundle verification failed: {verify.stderr.strip()}")
+        listed = subprocess.run(
+            ["git", "bundle", "list-heads", str(candidate)],
+            cwd=repository,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if listed.returncode or commit not in listed.stdout:
+            raise RuntimeError("Git bundle does not contain the exact source commit")
     if first.read_bytes() != second.read_bytes():
         raise RuntimeError("duplicate Git bundle builds are not byte-identical")
     first.replace(output)
