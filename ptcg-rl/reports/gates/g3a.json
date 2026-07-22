@@ -2,15 +2,15 @@
   "schema_version": 1,
   "record_id": "gate-g3a-20260720",
   "created_at_utc": "2026-07-20T14:55:27Z",
-  "updated_at_utc": "2026-07-20T14:55:27Z",
+  "updated_at_utc": "2026-07-22T10:31:05Z",
   "source_path": "reports/gates/g3a.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "1",
+  "producer_version": "2",
   "gate_id": "G3a",
   "title": "Recurrent PPO correctness proof",
   "status": "BLOCKED",
   "decision": "NOT_REVIEWED",
-  "authorization": "EVALUATION_CONTRACT_FROZEN_TRAINING_NOT_AUTHORIZED",
+  "authorization": "LOCAL_CORRECTNESS_COMPLETE_CLOUD_TRAINING_NOT_AUTHORIZED",
   "technical_checks": [
     {
       "name": "strict evaluation contract frozen",
@@ -29,8 +29,13 @@
     },
     {
       "name": "PPO correctness harness and versioned toy task implementations",
-      "status": "BLOCKED",
-      "evidence": null
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3a-ppo-local-correctness-v1.json"
+    },
+    {
+      "name": "independent local correctness recalculation",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3a-ppo-local-correctness-review-v1.json"
     },
     {
       "name": "bounded three-seed private correctness smoke",
@@ -39,16 +44,15 @@
     }
   ],
   "blockers": [
-    "The recurrent PPO correctness harness and versioned toy task implementations are not yet implemented and reviewed.",
-    "The exact per-task choice allocation, wall-time cap, checkpoint cadence, artifact destination and stop conditions have not yet been preregistered.",
-    "Explicit user approval to launch a bounded private Kaggle or Colab training smoke has not been granted."
+    "The exact private Kaggle or Colab task allocation, 25,000-to-100,000-choice per-seed budget, wall-time cap, checkpoint cadence, artifact destination and stop conditions have not yet been frozen and reviewed.",
+    "Explicit user training approval to launch the bounded private Kaggle or Colab correctness smoke has not been granted."
   ],
   "warnings": [
-    "A frozen evaluation contract does not establish PPO correctness, learning or policy strength.",
-    "The official engine uses system entropy; the contract does not claim paired seeds or deterministic game trajectories.",
-    "Natural-deployment player-slot balancing remains primary and forced actual-first/actual-second results remain separate diagnostics.",
-    "No training, Kaggle launch, Colab launch, Modal use or submission occurred while freezing this contract."
+    "The local micro-qualification validates PPO mathematics, recurrent toy learning, ordered multi-select replay, GAE, rollout ownership and checkpoint recovery; it does not complete G3a or establish Pokémon policy strength.",
+    "Local execution used CPU only, two PyTorch threads, one interop thread, zero workers, zero CABT games and at most 1,024 choices per model.",
+    "The authoritative report was generated from a clean isolated checkout of commit cae42da47bc9f3491869e8afd0e1254061b9f585 and now has a complete dashboard envelope.",
+    "No Kaggle launch, Colab launch, Modal use, deck change or submission occurred."
   ],
-  "approved_next_action": "Implement and locally exhaustively test the PPO correctness primitives and versioned toy environments without meaningful self-play, benchmark alternative smoke allocations, then present one exact bounded three-seed private Kaggle/Colab run plan for explicit user approval. Do not launch it automatically.",
+  "approved_next_action": "Freeze and review one exact 25,000-to-100,000-choice-per-seed private Kaggle or Colab G3a plan, including per-task allocation, maximum four CPU cores, wall-time cap, checkpoint cadence, resume proof, artifact destination and fail-closed stop conditions. Present it for explicit user approval and do not launch automatically.",
   "cost_usd": 0.0
 }

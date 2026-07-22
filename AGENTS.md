@@ -39,16 +39,16 @@ Reports and dashboards are not proof merely because they say `PASS`. Never lower
 
 ### Current state (dated checkpoint; update only when evidence changes)
 
-As of 2026-07-20:
+As of 2026-07-22:
 
 - `G0`: `SUCCEEDED / PASS`.
 - `G1R`: `SUCCEEDED / PASS`; independently closed by `docs/decisions/DEC-009_G1R_CLOSED.md` and `reports/gates/g1r.json`.
 - `R1`: `SUCCEEDED / PASS`; the approved capped replay transfer and semantic independent review are complete, while additional replay retrieval and action-supervision training remain unauthorized.
 - `G2`: `SUCCEEDED / PASS`; model, checkpoint, CPU/GPU parity and the exact 10,000-game T4 x2 neural reliability qualification passed.
 - The strict G3a evaluation contract is frozen at `configs/g3a_evaluation_v1.json`, independently reviewed in `reports/artifacts/g3a-evaluation-contract-v1.json`, and bound to implementation commit `6ca84cf7ccd79e49341998314da6d32aa8f1de45`.
-- `G3a` remains `BLOCKED / NOT_REVIEWED`: the PPO correctness harness, versioned toy tasks, exact bounded three-seed run plan and explicit user training approval are still required.
+- `G3a` remains `BLOCKED / NOT_REVIEWED`: the project-native PPO correctness core, versioned toy tasks and independently reviewed local three-seed micro-qualification passed at commits `68407689ccfb18236f14f78dd68360704f408682` and `cae42da47bc9f3491869e8afd0e1254061b9f585`; the exact 25,000-to-100,000-choice private cloud plan and explicit user training approval are still required.
 - The dashboard remains read-only and excludes private assets. Heavy workflows should use bounded private Kaggle notebooks by default; Modal, paid compute, deck freeze, submissions and active-submission changes remain approval-gated.
-- Recurrent PPO, actor/learner workers, league, deck bakeoff, champion selection and learned submission packaging are not implemented. Freezing an evaluation contract does not authorize training or establish policy strength.
+- The local recurrent PPO mathematical core, ordered compound replay, GAE, recurrent slicing, restricted checkpoint recovery and toy tasks are implemented. CABT actor/learner integration, the cloud qualification run, league training, deck bakeoff, champion selection and learned submission packaging remain incomplete. Local correctness does not authorize cloud training or establish policy strength.
 
 When a gate verdict changes, update only this dated checkpoint plus the corresponding decision record/evidence link. Do not opportunistically rewrite durable mission, safety, data, or evaluation policy.
 

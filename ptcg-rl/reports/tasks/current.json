@@ -257,24 +257,65 @@
   },
   {
     "schema_version": 1,
+    "record_id": "task-g3-ppo-001",
+    "created_at_utc": "2026-07-22T09:25:58Z",
+    "updated_at_utc": "2026-07-22T10:31:05Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G3-PPO-001",
+    "title": "Implement and locally qualify recurrent PPO correctness",
+    "phase": "G3a",
+    "priority": 5,
+    "status": "SUCCEEDED",
+    "depends_on": [
+      "G2_PASS",
+      "T-G3-EVAL-001"
+    ],
+    "done_when": "Project-native PPO primitives, recurrent rollout contracts, atomic checkpoint recovery and all three frozen toy tasks pass exhaustive local tests and an independently recalculated three-seed micro-qualification under the two-core resource boundary.",
+    "completed_at_utc": "2026-07-22T10:31:05Z",
+    "implementation_commits": [
+      "68407689ccfb18236f14f78dd68360704f408682",
+      "cae42da47bc9f3491869e8afd0e1254061b9f585"
+    ],
+    "completion_evidence": [
+      "reports/artifacts/g3a-ppo-local-correctness-v1.json",
+      "reports/artifacts/g3a-ppo-local-correctness-review-v1.json"
+    ],
+    "config_path": "configs/g3a_local_correctness_v1.json",
+    "config_sha256": "10874b321250cf87ff4824aafa7de35c557ad194bc76d255d2afc0d4a91471aa",
+    "report_sha256": "868fdd277eeafe96d09138f1a0f70bc50899fd58ee03b49a1fe6d8a3c9f4194e",
+    "focused_tests_passed": 55,
+    "isolated_clean_tests_passed": 334,
+    "isolated_clean_tests_skipped": 4,
+    "candidate_experiments_completed": 3,
+    "declared_seeds_passed": 3,
+    "maximum_local_cpu_threads": 2,
+    "cabt_games": 0,
+    "cloud_launch_performed": false,
+    "policy_strength_claimed": false
+  },
+  {
+    "schema_version": 1,
     "record_id": "task-g3-001",
     "created_at_utc": "2026-07-19T06:30:00Z",
-    "updated_at_utc": "2026-07-20T14:55:27Z",
+    "updated_at_utc": "2026-07-22T10:31:05Z",
     "source_path": "reports/tasks/current.json",
     "producer": "chatgpt-local-agent",
     "task_id": "T-G3-001",
     "title": "Launch recurrent PPO correctness smoke",
     "phase": "G3a",
-    "priority": 5,
+    "priority": 6,
     "status": "BLOCKED",
     "depends_on": [
       "G2_PASS",
       "T-G3-EVAL-001",
-      "PPO_CORRECTNESS_HARNESS_IMPLEMENTED",
+      "T-G3-PPO-001",
+      "G3A_CLOUD_PLAN_FROZEN",
       "USER_TRAINING_APPROVAL"
     ],
-    "done_when": "A bounded private Kaggle or Colab run proves the strict three-seed G3a contract.",
+    "done_when": "A bounded private Kaggle or Colab run proves the strict three-seed G3a contract at the frozen 25,000-to-100,000-choice per-seed budget.",
     "evaluation_contract_evidence": "reports/artifacts/g3a-evaluation-contract-v1.json",
-    "blocker": "The evaluation contract is frozen. The PPO correctness harness, exact bounded run plan and explicit user training approval remain open."
+    "local_correctness_evidence": "reports/artifacts/g3a-ppo-local-correctness-v1.json",
+    "blocker": "The evaluation contract and local PPO correctness harness are complete. The exact bounded cloud run plan and explicit user training approval remain open."
   }
 ]

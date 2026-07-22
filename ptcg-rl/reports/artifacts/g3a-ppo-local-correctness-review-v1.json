@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g3a-ppo-local-correctness-review-v1",
+  "created_at_utc": "2026-07-22T10:31:05Z",
+  "updated_at_utc": "2026-07-22T10:35:55Z",
+  "source_path": "reports/artifacts/g3a-ppo-local-correctness-review-v1.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "2",
+  "artifact_id": "g3a-ppo-local-correctness-review-v1",
+  "gate_id": "G3a",
+  "kind": "INDEPENDENT_REVIEW",
+  "title": "Independent review of the local G3a PPO correctness micro-qualification",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "scope": "Independent recalculation of the toy-only local PPO correctness report. This is not the frozen 25,000-to-100,000-choice G3a cloud qualification and is not policy-strength evidence.",
+  "implementation_commits": [
+    "68407689ccfb18236f14f78dd68360704f408682",
+    "cae42da47bc9f3491869e8afd0e1254061b9f585"
+  ],
+  "reviewed_artifact": {
+    "path": "reports/artifacts/g3a-ppo-local-correctness-v1.json",
+    "bytes": 27889,
+    "sha256": "868fdd277eeafe96d09138f1a0f70bc50899fd58ee03b49a1fe6d8a3c9f4194e",
+    "created_at_utc": "2026-07-22T10:24:05Z"
+  },
+  "identity_review": {
+    "dashboard_envelope_complete": true,
+    "schema_version": 1,
+    "record_id": "artifact-g3a-ppo-local-correctness-v1",
+    "kind": "KPTCG_G3A_LOCAL_CORRECTNESS_REPORT",
+    "status": "SUCCEEDED",
+    "decision": "PASS",
+    "source_commit": "cae42da47bc9f3491869e8afd0e1254061b9f585",
+    "source_commit_exact_match": true,
+    "clean_worktree_before_run": true,
+    "git_status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "config_bytes_and_sha256_match": true,
+    "all_declared_source_bytes_and_sha256_match": true,
+    "source_hash_mismatches": 0
+  },
+  "candidate_recalculation": [
+    {
+      "candidate_id": "a-512-lr5e3",
+      "recorded_pass": false,
+      "recalculated_pass": false,
+      "selected": false,
+      "variable_option_multiselect_score": 0.75,
+      "recurrent_margin": 0.5,
+      "maximum_gradient_norm_before_clip": 0.8231383061358004,
+      "disposition": "REJECT_INSUFFICIENT_MULTISELECT_SCORE"
+    },
+    {
+      "candidate_id": "b-1024-lr5e3",
+      "recorded_pass": true,
+      "recalculated_pass": true,
+      "selected": true,
+      "variable_option_multiselect_score": 1.0,
+      "recurrent_margin": 0.5,
+      "maximum_gradient_norm_before_clip": 0.8668152256223083,
+      "disposition": "SELECT_LOWEST_GRADIENT_PASSING_CANDIDATE"
+    },
+    {
+      "candidate_id": "c-1024-lr1e2",
+      "recorded_pass": true,
+      "recalculated_pass": true,
+      "selected": false,
+      "variable_option_multiselect_score": 1.0,
+      "recurrent_margin": 0.5,
+      "maximum_gradient_norm_before_clip": 1.5519256876696554,
+      "disposition": "REJECT_HIGHER_GRADIENT_PASSING_CANDIDATE"
+    }
+  ],
+  "selected_seed_recalculation": [
+    {
+      "seed": 1197953491,
+      "masked_bandit_score": 1.0,
+      "variable_option_multiselect_score": 1.0,
+      "recurrent_score": 1.0,
+      "stateless_score": 0.5,
+      "recurrent_margin": 0.5,
+      "maximum_probability_replay_error": 0.0,
+      "maximum_initial_ratio_error": 0.0,
+      "maximum_gradient_norm_before_clip": 0.8668152256223083,
+      "maximum_model_wall_seconds": 14.104740312000104,
+      "zero_tolerance_total": 0,
+      "all_checkpoint_reviews_pass": true,
+      "status": "PASS"
+    },
+    {
+      "seed": 20344180,
+      "masked_bandit_score": 1.0,
+      "variable_option_multiselect_score": 1.0,
+      "recurrent_score": 1.0,
+      "stateless_score": 0.5,
+      "recurrent_margin": 0.5,
+      "maximum_probability_replay_error": 0.0,
+      "maximum_initial_ratio_error": 0.0,
+      "maximum_gradient_norm_before_clip": 0.9104266579671529,
+      "maximum_model_wall_seconds": 13.908917884000402,
+      "zero_tolerance_total": 0,
+      "all_checkpoint_reviews_pass": true,
+      "status": "PASS"
+    },
+    {
+      "seed": 1491619630,
+      "masked_bandit_score": 1.0,
+      "variable_option_multiselect_score": 1.0,
+      "recurrent_score": 1.0,
+      "stateless_score": 0.5,
+      "recurrent_margin": 0.5,
+      "maximum_probability_replay_error": 0.0,
+      "maximum_initial_ratio_error": 0.0,
+      "maximum_gradient_norm_before_clip": 0.8521803335953153,
+      "maximum_model_wall_seconds": 13.623659962999227,
+      "zero_tolerance_total": 0,
+      "all_checkpoint_reviews_pass": true,
+      "status": "PASS"
+    }
+  ],
+  "checkpoint_review": {
+    "model_tensors_exact": true,
+    "fixed_evaluations_exact": true,
+    "restricted_weights_only_loader": true,
+    "all_reviewed_checkpoints_pass": true,
+    "restored_components": [
+      "model",
+      "optimizer",
+      "scheduler",
+      "counters",
+      "league",
+      "rollout_boundary",
+      "python_rng",
+      "numpy_rng",
+      "torch_cpu_rng"
+    ]
+  },
+  "resource_review": {
+    "device": "cpu",
+    "configured_maximum_cpu_threads": 2,
+    "observed_torch_threads": 2,
+    "observed_torch_interop_threads": 1,
+    "configured_maximum_worker_processes": 0,
+    "cabt_games": 0,
+    "gpu_used": false,
+    "overall_runner_wall_seconds": 294.369
+  },
+  "source_validation": {
+    "focused_tests_passed": 55,
+    "isolated_clean_tests_passed": 334,
+    "isolated_clean_tests_skipped": 4,
+    "ruff": "PASS"
+  },
+  "promotion_validation": {
+    "completed_at_utc": "2026-07-22T10:35:55Z",
+    "focused_g3_tests": {
+      "passed": 144,
+      "failed": 0
+    },
+    "full_python_suite": {
+      "passed": 347,
+      "failed": 0
+    },
+    "ruff": "PASS",
+    "dashboard_rebuild": {
+      "ingested": 111,
+      "quarantined": 0,
+      "status": "PASS"
+    },
+    "dashboard_doctor": "PASS",
+    "frontend_unit_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontend_build": "PASS",
+    "browser_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "tracked_browser_artifacts_restored": 4
+  },
+  "authorization_review": {
+    "training_launch_authorized": false,
+    "cloud_launch_allowed": false,
+    "meaningful_self_play_allowed": false,
+    "policy_strength_claim_allowed": false,
+    "external_service_mutated": false
+  },
+  "overall_independent_recalculation": "PASS",
+  "warnings": [
+    "The local runs used at most 1,024 choices per model and do not satisfy the frozen G3a 25,000-to-100,000-choice per-seed cloud budget.",
+    "The local result validates correctness primitives, toy learning behavior and checkpoint recovery only.",
+    "A separate exact private Kaggle or Colab plan and explicit user training approval remain required before launch."
+  ],
+  "cost_usd": 0.0
+}

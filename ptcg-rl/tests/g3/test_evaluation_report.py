@@ -81,7 +81,7 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
 
     assert gate["status"] == "BLOCKED"
     assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["authorization"] == "EVALUATION_CONTRACT_FROZEN_TRAINING_NOT_AUTHORIZED"
+    assert gate["authorization"] == "LOCAL_CORRECTNESS_COMPLETE_CLOUD_TRAINING_NOT_AUTHORIZED"
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["strict evaluation contract frozen"] == {
         "name": "strict evaluation contract frozen",
@@ -90,9 +90,10 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
     }
     assert checks["PPO correctness harness and versioned toy task implementations"][
         "status"
-    ] == "BLOCKED"
+    ] == "PASS"
+    assert checks["independent local correctness recalculation"]["status"] == "PASS"
     assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"
-    assert len(gate["blockers"]) == 3
+    assert len(gate["blockers"]) == 2
 
     contract_task = next(item for item in tasks if item.get("task_id") == "T-G3-EVAL-001")
     assert contract_task["status"] == "SUCCEEDED"
@@ -103,9 +104,14 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
 
     smoke_task = next(item for item in tasks if item.get("task_id") == "T-G3-001")
     assert smoke_task["status"] == "BLOCKED"
-    assert "PPO_CORRECTNESS_HARNESS_IMPLEMENTED" in smoke_task["depends_on"]
+    assert "T-G3-PPO-001" in smoke_task["depends_on"]
+    assert "G3A_CLOUD_PLAN_FROZEN" in smoke_task["depends_on"]
     assert "USER_TRAINING_APPROVAL" in smoke_task["depends_on"]
     assert smoke_task["evaluation_contract_evidence"] == REPORT_PATH
+    local_task = next(item for item in tasks if item.get("task_id") == "T-G3-PPO-001")
+    assert local_task["status"] == "SUCCEEDED"
+    assert local_task["implementation_commits"][-1] == "cae42da47bc9f3491869e8afd0e1254061b9f585"
+    assert local_task["report_sha256"] == "868fdd277eeafe96d09138f1a0f70bc50899fd58ee03b49a1fe6d8a3c9f4194e"
 
 
 def test_status_documents_do_not_overclaim_g3a_completion_or_authorization() -> None:
@@ -118,7 +124,7 @@ def test_status_documents_do_not_overclaim_g3a_completion_or_authorization() -> 
     assert "`G3a` remains `BLOCKED / NOT_REVIEWED`" in agents
     assert "Gate status: G2 PASS / R1 PASS / G3a BLOCKED" in project
     assert "PPO training remains unauthorized" in project
-    assert "PPO implementation is not complete" in project
+    assert "exact cloud plan is frozen and explicitly approved" in project
     assert "Current verdict: **BLOCKED / NOT_REVIEWED**" in progress
     assert "no training" in progress.lower()
     assert "policy strength" in progress.lower()
