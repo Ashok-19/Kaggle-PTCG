@@ -94,4 +94,4 @@ def test_bundle_parity_checkpoint_and_reliability_slices_close_g2() -> None:
 
     training_task = next(item for item in tasks if item.get("task_id") == "T-G3-001")
     assert training_task["status"] == "BLOCKED"
-    assert "explicit user training approval" in training_task["blocker"]
+    assert "user must import and run" in training_task["blocker"].lower()

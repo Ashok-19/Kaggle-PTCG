@@ -2,15 +2,15 @@
   "schema_version": 1,
   "record_id": "gate-g3a-20260720",
   "created_at_utc": "2026-07-20T14:55:27Z",
-  "updated_at_utc": "2026-07-22T16:34:26Z",
+  "updated_at_utc": "2026-07-22T17:34:58Z",
   "source_path": "reports/gates/g3a.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "3",
+  "producer_version": "4",
   "gate_id": "G3a",
   "title": "Recurrent PPO correctness proof",
   "status": "BLOCKED",
   "decision": "NOT_REVIEWED",
-  "authorization": "LOCAL_CORRECTNESS_COMPLETE_CLOUD_TRAINING_NOT_AUTHORIZED",
+  "authorization": "USER_APPROVAL_RECORDED_DATASET_READY_ASSISTANT_LAUNCH_NOT_PERFORMED",
   "technical_checks": [
     {
       "name": "strict evaluation contract frozen",
@@ -48,21 +48,35 @@
       "evidence": "reports/artifacts/g3a-cloud-correctness-plan-review-v1.json"
     },
     {
+      "name": "explicit user training approval recorded",
+      "status": "PASS",
+      "evidence": "reports/jobs/g3a-cloud-input-publication-v1.json"
+    },
+    {
+      "name": "private Kaggle input dataset version 1 ready and byte verified",
+      "status": "PASS",
+      "evidence": "reports/jobs/g3a-cloud-input-publication-v1.json"
+    },
+    {
+      "name": "single local notebook frozen and ready for user import",
+      "status": "PASS",
+      "evidence": "reports/jobs/g3a-cloud-input-publication-v1.json"
+    },
+    {
       "name": "bounded three-seed private correctness smoke",
       "status": "BLOCKED",
       "evidence": null
     }
   ],
   "blockers": [
-    "Explicit user approval to launch the exact immutable private Kaggle CPU correctness plan has not been granted.",
-    "The prepared stable private dataset version 1 and notebook version 1 remain local and unpublished, and no bounded cloud run, checkpoint/resume receipt, output manifest, downloaded artifact set or strict G3a run review exists yet."
+    "The user has not yet imported and run the exact local notebook with private dataset version 1; no saved run outputs, checkpoint/resume receipt, output manifest, downloaded artifact set or strict G3a run review exists yet."
   ],
   "warnings": [
-    "The frozen plan proves only how the bounded toy correctness run will be executed and reviewed; it does not complete G3a or establish Pokemon policy strength.",
-    "The plan uses exactly 100,000 aggregate non-forced choices per seed, split into four 25,000-choice streams including the stateless control, for seeds 1197953491, 20344180 and 1491619630.",
-    "The selected environment is private Kaggle CPU with internet, GPU and TPU off; two active PyTorch threads, one interop thread, zero workers and a four-core hard ceiling.",
-    "No Kaggle or Colab launch, dataset/notebook publication, Modal use, deck change, submission, Git push or other external service mutation occurred."
+    "The frozen plan and published dataset support only the bounded toy correctness run; they do not complete G3a or establish Pokemon policy strength.",
+    "The approved dataset is private Kaggle version 1, status READY, with exactly four remotely downloaded files matching the frozen local bytes and SHA-256 values.",
+    "The single notebook remains local-only at private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb; the user will import, launch and monitor it.",
+    "The assistant did not create or launch a Kaggle notebook session, did not monitor training, and did not create a submission, use Modal, change a deck or push Git."
   ],
-  "approved_next_action": "Present the exact immutable private Kaggle CPU G3a plan for one explicit approve-or-reject decision. On approval only, manually publish or update the stable private input dataset and single notebook to the frozen numeric versions, launch the exact CPU/internet-off run, download every manifest-listed output, verify bytes and SHA-256, and run the strict independent review. Do not launch automatically.",
+  "approved_next_action": "The user imports the exact local notebook, attaches only ashok205/kptcg-g3a-correctness-inputs version 1, selects CPU with internet/GPU/TPU off, sets KPTCG_G3A_TRAINING_APPROVED=YES and runs all cells without editing. After the saved version completes, download and verify every manifest-listed output and run the strict independent G3a review.",
   "cost_usd": 0.0
 }

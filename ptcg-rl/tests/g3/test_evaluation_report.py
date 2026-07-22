@@ -81,7 +81,9 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
 
     assert gate["status"] == "BLOCKED"
     assert gate["decision"] == "NOT_REVIEWED"
-    assert gate["authorization"] == "LOCAL_CORRECTNESS_COMPLETE_CLOUD_TRAINING_NOT_AUTHORIZED"
+    assert gate["authorization"] == (
+        "USER_APPROVAL_RECORDED_DATASET_READY_ASSISTANT_LAUNCH_NOT_PERFORMED"
+    )
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["strict evaluation contract frozen"] == {
         "name": "strict evaluation contract frozen",
@@ -93,7 +95,7 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
     ] == "PASS"
     assert checks["independent local correctness recalculation"]["status"] == "PASS"
     assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"
-    assert len(gate["blockers"]) == 2
+    assert len(gate["blockers"]) == 1
 
     contract_task = next(item for item in tasks if item.get("task_id") == "T-G3-EVAL-001")
     assert contract_task["status"] == "SUCCEEDED"
@@ -123,7 +125,7 @@ def test_status_documents_do_not_overclaim_g3a_completion_or_authorization() -> 
     assert IMPLEMENTATION_COMMIT in agents
     assert "`G3a` remains `BLOCKED / NOT_REVIEWED`" in agents
     assert "Gate status: G2 PASS / R1 PASS / G3a BLOCKED" in project
-    assert "PPO training remains unauthorized" in project
+    assert "Assistant launch remains unauthorized" in project
     assert "exact cloud plan is frozen and explicitly approved" in project
     assert "Current verdict: **BLOCKED / NOT_REVIEWED**" in progress
     assert "no training" in progress.lower()

@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "record_id": "job-g3a-cloud-input-publication-v1",
+  "created_at_utc": "2026-07-22T17:34:58Z",
+  "updated_at_utc": "2026-07-22T17:42:23Z",
+  "source_path": "reports/jobs/g3a-cloud-input-publication-v1.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "job_id": "g3a-cloud-input-publication-v1",
+  "gate_id": "G3a",
+  "kind": "PRIVATE_DATASET_PUBLICATION",
+  "title": "Publish frozen private Kaggle G3a correctness inputs",
+  "status": "SUCCEEDED",
+  "authorization": {
+    "user_plan_approval_received": true,
+    "approval_scope": "Publish the exact frozen private input dataset and retain the exact notebook locally; the user will import, launch and monitor the notebook.",
+    "dataset_publication_authorized": true,
+    "assistant_notebook_publication_authorized": false,
+    "assistant_training_launch_authorized": false,
+    "assistant_monitoring_authorized": false,
+    "submission_authorized": false
+  },
+  "source": {
+    "publication_base_commit": "b699f3dc167d62f8e382be58590590c90a870200",
+    "executable_source_commit": "78633d33769b0771eecb56e788bb90586acd5864",
+    "executable_source_tree": "1fdc154fefa1e1fc4ffc1a2fe8eb9580defd0fa4",
+    "plan_config_path": "configs/kaggle/g3a_cloud_correctness_v1.json",
+    "plan_config_sha256": "ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e",
+    "plan_report_sha256": "b826361bc1443682280936c4fc3bdceacbdf916fc829f02deb7ea1ec71b705d7",
+    "plan_review_sha256": "b3340459613a4af46ad2b02602df5641e5b9789f90afefc4e4adbbc95c64c701"
+  },
+  "dataset": {
+    "ref": "ashok205/kptcg-g3a-correctness-inputs",
+    "dataset_id": 11311575,
+    "version": 1,
+    "private": true,
+    "status": "READY",
+    "title": "KPTCG G3a Correctness Inputs",
+    "license": "other",
+    "file_count": 4,
+    "extra_remote_files": 0,
+    "remote_download_verified": true,
+    "files": [
+      {
+        "name": "g3a-cloud-input-manifest-v1.json",
+        "bytes": 724,
+        "sha256": "116a3cdebbd2b93becf6472b7ad34a4a1318e597cc8769adca18ea6d8cda036c"
+      },
+      {
+        "name": "g3a-cloud-plan-v1.json",
+        "bytes": 8309,
+        "sha256": "ea1e722657f358a85f64688e2df90397799bc17920adffe971a3ee7df72c871e"
+      },
+      {
+        "name": "g3a-cloud-source-manifest-v1.json",
+        "bytes": 3056,
+        "sha256": "c74480148bef75ccb29a214d6c1fabcd00d03542803a6d2882002c145d7ac36c"
+      },
+      {
+        "name": "g3a-cloud-source-v1.bundle",
+        "bytes": 5052825,
+        "sha256": "17580d32cb6b7dcc5ebffefccdf4cff8278b2f263a2c2a35558d5c456e85c532"
+      }
+    ]
+  },
+  "notebook": {
+    "local_path": "private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb",
+    "bytes": 5581,
+    "sha256": "d09d8c3361ca1f8111aa1b73de863111c26860576ea707501e3f12df8a1ce586",
+    "state": "LOCAL_ONLY_READY",
+    "remote_notebook_created": false,
+    "saved_outputs_present": false
+  },
+  "verification": {
+    "kaggle_cli_version": "1.7.4.5",
+    "dataset_version_one_resolved": true,
+    "remote_file_names_and_sizes_match": true,
+    "independent_remote_download_matches_local_bytes": true,
+    "local_notebook_hash_matches_frozen_plan": true,
+    "repository_clean_before_publication": true
+  },
+  "completed_negative_results": [
+    {
+      "attempt": "connector_dataset_info_read",
+      "result": "PERMISSION_DENIED",
+      "mutation_occurred": false,
+      "resolution": "Use the authenticated Kaggle CLI for create/status/metadata/download and the connector versioned file-list endpoint for independent version-1 verification."
+    },
+    {
+      "attempt": "absolute_tmp_upload_path",
+      "result": "EXECUTION_POLICY_REJECTED",
+      "mutation_occurred": false,
+      "resolution": "Stage the identical payload under approved local-only .chatgpt scratch and retry with a repository-relative path."
+    }
+  ],
+  "validation": {
+    "targeted_publication_state_tests": {
+      "passed": 15,
+      "failed": 0
+    },
+    "focused_g3_tests": {
+      "passed": 172,
+      "failed": 0
+    },
+    "full_python_suite": {
+      "passed": 375,
+      "failed": 0
+    },
+    "ruff": "PASS",
+    "dashboard_rebuild": {
+      "ingested": 115,
+      "quarantined": 0,
+      "status": "PASS"
+    },
+    "dashboard_doctor": "PASS",
+    "frontend_unit_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontend_build": "PASS",
+    "browser_tests": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "external_service_mutated": true,
+  "training_launched": false,
+  "notebook_session_created": false,
+  "submission_created": false,
+  "policy_strength_established": false,
+  "cost_usd": 0.0,
+  "verdict": "PASS_FOR_USER_MANUAL_NOTEBOOK_IMPORT_AND_RUN",
+  "warnings": [
+    "The frozen config remains a pre-approval plan artifact with all authorization booleans false; approval is recorded separately in this publication receipt.",
+    "Dataset publication does not complete G3a and does not establish Pokemon policy strength.",
+    "The assistant did not create, launch or monitor a Kaggle notebook session."
+  ]
+}

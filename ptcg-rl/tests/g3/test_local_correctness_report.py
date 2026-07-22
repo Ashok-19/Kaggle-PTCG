@@ -128,7 +128,7 @@ def test_independent_review_and_gate_preserve_cloud_blocker() -> None:
     assert promotion["tracked_browser_artifacts_restored"] == 4
     assert gate["status"] == "BLOCKED"
     assert gate["decision"] == "NOT_REVIEWED"
-    assert len(gate["blockers"]) == 2
+    assert len(gate["blockers"]) == 1
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["PPO correctness harness and versioned toy task implementations"]["status"] == "PASS"
     assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"

@@ -117,7 +117,7 @@ def test_task_and_gate_close_g2_but_preserve_training_boundary() -> None:
     assert tasks["T-G2-002"]["status"] == "SUCCEEDED"
     assert tasks["T-G2-002"]["no_training"] is True
     assert tasks["T-G3-001"]["status"] == "BLOCKED"
-    assert "explicit user training approval" in tasks["T-G3-001"]["blocker"]
+    assert "user must import and run" in tasks["T-G3-001"]["blocker"].lower()
 
     gate = read(GATE)
     assert gate["status"] == "SUCCEEDED"

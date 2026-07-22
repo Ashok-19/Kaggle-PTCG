@@ -2,7 +2,7 @@
 
 Current gate: **G3a recurrent PPO correctness proof**  
 Current verdict: **BLOCKED / NOT_REVIEWED**  
-Latest completed milestone: **exact private Kaggle CPU cloud correctness plan frozen and independently reviewed**  
+Latest completed milestone: **approved private Kaggle input dataset version 1 published and independently byte-verified; exact notebook ready locally**  
 Cost: **USD 0**
 
 The project-native recurrent PPO correctness implementation is committed at
@@ -122,14 +122,29 @@ Frozen identities:
 - independent review report SHA-256
   `b3340459613a4af46ad2b02602df5641e5b9789f90afefc4e4adbbc95c64c701`.
 
-Final validation passed 169 G3 tests, all 372 Python tests, repository-wide Ruff,
-dashboard rebuild with 114 ingested records and zero quarantine, dashboard
+Final validation passed 172 G3 tests, all 375 Python tests, repository-wide Ruff,
+dashboard rebuild with 115 ingested records and zero quarantine, dashboard
 doctor, seven frontend unit tests, the production build and four Playwright
 browser tests. Five failed or transient plan-freeze branches are retained with
 their evidence, correction and successful rerun in the safe plan report.
 
-G3a remains `BLOCKED / NOT_REVIEWED`. The remaining blockers are explicit user
-approval, manual publication or update of the stable private dataset and single
-notebook version `1`, execution of the exact frozen run, complete saved-output
-download and SHA-256 verification, and a passing strict run review. The plan
-itself is readiness evidence only and makes no Pokemon policy-strength claim.
+## Approved Publication State
+
+Explicit user approval is recorded in
+`reports/jobs/g3a-cloud-input-publication-v1.json`. The assistant created the
+private dataset `ashok205/kptcg-g3a-correctness-inputs`; numeric version `1` is
+`READY`. Kaggle exposes exactly the four frozen files, and an independent remote
+download reproduced every local byte count and SHA-256. The publication receipt
+SHA-256 is `6f15d5417a202d8398ffc3ac9f193eab8f140dba00d21ab9298030db93d6b931`.
+
+The exact notebook remains local-only at
+`private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb`, 5,581 bytes,
+SHA-256 `d09d8c3361ca1f8111aa1b73de863111c26860576ea707501e3f12df8a1ce586`.
+The assistant did not create, launch or monitor a Kaggle notebook session.
+
+G3a remains `BLOCKED / NOT_REVIEWED`. The user must import the exact notebook,
+attach only dataset version `1`, select CPU with internet/GPU/TPU off, set
+`KPTCG_G3A_TRAINING_APPROVED=YES`, run and save the completed version. The
+remaining evidence is the complete saved-output download, byte/SHA-256
+verification and passing strict run review. Neither the plan nor dataset
+publication makes a Pokemon policy-strength claim.
