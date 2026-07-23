@@ -1,3 +1,18 @@
+from ptcg_rl.g3.competence_plan import (
+    CANARY_SEED,
+    DECLARED_SEEDS,
+    EVIDENCE_BASE_COMMIT,
+    PLAN_ID,
+    CompetencePlanError,
+    LoadedCompetencePlan,
+    derive_seed,
+    expected_competence_plan,
+    load_competence_plan,
+    review_competence_plan,
+    semantic_sha256,
+    validate_competence_plan,
+)
+
 from ptcg_rl.g3.evaluation import (
     EvaluationContractError,
     LoadedEvaluationContract,
@@ -12,6 +27,18 @@ from ptcg_rl.g3.evaluation import (
 )
 
 __all__ = [
+    "CANARY_SEED",
+    "DECLARED_SEEDS",
+    "EVIDENCE_BASE_COMMIT",
+    "PLAN_ID",
+    "CompetencePlanError",
+    "LoadedCompetencePlan",
+    "derive_seed",
+    "expected_competence_plan",
+    "load_competence_plan",
+    "review_competence_plan",
+    "semantic_sha256",
+    "validate_competence_plan",
     "EvaluationContractError",
     "LoadedEvaluationContract",
     "canonical_json_bytes",
