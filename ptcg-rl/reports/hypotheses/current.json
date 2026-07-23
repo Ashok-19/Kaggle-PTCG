@@ -37,11 +37,11 @@
     "producer": "chatgpt-local-agent",
     "hypothesis_id": "H003",
     "title": "Strict recurrent PPO can reach anchor competence",
-    "status": "QUEUED",
+    "status": "ACTIVE",
     "priority": 3,
     "statement": "Terminal-reward recurrent PPO can exceed the strict G3b thresholds within five million non-forced choices per seed when trained against exact rule anchors and frozen policies.",
-    "evidence_for": "The action space is legality-filtered and the fixed-deck specialist reduces the learning problem.",
-    "evidence_against": "No PPO implementation or learning curve exists; public reports include PPO failures and collapse cases.",
-    "next_test": "Only after G2 passes, run the preregistered three-seed G3a and G3b stages in private Kaggle notebooks."
+    "evidence_for": "G3a independently proved the recurrent PPO mathematics, exact compound probability replay and checkpoint recovery; G2 proved the 970,022-parameter recurrent policy can run 10,000 complete CABT games on T4 x2 with zero reliability failures; exact learner and four rule-anchor assets are byte verified.",
+    "evidence_against": "No CABT actor/learner bridge, CABT PPO learning curve or measured training throughput exists yet. G3a establishes algorithm correctness only, and the retained replay sample is selected rather than a defensible current meta distribution.",
+    "next_test": "Implement and independently qualify the CABT actor/learner bridge without meaningful training. Only after that task passes and a separate launch approval is granted, run the two-branch 100,000-choice private T4 x2 topology canary."
   }
 ]

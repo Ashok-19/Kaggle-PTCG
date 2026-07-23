@@ -126,9 +126,9 @@ def test_status_documents_close_g3a_without_overclaiming_strength_or_g3b_authori
 
     assert IMPLEMENTATION_COMMIT in agents
     assert "`G3a`: `SUCCEEDED / PASS`" in agents
-    assert "Gate status: G2 PASS / R1 PASS / G3a PASS / G3b NOT STARTED" in project
+    assert "Gate status: G2 PASS / R1 PASS / G3a PASS / G3b BLOCKED / NOT_REVIEWED" in project
     assert "Assistant launch remains unauthorized" in project
     assert "exact cloud plan is frozen and explicitly approved" in project
-    assert "Current verdict: **G3a SUCCEEDED / PASS; G3b NOT STARTED**" in progress
-    assert "does not authorize g3b" in progress.lower()
+    assert "Current verdict: **G3a SUCCEEDED / PASS; G3b BLOCKED / NOT_REVIEWED**" in progress
+    assert "no g3b launch is authorized" in agents.lower()
     assert "policy strength" in progress.lower()

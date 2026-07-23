@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "record_id": "gate-g3b-20260723",
+  "created_at_utc": "2026-07-23T11:30:27Z",
+  "updated_at_utc": "2026-07-23T11:30:27Z",
+  "source_path": "reports/gates/g3b.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "gate_id": "G3b",
+  "title": "Recurrent PPO policy competence",
+  "status": "BLOCKED",
+  "decision": "NOT_REVIEWED",
+  "authorization": "PLAN_REVIEWED_INTEGRATION_AND_TRAINING_NOT_AUTHORIZED",
+  "technical_checks": [
+    {
+      "name": "strict G3b acceptance contract frozen",
+      "status": "PASS",
+      "evidence": "configs/g3a_evaluation_v1.json"
+    },
+    {
+      "name": "multiple platform and execution candidates evaluated",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3b-competence-plan-v1.json"
+    },
+    {
+      "name": "exact assets, engineering deck and four rule anchors byte verified",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3b-competence-plan-v1.json"
+    },
+    {
+      "name": "runtime chunking and evaluation size derived from retained evidence",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3b-competence-plan-v1.json"
+    },
+    {
+      "name": "independent frozen-plan review",
+      "status": "PASS",
+      "evidence": "reports/artifacts/g3b-competence-plan-review-v1.json"
+    },
+    {
+      "name": "CABT actor learner bridge implemented and independently qualified",
+      "status": "BLOCKED",
+      "evidence": null
+    },
+    {
+      "name": "private T4x2 topology and resume canary",
+      "status": "BLOCKED",
+      "evidence": null
+    },
+    {
+      "name": "three-seed one-million-choice broad screen",
+      "status": "BLOCKED",
+      "evidence": null
+    },
+    {
+      "name": "three-seed five-million-choice competence confirmation",
+      "status": "BLOCKED",
+      "evidence": null
+    }
+  ],
+  "blockers": [
+    "The CABT actor/learner bridge is not implemented or independently qualified.",
+    "No G3b cloud launch has been separately authorized, and no measured PPO training throughput or portable cloud checkpoint publication receipt exists."
+  ],
+  "warnings": [
+    "The frozen plan is not executable training source and does not establish policy competence or strength.",
+    "The selected private Kaggle T4x2 topology begins with two equal 50,000-choice canary branches; neither canary checkpoint may seed the broad screen.",
+    "The primary and diagnosis configurations may differ only by the preregistered opponent schedule.",
+    "Modal, deck freeze, replay expansion and submission remain separately gated."
+  ],
+  "approved_next_action": "Implement and independently qualify the CABT actor/learner bridge with zero meaningful training. After that evidence is reviewed, prepare the exact private Kaggle canary assets and request separate explicit launch approval.",
+  "cost_usd": 0.0
+}

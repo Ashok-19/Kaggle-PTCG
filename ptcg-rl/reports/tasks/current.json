@@ -478,5 +478,69 @@
     "stream_count": 12,
     "zero_tolerance_total": 0,
     "policy_strength_claimed": false
+  },
+  {
+    "schema_version": 1,
+    "record_id": "task-g3b-plan-001",
+    "created_at_utc": "2026-07-23T11:30:27Z",
+    "updated_at_utc": "2026-07-23T11:30:27Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G3B-PLAN-001",
+    "title": "Freeze and independently review the G3b competence plan",
+    "phase": "G3b",
+    "priority": 9,
+    "status": "SUCCEEDED",
+    "depends_on": [
+      "G3A_PASS",
+      "T-G3-EVAL-001"
+    ],
+    "done_when": "Multiple execution paths are evaluated from retained evidence; one exact plan freezes assets, seeds, budgets, topology canary, PPO configurations, opponent schedules, evaluations, checkpoints, stop conditions and authorization boundaries; and an independent review passes without launch.",
+    "completed_at_utc": "2026-07-23T11:30:27Z",
+    "planner_commit": "098997ae96b3e96a8739cc407fcb16e845c60774",
+    "planner_tree": "d118a6d1c729b5b9726e18d2d445a08b9dfa37f7",
+    "config_path": "configs/g3b_competence_plan_v1.json",
+    "config_sha256": "99cf090df232ffe37504eee4b86ab70554256b5ad89fe972bb9bb5033115bc26",
+    "completion_evidence": "reports/artifacts/g3b-competence-plan-v1.json",
+    "completion_evidence_sha256": "f64c6a4e0d122ce219c19ed06db5f4d8c98289e7b454af1c98b9d9130419b006",
+    "independent_review": "reports/artifacts/g3b-competence-plan-review-v1.json",
+    "independent_review_sha256": "23f5c5c02d74c0db8e91652016d20eb755c1eba515a84067fca6c85d7fb4afe0",
+    "selected_candidate_id": "staged-kaggle-t4x2-million-choice-chunks",
+    "declared_seeds": [
+      3559096134,
+      178618376,
+      3063530691
+    ],
+    "canary_seed": 290023920,
+    "broad_choices_per_seed": 1000000,
+    "confirmation_cumulative_choices_per_seed": 5000000,
+    "evaluation_games_per_cycle": 6000,
+    "edge_case_tests_passed": 27,
+    "training_launched": false,
+    "external_service_mutated": false,
+    "policy_competence_claimed": false
+  },
+  {
+    "schema_version": 1,
+    "record_id": "task-g3b-integration-001",
+    "created_at_utc": "2026-07-23T11:30:27Z",
+    "updated_at_utc": "2026-07-23T11:30:27Z",
+    "source_path": "reports/tasks/current.json",
+    "producer": "chatgpt-local-agent",
+    "task_id": "T-G3B-INTEGRATION-001",
+    "title": "Implement and independently qualify the CABT actor learner bridge",
+    "phase": "G3b",
+    "priority": 10,
+    "status": "PLANNED",
+    "depends_on": [
+      "G3A_PASS",
+      "T-G3B-PLAN-001"
+    ],
+    "done_when": "The exact G2 projection, recurrent neural policy and G3 PPO primitives operate end-to-end through CABT with exhaustive forced-chain, terminal, truncation, ownership, probability replay, optimizer, checkpoint, worker-failure and resource-boundary tests, without meaningful training or external launch.",
+    "plan_evidence": "reports/artifacts/g3b-competence-plan-v1.json",
+    "meaningful_training_allowed": false,
+    "cloud_launch_allowed": false,
+    "local_cabt_training_choices_allowed": 0,
+    "blocker": "Implementation and independent qualification have not started. The topology canary remains separately approval-gated after this task passes."
   }
 ]

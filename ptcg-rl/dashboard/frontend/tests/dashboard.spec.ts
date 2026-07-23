@@ -1,11 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-test("G3a completion and next-gate boundary are visible", async ({ page }) => {
+test("G3b blocked integration boundary is visible", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Active workstreams" })).toBeVisible();
-  await expect(page.getByText("PASS", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("NO ACTIVE GATE", { exact: true })).toBeVisible();
-  await expect(page.getByText("6/10", { exact: true })).toBeVisible();
+  await expect(page.getByText("G3b", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Recurrent PPO policy competence" })).toBeVisible();
+  await expect(page.getByText("BLOCKED", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/Implement and independently qualify the CABT actor\/learner bridge/)).toBeVisible();
+  await expect(page.getByText(/PLAN_REVIEWED_INTEGRATION_AND_TRAINING_NOT_AUTHORIZED/)).toBeVisible();
   await expect(page.getByText(/training remains unauthorized/)).toBeVisible();
   await expect(page.getByText("USD 0.00", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/command-center.png", fullPage: true });
@@ -22,7 +24,7 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   await expect(r1Step.getByText("Passed", { exact: true })).toBeVisible();
   await expect(g2Step.getByText("Passed", { exact: true })).toBeVisible();
   await expect(g3aStep.getByText("Passed", { exact: true })).toBeVisible();
-  await expect(g3bStep.getByText("Not started", { exact: true })).toBeVisible();
+  await expect(g3bStep.getByText("BLOCKED", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/gates-roadmap.png", fullPage: true });
 
   await page.getByRole("button", { name: "Evidence", exact: true }).click();

@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-g3b-competence-plan-v1",
+  "created_at_utc": "2026-07-23T11:30:27Z",
+  "updated_at_utc": "2026-07-23T11:30:27Z",
+  "source_path": "reports/artifacts/g3b-competence-plan-v1.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "artifact_id": "g3b-competence-plan-v1",
+  "gate_id": "G3b",
+  "kind": "KPTCG_G3B_COMPETENCE_PLAN_REPORT",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "title": "Frozen G3b recurrent PPO competence plan",
+  "scope": "Evidence-bound planning and independent review only. This artifact does not implement the CABT actor/learner bridge, freeze executable training source, authorize a cloud launch, or establish policy competence.",
+  "identity": {
+    "planner_commit": "098997ae96b3e96a8739cc407fcb16e845c60774",
+    "planner_tree": "d118a6d1c729b5b9726e18d2d445a08b9dfa37f7",
+    "evidence_base_commit": "da0a89f2f1d664c707786d31fe033857e332abdc",
+    "canonical_plan": {
+      "path": "configs/g3b_competence_plan_v1.json",
+      "bytes": 12291,
+      "sha256": "99cf090df232ffe37504eee4b86ab70554256b5ad89fe972bb9bb5033115bc26"
+    },
+    "independent_review": {
+      "path": "reports/artifacts/g3b-competence-plan-review-v1.json",
+      "bytes": 1496,
+      "sha256": "23f5c5c02d74c0db8e91652016d20eb755c1eba515a84067fca6c85d7fb4afe0"
+    },
+    "frozen_evaluation_contract_sha256": "51f5d0d800a0a3832cc0ea8873828f6c68262eb4f24e55a8b11ae4143a2dae72"
+  },
+  "evidence_audit": {
+    "g3a_status": "SUCCEEDED",
+    "g3a_decision": "PASS",
+    "cabt_actor_learner_bridge_present": false,
+    "measured_ppo_training_throughput_present": false,
+    "qualified_t4x2_native_inference_path_present": true,
+    "four_exact_rule_anchor_receipts_present": true,
+    "fixed_engineering_deck_present": true,
+    "initial_neural_checkpoint_present": true,
+    "modal_canary_present": false,
+    "training_launch_authorized": false
+  },
+  "candidate_evaluation": [
+    {
+      "candidate_id": "direct-kaggle-five-million-single-session",
+      "decision": "REJECT",
+      "reason": "It combines an unimplemented CABT learner bridge with an unmeasured long training run. The verified inference-only sensitivity projects one five-million-choice seed at 6.08 to 24.30 hours, so a single notebook session is not a defensible unit."
+    },
+    {
+      "candidate_id": "direct-modal-main-training",
+      "decision": "REJECT",
+      "reason": "G4 Modal canary, restart persistence, workload throughput and cost evidence are absent. Moving directly to paid or main Modal execution would skip the approved evidence order."
+    },
+    {
+      "candidate_id": "staged-kaggle-t4x2-million-choice-chunks",
+      "decision": "SELECT",
+      "reason": "It separates bridge correctness, topology measurement and competence; uses a verified native-engine T4x2 starting topology; and makes every one-million-choice chunk exact, resumable and independently downloadable."
+    }
+  ],
+  "selected_plan": {
+    "candidate_id": "staged-kaggle-t4x2-million-choice-chunks",
+    "platform": "private-kaggle-t4x2",
+    "internet": false,
+    "declared_seeds": [
+      3559096134,
+      178618376,
+      3063530691
+    ],
+    "canary_seed": 290023920,
+    "seed_derivation": "SHA-256 first unsigned 32-bit big-endian word over g3b-competence-v1 seed labels",
+    "learner_deck_sha256": "42068a1803902756badcfd418f6f348b7901365a281d78af0692cbf2589f0799",
+    "initial_checkpoint_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+    "rule_anchor_count": 4
+  },
+  "work_order": {
+    "integration_qualification": {
+      "training_choices": 0,
+      "meaningful_training": false,
+      "purpose": "Implement and independently qualify the CABT actor/learner bridge before any cloud training."
+    },
+    "topology_canary": {
+      "counts_toward_g3b_budget": false,
+      "total_non_forced_choices": 100000,
+      "layout_trials": 2,
+      "choices_per_layout": 50000,
+      "minimum_non_forced_choices_per_second": 35.0,
+      "checkpoint_reused_for_broad_screen": false
+    },
+    "broad_screen": {
+      "non_forced_choices_per_seed": 1000000,
+      "declared_seed_count": 3,
+      "chunk_non_forced_choices": 1000000
+    },
+    "competence_confirmation": {
+      "cumulative_non_forced_choices_per_seed": 5000000,
+      "chunks_per_seed": 5,
+      "additional_chunks_after_broad_screen": 4
+    },
+    "bounded_diagnosis_branch": {
+      "invocation": "Only after the primary configuration completes five million choices per seed and fails fixed G3b acceptance.",
+      "single_changed_factor": "opponent schedule",
+      "cumulative_non_forced_choices_per_seed": 5000000,
+      "result_dependent_extension_allowed": false
+    }
+  },
+  "configuration_control": {
+    "primary_id": "ppo-uniform-anchor-mixture-v1",
+    "diagnosis_id": "ppo-random-warmup-anchor-curriculum-v1",
+    "unchanged_between_configurations": [
+      "source and model family",
+      "optimizer family and all PPO hyperparameters",
+      "learner deck",
+      "opponent identities",
+      "reward",
+      "budgets",
+      "evaluation population",
+      "stopping rules"
+    ],
+    "only_changed_factor": "opponent schedule",
+    "learning_rate": 0.0003,
+    "non_forced_choices_per_update": 16384,
+    "recurrent_sequence_length": 64,
+    "ppo_epochs": 3,
+    "policy_version_lag": 0
+  },
+  "runtime_evidence": {
+    "source": "reports/evaluations/g2-neural-reliability-v1.json",
+    "source_sha256": "d6b934a43cc449a5b8ba6648cc97eb191ab690f9689b3757a9f663da782d3f69",
+    "meaningful_choices": 1156383,
+    "runner_wall_seconds": 5058.581121050001,
+    "measured_inference_only_choices_per_second": 228.59829116666842,
+    "one_million_hours_at_measured_rate": 1.2151349704327106,
+    "one_million_hours_at_25_percent_rate": 4.860539881730842,
+    "five_million_hours_at_measured_rate": 6.075674852163552,
+    "five_million_hours_at_25_percent_rate": 24.30269940865421,
+    "derived_minimum_canary_rate": 35.0,
+    "one_million_seconds_at_minimum_rate": 28571.428571428572,
+    "chunk_internal_wall_cap_seconds": 28800
+  },
+  "evaluation_design": {
+    "natural_deployment": true,
+    "balanced_player_slots": true,
+    "games_per_seed_per_population": 400,
+    "games_per_player_slot_per_seed_per_population": 200,
+    "total_games_per_population": 1200,
+    "population_count": 5,
+    "total_games_per_cycle": 6000,
+    "random_anchor_in_rule_aggregate": false,
+    "rule_anchor_aggregate_weights": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "weight_basis": "Equal fixed rule-anchor weights are used because the retained replay sample is selected and insufficient for a defensible current meta distribution.",
+    "posterior_method": "dirichlet_multinomial_posterior_simulation",
+    "posterior_draws": 10000,
+    "frozen_thresholds_changed": false
+  },
+  "statistical_size_probe": {
+    "method": "Deterministic Dirichlet(0.5,0.5,0.5) simulation under the frozen score definition, used for planning only.",
+    "games": 1200,
+    "no_draw_random_anchor_minimum_observed_wins_for_lower_bound_0_85": 1044,
+    "no_draw_rule_anchor_minimum_observed_wins_for_lower_bound_above_0_50_and_probability_0_975": 635,
+    "no_draw_remaining_anchor_minimum_observed_wins_for_lower_bound_0_35": 453,
+    "promotion_decisions_must_recalculate_from_actual_win_draw_loss_counts": true
+  },
+  "checkpoint_contract": {
+    "cadence_non_forced_choices": 100000,
+    "cadence_wall_seconds": 900,
+    "final_exact_chunk_checkpoint": true,
+    "fresh_process_resume_canary_after_choices": 50000,
+    "content_addressed": true,
+    "portable_between_saved_notebook_versions": true,
+    "remote_publication_requires_byte_hash_verification": true,
+    "torch_cuda_rng_required": true
+  },
+  "completed_negative_results": [
+    {
+      "attempt": "assumed_native_library_filename",
+      "result": "FAILED_CLOSED",
+      "evidence": "The first identity command named a nonexistent top-level CPython shared object.",
+      "resolution": "Repository tree inspection found cg/libcg.so; the complete identity probe then passed with SHA-256 feafd404...."
+    },
+    {
+      "attempt": "system_python_posterior_probe",
+      "result": "FAILED_CLOSED",
+      "evidence": "System Python lacked NumPy and produced no planning result.",
+      "resolution": "The same retained script was rerun in the locked project environment."
+    },
+    {
+      "attempt": "wrong_working_directory_posterior_probe",
+      "result": "FAILED_CLOSED",
+      "evidence": "The locked-environment rerun could not resolve project-relative evidence from the repository root.",
+      "resolution": "The same script was rerun from ptcg-rl and completed the runtime and posterior calculations."
+    },
+    {
+      "attempt": "implicit_external_review_source_path",
+      "result": "FAILED_CLOSED",
+      "evidence": "The first standalone reviewer edge test rejected an output outside the repository because no dashboard provenance path could be derived.",
+      "resolution": "The reviewer now requires or derives an explicit provenance path and all 27 edge tests pass."
+    }
+  ],
+  "edge_case_validation": {
+    "targeted_tests_passed": 27,
+    "complete_g3_tests_passed": 201,
+    "complete_python_tests_passed": 404,
+    "ruff": "PASS",
+    "covered": [
+      "duplicate JSON keys",
+      "unknown plan mutation",
+      "authorization escalation",
+      "seed overlap and drift",
+      "contract threshold drift",
+      "path traversal and symlink assets",
+      "asset and rule-anchor byte verification",
+      "multiple candidate selection",
+      "opponent schedule and weight drift",
+      "configuration factor leakage",
+      "broad and confirmation budget drift",
+      "checkpoint chunk arithmetic",
+      "unbalanced or undersized evaluation",
+      "random anchor aggregate inflation",
+      "runtime floor versus chunk cap",
+      "review output collision"
+    ]
+  },
+  "promotion_validation": {
+    "targeted_plan_and_report_tests": {
+      "passed": 33,
+      "failed": 0
+    },
+    "complete_g3_tests": {
+      "passed": 207,
+      "failed": 0
+    },
+    "complete_python_suite": {
+      "passed": 410,
+      "failed": 0
+    },
+    "ruff": "PASS",
+    "dashboard_rebuild": {
+      "ingested": 124,
+      "quarantined": 0,
+      "status": "PASS"
+    },
+    "dashboard_doctor": "PASS",
+    "frontend_unit_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontend_build": "PASS",
+    "browser_tests": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "independent_review": {
+    "status": "SUCCEEDED",
+    "decision": "PASS",
+    "all_checks_pass": true,
+    "training_launch_authorized": false,
+    "policy_competence_claimed": false
+  },
+  "authorization": {
+    "training_launch_authorized": false,
+    "external_service_mutated": false,
+    "modal_used": false,
+    "dataset_or_model_published": false,
+    "deck_frozen": false,
+    "submission_created": false
+  },
+  "claims": {
+    "plan_frozen": true,
+    "cabt_actor_learner_integration_complete": false,
+    "training_source_frozen": false,
+    "g3b_run_complete": false,
+    "policy_competence_established": false,
+    "policy_strength_established": false
+  },
+  "next_task": {
+    "task_id": "T-G3B-INTEGRATION-001",
+    "title": "Implement and independently qualify the CABT actor/learner bridge",
+    "training_launch_requires_new_explicit_user_approval": true
+  },
+  "cost_usd": 0.0
+}

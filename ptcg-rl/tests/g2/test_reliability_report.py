@@ -153,7 +153,7 @@ def test_event_and_project_status_record_final_pass_without_training() -> None:
     assert "no optimizer or training loop ran" in event["summary"]
 
     status = STATUS.read_text(encoding="utf-8")
-    assert "G2 PASS / R1 PASS / G3a PASS / G3b NOT STARTED" in status
+    assert "G2 PASS / R1 PASS / G3a PASS / G3b BLOCKED / NOT_REVIEWED" in status
     assert "Exactly 10,000 games" in status
     assert "The assistant did not launch or rerun the notebook." in status
     assert "PPO training remains unauthorized" in status

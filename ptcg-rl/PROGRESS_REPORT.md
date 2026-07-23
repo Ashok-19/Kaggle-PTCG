@@ -1,8 +1,8 @@
 # Progress Report
 
-Current gate: **G3b PPO policy competence planning and authorization**  
-Current verdict: **G3a SUCCEEDED / PASS; G3b NOT STARTED**  
-Latest completed milestone: **private G3a cloud correctness run passed complete manifest verification and byte-exact independent review**  
+Current gate: **G3b CABT actor/learner integration qualification**  
+Current verdict: **G3a SUCCEEDED / PASS; G3b BLOCKED / NOT_REVIEWED**  
+Latest completed milestone: **G3b competence plan frozen and independently reviewed after three completed execution-path comparisons**  
 Cost: **USD 0**
 
 The project-native recurrent PPO correctness implementation is committed at
@@ -151,3 +151,15 @@ The user manually ran `ashok205/kptcg-g3a-cloud-correctness-v1` as Kaggle saved 
 The complete saved output tree was downloaded despite Kaggle pagination. Its 220-entry manifest covered 20,617,497 bytes with zero missing, extra, byte-count or SHA-256 mismatches. The tree contains 84 checkpoint payloads, 84 sidecars, 12 final checkpoints and three intentional fresh-process resumes. All 15 retained stderr files are empty. The assistant reran `scripts/g3a_review.py`; its 1,008-byte result is byte-identical to the notebook review with SHA-256 `abc8dcd3db3489a968840d98fc4450d3164c699473a3336e7625c7295ea8565b`.
 
 Authoritative evidence is `reports/evaluations/g3a-cloud-correctness-v1.json` and `reports/artifacts/raw/g3a-cloud-correctness-review-v1.json`. G3a is `SUCCEEDED / PASS`. This proves only the frozen toy algorithm-correctness gate; it does not establish Pokémon policy competence or strength, and it does not authorize G3b training automatically.
+
+## Frozen G3b Competence Plan
+
+The exact G3b planning contract is committed at `098997ae96b3e96a8739cc407fcb16e845c60774`. Three execution paths were completed and compared. A direct five-million-choice Kaggle session was rejected because the CABT learner bridge and PPO training throughput are unqualified and the retained T4 x2 inference rate projects one seed at roughly 6.08–24.30 hours under the tested slowdown range. Direct Modal training was rejected because G4 canary, restart and cost evidence are absent. Staged private Kaggle T4 x2 with exact one-million-choice resumable chunks was selected.
+
+The plan binds the engineering deck, initial 970,022-parameter checkpoint, native engine, card table and four exact rule anchors by byte count and SHA-256. It derives three training seeds and a separate canary seed by SHA-256. Before the fixed one-million-choice broad screen, it requires zero-training CABT bridge qualification and a 100,000-choice topology canary split into two complete 50,000-choice layouts; neither canary checkpoint may seed the broad screen. Confirmation reaches exactly five one-million-choice chunks per seed. The preregistered diagnosis configuration may run only after a complete primary failure and differs only by opponent schedule.
+
+Each fixed evaluation cycle contains 6,000 balanced natural-deployment games: 400 games per seed against random and each of four rule anchors, split equally between learner player slots. The rule-anchor aggregate excludes random and uses equal fixed weights because the retained replay sample is selected and cannot support a defensible current meta weighting. Checkpoints are atomic and content-addressed every 100,000 choices or 900 seconds, include CPU and CUDA RNG, and require byte-verified publication before cross-notebook resume.
+
+The canonical plan is `configs/g3b_competence_plan_v1.json`, 12,291 bytes, SHA-256 `99cf090df232ffe37504eee4b86ab70554256b5ad89fe972bb9bb5033115bc26`. The independent review SHA-256 is `23f5c5c02d74c0db8e91652016d20eb755c1eba515a84067fca6c85d7fb4afe0`. Before the source commit, 27 targeted edge-case tests, 201 G3 tests, 404 total Python tests and Ruff passed. No notebook, dataset, model, canary or training run was created or launched.
+
+G3b remains `BLOCKED / NOT_REVIEWED`. The next task is `T-G3B-INTEGRATION-001`: implement and independently qualify the CABT actor/learner bridge with zero meaningful training. Cloud execution remains separately approval-gated.

@@ -1,0 +1,15 @@
+[
+  {
+    "schema_version": 1,
+    "record_id": "event-g3b-competence-plan-frozen-20260723",
+    "created_at_utc": "2026-07-23T11:30:27Z",
+    "source_path": "reports/artifacts/g3b-competence-plan-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G3b",
+    "kind": "PLAN_REVIEW",
+    "severity": "INFO",
+    "status_after": "BLOCKED",
+    "title": "G3b competence plan frozen and independently reviewed",
+    "summary": "Three execution paths were completed and compared. Direct single-session five-million-choice Kaggle training and direct Modal training were rejected; staged private Kaggle T4 x2 with exact one-million-choice resumable chunks was selected. The canonical plan binds three derived seeds, a separate two-layout canary, exact assets and four rule anchors, fixed PPO configurations, 6,000-game evaluation cycles, checkpoint/resume requirements and zero-tolerance stops. Twenty-seven edge-case tests, 201 G3 tests, 404 total Python tests and Ruff passed before the source commit; independent review passed. G3b remains blocked because the CABT actor/learner bridge is not implemented. No G3b launch is authorized."
+  }
+]
