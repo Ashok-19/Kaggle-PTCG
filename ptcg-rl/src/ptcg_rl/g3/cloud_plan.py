@@ -334,6 +334,8 @@ def validate_cloud_plan(value: Mapping[str, Any]) -> dict[str, Any]:
             "aggregate_non_forced_choices_per_seed",
             "allocations",
             "stateless_control_included_in_aggregate",
+            "rollout_sampling",
+            "rollout_seed_xor",
             "choices_per_update",
             "ppo_epochs",
             "learning_rate",
@@ -359,6 +361,10 @@ def validate_cloud_plan(value: Mapping[str, Any]) -> dict[str, Any]:
         raise CloudPlanError("aggregate budget must be exactly 100,000 choices per seed")
     if work["stateless_control_included_in_aggregate"] is not True:
         raise CloudPlanError("stateless control must be included in the aggregate budget")
+    if work["rollout_sampling"] != "seeded_categorical":
+        raise CloudPlanError("rollout sampling must be seeded categorical")
+    if work["rollout_seed_xor"] != 0x5A17:
+        raise CloudPlanError("rollout seed XOR differs from the frozen value")
     allocations = _object(work["allocations"], "allocations")
     if set(allocations) != {str(seed) for seed in REQUIRED_SEEDS}:
         raise CloudPlanError("allocation seed keys differ")

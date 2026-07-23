@@ -30,7 +30,7 @@ DOCKER_IMAGE = (
 )
 DATASET_OWNER = "ashok205"
 DATASET_SLUG = "kptcg-g3a-correctness-inputs"
-DATASET_VERSION = 2
+DATASET_VERSION = 3
 NOTEBOOK_OWNER = "ashok205"
 NOTEBOOK_SLUG = "kptcg-g3a-cloud-correctness-v1"
 NOTEBOOK_VERSION = 1
@@ -75,6 +75,13 @@ COMPLETED_NEGATIVE_RESULTS = [
         "evidence": "one existing G2 permutation test failed once with visually equal tensors at 1e-6 tolerance",
         "resolution": "no unsupported source change; isolate and repeat before full-suite rerun",
         "rerun": "isolated test passed six consecutive runs and the complete suite passed",
+    },
+    {
+        "attempt": "cloud_rollout_greedy_argmax",
+        "result": "FAILED_FINAL_REVIEW",
+        "evidence": "the first manual Kaggle run completed training but failed fixed evaluation; a bounded local reproduction matched the reported seed/task failures when the cloud runner used generator=None (greedy argmax)",
+        "resolution": "bind seeded categorical rollout collection to seed XOR 0x5A17 and retain greedy argmax only for fixed evaluation",
+        "rerun": "test_cloud_rollout_sampling_regression_for_reported_seed passes and fresh-process resume remains model/hash exact",
     },
 ]
 
@@ -139,6 +146,9 @@ EDGE_CASE_MATRIX = {
             "tests/g3/test_training_checkpoint.py"
         ],
         "fresh_process_fixed_evaluation_and_exact_final_budget": [
+            "tests/g3/test_cloud_runner.py"
+        ],
+        "seeded_categorical_rollout_and_failure_regression": [
             "tests/g3/test_cloud_runner.py"
         ],
     },
@@ -463,6 +473,8 @@ def build_plan(
             "aggregate_non_forced_choices_per_seed": 100_000,
             "allocations": allocations,
             "stateless_control_included_in_aggregate": True,
+            "rollout_sampling": "seeded_categorical",
+            "rollout_seed_xor": 0x5A17,
             "choices_per_update": 64,
             "ppo_epochs": 4,
             "learning_rate": 0.005,

@@ -41,11 +41,17 @@ class CloudRunError(RuntimeError):
     pass
 
 
+ROLLOUT_SAMPLING_MODE = "seeded_categorical"
+ROLLOUT_SEED_XOR = 0x5A17
+
+
 @dataclass(frozen=True)
 class StreamTrainingSpecV1:
     task_id: str
     seed: int
     stateless: bool
+    rollout_sampling: str
+    rollout_seed_xor: int
     total_non_forced_choices: int
     choices_per_update: int
     ppo_epochs: int
@@ -64,6 +70,14 @@ class StreamTrainingSpecV1:
     def __post_init__(self) -> None:
         if self.task_id not in toy_task_registry_v1():
             raise CloudRunError(f"unknown cloud correctness task: {self.task_id}")
+        if self.rollout_sampling != ROLLOUT_SAMPLING_MODE:
+            raise CloudRunError("cloud rollout sampling mode differs")
+        if (
+            isinstance(self.rollout_seed_xor, bool)
+            or not isinstance(self.rollout_seed_xor, int)
+            or self.rollout_seed_xor != ROLLOUT_SEED_XOR
+        ):
+            raise CloudRunError("cloud rollout seed XOR differs")
         for name in (
             "seed",
             "total_non_forced_choices",
@@ -139,6 +153,7 @@ def _initial_components(spec: StreamTrainingSpecV1) -> tuple[
     ToyRecurrentPolicyV1,
     torch.optim.Optimizer,
     torch.optim.lr_scheduler.LinearLR,
+    torch.Generator,
 ]:
     random.seed(spec.seed)
     np.random.seed(spec.seed % (2**32))
@@ -151,7 +166,8 @@ def _initial_components(spec: StreamTrainingSpecV1) -> tuple[
         end_factor=0.25,
         total_iters=max(spec.total_updates, 1),
     )
-    return model, optimizer, scheduler
+    torch.manual_seed(spec.seed ^ spec.rollout_seed_xor)
+    return model, optimizer, scheduler, torch.default_generator
 
 
 def _checkpoint_path(output_dir: Path, choices: int) -> Path:
@@ -239,7 +255,7 @@ def run_training_stream(
         raise CloudRunError("unexpected GPU visibility in the CPU-only stream")
 
     task = toy_task_registry_v1()[spec.task_id]
-    model, optimizer, scheduler = _initial_components(spec)
+    model, optimizer, scheduler, rollout_generator = _initial_components(spec)
     initial_evaluation = _evaluation_record(model, spec.task_id, stateless=spec.stateless)
     initial_score = float(initial_evaluation["score"])
     choices = 0
@@ -316,7 +332,7 @@ def run_training_stream(
             task,
             count=batch_size,
             start_case_index=choices,
-            generator=None,
+            generator=rollout_generator,
             stateless=spec.stateless,
         )
         old_log_probabilities = torch.tensor(

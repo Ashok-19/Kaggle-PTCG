@@ -179,6 +179,8 @@ def build_stream_spec(plan: Mapping[str, Any], *, seed: int, stream: str) -> Str
         task_id=task_id,
         seed=seed,
         stateless=stateless,
+        rollout_sampling=str(plan["work"]["rollout_sampling"]),
+        rollout_seed_xor=int(plan["work"]["rollout_seed_xor"]),
         total_non_forced_choices=allocation,
         choices_per_update=int(plan["work"]["choices_per_update"]),
         ppo_epochs=int(plan["work"]["ppo_epochs"]),

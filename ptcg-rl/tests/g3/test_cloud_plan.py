@@ -167,6 +167,8 @@ def plan_fixture() -> dict[str, object]:
             "aggregate_non_forced_choices_per_seed": 100_000,
             "allocations": allocations,
             "stateless_control_included_in_aggregate": True,
+            "rollout_sampling": "seeded_categorical",
+            "rollout_seed_xor": 0x5A17,
             "choices_per_update": 64,
             "ppo_epochs": 4,
             "learning_rate": 0.005,

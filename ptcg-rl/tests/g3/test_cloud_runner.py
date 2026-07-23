@@ -18,6 +18,8 @@ def spec(total_choices: int = 128) -> StreamTrainingSpecV1:
         task_id="recurrent-cue-v1",
         seed=1197953491,
         stateless=False,
+        rollout_sampling="seeded_categorical",
+        rollout_seed_xor=0x5A17,
         total_non_forced_choices=total_choices,
         choices_per_update=32,
         ppo_epochs=2,
@@ -75,6 +77,44 @@ def test_interrupted_fresh_restore_matches_uninterrupted(tmp_path: Path) -> None
     assert resumed["fixed_evaluation_sha256"] == uninterrupted["fixed_evaluation_sha256"]
     assert resumed["resume"]["fixed_evaluation_exact"] is True
     assert set(resumed["resume"]["restored_rng_states"]) == {"python", "numpy", "torch_cpu"}
+
+
+def test_cloud_rollout_sampling_regression_for_reported_seed(tmp_path: Path) -> None:
+    regression = StreamTrainingSpecV1(
+        task_id="masked-bandit-v1",
+        seed=1197953491,
+        stateless=False,
+        rollout_sampling="seeded_categorical",
+        rollout_seed_xor=0x5A17,
+        total_non_forced_choices=1024,
+        choices_per_update=64,
+        ppo_epochs=4,
+        learning_rate=0.005,
+        adam_epsilon=1e-5,
+        clip_coefficient=0.2,
+        value_clip_coefficient=0.2,
+        value_coefficient=0.5,
+        entropy_coefficient=0.01,
+        maximum_gradient_norm=0.5,
+        checkpoint_cadence_choices=4096,
+        checkpoint_cadence_wall_seconds=300,
+        evaluation_cadence_choices=1024,
+        intentional_interrupt_after_choices=None,
+    )
+    result = run_training_stream(
+        spec=regression,
+        output_dir=tmp_path / "seeded-categorical-regression",
+        limits=LocalExecutionLimitsV1(
+            max_cpu_threads=2,
+            max_worker_processes=1,
+            max_non_forced_choices=4096,
+            max_wall_seconds=300,
+        ),
+        interrupt=False,
+    )
+    assert result["final_score"] == 1.0
+    assert result["fixed_evaluation"]["passed_cases"] == 4
+    assert result["fixed_evaluation"]["total_cases"] == 4
 
 
 def test_resume_rejects_corrupt_checkpoint(tmp_path: Path) -> None:
