@@ -24,5 +24,18 @@
     "status_after": "BLOCKED",
     "title": "Local recurrent PPO correctness micro-qualification passed",
     "summary": "Commits 68407689 and cae42da implement and provenance-harden project-native compound-action PPO replay, GAE, recurrent slicing, restricted atomic checkpoint recovery and three versioned toy tasks. Three completed candidate experiments selected the 1,024-choice lr=0.005 configuration; all three declared seeds scored 1.0 on bandit, recurrent and variable-option/multi-select tasks, stateless controls remained 0.5, recurrent margins were 0.5, replay errors and zero-tolerance counters were zero, and an independent recalculation passed. The authoritative dashboard-valid report came from a clean isolated checkout, used CPU only with two threads and zero CABT games, and does not close G3a or authorize cloud training."
+  },
+  {
+    "schema_version": 1,
+    "record_id": "event-g3a-cloud-correctness-passed-20260723",
+    "created_at_utc": "2026-07-23T10:23:50Z",
+    "source_path": "reports/evaluations/g3a-cloud-correctness-v1.json",
+    "producer": "chatgpt-local-agent",
+    "gate_id": "G3a",
+    "kind": "CLOUD_CORRECTNESS",
+    "severity": "INFO",
+    "status_after": "SUCCEEDED",
+    "title": "Private G3a recurrent PPO correctness qualification passed",
+    "summary": "The user manually ran private Kaggle saved version 2 (scriptVersionId 337365875) from source commit 6b7975bf. All 12 exact-budget streams and three intentional fresh-process resumes passed. The complete 220-entry output manifest covered 20,617,497 bytes with zero missing, extra, byte or SHA-256 mismatches; 84 checkpoint payloads and 84 sidecars were retained. Every seed scored 1.0 on bandit, recurrent cue and variable-option multi-select, stateless controls remained 0.5, recurrent margins were 0.5, replay/resume errors and zero-tolerance counters were zero, and the assistant strict review was byte-identical to the notebook review. This is algorithm correctness only, not policy strength."
   }
 ]

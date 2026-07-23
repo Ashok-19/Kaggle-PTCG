@@ -1,8 +1,8 @@
 # Progress Report
 
-Current gate: **G3a recurrent PPO correctness proof**  
-Current verdict: **BLOCKED / NOT_REVIEWED**  
-Latest completed milestone: **greedy cloud rollout bug reproduced and corrected; private Kaggle input dataset version 3 published and independently byte-verified**  
+Current gate: **G3b PPO policy competence planning and authorization**  
+Current verdict: **G3a SUCCEEDED / PASS; G3b NOT STARTED**  
+Latest completed milestone: **private G3a cloud correctness run passed complete manifest verification and byte-exact independent review**  
 Cost: **USD 0**
 
 The project-native recurrent PPO correctness implementation is committed at
@@ -144,9 +144,10 @@ It contains no Kaggle secret lookup, authorization environment-variable check,
 authorization CLI flag or external URL request. The assistant did not create,
 launch or monitor a Kaggle notebook session.
 
-G3a remains `BLOCKED / NOT_REVIEWED`. The user imports the corrected notebook,
-attaches only dataset version `3`, selects CPU and runs all cells without adding
-a secret, environment variable, authorization cell or network probe. The
-remaining evidence is the complete saved-output download, byte/SHA-256
-verification and passing strict run review. Neither the plan nor dataset
-publication makes a Pokemon policy-strength claim.
+## Final Private G3a Qualification
+
+The user manually ran `ashok205/kptcg-g3a-cloud-correctness-v1` as Kaggle saved version `2` / scriptVersionId `337365875`. The run used source commit `6b7975bf518c36ff59338b6793ec52530c73f173` and private dataset version `3`. All twelve exact 25,000-choice streams succeeded, producing exactly 100,000 aggregate non-forced choices per seed. Every seed scored `1.0` on masked bandit, recurrent cue and variable-option ordered multi-select; stateless controls remained `0.5` and recurrent margins were `0.5`. All probability-replay errors, initial-ratio errors, fixed-tensor resume differences and zero-tolerance counters were `0`.
+
+The complete saved output tree was downloaded despite Kaggle pagination. Its 220-entry manifest covered 20,617,497 bytes with zero missing, extra, byte-count or SHA-256 mismatches. The tree contains 84 checkpoint payloads, 84 sidecars, 12 final checkpoints and three intentional fresh-process resumes. All 15 retained stderr files are empty. The assistant reran `scripts/g3a_review.py`; its 1,008-byte result is byte-identical to the notebook review with SHA-256 `abc8dcd3db3489a968840d98fc4450d3164c699473a3336e7625c7295ea8565b`.
+
+Authoritative evidence is `reports/evaluations/g3a-cloud-correctness-v1.json` and `reports/artifacts/raw/g3a-cloud-correctness-review-v1.json`. G3a is `SUCCEEDED / PASS`. This proves only the frozen toy algorithm-correctness gate; it does not establish Pokémon policy competence or strength, and it does not authorize G3b training automatically.

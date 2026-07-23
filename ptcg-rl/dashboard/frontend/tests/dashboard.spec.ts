@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("G3a approval boundary is visible after G2 closure", async ({ page }) => {
+test("G3a completion and next-gate boundary are visible", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Active workstreams" })).toBeVisible();
   await expect(page.getByText("PASS", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/Launch recurrent PPO correctness smoke/)).toBeVisible();
-  await expect(page.getByText("G3a", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("NO ACTIVE GATE", { exact: true })).toBeVisible();
+  await expect(page.getByText("6/10", { exact: true })).toBeVisible();
   await expect(page.getByText(/training remains unauthorized/)).toBeVisible();
   await expect(page.getByText("USD 0.00", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/command-center.png", fullPage: true });
@@ -17,10 +17,12 @@ test("roadmap and negative history remain inspectable", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Gates & Roadmap" })).toBeVisible();
   const r1Step = page.locator(".roadmap-step").filter({ hasText: "R1" });
   const g2Step = page.locator(".roadmap-step").filter({ hasText: "G2" });
-  const g3Step = page.locator(".roadmap-step").filter({ hasText: "G3a" });
+  const g3aStep = page.locator(".roadmap-step").filter({ hasText: "G3a" });
+  const g3bStep = page.locator(".roadmap-step").filter({ hasText: "G3b" });
   await expect(r1Step.getByText("Passed", { exact: true })).toBeVisible();
   await expect(g2Step.getByText("Passed", { exact: true })).toBeVisible();
-  await expect(g3Step.getByText("BLOCKED", { exact: true })).toBeVisible();
+  await expect(g3aStep.getByText("Passed", { exact: true })).toBeVisible();
+  await expect(g3bStep.getByText("Not started", { exact: true })).toBeVisible();
   await page.screenshot({ path: "../../reports/dashboard/screenshots/gates-roadmap.png", fullPage: true });
 
   await page.getByRole("button", { name: "Evidence", exact: true }).click();

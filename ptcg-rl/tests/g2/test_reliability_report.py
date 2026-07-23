@@ -103,7 +103,7 @@ def test_final_reliability_evaluation_binds_exact_downloaded_and_recalculated_ev
     )
 
 
-def test_task_and_gate_close_g2_but_preserve_training_boundary() -> None:
+def test_task_and_gate_close_g2_without_retroactively_authorizing_g3a() -> None:
     tasks = {task["task_id"]: task for task in read(TASKS)}
     reliability = tasks["T-G2-005"]
     assert reliability["status"] == "SUCCEEDED"
@@ -116,8 +116,12 @@ def test_task_and_gate_close_g2_but_preserve_training_boundary() -> None:
     assert reliability["assistant_kaggle_run_performed"] is False
     assert tasks["T-G2-002"]["status"] == "SUCCEEDED"
     assert tasks["T-G2-002"]["no_training"] is True
-    assert tasks["T-G3-001"]["status"] == "BLOCKED"
-    assert "user must import and run" in tasks["T-G3-001"]["blocker"].lower()
+    assert tasks["T-G3-001"]["status"] == "SUCCEEDED"
+    assert tasks["T-G3-001"]["completion_evidence"] == (
+        "reports/evaluations/g3a-cloud-correctness-v1.json"
+    )
+    assert tasks["T-G3-001"]["assistant_launch_performed"] is False
+    assert tasks["T-G3-001"]["policy_strength_claimed"] is False
 
     gate = read(GATE)
     assert gate["status"] == "SUCCEEDED"
@@ -149,7 +153,7 @@ def test_event_and_project_status_record_final_pass_without_training() -> None:
     assert "no optimizer or training loop ran" in event["summary"]
 
     status = STATUS.read_text(encoding="utf-8")
-    assert "G2 PASS / R1 PASS / G3a BLOCKED" in status
+    assert "G2 PASS / R1 PASS / G3a PASS / G3b NOT STARTED" in status
     assert "Exactly 10,000 games" in status
     assert "The assistant did not launch or rerun the notebook." in status
     assert "PPO training remains unauthorized" in status

@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "record_id": "evaluation-g3a-cloud-correctness-v1",
+  "created_at_utc": "2026-07-23T10:23:50Z",
+  "updated_at_utc": "2026-07-23T10:40:23Z",
+  "source_path": "reports/evaluations/g3a-cloud-correctness-v1.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "evaluation_id": "g3a-cloud-correctness-v1",
+  "gate_id": "G3a",
+  "kind": "EVALUATION",
+  "title": "G3a private cloud recurrent PPO correctness qualification",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "scope": "Private bounded toy recurrent PPO algorithm-correctness qualification across the three frozen seeds and four exact-budget streams per seed; no Pokemon self-play, competence, policy-strength or submission claim.",
+  "identity": {
+    "source_commit": "6b7975bf518c36ff59338b6793ec52530c73f173",
+    "source_tree": "75a3f8c55a903d2460779728f3db021ec06d942f",
+    "run_id": "g3a-cloud-correctness-v1-6b7975bf518c",
+    "notebook_ref": "ashok205/kptcg-g3a-cloud-correctness-v1",
+    "saved_version_number": 2,
+    "script_version_id": 337365875,
+    "notebook_url": "https://www.kaggle.com/code/ashok205/kptcg-g3a-cloud-correctness-v1?scriptVersionId=337365875",
+    "notebook_sha256": "3ab68cdfc8b686d5b7b643469b65d66eed6c1500e4c867ba22d82910e4127345"
+  },
+  "input": {
+    "dataset_ref": "ashok205/kptcg-g3a-correctness-inputs",
+    "dataset_id": 11311575,
+    "dataset_version": 3,
+    "dataset_status": "READY",
+    "dataset_private": true,
+    "runtime_config_sha256": "c0ea3bfa83cc2e86e1933555926c9f957da01ac9618e13f03e9f85d1a6b7957b",
+    "input_manifest_sha256": "4a5394d0deb34e4d0064f1539304aafcd13227414ce6122c1e6985dc0e7126ab",
+    "source_bundle_sha256": "048a76aa4f0e1d44b4d178dd0ffe91e830215b7942b55aaad820b2910ceab030"
+  },
+  "execution": {
+    "manual_user_run": true,
+    "assistant_launched_kaggle_run": false,
+    "assistant_monitored_training": false,
+    "private_bounded_run": true,
+    "internet": false,
+    "gpu": false,
+    "tpu": false,
+    "python": "3.12.13",
+    "torch": "2.10.0+cpu",
+    "numpy": "2.0.2",
+    "pydantic": "2.12.3",
+    "os_cpu_count": 4,
+    "affinity_cpu_count": 4,
+    "torch_threads": 2,
+    "torch_interop_threads": 1,
+    "notebook_log_completion_seconds": 3999.194273422,
+    "aggregate_stream_wall_seconds": 3445.9655135269995,
+    "maximum_stream_wall_seconds": 354.12407961700023,
+    "submission_created": false,
+    "modal_used": false
+  },
+  "results": {
+    "declared_seeds": [
+      1197953491,
+      20344180,
+      1491619630
+    ],
+    "seed_count": 3,
+    "stream_count": 12,
+    "aggregate_non_forced_choices_per_seed": 100000,
+    "choices_per_stream": 25000,
+    "exact_budget_complete": true,
+    "all_streams_succeeded": true,
+    "all_task_failed_cases": 0,
+    "masked_bandit_scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "recurrent_scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "stateless_control_scores": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "recurrent_margins": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "variable_option_multiselect_scores": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "maximum_old_log_probability_error": 0.0,
+    "maximum_initial_ratio_error": 0.0,
+    "maximum_fixed_tensor_abs_diff": 0.0,
+    "zero_tolerance_total": 0,
+    "fresh_process_resume_count": 3,
+    "restored_rng_states": [
+      "numpy",
+      "python",
+      "torch_cpu"
+    ]
+  },
+  "artifacts": {
+    "output_manifest": {
+      "bytes": 38272,
+      "sha256": "dad2747e81cbed932ad7cd2f30449594fc417d67504441ce512bd4199dee4a19",
+      "declared_file_count": 220,
+      "downloaded_file_count_including_manifest": 221,
+      "declared_total_bytes": 20617497,
+      "missing_file_count": 0,
+      "extra_file_count": 0,
+      "byte_or_sha256_mismatch_count": 0,
+      "pagination_observed": true,
+      "complete_tree_downloaded": true
+    },
+    "correctness_report": {
+      "bytes": 2197,
+      "sha256": "4292b7276fc080b2805a15410360f5231f209fc5f9ea5e22f2f458486e936dab"
+    },
+    "strict_evidence": {
+      "bytes": 5909,
+      "sha256": "9f2d937523dbe42aee51ab6253d9c0d8143adce08b2c4fc87ed56ee566a3840b"
+    },
+    "run_manifest": {
+      "bytes": 1829,
+      "sha256": "a02c6e834647524dc501c48462b6e0917efcdf1751e23c070867150f679c72c2"
+    },
+    "metrics": {
+      "bytes": 1241537,
+      "sha256": "c828e25f348bfe5896aa25a6576abc29692d3ba5c152cee07b323dbc4534acf6"
+    },
+    "checkpoint_manifest": {
+      "bytes": 40194,
+      "sha256": "f6d49a1658c1210322cfdaacc737708ef5494a61614aa62ec18113424a65ef71",
+      "checkpoint_payload_count": 84,
+      "checkpoint_sidecar_count": 84,
+      "final_checkpoint_count": 12
+    },
+    "resume_receipt": {
+      "bytes": 1157,
+      "sha256": "4c12e3892a308e0764c5b69d3e709dc1e2065eca72dde16c57ef2929b8baf9eb"
+    },
+    "notebook_independent_review": {
+      "bytes": 1008,
+      "sha256": "abc8dcd3db3489a968840d98fc4450d3164c699473a3336e7625c7295ea8565b"
+    },
+    "assistant_independent_review": {
+      "path": "reports/artifacts/raw/g3a-cloud-correctness-review-v1.json",
+      "bytes": 1008,
+      "sha256": "abc8dcd3db3489a968840d98fc4450d3164c699473a3336e7625c7295ea8565b",
+      "byte_exact_with_notebook_review": true
+    },
+    "stderr_file_count": 15,
+    "stderr_files_empty": true,
+    "raw_outputs_tracked": false
+  },
+  "independent_review": {
+    "status": "PASS",
+    "decision": "PASS",
+    "failures": [],
+    "reviewed_seed_count": 3,
+    "review_command": "scripts/g3a_review.py",
+    "review_bytes_exact_with_notebook": true,
+    "all_manifest_records_rehashed": true,
+    "all_compared_fields_exact": true
+  },
+  "validation": {
+    "promotion_validation_pending": false,
+    "focused_completion_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "focused_g3_tests": {
+      "passed": 174,
+      "failed": 0
+    },
+    "full_python_suite": {
+      "passed": 377,
+      "failed": 0
+    },
+    "ruff": "PASS",
+    "dashboard_rebuild": {
+      "ingested": 118,
+      "quarantined": 0,
+      "status": "PASS"
+    },
+    "dashboard_doctor": "PASS",
+    "frontend_unit_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontend_build": "PASS",
+    "browser_tests": {
+      "passed": 4,
+      "failed": 0
+    },
+    "tracked_browser_artifacts": 4
+  },
+  "claim": {
+    "algorithm_proof_only": true,
+    "policy_strength_established": false,
+    "g3b_promotion_automatic": false
+  },
+  "warnings": [
+    "This closes only the frozen G3a toy algorithm-correctness gate; it does not establish Pokemon policy competence, competitive strength or submission readiness.",
+    "G3b training, Modal execution, deck freeze and submission remain separately gated and require explicit approval.",
+    "Dataset versions 1 and 2 and the failed greedy-rollout run remain historical audit evidence."
+  ],
+  "cost_usd": 0.0
+}

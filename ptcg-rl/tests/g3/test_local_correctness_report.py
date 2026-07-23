@@ -97,7 +97,7 @@ def test_candidate_selection_and_all_declared_seed_results_recalculate_exactly()
             ]
 
 
-def test_independent_review_and_gate_preserve_cloud_blocker() -> None:
+def test_independent_local_review_remains_non_authorizing_after_cloud_pass() -> None:
     root = Path(__file__).resolve().parents[2]
     review = load(root, REVIEW)
     gate = load(root, "reports/gates/g3a.json")
@@ -126,13 +126,15 @@ def test_independent_review_and_gate_preserve_cloud_blocker() -> None:
     assert promotion["frontend_build"] == "PASS"
     assert promotion["browser_tests"] == {"passed": 4, "failed": 0}
     assert promotion["tracked_browser_artifacts_restored"] == 4
-    assert gate["status"] == "BLOCKED"
-    assert gate["decision"] == "NOT_REVIEWED"
-    assert len(gate["blockers"]) == 1
+    assert gate["status"] == "SUCCEEDED"
+    assert gate["decision"] == "PASS"
+    assert gate["blockers"] == []
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["PPO correctness harness and versioned toy task implementations"]["status"] == "PASS"
-    assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"
+    assert checks["bounded three-seed private correctness smoke"]["status"] == "PASS"
     smoke = next(item for item in tasks if item.get("task_id") == "T-G3-001")
-    assert smoke["status"] == "BLOCKED"
+    assert smoke["status"] == "SUCCEEDED"
     assert "G3A_CLOUD_PLAN_FROZEN" in smoke["depends_on"]
     assert "USER_TRAINING_APPROVAL" in smoke["depends_on"]
+    assert smoke["assistant_launch_performed"] is False
+    assert smoke["policy_strength_claimed"] is False

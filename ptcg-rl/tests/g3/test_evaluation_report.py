@@ -74,15 +74,15 @@ def test_g3a_evaluation_report_binds_exact_contract_and_validation() -> None:
     }
 
 
-def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
+def test_g3a_contract_remains_non_authorizing_after_later_cloud_pass() -> None:
     root = Path(__file__).resolve().parents[2]
     gate = load(root, "reports/gates/g3a.json")
     tasks = load(root, "reports/tasks/current.json")
 
-    assert gate["status"] == "BLOCKED"
-    assert gate["decision"] == "NOT_REVIEWED"
+    assert gate["status"] == "SUCCEEDED"
+    assert gate["decision"] == "PASS"
     assert gate["authorization"] == (
-        "USER_APPROVAL_RECORDED_DATASET_READY_ASSISTANT_LAUNCH_NOT_PERFORMED"
+        "USER_RUN_COMPLETED_OUTPUTS_VERIFIED_ASSISTANT_LAUNCH_NOT_PERFORMED"
     )
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["strict evaluation contract frozen"] == {
@@ -94,8 +94,8 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
         "status"
     ] == "PASS"
     assert checks["independent local correctness recalculation"]["status"] == "PASS"
-    assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"
-    assert len(gate["blockers"]) == 1
+    assert checks["bounded three-seed private correctness smoke"]["status"] == "PASS"
+    assert gate["blockers"] == []
 
     contract_task = next(item for item in tasks if item.get("task_id") == "T-G3-EVAL-001")
     assert contract_task["status"] == "SUCCEEDED"
@@ -105,28 +105,30 @@ def test_g3a_gate_and_tasks_preserve_blocked_training_boundary() -> None:
     assert contract_task["no_training"] is True
 
     smoke_task = next(item for item in tasks if item.get("task_id") == "T-G3-001")
-    assert smoke_task["status"] == "BLOCKED"
+    assert smoke_task["status"] == "SUCCEEDED"
     assert "T-G3-PPO-001" in smoke_task["depends_on"]
     assert "G3A_CLOUD_PLAN_FROZEN" in smoke_task["depends_on"]
     assert "USER_TRAINING_APPROVAL" in smoke_task["depends_on"]
     assert smoke_task["evaluation_contract_evidence"] == REPORT_PATH
+    assert smoke_task["assistant_launch_performed"] is False
+    assert smoke_task["policy_strength_claimed"] is False
     local_task = next(item for item in tasks if item.get("task_id") == "T-G3-PPO-001")
     assert local_task["status"] == "SUCCEEDED"
     assert local_task["implementation_commits"][-1] == "cae42da47bc9f3491869e8afd0e1254061b9f585"
     assert local_task["report_sha256"] == "868fdd277eeafe96d09138f1a0f70bc50899fd58ee03b49a1fe6d8a3c9f4194e"
 
 
-def test_status_documents_do_not_overclaim_g3a_completion_or_authorization() -> None:
+def test_status_documents_close_g3a_without_overclaiming_strength_or_g3b_authorization() -> None:
     root = Path(__file__).resolve().parents[2]
     agents = (root.parent / "AGENTS.md").read_text(encoding="utf-8")
     project = (root / "PROJECT_STATUS.md").read_text(encoding="utf-8")
     progress = (root / "PROGRESS_REPORT.md").read_text(encoding="utf-8")
 
     assert IMPLEMENTATION_COMMIT in agents
-    assert "`G3a` remains `BLOCKED / NOT_REVIEWED`" in agents
-    assert "Gate status: G2 PASS / R1 PASS / G3a BLOCKED" in project
+    assert "`G3a`: `SUCCEEDED / PASS`" in agents
+    assert "Gate status: G2 PASS / R1 PASS / G3a PASS / G3b NOT STARTED" in project
     assert "Assistant launch remains unauthorized" in project
     assert "exact cloud plan is frozen and explicitly approved" in project
-    assert "Current verdict: **BLOCKED / NOT_REVIEWED**" in progress
-    assert "no training" in progress.lower()
+    assert "Current verdict: **G3a SUCCEEDED / PASS; G3b NOT STARTED**" in progress
+    assert "does not authorize g3b" in progress.lower()
     assert "policy strength" in progress.lower()

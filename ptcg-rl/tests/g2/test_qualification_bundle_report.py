@@ -93,5 +93,9 @@ def test_bundle_parity_checkpoint_and_reliability_slices_close_g2() -> None:
     assert policy_task["no_training"] is True
 
     training_task = next(item for item in tasks if item.get("task_id") == "T-G3-001")
-    assert training_task["status"] == "BLOCKED"
-    assert "user must import and run" in training_task["blocker"].lower()
+    assert training_task["status"] == "SUCCEEDED"
+    assert training_task["completion_evidence"] == (
+        "reports/evaluations/g3a-cloud-correctness-v1.json"
+    )
+    assert training_task["assistant_launch_performed"] is False
+    assert training_task["policy_strength_claimed"] is False

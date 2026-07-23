@@ -122,18 +122,18 @@ def test_revised_plan_notebook_and_source_are_exactly_bound() -> None:
         assert forbidden not in code
 
 
-def test_gate_and_tasks_require_dataset_three_rerun() -> None:
+def test_publication_and_fix_remain_bound_after_g3a_completion() -> None:
     gate = load(ROOT / "reports/gates/g3a.json")
     tasks = load(ROOT / "reports/tasks/current.json")
-    assert gate["status"] == "BLOCKED"
-    assert gate["decision"] == "NOT_REVIEWED"
+    assert gate["status"] == "SUCCEEDED"
+    assert gate["decision"] == "PASS"
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks[
         "private Kaggle input dataset version 3 ready and byte verified"
     ]["status"] == "PASS"
-    assert checks["bounded three-seed private correctness smoke"]["status"] == "BLOCKED"
-    assert "version 3" in gate["approved_next_action"]
-    assert "Versions 1 and 2" in " ".join(gate["warnings"])
+    assert checks["bounded three-seed private correctness smoke"]["status"] == "PASS"
+    assert "G3b" in gate["approved_next_action"]
+    assert "greedy-rollout run remains" in " ".join(gate["warnings"])
 
     by_id = {item["task_id"]: item for item in tasks}
     publication = by_id["T-G3-PUBLISH-001"]
@@ -153,8 +153,10 @@ def test_gate_and_tasks_require_dataset_three_rerun() -> None:
     assert fix["assistant_training_launch_performed"] is False
 
     launch = by_id["T-G3-001"]
-    assert launch["status"] == "BLOCKED"
+    assert launch["status"] == "SUCCEEDED"
     assert launch["dataset_version"] == 3
     assert launch["previous_user_run_status"] == "FAILED_STRICT_FINAL_REVIEW"
     assert launch["rollout_sampling"] == "seeded_categorical"
+    assert launch["script_version_id"] == 337365875
+    assert launch["strict_review_status"] == "PASS"
     assert launch["assistant_launch_performed"] is False
