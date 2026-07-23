@@ -42,6 +42,11 @@ def test_embedded_accelerator_probes_preserve_environment_only_scope() -> None:
     assert 'expected_all_reduce_sum": 36.0' in module.TORCH_XLA_MULTI_PROBE
     assert "torch_xla.launch(worker, args=())" in module.TORCH_XLA_MULTI_PROBE
     assert "nprocs=8" not in module.TORCH_XLA_MULTI_PROBE
+    assert 'if __name__ == "__main__":' in module.TORCH_XLA_MULTI_PROBE
+    assert module.TORCH_XLA_PROBE.index("model_cpu = loaded.model.eval()") < module.TORCH_XLA_PROBE.index("import torch_xla")
+    xla_section = module.TORCH_XLA_PROBE[module.TORCH_XLA_PROBE.index("import torch_xla") :]
+    assert "torch.inference_mode" not in xla_section
+    assert "loaded_xla = load_checkpoint_package" in module.TORCH_XLA_PROBE
     assert '"meaningful_training_choices": 0' in module.TORCH_XLA_PROBE
     assert '"optimizer_created": False' in module.TORCH_XLA_PROBE
     assert ".step()" not in module.TORCH_XLA_PROBE

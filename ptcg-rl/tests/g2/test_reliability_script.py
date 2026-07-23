@@ -154,6 +154,71 @@ def test_device_topology_validates_cpu_alias_and_cuda_indices(
         module.validate_device_topology(["cuda:0"], False)
 
 
+
+def test_inference_server_never_exceeds_declared_batch_cap(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = Path(__file__).resolve().parents[2]
+    module = load_script(root)
+
+    class Connection:
+        def __init__(self, request_id: int) -> None:
+            self.messages = [
+                {"kind": "request", "request_id": request_id},
+                {"kind": "done"},
+            ]
+            self.responses: list[dict[str, Any]] = []
+
+        def recv(self) -> dict[str, Any]:
+            return self.messages.pop(0)
+
+        def send(self, value: dict[str, Any]) -> None:
+            self.responses.append(value)
+
+    class ResultQueue:
+        def __init__(self) -> None:
+            self.values: list[dict[str, Any]] = []
+
+        def put(self, value: dict[str, Any]) -> None:
+            self.values.append(value)
+
+    connections = [Connection(index) for index in range(10)]
+    result_queue = ResultQueue()
+    monkeypatch.setattr(
+        module,
+        "wait",
+        lambda active, timeout=0.0: [item for item in active if item.messages],
+    )
+    monkeypatch.setattr(
+        module,
+        "load_server_model",
+        lambda root, checkpoint, device: (object(), module.torch.device("cpu")),
+    )
+    observed_batches: list[int] = []
+
+    def execute(model: object, messages: list[dict[str, Any]], device: Any):
+        observed_batches.append(len(messages))
+        return [{"selection": message["request_id"]} for message in messages]
+
+    monkeypatch.setattr(module, "execute_inference_batch", execute)
+    module.inference_server_process(
+        str(root),
+        0,
+        "cpu:0",
+        {},
+        connections,
+        4,
+        0.0,
+        result_queue,
+    )
+
+    assert observed_batches == [4, 4, 2]
+    assert all(size <= 4 for size in observed_batches)
+    assert result_queue.values[-1]["batch_histogram"] == {2: 1, 4: 2}
+    assert result_queue.values[-1]["decisions"] == 10
+    assert all(len(connection.responses) == 1 for connection in connections)
+
+
 def test_process_evidence_passes_exact_worker_server_and_rss_accounting() -> None:
     root = Path(__file__).resolve().parents[2]
     module = load_script(root)

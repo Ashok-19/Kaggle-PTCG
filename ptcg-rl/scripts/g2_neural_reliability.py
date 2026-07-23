@@ -331,6 +331,8 @@ def inference_server_process(
                         active.remove(connection)
                 else:
                     pending.append((connection, message))
+                if len(pending) >= max_batch:
+                    break
             deadline = time.perf_counter() + batch_wait_ms / 1_000.0
             while len(pending) < max_batch and active and time.perf_counter() < deadline:
                 additional = wait(active, timeout=max(0.0, deadline - time.perf_counter()))

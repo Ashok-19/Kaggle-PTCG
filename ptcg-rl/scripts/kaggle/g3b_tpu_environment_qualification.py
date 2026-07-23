@@ -476,7 +476,6 @@ import time
 from pathlib import Path
 
 import torch
-import torch_xla
 
 from ptcg_rl.g2.checkpoint import load_checkpoint_package
 from ptcg_rl.g2.network import collate_projected
@@ -485,15 +484,6 @@ root = Path(os.environ["KPTCG_ROOT"])
 output = Path(os.environ["KPTCG_PROBE_OUTPUT"])
 checkpoint = root / "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip"
 checkpoint_hash = "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827"
-
-try:
-    device = torch_xla.device()
-except Exception:
-    import torch_xla.core.xla_model as xm
-    device = xm.xla_device()
-
-import torch_xla.core.xla_model as xm
-import torch_xla.debug.metrics as met
 
 spec = importlib.util.spec_from_file_location(
     "kptcg_g2_policy_qualification",
@@ -543,23 +533,37 @@ for name, tensor in sorted(model_cpu.state_dict().items()):
     state_before.update(tensor.detach().cpu().contiguous().numpy().tobytes())
 state_before_digest = state_before.hexdigest()
 
-model_xla = model_cpu.to(device).eval()
+import torch_xla
+import torch_xla.core.xla_model as xm
+import torch_xla.debug.metrics as met
+
+try:
+    device = torch_xla.device()
+except Exception:
+    device = xm.xla_device()
+
+loaded_xla = load_checkpoint_package(
+    checkpoint,
+    device="cpu",
+    expected_package_sha256=checkpoint_hash,
+    expected_source_commit=None,
+    source_root=root,
+)
+model_xla = loaded_xla.model.to(device).eval()
 batch_xla = batch_cpu.to(device)
 started = time.perf_counter()
-with torch.inference_mode():
-    xla_values = run_model(model_xla, batch_xla, device)
+xla_values = run_model(model_xla, batch_xla, device)
 xm.mark_step()
 first_seconds = time.perf_counter() - started
 copied = {name: value.detach().cpu() for name, value in xla_values.items()}
 
 steady = []
-with torch.inference_mode():
-    for _ in range(3):
-        started = time.perf_counter()
-        values = run_model(model_xla, batch_xla, device)
-        xm.mark_step()
-        _ = values["values"].detach().cpu()
-        steady.append(time.perf_counter() - started)
+for _ in range(3):
+    started = time.perf_counter()
+    values = run_model(model_xla, batch_xla, device)
+    xm.mark_step()
+    _ = values["values"].detach().cpu()
+    steady.append(time.perf_counter() - started)
 
 comparisons = {}
 for name in cpu:
@@ -585,9 +589,8 @@ gradient_seconds = time.perf_counter() - grad_started
 if not bool(torch.isfinite(gradient).all()):
     raise RuntimeError("synthetic XLA gradient is non-finite")
 
-model_roundtrip = model_xla.to("cpu")
 state_after = hashlib.sha256()
-for name, tensor in sorted(model_roundtrip.state_dict().items()):
+for name, tensor in sorted(model_xla.state_dict().items()):
     state_after.update(name.encode())
     state_after.update(tensor.detach().cpu().contiguous().numpy().tobytes())
 state_after_digest = state_after.hexdigest()
@@ -680,35 +683,41 @@ def worker(index):
         json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n"
     )
 
-if hasattr(torch_xla, "launch"):
-    torch_xla.launch(worker, args=())
-else:
-    import torch_xla.distributed.xla_multiprocessing as xmp
-    xmp.spawn(worker, args=(), start_method="spawn")
+def main():
+    output_dir.mkdir(parents=True, exist_ok=True)
+    if hasattr(torch_xla, "launch"):
+        torch_xla.launch(worker, args=())
+    else:
+        import torch_xla.distributed.xla_multiprocessing as xmp
+        xmp.spawn(worker, args=(), start_method="spawn")
 
-records = [json.loads(path.read_text()) for path in sorted(output_dir.glob("worker-*.json"))]
-passed = (
-    len(records) == 8
-    and all(record.get("status") == "PASS" for record in records)
-    and all(abs(float(record.get("all_reduce_sum", 0.0)) - 36.0) <= 1e-5 for record in records)
-)
-summary = {
-    "status": "PASS" if passed else "FAIL",
-    "workers": records,
-    "expected_workers": 8,
-    "expected_all_reduce_sum": 36.0,
-    "authorization": {
-        "synthetic_tensors_only": True,
-        "optimizer_created": False,
-        "training_loop_ran": False,
-    },
-}
-(output_dir / "summary.json").write_text(
-    json.dumps(summary, sort_keys=True, separators=(",", ":")) + "\n"
-)
-print(json.dumps(summary, indent=2, sort_keys=True))
-if not passed:
-    raise RuntimeError("eight-device torch_xla collective probe failed")
+    records = [json.loads(path.read_text()) for path in sorted(output_dir.glob("worker-*.json"))]
+    passed = (
+        len(records) == 8
+        and all(record.get("status") == "PASS" for record in records)
+        and all(abs(float(record.get("all_reduce_sum", 0.0)) - 36.0) <= 1e-5 for record in records)
+    )
+    summary = {
+        "status": "PASS" if passed else "FAIL",
+        "workers": records,
+        "expected_workers": 8,
+        "expected_all_reduce_sum": 36.0,
+        "authorization": {
+            "synthetic_tensors_only": True,
+            "optimizer_created": False,
+            "training_loop_ran": False,
+        },
+    }
+    (output_dir / "summary.json").write_text(
+        json.dumps(summary, sort_keys=True, separators=(",", ":")) + "\n"
+    )
+    print(json.dumps(summary, indent=2, sort_keys=True))
+    if not passed:
+        raise RuntimeError("eight-device torch_xla collective probe failed")
+
+
+if __name__ == "__main__":
+    main()
 '''
 
 
