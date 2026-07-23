@@ -2,7 +2,7 @@
 
 Current gate: **G3a recurrent PPO correctness proof**  
 Current verdict: **BLOCKED / NOT_REVIEWED**  
-Latest completed milestone: **corrected private Kaggle input dataset version 2 published and independently byte-verified; exact notebook no longer requires secret or network preflight checks**  
+Latest completed milestone: **greedy cloud rollout bug reproduced and corrected; private Kaggle input dataset version 3 published and independently byte-verified**  
 Cost: **USD 0**
 
 The project-native recurrent PPO correctness implementation is committed at
@@ -72,7 +72,7 @@ frozen cloud budget and does not establish policy strength.
 ## Frozen Private Kaggle CPU Plan
 
 The complete cloud-plan lifecycle is now finished against clean source commit
-`95651d6c3979f12e5a8a63556b0030745d6fab34`. A fresh Python process cloned the
+`6b7975bf518c36ff59338b6793ec52530c73f173`. A fresh Python process cloned the
 exact offline Git bundle, loaded the canonical plan and independently reproduced
 the plan review as `PASS`. No notebook, dataset or model was published and no
 training process was started.
@@ -83,7 +83,7 @@ The immutable work allocation is:
 - exactly `100,000` aggregate non-forced choices per seed;
 - exactly four `25,000`-choice streams per seed: masked bandit, recurrent cue,
   variable-option ordered multi-select, and recurrent-cue stateless control;
-- evaluation choices excluded from the training budget and no result-dependent extension;
+- seed-bound categorical rollout sampling with seed XOR `23063`; evaluation remains greedy and choices are excluded from the training budget;
 - `64` choices per update, four PPO epochs, learning rate `0.005`, Adam epsilon
   `1e-5`, clip/value-clip `0.2`, entropy coefficient `0.01`, value coefficient
   `0.5` and maximum gradient norm `0.5`.
@@ -108,43 +108,44 @@ outputs, dashboard-envelope failure or download/hash mismatch fails closed.
 Frozen identities:
 
 - config: `configs/kaggle/g3a_cloud_correctness_v1.json`, SHA-256
-  `617c46cbf05a985f4cd1d462f9408a8ce39dc63f20104396dc21335f7184855b`;
-- source bundle: 6,961,132 bytes, SHA-256
-  `102b802fb1d54355308ebf8d19b759909950f507559cdad329f279d47cbe4fe5`;
+  `c0ea3bfa83cc2e86e1933555926c9f957da01ac9618e13f03e9f85d1a6b7957b`;
+- source bundle: 7,541,761 bytes, SHA-256
+  `048a76aa4f0e1d44b4d178dd0ffe91e830215b7942b55aaad820b2910ceab030`;
 - source manifest SHA-256
-  `d7cc817551f79fa5d093111d960bbd4c3958b2a8dd0956d6c3a07e22a8a37cea`;
+  `f4d79f1bf6e17d88621df240672a60fbfedb1529a75efaa6daafd0133d6f8afb`;
 - input manifest SHA-256
-  `2c9fa5e441701c2b9ff92e2d05e73513173ddd8ff362565c424c37b5c620ff52`;
+  `4a5394d0deb34e4d0064f1539304aafcd13227414ce6122c1e6985dc0e7126ab`;
 - single notebook SHA-256
-  `1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c`;
+  `3ab68cdfc8b686d5b7b643469b65d66eed6c1500e4c867ba22d82910e4127345`;
 - safe plan report SHA-256
-  `f409ab1bb0d0fdffa4a9ddce7df952253485ad605c16ce7deb71f211346afc05`;
+  `f9e4f554b610a0b60f7b8ed08f6bbb3ea59d12c50f7fb720f8c90383bc196116`;
 - independent review report SHA-256
-  `d7e6b3f41bcd47494a95bf07f964c6caeea27268a244cf152f79edf478913f64`.
+  `47b1c937d5bae45197d2287f0ed154604f52d761125bf0343bf5f18a72a9343e`.
 
-Final validation passed 172 G3 tests, all 375 Python tests, repository-wide Ruff,
+Pre-publication validation passed 173 G3 tests, all 376 Python tests, repository-wide Ruff,
 dashboard rebuild with 115 ingested records and zero quarantine, dashboard
 doctor, seven frontend unit tests, the production build and four Playwright
 browser tests. Five failed or transient plan-freeze branches are retained with
 their evidence, correction and successful rerun in the safe plan report.
 
+The first complete user-run version-2 notebook trained for approximately one hour and then failed the strict final review. Investigation found that `cloud_runner.py` passed `generator=None` during training, which means greedy argmax collection, while the locally qualified trainer used seed-bound categorical sampling. A 1,024-choice diagnostic reproduced the reported seed-119 bandit `0.5` score and seed-149 multi-select `0.75` score. The corrected cloud runner scored `1.0` on all four reported seed/task diagnostics without changing the plan budget, thresholds, tasks, optimizer or learning rate.
+
 ## Approved Publication State
 
 The corrective publication is recorded in
-`reports/jobs/g3a-cloud-input-publication-v2.json`. The private dataset
-`ashok205/kptcg-g3a-correctness-inputs` version `2` is `READY`; version `1` is
-retained only for audit. Kaggle exposes exactly the four corrected files, and an
+`reports/jobs/g3a-cloud-input-publication-v3.json`. The private dataset
+`ashok205/kptcg-g3a-correctness-inputs` version `3` is `READY`; versions `1` and `2` are retained only for audit. Kaggle exposes exactly the four corrected files, and an
 independent remote download reproduced every local byte count and SHA-256.
 
 The corrected notebook remains local-only at
 `private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb`, 4,787 bytes,
-SHA-256 `1eb6192891f96ca128ce75342dc3d0dbb41d2a66acb367a1275d4c3589c9447c`.
+SHA-256 `3ab68cdfc8b686d5b7b643469b65d66eed6c1500e4c867ba22d82910e4127345`.
 It contains no Kaggle secret lookup, authorization environment-variable check,
 authorization CLI flag or external URL request. The assistant did not create,
 launch or monitor a Kaggle notebook session.
 
 G3a remains `BLOCKED / NOT_REVIEWED`. The user imports the corrected notebook,
-attaches only dataset version `2`, selects CPU and runs all cells without adding
+attaches only dataset version `3`, selects CPU and runs all cells without adding
 a secret, environment variable, authorization cell or network probe. The
 remaining evidence is the complete saved-output download, byte/SHA-256
 verification and passing strict run review. Neither the plan nor dataset

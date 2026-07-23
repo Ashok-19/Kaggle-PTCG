@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "record_id": "job-g3a-cloud-input-publication-v3",
+  "created_at_utc": "2026-07-23T08:00:00Z",
+  "updated_at_utc": "2026-07-23T08:06:54Z",
+  "source_path": "reports/jobs/g3a-cloud-input-publication-v3.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "1",
+  "job_id": "g3a-cloud-input-publication-v3",
+  "gate_id": "G3a",
+  "kind": "PRIVATE_DATASET_CORRECTIVE_PUBLICATION",
+  "title": "Restore seeded categorical G3a cloud rollouts",
+  "status": "SUCCEEDED",
+  "trigger": {
+    "manual_user_run": true,
+    "assistant_launched_run": false,
+    "observed_wall_time_description": "approximately one hour before final review failure",
+    "failure_phase": "strict independent final review after all stream training",
+    "failure_summary": [
+      "seed 1197953491 masked-bandit-v1 failed 2 of 4 fixed cases",
+      "seed 1197953491 variable-option-multiselect-v1 failed 1 of 4 fixed cases",
+      "seed 20344180 recurrent-cue-v1 scored 0.5 with zero margin over stateless",
+      "seed 1491619630 variable-option-multiselect-v1 failed 1 of 4 fixed cases"
+    ],
+    "passing_g3a_result_produced": false
+  },
+  "root_cause": {
+    "classification": "CLOUD_RUNNER_EXPLORATION_MISMATCH",
+    "code_path": "src/ptcg_rl/g3/cloud_runner.py",
+    "fault": "training rollout collection passed generator=None, which selected greedy argmax actions instead of the seed-bound categorical sampling used by the qualified local trainer",
+    "threshold_or_budget_issue": false,
+    "kaggle_hardware_issue": false,
+    "bounded_reproduction": {
+      "budget_per_diagnostic_stream": 1024,
+      "current_greedy_seed_1197953491_masked_bandit_score": 0.5,
+      "current_greedy_seed_1491619630_multiselect_score": 0.75,
+      "corrected_cloud_runner_scores": {
+        "1197953491/masked-bandit-v1": 1.0,
+        "1197953491/variable-option-multiselect-v1": 1.0,
+        "20344180/recurrent-cue-v1": 1.0,
+        "1491619630/variable-option-multiselect-v1": 1.0
+      }
+    }
+  },
+  "correction": {
+    "source_commit": "6b7975bf518c36ff59338b6793ec52530c73f173",
+    "source_tree": "75a3f8c55a903d2460779728f3db021ec06d942f",
+    "rollout_sampling": "seeded_categorical",
+    "rollout_seed_xor": 23063,
+    "rollout_rng_checkpointed_as": "torch_cpu",
+    "fixed_evaluation_remains_greedy_argmax": true,
+    "learning_rate_changed": false,
+    "budget_changed": false,
+    "thresholds_changed": false,
+    "tasks_changed": false
+  },
+  "source": {
+    "executable_source_commit": "6b7975bf518c36ff59338b6793ec52530c73f173",
+    "executable_source_tree": "75a3f8c55a903d2460779728f3db021ec06d942f",
+    "plan_config_path": "configs/kaggle/g3a_cloud_correctness_v1.json",
+    "plan_config_sha256": "c0ea3bfa83cc2e86e1933555926c9f957da01ac9618e13f03e9f85d1a6b7957b",
+    "plan_report_sha256": "f9e4f554b610a0b60f7b8ed08f6bbb3ea59d12c50f7fb720f8c90383bc196116",
+    "plan_review_sha256": "47b1c937d5bae45197d2287f0ed154604f52d761125bf0343bf5f18a72a9343e"
+  },
+  "dataset": {
+    "ref": "ashok205/kptcg-g3a-correctness-inputs",
+    "dataset_id": 11311575,
+    "version": 3,
+    "historical_versions_retained": [
+      1,
+      2
+    ],
+    "private": true,
+    "status": "READY",
+    "file_count": 4,
+    "extra_remote_files": 0,
+    "remote_download_verified": true,
+    "files": [
+      {
+        "name": "g3a-cloud-input-manifest-v1.json",
+        "bytes": 724,
+        "sha256": "4a5394d0deb34e4d0064f1539304aafcd13227414ce6122c1e6985dc0e7126ab"
+      },
+      {
+        "name": "g3a-cloud-plan-v1.json",
+        "bytes": 8394,
+        "sha256": "c0ea3bfa83cc2e86e1933555926c9f957da01ac9618e13f03e9f85d1a6b7957b"
+      },
+      {
+        "name": "g3a-cloud-source-manifest-v1.json",
+        "bytes": 3056,
+        "sha256": "f4d79f1bf6e17d88621df240672a60fbfedb1529a75efaa6daafd0133d6f8afb"
+      },
+      {
+        "name": "g3a-cloud-source-v1.bundle",
+        "bytes": 7541761,
+        "sha256": "048a76aa4f0e1d44b4d178dd0ffe91e830215b7942b55aaad820b2910ceab030"
+      }
+    ]
+  },
+  "notebook": {
+    "local_path": "private/kaggle/notebooks/kptcg-g3a-cloud-correctness-v1.ipynb",
+    "bytes": 4787,
+    "sha256": "3ab68cdfc8b686d5b7b643469b65d66eed6c1500e4c867ba22d82910e4127345",
+    "state": "LOCAL_ONLY_READY",
+    "remote_notebook_created": false,
+    "manual_setup": [
+      "Import the exact notebook into a private Kaggle CPU session.",
+      "Attach only ashok205/kptcg-g3a-correctness-inputs version 3.",
+      "Run all cells without edits or extra authorization/network cells."
+    ]
+  },
+  "validation": {
+    "targeted_fix_tests": {
+      "passed": 19,
+      "failed": 0
+    },
+    "corrected_cloud_diagnostic_cases": {
+      "passed": 4,
+      "failed": 0
+    },
+    "focused_g3_tests": {
+      "passed": 173,
+      "failed": 0
+    },
+    "full_python_suite": {
+      "passed": 376,
+      "failed": 0
+    },
+    "ruff": "PASS",
+    "dashboard_rebuild": {
+      "ingested": 116,
+      "quarantined": 0,
+      "status": "PASS"
+    },
+    "dashboard_doctor": "PASS",
+    "frontend_unit_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "frontend_build": "PASS",
+    "browser_tests": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "external_service_mutated": true,
+  "training_launched_by_assistant": false,
+  "notebook_session_created_by_assistant": false,
+  "submission_created": false,
+  "policy_strength_established": false,
+  "cost_usd": 0.0,
+  "verdict": "PASS_FOR_USER_MANUAL_RERUN_WITH_DATASET_VERSION_3",
+  "warnings": [
+    "Dataset versions 1 and 2 are historical and must not be attached to the next run.",
+    "The failed user run is evidence of a completed negative result, not G3a completion.",
+    "The assistant did not launch or monitor the Kaggle notebook."
+  ]
+}

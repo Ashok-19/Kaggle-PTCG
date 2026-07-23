@@ -2,10 +2,10 @@
   "schema_version": 1,
   "record_id": "gate-g3a-20260720",
   "created_at_utc": "2026-07-20T14:55:27Z",
-  "updated_at_utc": "2026-07-22T18:08:15Z",
+  "updated_at_utc": "2026-07-23T08:00:00Z",
   "source_path": "reports/gates/g3a.json",
   "producer": "chatgpt-local-agent",
-  "producer_version": "5",
+  "producer_version": "6",
   "gate_id": "G3a",
   "title": "Recurrent PPO correctness proof",
   "status": "BLOCKED",
@@ -50,17 +50,17 @@
     {
       "name": "explicit user training approval recorded",
       "status": "PASS",
-      "evidence": "reports/jobs/g3a-cloud-input-publication-v2.json"
+      "evidence": "reports/jobs/g3a-cloud-input-publication-v3.json"
     },
     {
-      "name": "private Kaggle input dataset version 2 ready and byte verified",
+      "name": "private Kaggle input dataset version 3 ready and byte verified",
       "status": "PASS",
-      "evidence": "reports/jobs/g3a-cloud-input-publication-v2.json"
+      "evidence": "reports/jobs/g3a-cloud-input-publication-v3.json"
     },
     {
       "name": "single local notebook frozen and ready for user import",
       "status": "PASS",
-      "evidence": "reports/jobs/g3a-cloud-input-publication-v2.json"
+      "evidence": "reports/jobs/g3a-cloud-input-publication-v3.json"
     },
     {
       "name": "bounded three-seed private correctness smoke",
@@ -69,14 +69,15 @@
     }
   ],
   "blockers": [
-    "The user has not yet imported and run the corrected exact local notebook with private dataset version 2; no saved run outputs, checkpoint/resume receipt, output manifest, downloaded artifact set or strict G3a run review exists yet."
+    "The first complete manual run failed strict final review because the cloud runner collected greedy rollouts. Dataset version 3 and the corrected notebook are ready, but no passing saved run outputs or strict G3a run review exists yet."
   ],
   "warnings": [
     "The frozen plan and published dataset support only the bounded toy correctness run; they do not complete G3a or establish Pokemon policy strength.",
-    "Use private Kaggle dataset version 2 only. Version 1 is retained for audit and contains the removed preflight behavior.",
-    "The corrected local notebook requires no Kaggle secret, authorization environment variable, authorization cell or external network probe.",
+    "Use private Kaggle dataset version 3 only. Versions 1 and 2 are retained for audit and must not be attached.",
+    "The version-2 user run completed training but failed strict final review; it is retained as a completed negative result.",
+    "The corrected cloud runner uses seed-bound categorical rollouts and checkpoints the Torch CPU RNG for exact fresh-process resume.",
     "The assistant did not create or launch a Kaggle notebook session, did not monitor training, and did not create a submission, use Modal, change a deck or push Git."
   ],
-  "approved_next_action": "The user imports the corrected exact local notebook, attaches only ashok205/kptcg-g3a-correctness-inputs version 2, selects CPU and runs all cells without adding a secret, environment variable, authorization cell or network probe. After the saved version completes, download and verify every manifest-listed output and run the strict independent G3a review.",
+  "approved_next_action": "The user imports the exact corrected local notebook, attaches only ashok205/kptcg-g3a-correctness-inputs version 3, selects CPU and runs all cells without edits. After the saved version completes, download and verify every manifest-listed output and run the strict independent G3a review.",
   "cost_usd": 0.0
 }
