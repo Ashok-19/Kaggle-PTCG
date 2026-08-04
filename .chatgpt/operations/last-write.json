@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "operation_id": "write-2026-07-30T18-11-32-436Z-d5a39fa6",
+  "tool": "repo_write_file",
+  "repo_id": "ptcg",
+  "timestamp": "2026-07-30T18:11:32.436Z",
+  "head_sha_before": "32376b090bbdb7587a6d8bbf82ff3a00b3f11925",
+  "head_sha_after": "32376b090bbdb7587a6d8bbf82ff3a00b3f11925",
+  "touched_paths": [
+    "ptcg-rl/docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md"
+  ],
+  "changed_paths": [
+    "ptcg-rl/docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md"
+  ],
+  "created_paths": [
+    "ptcg-rl/docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md"
+  ],
+  "modified_paths": [],
+  "content_hashes": {
+    "ptcg-rl/docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md": "19bcd93ad39eddeedd4b7b32a81d503794f77bfea63cb57252da2d832086f2ce"
+  },
+  "counts": {
+    "requested": 1,
+    "changed": 1,
+    "created": 1,
+    "unchanged": 0
+  },
+  "summary": "Created ptcg-rl/docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md."
+}

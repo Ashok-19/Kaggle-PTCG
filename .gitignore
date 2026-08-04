@@ -5,7 +5,4 @@ sample-agents/
 PTCG.zip
 scratch/
 ptcg-rl/scratch/
-.chatgpt/handoffs/
-.chatgpt/operations/
-.chatgpt/workspace-locks/
 .dual-graph/
