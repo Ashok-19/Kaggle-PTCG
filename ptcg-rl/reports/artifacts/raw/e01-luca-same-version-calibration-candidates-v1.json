@@ -1,0 +1,336 @@
+{
+  "candidate_pool": {
+    "episodes": 39,
+    "maximum_bytes": 8117381,
+    "minimum_bytes": 2375741,
+    "strata": {
+      "seat_0_reward_-1": 3,
+      "seat_0_reward_1": 13,
+      "seat_1_reward_-1": 13,
+      "seat_1_reward_1": 10
+    },
+    "total_bytes": 209028226
+  },
+  "client": {
+    "dataset_file_method": "dataset_list_files",
+    "episode_method": "competition_list_episodes",
+    "kaggle_cli_source_commit": "f0afa32699d28c97f82691728ada3ed8c16c5abf"
+  },
+  "collection_boundary": {
+    "action_exports": 0,
+    "agent_logs_downloaded": 0,
+    "external_compute": false,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "raw_step_exports": 0,
+    "replay_bodies_downloaded": 0,
+    "training": false,
+    "training_labels_created": 0
+  },
+  "created_at_utc": "2026-07-24T18:53:28.610500Z",
+  "dataset": {
+    "dataset_file_pages": 23,
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "json_files": 4559,
+    "owner_slug": "kaggle",
+    "version": 1
+  },
+  "producer": "current-official-kaggle-client-metadata-only",
+  "record_id": "e01-luca-same-version-calibration-candidates-v1",
+  "same_version_proxy": {
+    "anchor_create_time": "2026-07-23T21:58:09.823506Z",
+    "anchor_episode_id": 87731214,
+    "anchor_observed_module_version": "1.32.2",
+    "execution_must_fail_closed_per_file_unless_module_version_is_1.32.2": true,
+    "metadata_can_guarantee_module_version": false
+  },
+  "schema_version": 1,
+  "selection": {
+    "files": 12,
+    "maximum_files": 12,
+    "maximum_total_bytes": 67108864,
+    "method": "three_byte_quantiles_per_seat_result_stratum_with_exact_64_mib_cap",
+    "module_version_required_at_review": "1.32.2",
+    "selected_items": [
+      {
+        "create_time": "2026-07-23T22:06:12.173000Z",
+        "declared_bytes": 5999663,
+        "end_time": "2026-07-23T22:08:06.941000Z",
+        "episode_id": 87732247,
+        "file_name": "87732247.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54775633,
+        "opponent_team_id": 16422150,
+        "opponent_team_name": "junlee789",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 0,
+          "reward": 1
+        },
+        "teacher_player_index": 0,
+        "teacher_reward": 1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T22:14:09.972000Z",
+        "declared_bytes": 5047771,
+        "end_time": "2026-07-23T22:15:17.344000Z",
+        "episode_id": 87733289,
+        "file_name": "87733289.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54875820,
+        "opponent_team_id": 16407282,
+        "opponent_team_name": "SQUIRTLE (prime)",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 0,
+          "reward": -1
+        },
+        "teacher_player_index": 0,
+        "teacher_reward": -1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T22:18:09.965000Z",
+        "declared_bytes": 4942976,
+        "end_time": "2026-07-23T22:19:10.973000Z",
+        "episode_id": 87733748,
+        "file_name": "87733748.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54887818,
+        "opponent_team_id": 16397524,
+        "opponent_team_name": "jiatu.l",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 0,
+          "reward": -1
+        },
+        "teacher_player_index": 0,
+        "teacher_reward": -1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T22:22:10.779000Z",
+        "declared_bytes": 3934914,
+        "end_time": "2026-07-23T22:22:48.756000Z",
+        "episode_id": 87734353,
+        "file_name": "87734353.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54922187,
+        "opponent_team_id": 16385372,
+        "opponent_team_name": "kashiwashira",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 0,
+          "reward": 1
+        },
+        "teacher_player_index": 0,
+        "teacher_reward": 1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T22:38:10.276000Z",
+        "declared_bytes": 5122828,
+        "end_time": "2026-07-23T22:39:16.374000Z",
+        "episode_id": 87736454,
+        "file_name": "87736454.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54898840,
+        "opponent_team_id": 16425135,
+        "opponent_team_name": "Rmy",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 1,
+          "reward": -1
+        },
+        "teacher_player_index": 1,
+        "teacher_reward": -1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T22:46:11.169000Z",
+        "declared_bytes": 6627479,
+        "end_time": "2026-07-23T22:47:43.352000Z",
+        "episode_id": 87737495,
+        "file_name": "87737495.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54934488,
+        "opponent_team_id": 16514272,
+        "opponent_team_name": "Dominic Peel",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 1,
+          "reward": -1
+        },
+        "teacher_player_index": 1,
+        "teacher_reward": -1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T22:58:09.811000Z",
+        "declared_bytes": 6109840,
+        "end_time": "2026-07-23T22:59:28.938000Z",
+        "episode_id": 87739090,
+        "file_name": "87739090.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54934375,
+        "opponent_team_id": 16400014,
+        "opponent_team_name": "__Taichicchi__",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 0,
+          "reward": -1
+        },
+        "teacher_player_index": 0,
+        "teacher_reward": -1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T23:02:10.177000Z",
+        "declared_bytes": 6699033,
+        "end_time": "2026-07-23T23:03:52.238000Z",
+        "episode_id": 87739639,
+        "file_name": "87739639.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54909711,
+        "opponent_team_id": 16374395,
+        "opponent_team_name": "Majkel1337",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 1,
+          "reward": 1
+        },
+        "teacher_player_index": 1,
+        "teacher_reward": 1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T23:14:09.782000Z",
+        "declared_bytes": 6065629,
+        "end_time": "2026-07-23T23:15:21.326000Z",
+        "episode_id": 87741191,
+        "file_name": "87741191.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54898840,
+        "opponent_team_id": 16425135,
+        "opponent_team_name": "Rmy",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 1,
+          "reward": 1
+        },
+        "teacher_player_index": 1,
+        "teacher_reward": 1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T23:45:04.219000Z",
+        "declared_bytes": 5544479,
+        "end_time": "2026-07-23T23:45:58.004000Z",
+        "episode_id": 87744901,
+        "file_name": "87744901.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54897360,
+        "opponent_team_id": 16381624,
+        "opponent_team_name": "LumenLiquidity",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 1,
+          "reward": 1
+        },
+        "teacher_player_index": 1,
+        "teacher_reward": 1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T23:45:04.223000Z",
+        "declared_bytes": 4958020,
+        "end_time": "2026-07-23T23:46:05.997000Z",
+        "episode_id": 87744904,
+        "file_name": "87744904.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54895414,
+        "opponent_team_id": 16463316,
+        "opponent_team_name": "LiamK",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 0,
+          "reward": 1
+        },
+        "teacher_player_index": 0,
+        "teacher_reward": 1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-23T23:53:32.145000Z",
+        "declared_bytes": 2775425,
+        "end_time": "2026-07-23T23:54:44.813000Z",
+        "episode_id": 87745939,
+        "file_name": "87745939.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54933747,
+        "opponent_team_id": 16400014,
+        "opponent_team_name": "__Taichicchi__",
+        "state": "COMPLETED",
+        "stratum": {
+          "player_index": 1,
+          "reward": -1
+        },
+        "teacher_player_index": 1,
+        "teacher_reward": -1,
+        "teacher_submission_id": 54863653,
+        "teacher_team_id": 16448747,
+        "teacher_team_name": "Luca",
+        "type": "EPISODE_TYPE_PUBLIC"
+      }
+    ],
+    "strata": {
+      "seat_0_reward_-1": 3,
+      "seat_0_reward_1": 3,
+      "seat_1_reward_-1": 3,
+      "seat_1_reward_1": 3
+    },
+    "total_bytes": 63828057
+  },
+  "source_path": "reports/artifacts/raw/e01-luca-same-version-calibration-candidates-v1.json",
+  "teacher": {
+    "leaderboard_rank": 2,
+    "submission_id": 54863653,
+    "submission_public_score": 1180.9,
+    "team_id": 16448747,
+    "team_name": "Luca"
+  }
+}

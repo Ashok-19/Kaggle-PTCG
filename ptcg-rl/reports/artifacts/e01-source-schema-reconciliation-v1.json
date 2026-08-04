@@ -1,0 +1,241 @@
+{
+  "adapter": {
+    "candidate_set_reranked": false,
+    "episode_identity_reproduced": true,
+    "file_byte_count_reproduced": true,
+    "rating_field_reproduced": false,
+    "rating_field_used_for_probe": false,
+    "submission_identity_reproduced": true,
+    "team_identity_reproduced": true,
+    "timestamp_reproduced": true
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T15:30:17Z",
+  "decision": "ACCEPT_PROVENANCE_ADAPTER_AND_ONE_FILE_REQUEST",
+  "inputs": {
+    "decision": {
+      "path": "docs/decisions/DEC-014_E01_SOURCE_SCHEMA_RECONCILED.md",
+      "sha256": "eb53541af1520384cbefa581af2a1dfadc06da29f716e7f18e412b04380ece67"
+    },
+    "dry_run": {
+      "path": "reports/artifacts/e01a-public-replay-dry-run-v1.json",
+      "sha256": "ecec3f97e62d177fbb111b528a3f70ad9b0059991af50935861b937ab87ea599"
+    },
+    "raw_reconciliation": {
+      "path": "reports/artifacts/raw/e01-public-source-schema-reconciliation-raw-v1.json",
+      "sha256": "d14c6666999d6013147f394cb236c45dd2c9429e88b64be461fd3c639b874859"
+    },
+    "request": {
+      "path": "configs/e01_provenance_probe_request_v2.json",
+      "sha256": "ed0b213c7e47f3821aef1e962b2feaf9000bebafbb2c87b5c321e13b9d55caa0"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_ONE_FILE_PROVENANCE_PROBE",
+  "probe": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "declared_bytes": 3641302,
+    "episode_id": 87703034,
+    "external_compute_authorized": false,
+    "file_name": "87703034.json",
+    "files_authorized": 1,
+    "output_directory_exists": false,
+    "request_authorized": false,
+    "request_ready": true,
+    "smallest_accepted_candidate": true,
+    "training_authorized": false
+  },
+  "producer": "scripts/e01_source_schema_review.py",
+  "qualification": {
+    "deck_qualified": false,
+    "e01_screening_gate_passed": false,
+    "policy_consistency_qualified": false,
+    "replay_transfer_authorized": false,
+    "source_schema_reconciled_for_probe": true,
+    "teacher_strength_qualified": false
+  },
+  "record_id": "e01-source-schema-reconciliation-v1",
+  "review_sha256": "ef4693548a1deee6677717bf1faaee3f80b4b0775349dea38b4c60c572fcc430",
+  "reviewed_decision": "DEC-014",
+  "schema_version": 1,
+  "selected_candidates": [
+    {
+      "agents": [
+        {
+          "reward": -1,
+          "submissionId": 54863653,
+          "teamId": 16448747,
+          "teamName": "Luca"
+        },
+        {
+          "index": 1,
+          "reward": 1,
+          "submissionId": 54858381,
+          "teamId": 16372828,
+          "teamName": "iwashi"
+        }
+      ],
+      "create_time": "2026-07-23T00:42:07.787189100Z",
+      "end_time": "2026-07-23T00:50:09.580087700Z",
+      "episode_id": 87562468,
+      "file_name": "87562468.json",
+      "total_bytes": 8131655
+    },
+    {
+      "agents": [
+        {
+          "reward": -1,
+          "submissionId": 54909711,
+          "teamId": 16374395,
+          "teamName": "Majkel1337"
+        },
+        {
+          "index": 1,
+          "reward": 1,
+          "submissionId": 54899223,
+          "teamId": 16425135,
+          "teamName": "Rmy"
+        }
+      ],
+      "create_time": "2026-07-23T03:18:03.918732900Z",
+      "end_time": "2026-07-23T03:19:17.291349300Z",
+      "episode_id": 87583340,
+      "file_name": "87583340.json",
+      "total_bytes": 4543765
+    },
+    {
+      "agents": [
+        {
+          "reward": 1,
+          "submissionId": 54923761,
+          "teamId": 16406640,
+          "teamName": "gecogeco"
+        },
+        {
+          "index": 1,
+          "reward": -1,
+          "submissionId": 54863653,
+          "teamId": 16448747,
+          "teamName": "Luca"
+        }
+      ],
+      "create_time": "2026-07-23T11:14:19.615517300Z",
+      "end_time": "2026-07-23T11:15:22.239092600Z",
+      "episode_id": 87646392,
+      "file_name": "87646392.json",
+      "total_bytes": 5181665
+    },
+    {
+      "agents": [
+        {
+          "reward": 1,
+          "submissionId": 54912602,
+          "teamId": 16487924,
+          "teamName": "lmaffei"
+        },
+        {
+          "index": 1,
+          "reward": -1,
+          "submissionId": 54909711,
+          "teamId": 16374395,
+          "teamName": "Majkel1337"
+        }
+      ],
+      "create_time": "2026-07-23T11:58:15.878512800Z",
+      "end_time": "2026-07-23T12:00:36.152633400Z",
+      "episode_id": 87652312,
+      "file_name": "87652312.json",
+      "total_bytes": 3964599
+    },
+    {
+      "agents": [
+        {
+          "reward": 1,
+          "submissionId": 54933084,
+          "teamId": 16401597,
+          "teamName": "Benarg"
+        },
+        {
+          "index": 1,
+          "reward": -1,
+          "submissionId": 54775633,
+          "teamId": 16422150,
+          "teamName": "junlee789"
+        }
+      ],
+      "create_time": "2026-07-23T18:26:15.370240100Z",
+      "end_time": "2026-07-23T18:32:34.138948200Z",
+      "episode_id": 87703034,
+      "file_name": "87703034.json",
+      "total_bytes": 3641302
+    },
+    {
+      "agents": [
+        {
+          "reward": 1,
+          "submissionId": 54863653,
+          "teamId": 16448747,
+          "teamName": "Luca"
+        },
+        {
+          "index": 1,
+          "reward": -1,
+          "submissionId": 54886942,
+          "teamId": 16441077,
+          "teamName": "haggle"
+        }
+      ],
+      "create_time": "2026-07-23T20:34:10.003558400Z",
+      "end_time": "2026-07-23T20:35:33.245642100Z",
+      "episode_id": 87720146,
+      "file_name": "87720146.json",
+      "total_bytes": 6979760
+    },
+    {
+      "agents": [
+        {
+          "reward": -1,
+          "submissionId": 54919611,
+          "teamId": 16464757,
+          "teamName": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        },
+        {
+          "index": 1,
+          "reward": 1,
+          "submissionId": 54907538,
+          "teamId": 16463316,
+          "teamName": "LiamK"
+        }
+      ],
+      "create_time": "2026-07-23T22:54:09.867126400Z",
+      "end_time": "2026-07-23T22:57:24.724047800Z",
+      "episode_id": 87738531,
+      "file_name": "87738531.json",
+      "total_bytes": 4024477
+    },
+    {
+      "agents": [
+        {
+          "reward": -1,
+          "submissionId": 54898840,
+          "teamId": 16425135,
+          "teamName": "Rmy"
+        },
+        {
+          "index": 1,
+          "reward": 1,
+          "submissionId": 54934488,
+          "teamId": 16514272,
+          "teamName": "Dominic Peel"
+        }
+      ],
+      "create_time": "2026-07-23T22:58:09.804334600Z",
+      "end_time": "2026-07-23T22:59:08.795316900Z",
+      "episode_id": 87739085,
+      "file_name": "87739085.json",
+      "total_bytes": 6152786
+    }
+  ],
+  "source_path": "reports/artifacts/e01-source-schema-reconciliation-v1.json",
+  "status": "PASS"
+}

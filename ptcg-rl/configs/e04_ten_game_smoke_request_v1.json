@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "record_id": "e04-ten-game-smoke-request-v1",
+  "created_at_utc": "2026-07-24T12:24:40Z",
+  "decision_id": "DEC-011",
+  "stage": "smoke",
+  "games": 10,
+  "minimum_meaningful_decisions": 1,
+  "output_directory": "private/g3/e04/ten-game-smoke-v1",
+  "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "deck_sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee",
+  "checkpoint_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+  "authorized": false,
+  "optimizer_steps_authorized": 0,
+  "external_compute_authorized": false,
+  "authorization_scope": "CONSUMED_AFTER_TEN_GAME_APPROVED_EXECUTION",
+  "runner_sha256": "e30ce8d0b468058a95473ee7a0f5fc67dafe797d21c3f40c1c6baa81bd8a8bd3",
+  "prerequisite_evidence": "reports/evaluations/e04-single-process-trace-v1.json",
+  "prerequisite_evidence_sha256": "d169bb3c955197607bb4ae9c13c46ba9aedb79afbc708548d5b680374ba99653",
+  "notes": [
+    "The exact ten-game local CPU smoke completed under explicit user approval on 2026-07-24.",
+    "The approval is consumed and cannot authorize overwrite, rerun, 100-game qualification or training.",
+    "Any later native execution requires a separate exact request and explicit user approval."
+  ],
+  "authorized_at_utc": "2026-07-24T12:45:41Z",
+  "approval_source": "project_chat_user_confirmation",
+  "authorization_consumed_at_utc": "2026-07-24T12:47:27Z",
+  "authorization_snapshot": "private/g3/e04/ten-game-smoke-v1/e04-native-zero-update-authorization.json",
+  "authorization_snapshot_sha256": "f8019962c4914fa1cfac754b1af7616db69fdb4e0503e89cb46f6282cd2f4922"
+}

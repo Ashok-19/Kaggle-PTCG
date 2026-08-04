@@ -1,0 +1,86 @@
+{
+  "confirmation": {
+    "confirmation_gate_passed": false,
+    "decision_shortfall": 18633,
+    "episode_shortfall": 146,
+    "independent_recent_teacher_requirement_met": true,
+    "observed_recent_teacher_decisions": 6367,
+    "observed_recent_teacher_episodes": 54
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-27T18:06:57.060612Z",
+  "decision": "ACCEPT_EXACT_12_FILE_CURRENT_RANK_1_DRIES_GRIMMSNARL_CALIBRATION_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-dries-grimmsnarl-calibration-candidates-v1.json",
+      "sha256": "18e84036a294c57e6d805114270815c84cddea903cad5599a5cb5bab83603bcd"
+    },
+    "completed_flg_screening": {
+      "path": "reports/artifacts/e01-flg-dragapult-screening-expansion-review-v1.json",
+      "review_sha256": "0346535b89f0f14e153df0afeda90609f51e2a0d75b4b959df38be71dfb7df80",
+      "sha256": "38f1e6f4f0d68b52677e6e578ac7f69ca0730f819bc895b5205d42387f7c8fc2"
+    },
+    "completed_probe_request": {
+      "path": "configs/e01_dries_confirmation_teacher_probe_request_v1.json",
+      "sha256": "9e558be620bcf9722ba69ae7189ebec79145b351c20e4370eb1bb37d2427d2bc"
+    },
+    "completed_probe_review": {
+      "path": "reports/artifacts/e01-dries-confirmation-teacher-probe-review-v1.json",
+      "review_sha256": "85845efb12c00b4fc489daa65be9291d1ff0db2d18e55261c66d107c8c64422c",
+      "sha256": "42d65b6f40fd2a2767ed3b7ed56852c2a7efb096c159f97f294c8fe6183008e0"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-023_E01_DRIES_GRIMMSNARL_CALIBRATION.md",
+      "sha256": "9ea27e6e2f5f41953a2ef2eb68af0840a0297a7640832480b232674826403460"
+    },
+    "live_confirmation_refresh": {
+      "path": "reports/artifacts/raw/e01-live-confirmation-refresh-v1.json",
+      "sha256": "7642598704cca4899235089c57e6429805ebb8ea496e4c5b47befc677e4b80dc"
+    },
+    "request": {
+      "path": "configs/e01_dries_grimmsnarl_calibration_request_v1.json",
+      "sha256": "768cd21cc71fbe38586b07d6807794bd8215cfd7f8aa10601000be5877cb6509"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_12_FILE_DRIES_GRIMMSNARL_CALIBRATION",
+  "producer": "scripts/e01_dries_grimmsnarl_calibration_contract_review.py",
+  "qualification": {
+    "completed_flg_screening_qualified": true,
+    "confirmation_gate_passed": false,
+    "current_rank_1_calibration_request_ready": true,
+    "current_rank_1_dries_probe_qualified": true,
+    "exact_grimmsnarl_deck_qualified": true,
+    "minimum_200_recent_teacher_episodes_met": false,
+    "minimum_25000_meaningful_teacher_decisions_met": false,
+    "replay_transfer_authorized": false,
+    "second_independent_recent_teacher_qualified": true,
+    "training_authorized": false
+  },
+  "record_id": "e01-dries-grimmsnarl-calibration-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 60869451,
+    "maximum_new_files": 12,
+    "output_directory_exists": false,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "required_deck_multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+    "required_module_version": "1.32.2",
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "review_sha256": "85587edcf8393ab736e26faa1aad63ab3cd8885cfe5d2f55fe8d554c7920dddb",
+  "reviewed_decision": "DEC-023",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-dries-grimmsnarl-calibration-contract-review-v1.json",
+  "status": "PASS"
+}

@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "record_id": "e01a-public-replay-dry-run-v1",
+  "created_at_utc": "2026-07-24T11:20:00Z",
+  "source_path": "reports/artifacts/e01a-public-replay-dry-run-v1.json",
+  "decision_id": "DEC-011",
+  "experiment_id": "E01-A",
+  "status": "DRY_RUN_PASS_TRANSFER_BLOCKED",
+  "purpose": "Name the smallest deterministic current public replay candidate set before any replay-body transfer approval.",
+  "index_source": {
+    "dataset_owner": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-index",
+    "dataset_version": 38,
+    "manifest_filename": "manifest.csv",
+    "manifest_bytes": 6744,
+    "manifest_sha256": "ccae4b951f7d05c5d269e604b6d03a843af04e7398957dfeba40695c2a3f3b1e",
+    "manifest_rows": 38,
+    "created_at_utc": "2026-07-24T00:03:00.533Z",
+    "license": "CC0: Public Domain"
+  },
+  "daily_source": {
+    "dataset_owner": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "dataset_version": 1,
+    "manifest_filename": "manifest.csv",
+    "manifest_bytes": 378402,
+    "manifest_sha256": "e082c3cf80638e4ba5a8915e40eca25683a83c4abb79a4b7f41c02133b01f31a",
+    "manifest_rows": 4559,
+    "declared_episode_bytes": 21474555587,
+    "created_at_utc": "2026-07-24T00:02:58.440Z",
+    "license": "CC0: Public Domain"
+  },
+  "planner": {
+    "implementation": "ptcg_rl.replay.planner",
+    "planner_version": "e01a-public-dry-run-v1",
+    "seed": 20260724,
+    "source_date": "2026-07-23",
+    "time_blocks": 4,
+    "avg_score_quantile": 0.85,
+    "min_score_quantile": 0.7,
+    "quotas": {
+      "elite_dual": 4,
+      "elite_avg": 2,
+      "broad_time": 2
+    }
+  },
+  "planner_plan_sha256": "4123d318c3cfc898858233c1aff3f987580fdbdf64e8204227294ae1117584c2",
+  "caps": {
+    "max_files": 8,
+    "max_total_bytes": 67108864,
+    "max_file_bytes": 16777216
+  },
+  "selection": {
+    "selected_files": 8,
+    "selected_bytes": 42620009,
+    "maximum_selected_file_bytes": 8131655
+  },
+  "selected_items": [
+    {
+      "episode_id": "87583340",
+      "remote_filename": "87583340.json",
+      "declared_bytes": 4543765,
+      "create_time": "2026-07-23T03:18:03.9187329",
+      "avg_score": 1119.928923,
+      "min_score": 1100.055097,
+      "stratum": "broad_time",
+      "time_block": 0
+    },
+    {
+      "episode_id": "87738531",
+      "remote_filename": "87738531.json",
+      "declared_bytes": 4024477,
+      "create_time": "2026-07-23T22:54:09.8671264",
+      "avg_score": 1085.546667,
+      "min_score": 1030.356147,
+      "stratum": "broad_time",
+      "time_block": 3
+    },
+    {
+      "episode_id": "87652312",
+      "remote_filename": "87652312.json",
+      "declared_bytes": 3964599,
+      "create_time": "2026-07-23T11:58:15.8785128",
+      "avg_score": 1136.582371,
+      "min_score": 1089.553196,
+      "stratum": "elite_avg",
+      "time_block": 1
+    },
+    {
+      "episode_id": "87720146",
+      "remote_filename": "87720146.json",
+      "declared_bytes": 6979760,
+      "create_time": "2026-07-23T20:34:10.0035584",
+      "avg_score": 1129.657922,
+      "min_score": 1088.768012,
+      "stratum": "elite_avg",
+      "time_block": 2
+    },
+    {
+      "episode_id": "87562468",
+      "remote_filename": "87562468.json",
+      "declared_bytes": 8131655,
+      "create_time": "2026-07-23T00:42:07.7871891",
+      "avg_score": 1159.135376,
+      "min_score": 1120.939484,
+      "stratum": "elite_dual",
+      "time_block": 0
+    },
+    {
+      "episode_id": "87646392",
+      "remote_filename": "87646392.json",
+      "declared_bytes": 5181665,
+      "create_time": "2026-07-23T11:14:19.6155173",
+      "avg_score": 1145.882032,
+      "min_score": 1122.851762,
+      "stratum": "elite_dual",
+      "time_block": 1
+    },
+    {
+      "episode_id": "87703034",
+      "remote_filename": "87703034.json",
+      "declared_bytes": 3641302,
+      "create_time": "2026-07-23T18:26:15.3702401",
+      "avg_score": 1131.41633,
+      "min_score": 1101.24992,
+      "stratum": "elite_dual",
+      "time_block": 2
+    },
+    {
+      "episode_id": "87739085",
+      "remote_filename": "87739085.json",
+      "declared_bytes": 6152786,
+      "create_time": "2026-07-23T22:58:09.8043346",
+      "avg_score": 1172.391006,
+      "min_score": 1155.604005,
+      "stratum": "elite_dual",
+      "time_block": 3
+    }
+  ],
+  "episode_json_transferred": 0,
+  "transfer_authorized": false,
+  "training_authorized": false,
+  "teacher_deck_qualification": "NOT_EVALUATED_WITHOUT_REPLAY_BODIES",
+  "blocking_requirements": [
+    "exact_teacher_identity",
+    "exact_60_card_deck_hash",
+    "teacher_policy_consistency",
+    "named_file_transfer_approval"
+  ],
+  "approval_request": null,
+  "notes": [
+    "Manifest metadata and ranking are not evidence of policy competence.",
+    "No selected replay may be transferred until the exact smallest approval names the dataset version, filenames and byte cap.",
+    "Selection is a deterministic acquisition candidate set, not an E01 screening or confirmation pass."
+  ]
+}

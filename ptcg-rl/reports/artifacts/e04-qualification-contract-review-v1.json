@@ -1,0 +1,91 @@
+{
+  "accepted_decision": {
+    "bridge_checkpoint_interval_games": 10,
+    "decision": "DEC-012",
+    "games": 180,
+    "minimum_meaningful_decisions": 10000,
+    "path": "docs/decisions/DEC-012_E04_QUALIFICATION_RESIZED.md",
+    "sha256": "4667d8c08f9fb6782d37729f14ed097323c4b31efafdd87f44da9bdb2ad40307"
+  },
+  "authorization": {
+    "external_compute": false,
+    "optimizer_steps": false,
+    "qualification_execution": false,
+    "replay_transfer": false,
+    "repository_implementation": true,
+    "rerun_or_overwrite": false,
+    "submission": false,
+    "unit_tests": true
+  },
+  "created_at_utc": "2026-07-24T13:10:00Z",
+  "decision": "ACCEPT_180_GAME_QUALIFICATION_CONTRACT",
+  "producer": "scripts/e04_qualification_contract_review.py",
+  "record_id": "e04-qualification-contract-review-v1",
+  "request": {
+    "authorized": false,
+    "external_compute_authorized": false,
+    "optimizer_steps_authorized": 0,
+    "output_directory": "private/g3/e04/qualification-v1",
+    "output_directory_exists": false,
+    "path": "configs/e04_qualification_request_v1.json",
+    "sha256": "6304f544a626f2cada768b80ad195c3ebf67aaa832c48b83ef6ff46a8bc694de"
+  },
+  "review_sha256": "8d8129fca8114f78860ca69c20ae38b563072c3df3346809f7ff852423e5c31d",
+  "revisit_trigger": "The qualification request, decision floor, game count, runner, authorization validator, assets, deck, checkpoint or prerequisite smoke evidence changes.",
+  "runtime_projection": {
+    "linear_seconds_for_selected_games": 249.18777572401447,
+    "observed_seconds_per_game": 1.3843765318000805,
+    "planning_only": true
+  },
+  "schema_version": 1,
+  "sizing": {
+    "games_required_at_99_percent_lower_bound": 168,
+    "games_required_at_observed_minimum": 179,
+    "old_100_game_projection_at_mean": 6480.0,
+    "old_100_game_projection_at_observed_maximum": 7000,
+    "one_sided_99_percent_lower_bound_mean": 59.583942015953184,
+    "one_sided_99_percent_t_critical_df9": 2.821437925025808,
+    "selected_games": 180,
+    "selected_projection_at_99_percent_lower_bound": 10725.109562871574,
+    "selected_projection_at_mean": 11664.0,
+    "selected_projection_at_observed_minimum": 10080
+  },
+  "smoke_evidence": {
+    "games": 10,
+    "mean": 64.8,
+    "meaningful_decisions": 648,
+    "observations": [
+      58,
+      70,
+      57,
+      70,
+      56,
+      70,
+      70,
+      66,
+      63,
+      68
+    ],
+    "observed_maximum": 70,
+    "observed_minimum": 56,
+    "optimizer_steps": 0,
+    "path": "reports/evaluations/e04-ten-game-smoke-v1.json",
+    "sample_standard_deviation": 5.846176338238334,
+    "sha256": "66d00da9e0b99783fd3f7ec441a89fa298597acbc1818220014a97481ba68236",
+    "zero_tolerance_total": 0
+  },
+  "source_contract": {
+    "authorization_validator_path": "src/ptcg_rl/g3/e04_authorization.py",
+    "authorization_validator_sha256": "f84fa26251c4ae4cf0294b12eadf5b0b87fdd9193909ed21b4f116776e7941e3",
+    "runner_path": "scripts/e04_native_zero_update.py",
+    "runner_sha256": "cd5ef3a7e987f92172f218991084e3a0a1f3002e9df9acac57919a4ee23c63b7"
+  },
+  "source_path": "reports/artifacts/e04-qualification-contract-review-v1.json",
+  "status": "PASS",
+  "supersedes": {
+    "decision": "DEC-011",
+    "old_games": 100,
+    "old_minimum_meaningful_decisions": 10000,
+    "scope": "E04 qualification game count only"
+  }
+}

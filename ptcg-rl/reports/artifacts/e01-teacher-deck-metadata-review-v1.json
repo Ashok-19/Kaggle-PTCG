@@ -1,0 +1,166 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T14:52:18Z",
+  "decision": "BLOCK_E01_SOURCE_MANIFEST_CONTRACT_UNRESOLVED",
+  "inputs": {
+    "current_manifest_snapshot": {
+      "path": "reports/artifacts/raw/e01-public-manifest-metadata-v1.json",
+      "sha256": "c7880aa62800d6939c9a306dd492c2c026f17ad0b86a07f62ec84c121e22264d"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-013_E01_PROVENANCE_PROBE.md",
+      "sha256": "15aa1ba1113c62f2a9d5dcd02b6e221b6a91ee3f54726989477eb15a564cbf94"
+    },
+    "dry_run": {
+      "path": "reports/artifacts/e01a-public-replay-dry-run-v1.json",
+      "sha256": "ecec3f97e62d177fbb111b528a3f70ad9b0059991af50935861b937ab87ea599"
+    },
+    "probe_placeholder": {
+      "path": "configs/e01_provenance_probe_request_v1.json",
+      "sha256": "c12b7651720514b2584a059090898fe58dc3144da7c9a83981ba67e4fdb1e898"
+    }
+  },
+  "manifest_comparison": {
+    "accepted_columns": [
+      "episode_id",
+      "create_time",
+      "avg_score",
+      "min_score",
+      "sum_score",
+      "agent_count",
+      "size_bytes"
+    ],
+    "accepted_manifest_bytes": 378402,
+    "accepted_manifest_sha256": "e082c3cf80638e4ba5a8915e40eca25683a83c4abb79a4b7f41c02133b01f31a",
+    "current_columns": [
+      "id",
+      "create_time",
+      "agents",
+      "score1",
+      "score2",
+      "data_size",
+      "file_name"
+    ],
+    "current_manifest_bytes": 378253,
+    "current_manifest_sha256": "136dbdb174e6bbd6057023e0271d1016fe0ff143e5958ddbef38d105cc59d5c2",
+    "manifest_object_matches": false,
+    "same_declared_owner_slug_version_and_filename": true,
+    "schema_matches": false,
+    "selected_episode_ids_match": true,
+    "selected_row_mismatches": [
+      {
+        "accepted_create_time": "2026-07-23T00:42:07.7871891",
+        "accepted_declared_bytes": 8131655,
+        "accepted_file_name": "87562468.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-20T11:54:43.909",
+        "current_file_name": "87562468.json",
+        "current_manifest_data_size": 5340627,
+        "episode_id": 87562468
+      },
+      {
+        "accepted_create_time": "2026-07-23T03:18:03.9187329",
+        "accepted_declared_bytes": 4543765,
+        "accepted_file_name": "87583340.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-20T22:08:00.136",
+        "current_file_name": "87583340.json",
+        "current_manifest_data_size": 4818610,
+        "episode_id": 87583340
+      },
+      {
+        "accepted_create_time": "2026-07-23T11:14:19.6155173",
+        "accepted_declared_bytes": 5181665,
+        "accepted_file_name": "87646392.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-22T11:27:53.436",
+        "current_file_name": "87646392.json",
+        "current_manifest_data_size": 6249941,
+        "episode_id": 87646392
+      },
+      {
+        "accepted_create_time": "2026-07-23T11:58:15.8785128",
+        "accepted_declared_bytes": 3964599,
+        "accepted_file_name": "87652312.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-22T13:43:47.271",
+        "current_file_name": "87652312.json",
+        "current_manifest_data_size": 6303684,
+        "episode_id": 87652312
+      },
+      {
+        "accepted_create_time": "2026-07-23T18:26:15.3702401",
+        "accepted_declared_bytes": 3641302,
+        "accepted_file_name": "87703034.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-23T06:29:01.125",
+        "current_file_name": "87703034.json",
+        "current_manifest_data_size": 5279979,
+        "episode_id": 87703034
+      },
+      {
+        "accepted_create_time": "2026-07-23T20:34:10.0035584",
+        "accepted_declared_bytes": 6979760,
+        "accepted_file_name": "87720146.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-23T13:38:13.582",
+        "current_file_name": "87720146.json",
+        "current_manifest_data_size": 4985898,
+        "episode_id": 87720146
+      },
+      {
+        "accepted_create_time": "2026-07-23T22:54:09.8671264",
+        "accepted_declared_bytes": 4024477,
+        "accepted_file_name": "87738531.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-23T21:32:51.684",
+        "current_file_name": "87738531.json",
+        "current_manifest_data_size": 4986556,
+        "episode_id": 87738531
+      },
+      {
+        "accepted_create_time": "2026-07-23T22:58:09.8043346",
+        "accepted_declared_bytes": 6152786,
+        "accepted_file_name": "87739085.json",
+        "byte_count_matches": false,
+        "create_time_matches": false,
+        "current_create_time": "2026-07-23T21:47:42.267",
+        "current_file_name": "87739085.json",
+        "current_manifest_data_size": 4654714,
+        "episode_id": 87739085
+      }
+    ]
+  },
+  "next_action": "RECERTIFY_DAILY_MANIFEST_SOURCE_AND_SCHEMA_BEFORE_ANY_REPLAY_TRANSFER",
+  "probe": {
+    "agent_logs_authorized": false,
+    "bytes_authorized": 0,
+    "external_compute_authorized": false,
+    "files_authorized": 0,
+    "request_authorized": false,
+    "request_ready": false,
+    "training_authorized": false
+  },
+  "producer": "scripts/e01_teacher_metadata_review.py",
+  "qualification": {
+    "deck_qualified": false,
+    "e01_screening_gate_passed": false,
+    "named_replay_transfer_authorized": false,
+    "policy_consistency_qualified": false,
+    "source_provenance_qualified": false,
+    "teacher_qualified": false
+  },
+  "record_id": "e01-teacher-deck-metadata-review-v1",
+  "review_sha256": "5c6250d1ab7b9ee750b1f4722e2d145954990d53c8a8f711a46c73adbd0e9ffe",
+  "reviewed_decision": "DEC-013",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-teacher-deck-metadata-review-v1.json",
+  "status": "PASS"
+}

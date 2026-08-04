@@ -1,0 +1,75 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T18:55:33.100265Z",
+  "decision": "ACCEPT_EXACT_12_FILE_LUCA_CALIBRATION_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-luca-same-version-calibration-candidates-v1.json",
+      "sha256": "9efd5da48e7f6d76bdd7065c3cbbb95c1be26bb22cb642707994a8be7504d1e0"
+    },
+    "completed_teacher_probe_request": {
+      "path": "configs/e01_luca_gold_teacher_probe_request_v1.json",
+      "sha256": "b70efe6228d08f78c104e75c3007d4e1b99c747223d05d1d14e9808f975146a2"
+    },
+    "completed_teacher_probe_review": {
+      "path": "reports/artifacts/e01-luca-gold-teacher-probe-review-v1.json",
+      "review_sha256": "071784291ac0acc772337c326857f261f1781ab21901d4bf26ab928ec8cb543c",
+      "sha256": "533cb71425a8f233885855ca1377d2fc67b56d24ced96a09a8f52934ce083c70"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-017_E01_LUCA_SAME_VERSION_CALIBRATION.md",
+      "sha256": "1dd14efd37f07fdf00de5e50925556c00736aea04222f2972b6812a0ee0bfd83"
+    },
+    "request": {
+      "path": "configs/e01_luca_same_version_calibration_request_v1.json",
+      "sha256": "5b8b6b91d4d407cf06ff3270f1852c55c334d33ef34c4e915bf0097de262009a"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_12_FILE_LUCA_CALIBRATION_BATCH",
+  "producer": "scripts/e01_luca_calibration_contract_review.py",
+  "qualification": {
+    "calibration_candidate_pool_available": true,
+    "calibration_request_ready": true,
+    "e01_screening_gate_passed": false,
+    "exact_deck_consistency_from_probe_qualified": true,
+    "gold_region_teacher_qualified": true,
+    "minimum_5000_teacher_decisions_met": false,
+    "replay_transfer_authorized": false,
+    "same_version_policy_consistency_qualified": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-luca-same-version-calibration-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 63828057,
+    "maximum_new_files": 12,
+    "output_directory_exists": false,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "required_module_version": "1.32.2",
+    "training_authorized": false
+  },
+  "review_sha256": "b2d89ac2bd5a643f434affe8b31407f8e56ed3f33bf22cf22f70b67d92c15e3d",
+  "reviewed_decision": "DEC-017",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-luca-same-version-calibration-contract-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "expected_deck_multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+    "leaderboard_rank": 2,
+    "leaderboard_team_score": 1190.4,
+    "submission_id": 54863653,
+    "submission_public_score": 1180.9,
+    "team_id": 16448747,
+    "team_name": "Luca"
+  }
+}

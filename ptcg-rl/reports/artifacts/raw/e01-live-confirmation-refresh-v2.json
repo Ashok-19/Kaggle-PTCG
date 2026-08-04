@@ -1,0 +1,224 @@
+{
+  "competition": "pokemon-tcg-ai-battle",
+  "created_at_utc": "2026-07-30T18:10:35.115080Z",
+  "current_rank_1": {
+    "active_submission": {
+      "date_submitted": "2026-07-30T08:43:37.713000Z",
+      "public_score": 1169.5,
+      "submission_id": 55104355
+    },
+    "active_submissions": [
+      {
+        "date_submitted": "2026-07-30T08:43:37.713000Z",
+        "public_score": 1169.5,
+        "submission_id": 55104355
+      },
+      {
+        "date_submitted": "2026-07-30T07:50:58.627000Z",
+        "public_score": 1011.1,
+        "submission_id": 55103290
+      }
+    ],
+    "public_episode_count": 76,
+    "public_episode_strata": {
+      "seat_0_loss": 10,
+      "seat_0_win": 26,
+      "seat_1_loss": 14,
+      "seat_1_win": 26
+    },
+    "rank": 1,
+    "score": 1169.5,
+    "team_id": 16441077,
+    "team_name": "haggle"
+  },
+  "current_rank_1_dataset_intersection": {
+    "episodes": 0,
+    "files": [],
+    "replay_bodies_used": false,
+    "total_bytes": 0
+  },
+  "latest_complete_daily_dataset": {
+    "declared_json_bytes": 21474480425,
+    "inventory_sha256": "60c3a6caf58e0df5c33d2b27d2a3ccb76ffb2e72fb3c5b6b27918fec979577ed",
+    "json_files": 4387,
+    "last_updated": "2026-07-30T00:15:09.207000Z",
+    "ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-29",
+    "total_bytes": 744279881,
+    "version": 1,
+    "versioned_ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-29/1"
+  },
+  "leaderboard_top20": [
+    {
+      "rank": 1,
+      "score": 1169.5,
+      "submission_date": "2026-07-30T08:43:37.713000Z",
+      "team_id": 16441077,
+      "team_name": "haggle"
+    },
+    {
+      "rank": 2,
+      "score": 1163.7,
+      "submission_date": "2026-07-28T15:29:52.756000Z",
+      "team_id": 16448747,
+      "team_name": "Luca"
+    },
+    {
+      "rank": 3,
+      "score": 1159.0,
+      "submission_date": "2026-07-27T16:13:32.776000Z",
+      "team_id": 16380946,
+      "team_name": "flg"
+    },
+    {
+      "rank": 4,
+      "score": 1152.3,
+      "submission_date": "2026-07-29T23:45:08.200000Z",
+      "team_id": 16408505,
+      "team_name": "JZ"
+    },
+    {
+      "rank": 5,
+      "score": 1151.7,
+      "submission_date": "2026-07-29T19:15:43.346000Z",
+      "team_id": 16463316,
+      "team_name": "LiamK"
+    },
+    {
+      "rank": 6,
+      "score": 1145.6,
+      "submission_date": "2026-07-30T01:00:02.660000Z",
+      "team_id": 16371703,
+      "team_name": "やる気元気ミワハルキ"
+    },
+    {
+      "rank": 7,
+      "score": 1144.9,
+      "submission_date": "2026-07-30T13:56:57.906000Z",
+      "team_id": 16375647,
+      "team_name": "James Cox & Henry Chao"
+    },
+    {
+      "rank": 8,
+      "score": 1144.2,
+      "submission_date": "2026-07-27T22:55:57.470000Z",
+      "team_id": 16374395,
+      "team_name": "Majkel1337"
+    },
+    {
+      "rank": 9,
+      "score": 1138.4,
+      "submission_date": "2026-07-30T01:08:46.393000Z",
+      "team_id": 16514272,
+      "team_name": "Dominic Peel"
+    },
+    {
+      "rank": 10,
+      "score": 1123.0,
+      "submission_date": "2026-07-30T13:26:10.730000Z",
+      "team_id": 16514960,
+      "team_name": "YuPengCao"
+    },
+    {
+      "rank": 11,
+      "score": 1122.0,
+      "submission_date": "2026-07-30T01:41:33.300000Z",
+      "team_id": 16375320,
+      "team_name": "カントー地方マスター(KantoRegionMaster)"
+    },
+    {
+      "rank": 12,
+      "score": 1121.4,
+      "submission_date": "2026-07-27T02:58:59.593000Z",
+      "team_id": 16462035,
+      "team_name": "Azat Akhtyamov"
+    },
+    {
+      "rank": 13,
+      "score": 1121.0,
+      "submission_date": "2026-07-30T10:20:33.033000Z",
+      "team_id": 16374074,
+      "team_name": "Octavi Grau"
+    },
+    {
+      "rank": 14,
+      "score": 1112.5,
+      "submission_date": "2026-07-29T04:06:16.596000Z",
+      "team_id": 16561141,
+      "team_name": "A. R. SEKKAT"
+    },
+    {
+      "rank": 15,
+      "score": 1112.2,
+      "submission_date": "2026-07-29T05:16:31.783000Z",
+      "team_id": 16505594,
+      "team_name": "Pokemon Fan"
+    },
+    {
+      "rank": 16,
+      "score": 1106.2,
+      "submission_date": "2026-07-17T02:27:09.746000Z",
+      "team_id": 16381823,
+      "team_name": "Yushin Ito"
+    },
+    {
+      "rank": 17,
+      "score": 1100.6,
+      "submission_date": "2026-07-29T08:38:58.616000Z",
+      "team_id": 16536318,
+      "team_name": "李秉叡（ntumlnoob）"
+    },
+    {
+      "rank": 18,
+      "score": 1100.0,
+      "submission_date": "2026-07-25T14:09:52.420000Z",
+      "team_id": 16372782,
+      "team_name": "Pokemon Siuuuu"
+    },
+    {
+      "rank": 19,
+      "score": 1098.5,
+      "submission_date": "2026-07-28T00:24:20.946000Z",
+      "team_id": 16376653,
+      "team_name": "szlachetny snieg"
+    },
+    {
+      "rank": 20,
+      "score": 1092.6,
+      "submission_date": "2026-07-30T13:12:28.660000Z",
+      "team_id": 16561259,
+      "team_name": "Karandeep Singh #2"
+    }
+  ],
+  "next_action": "WAIT_FOR_DAILY_DATASET_CONTAINING_CURRENT_RANK_1_SUBMISSION_55104355",
+  "prior_dries_teacher": {
+    "active_submission_changed": true,
+    "completed_evidence_remains_exact_submission_bound": true,
+    "current_active_submissions": [
+      {
+        "date_submitted": "2026-07-30T13:18:05.040000Z",
+        "public_score": 1029.8,
+        "submission_id": 55109984
+      },
+      {
+        "date_submitted": "2026-07-30T08:09:37.873000Z",
+        "public_score": 1039.1,
+        "submission_id": 55103656
+      }
+    ],
+    "current_top20_rank": null,
+    "qualified_submission_id": 55002825,
+    "team_id": 16531269,
+    "team_name": "Dries @ Tufa Labs"
+  },
+  "record_id": "e01-live-confirmation-refresh-v2",
+  "schema_version": 1,
+  "source_boundary": {
+    "agent_logs_authorized": false,
+    "current_rank_1_probe_request_ready": false,
+    "external_compute_authorized": false,
+    "raw_exports_authorized": false,
+    "replay_transfer_authorized": false,
+    "submission_authorized": false,
+    "training_authorized": false
+  }
+}

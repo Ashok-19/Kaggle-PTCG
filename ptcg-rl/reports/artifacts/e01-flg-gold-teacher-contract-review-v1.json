@@ -1,0 +1,69 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-27T14:50:57.939056Z",
+  "decision": "ACCEPT_EXACT_TWO_FILE_CURRENT_RANK_1_TEACHER_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "decision": {
+      "path": "docs/decisions/DEC-019_E01_LIVE_GOLD_TEACHER_REFRESH.md",
+      "sha256": "111fcc2e740d27aa718ead66be186c82f4f282103f2623441010e604b0a99b5c"
+    },
+    "live_refresh": {
+      "path": "reports/artifacts/raw/e01-live-gold-refresh-v1.json",
+      "sha256": "410b137a7ed4052111d6e16c373fbdc1b1ae484de4ad152a06420981c0870120"
+    },
+    "request": {
+      "path": "configs/e01_flg_gold_teacher_probe_request_v1.json",
+      "sha256": "98eeb79dcf23d62d57ddc80f0a9a793cc2e27d0c14dbbb22fdd66c6e2107edb0"
+    },
+    "superseded_request": {
+      "path": "configs/e01_luca_screening_expansion_request_v1.json",
+      "sha256": "c293268607ce0fc8762d543508bf2c798087ca9583cec05e3031a1906fc26962"
+    }
+  },
+  "next_action": "EXECUTE_EXACT_TWO_FILE_FLG_PROBE_UNDER_CURRENT_USER_APPROVAL",
+  "producer": "scripts/e01_flg_teacher_contract_review.py",
+  "qualification": {
+    "current_daily_dataset_coverage_available": true,
+    "current_rank_1_teacher_selected": true,
+    "e01_screening_gate_passed": false,
+    "live_leaderboard_refreshed": true,
+    "rank_1_probe_request_ready": true,
+    "replay_transfer_authorized": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-flg-gold-teacher-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "episode_ids": [
+      88302734,
+      88333037
+    ],
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 3996398,
+    "maximum_new_files": 2,
+    "opposite_teacher_results": true,
+    "opposite_teacher_seats": true,
+    "output_directory_exists": false,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "submission_authorized": false,
+    "superseded_luca_request_executed": false,
+    "training_authorized": false
+  },
+  "review_sha256": "0e201c36c59fb8bc188a05f26e0748e95e9310262e94f51f250c814c38663775",
+  "reviewed_decision": "DEC-019",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-flg-gold-teacher-contract-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "dataset_episode_count": 131,
+    "live_rank_at_refresh": 1,
+    "live_team_score_at_refresh": 1234.2,
+    "submission_id": 55004495,
+    "submission_public_score": 1244.2,
+    "team_id": 16380946,
+    "team_name": "flg"
+  }
+}

@@ -1,73 +1,230 @@
 {
-  "schema_version": 1,
-  "record_id": "gate-g3b-20260723",
+  "approved_next_action": "Implement and independently qualify the remaining policy-competence path by performing a metadata-only refresh after a pinned daily episode dataset contains current rank-1 haggle submission 55104355, or after the live rank-1 submission changes. Only then prepare the smallest exact opposite-seat/opposite-result replay request with pinned file names and declared byte counts, leave it unauthorized, and require separate explicit approval before transfer. Do not download replay bodies or logs, export raw data or labels, train, launch compute, rerun E04, freeze a deck or submit.",
+  "authorization": "DEC_024_DRIES_GRIMMSNARL_CALIBRATION_PASS_CURRENT_RANK_1_SOURCE_WAIT_E04_QUALIFIED_TRAINING_BLOCKED",
+  "blockers": [
+    "DEC-023 is complete and independently reviewed: all 12 Dries Grimmsnarl calibration files qualify as schema 1, CABT 1.0.0, module 1.32.2, exact deck consistent, current-asset compatible and action aligned. They add 1175 teacher decisions, bringing confirmation to two teachers, 66 episodes and 7542 decisions; the remaining shortfalls are 134 episodes and 17458 decisions.",
+    "The live rank-1 is now haggle submission 55104355 with 76 public episodes, but the latest complete pinned daily dataset is July 29 version 1 and has zero matching files. No current-rank-1 replay request is source-ready. Behavior cloning, competence evaluation, confirmation floors and submission selection remain incomplete; replay transfer, training, external compute and submission remain unauthorized."
+  ],
+  "cost_usd": 0.0,
   "created_at_utc": "2026-07-23T11:30:27Z",
-  "updated_at_utc": "2026-07-23T11:30:27Z",
-  "source_path": "reports/gates/g3b.json",
+  "decision": "NOT_REVIEWED",
+  "gate_id": "G3b",
   "producer": "chatgpt-local-agent",
   "producer_version": "1",
-  "gate_id": "G3b",
-  "title": "Recurrent PPO policy competence",
+  "record_id": "gate-g3b-20260724",
+  "schema_version": 1,
+  "source_path": "reports/gates/g3b.json",
   "status": "BLOCKED",
-  "decision": "NOT_REVIEWED",
-  "authorization": "PLAN_REVIEWED_INTEGRATION_AND_TRAINING_NOT_AUTHORIZED",
   "technical_checks": [
     {
+      "evidence": "configs/g3a_evaluation_v1.json",
       "name": "strict G3b acceptance contract frozen",
-      "status": "PASS",
-      "evidence": "configs/g3a_evaluation_v1.json"
+      "status": "PASS"
     },
     {
+      "evidence": "reports/artifacts/g3b-competence-plan-v1.json",
       "name": "multiple platform and execution candidates evaluated",
-      "status": "PASS",
-      "evidence": "reports/artifacts/g3b-competence-plan-v1.json"
+      "status": "PASS"
     },
     {
+      "evidence": "reports/artifacts/g3b-competence-plan-v1.json",
       "name": "exact assets, engineering deck and four rule anchors byte verified",
-      "status": "PASS",
-      "evidence": "reports/artifacts/g3b-competence-plan-v1.json"
+      "status": "PASS"
     },
     {
+      "evidence": "reports/artifacts/g3b-competence-plan-v1.json",
       "name": "runtime chunking and evaluation size derived from retained evidence",
-      "status": "PASS",
-      "evidence": "reports/artifacts/g3b-competence-plan-v1.json"
+      "status": "PASS"
     },
     {
+      "evidence": "reports/artifacts/g3b-competence-plan-review-v1.json",
       "name": "independent frozen-plan review",
-      "status": "PASS",
-      "evidence": "reports/artifacts/g3b-competence-plan-review-v1.json"
+      "status": "PASS"
     },
     {
+      "evidence": "reports/artifacts/gold-path-work-orders-review-v1.json",
+      "name": "DEC-012 E04 qualification resizing and active work orders independently reviewed",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01a-public-replay-dry-run-v1.json",
+      "name": "E01-A current public acquisition dry run is exact, capped and zero-transfer",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-teacher-deck-metadata-review-v1.json",
+      "name": "DEC-013 E01 daily manifest source and schema recertification",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": "reports/artifacts/e01-source-schema-reconciliation-v1.json",
+      "name": "DEC-014 E01 provenance source-schema adapter and exact one-file request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-provenance-probe-review-v1.json",
+      "name": "E01 exact one-file provenance probe execution",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-same-submission-consistency-review-v1.json",
+      "name": "DEC-015 exact same-submission consistency execution independently reviewed",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-same-submission-consistency-review-v1.json",
+      "name": "DEC-015 same-submission consistency execution and exact deck comparison",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-luca-gold-teacher-contract-review-v1.json",
+      "name": "DEC-016 rank-2 Luca gold-region teacher selection and exact two-file request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-luca-gold-teacher-probe-review-v1.json",
+      "name": "DEC-016 rank-2 Luca strong-teacher probe execution",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-luca-same-version-calibration-review-v1.json",
+      "name": "DEC-017 exact 12-file Luca same-version calibration request and execution",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-luca-screening-expansion-contract-review-v1.json",
+      "name": "DEC-018 exact 51-file Luca screening expansion request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "src/ptcg_rl/g3/zero_update_bridge.py",
+      "name": "E04 zero-update bridge source contract and unit negative controls",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e04-official-downloadable-asset-parity-v1.json",
+      "name": "current official downloadable engine wrapper and card data byte parity",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/evaluations/e04-single-process-trace-v1.json",
+      "name": "E04 native one-game single-process trace",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/evaluations/e04-ten-game-smoke-v1.json",
+      "name": "E04 native ten-game zero-update smoke",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e04-qualification-contract-review-v1.json",
+      "name": "E04 qualification sizing contract independently reviewed",
+      "status": "PASS"
+    },
+    {
+      "evidence": "configs/e04_qualification_request_v1.json",
+      "name": "exact fail-closed 180-game E04 qualification request",
+      "status": "PASS"
+    },
+    {
+      "evidence": null,
       "name": "CABT actor learner bridge implemented and independently qualified",
-      "status": "BLOCKED",
-      "evidence": null
+      "status": "BLOCKED"
     },
     {
+      "evidence": null,
       "name": "private T4x2 topology and resume canary",
-      "status": "BLOCKED",
-      "evidence": null
+      "status": "BLOCKED"
     },
     {
+      "evidence": null,
       "name": "three-seed one-million-choice broad screen",
-      "status": "BLOCKED",
-      "evidence": null
+      "status": "BLOCKED"
     },
     {
+      "evidence": null,
       "name": "three-seed five-million-choice competence confirmation",
-      "status": "BLOCKED",
-      "evidence": null
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "E01 exact teacher identity, legal deck and replay supervision qualification",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": "reports/evaluations/e04-qualification-v1.json",
+      "name": "E04 180-game 10000-decision qualification execution",
+      "status": "PASS"
+    },
+    {
+      "evidence": null,
+      "name": "full-compound-action recurrent behavior cloning",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "on-policy and held-out competence evaluation",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "bounded KL auxiliary-BC recurrent PPO within 500000 choices",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": null,
+      "name": "frozen tournament and submission selection",
+      "status": "BLOCKED"
+    },
+    {
+      "evidence": "configs/e01_luca_screening_expansion_request_v1.json",
+      "name": "DEC-018 Luca screening expansion superseded without execution",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-flg-gold-teacher-probe-review-v1.json",
+      "name": "DEC-019 live leaderboard refresh and current rank-1 teacher probe",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-flg-dragapult-calibration-contract-review-v1.json",
+      "name": "DEC-020 exact 12-file current rank-1 Dragapult calibration request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-flg-dragapult-calibration-review-v1.json",
+      "name": "DEC-020 completed 12-file current rank-1 Dragapult calibration",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-flg-dragapult-screening-expansion-review-v1.json",
+      "name": "DEC-021 current-rank-1 Dragapult screening expansion execution",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-dries-confirmation-teacher-probe-review-v1.json",
+      "name": "DEC-022 completed current-rank-1 Dries confirmation-teacher probe",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-dries-grimmsnarl-calibration-review-v1.json",
+      "name": "DEC-023 completed 12-file Dries Grimmsnarl calibration",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-live-confirmation-source-wait-review-v1.json",
+      "name": "DEC-024 current-rank-1 versioned-source wait",
+      "status": "PASS"
     }
   ],
-  "blockers": [
-    "The CABT actor/learner bridge is not implemented or independently qualified.",
-    "No G3b cloud launch has been separately authorized, and no measured PPO training throughput or portable cloud checkpoint publication receipt exists."
-  ],
+  "title": "Evidence-gated Pokemon policy competence",
+  "updated_at_utc": "2026-07-30T18:21:47.271471Z",
   "warnings": [
-    "The frozen plan is not executable training source and does not establish policy competence or strength.",
-    "The selected private Kaggle T4x2 topology begins with two equal 50,000-choice canary branches; neither canary checkpoint may seed the broad screen.",
-    "The primary and diagnosis configurations may differ only by the preregistered opponent schedule.",
-    "Modal, deck freeze, replay expansion and submission remain separately gated."
-  ],
-  "approved_next_action": "Implement and independently qualify the CABT actor/learner bridge with zero meaningful training. After that evidence is reviewed, prepare the exact private Kaggle canary assets and request separate explicit launch approval.",
-  "cost_usd": 0.0
+    "G2 reliability and G3a toy PPO correctness do not establish Pokemon policy competence.",
+    "Historical DEC-013–018 records remain compatibility evidence; DEC-018 was superseded without transfer.",
+    "DEC-021 establishes the exact flg submission screening floor with 6340 decisions; it does not by itself establish confirmation or authorize training.",
+    "DEC-022 and DEC-023 qualify exact historical Dries submission 55002825 and bring confirmation evidence to 66 episodes and 7542 decisions; they do not transfer to later Dries submissions or haggle.",
+    "DEC-024 is a zero-transfer source wait because current rank-1 submission 55104355 has no files in the latest complete daily dataset.",
+    "The accepted E04 results establish zero-update bridge reliability only; they do not establish Pokemon policy competence or authorize training."
+  ]
 }

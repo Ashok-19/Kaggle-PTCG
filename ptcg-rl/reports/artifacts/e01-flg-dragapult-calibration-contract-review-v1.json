@@ -1,0 +1,70 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-27T15:05:36.357339Z",
+  "decision": "ACCEPT_EXACT_12_FILE_CURRENT_RANK_1_DRAGAPULT_CALIBRATION_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-flg-dragapult-calibration-candidates-v1.json",
+      "sha256": "038d88b1350b4463aec5879b5be8f496630804fe62e3d2e298e2075e9d98c42e"
+    },
+    "completed_probe_request": {
+      "path": "configs/e01_flg_gold_teacher_probe_request_v1.json",
+      "sha256": "b1b0b81014fddeea8c5bb9d5be41a61ea538e1a3723eb64a246c87668c49b349"
+    },
+    "completed_probe_review": {
+      "path": "reports/artifacts/e01-flg-gold-teacher-probe-review-v1.json",
+      "review_sha256": "b6769479e7969688ba613ac9ab99b6f7a3cd27f54684e5c4b4a44ef60282a7a4",
+      "sha256": "c20c15c9325b44b81adf58a81ef962f1820bb53c68e7c5872bee81ae7398a17a"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-020_E01_FLG_DRAGAPULT_CALIBRATION.md",
+      "sha256": "1f30b8081cdfea4113f60fdfe76213902f1bf3afc645ab0a4a0c1b4301766547"
+    },
+    "live_refresh": {
+      "path": "reports/artifacts/raw/e01-live-gold-refresh-v1.json",
+      "sha256": "410b137a7ed4052111d6e16c373fbdc1b1ae484de4ad152a06420981c0870120"
+    },
+    "request": {
+      "path": "configs/e01_flg_dragapult_calibration_request_v1.json",
+      "sha256": "644be06359e6ad1f49224bab4fee68af562e026d4be93f536ae86bbc00f74eb8"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_12_FILE_FLG_DRAGAPULT_CALIBRATION",
+  "producer": "scripts/e01_flg_calibration_contract_review.py",
+  "qualification": {
+    "current_rank_1_calibration_request_ready": true,
+    "current_rank_1_teacher_qualified": true,
+    "e01_screening_gate_passed": false,
+    "exact_dragapult_deck_qualified": true,
+    "minimum_5000_teacher_decisions_met": false,
+    "replay_transfer_authorized": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-flg-dragapult-calibration-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 63562985,
+    "maximum_new_files": 12,
+    "output_directory_exists": false,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "required_deck_multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "required_module_version": "1.32.2",
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "review_sha256": "2237c5c7d26009bf88ef9c5dee1276b206dea10f5ca4f6c61c662e19ec6ab016",
+  "reviewed_decision": "DEC-020",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-flg-dragapult-calibration-contract-review-v1.json",
+  "status": "PASS"
+}

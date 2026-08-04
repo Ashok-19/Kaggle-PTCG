@@ -1,0 +1,606 @@
+{
+  "consistency": {
+    "all_replay_action_alignment": "PASS",
+    "all_same_module_version": true,
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "calibration_teacher_active_selection_requests": 1292,
+    "combined_all_player_active_selection_requests": 2247,
+    "current_asset_deck_construction_compatibility": "PASS",
+    "empty_lagged_selections": 7,
+    "environment_name": "cabt",
+    "environment_version": "1.0.0",
+    "exact_historical_engine_card_mapping_available": false,
+    "exact_historical_legality": "UNPROVEN",
+    "exact_teacher_deck_match": true,
+    "maximum_option_count": 38,
+    "maximum_selection_count": 8,
+    "module_versions": [
+      "1.32.2"
+    ],
+    "nonempty_lagged_selections": 2240,
+    "schema_version": 1,
+    "teacher_archetype_context_label": "Dragapult ex",
+    "teacher_deck_multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e"
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-27T15:52:56.822350Z",
+  "decision": "ACCEPT_CURRENT_RANK_1_DRAGAPULT_CALIBRATION_SCREENING_FLOOR_BLOCKED",
+  "density": {
+    "calibration_decisions_per_episode": 107.66666666666667,
+    "calibration_decisions_per_mib": 21.31366536672247,
+    "calibration_teacher_decisions": 1292,
+    "combined_observed_teacher_decisions": 1386,
+    "prior_probe_teacher_decisions": 94,
+    "projected_additional_bytes_at_observed_density": 177799248,
+    "projected_additional_episodes_at_observed_density": 34,
+    "screening_minimum_teacher_decisions": 5000,
+    "screening_teacher_decision_shortfall": 3614
+  },
+  "episodes": [
+    {
+      "action_alignment": {
+        "active_selection_requests": 155,
+        "empty_lagged_selections": 1,
+        "maximum_option_count": 29,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 154,
+        "status": "PASS",
+        "teacher_active_selection_requests": 87
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88304411,
+      "file": {
+        "bytes": 4377850,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88304411.json",
+        "sha256": "d84aac31c4398df9ac2aca33a5e4dd7e3e651f0c310f324dba64c3ba970e8d6c"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 157,
+      "stratum": "seat_0_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 170,
+        "empty_lagged_selections": 1,
+        "maximum_option_count": 36,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 169,
+        "status": "PASS",
+        "teacher_active_selection_requests": 90
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88312254,
+      "file": {
+        "bytes": 4954508,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88312254.json",
+        "sha256": "96bc1e232599e5e279fe8a0520f642bef4085a04440e18d06c3e2928a25f340f"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 172,
+      "stratum": "seat_0_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 227,
+        "empty_lagged_selections": 3,
+        "maximum_option_count": 28,
+        "maximum_selection_count": 6,
+        "nonempty_lagged_selections": 224,
+        "status": "PASS",
+        "teacher_active_selection_requests": 135
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88333027,
+      "file": {
+        "bytes": 6464753,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88333027.json",
+        "sha256": "c4a3f7fec14551aca9d3b116e6ccb0afadd146fa4dc99f0a6ec53c30d414ddf6"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 229,
+      "stratum": "seat_0_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 166,
+        "empty_lagged_selections": 1,
+        "maximum_option_count": 35,
+        "maximum_selection_count": 8,
+        "nonempty_lagged_selections": 165,
+        "status": "PASS",
+        "teacher_active_selection_requests": 99
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88324168,
+      "file": {
+        "bytes": 4747191,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88324168.json",
+        "sha256": "5e1df438954c449cdd557b56440264467a914431210b0274c0e4ea770d3a247c"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 168,
+      "stratum": "seat_0_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 208,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 38,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 208,
+        "status": "PASS",
+        "teacher_active_selection_requests": 124
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88306996,
+      "file": {
+        "bytes": 6103324,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88306996.json",
+        "sha256": "4de977fdd19abb728831f67e44c0f0d058af95830a9e5c8978886f99b4acd7ec"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 210,
+      "stratum": "seat_0_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 241,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 23,
+        "maximum_selection_count": 8,
+        "nonempty_lagged_selections": 241,
+        "status": "PASS",
+        "teacher_active_selection_requests": 150
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88280071,
+      "file": {
+        "bytes": 7020621,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88280071.json",
+        "sha256": "276042a83ac52c624658b88689834426c0c145a960f0051f7d2faae3d53cd16e"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 243,
+      "stratum": "seat_0_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 112,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 18,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 112,
+        "status": "PASS",
+        "teacher_active_selection_requests": 47
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88329376,
+      "file": {
+        "bytes": 2996616,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88329376.json",
+        "sha256": "aa6bb3b74d140d195fdcb1933d9738978d72840d86a8a37b5f887a165ae965cb"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 114,
+      "stratum": "seat_1_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 162,
+        "empty_lagged_selections": 1,
+        "maximum_option_count": 22,
+        "maximum_selection_count": 8,
+        "nonempty_lagged_selections": 161,
+        "status": "PASS",
+        "teacher_active_selection_requests": 75
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88286928,
+      "file": {
+        "bytes": 4415458,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88286928.json",
+        "sha256": "6170b006a86f1bbce443d730518633bb667ac9644471e1ab7669e5916c81a63a"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 164,
+      "stratum": "seat_1_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 201,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 36,
+        "maximum_selection_count": 2,
+        "nonempty_lagged_selections": 201,
+        "status": "PASS",
+        "teacher_active_selection_requests": 111
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88276868,
+      "file": {
+        "bytes": 5819313,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88276868.json",
+        "sha256": "8308c00dd517128b0b16e7cd393fdd2eac6f046c945e09a48254f40901cc1ef7"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 203,
+      "stratum": "seat_1_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 183,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 30,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 183,
+        "status": "PASS",
+        "teacher_active_selection_requests": 114
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88295387,
+      "file": {
+        "bytes": 4787236,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88295387.json",
+        "sha256": "72e64ee29f562b5303e59c495fc4716ad6b4282265b367a8fde371fc25772136"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 185,
+      "stratum": "seat_1_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 203,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 31,
+        "maximum_selection_count": 4,
+        "nonempty_lagged_selections": 203,
+        "status": "PASS",
+        "teacher_active_selection_requests": 134
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88318931,
+      "file": {
+        "bytes": 5624889,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88318931.json",
+        "sha256": "c45d9ec2f591ee7d0398371599755b363b6ee591531f5f7ef146dd4d5bd10c79"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 205,
+      "stratum": "seat_1_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 219,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 30,
+        "maximum_selection_count": 4,
+        "nonempty_lagged_selections": 219,
+        "status": "PASS",
+        "teacher_active_selection_requests": 126
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88316351,
+      "file": {
+        "bytes": 6251226,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88316351.json",
+        "sha256": "24accb1a28261ca6e44e449efc48c473976d065767246e2cacdd813d7492d577"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 221,
+      "stratum": "seat_1_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 22,
+        "missing_card_ids": 0,
+        "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    }
+  ],
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-flg-dragapult-calibration-candidates-v1.json",
+      "sha256": "038d88b1350b4463aec5879b5be8f496630804fe62e3d2e298e2075e9d98c42e"
+    },
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-020_E01_FLG_DRAGAPULT_CALIBRATION.md",
+      "sha256": "1f30b8081cdfea4113f60fdfe76213902f1bf3afc645ab0a4a0c1b4301766547"
+    },
+    "prior_flg_probe_review": {
+      "path": "reports/artifacts/e01-flg-gold-teacher-probe-review-v1.json",
+      "review_sha256": "b6769479e7969688ba613ac9ab99b6f7a3cd27f54684e5c4b4a44ef60282a7a4",
+      "sha256": "c20c15c9325b44b81adf58a81ef962f1820bb53c68e7c5872bee81ae7398a17a"
+    },
+    "request": {
+      "authorization_consumed": true,
+      "authorized_request_sha256": "42b97e0fbb26e293a62747e5437315ae2018bdb7d5c07c0d28004dcc604adce7",
+      "path": "configs/e01_flg_dragapult_calibration_request_v1.json",
+      "sha256": "9140bc26599d08c6c343db19a658cfa728b5425f9a59700d9bb627b3c16c89e8"
+    }
+  },
+  "next_action": "PREPARE_BOUNDED_FLG_DRAGAPULT_SCREENING_EXPANSION_REQUEST_FROM_CALIBRATED_DENSITY_WITH_NEW_APPROVAL",
+  "policy_behavior_consistency_definition": "SAME_PUBLIC_SUBMISSION_ID_MODULE_DECK_AND_VALID_ACTION_ALIGNED_REPLAY_CONTRACT_NOT_IDENTICAL_STATE_ACTION_REPRODUCIBILITY",
+  "producer": "scripts/e01_flg_calibration_review.py",
+  "qualification": {
+    "action_aligned_supervision_available": true,
+    "current_asset_deck_construction_compatibility_qualified": true,
+    "current_rank_1_strength_metadata_qualified": true,
+    "e01_screening_gate_passed": false,
+    "exact_deck_consistency_qualified": true,
+    "exact_historical_deck_legality_qualified": false,
+    "minimum_5000_teacher_decisions_met": false,
+    "policy_behavior_consistency_qualified": true,
+    "replay_transfer_authorized": false,
+    "same_module_version_qualified": true,
+    "same_submission_identity_qualified": true,
+    "same_version_replay_contract_consistency_qualified": true,
+    "teacher_strength_qualified": true,
+    "training_authorized": false
+  },
+  "record_id": "e01-flg-dragapult-calibration-review-v1",
+  "review_sha256": "be2704b2f09126a1b77340e25971c4231c2f515e52ca4e41e3c9d32b8daa7282",
+  "reviewed_decision": "DEC-020",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-flg-dragapult-calibration-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "archetype_context_label": "Dragapult ex",
+    "live_rank_at_refresh": 1,
+    "live_team_score_at_refresh": 1234.2,
+    "same_exact_public_submission_across_episodes": true,
+    "submission_id": 55004495,
+    "submission_ids_bound_by_public_metadata": true,
+    "submission_ids_present_in_replay_bodies": false,
+    "submission_public_score": 1244.2,
+    "team_id": 16380946,
+    "team_name": "flg"
+  },
+  "transfer": {
+    "action_sequence_exports": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "card_list_exports": 0,
+    "downloaded_files": [
+      {
+        "bytes": 4377850,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88304411.json",
+        "sha256": "d84aac31c4398df9ac2aca33a5e4dd7e3e651f0c310f324dba64c3ba970e8d6c"
+      },
+      {
+        "bytes": 4954508,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88312254.json",
+        "sha256": "96bc1e232599e5e279fe8a0520f642bef4085a04440e18d06c3e2928a25f340f"
+      },
+      {
+        "bytes": 6464753,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88333027.json",
+        "sha256": "c4a3f7fec14551aca9d3b116e6ccb0afadd146fa4dc99f0a6ec53c30d414ddf6"
+      },
+      {
+        "bytes": 4747191,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88324168.json",
+        "sha256": "5e1df438954c449cdd557b56440264467a914431210b0274c0e4ea770d3a247c"
+      },
+      {
+        "bytes": 6103324,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88306996.json",
+        "sha256": "4de977fdd19abb728831f67e44c0f0d058af95830a9e5c8978886f99b4acd7ec"
+      },
+      {
+        "bytes": 7020621,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88280071.json",
+        "sha256": "276042a83ac52c624658b88689834426c0c145a960f0051f7d2faae3d53cd16e"
+      },
+      {
+        "bytes": 2996616,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88329376.json",
+        "sha256": "aa6bb3b74d140d195fdcb1933d9738978d72840d86a8a37b5f887a165ae965cb"
+      },
+      {
+        "bytes": 4415458,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88286928.json",
+        "sha256": "6170b006a86f1bbce443d730518633bb667ac9644471e1ab7669e5916c81a63a"
+      },
+      {
+        "bytes": 5819313,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88276868.json",
+        "sha256": "8308c00dd517128b0b16e7cd393fdd2eac6f046c945e09a48254f40901cc1ef7"
+      },
+      {
+        "bytes": 4787236,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88295387.json",
+        "sha256": "72e64ee29f562b5303e59c495fc4716ad6b4282265b367a8fde371fc25772136"
+      },
+      {
+        "bytes": 5624889,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88318931.json",
+        "sha256": "c45d9ec2f591ee7d0398371599755b363b6ee591531f5f7ef146dd4d5bd10c79"
+      },
+      {
+        "bytes": 6251226,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88316351.json",
+        "sha256": "24accb1a28261ca6e44e449efc48c473976d065767246e2cacdd813d7492d577"
+      }
+    ],
+    "new_bytes_downloaded": 63562985,
+    "new_files_downloaded": 12,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "overwrite_used": false,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "request_exports": 0,
+    "training_label_exports": 0
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "record_id": "e01-luca-gold-teacher-probe-request-v1",
+  "created_at_utc": "2026-07-24T17:52:03.975945Z",
+  "stage": "gold_region_teacher_provenance_and_consistency_probe",
+  "decision_id": "DEC-016",
+  "decision_path": "docs/decisions/DEC-016_E01_LUCA_GOLD_TEACHER_PROBE.md",
+  "decision_sha256": "e52bf2d91a504db6e9828de3190aa652dde59c46aa93b0035912e675d17792f8",
+  "completed_consistency_request_path": "configs/e01_same_submission_consistency_request_v1.json",
+  "completed_consistency_request_sha256": "e98cbbaae8bdd2a8b09b9ff43f6298c59f45e821206cd7bc860d140f60927ae2",
+  "completed_consistency_review_path": "reports/artifacts/e01-same-submission-consistency-review-v1.json",
+  "completed_consistency_review_sha256": "4ec60a2a4dffeb9ffae898fad8ae44a0e77c0c5e51a50e155df21b90ae665966",
+  "completed_consistency_review_self_hash": "dae9bd135831b745d7050b49872b7f1404bbea45ab49b7cd20195f74885862bb",
+  "teacher_coverage_path": "reports/artifacts/raw/e01-gold-teacher-coverage-v1.json",
+  "teacher_coverage_sha256": "f73d67ea3aa8450f712ab046f35a97e887d1e287813c9968efbb33f8fd06acb7",
+  "status": "CONSUMED",
+  "request_ready": false,
+  "authorized": false,
+  "authorization_scope": "CONSUMED_EXACT_TWO_FILE_LUCA_GOLD_TEACHER_PROBE_87731214_AND_87615736_ONLY",
+  "approval": {
+    "approved_at_utc": "2026-07-24T18:39:10.464888Z",
+    "approved_by": "user",
+    "approval_message": "proceed",
+    "approved_prior_request_sha256": "02a672b1950da7002e98c62e5e0f807bc5f539488e2a4c614a6c845cb84a6a89",
+    "authorized_request_sha256": "8c1c6eac94cd0dc18ea29117c62255c8871df994e280033063c306f0a58aacf4",
+    "consumed_at_utc": "2026-07-24T18:43:47.144083Z",
+    "one_time": true
+  },
+  "execution": {
+    "files_downloaded": 2,
+    "bytes_downloaded": 1313221,
+    "downloaded_files": [
+      {
+        "path": "private/g3/e01/luca-gold-teacher-probe-v1/87731214.json",
+        "bytes": 574428,
+        "sha256": "523c74d0e21d8ca7a687a835c178e947844614a95ee00479c0efe6f5dc31125c"
+      },
+      {
+        "path": "private/g3/e01/luca-gold-teacher-probe-v1/87615736.json",
+        "bytes": 738793,
+        "sha256": "b10f5b2824c7db1b6a3f9c9f1e782da9a0e366595cd06ddc5e86e78d6ce23876"
+      }
+    ],
+    "agent_logs_downloaded": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "action_sequence_exports": 0,
+    "observation_exports": 0,
+    "training_label_exports": 0,
+    "optimizer_steps": 0,
+    "external_compute": false,
+    "training": false,
+    "submission": false
+  },
+  "dataset": {
+    "owner_slug": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "version": 1
+  },
+  "teacher": {
+    "team_id": 16448747,
+    "team_name": "Luca",
+    "submission_id": 54863653,
+    "leaderboard_rank": 2,
+    "leaderboard_team_score": 1190.4,
+    "submission_public_score": 1180.9,
+    "dataset_episode_count": 357,
+    "dataset_seat_0_count": 181,
+    "dataset_seat_1_count": 176,
+    "strength_basis": "CURRENT_PUBLIC_GOLD_REGION_SCORE_AND_RANK",
+    "rating_field_from_historical_manifest_used": false
+  },
+  "episodes": [
+    {
+      "episode_id": 87731214,
+      "file_name": "87731214.json",
+      "declared_bytes": 574428,
+      "create_time": "2026-07-23T21:58:09.823506Z",
+      "end_time": "2026-07-23T21:58:58.075996Z",
+      "state": "COMPLETED",
+      "type": "EPISODE_TYPE_PUBLIC",
+      "teacher_submission_id": 54863653,
+      "teacher_player_index": 1,
+      "teacher_reward": -1,
+      "opponent_submission_id": 54934488,
+      "opponent_team_name": "Dominic Peel"
+    },
+    {
+      "episode_id": 87615736,
+      "file_name": "87615736.json",
+      "declared_bytes": 738793,
+      "create_time": "2026-07-23T07:22:06.023178600Z",
+      "end_time": "2026-07-23T07:23:00.132860600Z",
+      "state": "COMPLETED",
+      "type": "EPISODE_TYPE_PUBLIC",
+      "teacher_submission_id": 54863653,
+      "teacher_player_index": 0,
+      "teacher_reward": 1,
+      "opponent_submission_id": 54775633,
+      "opponent_team_name": "junlee789"
+    }
+  ],
+  "selection_basis": {
+    "current_top_10_screened": true,
+    "selected_teacher_current_gold_region": true,
+    "selected_teacher_highest_coverage_among_current_top_two": true,
+    "selected_teacher_has_near_balanced_dataset_seats": true,
+    "smallest_opposite_slot_opposite_result_pair": true,
+    "leaderboard_score_used_for_teacher_strength_selection": true,
+    "replay_body_used_for_selection": false
+  },
+  "maximum_new_files": 2,
+  "maximum_new_bytes": 1313221,
+  "output_directory": "private/g3/e01/luca-gold-teacher-probe-v1",
+  "overwrite_authorized": false,
+  "inspection_boundary": {
+    "compare_submission_id": true,
+    "compare_team_name": true,
+    "compare_replay_schema": true,
+    "compare_module_version": true,
+    "compare_exact_60_card_deck_hash": true,
+    "compare_current_asset_deck_construction_checks": true,
+    "compare_aggregate_action_alignment": true,
+    "count_teacher_active_requests": true,
+    "agent_log_downloads": 0,
+    "additional_replay_downloads_after_named_files": 0,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "action_sequence_exports": 0,
+    "observation_exports": 0,
+    "training_label_exports": 0,
+    "optimizer_steps": 0,
+    "external_compute": false,
+    "training": false,
+    "submission": false
+  },
+  "stop_conditions": [
+    "stop_if_output_directory_exists",
+    "stop_if_dataset_owner_slug_or_version_differs",
+    "stop_if_either_file_name_differs",
+    "stop_if_downloaded_bytes_are_not_exactly_574428_and_738793",
+    "stop_if_total_downloaded_bytes_are_not_exactly_1313221",
+    "stop_after_exactly_two_named_files",
+    "stop_after_gold_teacher_probe_review_whether_pass_or_fail",
+    "no_agent_log_third_replay_export_or_training_without_new_explicit_approval"
+  ],
+  "notes": [
+    "This request is prepared under DEC-016 and is not authorized.",
+    "Separate explicit user approval is required before either replay body may be transferred.",
+    "The purpose is gold-region teacher provenance, exact deck consistency and aggregate action-alignment testing only.",
+    "No raw action supervision, training labels, optimizer steps or later replay transfer are authorized."
+  ]
+}

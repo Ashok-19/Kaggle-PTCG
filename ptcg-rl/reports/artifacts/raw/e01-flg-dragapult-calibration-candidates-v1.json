@@ -1,0 +1,227 @@
+{
+  "candidate_pools": {
+    "seat_0_loss": {
+      "episodes": 19,
+      "maximum_bytes": 8488713,
+      "median_bytes": 4954508,
+      "minimum_bytes": 3670353
+    },
+    "seat_0_win": {
+      "episodes": 31,
+      "maximum_bytes": 8160732,
+      "median_bytes": 6103324,
+      "minimum_bytes": 3580698
+    },
+    "seat_1_loss": {
+      "episodes": 28,
+      "maximum_bytes": 7145674,
+      "median_bytes": 4415458,
+      "minimum_bytes": 2024798
+    },
+    "seat_1_win": {
+      "episodes": 51,
+      "maximum_bytes": 9234114,
+      "median_bytes": 5624889,
+      "minimum_bytes": 1483660
+    }
+  },
+  "created_at_utc": "2026-07-27T15:04:21.791379Z",
+  "dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-26/1",
+  "excluded_probe_episode_ids": [
+    88302734,
+    88333037
+  ],
+  "record_id": "e01-flg-dragapult-calibration-candidates-v1",
+  "review_boundary": {
+    "metadata_can_guarantee_module_version": false,
+    "replay_bodies_used_for_selection": false,
+    "require_exact_deck_hash_at_review": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "require_module_version_at_review": "1.32.2"
+  },
+  "schema_version": 1,
+  "selection": {
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "episodes": [
+      {
+        "create_time": "2026-07-26T19:20:32.597Z",
+        "declared_bytes": 4377850,
+        "end_time": "2026-07-26T19:21:26.549Z",
+        "episode_id": 88304411,
+        "file_name": "88304411.json",
+        "opponent_submission_id": 54935503,
+        "opponent_team_name": "James Cox",
+        "selection_quantile": 0.2,
+        "stratum": "seat_0_loss",
+        "teacher_player_index": 0,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T20:20:28.649Z",
+        "declared_bytes": 4954508,
+        "end_time": "2026-07-26T20:21:40.032Z",
+        "episode_id": 88312254,
+        "file_name": "88312254.json",
+        "opponent_submission_id": 54909711,
+        "opponent_team_name": "Majkel1337",
+        "selection_quantile": 0.5,
+        "stratum": "seat_0_loss",
+        "teacher_player_index": 0,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T23:00:28.867Z",
+        "declared_bytes": 6464753,
+        "end_time": "2026-07-26T23:01:38.300Z",
+        "episode_id": 88333027,
+        "file_name": "88333027.json",
+        "opponent_submission_id": 54935503,
+        "opponent_team_name": "James Cox",
+        "selection_quantile": 0.8,
+        "stratum": "seat_0_loss",
+        "teacher_player_index": 0,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T21:52:26.693Z",
+        "declared_bytes": 4747191,
+        "end_time": "2026-07-26T21:53:18.161Z",
+        "episode_id": 88324168,
+        "file_name": "88324168.json",
+        "opponent_submission_id": 54954310,
+        "opponent_team_name": "James Cox",
+        "selection_quantile": 0.2,
+        "stratum": "seat_0_win",
+        "teacher_player_index": 0,
+        "teacher_reward": 1
+      },
+      {
+        "create_time": "2026-07-26T19:40:29.388Z",
+        "declared_bytes": 6103324,
+        "end_time": "2026-07-26T19:41:34.451Z",
+        "episode_id": 88306996,
+        "file_name": "88306996.json",
+        "opponent_submission_id": 54963461,
+        "opponent_team_name": "Majkel1337",
+        "selection_quantile": 0.5,
+        "stratum": "seat_0_win",
+        "teacher_player_index": 0,
+        "teacher_reward": 1
+      },
+      {
+        "create_time": "2026-07-26T16:16:26.625Z",
+        "declared_bytes": 7020621,
+        "end_time": "2026-07-26T16:17:42.806Z",
+        "episode_id": 88280071,
+        "file_name": "88280071.json",
+        "opponent_submission_id": 54957625,
+        "opponent_team_name": "Where is my orbit",
+        "selection_quantile": 0.8,
+        "stratum": "seat_0_win",
+        "teacher_player_index": 0,
+        "teacher_reward": 1
+      },
+      {
+        "create_time": "2026-07-26T22:32:26.040Z",
+        "declared_bytes": 2996616,
+        "end_time": "2026-07-26T22:33:15.812Z",
+        "episode_id": 88329376,
+        "file_name": "88329376.json",
+        "opponent_submission_id": 54992856,
+        "opponent_team_name": "kashiwashira",
+        "selection_quantile": 0.2,
+        "stratum": "seat_1_loss",
+        "teacher_player_index": 1,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T17:08:26.067Z",
+        "declared_bytes": 4415458,
+        "end_time": "2026-07-26T17:09:23.349Z",
+        "episode_id": 88286928,
+        "file_name": "88286928.json",
+        "opponent_submission_id": 54935503,
+        "opponent_team_name": "James Cox",
+        "selection_quantile": 0.5,
+        "stratum": "seat_1_loss",
+        "teacher_player_index": 1,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T15:52:25.815Z",
+        "declared_bytes": 5819313,
+        "end_time": "2026-07-26T15:53:34.340Z",
+        "episode_id": 88276868,
+        "file_name": "88276868.json",
+        "opponent_submission_id": 54995147,
+        "opponent_team_name": "Budew",
+        "selection_quantile": 0.8,
+        "stratum": "seat_1_loss",
+        "teacher_player_index": 1,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T18:12:26.208Z",
+        "declared_bytes": 4787236,
+        "end_time": "2026-07-26T18:13:28.372Z",
+        "episode_id": 88295387,
+        "file_name": "88295387.json",
+        "opponent_submission_id": 54990799,
+        "opponent_team_name": "bono",
+        "selection_quantile": 0.2,
+        "stratum": "seat_1_win",
+        "teacher_player_index": 1,
+        "teacher_reward": 1
+      },
+      {
+        "create_time": "2026-07-26T21:12:26.757Z",
+        "declared_bytes": 5624889,
+        "end_time": "2026-07-26T21:13:26.549Z",
+        "episode_id": 88318931,
+        "file_name": "88318931.json",
+        "opponent_submission_id": 54975989,
+        "opponent_team_name": "lollipop947",
+        "selection_quantile": 0.5,
+        "stratum": "seat_1_win",
+        "teacher_player_index": 1,
+        "teacher_reward": 1
+      },
+      {
+        "create_time": "2026-07-26T20:52:26.654Z",
+        "declared_bytes": 6251226,
+        "end_time": "2026-07-26T20:53:20.423Z",
+        "episode_id": 88316351,
+        "file_name": "88316351.json",
+        "opponent_submission_id": 54968369,
+        "opponent_team_name": "A. R. SEKKAT",
+        "selection_quantile": 0.8,
+        "stratum": "seat_1_win",
+        "teacher_player_index": 1,
+        "teacher_reward": 1
+      }
+    ],
+    "files": 12,
+    "files_per_stratum": 3,
+    "maximum_total_bytes": 67108864,
+    "method": "20th_50th_80th_file_byte_quantiles_per_seat_result_stratum",
+    "quantiles": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "total_bytes": 63562985
+  },
+  "teacher": {
+    "archetype_context_label": "Dragapult ex",
+    "expected_deck_multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "live_rank_at_refresh": 1,
+    "submission_id": 55004495,
+    "submission_public_score": 1244.2,
+    "team_id": 16380946,
+    "team_name": "flg"
+  }
+}

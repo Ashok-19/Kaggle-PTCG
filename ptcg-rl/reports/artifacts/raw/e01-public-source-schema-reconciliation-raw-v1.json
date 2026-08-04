@@ -1,0 +1,286 @@
+{
+  "client": {
+    "episode_endpoint": "/api/v1/competitions/submissions/{submission_id}/episodes",
+    "kaggle_cli_version": "2.2.4",
+    "source_commit": "f0afa32699d28c97f82691728ada3ed8c16c5abf"
+  },
+  "collection_boundary": {
+    "agent_logs_downloaded": 0,
+    "dataset_file_bodies_downloaded": 0,
+    "optimizer_steps": 0,
+    "replay_bodies_downloaded": 0,
+    "training_labels_created": 0
+  },
+  "created_at_utc": "2026-07-24T15:28:00Z",
+  "dataset": {
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "file_metadata_pages": 23,
+    "owner_slug": "kaggle",
+    "version": 1
+  },
+  "episode_response_counts": {
+    "54863653": 1000,
+    "54898840": 591,
+    "54907538": 476,
+    "54909711": 842,
+    "54933084": 250
+  },
+  "producer": "current-official-kaggle-client-metadata-only",
+  "record_id": "e01-public-source-schema-reconciliation-raw-v1",
+  "schema_version": 1,
+  "score_field_status": {
+    "accepted_rank_scores_reproducible": false,
+    "precise_episode_agent_rating_present": false,
+    "raw_manifest_score_fields_semantically_equivalent": false
+  },
+  "selected": [
+    {
+      "episode_id": 87562468,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": -1,
+            "submissionId": 54863653,
+            "teamId": 16448747,
+            "teamName": "Luca"
+          },
+          {
+            "index": 1,
+            "reward": 1,
+            "submissionId": 54858381,
+            "teamId": 16372828,
+            "teamName": "iwashi"
+          }
+        ],
+        "createTime": "2026-07-23T00:42:07.787189100Z",
+        "endTime": "2026-07-23T00:50:09.580087700Z",
+        "id": 87562468,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:01.328000",
+        "file_name": "87562468.json",
+        "total_bytes": 8131655
+      }
+    },
+    {
+      "episode_id": 87583340,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": -1,
+            "submissionId": 54909711,
+            "teamId": 16374395,
+            "teamName": "Majkel1337"
+          },
+          {
+            "index": 1,
+            "reward": 1,
+            "submissionId": 54899223,
+            "teamId": 16425135,
+            "teamName": "Rmy"
+          }
+        ],
+        "createTime": "2026-07-23T03:18:03.918732900Z",
+        "endTime": "2026-07-23T03:19:17.291349300Z",
+        "id": 87583340,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:02.216000",
+        "file_name": "87583340.json",
+        "total_bytes": 4543765
+      }
+    },
+    {
+      "episode_id": 87646392,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": 1,
+            "submissionId": 54923761,
+            "teamId": 16406640,
+            "teamName": "gecogeco"
+          },
+          {
+            "index": 1,
+            "reward": -1,
+            "submissionId": 54863653,
+            "teamId": 16448747,
+            "teamName": "Luca"
+          }
+        ],
+        "createTime": "2026-07-23T11:14:19.615517300Z",
+        "endTime": "2026-07-23T11:15:22.239092600Z",
+        "id": 87646392,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:05.907000",
+        "file_name": "87646392.json",
+        "total_bytes": 5181665
+      }
+    },
+    {
+      "episode_id": 87652312,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": 1,
+            "submissionId": 54912602,
+            "teamId": 16487924,
+            "teamName": "lmaffei"
+          },
+          {
+            "index": 1,
+            "reward": -1,
+            "submissionId": 54909711,
+            "teamId": 16374395,
+            "teamName": "Majkel1337"
+          }
+        ],
+        "createTime": "2026-07-23T11:58:15.878512800Z",
+        "endTime": "2026-07-23T12:00:36.152633400Z",
+        "id": 87652312,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:06.189000",
+        "file_name": "87652312.json",
+        "total_bytes": 3964599
+      }
+    },
+    {
+      "episode_id": 87703034,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": 1,
+            "submissionId": 54933084,
+            "teamId": 16401597,
+            "teamName": "Benarg"
+          },
+          {
+            "index": 1,
+            "reward": -1,
+            "submissionId": 54775633,
+            "teamId": 16422150,
+            "teamName": "junlee789"
+          }
+        ],
+        "createTime": "2026-07-23T18:26:15.370240100Z",
+        "endTime": "2026-07-23T18:32:34.138948200Z",
+        "id": 87703034,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:07.529000",
+        "file_name": "87703034.json",
+        "total_bytes": 3641302
+      }
+    },
+    {
+      "episode_id": 87720146,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": 1,
+            "submissionId": 54863653,
+            "teamId": 16448747,
+            "teamName": "Luca"
+          },
+          {
+            "index": 1,
+            "reward": -1,
+            "submissionId": 54886942,
+            "teamId": 16441077,
+            "teamName": "haggle"
+          }
+        ],
+        "createTime": "2026-07-23T20:34:10.003558400Z",
+        "endTime": "2026-07-23T20:35:33.245642100Z",
+        "id": 87720146,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:08.991000",
+        "file_name": "87720146.json",
+        "total_bytes": 6979760
+      }
+    },
+    {
+      "episode_id": 87738531,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": -1,
+            "submissionId": 54919611,
+            "teamId": 16464757,
+            "teamName": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+          },
+          {
+            "index": 1,
+            "reward": 1,
+            "submissionId": 54907538,
+            "teamId": 16463316,
+            "teamName": "LiamK"
+          }
+        ],
+        "createTime": "2026-07-23T22:54:09.867126400Z",
+        "endTime": "2026-07-23T22:57:24.724047800Z",
+        "id": 87738531,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:11.791000",
+        "file_name": "87738531.json",
+        "total_bytes": 4024477
+      }
+    },
+    {
+      "episode_id": 87739085,
+      "episode_metadata": {
+        "agents": [
+          {
+            "reward": -1,
+            "submissionId": 54898840,
+            "teamId": 16425135,
+            "teamName": "Rmy"
+          },
+          {
+            "index": 1,
+            "reward": 1,
+            "submissionId": 54934488,
+            "teamId": 16514272,
+            "teamName": "Dominic Peel"
+          }
+        ],
+        "createTime": "2026-07-23T22:58:09.804334600Z",
+        "endTime": "2026-07-23T22:59:08.795316900Z",
+        "id": 87739085,
+        "state": "COMPLETED",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      "file_metadata": {
+        "creation_date": "2026-07-24T00:03:11.851000",
+        "file_name": "87739085.json",
+        "total_bytes": 6152786
+      }
+    }
+  ],
+  "source_path": "reports/artifacts/raw/e01-public-source-schema-reconciliation-raw-v1.json",
+  "source_submission_ids": [
+    54863653,
+    54909711,
+    54898840,
+    54907538,
+    54933084
+  ]
+}

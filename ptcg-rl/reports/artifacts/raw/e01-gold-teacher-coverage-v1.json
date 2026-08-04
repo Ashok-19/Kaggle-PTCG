@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "record_id": "e01-gold-teacher-coverage-v1",
+  "created_at_utc": "2026-07-24T17:52:03.975945Z",
+  "source_path": "reports/artifacts/raw/e01-gold-teacher-coverage-v1.json",
+  "producer": "current-official-kaggle-client-metadata-only",
+  "collector": {
+    "scratch_path": "scratch/agents/chatgpt-e01/e01_top_teacher_coverage.py",
+    "sha256": "93986598068c0a78bb670139a6a13cfca963ad57d65847d0c25f79b9faa64024",
+    "kaggle_cli_version": "2.2.4",
+    "source_commit": "f0afa32699d28c97f82691728ada3ed8c16c5abf"
+  },
+  "competition": {
+    "slug": "pokemon-tcg-ai-battle",
+    "leaderboard_snapshot_date_utc": "2026-07-24",
+    "team_count": 5644
+  },
+  "dataset": {
+    "owner_slug": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "version": 1,
+    "file_pages": 23,
+    "json_files": 4559
+  },
+  "covered_top_10": [
+    {
+      "leaderboard_rank": 1,
+      "team_id": 16400014,
+      "team_name": "__Taichicchi__",
+      "leaderboard_team_score": 1229.0,
+      "selected_active_submission_id": 54933747,
+      "submission_public_score": 1231.5,
+      "dataset_episode_count": 59,
+      "dataset_total_bytes": 274272026,
+      "seat_0_count": 27,
+      "seat_1_count": 32,
+      "win_count": 38,
+      "loss_count": 21
+    },
+    {
+      "leaderboard_rank": 2,
+      "team_id": 16448747,
+      "team_name": "Luca",
+      "leaderboard_team_score": 1190.4,
+      "selected_active_submission_id": 54863653,
+      "submission_public_score": 1180.9,
+      "dataset_episode_count": 357,
+      "dataset_total_bytes": 1825676360,
+      "seat_0_count": 181,
+      "seat_1_count": 176,
+      "win_count": 224,
+      "loss_count": 133
+    },
+    {
+      "leaderboard_rank": 3,
+      "team_id": 16374469,
+      "team_name": "西松大祐",
+      "leaderboard_team_score": 1122.1,
+      "selected_active_submission_id": 54949427,
+      "submission_public_score": 1116.6,
+      "dataset_episode_count": 0
+    },
+    {
+      "leaderboard_rank": 4,
+      "team_id": 16372380,
+      "team_name": "THIRD PTCG Club",
+      "leaderboard_team_score": 1110.9,
+      "selected_active_submission_id": 54950541,
+      "submission_public_score": 1114.8,
+      "dataset_episode_count": 0
+    },
+    {
+      "leaderboard_rank": 5,
+      "team_id": 16385372,
+      "team_name": "kashiwashira",
+      "leaderboard_team_score": 1107.2,
+      "selected_active_submission_id": 54943166,
+      "submission_public_score": 1101.3,
+      "dataset_episode_count": 0
+    },
+    {
+      "leaderboard_rank": 6,
+      "team_id": 16425135,
+      "team_name": "Rmy",
+      "leaderboard_team_score": 1104.1,
+      "selected_active_submission_id": 54898840,
+      "submission_public_score": 1110.0,
+      "dataset_episode_count": 225,
+      "dataset_total_bytes": 1124771161,
+      "seat_0_count": 120,
+      "seat_1_count": 105,
+      "win_count": 126,
+      "loss_count": 98,
+      "other_result_count": 1
+    },
+    {
+      "leaderboard_rank": 7,
+      "team_id": 16374395,
+      "team_name": "Majkel1337",
+      "leaderboard_team_score": 1102.1,
+      "selected_active_submission_id": 54909711,
+      "submission_public_score": 1096.6,
+      "dataset_episode_count": 379,
+      "dataset_total_bytes": 1743976968,
+      "seat_0_count": 173,
+      "seat_1_count": 206,
+      "win_count": 210,
+      "loss_count": 169
+    },
+    {
+      "leaderboard_rank": 8,
+      "team_id": 16440585,
+      "team_name": "Brahim",
+      "leaderboard_team_score": 1097.4,
+      "selected_active_submission_id": 54952235,
+      "submission_public_score": 1103.6,
+      "dataset_episode_count": 0
+    },
+    {
+      "leaderboard_rank": 9,
+      "team_id": 16424674,
+      "team_name": "【共逐荣光】Timmy Juicehouse",
+      "leaderboard_team_score": 1091.1,
+      "selected_active_submission_id": 54919551,
+      "submission_public_score": 1088.6,
+      "dataset_episode_count": 24,
+      "dataset_total_bytes": 118130061,
+      "seat_0_count": 7,
+      "seat_1_count": 17,
+      "win_count": 9,
+      "loss_count": 15
+    },
+    {
+      "leaderboard_rank": 10,
+      "team_id": 16411724,
+      "team_name": "me and the lads",
+      "leaderboard_team_score": 1087.9,
+      "selected_active_submission_id": 54925664,
+      "submission_public_score": 1092.3,
+      "dataset_episode_count": 138,
+      "dataset_total_bytes": 692770491,
+      "seat_0_count": 68,
+      "seat_1_count": 70,
+      "win_count": 81,
+      "loss_count": 57
+    }
+  ],
+  "selection": {
+    "teacher_team_id": 16448747,
+    "teacher_team_name": "Luca",
+    "teacher_submission_id": 54863653,
+    "teacher_submission_public_score": 1180.9,
+    "teacher_leaderboard_rank": 2,
+    "teacher_dataset_episode_count": 357,
+    "teacher_seat_0_count": 181,
+    "teacher_seat_1_count": 176,
+    "reason": "Highest replay coverage among the current top-two teams while retaining a gold-region public score and near-balanced seats; more likely than the rank-one submission's 59 files to support the 5000-teacher-decision screen.",
+    "probe_files": [
+      {
+        "episode_id": 87731214,
+        "file_name": "87731214.json",
+        "declared_bytes": 574428,
+        "create_time": "2026-07-23T21:58:09.823506Z",
+        "end_time": "2026-07-23T21:58:58.075996Z",
+        "teacher_player_index": 1,
+        "teacher_reward": -1,
+        "opponent_submission_id": 54934488,
+        "opponent_team_name": "Dominic Peel"
+      },
+      {
+        "episode_id": 87615736,
+        "file_name": "87615736.json",
+        "declared_bytes": 738793,
+        "create_time": "2026-07-23T07:22:06.023178600Z",
+        "end_time": "2026-07-23T07:23:00.132860600Z",
+        "teacher_player_index": 0,
+        "teacher_reward": 1,
+        "opponent_submission_id": 54775633,
+        "opponent_team_name": "junlee789"
+      }
+    ],
+    "probe_total_bytes": 1313221,
+    "opposite_player_slots": true,
+    "opposite_terminal_results": true,
+    "smallest_qualifying_pair": true
+  },
+  "collection_boundary": {
+    "replay_bodies_downloaded": 0,
+    "agent_logs_downloaded": 0,
+    "raw_step_exports": 0,
+    "action_exports": 0,
+    "observation_exports": 0,
+    "training_labels_created": 0,
+    "optimizer_steps": 0,
+    "external_compute": false,
+    "training": false
+  }
+}

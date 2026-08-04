@@ -1,0 +1,456 @@
+{
+  "approval": {
+    "approval_message": "proceed",
+    "approved_at_utc": "2026-07-24T19:27:38.505500Z",
+    "approved_by": "user",
+    "approved_prior_request_sha256": "5b8b6b91d4d407cf06ff3270f1852c55c334d33ef34c4e915bf0097de262009a",
+    "authorized_request_sha256": "e17411c7064c293a38772be66d441901fea19a7af67ecca3a0cae99113e76784",
+    "consumed_at_utc": "2026-07-24T19:33:52.430166Z",
+    "one_time": true
+  },
+  "authorization_scope": "CONSUMED_EXACT_12_FILE_LUCA_SAME_VERSION_CALIBRATION_ONLY",
+  "authorized": false,
+  "candidate_metadata_path": "reports/artifacts/raw/e01-luca-same-version-calibration-candidates-v1.json",
+  "candidate_metadata_sha256": "9efd5da48e7f6d76bdd7065c3cbbb95c1be26bb22cb642707994a8be7504d1e0",
+  "completed_teacher_probe_request_path": "configs/e01_luca_gold_teacher_probe_request_v1.json",
+  "completed_teacher_probe_request_sha256": "b70efe6228d08f78c104e75c3007d4e1b99c747223d05d1d14e9808f975146a2",
+  "completed_teacher_probe_review_path": "reports/artifacts/e01-luca-gold-teacher-probe-review-v1.json",
+  "completed_teacher_probe_review_self_hash": "071784291ac0acc772337c326857f261f1781ab21901d4bf26ab928ec8cb543c",
+  "completed_teacher_probe_review_sha256": "533cb71425a8f233885855ca1377d2fc67b56d24ced96a09a8f52934ce083c70",
+  "created_at_utc": "2026-07-24T18:55:33.100265Z",
+  "dataset": {
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "owner_slug": "kaggle",
+    "version": 1
+  },
+  "decision_id": "DEC-017",
+  "decision_path": "docs/decisions/DEC-017_E01_LUCA_SAME_VERSION_CALIBRATION.md",
+  "decision_sha256": "1dd14efd37f07fdf00de5e50925556c00736aea04222f2972b6812a0ee0bfd83",
+  "episodes": [
+    {
+      "create_time": "2026-07-23T22:06:12.173000Z",
+      "declared_bytes": 5999663,
+      "end_time": "2026-07-23T22:08:06.941000Z",
+      "episode_id": 87732247,
+      "file_name": "87732247.json",
+      "opponent_reward": -1,
+      "opponent_submission_id": 54775633,
+      "opponent_team_id": 16422150,
+      "opponent_team_name": "junlee789",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 0,
+        "reward": 1
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T22:14:09.972000Z",
+      "declared_bytes": 5047771,
+      "end_time": "2026-07-23T22:15:17.344000Z",
+      "episode_id": 87733289,
+      "file_name": "87733289.json",
+      "opponent_reward": 1,
+      "opponent_submission_id": 54875820,
+      "opponent_team_id": 16407282,
+      "opponent_team_name": "SQUIRTLE (prime)",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 0,
+        "reward": -1
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T22:18:09.965000Z",
+      "declared_bytes": 4942976,
+      "end_time": "2026-07-23T22:19:10.973000Z",
+      "episode_id": 87733748,
+      "file_name": "87733748.json",
+      "opponent_reward": 1,
+      "opponent_submission_id": 54887818,
+      "opponent_team_id": 16397524,
+      "opponent_team_name": "jiatu.l",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 0,
+        "reward": -1
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T22:22:10.779000Z",
+      "declared_bytes": 3934914,
+      "end_time": "2026-07-23T22:22:48.756000Z",
+      "episode_id": 87734353,
+      "file_name": "87734353.json",
+      "opponent_reward": -1,
+      "opponent_submission_id": 54922187,
+      "opponent_team_id": 16385372,
+      "opponent_team_name": "kashiwashira",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 0,
+        "reward": 1
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T22:38:10.276000Z",
+      "declared_bytes": 5122828,
+      "end_time": "2026-07-23T22:39:16.374000Z",
+      "episode_id": 87736454,
+      "file_name": "87736454.json",
+      "opponent_reward": 1,
+      "opponent_submission_id": 54898840,
+      "opponent_team_id": 16425135,
+      "opponent_team_name": "Rmy",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 1,
+        "reward": -1
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T22:46:11.169000Z",
+      "declared_bytes": 6627479,
+      "end_time": "2026-07-23T22:47:43.352000Z",
+      "episode_id": 87737495,
+      "file_name": "87737495.json",
+      "opponent_reward": 1,
+      "opponent_submission_id": 54934488,
+      "opponent_team_id": 16514272,
+      "opponent_team_name": "Dominic Peel",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 1,
+        "reward": -1
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T22:58:09.811000Z",
+      "declared_bytes": 6109840,
+      "end_time": "2026-07-23T22:59:28.938000Z",
+      "episode_id": 87739090,
+      "file_name": "87739090.json",
+      "opponent_reward": 1,
+      "opponent_submission_id": 54934375,
+      "opponent_team_id": 16400014,
+      "opponent_team_name": "__Taichicchi__",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 0,
+        "reward": -1
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T23:02:10.177000Z",
+      "declared_bytes": 6699033,
+      "end_time": "2026-07-23T23:03:52.238000Z",
+      "episode_id": 87739639,
+      "file_name": "87739639.json",
+      "opponent_reward": -1,
+      "opponent_submission_id": 54909711,
+      "opponent_team_id": 16374395,
+      "opponent_team_name": "Majkel1337",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 1,
+        "reward": 1
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T23:14:09.782000Z",
+      "declared_bytes": 6065629,
+      "end_time": "2026-07-23T23:15:21.326000Z",
+      "episode_id": 87741191,
+      "file_name": "87741191.json",
+      "opponent_reward": -1,
+      "opponent_submission_id": 54898840,
+      "opponent_team_id": 16425135,
+      "opponent_team_name": "Rmy",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 1,
+        "reward": 1
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T23:45:04.219000Z",
+      "declared_bytes": 5544479,
+      "end_time": "2026-07-23T23:45:58.004000Z",
+      "episode_id": 87744901,
+      "file_name": "87744901.json",
+      "opponent_reward": -1,
+      "opponent_submission_id": 54897360,
+      "opponent_team_id": 16381624,
+      "opponent_team_name": "LumenLiquidity",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 1,
+        "reward": 1
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T23:45:04.223000Z",
+      "declared_bytes": 4958020,
+      "end_time": "2026-07-23T23:46:05.997000Z",
+      "episode_id": 87744904,
+      "file_name": "87744904.json",
+      "opponent_reward": -1,
+      "opponent_submission_id": 54895414,
+      "opponent_team_id": 16463316,
+      "opponent_team_name": "LiamK",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 0,
+        "reward": 1
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    },
+    {
+      "create_time": "2026-07-23T23:53:32.145000Z",
+      "declared_bytes": 2775425,
+      "end_time": "2026-07-23T23:54:44.813000Z",
+      "episode_id": 87745939,
+      "file_name": "87745939.json",
+      "opponent_reward": 1,
+      "opponent_submission_id": 54933747,
+      "opponent_team_id": 16400014,
+      "opponent_team_name": "__Taichicchi__",
+      "state": "COMPLETED",
+      "stratum": {
+        "player_index": 1,
+        "reward": -1
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1,
+      "teacher_submission_id": 54863653,
+      "teacher_team_id": 16448747,
+      "teacher_team_name": "Luca",
+      "type": "EPISODE_TYPE_PUBLIC"
+    }
+  ],
+  "execution": {
+    "action_sequence_exports": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "bytes_downloaded": 63828057,
+    "card_list_exports": 0,
+    "downloaded_files": [
+      {
+        "bytes": 5999663,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87732247.json",
+        "sha256": "14967e122582fb4ca926242b68969dada4e02b2270d7b828e3383a46007971b7"
+      },
+      {
+        "bytes": 5047771,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87733289.json",
+        "sha256": "a43083267ebaac0a44b5b421028e0e73ea3e7c625bfd6fb0bba89fda69067ba2"
+      },
+      {
+        "bytes": 4942976,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87733748.json",
+        "sha256": "ed89228b5058a46fadd308b183b2a94f2c2adad6601f2c4a36a23239ed361d29"
+      },
+      {
+        "bytes": 3934914,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87734353.json",
+        "sha256": "1e7a1b33ec2ec649308806adb7f4d6ccd2af3fe70f7dd474b1824350aa105d7c"
+      },
+      {
+        "bytes": 5122828,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87736454.json",
+        "sha256": "eac42a493a39b34ce4cd043e3dbfa61dc1ae96a0e08efc5834050aa32321ebe2"
+      },
+      {
+        "bytes": 6627479,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87737495.json",
+        "sha256": "e90cf26d07e6bc8d18b23f0758750fb07a0c7da1dd110b16421041a89df375ec"
+      },
+      {
+        "bytes": 6109840,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87739090.json",
+        "sha256": "75100a0239b5e3d01e2e71fc8f332dfde474ad4fe3be9c58092b64e41524d9a1"
+      },
+      {
+        "bytes": 6699033,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87739639.json",
+        "sha256": "d1897292bc6cb35838fd78070762ce86f02fd545ae30248e20dae728c507334e"
+      },
+      {
+        "bytes": 6065629,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87741191.json",
+        "sha256": "bfb3e5e0c547642a877e6f580a533422916a59bf4c1671464adc89382c2fcb6d"
+      },
+      {
+        "bytes": 5544479,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87744901.json",
+        "sha256": "728ae565de5d27e463983310db8d3de4891774cda59ef0e3ecb449027a4301cd"
+      },
+      {
+        "bytes": 4958020,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87744904.json",
+        "sha256": "143fa8e445a592ea4f6508bc61b4b7e226bdf427105029adf469e474800e4bca"
+      },
+      {
+        "bytes": 2775425,
+        "path": "private/g3/e01/luca-same-version-calibration-v1/87745939.json",
+        "sha256": "d5d0813ce96d9dfc4ca62447a1df20c55365c3bc490c634458add4edfe9f2f7f"
+      }
+    ],
+    "external_compute": false,
+    "files_downloaded": 12,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "submission": false,
+    "training": false,
+    "training_label_exports": 0
+  },
+  "maximum_new_bytes": 63828057,
+  "maximum_new_files": 12,
+  "notes": [
+    "This request is prepared under DEC-017 and is not authorized.",
+    "Separate explicit user approval is required before any named calibration replay may be transferred.",
+    "This is a calibration batch for module/deck/action consistency and decision-density estimation, not the full 5000-decision screening batch.",
+    "No raw action supervision, labels, optimizer steps, training, external compute or submission are authorized."
+  ],
+  "output_directory": "private/g3/e01/luca-same-version-calibration-v1",
+  "overwrite_authorized": false,
+  "record_id": "e01-luca-same-version-calibration-request-v1",
+  "request_ready": false,
+  "review_boundary": {
+    "action_sequence_exports": 0,
+    "additional_replay_downloads_after_named_files": 0,
+    "agent_log_downloads": 0,
+    "card_list_exports": 0,
+    "external_compute": false,
+    "measure_luca_decision_density": true,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "require_aggregate_action_alignment": true,
+    "require_current_asset_deck_construction_checks": true,
+    "require_environment_name": "cabt",
+    "require_environment_version": "1.0.0",
+    "require_exact_deck_hash": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+    "require_exact_declared_bytes": true,
+    "require_exact_file_sha256": true,
+    "require_module_version": "1.32.2",
+    "require_schema_version": 1,
+    "require_submission_binding": true,
+    "submission": false,
+    "training": false,
+    "training_label_exports": 0
+  },
+  "same_version_proxy": {
+    "anchor_create_time": "2026-07-23T21:58:09.823506Z",
+    "anchor_episode_id": 87731214,
+    "anchor_observed_module_version": "1.32.2",
+    "execution_must_fail_closed_per_file_unless_module_version_is_1.32.2": true,
+    "metadata_can_guarantee_module_version": false
+  },
+  "schema_version": 1,
+  "selection_basis": {
+    "balanced_player_slot_and_terminal_result": true,
+    "byte_quantiles_per_stratum": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "candidate_pool_episodes": 39,
+    "files_per_stratum": 3,
+    "leaderboard_rating_used_for_file_selection": false,
+    "metadata_can_guarantee_module_version": false,
+    "module_version_required_at_review": "1.32.2",
+    "replay_bodies_used_for_selection": false
+  },
+  "stage": "same_version_teacher_calibration",
+  "status": "CONSUMED",
+  "stop_conditions": [
+    "stop_if_output_directory_exists",
+    "stop_if_dataset_owner_slug_or_version_differs",
+    "stop_if_any_file_name_or_declared_byte_count_differs",
+    "stop_after_exactly_12_named_files",
+    "fail_qualification_if_any_replay_module_version_is_not_1.32.2",
+    "fail_qualification_if_any_luca_deck_hash_differs",
+    "stop_after_calibration_review_whether_pass_or_fail",
+    "no_agent_log_or_additional_replay_without_new_explicit_approval"
+  ],
+  "teacher": {
+    "dataset_episode_count": 357,
+    "expected_deck_multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+    "leaderboard_rank": 2,
+    "leaderboard_team_score": 1190.4,
+    "submission_id": 54863653,
+    "submission_public_score": 1180.9,
+    "team_id": 16448747,
+    "team_name": "Luca"
+  }
+}

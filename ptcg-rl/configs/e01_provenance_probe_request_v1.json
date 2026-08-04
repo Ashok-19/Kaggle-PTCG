@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "record_id": "e01-provenance-probe-request-v1",
+  "created_at_utc": "2026-07-24T14:52:18Z",
+  "stage": "provenance_probe",
+  "decision_id": "DEC-013",
+  "decision_path": "docs/decisions/DEC-013_E01_PROVENANCE_PROBE.md",
+  "decision_sha256": "15aa1ba1113c62f2a9d5dcd02b6e221b6a91ee3f54726989477eb15a564cbf94",
+  "dry_run_path": "reports/artifacts/e01a-public-replay-dry-run-v1.json",
+  "dry_run_sha256": "ecec3f97e62d177fbb111b528a3f70ad9b0059991af50935861b937ab87ea599",
+  "current_manifest_snapshot_path": "reports/artifacts/raw/e01-public-manifest-metadata-v1.json",
+  "current_manifest_snapshot_sha256": "c7880aa62800d6939c9a306dd492c2c026f17ad0b86a07f62ec84c121e22264d",
+  "status": "BLOCKED_SOURCE_MANIFEST_CONTRACT_UNRESOLVED",
+  "request_ready": false,
+  "authorized": false,
+  "authorization_scope": null,
+  "dataset": {
+    "owner_slug": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "version": 1
+  },
+  "episode_id": null,
+  "file_name": null,
+  "declared_bytes": null,
+  "maximum_files": 0,
+  "maximum_total_bytes": 0,
+  "output_directory": null,
+  "inspection_boundary": {
+    "replay_files": 0,
+    "agent_log_downloads": 0,
+    "public_replay_body_exports": 0,
+    "action_sequence_exports": 0,
+    "observation_exports": 0,
+    "training_label_exports": 0,
+    "optimizer_steps": 0,
+    "external_compute": false,
+    "training": false,
+    "submission": false
+  },
+  "blockers": [
+    "accepted_daily_manifest_sha256_not_reproducible",
+    "daily_manifest_schema_changed",
+    "selected_file_byte_caps_not_reproducible",
+    "timestamp_and_score_semantics_unresolved"
+  ],
+  "notes": [
+    "This placeholder is intentionally non-executable.",
+    "No replay transfer may be approved from this file.",
+    "A new exact request requires a separately reviewed source/schema reconciliation."
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "artifacts": {
+    "authorization_snapshot": {
+      "bytes": 1650,
+      "path": "private/g3/e04/ten-game-smoke-v1/e04-native-zero-update-authorization.json",
+      "sha256": "f8019962c4914fa1cfac754b1af7616db69fdb4e0503e89cb46f6282cd2f4922"
+    },
+    "bridge_checkpoint": {
+      "bytes": 9390133,
+      "path": "private/g3/e04/ten-game-smoke-v1/e04-native-zero-update-bridge.json",
+      "sha256": "42ad8c70921a7b8aedba16b4b58ec76f0e938fd53a9de45cf6c17293e4855084"
+    },
+    "current_consumed_request": {
+      "bytes": 1844,
+      "path": "configs/e04_ten_game_smoke_request_v1.json",
+      "sha256": "47b254f63ae41f6dfd605e4880b444c00847eca3705c8f08ea6189ad40ac930b"
+    },
+    "game_ledger": {
+      "bytes": 16604,
+      "path": "private/g3/e04/ten-game-smoke-v1/e04-native-zero-update-games.json",
+      "sha256": "fb81311badec02349c9e5e07af3eae1cb57de96028978b8b11a448c5435909ec"
+    },
+    "native_report": {
+      "bytes": 20137,
+      "path": "private/g3/e04/ten-game-smoke-v1/e04-native-zero-update-report.json",
+      "sha256": "fe5520f95c11550b95764ce244dd2e3f0d1bdb45dd4e23e304229cf7a63a1dc0"
+    }
+  },
+  "assets": {
+    "card_data": {
+      "bytes": 359151,
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "checkpoint": {
+      "bytes": 5429190,
+      "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827"
+    },
+    "deck": {
+      "bytes": 305,
+      "sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee"
+    },
+    "engine_library": {
+      "bytes": 1342400,
+      "sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887"
+    },
+    "wrapper_api": {
+      "bytes": 26933,
+      "sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced"
+    }
+  },
+  "authorization": {
+    "authorization_consumed": true,
+    "authorization_snapshot_sha256": "f8019962c4914fa1cfac754b1af7616db69fdb4e0503e89cb46f6282cd2f4922",
+    "current_request_authorized": false,
+    "explicit_user_approval": true,
+    "external_compute_authorized": false,
+    "games_authorized": 10,
+    "hundred_game_stage_authorized": false,
+    "optimizer_steps_authorized": 0,
+    "rerun_authorized": false
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T12:46:54.336945+00:00",
+  "decision": "PASS",
+  "execution": {
+    "device": "cpu",
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "single_process": true,
+    "training_loop_ran": false,
+    "wall_seconds": 13.843765318000806
+  },
+  "producer": "scripts/e04_smoke_review.py",
+  "qualification_scope": {
+    "hundred_game_qualification": false,
+    "policy_competence": false,
+    "single_process_trace": true,
+    "ten_game_smoke": true,
+    "training_authorized": false
+  },
+  "record_id": "e04-ten-game-smoke-v1",
+  "results": {
+    "bridge_state_sha256": "611ee6fa99e4e323c2177b5be1808ca8993f35306f67da2ddbc49c051e441676",
+    "engine_decisions": 711,
+    "forced_decisions": 63,
+    "games": 10,
+    "maximum_compound_log_probability_absolute_error": 1.9428366693219346e-07,
+    "meaningful_decisions": 648,
+    "per_game": [
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-smoke-0000",
+        "forced_decisions": 5,
+        "game_index": 0,
+        "maximum_replay_absolute_error": 1.380814351747972e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.3283348200056935
+      },
+      {
+        "engine_decisions": 78,
+        "episode_id": "e04-smoke-0001",
+        "forced_decisions": 8,
+        "game_index": 1,
+        "maximum_replay_absolute_error": 1.2467715082564723e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 1,
+        "wall_seconds": 1.1397619859926635
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-smoke-0002",
+        "forced_decisions": 4,
+        "game_index": 2,
+        "maximum_replay_absolute_error": 1.5015791010597468e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 1,
+        "wall_seconds": 0.8899661249888595
+      },
+      {
+        "engine_decisions": 75,
+        "episode_id": "e04-smoke-0003",
+        "forced_decisions": 5,
+        "game_index": 3,
+        "maximum_replay_absolute_error": 1.7632744553353064e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 1,
+        "wall_seconds": 1.1492583399958676
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-smoke-0004",
+        "forced_decisions": 5,
+        "game_index": 4,
+        "maximum_replay_absolute_error": 1.5570463762770714e-07,
+        "meaningful_decisions": 56,
+        "terminal_result": 1,
+        "wall_seconds": 0.9090734350029379
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-smoke-0005",
+        "forced_decisions": 6,
+        "game_index": 5,
+        "maximum_replay_absolute_error": 1.7825196563237e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 1,
+        "wall_seconds": 1.1419296669919277
+      },
+      {
+        "engine_decisions": 80,
+        "episode_id": "e04-smoke-0006",
+        "forced_decisions": 10,
+        "game_index": 6,
+        "maximum_replay_absolute_error": 1.3897724393530098e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 0,
+        "wall_seconds": 1.195234081998933
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-smoke-0007",
+        "forced_decisions": 4,
+        "game_index": 7,
+        "maximum_replay_absolute_error": 1.3629360484657127e-07,
+        "meaningful_decisions": 66,
+        "terminal_result": 0,
+        "wall_seconds": 1.0486765499954345
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-smoke-0008",
+        "forced_decisions": 7,
+        "game_index": 8,
+        "maximum_replay_absolute_error": 1.9428366693219346e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 0,
+        "wall_seconds": 1.0757194080069894
+      },
+      {
+        "engine_decisions": 77,
+        "episode_id": "e04-smoke-0009",
+        "forced_decisions": 9,
+        "game_index": 9,
+        "maximum_replay_absolute_error": 1.8385859101854862e-07,
+        "meaningful_decisions": 68,
+        "terminal_result": 1,
+        "wall_seconds": 1.3091950780071784
+      }
+    ],
+    "terminal_boundaries_for_both_players": 10,
+    "terminal_result_counts": {
+      "-1": 0,
+      "0": 4,
+      "1": 6
+    },
+    "zero_tolerance": {
+      "duplicate_requests": 0,
+      "fallback_actions": 0,
+      "invalid_actions": 0,
+      "nonfinite_values": 0,
+      "optimizer_attempts": 0,
+      "out_of_order_requests": 0,
+      "policy_lag": 0,
+      "recurrent_owner_failures": 0,
+      "replay_mismatches": 0,
+      "stale_requests": 0,
+      "terminal_errors": 0,
+      "worker_deaths": 0
+    }
+  },
+  "review_sha256": "6d3ffa9b7866167fbf8060ff4377a682c34ed100f14b70ec3dac0c56f514a64e",
+  "schema_version": 1,
+  "source_path": "reports/evaluations/e04-ten-game-smoke-v1.json",
+  "stage": "smoke",
+  "status": "SUCCEEDED"
+}

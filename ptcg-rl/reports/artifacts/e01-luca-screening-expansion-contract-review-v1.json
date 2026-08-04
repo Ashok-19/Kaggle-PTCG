@@ -1,0 +1,69 @@
+{
+  "calibration": {
+    "combined_observed_luca_decisions": 1207,
+    "conservative_density_per_mib": 16.264384083698396,
+    "projected_additional_luca_decisions": 4200.478614492002,
+    "projection_is_guarantee": false,
+    "reserve_multiplier": 1.1,
+    "screening_shortfall": 3793
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T19:40:32.603085Z",
+  "decision": "ACCEPT_EXACT_51_FILE_LUCA_SCREENING_EXPANSION_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "calibration_request": {
+      "path": "configs/e01_luca_same_version_calibration_request_v1.json",
+      "sha256": "a71621707f597e9f99c9db2dfb549f3dcf626aaf3d4f36ad182cc2d03dcd87f0"
+    },
+    "calibration_review": {
+      "path": "reports/artifacts/e01-luca-same-version-calibration-review-v1.json",
+      "review_sha256": "c8436471020021b6137b24dfc4a501d6d6ec5164e4714132ed9384833fd82440",
+      "sha256": "c5688e712d32919e495517e4ae5911e9cd7e01ad7f096dda84eea18e563d5bc4"
+    },
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-luca-screening-expansion-candidates-v1.json",
+      "sha256": "56e5e1e348b5bcbf0210efd039154df16f51727fe401f71ed67af41600c60c3e"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-018_E01_LUCA_SCREENING_EXPANSION.md",
+      "sha256": "ce617725a0481d3a83c40885fb72d3049306a15f8a83cc99dda669d27a0f5a68"
+    },
+    "request": {
+      "path": "configs/e01_luca_screening_expansion_request_v1.json",
+      "sha256": "c293268607ce0fc8762d543508bf2c798087ca9583cec05e3031a1906fc26962"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_51_FILE_LUCA_SCREENING_EXPANSION",
+  "producer": "scripts/e01_luca_screening_expansion_contract_review.py",
+  "qualification": {
+    "e01_screening_gate_passed": false,
+    "gold_region_teacher_qualified": true,
+    "minimum_5000_teacher_decisions_met": false,
+    "replay_transfer_authorized": false,
+    "same_version_source_consistency_qualified": true,
+    "screening_expansion_request_ready": true,
+    "training_authorized": false
+  },
+  "record_id": "e01-luca-screening-expansion-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "at_or_after_anchor_files": 27,
+    "authorized": false,
+    "count_only_module_version": "1.32.2",
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 270807738,
+    "maximum_new_files": 51,
+    "nonmatching_files_rejected_from_counts": true,
+    "output_directory_exists": false,
+    "pre_anchor_boundary_files": 24,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "training_authorized": false
+  },
+  "review_sha256": "237398763638c9358c2df7fef522d8dd6b635d954021dbf49bea1758a4fa30fa",
+  "reviewed_decision": "DEC-018",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-luca-screening-expansion-contract-review-v1.json",
+  "status": "PASS"
+}

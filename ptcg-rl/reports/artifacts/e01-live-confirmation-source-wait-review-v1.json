@@ -1,0 +1,74 @@
+{
+  "confirmation": {
+    "confirmation_gate_passed": false,
+    "decision_shortfall": 17458,
+    "episode_shortfall": 134,
+    "observed_independent_recent_teachers": 2,
+    "observed_recent_teacher_decisions": 7542,
+    "observed_recent_teacher_episodes": 66
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-30T18:10:35.115080Z",
+  "current_rank_1": {
+    "dataset_intersection_bytes": 0,
+    "dataset_intersection_files": 0,
+    "latest_complete_daily_dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-29/1",
+    "public_episode_count": 76,
+    "rank": 1,
+    "score": 1169.5,
+    "submission_id": 55104355,
+    "team_id": 16441077,
+    "team_name": "haggle"
+  },
+  "decision": "ACCEPT_CURRENT_RANK_1_SOURCE_WAIT_NO_REPLAY_REQUEST",
+  "inputs": {
+    "completed_calibration_request": {
+      "authorization_consumed": true,
+      "authorized_request_sha256": "75bc96fe9f5ab595f1443716a96f47c67843687b32f6d55616b05f9a59c8945d",
+      "path": "configs/e01_dries_grimmsnarl_calibration_request_v1.json",
+      "sha256": "f026a350d9e5c882080f28f60a811d3060f49c7a3c7375dc85e550865d4f9380"
+    },
+    "completed_calibration_review": {
+      "path": "reports/artifacts/e01-dries-grimmsnarl-calibration-review-v1.json",
+      "review_sha256": "56e7f1d065c0eaf5132bcac710f903ca4bfab236638d5a7d5b62bddd7ea2a871",
+      "sha256": "e2b0437f0cf43ebd1c1a1059714d7d435de5c25f95704e6f0aab423a114a8e45"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md",
+      "sha256": "19bcd93ad39eddeedd4b7b32a81d503794f77bfea63cb57252da2d832086f2ce"
+    },
+    "live_refresh": {
+      "path": "reports/artifacts/raw/e01-live-confirmation-refresh-v2.json",
+      "sha256": "ac8e0a72b9d49a44d1f587929664a444b673866ae677f74f030555e1af889b92"
+    }
+  },
+  "next_action": "REFRESH_AFTER_PINNED_DAILY_DATASET_CONTAINS_SUBMISSION_55104355",
+  "producer": "scripts/e01_live_confirmation_source_wait_review.py",
+  "qualification": {
+    "confirmation_gate_passed": false,
+    "current_rank_1_source_ready": false,
+    "dec_023_calibration_qualified": true,
+    "minimum_200_recent_teacher_episodes_met": false,
+    "minimum_25000_meaningful_teacher_decisions_met": false,
+    "replay_transfer_authorized": false,
+    "training_authorized": false,
+    "two_independent_recent_teachers_qualified": true
+  },
+  "record_id": "e01-live-confirmation-source-wait-review-v1",
+  "review_sha256": "d98f83f8a22b000ec83213a1b0f2703ee9cb171e399c3ccd1ca64cc030d0fa99",
+  "reviewed_decision": "DEC-024",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-live-confirmation-source-wait-review-v1.json",
+  "source_wait": {
+    "agent_logs_authorized": false,
+    "current_rank_1_output_exists": false,
+    "current_rank_1_probe_request_exists": false,
+    "current_rank_1_probe_request_ready": false,
+    "external_compute_authorized": false,
+    "raw_exports_authorized": false,
+    "replay_transfer_authorized": false,
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "status": "PASS"
+}

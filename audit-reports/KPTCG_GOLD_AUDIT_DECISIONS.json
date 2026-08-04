@@ -1,0 +1,370 @@
+{
+  "audit_date_utc": "2026-07-24T09:43:04Z",
+  "source_commit": "32376b090bbdb7587a6d8bbf82ff3a00b3f11925",
+  "overall_confidence": 0.76,
+  "gold_attainability": "POSSIBLE_BUT_LOW_CONFIDENCE",
+  "evidence_class_legend": {
+    "Verified project fact": "Direct archive source/config/test/report/hash/recalculation.",
+    "Verified live fact": "Current official public source fetched during audit.",
+    "Provisional project measurement": "Real observation with incomplete independent live/harness qualification.",
+    "Forum report": "Participant or host discussion claim; host comments are marked but official pages override.",
+    "Research-supported inference": "Mechanism transferred from primary research with environment assumptions assessed.",
+    "Auditor hypothesis": "Plausible recommendation requiring a falsification experiment."
+  },
+  "executive_verdict": "Preserve the verified action/model/PPO/checkpoint/evaluation engineering, but supersede the frozen PPO-first sequencing. Use exact-deck recurrent autoregressive imitation as a competence warm start only after a strict teacher/deck/replay-safety gate, then permit a bounded KL-regularized recurrent PPO phase. Maintain a deterministic Mega Lucario specialist as a continuously shippable hedge. Do not authorize the 15M-choice scratch programme, full TPU training, unconditional search, or offline Q-learning now.",
+  "primary_path": {
+    "name": "Qualified specialist imitation -> bounded KL-regularized recurrent PPO",
+    "default_deck": "Mega Lucario exact included list, subject to E01 and equal-budget Starmie challenger gate",
+    "entry_gates": [
+      "New decision record superseding G3b sequencing",
+      "E01 exact-deck teacher/replay confirmation",
+      "E04 CABT bridge confirmation"
+    ],
+    "budgets": {
+      "bc_labels": [
+        5000,
+        25000,
+        100000
+      ],
+      "ppo_canary_choices": 100000,
+      "ppo_confirmation_choices": 500000,
+      "maximum_before_new_redecision_choices": 500000
+    },
+    "promotion_gates": [
+      "On-policy H2H, not action accuracy alone",
+      "Zero reliability failures",
+      "No catastrophic matchup regression",
+      "Cross-seed and held-out teacher/matchup transfer"
+    ],
+    "abandonment": [
+      "No safe >=25k-label exact-deck corpus",
+      "100k BC fails E03 confirmation",
+      "100k KL-PPO regresses aggregate >=5 pp or any important matchup >=10 pp",
+      "500k does not beat the best earlier checkpoint under corrected confirmation"
+    ]
+  },
+  "backup_path": {
+    "name": "Deterministic/copied-policy specialist hedge",
+    "default_deck": "Mega Lucario; retain Dragapult and Mega Abomasnow anchors",
+    "entry_gates": [
+      "Exact package/runtime smoke",
+      "Held-out perturbation controls for every guard"
+    ],
+    "budget": "0 accelerator hours; 400-game screen and 1,200-game confirmation",
+    "promotion_gates": [
+      "Zero invalid/timeout",
+      "Meta-weighted noninferiority and worst-matchup floor",
+      "Submission package parity"
+    ],
+    "abandonment": [
+      "Aggregate regression >=5 pp",
+      "Any narrative guard fails perturbation control",
+      "A learned champion dominates by confirmed >3 pp with no floor breach"
+    ]
+  },
+  "preserve": [
+    "G1/G1R environment and ordered compound-action contract",
+    "G2 recurrent semantic policy and 970,022-parameter architecture as the first specialist model",
+    "G3a PPO correctness, GAE, checkpoint/RNG, probability replay, zero-lag discipline",
+    "R1 lag-aligned semantic replay loader and fail-closed label validation",
+    "Strict evaluation manifests, seat splits, loss capsules, and zero-tolerance reliability",
+    "Included deterministic rule agents and exact deck sources",
+    "Authorization boundaries and immutable evidence receipts"
+  ],
+  "amend": [
+    "Create DEC-AUDIT-001 to supersede G3b PPO-first sequencing and enable gated BC plus KL-regularized PPO",
+    "Make option-position signal an explicit ablation rather than an ideological exclusion",
+    "Replace equal anchor weights as sole primary metric with meta-weighted primary plus equal-weight diagnostic and worst-matchup floors",
+    "Define partial-update handling for budgets not divisible by 16,384",
+    "Separate batch fail-closed behavior from interactive notebook negative-verdict return while preserving integrity failures",
+    "Require exact-list/teacher/time/matchup/dedup authorization before replay labels"
+  ],
+  "stop": [
+    "Do not launch 1M/5M per-seed scratch PPO on the Mega Abomasnow engineering deck",
+    "Do not infer competence from 10,000-game reliability, toy PPO, action accuracy, random wins, mirror wins, or provisional leaderboard spikes",
+    "Do not expand TPU qualification into training before a learning branch passes E03/E05",
+    "Do not implement full offline Q-learning, MuZero, ReBeL, Deep CFR, or broad search under the current deadline",
+    "Do not add narrative rule guards without held-out perturbation controls",
+    "Do not spend five daily submissions on small variants",
+    "Do not treat the July 16 forum or July 24 snapshot as current hidden-field truth"
+  ],
+  "first_three_experiments": [
+    {
+      "priority": 1,
+      "experiment_id": "E01",
+      "title": "Exact-deck teacher and replay-safety qualification",
+      "decision_resolved": "Whether imitation is legally, semantically, and statistically defensible for any specialist before training.",
+      "hypothesis": "At least one exact 60-card archetype has a recent, settled, policy-consistent teacher corpus with >=25,000 valid meaningful decisions and no unresolved action alignment.",
+      "strongest_alternative": "Public replay selection is too biased, teacher identity/deck is too uncertain, or labels cannot be authorized; imitation should be abandoned.",
+      "inputs_and_provenance": "Official episode/deck interfaces; current daily top-episode indices; project semantic replay loader; exact deck SHA-256; teacher/rating/date receipts. Raw bodies are not in this audit pack and must be acquired under separate authorization.",
+      "deck": "Mega Lucario default; Starmie challenger; Dragapult as high-complexity comparator.",
+      "teacher_or_opponent_population": "At least 2 independent strong teachers per candidate, plus lower-rated and losing episodes for coverage diagnostics.",
+      "model_initialization": "None. Evidence/data gate only.",
+      "trainable_parameters_and_losses": "None.",
+      "compute_platform": "CPU; no cloud accelerator.",
+      "choice_game_update_budget": "0 training choices; target >=200 episodes and >=25k meaningful decisions for a passing deck.",
+      "wall_time_low_hours": 1.0,
+      "wall_time_base_hours": 3.0,
+      "wall_time_high_hours": 6.0,
+      "checkpoint_resume_plan": "Versioned acquisition manifest; content hashes; append-only audit; no mutable labels.",
+      "primary_metric": "Valid full-action label rate, exact-deck certainty, teacher consistency, duplicate-adjusted episode/decision count, matchup/time coverage.",
+      "negative_controls": "Attempt parsing intentionally shifted actions; cross-deck teacher mixing; duplicate episodes; forced/setup rows.",
+      "screening_threshold": "One candidate with exact legal 60-card list, >=1 strong teacher, >=5k valid decisions, zero unresolved labels.",
+      "confirmation_threshold": "Exact list + >=2 independent recent teachers + >=25k meaningful decisions + episode-level dedup/splits + zero unresolved labels + documented license/authorization.",
+      "catastrophic_stop_conditions": "Any hidden/private leakage, invalid labels, deck mismatch, unauthorized data use, duplicate contamination across splits, or unresolved compound-action reconstruction.",
+      "maximum_compute_loss": "0 accelerator hours; <=6 analyst/CPU hours.",
+      "pass_next_action": "Authorize E02/E03 for the passing deck through a new decision record.",
+      "fail_next_action": "Stop imitation; retain deterministic hedge and run only bounded PPO canary after E04.",
+      "ambiguous_next_action": "Acquire the smallest missing sample or a second teacher; do not train.",
+      "entry_gate": "Read-only acquisition/analysis authorization and official rules check.",
+      "owner": "Research/data lead",
+      "deadline_utc": "2026-07-25T18:00:00Z",
+      "expected_gold_decision_value_1_5": 5,
+      "engineering_cost_1_5": 2,
+      "compute_cost_1_5": 1,
+      "priority_rationale": "It can invalidate the recommended path before any material compute and resolves the largest unknown."
+    },
+    {
+      "priority": 2,
+      "experiment_id": "E04",
+      "title": "Minimal CABT actor/learner bridge qualification",
+      "decision_resolved": "Whether the proven PPO components can operate on real CABT trajectories without semantic, recurrent, or lifecycle corruption.",
+      "hypothesis": "A minimal bridge can reproduce stored compound log-probabilities, attach both-player boundaries, and run 100 games with zero reliability events before any optimizer step.",
+      "strongest_alternative": "Integration defects dominate and make both on-policy evaluation and fine-tuning unsafe.",
+      "inputs_and_provenance": "Frozen G1/G2/G3a source/configs, exact engine/card/deck hashes, rule opponents, no training.",
+      "deck": "Mega Lucario engineering candidate plus Mega Abomasnow smoke anchor.",
+      "teacher_or_opponent_population": "Random legal and included rule agents.",
+      "model_initialization": "Frozen G2 checkpoint or deterministic freshly initialized policy for no-update qualification.",
+      "trainable_parameters_and_losses": "No optimizer steps; all parameters frozen.",
+      "compute_platform": "Local/private CPU first; T4x2 only after local pass.",
+      "choice_game_update_budget": "0 training choices; 10-game smoke, then 100-game/10k-decision qualification.",
+      "wall_time_low_hours": 0.5,
+      "wall_time_base_hours": 2.0,
+      "wall_time_high_hours": 6.0,
+      "checkpoint_resume_plan": "Attempt-scoped manifests; exact request/action traces; deterministic bridge resume test.",
+      "primary_metric": "Zero invalid/fallback/stale/out-of-order/owner-crossing events; old compound log-prob max error <=1e-5; terminal/truncation classification 100%.",
+      "negative_controls": "Injected stale request, duplicate action index, worker death, forced-only step, partial multi-select/STOP, two-player terminal ordering.",
+      "screening_threshold": "10 games complete with zero reliability events and exact action replay.",
+      "confirmation_threshold": "100 games and >=10k decisions, zero reliability events, deterministic checkpoint/resume parity.",
+      "catastrophic_stop_conditions": "Any silent fallback, swallowed worker failure, nonzero policy lag, recurrent ownership crossing, unclassified terminal, or replay mismatch.",
+      "maximum_compute_loss": "<=1 T4 hour; <=6 CPU hours.",
+      "pass_next_action": "Permit E05 and real on-policy evaluation.",
+      "fail_next_action": "Do not run PPO; fix bridge while BC/offline analysis and deterministic hedge continue.",
+      "ambiguous_next_action": "Reduce to a single-process trace and classify every discrepancy.",
+      "entry_gate": "No omitted native asset required for source audit; execution requires authorized private engine.",
+      "owner": "Systems/RL lead",
+      "deadline_utc": "2026-07-26T00:00:00Z",
+      "expected_gold_decision_value_1_5": 5,
+      "engineering_cost_1_5": 3,
+      "compute_cost_1_5": 1,
+      "priority_rationale": "It is the hard safety gate for all learned-policy field testing and can run in parallel with data qualification."
+    },
+    {
+      "priority": 3,
+      "experiment_id": "E02",
+      "title": "Native option-order signal ablation",
+      "decision_resolved": "Whether suppressing raw option position discards a cheap, competition-relevant prior.",
+      "hypothesis": "A small normalized option-position embedding improves held-out log loss and on-policy strength without creating brittle permutation dependence.",
+      "strongest_alternative": "Option order is spurious, engine-version-specific, or causes shortcuts that fail under perturbation.",
+      "inputs_and_provenance": "E01-qualified exact-deck labels; semantic projection; native order retained only in one branch.",
+      "deck": "First E01-qualified deck, expected Mega Lucario.",
+      "teacher_or_opponent_population": "Qualified teachers; held-out teacher, time, matchup, and episode splits.",
+      "model_initialization": "Same seed/model; order-blind control versus position-feature treatment.",
+      "trainable_parameters_and_losses": "Recurrent autoregressive BC; all G2 parameters trainable; token cross-entropy including STOP.",
+      "compute_platform": "Single T4 or CPU/GPU notebook.",
+      "choice_game_update_budget": "5k labels per arm; 200 screening games per arm against fixed population.",
+      "wall_time_low_hours": 0.2,
+      "wall_time_base_hours": 0.6,
+      "wall_time_high_hours": 1.5,
+      "checkpoint_resume_plan": "Checkpoint at 1k/5k labels; exact config/model/data hashes.",
+      "primary_metric": "Held-out full-action NLL and exact match; on-policy paired win-rate delta.",
+      "negative_controls": "Randomly permuted legal-option order at validation; option-0 deterministic policy; uniform policy; card-ID-only model.",
+      "screening_threshold": "Position arm improves held-out NLL >=5% relative and no permutation-control collapse >10 pp.",
+      "confirmation_threshold": "At least +5 pp paired on-policy win rate with no held-out archetype regression >3 pp at >=400 games/arm.",
+      "catastrophic_stop_conditions": "Illegal action, reliance on missing position at submission, >10 pp collapse under semantically equivalent option permutation, or leakage of teacher action index.",
+      "maximum_compute_loss": "<=1.5 GPU hours plus <=1 CPU evaluation hour.",
+      "pass_next_action": "Include position feature with permutation regularization in E03.",
+      "fail_next_action": "Keep current semantic order-blind projection.",
+      "ambiguous_next_action": "Increase to 25k labels only if offline metrics and 200-game result disagree.",
+      "entry_gate": "E01 screening pass.",
+      "owner": "Model lead",
+      "deadline_utc": "2026-07-26T12:00:00Z",
+      "expected_gold_decision_value_1_5": 4,
+      "engineering_cost_1_5": 2,
+      "compute_cost_1_5": 1,
+      "priority_rationale": "Forum evidence suggests native order can be unusually strong; this is a cheap, falsifiable architecture decision."
+    }
+  ],
+  "specialist_deck_shortlist": [
+    {
+      "rank": 1,
+      "archetype": "Mega Lucario",
+      "status": "Default first specialist/hedge",
+      "evidence": "Exact included 60-card list and 508-line tactical rule policy; moderate branching; current field strength unproven",
+      "reversal_gate": "Starmie equal-budget challenger beats by >=8 pp with no floor breach"
+    },
+    {
+      "rank": 2,
+      "archetype": "Starmie",
+      "status": "Data-gated learned challenger",
+      "evidence": "Forum/meta reports suggest strong low-branching policy; exact list/teacher absent from archive",
+      "reversal_gate": "Must pass E01 exact-list + two-teacher + >=25k label gate"
+    },
+    {
+      "rank": 3,
+      "archetype": "Dragapult/Psychic",
+      "status": "High-ceiling hard anchor/second-wave candidate",
+      "evidence": "Exact included list and 853-line planner; high sequencing/prize-map complexity",
+      "reversal_gate": "Only after larger teacher corpus or specialist representation evidence"
+    },
+    {
+      "rank": 4,
+      "archetype": "Crustle",
+      "status": "Low-complexity imitation comparator",
+      "evidence": "Historic rule/meta/forum support; ceiling and counter risk",
+      "reversal_gate": "Fresh meta and strong exact teacher required"
+    },
+    {
+      "rank": 5,
+      "archetype": "Alakazam",
+      "status": "Search/tactical research candidate",
+      "evidence": "Search reportedly helped weak policies; complexity and current teacher/list uncertain",
+      "reversal_gate": "Only if no-search baseline and runtime-gated search pass"
+    },
+    {
+      "rank": 6,
+      "archetype": "Mega Abomasnow",
+      "status": "Engineering anchor only",
+      "evidence": "Exact included simple policy; likely low ceiling",
+      "reversal_gate": "Promote only if current controlled tournament disproves ceiling concern"
+    }
+  ],
+  "compute_envelope": {
+    "snapshot_before_2026_07_25_refresh": {
+      "gpu_hours_remaining": 24.358,
+      "tpu_hours_remaining": 18.425,
+      "evidence_class": "Provisional project measurement"
+    },
+    "first_72_hours_recommended": {
+      "gpu_hours_low_base_high": [
+        0.5,
+        3.0,
+        8.0
+      ],
+      "tpu_hours": [
+        0,
+        0,
+        0
+      ],
+      "cpu_evaluation_hours_low_base_high": [
+        3,
+        10,
+        24
+      ],
+      "maximum_choices": 100000
+    },
+    "seven_day_recommended": {
+      "gpu_hours_low_base_high": [
+        4,
+        10,
+        20
+      ],
+      "tpu_hours_low_base_high": [
+        0,
+        0,
+        4
+      ],
+      "cpu_evaluation_hours_low_base_high": [
+        10,
+        30,
+        80
+      ],
+      "maximum_choices_before_redecision": 500000
+    },
+    "not_authorized": {
+      "scratch_g3b_choices_total": 15000000,
+      "estimated_experience_hours_at_228_6_choices_s": 18.23,
+      "estimated_experience_hours_at_57_15_choices_s": 72.91,
+      "estimated_experience_hours_at_35_choices_s": 119.05
+    },
+    "checkpoint_storage_estimate": {
+      "5M_x_3_seeds_checkpoints": 150,
+      "estimated_total_gib_range": [
+        2.2,
+        4.4
+      ],
+      "assumption": "15-30 MB full learner checkpoint; omitted checkpoint prevents exact measurement"
+    }
+  },
+  "largest_unknown": "Whether a current, exact-60-card, strong-teacher corpus can be acquired and authorized with enough policy consistency and matchup coverage to produce on-policy competence that transfers to the non-stationary hidden ladder before 2026-08-16.",
+  "decision_reversal_triggers": [
+    "No archetype passes E01 confirmation by 2026-07-26: abandon imitation and focus deterministic hedge plus a single 100k-choice PPO canary after E04.",
+    "E03 100k BC fails >=70% full-action exact, >=40% teacher H2H, >=5 pp rule-baseline gain, or held-out floors: stop imitation expansion.",
+    "A predeclared scratch PPO 100k canary unexpectedly exceeds 55% held-out aggregate with lower bound >50% while BC fails: reconsider PPO-first for that exact deck.",
+    "Starmie passes exact-list/data gates and beats Lucario by >=8 pp pooled with no important matchup regression: switch learned specialist.",
+    "E05 KL-PPO regresses aggregate >=5 pp or any important matchup >=10 pp: abandon that RL configuration and revert to BC.",
+    "Deterministic specialist reaches and sustains the operational top-10 frontier under sufficient settled games: prioritize packaging/evaluation over learning.",
+    "Official runtime/search API differs materially from archived assumptions: suspend search and rerun package qualification."
+  ],
+  "deadline_state": {
+    "audit_time_utc": "2026-07-24T09:43:04Z",
+    "entry_team_deadline_utc": "2026-08-09T23:59:00Z",
+    "hours_remaining_to_entry_team": 398.27,
+    "strategy_entry_deadline_utc": "2026-09-06T23:59:00Z",
+    "hours_remaining_to_strategy_entry": 1070.27,
+    "simulation_deadline_utc": "2026-08-16T23:59:00Z",
+    "hours_remaining_to_simulation": 566.27,
+    "strategy_deadline_utc": "2026-09-13T23:59:00Z",
+    "hours_remaining_to_strategy": 1238.27
+  },
+  "leaderboard_frontier": {
+    "evidence_class": "Provisional project measurement",
+    "snapshot_utc": "2026-07-24",
+    "rank_1_score": 1198.0,
+    "rank_5_score": 1136.5,
+    "rank_10_operational_frontier": 1115.6,
+    "rank_20_score": 1102.1,
+    "rank_25_score": 1092.8,
+    "rank_1_minus_rank_10": 82.4,
+    "rank_10_minus_rank_25": 22.8,
+    "exact_gold_medal_cutoff": "Not independently verified; team count/medal settings and settled ratings unavailable in anonymous live access",
+    "uncertainty": "High because ratings are non-stationary and active agents continue playing."
+  },
+  "sources_reviewed": {
+    "official": 10,
+    "kaggle_discussions": 62,
+    "kaggle_discussions_full_archived": 56,
+    "kaggle_discussions_current_snippet_only": 6,
+    "primary_research": 31,
+    "other_high_quality": 5,
+    "project_sources": 34
+  },
+  "archive_integrity": {
+    "manifest_entries_verified": 345,
+    "hash_or_size_errors": 0,
+    "secret_scan_reported_pass": true,
+    "raw_replay_bodies_present": false,
+    "native_engine_present": false,
+    "full_checkpoint_present": false,
+    "tpu_v2_output_present": false
+  },
+  "static_checks": {
+    "initial_audit_run_reported": "401 passed, 1 skipped, 14 failed; failures traced to omitted private assets/layout/.git/Python environment, not a reproduced algorithmic assertion failure",
+    "repeat_run_in_current_container": "Reached 86% before execution timeout; therefore no additional clean-suite claim",
+    "ruff": "Unavailable"
+  },
+  "self_review": {
+    "evidence_completeness": {
+      "status": "PASS_WITH_LIMITATION",
+      "limitation": "Same-minute leaderboard and full late-July forum tree could not be independently accessed without Kaggle authentication; snapshot/current snippets are separately classified."
+    },
+    "adversarial": {
+      "status": "PASS",
+      "limitation": "The strongest counterargument—data/teacher failure makes imitation a schedule tax and bounded scratch PPO may be faster—is stated with reversal triggers."
+    },
+    "execution": {
+      "status": "PASS_WITH_GATES",
+      "limitation": "Plan fits remaining nominal quota only if first experiments pass; no large run is authorized by this audit."
+    }
+  }
+}

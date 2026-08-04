@@ -1,0 +1,497 @@
+{
+  "authorization": {
+    "e01_current_rank_1_dragapult_calibration_authorization_consumed": true,
+    "e01_current_rank_1_dragapult_calibration_completed": true,
+    "e01_current_rank_1_dragapult_calibration_request_ready": false,
+    "e01_current_rank_1_dragapult_screening_expansion_authorization_consumed": true,
+    "e01_current_rank_1_dragapult_screening_expansion_completed": true,
+    "e01_current_rank_1_dragapult_screening_expansion_request_ready": false,
+    "e01_current_rank_1_dries_confirmation_teacher_authorization_consumed": true,
+    "e01_current_rank_1_dries_confirmation_teacher_completed": true,
+    "e01_current_rank_1_dries_confirmation_teacher_request_ready": false,
+    "e01_current_rank_1_dries_grimmsnarl_calibration_authorization_consumed": true,
+    "e01_current_rank_1_dries_grimmsnarl_calibration_completed": true,
+    "e01_current_rank_1_dries_grimmsnarl_calibration_request_ready": false,
+    "e01_current_rank_1_probe_request_ready": false,
+    "e01_current_rank_1_source_ready": false,
+    "e01_current_rank_1_source_wait_completed": true,
+    "e01_current_rank_1_teacher_authorization_consumed": true,
+    "e01_current_rank_1_teacher_completed": true,
+    "e01_current_rank_1_teacher_request_ready": false,
+    "e01_live_confirmation_refresh_completed": true,
+    "e01_live_gold_refresh_completed": true,
+    "e01_luca_gold_teacher_authorization_consumed": true,
+    "e01_luca_gold_teacher_completed": true,
+    "e01_luca_gold_teacher_request_ready": false,
+    "e01_luca_same_version_calibration_authorization_consumed": true,
+    "e01_luca_same_version_calibration_completed": true,
+    "e01_luca_same_version_calibration_request_ready": false,
+    "e01_luca_screening_expansion_execution": false,
+    "e01_luca_screening_expansion_request_ready": true,
+    "e01_luca_screening_expansion_superseded": true,
+    "e01_provenance_probe_authorization_consumed": true,
+    "e01_provenance_probe_completed": true,
+    "e01_provenance_probe_request_ready": false,
+    "e01_same_submission_consistency_authorization_consumed": true,
+    "e01_same_submission_consistency_completed": true,
+    "e01_same_submission_consistency_request_ready": false,
+    "e01_source_schema_reconciled_for_probe": true,
+    "external_compute": false,
+    "further_native_e04_execution": false,
+    "native_e04_execution": false,
+    "native_e04_qualification_completed": true,
+    "native_e04_single_trace_completed": true,
+    "native_e04_ten_game_smoke_completed": true,
+    "qualification_contract_review_required": false,
+    "qualification_execution_completed": true,
+    "qualification_request_ready": false,
+    "replay_transfer": false,
+    "submission": false,
+    "training": false,
+    "zero_update_bridge_qualified": true
+  },
+  "checks": [
+    {
+      "accepted_manifest_sha256": "e082c3cf80638e4ba5a8915e40eca25683a83c4abb79a4b7f41c02133b01f31a",
+      "check": "e01_source_provenance",
+      "current_manifest_sha256": "136dbdb174e6bbd6057023e0271d1016fe0ff143e5958ddbef38d105cc59d5c2",
+      "decision": "DEC-013",
+      "probe_authorized": false,
+      "probe_request_ready": false,
+      "replay_bodies_transferred": 0,
+      "selected_episode_ids_match": true,
+      "selected_row_mismatches": 8,
+      "status": "BLOCKED"
+    },
+    {
+      "agent_logs_transferred": 0,
+      "candidate_set_reranked": false,
+      "check": "e01_source_schema_reconciliation",
+      "decision": "DEC-014",
+      "evidence_sha256": "0c428b9703efa86875b2d98f8077cae1baea99f438b953e7ab8d76e7449a7cb1",
+      "probe_authorized": false,
+      "probe_declared_bytes": 3641302,
+      "probe_episode_id": 87703034,
+      "probe_file_name": "87703034.json",
+      "probe_request_ready": true,
+      "rating_field_reproduced": false,
+      "replay_bodies_transferred": 0,
+      "status": "PASS"
+    },
+    {
+      "active_selection_requests": 128,
+      "additional_replays_downloaded": 0,
+      "agent_logs_downloaded": 0,
+      "authorization_consumed": true,
+      "bytes": 3641302,
+      "check": "e01_provenance_probe",
+      "decision": "DEC-014",
+      "deck_hashes": [
+        "606a775392ffe25e058b19c17801d58a4bf30f7cd8c62782388d3de7e7eb5283",
+        "eff68cb08be178b9c7f06c409b61e88ae9200ab6dc26e05f4bf29eed86040455"
+      ],
+      "episode_id": 87703034,
+      "file_name": "87703034.json",
+      "replay_sha256": "58089ab3824ac703dddb5d1364718684d4770d3ebf853ea198ca00efdc6a43db",
+      "request_sha256": "b9e27cd30f4ebd8f3db767c3da5708b3330a5052f651b5f666420e02815ce34b",
+      "screening_gate_passed": false,
+      "status": "PASS",
+      "training_labels_created": 0
+    },
+    {
+      "all_player_active_selection_requests": 157,
+      "authorization_consumed": true,
+      "bytes": 559779,
+      "check": "e01_same_submission_consistency_probe",
+      "decision": "DEC-015",
+      "episode_id": 87741212,
+      "exact_deck_match": true,
+      "file_name": "87741212.json",
+      "replay_sha256": "be962b8ca9146320f7d8976460c20244cf5e8bf6b026816816bc4b4ec91a87d2",
+      "request_sha256": "e98cbbaae8bdd2a8b09b9ff43f6298c59f45e821206cd7bc860d140f60927ae2",
+      "same_submission_id": 54933084,
+      "screening_decision_shortfall": 4935,
+      "screening_gate_passed": false,
+      "status": "PASS",
+      "teacher_active_selection_requests": 65
+    },
+    {
+      "authorization_consumed": true,
+      "bytes": 1313221,
+      "check": "e01_luca_gold_teacher_probe",
+      "decision": "DEC-016",
+      "deck_multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+      "episode_ids": [
+        87731214,
+        87615736
+      ],
+      "exact_deck_match": true,
+      "files": 2,
+      "leaderboard_rank": 2,
+      "module_versions": [
+        "1.32.2",
+        "1.32.1"
+      ],
+      "request_sha256": "b70efe6228d08f78c104e75c3007d4e1b99c747223d05d1d14e9808f975146a2",
+      "same_module_version": false,
+      "screening_decision_shortfall": 4963,
+      "screening_gate_passed": false,
+      "status": "PASS",
+      "teacher_active_selection_requests": 37,
+      "teacher_submission_id": 54863653,
+      "teacher_submission_public_score": 1180.9
+    },
+    {
+      "authorization_consumed": true,
+      "bytes": 63828057,
+      "calibration_luca_decisions": 1170,
+      "check": "e01_luca_same_version_calibration",
+      "combined_observed_luca_decisions": 1207,
+      "decision": "DEC-017",
+      "exact_deck_match": true,
+      "files": 12,
+      "module_versions": [
+        "1.32.2"
+      ],
+      "request_sha256": "a71621707f597e9f99c9db2dfb549f3dcf626aaf3d4f36ad182cc2d03dcd87f0",
+      "screening_decision_shortfall": 3793,
+      "screening_gate_passed": false,
+      "status": "PASS"
+    },
+    {
+      "at_or_after_anchor_files": 27,
+      "authorized": false,
+      "check": "e01_luca_screening_expansion_contract",
+      "count_only_module_version": "1.32.2",
+      "decision": "DEC-018",
+      "maximum_new_bytes": 270807738,
+      "maximum_new_files": 51,
+      "pre_anchor_boundary_files": 24,
+      "request_ready": true,
+      "request_sha256": "c293268607ce0fc8762d543508bf2c798087ca9583cec05e3031a1906fc26962",
+      "status": "PASS",
+      "teacher_submission_id": 54863653
+    },
+    {
+      "archetype_context_label": "Dragapult ex",
+      "authorization_consumed": true,
+      "bytes": 3996398,
+      "check": "e01_current_rank_1_dragapult_probe",
+      "decision": "DEC-019",
+      "deck_multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+      "files": 2,
+      "module_versions": [
+        "1.32.2"
+      ],
+      "request_sha256": "b1b0b81014fddeea8c5bb9d5be41a61ea538e1a3723eb64a246c87668c49b349",
+      "screening_decision_shortfall": 4906,
+      "screening_gate_passed": false,
+      "status": "PASS",
+      "teacher_active_selection_requests": 94,
+      "teacher_live_rank_at_refresh": 1,
+      "teacher_submission_id": 55004495,
+      "teacher_submission_public_score": 1244.2
+    },
+    {
+      "authorization_consumed": true,
+      "bytes": 63562985,
+      "calibration_teacher_decisions": 1292,
+      "check": "e01_current_rank_1_dragapult_calibration",
+      "combined_observed_teacher_decisions": 1386,
+      "decision": "DEC-020",
+      "exact_deck_match": true,
+      "files": 12,
+      "module_versions": [
+        "1.32.2"
+      ],
+      "request_sha256": "9140bc26599d08c6c343db19a658cfa728b5425f9a59700d9bb627b3c16c89e8",
+      "screening_decision_shortfall": 3614,
+      "screening_gate_passed": false,
+      "status": "PASS",
+      "teacher_submission_id": 55004495
+    },
+    {
+      "authorization_consumed": true,
+      "bytes": 254237550,
+      "check": "e01_current_rank_1_dragapult_screening_expansion",
+      "combined_observed_teacher_decisions": 6340,
+      "decision": "DEC-021",
+      "files": 38,
+      "qualified_files": 38,
+      "qualified_teacher_decisions": 4954,
+      "rejected_files": 0,
+      "request_sha256": "f16d155948db791e355f561901daf2e4f2ef886d68d638a6fdce4c2d31939583",
+      "screening_decision_shortfall": 0,
+      "screening_gate_passed": true,
+      "status": "PASS",
+      "teacher_submission_id": 55004495
+    },
+    {
+      "authorization_consumed": true,
+      "bytes": 1135238,
+      "check": "e01_current_rank_1_dries_confirmation_teacher_probe",
+      "confirmation_gate_passed": false,
+      "decision": "DEC-022",
+      "files": 2,
+      "independent_recent_teachers": 2,
+      "request_sha256": "9e558be620bcf9722ba69ae7189ebec79145b351c20e4370eb1bb37d2427d2bc",
+      "status": "PASS",
+      "teacher_decisions": 27,
+      "teacher_submission_id": 55002825
+    },
+    {
+      "authorization_consumed": true,
+      "bytes": 60869451,
+      "check": "e01_current_rank_1_dries_grimmsnarl_calibration",
+      "combined_recent_teacher_decisions": 7542,
+      "combined_recent_teacher_episodes": 66,
+      "confirmation_gate_passed": false,
+      "decision": "DEC-023",
+      "files": 12,
+      "request_sha256": "f026a350d9e5c882080f28f60a811d3060f49c7a3c7375dc85e550865d4f9380",
+      "status": "PASS",
+      "teacher_decisions": 1175,
+      "teacher_submission_id": 55002825
+    },
+    {
+      "check": "e01_current_rank_1_source_wait",
+      "dataset_intersection_files": 0,
+      "decision": "DEC-024",
+      "latest_daily_dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-29/1",
+      "public_episode_count": 76,
+      "replay_transfer_authorized": false,
+      "request_ready": false,
+      "status": "PASS",
+      "submission_id": 55104355,
+      "team_name": "haggle"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "audit-reports/KPTCG_EXPERIMENT_BACKLOG.csv",
+      "sha256": "21735dab7122f72b3c2589efc650e3de753d92faffb60af3295a0820352b2dc4"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "audit-reports/KPTCG_GOLD_AUDIT_DECISIONS.json",
+      "sha256": "2152bbb44f029489143af43328af772c265759b54adc5ed56c45a543f0401691"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "audit-reports/KPTCG_GOLD_AUDIT_REPORT.md",
+      "sha256": "f6481bec4d351b718ff362f5a2fab4b20888cf5ea2745af50642e8d444aed112"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "audit-reports/KPTCG_RESEARCH_LOG.csv",
+      "sha256": "26822019a76e3b914451b1390133ca0b09964b6c5185ca79f2e8fe4f7cac67ce"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "ptcg-rl/configs/g3b_competence_plan_v1.json",
+      "sha256": "99cf090df232ffe37504eee4b86ab70554256b5ad89fe972bb9bb5033115bc26"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "ptcg-rl/reports/artifacts/g3b-competence-plan-review-v1.json",
+      "sha256": "23f5c5c02d74c0db8e91652016d20eb755c1eba515a84067fca6c85d7fb4afe0"
+    },
+    {
+      "check": "source_evidence_hash",
+      "path": "ptcg-rl/reports/artifacts/g3b-competence-plan-v1.json",
+      "sha256": "f64c6a4e0d122ce219c19ed06db5f4d8c98289e7b454af1c98b9d9130419b006"
+    },
+    {
+      "artifact_sha256": "fdc222579568f00c13f096be778a954f0fa28c0609062933811a79e8a30b6dad",
+      "check": "official_downloadable_asset_parity",
+      "hosted_runtime_behavior_parity": "UNRESOLVED_AFTER_2026-07-23_ENGINE_UPDATE",
+      "status": "PASS"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "src/ptcg_rl/g3/zero_update_bridge.py",
+      "sha256": "3bd838d0c8b9e85ea9aba2b8a6bf93eaeaa714c8e0cf7c401cbd43dd301664b3"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "src/ptcg_rl/g3/native_zero_update.py",
+      "sha256": "b218ae43d046d90ed6167fd3ac552d4a463e3ab518cdd37de594f9036c79c6ab"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "src/ptcg_rl/g3/e04_authorization.py",
+      "sha256": "f84fa26251c4ae4cf0294b12eadf5b0b87fdd9193909ed21b4f116776e7941e3"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "scripts/e04_native_zero_update.py",
+      "sha256": "cd5ef3a7e987f92172f218991084e3a0a1f3002e9df9acac57919a4ee23c63b7"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "configs/e04_single_process_trace_request_v1.json",
+      "sha256": "2c5bb59e4d8d3675855ae7583a9da019c044c6ed31507d4cdbd7b18fe29a9a16"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "tests/g3/test_zero_update_bridge.py",
+      "sha256": "dc7c05a15916169c1c3e323eac5af5f8718f52ff5f2d1ba7cf96150ca0c79fb0"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "tests/g3/test_native_zero_update.py",
+      "sha256": "e2c7754595508fec2f8f5f15cfed65518086ed717d7b8e2a6c6e7864f8563581"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "scripts/e04_single_trace_review.py",
+      "sha256": "e9579217853a93ad6133f156b047a3edca6a5d402f1b24c0ce467e55a94e7106"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "reports/evaluations/e04-single-process-trace-v1.json",
+      "sha256": "d169bb3c955197607bb4ae9c13c46ba9aedb79afbc708548d5b680374ba99653"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "configs/e04_ten_game_smoke_request_v1.json",
+      "sha256": "47b254f63ae41f6dfd605e4880b444c00847eca3705c8f08ea6189ad40ac930b"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "scripts/e04_smoke_review.py",
+      "sha256": "c8677368e04591da256c411c3844d80e3d0ecabe07c9d59ca3351c1a8cd02130"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "reports/evaluations/e04-ten-game-smoke-v1.json",
+      "sha256": "66d00da9e0b99783fd3f7ec441a89fa298597acbc1818220014a97481ba68236"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "docs/decisions/DEC-012_E04_QUALIFICATION_RESIZED.md",
+      "sha256": "4667d8c08f9fb6782d37729f14ed097323c4b31efafdd87f44da9bdb2ad40307"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "reports/artifacts/e04-qualification-contract-review-v1.json",
+      "sha256": "f89c4279c77e8441824cf08acba2c4f109a778dfe145791cd9856052984709a1"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "scripts/e04_qualification_contract_review.py",
+      "sha256": "e76287caac306b2410093e3563de891d413f1309051a20759d134e3bf4df97b8"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "configs/e04_qualification_request_v1.json",
+      "sha256": "13aa4465404599827e22a494181ac2f0af4e591b316e4f933500b0ed942a497b"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "scripts/e04_qualification_review.py",
+      "sha256": "ed00031d184161052c5461b556c37cf656e4e5c3c4ad91aba6ad5747b3d3977d"
+    },
+    {
+      "check": "e04_source_hash",
+      "path": "reports/evaluations/e04-qualification-v1.json",
+      "sha256": "1d475ad630594fbf78b2b0b4bf542f100689d843cc68695025bec3b2c952d7db"
+    },
+    {
+      "authorized": false,
+      "check": "e04_single_process_authorization_consumed",
+      "games": 1,
+      "optimizer_steps_authorized": 0,
+      "status": "PASS"
+    },
+    {
+      "additional_cabt_execution_for_recovery": false,
+      "check": "e04_single_process_trace",
+      "engine_decisions": 67,
+      "evidence_sha256": "d169bb3c955197607bb4ae9c13c46ba9aedb79afbc708548d5b680374ba99653",
+      "forced_decisions": 4,
+      "games": 1,
+      "maximum_replay_error": 1.896961934200192e-07,
+      "meaningful_decisions": 63,
+      "status": "PASS"
+    },
+    {
+      "authorized": false,
+      "check": "e04_ten_game_smoke_authorization_consumed",
+      "external_compute_authorized": false,
+      "games": 10,
+      "optimizer_steps_authorized": 0,
+      "request_sha256": "47b254f63ae41f6dfd605e4880b444c00847eca3705c8f08ea6189ad40ac930b",
+      "status": "PASS"
+    },
+    {
+      "check": "e04_ten_game_smoke",
+      "engine_decisions": 711,
+      "evidence_sha256": "66d00da9e0b99783fd3f7ec441a89fa298597acbc1818220014a97481ba68236",
+      "forced_decisions": 63,
+      "games": 10,
+      "maximum_replay_error": 1.9428366693219346e-07,
+      "meaningful_decisions": 648,
+      "projected_at_observed_max_for_100_games": 7000,
+      "projected_meaningful_decisions_at_100_games": 6480,
+      "qualification_floor": 10000,
+      "qualification_request_ready": true,
+      "status": "PASS"
+    },
+    {
+      "bridge_checkpoint_interval_games": 10,
+      "check": "e04_qualification_contract",
+      "decision": "DEC-012",
+      "games": 180,
+      "minimum_meaningful_decisions": 10000,
+      "review_sha256": "f89c4279c77e8441824cf08acba2c4f109a778dfe145791cd9856052984709a1",
+      "status": "PASS"
+    },
+    {
+      "authorization_consumed": true,
+      "check": "e04_qualification",
+      "engine_decisions": 12194,
+      "evidence_sha256": "1d475ad630594fbf78b2b0b4bf542f100689d843cc68695025bec3b2c952d7db",
+      "forced_decisions": 944,
+      "games": 180,
+      "maximum_replay_error": 2.3479170385698467e-07,
+      "meaningful_decisions": 11250,
+      "optimizer_steps": 0,
+      "request_sha256": "13aa4465404599827e22a494181ac2f0af4e591b316e4f933500b0ed942a497b",
+      "rerun_authorized": false,
+      "status": "PASS",
+      "terminal_boundaries_for_both_players": 180,
+      "zero_tolerance_total": 0
+    },
+    {
+      "check": "decision_scope",
+      "status": "PASS"
+    },
+    {
+      "check": "mega_lucario_byte_freeze",
+      "deck_sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee",
+      "module_sha256": "ab8563b67b88b3666c2ff9c308505085a84fdac676c194c5b484d8544478c3b2",
+      "receipt_sha256": "dc94ec50448e7a0dd40423d62cd33c480d6021870d2726c9849ba0429045713e",
+      "status": "PASS"
+    },
+    {
+      "check": "e01a_zero_transfer_caps",
+      "episode_json_transferred": 0,
+      "selected_bytes": 42620009,
+      "selected_files": 8,
+      "status": "PASS"
+    }
+  ],
+  "created_at_utc": "2026-07-24T11:20:00Z",
+  "decision": "ACCEPT",
+  "decision_sha256": "19bcd93ad39eddeedd4b7b32a81d503794f77bfea63cb57252da2d832086f2ce",
+  "dry_run_sha256": "ecec3f97e62d177fbb111b528a3f70ad9b0059991af50935861b937ab87ea599",
+  "official_asset_parity_sha256": "fdc222579568f00c13f096be778a954f0fa28c0609062933811a79e8a30b6dad",
+  "record_id": "gold-path-work-orders-review-v1",
+  "review_sha256": "1ec37283e3269128211d2b985a9e27ecf1423a91d1192c5f47280e51e53a19a5",
+  "reviewed_decision": "DEC-024",
+  "revisit_trigger": "Any source or evidence hash changes, any consumed E01 replay changes, a pinned daily dataset begins containing current rank-1 submission 55104355, the active rank-1 team or submission changes, runtime asset parity is resolved differently, or any replay transfer, optimizer step, external compute, submission, rerun or later native E04 execution becomes authorized.",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/gold-path-work-orders-review-v1.json",
+  "status": "PASS",
+  "work_orders_sha256": "4e65f7ebf2b34fab9178478137c23202ef1a360316d99447dadd149924031883"
+}

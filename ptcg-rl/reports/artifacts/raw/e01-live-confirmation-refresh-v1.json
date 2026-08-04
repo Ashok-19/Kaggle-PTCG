@@ -1,0 +1,257 @@
+{
+  "active_public_submissions": {
+    "16380946": [
+      {
+        "date_submitted": "2026-07-27T16:13:32.777Z",
+        "public_score": 1153.6,
+        "submission_id": 55033457
+      },
+      {
+        "date_submitted": "2026-07-27T16:06:01.463Z",
+        "public_score": 1150.2,
+        "submission_id": 55033309
+      }
+    ],
+    "16531269": [
+      {
+        "date_submitted": "2026-07-26T13:51:57.320Z",
+        "public_score": 1205.2,
+        "submission_id": 55002825
+      },
+      {
+        "date_submitted": "2026-07-25T23:35:38.187Z",
+        "public_score": 1122.7,
+        "submission_id": 54986389
+      }
+    ]
+  },
+  "competition": "pokemon-tcg-ai-battle",
+  "confirmation_boundary": {
+    "dries_probe_is_confirmation_completion": false,
+    "requires_at_least_200_episodes": true,
+    "requires_at_least_25000_meaningful_teacher_decisions": true,
+    "requires_two_independent_recent_teachers": true,
+    "training_authorized": false
+  },
+  "created_at_utc": "2026-07-27T17:09:08.910398Z",
+  "dataset": {
+    "declared_json_bytes": 21474535960,
+    "inventory_sha256": "08f3162857b99b3d0704835349501eb27723c2704e3163a6de5891cb8d7ca47f",
+    "json_files": 4554,
+    "ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-26/1"
+  },
+  "leaderboard_top20": [
+    {
+      "rank": 1,
+      "score": 1205.2,
+      "submission_date": "2026-07-26T13:51:57.320Z",
+      "team_id": 16531269,
+      "team_name": "Dries @ Tufa Labs"
+    },
+    {
+      "rank": 2,
+      "score": 1183.3,
+      "submission_date": "2026-07-26T12:41:05.656666700Z",
+      "team_id": 16514272,
+      "team_name": "Dominic Peel"
+    },
+    {
+      "rank": 3,
+      "score": 1169.7,
+      "submission_date": "2026-07-26T21:57:51.196666700Z",
+      "team_id": 16461850,
+      "team_name": "Matheus, Dieter, Eduardo"
+    },
+    {
+      "rank": 4,
+      "score": 1153.6,
+      "submission_date": "2026-07-27T16:13:32.776666700Z",
+      "team_id": 16380946,
+      "team_name": "flg"
+    },
+    {
+      "rank": 5,
+      "score": 1152.8,
+      "submission_date": "2026-07-26T21:41:40.223333300Z",
+      "team_id": 16463316,
+      "team_name": "LiamK"
+    },
+    {
+      "rank": 6,
+      "score": 1139.1,
+      "submission_date": "2026-07-27T11:30:03.223333300Z",
+      "team_id": 16499803,
+      "team_name": "Team Rot-Weiß"
+    },
+    {
+      "rank": 7,
+      "score": 1126.7,
+      "submission_date": "2026-07-25T11:04:49.150Z",
+      "team_id": 16376653,
+      "team_name": "szlachetny snieg"
+    },
+    {
+      "rank": 8,
+      "score": 1126.6,
+      "submission_date": "2026-07-27T15:25:08.903333300Z",
+      "team_id": 16385817,
+      "team_name": "M Sato"
+    },
+    {
+      "rank": 9,
+      "score": 1123.8,
+      "submission_date": "2026-07-24T15:18:14.033333300Z",
+      "team_id": 16375647,
+      "team_name": "James Cox"
+    },
+    {
+      "rank": 10,
+      "score": 1123.5,
+      "submission_date": "2026-07-25T00:37:15.153333300Z",
+      "team_id": 16374395,
+      "team_name": "Majkel1337"
+    },
+    {
+      "rank": 11,
+      "score": 1123.5,
+      "submission_date": "2026-07-27T16:32:54.340Z",
+      "team_id": 16489606,
+      "team_name": "junseo lee"
+    },
+    {
+      "rank": 12,
+      "score": 1122.8,
+      "submission_date": "2026-07-26T13:17:03.263333300Z",
+      "team_id": 16448747,
+      "team_name": "Luca"
+    },
+    {
+      "rank": 13,
+      "score": 1121.3,
+      "submission_date": "2026-07-26T14:06:50.036666700Z",
+      "team_id": 16371829,
+      "team_name": "e-toppo + kurupical"
+    },
+    {
+      "rank": 14,
+      "score": 1120.8,
+      "submission_date": "2026-07-25T16:33:23.433333300Z",
+      "team_id": 16487924,
+      "team_name": "lmaffei"
+    },
+    {
+      "rank": 15,
+      "score": 1119.5,
+      "submission_date": "2026-07-17T02:27:09.746666700Z",
+      "team_id": 16381823,
+      "team_name": "Yushin Ito"
+    },
+    {
+      "rank": 16,
+      "score": 1114.7,
+      "submission_date": "2026-07-27T16:00:37.146666700Z",
+      "team_id": 16386246,
+      "team_name": "懒惰的金枪鱼"
+    },
+    {
+      "rank": 17,
+      "score": 1110.1,
+      "submission_date": "2026-07-27T16:05:09.503333300Z",
+      "team_id": 16389043,
+      "team_name": "Pushu?"
+    },
+    {
+      "rank": 18,
+      "score": 1109.9,
+      "submission_date": "2026-07-25T14:09:52.420Z",
+      "team_id": 16372782,
+      "team_name": "Pokemon Siuuuu"
+    },
+    {
+      "rank": 19,
+      "score": 1108.8,
+      "submission_date": "2026-07-24T20:33:58.450Z",
+      "team_id": 16454068,
+      "team_name": "Where is my orbit"
+    },
+    {
+      "rank": 20,
+      "score": 1108.2,
+      "submission_date": "2026-07-27T13:23:50.800Z",
+      "team_id": 16464757,
+      "team_name": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+    }
+  ],
+  "record_id": "e01-live-confirmation-refresh-v1",
+  "schema_version": 1,
+  "selection": {
+    "selected_files": [
+      {
+        "create_time": "2026-07-26T16:24:27.335Z",
+        "declared_bytes": 625479,
+        "end_time": "2026-07-26T16:25:17.966Z",
+        "episode_id": 88281294,
+        "file_name": "88281294.json",
+        "opponent_reward": -1,
+        "opponent_submission_id": 54938273,
+        "opponent_team_id": 16401597,
+        "opponent_team_name": "Benarg",
+        "state": "COMPLETED",
+        "stratum": "seat_1_win",
+        "teacher_player_index": 1,
+        "teacher_reward": 1,
+        "teacher_submission_id": 55002825,
+        "teacher_team_id": 16531269,
+        "teacher_team_name": "Dries @ Tufa Labs",
+        "type": "EPISODE_TYPE_PUBLIC"
+      },
+      {
+        "create_time": "2026-07-26T22:52:26.239Z",
+        "declared_bytes": 509759,
+        "end_time": "2026-07-26T22:53:06.847Z",
+        "episode_id": 88332011,
+        "file_name": "88332011.json",
+        "opponent_reward": 1,
+        "opponent_submission_id": 54935503,
+        "opponent_team_id": 16375647,
+        "opponent_team_name": "James Cox",
+        "state": "COMPLETED",
+        "stratum": "seat_0_loss",
+        "teacher_player_index": 0,
+        "teacher_reward": -1,
+        "teacher_submission_id": 55002825,
+        "teacher_team_id": 16531269,
+        "teacher_team_name": "Dries @ Tufa Labs",
+        "type": "EPISODE_TYPE_PUBLIC"
+      }
+    ],
+    "selected_total_bytes": 1135238,
+    "selection_rule": "smallest_pair_with_opposite_teacher_seats_and_opposite_teacher_results"
+  },
+  "supersession": {
+    "completed_screening_decisions": 6340,
+    "completed_screening_remains_valid": true,
+    "completed_screening_teacher_active_submission_changed": true,
+    "completed_screening_teacher_current_rank": 4,
+    "completed_screening_teacher_submission_id": 55004495,
+    "completed_screening_teacher_team_name": "flg",
+    "current_flg_active_submission_id": 55033457,
+    "reason": "flg changed active submission and moved to rank 4 after the completed DEC-021 screening; confirmation must use a separately qualified current teacher."
+  },
+  "teacher": {
+    "dataset_episode_count": 128,
+    "dataset_total_bytes": 643312769,
+    "live_rank_at_refresh": 1,
+    "live_team_score_at_refresh": 1205.2,
+    "strata": {
+      "seat_0_loss": 26,
+      "seat_0_win": 36,
+      "seat_1_loss": 24,
+      "seat_1_win": 42
+    },
+    "submission_id": 55002825,
+    "submission_public_score": 1205.2,
+    "team_id": 16531269,
+    "team_name": "Dries @ Tufa Labs"
+  }
+}

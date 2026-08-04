@@ -1,0 +1,356 @@
+{
+  "approval": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "approval_message": "Yes proceed",
+    "approved_at_utc": "2026-07-27T15:48:12.879395Z",
+    "approved_by": "user",
+    "approved_prior_request_sha256": "644be06359e6ad1f49224bab4fee68af562e026d4be93f536ae86bbc00f74eb8",
+    "authorization_scope": "AUTHORIZED_EXACT_12_FILE_FLG_DRAGAPULT_CALIBRATION_ONLY",
+    "authorized_request_sha256": "42b97e0fbb26e293a62747e5437315ae2018bdb7d5c07c0d28004dcc604adce7",
+    "consumed_at_utc": "2026-07-27T15:52:56.822350Z",
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 63562985,
+    "maximum_new_files": 12,
+    "one_time": true,
+    "raw_exports_authorized": false,
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "authorization_scope": "CONSUMED_EXACT_12_FILE_FLG_DRAGAPULT_CALIBRATION_ONLY",
+  "authorized": false,
+  "candidate_metadata_path": "reports/artifacts/raw/e01-flg-dragapult-calibration-candidates-v1.json",
+  "candidate_metadata_sha256": "038d88b1350b4463aec5879b5be8f496630804fe62e3d2e298e2075e9d98c42e",
+  "completed_probe_request_path": "configs/e01_flg_gold_teacher_probe_request_v1.json",
+  "completed_probe_request_sha256": "b1b0b81014fddeea8c5bb9d5be41a61ea538e1a3723eb64a246c87668c49b349",
+  "completed_probe_review_path": "reports/artifacts/e01-flg-gold-teacher-probe-review-v1.json",
+  "completed_probe_review_self_hash": "b6769479e7969688ba613ac9ab99b6f7a3cd27f54684e5c4b4a44ef60282a7a4",
+  "completed_probe_review_sha256": "c20c15c9325b44b81adf58a81ef962f1820bb53c68e7c5872bee81ae7398a17a",
+  "created_at_utc": "2026-07-27T15:05:36.357339Z",
+  "dataset": {
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-26",
+    "owner_slug": "kaggle",
+    "version": 1
+  },
+  "decision_id": "DEC-020",
+  "decision_path": "docs/decisions/DEC-020_E01_FLG_DRAGAPULT_CALIBRATION.md",
+  "decision_sha256": "1f30b8081cdfea4113f60fdfe76213902f1bf3afc645ab0a4a0c1b4301766547",
+  "episodes": [
+    {
+      "create_time": "2026-07-26T19:20:32.597Z",
+      "declared_bytes": 4377850,
+      "end_time": "2026-07-26T19:21:26.549Z",
+      "episode_id": 88304411,
+      "file_name": "88304411.json",
+      "opponent_submission_id": 54935503,
+      "opponent_team_name": "James Cox",
+      "selection_quantile": 0.2,
+      "stratum": "seat_0_loss",
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "create_time": "2026-07-26T20:20:28.649Z",
+      "declared_bytes": 4954508,
+      "end_time": "2026-07-26T20:21:40.032Z",
+      "episode_id": 88312254,
+      "file_name": "88312254.json",
+      "opponent_submission_id": 54909711,
+      "opponent_team_name": "Majkel1337",
+      "selection_quantile": 0.5,
+      "stratum": "seat_0_loss",
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "create_time": "2026-07-26T23:00:28.867Z",
+      "declared_bytes": 6464753,
+      "end_time": "2026-07-26T23:01:38.300Z",
+      "episode_id": 88333027,
+      "file_name": "88333027.json",
+      "opponent_submission_id": 54935503,
+      "opponent_team_name": "James Cox",
+      "selection_quantile": 0.8,
+      "stratum": "seat_0_loss",
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "create_time": "2026-07-26T21:52:26.693Z",
+      "declared_bytes": 4747191,
+      "end_time": "2026-07-26T21:53:18.161Z",
+      "episode_id": 88324168,
+      "file_name": "88324168.json",
+      "opponent_submission_id": 54954310,
+      "opponent_team_name": "James Cox",
+      "selection_quantile": 0.2,
+      "stratum": "seat_0_win",
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "create_time": "2026-07-26T19:40:29.388Z",
+      "declared_bytes": 6103324,
+      "end_time": "2026-07-26T19:41:34.451Z",
+      "episode_id": 88306996,
+      "file_name": "88306996.json",
+      "opponent_submission_id": 54963461,
+      "opponent_team_name": "Majkel1337",
+      "selection_quantile": 0.5,
+      "stratum": "seat_0_win",
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "create_time": "2026-07-26T16:16:26.625Z",
+      "declared_bytes": 7020621,
+      "end_time": "2026-07-26T16:17:42.806Z",
+      "episode_id": 88280071,
+      "file_name": "88280071.json",
+      "opponent_submission_id": 54957625,
+      "opponent_team_name": "Where is my orbit",
+      "selection_quantile": 0.8,
+      "stratum": "seat_0_win",
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "create_time": "2026-07-26T22:32:26.040Z",
+      "declared_bytes": 2996616,
+      "end_time": "2026-07-26T22:33:15.812Z",
+      "episode_id": 88329376,
+      "file_name": "88329376.json",
+      "opponent_submission_id": 54992856,
+      "opponent_team_name": "kashiwashira",
+      "selection_quantile": 0.2,
+      "stratum": "seat_1_loss",
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "create_time": "2026-07-26T17:08:26.067Z",
+      "declared_bytes": 4415458,
+      "end_time": "2026-07-26T17:09:23.349Z",
+      "episode_id": 88286928,
+      "file_name": "88286928.json",
+      "opponent_submission_id": 54935503,
+      "opponent_team_name": "James Cox",
+      "selection_quantile": 0.5,
+      "stratum": "seat_1_loss",
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "create_time": "2026-07-26T15:52:25.815Z",
+      "declared_bytes": 5819313,
+      "end_time": "2026-07-26T15:53:34.340Z",
+      "episode_id": 88276868,
+      "file_name": "88276868.json",
+      "opponent_submission_id": 54995147,
+      "opponent_team_name": "Budew",
+      "selection_quantile": 0.8,
+      "stratum": "seat_1_loss",
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "create_time": "2026-07-26T18:12:26.208Z",
+      "declared_bytes": 4787236,
+      "end_time": "2026-07-26T18:13:28.372Z",
+      "episode_id": 88295387,
+      "file_name": "88295387.json",
+      "opponent_submission_id": 54990799,
+      "opponent_team_name": "bono",
+      "selection_quantile": 0.2,
+      "stratum": "seat_1_win",
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    },
+    {
+      "create_time": "2026-07-26T21:12:26.757Z",
+      "declared_bytes": 5624889,
+      "end_time": "2026-07-26T21:13:26.549Z",
+      "episode_id": 88318931,
+      "file_name": "88318931.json",
+      "opponent_submission_id": 54975989,
+      "opponent_team_name": "lollipop947",
+      "selection_quantile": 0.5,
+      "stratum": "seat_1_win",
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    },
+    {
+      "create_time": "2026-07-26T20:52:26.654Z",
+      "declared_bytes": 6251226,
+      "end_time": "2026-07-26T20:53:20.423Z",
+      "episode_id": 88316351,
+      "file_name": "88316351.json",
+      "opponent_submission_id": 54968369,
+      "opponent_team_name": "A. R. SEKKAT",
+      "selection_quantile": 0.8,
+      "stratum": "seat_1_win",
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    }
+  ],
+  "execution": {
+    "action_sequence_exports": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "bytes_downloaded": 63562985,
+    "card_list_exports": 0,
+    "downloaded_files": [
+      {
+        "bytes": 4377850,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88304411.json",
+        "sha256": "d84aac31c4398df9ac2aca33a5e4dd7e3e651f0c310f324dba64c3ba970e8d6c"
+      },
+      {
+        "bytes": 4954508,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88312254.json",
+        "sha256": "96bc1e232599e5e279fe8a0520f642bef4085a04440e18d06c3e2928a25f340f"
+      },
+      {
+        "bytes": 6464753,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88333027.json",
+        "sha256": "c4a3f7fec14551aca9d3b116e6ccb0afadd146fa4dc99f0a6ec53c30d414ddf6"
+      },
+      {
+        "bytes": 4747191,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88324168.json",
+        "sha256": "5e1df438954c449cdd557b56440264467a914431210b0274c0e4ea770d3a247c"
+      },
+      {
+        "bytes": 6103324,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88306996.json",
+        "sha256": "4de977fdd19abb728831f67e44c0f0d058af95830a9e5c8978886f99b4acd7ec"
+      },
+      {
+        "bytes": 7020621,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88280071.json",
+        "sha256": "276042a83ac52c624658b88689834426c0c145a960f0051f7d2faae3d53cd16e"
+      },
+      {
+        "bytes": 2996616,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88329376.json",
+        "sha256": "aa6bb3b74d140d195fdcb1933d9738978d72840d86a8a37b5f887a165ae965cb"
+      },
+      {
+        "bytes": 4415458,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88286928.json",
+        "sha256": "6170b006a86f1bbce443d730518633bb667ac9644471e1ab7669e5916c81a63a"
+      },
+      {
+        "bytes": 5819313,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88276868.json",
+        "sha256": "8308c00dd517128b0b16e7cd393fdd2eac6f046c945e09a48254f40901cc1ef7"
+      },
+      {
+        "bytes": 4787236,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88295387.json",
+        "sha256": "72e64ee29f562b5303e59c495fc4716ad6b4282265b367a8fde371fc25772136"
+      },
+      {
+        "bytes": 5624889,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88318931.json",
+        "sha256": "c45d9ec2f591ee7d0398371599755b363b6ee591531f5f7ef146dd4d5bd10c79"
+      },
+      {
+        "bytes": 6251226,
+        "path": "private/g3/e01/flg-dragapult-calibration-v1/88316351.json",
+        "sha256": "24accb1a28261ca6e44e449efc48c473976d065767246e2cacdd813d7492d577"
+      }
+    ],
+    "external_compute": false,
+    "files_downloaded": 12,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "request_exports": 0,
+    "submission": false,
+    "training": false,
+    "training_label_exports": 0
+  },
+  "live_refresh_path": "reports/artifacts/raw/e01-live-gold-refresh-v1.json",
+  "live_refresh_sha256": "410b137a7ed4052111d6e16c373fbdc1b1ae484de4ad152a06420981c0870120",
+  "maximum_new_bytes": 63562985,
+  "maximum_new_files": 12,
+  "notes": [
+    "Prepared under DEC-020 and not authorized.",
+    "Separate explicit user approval is required before transfer.",
+    "This is a calibration batch, not the full 5000-decision screen."
+  ],
+  "output_directory": "private/g3/e01/flg-dragapult-calibration-v1",
+  "overwrite_authorized": false,
+  "record_id": "e01-flg-dragapult-calibration-request-v1",
+  "request_ready": false,
+  "review_boundary": {
+    "action_sequence_exports": 0,
+    "additional_replay_downloads_after_named_files": 0,
+    "agent_log_downloads": 0,
+    "card_list_exports": 0,
+    "external_compute": false,
+    "measure_teacher_decision_density": true,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "request_exports": 0,
+    "require_aggregate_action_alignment": true,
+    "require_current_asset_deck_construction_checks": true,
+    "require_environment_name": "cabt",
+    "require_environment_version": "1.0.0",
+    "require_exact_deck_hash": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "require_exact_declared_bytes": true,
+    "require_exact_file_sha256": true,
+    "require_module_version": "1.32.2",
+    "require_schema_version": 1,
+    "require_submission_binding": true,
+    "submission": false,
+    "training": false,
+    "training_label_exports": 0
+  },
+  "schema_version": 1,
+  "selection_basis": {
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "files_per_stratum": 3,
+    "metadata_can_guarantee_module_version": false,
+    "method": "20th_50th_80th_file_byte_quantiles_per_seat_result_stratum",
+    "quantiles": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "replay_bodies_used_for_selection": false
+  },
+  "stage": "E01-A",
+  "status": "CONSUMED",
+  "stop_conditions": [
+    "stop_if_output_directory_exists",
+    "stop_if_dataset_owner_slug_or_version_differs",
+    "stop_if_any_file_name_or_declared_byte_count_differs",
+    "stop_after_exactly_12_named_files",
+    "fail_qualification_if_any_replay_module_version_is_not_1.32.2",
+    "fail_qualification_if_any_teacher_deck_hash_differs",
+    "stop_after_calibration_review_whether_pass_or_fail",
+    "no_additional_replay_log_export_training_or_compute_without_new_explicit_approval"
+  ],
+  "teacher": {
+    "archetype_context_label": "Dragapult ex",
+    "dataset_episode_count": 131,
+    "expected_deck_multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "live_rank_at_refresh": 1,
+    "submission_id": 55004495,
+    "submission_public_score": 1244.2,
+    "team_id": 16380946,
+    "team_name": "flg"
+  }
+}

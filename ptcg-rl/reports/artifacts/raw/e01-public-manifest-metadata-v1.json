@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "record_id": "e01-public-manifest-metadata-v1",
+  "created_at_utc": "2026-07-24T14:52:18Z",
+  "source_path": "reports/artifacts/raw/e01-public-manifest-metadata-v1.json",
+  "producer": "chatgpt-local-agent",
+  "collection_boundary": {
+    "read_only_public_metadata": true,
+    "episode_json_transferred": 0,
+    "agent_logs_transferred": 0,
+    "replay_body_inspected": false,
+    "training_labels_created": 0
+  },
+  "dataset": {
+    "owner_slug": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "version": 1,
+    "files_total": 4560,
+    "episode_json_files": 4559,
+    "manifest_files": 1,
+    "manifest_name": "manifest.csv",
+    "manifest_bytes": 378253,
+    "manifest_sha256": "136dbdb174e6bbd6057023e0271d1016fe0ff143e5958ddbef38d105cc59d5c2",
+    "manifest_rows": 4559,
+    "manifest_columns": [
+      "id",
+      "create_time",
+      "agents",
+      "score1",
+      "score2",
+      "data_size",
+      "file_name"
+    ],
+    "teacher_sidecars": 0,
+    "submission_sidecars": 0,
+    "policy_sidecars": 0,
+    "deck_sidecars": 0
+  },
+  "selected_rows": [
+    {
+      "id": 87562468,
+      "create_time": "2026-07-20T11:54:43.909",
+      "agents": 2,
+      "score1": 1253,
+      "score2": 1100,
+      "data_size": 5340627,
+      "file_name": "87562468.json"
+    },
+    {
+      "id": 87583340,
+      "create_time": "2026-07-20T22:08:00.136",
+      "agents": 2,
+      "score1": 1033,
+      "score2": 1155,
+      "data_size": 4818610,
+      "file_name": "87583340.json"
+    },
+    {
+      "id": 87646392,
+      "create_time": "2026-07-22T11:27:53.436",
+      "agents": 2,
+      "score1": 1155,
+      "score2": 1088,
+      "data_size": 6249941,
+      "file_name": "87646392.json"
+    },
+    {
+      "id": 87652312,
+      "create_time": "2026-07-22T13:43:47.271",
+      "agents": 2,
+      "score1": 1211,
+      "score2": 1030,
+      "data_size": 6303684,
+      "file_name": "87652312.json"
+    },
+    {
+      "id": 87703034,
+      "create_time": "2026-07-23T06:29:01.125",
+      "agents": 2,
+      "score1": 1337,
+      "score2": 1089,
+      "data_size": 5279979,
+      "file_name": "87703034.json"
+    },
+    {
+      "id": 87720146,
+      "create_time": "2026-07-23T13:38:13.582",
+      "agents": 2,
+      "score1": 1325,
+      "score2": 1101,
+      "data_size": 4985898,
+      "file_name": "87720146.json"
+    },
+    {
+      "id": 87738531,
+      "create_time": "2026-07-23T21:32:51.684",
+      "agents": 2,
+      "score1": 1354,
+      "score2": 1122,
+      "data_size": 4986556,
+      "file_name": "87738531.json"
+    },
+    {
+      "id": 87739085,
+      "create_time": "2026-07-23T21:47:42.267",
+      "agents": 2,
+      "score1": 1328,
+      "score2": 1155,
+      "data_size": 4654714,
+      "file_name": "87739085.json"
+    }
+  ],
+  "metadata_coverage": {
+    "episode_identity": true,
+    "creation_time": true,
+    "agent_count": true,
+    "aggregate_skill_scores": true,
+    "declared_file_size": true,
+    "exact_teacher_identity": false,
+    "team_identity": false,
+    "submission_identity": false,
+    "policy_identity_or_version": false,
+    "exact_deck_list": false,
+    "exact_60_card_deck_hash": false,
+    "action_alignment": false
+  },
+  "public_submission_api_observation": {
+    "reverse_episode_lookup_available": false,
+    "submission_episode_page_size_observed": 25,
+    "continuation_token_returned": true,
+    "continuation_token_input_exposed": false,
+    "selected_episode_identity_resolved": false
+  },
+  "decision": "PUBLIC_METADATA_INSUFFICIENT_FOR_TEACHER_OR_DECK_QUALIFICATION"
+}

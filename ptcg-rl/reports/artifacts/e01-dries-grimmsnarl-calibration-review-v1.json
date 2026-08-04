@@ -1,0 +1,682 @@
+{
+  "confirmation": {
+    "calibration_teacher_decisions": 1175,
+    "calibration_teacher_episodes": 12,
+    "confirmation_gate_passed": false,
+    "decision_shortfall": 17458,
+    "episode_shortfall": 134,
+    "independent_recent_teacher_requirement_met": true,
+    "observed_independent_recent_teachers": 2,
+    "observed_recent_teacher_decisions": 7542,
+    "observed_recent_teacher_episodes": 66,
+    "prior_observed_independent_recent_teachers": 2,
+    "prior_observed_recent_teacher_decisions": 6367,
+    "prior_observed_recent_teacher_episodes": 54,
+    "required_episodes": 200,
+    "required_independent_recent_teachers": 2,
+    "required_meaningful_teacher_decisions": 25000
+  },
+  "consistency": {
+    "all_replay_action_alignment": "PASS",
+    "all_same_module_version": true,
+    "balanced_strata": {
+      "seat_0_loss": 3,
+      "seat_0_win": 3,
+      "seat_1_loss": 3,
+      "seat_1_win": 3
+    },
+    "calibration_teacher_active_selection_requests": 1175,
+    "combined_all_player_active_selection_requests": 2171,
+    "current_asset_deck_construction_compatibility": "PASS",
+    "empty_lagged_selections": 23,
+    "environment_name": "cabt",
+    "environment_version": "1.0.0",
+    "exact_historical_engine_card_mapping_available": false,
+    "exact_historical_legality": "UNPROVEN",
+    "exact_teacher_deck_match": true,
+    "maximum_option_count": 30,
+    "maximum_selection_count": 5,
+    "module_versions": [
+      "1.32.2"
+    ],
+    "nonempty_lagged_selections": 2148,
+    "schema_version": 1,
+    "teacher_archetype_context_label": "Marnie's Grimmsnarl ex",
+    "teacher_deck_multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd"
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-30T18:02:42.924501Z",
+  "decision": "ACCEPT_DRIES_GRIMMSNARL_CALIBRATION_CONFIRMATION_FLOOR_BLOCKED",
+  "density": {
+    "calibration_decisions_per_episode": 97.91666666666667,
+    "calibration_decisions_per_mib": 20.241299695638787,
+    "projected_additional_bytes_for_decision_floor": 904390533,
+    "projected_additional_episodes_for_all_confirmation_floors": 179,
+    "projected_additional_episodes_for_decision_floor": 179,
+    "projection_is_guarantee": false
+  },
+  "episodes": [
+    {
+      "action_alignment": {
+        "active_selection_requests": 147,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 30,
+        "maximum_selection_count": 2,
+        "nonempty_lagged_selections": 147,
+        "status": "PASS",
+        "teacher_active_selection_requests": 66
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88282349,
+      "file": {
+        "bytes": 4144487,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88282349.json",
+        "sha256": "118d14fa27c644738a4e65253b10b2717a66f1bdc42a5abbf95d475da00d6176"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 149,
+      "stratum": "seat_0_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 163,
+        "empty_lagged_selections": 1,
+        "maximum_option_count": 19,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 162,
+        "status": "PASS",
+        "teacher_active_selection_requests": 77
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88309616,
+      "file": {
+        "bytes": 4609394,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88309616.json",
+        "sha256": "248e8ae8f8eda581e9f087c578405520a7c0393f178fc9b2d30ac6991bca86b3"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 165,
+      "stratum": "seat_0_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 203,
+        "empty_lagged_selections": 1,
+        "maximum_option_count": 26,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 202,
+        "status": "PASS",
+        "teacher_active_selection_requests": 92
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88278502,
+      "file": {
+        "bytes": 5763304,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88278502.json",
+        "sha256": "d38b3b9b8655f819dc53a4ac5b60c89f3794999622af697a86e605c73f692502"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 205,
+      "stratum": "seat_0_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 155,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 23,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 155,
+        "status": "PASS",
+        "teacher_active_selection_requests": 88
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88325741,
+      "file": {
+        "bytes": 4132196,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88325741.json",
+        "sha256": "0959905bceee62abffd6efe32c91b35a74fd1cb6298ba094f6dd12780ca52214"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 157,
+      "stratum": "seat_0_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 187,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 26,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 187,
+        "status": "PASS",
+        "teacher_active_selection_requests": 106
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88323126,
+      "file": {
+        "bytes": 5037959,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88323126.json",
+        "sha256": "0959d1d6acb3276559de87dc59dc8de890af676d940472bb192419d2bfccf158"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 189,
+      "stratum": "seat_0_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 202,
+        "empty_lagged_selections": 2,
+        "maximum_option_count": 24,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 200,
+        "status": "PASS",
+        "teacher_active_selection_requests": 141
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88295625,
+      "file": {
+        "bytes": 5887456,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88295625.json",
+        "sha256": "d51b83e3d2f0a9ae2ee617202bf8301cbe544f90d1fbad08be5f0c9b68e1681d"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 204,
+      "stratum": "seat_0_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 152,
+        "empty_lagged_selections": 0,
+        "maximum_option_count": 26,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 152,
+        "status": "PASS",
+        "teacher_active_selection_requests": 77
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88278632,
+      "file": {
+        "bytes": 4119037,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88278632.json",
+        "sha256": "71a918023feeda7c67d85898048efe38c2ada074d1b44fe3bb23836aaefb0dfc"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 154,
+      "stratum": "seat_1_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 181,
+        "empty_lagged_selections": 3,
+        "maximum_option_count": 21,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 178,
+        "status": "PASS",
+        "teacher_active_selection_requests": 80
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88299587,
+      "file": {
+        "bytes": 5096795,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88299587.json",
+        "sha256": "5092d3497478d6e3b65f2c745b1131f2f02a9a8090d2ab8839b8eb52a8b277d6"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 183,
+      "stratum": "seat_1_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 216,
+        "empty_lagged_selections": 5,
+        "maximum_option_count": 25,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 211,
+        "status": "PASS",
+        "teacher_active_selection_requests": 108
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88324713,
+      "file": {
+        "bytes": 6105640,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88324713.json",
+        "sha256": "06518e3501634603e66a3e2f23ab18d9e13f7b6a27677b4c21cc7fad26bbb1c9"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 218,
+      "stratum": "seat_1_loss",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": -1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 173,
+        "empty_lagged_selections": 5,
+        "maximum_option_count": 24,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 168,
+        "status": "PASS",
+        "teacher_active_selection_requests": 97
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88325214,
+      "file": {
+        "bytes": 4667363,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88325214.json",
+        "sha256": "65eb6da594ce1176dfec0ce38f07bce19bf1b7ace9869e577785e86f64d5d3a1"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 175,
+      "stratum": "seat_1_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 180,
+        "empty_lagged_selections": 4,
+        "maximum_option_count": 28,
+        "maximum_selection_count": 3,
+        "nonempty_lagged_selections": 176,
+        "status": "PASS",
+        "teacher_active_selection_requests": 119
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88314806,
+      "file": {
+        "bytes": 5222527,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88314806.json",
+        "sha256": "3863e0bbb5d25af8c3093236a79b3fe02c051f503634d816cad7dab8954905fc"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 182,
+      "stratum": "seat_1_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    },
+    {
+      "action_alignment": {
+        "active_selection_requests": 212,
+        "empty_lagged_selections": 2,
+        "maximum_option_count": 19,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 210,
+        "status": "PASS",
+        "teacher_active_selection_requests": 124
+      },
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 88323660,
+      "file": {
+        "bytes": 6083293,
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88323660.json",
+        "sha256": "f937417d7eb2c470fb710941a1a009aae76bf08a6bccd07361cebacb8ab9aa5f"
+      },
+      "module_version": "1.32.2",
+      "schema_version": 1,
+      "steps": 214,
+      "stratum": "seat_1_win",
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Marnie's Grimmsnarl ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1
+    }
+  ],
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-dries-grimmsnarl-calibration-candidates-v1.json",
+      "sha256": "18e84036a294c57e6d805114270815c84cddea903cad5599a5cb5bab83603bcd"
+    },
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-023_E01_DRIES_GRIMMSNARL_CALIBRATION.md",
+      "sha256": "9ea27e6e2f5f41953a2ef2eb68af0840a0297a7640832480b232674826403460"
+    },
+    "prior_dries_probe_review": {
+      "path": "reports/artifacts/e01-dries-confirmation-teacher-probe-review-v1.json",
+      "review_sha256": "85845efb12c00b4fc489daa65be9291d1ff0db2d18e55261c66d107c8c64422c",
+      "sha256": "42d65b6f40fd2a2767ed3b7ed56852c2a7efb096c159f97f294c8fe6183008e0"
+    },
+    "request": {
+      "authorization_consumed": true,
+      "authorized_request_sha256": "75bc96fe9f5ab595f1443716a96f47c67843687b32f6d55616b05f9a59c8945d",
+      "path": "configs/e01_dries_grimmsnarl_calibration_request_v1.json",
+      "sha256": "f026a350d9e5c882080f28f60a811d3060f49c7a3c7375dc85e550865d4f9380"
+    }
+  },
+  "next_action": "PREPARE_BOUNDED_DRIES_GRIMMSNARL_CONFIRMATION_EXPANSION_REQUEST_FROM_CALIBRATED_DENSITY_WITH_NEW_APPROVAL",
+  "policy_behavior_consistency_definition": "SAME_PUBLIC_SUBMISSION_ID_MODULE_DECK_AND_VALID_ACTION_ALIGNED_REPLAY_CONTRACT_NOT_IDENTICAL_STATE_ACTION_REPRODUCIBILITY",
+  "producer": "scripts/e01_dries_grimmsnarl_calibration_review.py",
+  "qualification": {
+    "action_aligned_supervision_available": true,
+    "confirmation_gate_passed": false,
+    "current_asset_deck_construction_compatibility_qualified": true,
+    "current_rank_1_strength_metadata_qualified": true,
+    "exact_deck_consistency_qualified": true,
+    "exact_historical_deck_legality_qualified": false,
+    "minimum_200_recent_teacher_episodes_met": false,
+    "minimum_25000_meaningful_teacher_decisions_met": false,
+    "policy_behavior_contract_consistency_qualified": true,
+    "replay_transfer_authorized": false,
+    "same_module_version_qualified": true,
+    "same_submission_identity_qualified": true,
+    "same_version_replay_contract_consistency_qualified": true,
+    "second_independent_recent_teacher_qualified": true,
+    "teacher_strength_qualified": true,
+    "training_authorized": false
+  },
+  "record_id": "e01-dries-grimmsnarl-calibration-review-v1",
+  "review_sha256": "56e7f1d065c0eaf5132bcac710f903ca4bfab236638d5a7d5b62bddd7ea2a871",
+  "reviewed_decision": "DEC-023",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-dries-grimmsnarl-calibration-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "archetype_context_label": "Marnie's Grimmsnarl ex",
+    "dataset_episode_count": 128,
+    "live_rank_at_refresh": 1,
+    "same_exact_public_submission_across_episodes": true,
+    "submission_id": 55002825,
+    "submission_ids_bound_by_public_metadata": true,
+    "submission_ids_present_in_replay_bodies": false,
+    "submission_public_score": 1205.2,
+    "team_id": 16531269,
+    "team_name": "Dries @ Tufa Labs"
+  },
+  "transfer": {
+    "action_sequence_exports": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "card_list_exports": 0,
+    "downloaded_files": [
+      {
+        "bytes": 4144487,
+        "episode_id": 88282349,
+        "file_name": "88282349.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88282349.json",
+        "sha256": "118d14fa27c644738a4e65253b10b2717a66f1bdc42a5abbf95d475da00d6176"
+      },
+      {
+        "bytes": 4609394,
+        "episode_id": 88309616,
+        "file_name": "88309616.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88309616.json",
+        "sha256": "248e8ae8f8eda581e9f087c578405520a7c0393f178fc9b2d30ac6991bca86b3"
+      },
+      {
+        "bytes": 5763304,
+        "episode_id": 88278502,
+        "file_name": "88278502.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88278502.json",
+        "sha256": "d38b3b9b8655f819dc53a4ac5b60c89f3794999622af697a86e605c73f692502"
+      },
+      {
+        "bytes": 4132196,
+        "episode_id": 88325741,
+        "file_name": "88325741.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88325741.json",
+        "sha256": "0959905bceee62abffd6efe32c91b35a74fd1cb6298ba094f6dd12780ca52214"
+      },
+      {
+        "bytes": 5037959,
+        "episode_id": 88323126,
+        "file_name": "88323126.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88323126.json",
+        "sha256": "0959d1d6acb3276559de87dc59dc8de890af676d940472bb192419d2bfccf158"
+      },
+      {
+        "bytes": 5887456,
+        "episode_id": 88295625,
+        "file_name": "88295625.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88295625.json",
+        "sha256": "d51b83e3d2f0a9ae2ee617202bf8301cbe544f90d1fbad08be5f0c9b68e1681d"
+      },
+      {
+        "bytes": 4119037,
+        "episode_id": 88278632,
+        "file_name": "88278632.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88278632.json",
+        "sha256": "71a918023feeda7c67d85898048efe38c2ada074d1b44fe3bb23836aaefb0dfc"
+      },
+      {
+        "bytes": 5096795,
+        "episode_id": 88299587,
+        "file_name": "88299587.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88299587.json",
+        "sha256": "5092d3497478d6e3b65f2c745b1131f2f02a9a8090d2ab8839b8eb52a8b277d6"
+      },
+      {
+        "bytes": 6105640,
+        "episode_id": 88324713,
+        "file_name": "88324713.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88324713.json",
+        "sha256": "06518e3501634603e66a3e2f23ab18d9e13f7b6a27677b4c21cc7fad26bbb1c9"
+      },
+      {
+        "bytes": 4667363,
+        "episode_id": 88325214,
+        "file_name": "88325214.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88325214.json",
+        "sha256": "65eb6da594ce1176dfec0ce38f07bce19bf1b7ace9869e577785e86f64d5d3a1"
+      },
+      {
+        "bytes": 5222527,
+        "episode_id": 88314806,
+        "file_name": "88314806.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88314806.json",
+        "sha256": "3863e0bbb5d25af8c3093236a79b3fe02c051f503634d816cad7dab8954905fc"
+      },
+      {
+        "bytes": 6083293,
+        "episode_id": 88323660,
+        "file_name": "88323660.json",
+        "path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88323660.json",
+        "sha256": "f937417d7eb2c470fb710941a1a009aae76bf08a6bccd07361cebacb8ab9aa5f"
+      }
+    ],
+    "new_bytes_downloaded": 60869451,
+    "new_files_downloaded": 12,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "overwrite_used": false,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "request_exports": 0,
+    "training_label_exports": 0
+  }
+}

@@ -1,0 +1,1922 @@
+{
+  "artifacts": {
+    "authorization_snapshot": {
+      "bytes": 2188,
+      "path": "private/g3/e04/qualification-v1/e04-native-zero-update-authorization.json",
+      "sha256": "cab752414df29ad9d7ceb78baf46c44cb2fbba7384c02e6aad3e72b55ad1a947"
+    },
+    "bridge_checkpoint": {
+      "bytes": 161415107,
+      "path": "private/g3/e04/qualification-v1/e04-native-zero-update-bridge.json",
+      "sha256": "9a9e89d737ef640ab14eb64d4756c89d37dc75b4049bc5a7a3c0598114bc9c22"
+    },
+    "current_consumed_request": {
+      "bytes": 2550,
+      "path": "configs/e04_qualification_request_v1.json",
+      "sha256": "13aa4465404599827e22a494181ac2f0af4e591b316e4f933500b0ed942a497b"
+    },
+    "game_ledger": {
+      "bytes": 299787,
+      "path": "private/g3/e04/qualification-v1/e04-native-zero-update-games.json",
+      "sha256": "b45be2af9f8011fa99e040a5b4069aa59a3e59d78450ca0b08a4a019e02e0672"
+    },
+    "native_report": {
+      "bytes": 303374,
+      "path": "private/g3/e04/qualification-v1/e04-native-zero-update-report.json",
+      "sha256": "e7c85dfeeb14d8bdc23c5ed11bf4fe86bdcbf4f64348fe9a313f11b999e3a56e"
+    }
+  },
+  "assets": {
+    "card_data": {
+      "bytes": 359151,
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "checkpoint": {
+      "bytes": 5429190,
+      "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827"
+    },
+    "deck": {
+      "bytes": 305,
+      "sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee"
+    },
+    "engine_library": {
+      "bytes": 1342400,
+      "sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887"
+    },
+    "wrapper_api": {
+      "bytes": 26933,
+      "sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced"
+    }
+  },
+  "authorization": {
+    "authorization_consumed": true,
+    "authorization_snapshot_sha256": "cab752414df29ad9d7ceb78baf46c44cb2fbba7384c02e6aad3e72b55ad1a947",
+    "current_request_authorized": false,
+    "explicit_user_approval": true,
+    "external_compute_authorized": false,
+    "games_authorized": 180,
+    "later_native_stage_authorized": false,
+    "minimum_meaningful_decisions": 10000,
+    "optimizer_steps_authorized": 0,
+    "rerun_authorized": false
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T13:55:23.160216+00:00",
+  "decision": "PASS",
+  "execution": {
+    "bridge_checkpoint_interval_games": 10,
+    "device": "cpu",
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "single_process": true,
+    "training_loop_ran": false,
+    "wall_seconds": 294.104991952001
+  },
+  "producer": "scripts/e04_qualification_review.py",
+  "qualification_scope": {
+    "external_compute_authorized": false,
+    "policy_competence": false,
+    "qualification": true,
+    "single_process_trace": true,
+    "submission_authorized": false,
+    "ten_game_smoke": true,
+    "training_authorized": false,
+    "zero_update_bridge_qualified": true
+  },
+  "record_id": "e04-qualification-v1",
+  "results": {
+    "bridge_state_sha256": "ac2f63202898ea22455d53774a56762b128728f9002726a2ca20e703a4d52362",
+    "engine_decisions": 12194,
+    "forced_decisions": 944,
+    "games": 180,
+    "maximum_compound_log_probability_absolute_error": 2.3479170385698467e-07,
+    "meaningful_decisions": 11250,
+    "per_game": [
+      {
+        "engine_decisions": 58,
+        "episode_id": "e04-qualification-0000",
+        "forced_decisions": 4,
+        "game_index": 0,
+        "maximum_replay_absolute_error": 1.2724177178569107e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 1,
+        "wall_seconds": 1.1335817939980188
+      },
+      {
+        "engine_decisions": 55,
+        "episode_id": "e04-qualification-0001",
+        "forced_decisions": 7,
+        "game_index": 1,
+        "maximum_replay_absolute_error": 1.467040733338365e-07,
+        "meaningful_decisions": 48,
+        "terminal_result": 1,
+        "wall_seconds": 1.028882362996228
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0002",
+        "forced_decisions": 6,
+        "game_index": 2,
+        "maximum_replay_absolute_error": 1.45027315934243e-07,
+        "meaningful_decisions": 56,
+        "terminal_result": 0,
+        "wall_seconds": 0.9998002060019644
+      },
+      {
+        "engine_decisions": 71,
+        "episode_id": "e04-qualification-0003",
+        "forced_decisions": 6,
+        "game_index": 3,
+        "maximum_replay_absolute_error": 1.4315048213475734e-07,
+        "meaningful_decisions": 65,
+        "terminal_result": 1,
+        "wall_seconds": 1.2140016530029243
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0004",
+        "forced_decisions": 13,
+        "game_index": 4,
+        "maximum_replay_absolute_error": 1.708853383242115e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 1,
+        "wall_seconds": 1.0890785299998242
+      },
+      {
+        "engine_decisions": 75,
+        "episode_id": "e04-qualification-0005",
+        "forced_decisions": 8,
+        "game_index": 5,
+        "maximum_replay_absolute_error": 1.3747117089124572e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 1,
+        "wall_seconds": 1.2250286399939796
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0006",
+        "forced_decisions": 5,
+        "game_index": 6,
+        "maximum_replay_absolute_error": 1.574559633787942e-07,
+        "meaningful_decisions": 52,
+        "terminal_result": 1,
+        "wall_seconds": 0.8447212430037325
+      },
+      {
+        "engine_decisions": 58,
+        "episode_id": "e04-qualification-0007",
+        "forced_decisions": 6,
+        "game_index": 7,
+        "maximum_replay_absolute_error": 2.3479170385698467e-07,
+        "meaningful_decisions": 52,
+        "terminal_result": 1,
+        "wall_seconds": 0.9152429890091298
+      },
+      {
+        "engine_decisions": 75,
+        "episode_id": "e04-qualification-0008",
+        "forced_decisions": 4,
+        "game_index": 8,
+        "maximum_replay_absolute_error": 1.5432037203666482e-07,
+        "meaningful_decisions": 71,
+        "terminal_result": 1,
+        "wall_seconds": 1.2051681640004972
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0009",
+        "forced_decisions": 2,
+        "game_index": 9,
+        "maximum_replay_absolute_error": 1.588958218334824e-07,
+        "meaningful_decisions": 74,
+        "terminal_result": 0,
+        "wall_seconds": 1.2912226680055028
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0010",
+        "forced_decisions": 3,
+        "game_index": 10,
+        "maximum_replay_absolute_error": 1.4959973482220335e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.0780751670099562
+      },
+      {
+        "engine_decisions": 72,
+        "episode_id": "e04-qualification-0011",
+        "forced_decisions": 3,
+        "game_index": 11,
+        "maximum_replay_absolute_error": 1.97192894901832e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 1,
+        "wall_seconds": 1.1180816410051193
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0012",
+        "forced_decisions": 2,
+        "game_index": 12,
+        "maximum_replay_absolute_error": 1.4487184829548028e-07,
+        "meaningful_decisions": 66,
+        "terminal_result": 0,
+        "wall_seconds": 1.2567378310050117
+      },
+      {
+        "engine_decisions": 56,
+        "episode_id": "e04-qualification-0013",
+        "forced_decisions": 5,
+        "game_index": 13,
+        "maximum_replay_absolute_error": 1.5672501918473358e-07,
+        "meaningful_decisions": 51,
+        "terminal_result": 0,
+        "wall_seconds": 0.8715797369950451
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0014",
+        "forced_decisions": 4,
+        "game_index": 14,
+        "maximum_replay_absolute_error": 1.897468422384918e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 1,
+        "wall_seconds": 0.9988475220015971
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0015",
+        "forced_decisions": 5,
+        "game_index": 15,
+        "maximum_replay_absolute_error": 1.3533041443025695e-07,
+        "meaningful_decisions": 62,
+        "terminal_result": 0,
+        "wall_seconds": 1.0365310850029346
+      },
+      {
+        "engine_decisions": 74,
+        "episode_id": "e04-qualification-0016",
+        "forced_decisions": 5,
+        "game_index": 16,
+        "maximum_replay_absolute_error": 1.3127582576544228e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 1,
+        "wall_seconds": 1.1652044669899624
+      },
+      {
+        "engine_decisions": 78,
+        "episode_id": "e04-qualification-0017",
+        "forced_decisions": 6,
+        "game_index": 17,
+        "maximum_replay_absolute_error": 1.4231034883849247e-07,
+        "meaningful_decisions": 72,
+        "terminal_result": 0,
+        "wall_seconds": 1.2012973589880858
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-qualification-0018",
+        "forced_decisions": 9,
+        "game_index": 18,
+        "maximum_replay_absolute_error": 1.719730127192065e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.0303352639894001
+      },
+      {
+        "engine_decisions": 87,
+        "episode_id": "e04-qualification-0019",
+        "forced_decisions": 10,
+        "game_index": 19,
+        "maximum_replay_absolute_error": 1.598179988349102e-07,
+        "meaningful_decisions": 77,
+        "terminal_result": 1,
+        "wall_seconds": 1.6477605539985234
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0020",
+        "forced_decisions": 9,
+        "game_index": 20,
+        "maximum_replay_absolute_error": 1.3121398279025698e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 1,
+        "wall_seconds": 1.013246019007056
+      },
+      {
+        "engine_decisions": 52,
+        "episode_id": "e04-qualification-0021",
+        "forced_decisions": 1,
+        "game_index": 21,
+        "maximum_replay_absolute_error": 1.6449330253465178e-07,
+        "meaningful_decisions": 51,
+        "terminal_result": 0,
+        "wall_seconds": 0.7877808189950883
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0022",
+        "forced_decisions": 3,
+        "game_index": 22,
+        "maximum_replay_absolute_error": 1.3056384240428542e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 1,
+        "wall_seconds": 1.0694957689993316
+      },
+      {
+        "engine_decisions": 77,
+        "episode_id": "e04-qualification-0023",
+        "forced_decisions": 8,
+        "game_index": 23,
+        "maximum_replay_absolute_error": 1.8496844766957565e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 1,
+        "wall_seconds": 1.1574136949930107
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0024",
+        "forced_decisions": 7,
+        "game_index": 24,
+        "maximum_replay_absolute_error": 1.5281196752425785e-07,
+        "meaningful_decisions": 55,
+        "terminal_result": 0,
+        "wall_seconds": 0.9447656060074223
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0025",
+        "forced_decisions": 6,
+        "game_index": 25,
+        "maximum_replay_absolute_error": 1.6591898699402918e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 1,
+        "wall_seconds": 1.0077341139985947
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0026",
+        "forced_decisions": 8,
+        "game_index": 26,
+        "maximum_replay_absolute_error": 1.4070451337389045e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 0,
+        "wall_seconds": 0.9724038580025081
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0027",
+        "forced_decisions": 2,
+        "game_index": 27,
+        "maximum_replay_absolute_error": 1.5876485326415946e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.0867603969963966
+      },
+      {
+        "engine_decisions": 83,
+        "episode_id": "e04-qualification-0028",
+        "forced_decisions": 4,
+        "game_index": 28,
+        "maximum_replay_absolute_error": 1.7073801705791425e-07,
+        "meaningful_decisions": 79,
+        "terminal_result": 1,
+        "wall_seconds": 1.5429667309945216
+      },
+      {
+        "engine_decisions": 72,
+        "episode_id": "e04-qualification-0029",
+        "forced_decisions": 7,
+        "game_index": 29,
+        "maximum_replay_absolute_error": 1.7343245817258435e-07,
+        "meaningful_decisions": 65,
+        "terminal_result": 1,
+        "wall_seconds": 1.2093627699941862
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0030",
+        "forced_decisions": 3,
+        "game_index": 30,
+        "maximum_replay_absolute_error": 1.4130017422786523e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 0,
+        "wall_seconds": 0.8558913830056554
+      },
+      {
+        "engine_decisions": 78,
+        "episode_id": "e04-qualification-0031",
+        "forced_decisions": 9,
+        "game_index": 31,
+        "maximum_replay_absolute_error": 1.5566558486668214e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 1,
+        "wall_seconds": 1.2661430000007385
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0032",
+        "forced_decisions": 5,
+        "game_index": 32,
+        "maximum_replay_absolute_error": 1.9672831141903657e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 1,
+        "wall_seconds": 0.9779552599939052
+      },
+      {
+        "engine_decisions": 51,
+        "episode_id": "e04-qualification-0033",
+        "forced_decisions": 3,
+        "game_index": 33,
+        "maximum_replay_absolute_error": 1.4179943663705785e-07,
+        "meaningful_decisions": 48,
+        "terminal_result": 0,
+        "wall_seconds": 0.8859407660056604
+      },
+      {
+        "engine_decisions": 81,
+        "episode_id": "e04-qualification-0034",
+        "forced_decisions": 1,
+        "game_index": 34,
+        "maximum_replay_absolute_error": 1.2051161313308967e-07,
+        "meaningful_decisions": 80,
+        "terminal_result": 0,
+        "wall_seconds": 1.25686842900177
+      },
+      {
+        "engine_decisions": 55,
+        "episode_id": "e04-qualification-0035",
+        "forced_decisions": 2,
+        "game_index": 35,
+        "maximum_replay_absolute_error": 1.5334093994567866e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 1,
+        "wall_seconds": 0.9005038329923991
+      },
+      {
+        "engine_decisions": 72,
+        "episode_id": "e04-qualification-0036",
+        "forced_decisions": 5,
+        "game_index": 36,
+        "maximum_replay_absolute_error": 1.7248419270643467e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 0,
+        "wall_seconds": 1.2042140209960053
+      },
+      {
+        "engine_decisions": 81,
+        "episode_id": "e04-qualification-0037",
+        "forced_decisions": 5,
+        "game_index": 37,
+        "maximum_replay_absolute_error": 1.861974512351594e-07,
+        "meaningful_decisions": 76,
+        "terminal_result": 0,
+        "wall_seconds": 1.4585367669933476
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0038",
+        "forced_decisions": 6,
+        "game_index": 38,
+        "maximum_replay_absolute_error": 1.948005587948387e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.087394205009332
+      },
+      {
+        "engine_decisions": 73,
+        "episode_id": "e04-qualification-0039",
+        "forced_decisions": 6,
+        "game_index": 39,
+        "maximum_replay_absolute_error": 1.9800547690351777e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 1,
+        "wall_seconds": 1.1730000589886913
+      },
+      {
+        "engine_decisions": 49,
+        "episode_id": "e04-qualification-0040",
+        "forced_decisions": 4,
+        "game_index": 40,
+        "maximum_replay_absolute_error": 1.6255328727510232e-07,
+        "meaningful_decisions": 45,
+        "terminal_result": 0,
+        "wall_seconds": 0.8079455099941697
+      },
+      {
+        "engine_decisions": 75,
+        "episode_id": "e04-qualification-0041",
+        "forced_decisions": 4,
+        "game_index": 41,
+        "maximum_replay_absolute_error": 1.865290371050321e-07,
+        "meaningful_decisions": 71,
+        "terminal_result": 1,
+        "wall_seconds": 1.2083561370091047
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0042",
+        "forced_decisions": 3,
+        "game_index": 42,
+        "maximum_replay_absolute_error": 1.762730854615313e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 1,
+        "wall_seconds": 0.9842257329873974
+      },
+      {
+        "engine_decisions": 75,
+        "episode_id": "e04-qualification-0043",
+        "forced_decisions": 7,
+        "game_index": 43,
+        "maximum_replay_absolute_error": 1.7704885424407735e-07,
+        "meaningful_decisions": 68,
+        "terminal_result": 1,
+        "wall_seconds": 1.3104157839989057
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0044",
+        "forced_decisions": 4,
+        "game_index": 44,
+        "maximum_replay_absolute_error": 1.72204572823631e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 0,
+        "wall_seconds": 1.1724994219985092
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0045",
+        "forced_decisions": 11,
+        "game_index": 45,
+        "maximum_replay_absolute_error": 1.3995036995950727e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 1.0937373680062592
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0046",
+        "forced_decisions": 6,
+        "game_index": 46,
+        "maximum_replay_absolute_error": 1.4406353177065512e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.0324765250115888
+      },
+      {
+        "engine_decisions": 84,
+        "episode_id": "e04-qualification-0047",
+        "forced_decisions": 4,
+        "game_index": 47,
+        "maximum_replay_absolute_error": 1.827873270521252e-07,
+        "meaningful_decisions": 80,
+        "terminal_result": 0,
+        "wall_seconds": 1.6708400420029648
+      },
+      {
+        "engine_decisions": 83,
+        "episode_id": "e04-qualification-0048",
+        "forced_decisions": 8,
+        "game_index": 48,
+        "maximum_replay_absolute_error": 1.850098239053466e-07,
+        "meaningful_decisions": 75,
+        "terminal_result": 0,
+        "wall_seconds": 1.488702521994128
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0049",
+        "forced_decisions": 4,
+        "game_index": 49,
+        "maximum_replay_absolute_error": 1.4968358286182593e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.2050216419884237
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0050",
+        "forced_decisions": 10,
+        "game_index": 50,
+        "maximum_replay_absolute_error": 1.405033374091147e-07,
+        "meaningful_decisions": 66,
+        "terminal_result": 1,
+        "wall_seconds": 1.30212188900623
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0051",
+        "forced_decisions": 6,
+        "game_index": 51,
+        "maximum_replay_absolute_error": 1.3612433624743403e-07,
+        "meaningful_decisions": 56,
+        "terminal_result": 1,
+        "wall_seconds": 1.2074170249979943
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0052",
+        "forced_decisions": 4,
+        "game_index": 52,
+        "maximum_replay_absolute_error": 1.7503632632198673e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.2795002200000454
+      },
+      {
+        "engine_decisions": 66,
+        "episode_id": "e04-qualification-0053",
+        "forced_decisions": 5,
+        "game_index": 53,
+        "maximum_replay_absolute_error": 1.3721806046973484e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 1,
+        "wall_seconds": 1.287084704003064
+      },
+      {
+        "engine_decisions": 90,
+        "episode_id": "e04-qualification-0054",
+        "forced_decisions": 7,
+        "game_index": 54,
+        "maximum_replay_absolute_error": 1.7210369662734593e-07,
+        "meaningful_decisions": 83,
+        "terminal_result": 0,
+        "wall_seconds": 1.6405342189973453
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0055",
+        "forced_decisions": 4,
+        "game_index": 55,
+        "maximum_replay_absolute_error": 1.8853209438063345e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.2482449100061785
+      },
+      {
+        "engine_decisions": 56,
+        "episode_id": "e04-qualification-0056",
+        "forced_decisions": 3,
+        "game_index": 56,
+        "maximum_replay_absolute_error": 1.696054368061084e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 0.9897536179923918
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0057",
+        "forced_decisions": 1,
+        "game_index": 57,
+        "maximum_replay_absolute_error": 1.7939590568616381e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 0,
+        "wall_seconds": 0.9772207680071006
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0058",
+        "forced_decisions": 3,
+        "game_index": 58,
+        "maximum_replay_absolute_error": 1.8425961512136269e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 1,
+        "wall_seconds": 0.9626528299995698
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0059",
+        "forced_decisions": 6,
+        "game_index": 59,
+        "maximum_replay_absolute_error": 1.3765933326581603e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.0152243749907939
+      },
+      {
+        "engine_decisions": 58,
+        "episode_id": "e04-qualification-0060",
+        "forced_decisions": 4,
+        "game_index": 60,
+        "maximum_replay_absolute_error": 1.563783849078959e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 1,
+        "wall_seconds": 1.089414340996882
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0061",
+        "forced_decisions": 4,
+        "game_index": 61,
+        "maximum_replay_absolute_error": 1.858606264448781e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 1,
+        "wall_seconds": 0.9734634670021478
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0062",
+        "forced_decisions": 7,
+        "game_index": 62,
+        "maximum_replay_absolute_error": 1.6982726025460693e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 1,
+        "wall_seconds": 1.0648527699959232
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0063",
+        "forced_decisions": 6,
+        "game_index": 63,
+        "maximum_replay_absolute_error": 1.8069899621053764e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 1,
+        "wall_seconds": 1.0544168899941724
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0064",
+        "forced_decisions": 5,
+        "game_index": 64,
+        "maximum_replay_absolute_error": 1.7067660218472724e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 1,
+        "wall_seconds": 1.1023065760091413
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0065",
+        "forced_decisions": 4,
+        "game_index": 65,
+        "maximum_replay_absolute_error": 1.7857122847075857e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 0.9938746580010047
+      },
+      {
+        "engine_decisions": 69,
+        "episode_id": "e04-qualification-0066",
+        "forced_decisions": 6,
+        "game_index": 66,
+        "maximum_replay_absolute_error": 1.6065596586400943e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 1,
+        "wall_seconds": 1.1251948110002559
+      },
+      {
+        "engine_decisions": 59,
+        "episode_id": "e04-qualification-0067",
+        "forced_decisions": 6,
+        "game_index": 67,
+        "maximum_replay_absolute_error": 1.4201897791110696e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 0.9704708049976034
+      },
+      {
+        "engine_decisions": 55,
+        "episode_id": "e04-qualification-0068",
+        "forced_decisions": 4,
+        "game_index": 68,
+        "maximum_replay_absolute_error": 9.955517654702817e-08,
+        "meaningful_decisions": 51,
+        "terminal_result": 1,
+        "wall_seconds": 0.9969843059952836
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0069",
+        "forced_decisions": 4,
+        "game_index": 69,
+        "maximum_replay_absolute_error": 1.7278718944524485e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 0.985001958993962
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0070",
+        "forced_decisions": 6,
+        "game_index": 70,
+        "maximum_replay_absolute_error": 1.31375162748526e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.0463433130062185
+      },
+      {
+        "engine_decisions": 58,
+        "episode_id": "e04-qualification-0071",
+        "forced_decisions": 4,
+        "game_index": 71,
+        "maximum_replay_absolute_error": 1.7451419331848683e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 1,
+        "wall_seconds": 1.0170746529911412
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0072",
+        "forced_decisions": 6,
+        "game_index": 72,
+        "maximum_replay_absolute_error": 1.5793684582376954e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 0.9725093720044242
+      },
+      {
+        "engine_decisions": 78,
+        "episode_id": "e04-qualification-0073",
+        "forced_decisions": 8,
+        "game_index": 73,
+        "maximum_replay_absolute_error": 1.643966185405077e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 0,
+        "wall_seconds": 1.2644214299943997
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0074",
+        "forced_decisions": 4,
+        "game_index": 74,
+        "maximum_replay_absolute_error": 1.4567487172101323e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 0,
+        "wall_seconds": 1.0520652439881815
+      },
+      {
+        "engine_decisions": 73,
+        "episode_id": "e04-qualification-0075",
+        "forced_decisions": 3,
+        "game_index": 75,
+        "maximum_replay_absolute_error": 1.533465820990898e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 0,
+        "wall_seconds": 1.5358694010064937
+      },
+      {
+        "engine_decisions": 81,
+        "episode_id": "e04-qualification-0076",
+        "forced_decisions": 3,
+        "game_index": 76,
+        "maximum_replay_absolute_error": 1.6369670996496666e-07,
+        "meaningful_decisions": 78,
+        "terminal_result": 1,
+        "wall_seconds": 1.4357108870026423
+      },
+      {
+        "engine_decisions": 50,
+        "episode_id": "e04-qualification-0077",
+        "forced_decisions": 3,
+        "game_index": 77,
+        "maximum_replay_absolute_error": 1.7454047496201497e-07,
+        "meaningful_decisions": 47,
+        "terminal_result": 0,
+        "wall_seconds": 0.9657356809912017
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0078",
+        "forced_decisions": 5,
+        "game_index": 78,
+        "maximum_replay_absolute_error": 1.6248976741906063e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 1,
+        "wall_seconds": 1.1725592000002507
+      },
+      {
+        "engine_decisions": 66,
+        "episode_id": "e04-qualification-0079",
+        "forced_decisions": 2,
+        "game_index": 79,
+        "maximum_replay_absolute_error": 1.706591077343944e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 1,
+        "wall_seconds": 1.0552310700004455
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0080",
+        "forced_decisions": 7,
+        "game_index": 80,
+        "maximum_replay_absolute_error": 1.6887595055692373e-07,
+        "meaningful_decisions": 55,
+        "terminal_result": 1,
+        "wall_seconds": 0.9010190139961196
+      },
+      {
+        "engine_decisions": 69,
+        "episode_id": "e04-qualification-0081",
+        "forced_decisions": 6,
+        "game_index": 81,
+        "maximum_replay_absolute_error": 1.7105482541523997e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 1,
+        "wall_seconds": 1.246002165004029
+      },
+      {
+        "engine_decisions": 52,
+        "episode_id": "e04-qualification-0082",
+        "forced_decisions": 4,
+        "game_index": 82,
+        "maximum_replay_absolute_error": 1.6600841723501958e-07,
+        "meaningful_decisions": 48,
+        "terminal_result": 0,
+        "wall_seconds": 0.7613915099937003
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0083",
+        "forced_decisions": 7,
+        "game_index": 83,
+        "maximum_replay_absolute_error": 1.5186449386916934e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.0091506530006882
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0084",
+        "forced_decisions": 3,
+        "game_index": 84,
+        "maximum_replay_absolute_error": 1.9235496573344335e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 1,
+        "wall_seconds": 0.9049612649978371
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0085",
+        "forced_decisions": 7,
+        "game_index": 85,
+        "maximum_replay_absolute_error": 1.7287632569917832e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 0.999193480995018
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0086",
+        "forced_decisions": 5,
+        "game_index": 86,
+        "maximum_replay_absolute_error": 1.6804480607035543e-07,
+        "meaningful_decisions": 55,
+        "terminal_result": 0,
+        "wall_seconds": 1.0865695490065264
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0087",
+        "forced_decisions": 3,
+        "game_index": 87,
+        "maximum_replay_absolute_error": 1.5538984721175098e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 1,
+        "wall_seconds": 1.2230328369914787
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0088",
+        "forced_decisions": 6,
+        "game_index": 88,
+        "maximum_replay_absolute_error": 1.7295607213085873e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 0,
+        "wall_seconds": 1.4266273240064038
+      },
+      {
+        "engine_decisions": 74,
+        "episode_id": "e04-qualification-0089",
+        "forced_decisions": 6,
+        "game_index": 89,
+        "maximum_replay_absolute_error": 1.8628587339364344e-07,
+        "meaningful_decisions": 68,
+        "terminal_result": 0,
+        "wall_seconds": 1.3776444620016264
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0090",
+        "forced_decisions": 1,
+        "game_index": 90,
+        "maximum_replay_absolute_error": 1.8488071695799135e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 1,
+        "wall_seconds": 1.0825192729971604
+      },
+      {
+        "engine_decisions": 83,
+        "episode_id": "e04-qualification-0091",
+        "forced_decisions": 5,
+        "game_index": 91,
+        "maximum_replay_absolute_error": 1.5673122266690598e-07,
+        "meaningful_decisions": 78,
+        "terminal_result": 0,
+        "wall_seconds": 1.41305436300172
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0092",
+        "forced_decisions": 5,
+        "game_index": 92,
+        "maximum_replay_absolute_error": 1.5000815833943193e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 0,
+        "wall_seconds": 1.306698227999732
+      },
+      {
+        "engine_decisions": 77,
+        "episode_id": "e04-qualification-0093",
+        "forced_decisions": 7,
+        "game_index": 93,
+        "maximum_replay_absolute_error": 1.536014555547638e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 1,
+        "wall_seconds": 1.2659457460104022
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0094",
+        "forced_decisions": 1,
+        "game_index": 94,
+        "maximum_replay_absolute_error": 1.869252748143424e-07,
+        "meaningful_decisions": 56,
+        "terminal_result": 0,
+        "wall_seconds": 0.8575103559996933
+      },
+      {
+        "engine_decisions": 88,
+        "episode_id": "e04-qualification-0095",
+        "forced_decisions": 11,
+        "game_index": 95,
+        "maximum_replay_absolute_error": 1.749626199476495e-07,
+        "meaningful_decisions": 77,
+        "terminal_result": 0,
+        "wall_seconds": 1.440171217007446
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-qualification-0096",
+        "forced_decisions": 8,
+        "game_index": 96,
+        "maximum_replay_absolute_error": 1.5877094305949413e-07,
+        "meaningful_decisions": 62,
+        "terminal_result": 0,
+        "wall_seconds": 1.4015273730037734
+      },
+      {
+        "engine_decisions": 54,
+        "episode_id": "e04-qualification-0097",
+        "forced_decisions": 1,
+        "game_index": 97,
+        "maximum_replay_absolute_error": 2.150612488094339e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 0.908819731004769
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0098",
+        "forced_decisions": 5,
+        "game_index": 98,
+        "maximum_replay_absolute_error": 1.411695533803936e-07,
+        "meaningful_decisions": 52,
+        "terminal_result": 0,
+        "wall_seconds": 0.9129578730062349
+      },
+      {
+        "engine_decisions": 71,
+        "episode_id": "e04-qualification-0099",
+        "forced_decisions": 2,
+        "game_index": 99,
+        "maximum_replay_absolute_error": 1.633713653248492e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 1,
+        "wall_seconds": 1.2597850119927898
+      },
+      {
+        "engine_decisions": 89,
+        "episode_id": "e04-qualification-0100",
+        "forced_decisions": 2,
+        "game_index": 100,
+        "maximum_replay_absolute_error": 1.1756457851674895e-07,
+        "meaningful_decisions": 87,
+        "terminal_result": 1,
+        "wall_seconds": 1.3908585639874218
+      },
+      {
+        "engine_decisions": 58,
+        "episode_id": "e04-qualification-0101",
+        "forced_decisions": 6,
+        "game_index": 101,
+        "maximum_replay_absolute_error": 1.6961561311035211e-07,
+        "meaningful_decisions": 52,
+        "terminal_result": 0,
+        "wall_seconds": 0.8575728659925517
+      },
+      {
+        "engine_decisions": 59,
+        "episode_id": "e04-qualification-0102",
+        "forced_decisions": 1,
+        "game_index": 102,
+        "maximum_replay_absolute_error": 1.6935135693785242e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.0346749680029461
+      },
+      {
+        "engine_decisions": 49,
+        "episode_id": "e04-qualification-0103",
+        "forced_decisions": 3,
+        "game_index": 103,
+        "maximum_replay_absolute_error": 1.3959861666634765e-07,
+        "meaningful_decisions": 46,
+        "terminal_result": 1,
+        "wall_seconds": 0.8205058640014613
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0104",
+        "forced_decisions": 4,
+        "game_index": 104,
+        "maximum_replay_absolute_error": 2.0743844908466258e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 0,
+        "wall_seconds": 1.1234959730063565
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0105",
+        "forced_decisions": 6,
+        "game_index": 105,
+        "maximum_replay_absolute_error": 1.4540554982289677e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 0,
+        "wall_seconds": 1.3291282380087068
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0106",
+        "forced_decisions": 4,
+        "game_index": 106,
+        "maximum_replay_absolute_error": 1.9068925327658803e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 0,
+        "wall_seconds": 1.055747860998963
+      },
+      {
+        "engine_decisions": 83,
+        "episode_id": "e04-qualification-0107",
+        "forced_decisions": 2,
+        "game_index": 107,
+        "maximum_replay_absolute_error": 2.1432779639951605e-07,
+        "meaningful_decisions": 81,
+        "terminal_result": 0,
+        "wall_seconds": 1.6881705690029776
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0108",
+        "forced_decisions": 4,
+        "game_index": 108,
+        "maximum_replay_absolute_error": 1.483966913795598e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 1,
+        "wall_seconds": 1.1013671190012246
+      },
+      {
+        "engine_decisions": 74,
+        "episode_id": "e04-qualification-0109",
+        "forced_decisions": 7,
+        "game_index": 109,
+        "maximum_replay_absolute_error": 1.63623273596869e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 0,
+        "wall_seconds": 1.3192627290118253
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0110",
+        "forced_decisions": 6,
+        "game_index": 110,
+        "maximum_replay_absolute_error": 1.735493340149219e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 0,
+        "wall_seconds": 1.3271166420017835
+      },
+      {
+        "engine_decisions": 73,
+        "episode_id": "e04-qualification-0111",
+        "forced_decisions": 4,
+        "game_index": 111,
+        "maximum_replay_absolute_error": 1.6158858029413636e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 0,
+        "wall_seconds": 1.245723330997862
+      },
+      {
+        "engine_decisions": 78,
+        "episode_id": "e04-qualification-0112",
+        "forced_decisions": 5,
+        "game_index": 112,
+        "maximum_replay_absolute_error": 1.7192151924305676e-07,
+        "meaningful_decisions": 73,
+        "terminal_result": 0,
+        "wall_seconds": 1.2919467259926023
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0113",
+        "forced_decisions": 9,
+        "game_index": 113,
+        "maximum_replay_absolute_error": 1.727934719752966e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 0,
+        "wall_seconds": 1.1476247350074118
+      },
+      {
+        "engine_decisions": 71,
+        "episode_id": "e04-qualification-0114",
+        "forced_decisions": 10,
+        "game_index": 114,
+        "maximum_replay_absolute_error": 1.6280641945698449e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 1,
+        "wall_seconds": 1.007191814991529
+      },
+      {
+        "engine_decisions": 66,
+        "episode_id": "e04-qualification-0115",
+        "forced_decisions": 4,
+        "game_index": 115,
+        "maximum_replay_absolute_error": 1.5923182150601178e-07,
+        "meaningful_decisions": 62,
+        "terminal_result": 0,
+        "wall_seconds": 0.9763252699922305
+      },
+      {
+        "engine_decisions": 69,
+        "episode_id": "e04-qualification-0116",
+        "forced_decisions": 10,
+        "game_index": 116,
+        "maximum_replay_absolute_error": 1.6460885943203607e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 0,
+        "wall_seconds": 1.364508978993399
+      },
+      {
+        "engine_decisions": 84,
+        "episode_id": "e04-qualification-0117",
+        "forced_decisions": 4,
+        "game_index": 117,
+        "maximum_replay_absolute_error": 1.421110296107031e-07,
+        "meaningful_decisions": 80,
+        "terminal_result": 0,
+        "wall_seconds": 1.4959524790028809
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0118",
+        "forced_decisions": 7,
+        "game_index": 118,
+        "maximum_replay_absolute_error": 1.5186817003964848e-07,
+        "meaningful_decisions": 56,
+        "terminal_result": 1,
+        "wall_seconds": 1.1232002090109745
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0119",
+        "forced_decisions": 4,
+        "game_index": 119,
+        "maximum_replay_absolute_error": 1.1931747101456835e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 1,
+        "wall_seconds": 1.0024529960064683
+      },
+      {
+        "engine_decisions": 79,
+        "episode_id": "e04-qualification-0120",
+        "forced_decisions": 7,
+        "game_index": 120,
+        "maximum_replay_absolute_error": 1.7606195568120597e-07,
+        "meaningful_decisions": 72,
+        "terminal_result": 0,
+        "wall_seconds": 1.3924270510033239
+      },
+      {
+        "engine_decisions": 77,
+        "episode_id": "e04-qualification-0121",
+        "forced_decisions": 9,
+        "game_index": 121,
+        "maximum_replay_absolute_error": 1.6110230749433185e-07,
+        "meaningful_decisions": 68,
+        "terminal_result": 1,
+        "wall_seconds": 1.6446559890027856
+      },
+      {
+        "engine_decisions": 92,
+        "episode_id": "e04-qualification-0122",
+        "forced_decisions": 6,
+        "game_index": 122,
+        "maximum_replay_absolute_error": 1.9433596509799145e-07,
+        "meaningful_decisions": 86,
+        "terminal_result": 0,
+        "wall_seconds": 1.623741331990459
+      },
+      {
+        "engine_decisions": 69,
+        "episode_id": "e04-qualification-0123",
+        "forced_decisions": 8,
+        "game_index": 123,
+        "maximum_replay_absolute_error": 1.3324391323621398e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.1347872010082938
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-qualification-0124",
+        "forced_decisions": 9,
+        "game_index": 124,
+        "maximum_replay_absolute_error": 1.295074065765789e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.1944192289956845
+      },
+      {
+        "engine_decisions": 71,
+        "episode_id": "e04-qualification-0125",
+        "forced_decisions": 11,
+        "game_index": 125,
+        "maximum_replay_absolute_error": 1.6207900932485586e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 1,
+        "wall_seconds": 1.3808022759913001
+      },
+      {
+        "engine_decisions": 85,
+        "episode_id": "e04-qualification-0126",
+        "forced_decisions": 4,
+        "game_index": 126,
+        "maximum_replay_absolute_error": 2.0941375744598645e-07,
+        "meaningful_decisions": 81,
+        "terminal_result": 1,
+        "wall_seconds": 1.612305197006208
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0127",
+        "forced_decisions": 4,
+        "game_index": 127,
+        "maximum_replay_absolute_error": 1.6151757176174897e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 1,
+        "wall_seconds": 1.1016406510025263
+      },
+      {
+        "engine_decisions": 59,
+        "episode_id": "e04-qualification-0128",
+        "forced_decisions": 7,
+        "game_index": 128,
+        "maximum_replay_absolute_error": 1.6436245964257523e-07,
+        "meaningful_decisions": 52,
+        "terminal_result": 0,
+        "wall_seconds": 0.9810356270027114
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0129",
+        "forced_decisions": 7,
+        "game_index": 129,
+        "maximum_replay_absolute_error": 1.7239809402269657e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 1,
+        "wall_seconds": 1.3519380249927053
+      },
+      {
+        "engine_decisions": 71,
+        "episode_id": "e04-qualification-0130",
+        "forced_decisions": 8,
+        "game_index": 130,
+        "maximum_replay_absolute_error": 2.0539532075147804e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 0,
+        "wall_seconds": 1.3591055260039866
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0131",
+        "forced_decisions": 3,
+        "game_index": 131,
+        "maximum_replay_absolute_error": 1.594741898536256e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 0,
+        "wall_seconds": 1.0671330979967024
+      },
+      {
+        "engine_decisions": 80,
+        "episode_id": "e04-qualification-0132",
+        "forced_decisions": 4,
+        "game_index": 132,
+        "maximum_replay_absolute_error": 1.292850928535927e-07,
+        "meaningful_decisions": 76,
+        "terminal_result": 1,
+        "wall_seconds": 1.5148700559948338
+      },
+      {
+        "engine_decisions": 74,
+        "episode_id": "e04-qualification-0133",
+        "forced_decisions": 4,
+        "game_index": 133,
+        "maximum_replay_absolute_error": 1.1865220583828773e-07,
+        "meaningful_decisions": 70,
+        "terminal_result": 1,
+        "wall_seconds": 1.4182431649969658
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0134",
+        "forced_decisions": 4,
+        "game_index": 134,
+        "maximum_replay_absolute_error": 1.9646439097797952e-07,
+        "meaningful_decisions": 72,
+        "terminal_result": 1,
+        "wall_seconds": 1.6507579280005302
+      },
+      {
+        "engine_decisions": 85,
+        "episode_id": "e04-qualification-0135",
+        "forced_decisions": 4,
+        "game_index": 135,
+        "maximum_replay_absolute_error": 1.6798253010819053e-07,
+        "meaningful_decisions": 81,
+        "terminal_result": 0,
+        "wall_seconds": 1.6751531839981908
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0136",
+        "forced_decisions": 6,
+        "game_index": 136,
+        "maximum_replay_absolute_error": 1.6671692515402015e-07,
+        "meaningful_decisions": 55,
+        "terminal_result": 1,
+        "wall_seconds": 1.1153358269948512
+      },
+      {
+        "engine_decisions": 69,
+        "episode_id": "e04-qualification-0137",
+        "forced_decisions": 3,
+        "game_index": 137,
+        "maximum_replay_absolute_error": 1.4393221015041036e-07,
+        "meaningful_decisions": 66,
+        "terminal_result": 1,
+        "wall_seconds": 1.3037340120063163
+      },
+      {
+        "engine_decisions": 74,
+        "episode_id": "e04-qualification-0138",
+        "forced_decisions": 3,
+        "game_index": 138,
+        "maximum_replay_absolute_error": 1.593107792352555e-07,
+        "meaningful_decisions": 71,
+        "terminal_result": 0,
+        "wall_seconds": 1.4703265349962749
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0139",
+        "forced_decisions": 7,
+        "game_index": 139,
+        "maximum_replay_absolute_error": 1.669445888197174e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.137678892002441
+      },
+      {
+        "engine_decisions": 85,
+        "episode_id": "e04-qualification-0140",
+        "forced_decisions": 6,
+        "game_index": 140,
+        "maximum_replay_absolute_error": 1.3196202441889682e-07,
+        "meaningful_decisions": 79,
+        "terminal_result": 1,
+        "wall_seconds": 1.6831217170110904
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0141",
+        "forced_decisions": 7,
+        "game_index": 141,
+        "maximum_replay_absolute_error": 1.4791994384921736e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 1.118982910993509
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0142",
+        "forced_decisions": 2,
+        "game_index": 142,
+        "maximum_replay_absolute_error": 1.6444336603527177e-07,
+        "meaningful_decisions": 65,
+        "terminal_result": 1,
+        "wall_seconds": 1.330033906007884
+      },
+      {
+        "engine_decisions": 83,
+        "episode_id": "e04-qualification-0143",
+        "forced_decisions": 8,
+        "game_index": 143,
+        "maximum_replay_absolute_error": 1.6531156665777758e-07,
+        "meaningful_decisions": 75,
+        "terminal_result": 1,
+        "wall_seconds": 1.5602808819967322
+      },
+      {
+        "engine_decisions": 58,
+        "episode_id": "e04-qualification-0144",
+        "forced_decisions": 4,
+        "game_index": 144,
+        "maximum_replay_absolute_error": 1.6549441506086282e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 0,
+        "wall_seconds": 1.2334144850028679
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0145",
+        "forced_decisions": 4,
+        "game_index": 145,
+        "maximum_replay_absolute_error": 1.4979034901330124e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.306861436998588
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0146",
+        "forced_decisions": 4,
+        "game_index": 146,
+        "maximum_replay_absolute_error": 1.5486977300582794e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 1,
+        "wall_seconds": 1.1978199740115087
+      },
+      {
+        "engine_decisions": 49,
+        "episode_id": "e04-qualification-0147",
+        "forced_decisions": 5,
+        "game_index": 147,
+        "maximum_replay_absolute_error": 1.3321189129555933e-07,
+        "meaningful_decisions": 44,
+        "terminal_result": 1,
+        "wall_seconds": 0.8850036379881203
+      },
+      {
+        "engine_decisions": 56,
+        "episode_id": "e04-qualification-0148",
+        "forced_decisions": 7,
+        "game_index": 148,
+        "maximum_replay_absolute_error": 1.9149541197194253e-07,
+        "meaningful_decisions": 49,
+        "terminal_result": 1,
+        "wall_seconds": 1.0543759319989476
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0149",
+        "forced_decisions": 4,
+        "game_index": 149,
+        "maximum_replay_absolute_error": 1.4441235007822684e-07,
+        "meaningful_decisions": 53,
+        "terminal_result": 0,
+        "wall_seconds": 1.032674963993486
+      },
+      {
+        "engine_decisions": 73,
+        "episode_id": "e04-qualification-0150",
+        "forced_decisions": 5,
+        "game_index": 150,
+        "maximum_replay_absolute_error": 1.6019451676285712e-07,
+        "meaningful_decisions": 68,
+        "terminal_result": 0,
+        "wall_seconds": 1.3820822129928274
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0151",
+        "forced_decisions": 3,
+        "game_index": 151,
+        "maximum_replay_absolute_error": 1.3874217819065393e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.1636451600061264
+      },
+      {
+        "engine_decisions": 77,
+        "episode_id": "e04-qualification-0152",
+        "forced_decisions": 5,
+        "game_index": 152,
+        "maximum_replay_absolute_error": 1.579534085749401e-07,
+        "meaningful_decisions": 72,
+        "terminal_result": 0,
+        "wall_seconds": 1.5722026389994426
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0153",
+        "forced_decisions": 6,
+        "game_index": 153,
+        "maximum_replay_absolute_error": 1.5974425426890093e-07,
+        "meaningful_decisions": 55,
+        "terminal_result": 0,
+        "wall_seconds": 1.0987476599984802
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0154",
+        "forced_decisions": 7,
+        "game_index": 154,
+        "maximum_replay_absolute_error": 1.575524994912314e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 0,
+        "wall_seconds": 1.3932818890025374
+      },
+      {
+        "engine_decisions": 64,
+        "episode_id": "e04-qualification-0155",
+        "forced_decisions": 5,
+        "game_index": 155,
+        "maximum_replay_absolute_error": 1.636998314680227e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 0,
+        "wall_seconds": 1.3086181309918175
+      },
+      {
+        "engine_decisions": 76,
+        "episode_id": "e04-qualification-0156",
+        "forced_decisions": 5,
+        "game_index": 156,
+        "maximum_replay_absolute_error": 1.6299704652666946e-07,
+        "meaningful_decisions": 71,
+        "terminal_result": 1,
+        "wall_seconds": 1.357591132997186
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-qualification-0157",
+        "forced_decisions": 6,
+        "game_index": 157,
+        "maximum_replay_absolute_error": 1.4557201133413855e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 0,
+        "wall_seconds": 1.2592656289925799
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0158",
+        "forced_decisions": 9,
+        "game_index": 158,
+        "maximum_replay_absolute_error": 1.1409788358562878e-07,
+        "meaningful_decisions": 56,
+        "terminal_result": 0,
+        "wall_seconds": 1.2912241330050165
+      },
+      {
+        "engine_decisions": 72,
+        "episode_id": "e04-qualification-0159",
+        "forced_decisions": 5,
+        "game_index": 159,
+        "maximum_replay_absolute_error": 1.378868077495099e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 0,
+        "wall_seconds": 1.3318765769945458
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0160",
+        "forced_decisions": 7,
+        "game_index": 160,
+        "maximum_replay_absolute_error": 1.561068838640267e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 1,
+        "wall_seconds": 1.174912034010049
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0161",
+        "forced_decisions": 3,
+        "game_index": 161,
+        "maximum_replay_absolute_error": 1.3742693116824967e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 1,
+        "wall_seconds": 1.2160457680001855
+      },
+      {
+        "engine_decisions": 73,
+        "episode_id": "e04-qualification-0162",
+        "forced_decisions": 5,
+        "game_index": 162,
+        "maximum_replay_absolute_error": 1.9855772670496208e-07,
+        "meaningful_decisions": 68,
+        "terminal_result": 1,
+        "wall_seconds": 1.3772898839961272
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0163",
+        "forced_decisions": 4,
+        "game_index": 163,
+        "maximum_replay_absolute_error": 1.5788728457977186e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 1,
+        "wall_seconds": 1.1426287180074723
+      },
+      {
+        "engine_decisions": 82,
+        "episode_id": "e04-qualification-0164",
+        "forced_decisions": 7,
+        "game_index": 164,
+        "maximum_replay_absolute_error": 1.6744875219742994e-07,
+        "meaningful_decisions": 75,
+        "terminal_result": 0,
+        "wall_seconds": 1.7501430959964637
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0165",
+        "forced_decisions": 6,
+        "game_index": 165,
+        "maximum_replay_absolute_error": 2.0569833703021345e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.2158614159998251
+      },
+      {
+        "engine_decisions": 57,
+        "episode_id": "e04-qualification-0166",
+        "forced_decisions": 7,
+        "game_index": 166,
+        "maximum_replay_absolute_error": 1.19262442144219e-07,
+        "meaningful_decisions": 50,
+        "terminal_result": 0,
+        "wall_seconds": 1.046468497996102
+      },
+      {
+        "engine_decisions": 77,
+        "episode_id": "e04-qualification-0167",
+        "forced_decisions": 8,
+        "game_index": 167,
+        "maximum_replay_absolute_error": 1.526635955428901e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 1,
+        "wall_seconds": 1.4495863660122268
+      },
+      {
+        "engine_decisions": 67,
+        "episode_id": "e04-qualification-0168",
+        "forced_decisions": 3,
+        "game_index": 168,
+        "maximum_replay_absolute_error": 1.6960933013621116e-07,
+        "meaningful_decisions": 64,
+        "terminal_result": 1,
+        "wall_seconds": 1.021600772990496
+      },
+      {
+        "engine_decisions": 80,
+        "episode_id": "e04-qualification-0169",
+        "forced_decisions": 11,
+        "game_index": 169,
+        "maximum_replay_absolute_error": 1.859747631449693e-07,
+        "meaningful_decisions": 69,
+        "terminal_result": 0,
+        "wall_seconds": 1.210997917005443
+      },
+      {
+        "engine_decisions": 69,
+        "episode_id": "e04-qualification-0170",
+        "forced_decisions": 6,
+        "game_index": 170,
+        "maximum_replay_absolute_error": 2.030942756192644e-07,
+        "meaningful_decisions": 63,
+        "terminal_result": 0,
+        "wall_seconds": 1.111958991998108
+      },
+      {
+        "engine_decisions": 82,
+        "episode_id": "e04-qualification-0171",
+        "forced_decisions": 4,
+        "game_index": 171,
+        "maximum_replay_absolute_error": 1.6840131999984465e-07,
+        "meaningful_decisions": 78,
+        "terminal_result": 1,
+        "wall_seconds": 1.2769297460035887
+      },
+      {
+        "engine_decisions": 70,
+        "episode_id": "e04-qualification-0172",
+        "forced_decisions": 3,
+        "game_index": 172,
+        "maximum_replay_absolute_error": 1.5323476842965533e-07,
+        "meaningful_decisions": 67,
+        "terminal_result": 0,
+        "wall_seconds": 1.1625842880021082
+      },
+      {
+        "engine_decisions": 63,
+        "episode_id": "e04-qualification-0173",
+        "forced_decisions": 2,
+        "game_index": 173,
+        "maximum_replay_absolute_error": 1.706217540586863e-07,
+        "meaningful_decisions": 61,
+        "terminal_result": 0,
+        "wall_seconds": 1.3124776449985802
+      },
+      {
+        "engine_decisions": 62,
+        "episode_id": "e04-qualification-0174",
+        "forced_decisions": 4,
+        "game_index": 174,
+        "maximum_replay_absolute_error": 1.7118736428400894e-07,
+        "meaningful_decisions": 58,
+        "terminal_result": 0,
+        "wall_seconds": 1.0762454000068828
+      },
+      {
+        "engine_decisions": 52,
+        "episode_id": "e04-qualification-0175",
+        "forced_decisions": 2,
+        "game_index": 175,
+        "maximum_replay_absolute_error": 1.3608290760913633e-07,
+        "meaningful_decisions": 50,
+        "terminal_result": 1,
+        "wall_seconds": 1.00998376699863
+      },
+      {
+        "engine_decisions": 65,
+        "episode_id": "e04-qualification-0176",
+        "forced_decisions": 6,
+        "game_index": 176,
+        "maximum_replay_absolute_error": 1.4612115473155995e-07,
+        "meaningful_decisions": 59,
+        "terminal_result": 1,
+        "wall_seconds": 1.143714359990554
+      },
+      {
+        "engine_decisions": 60,
+        "episode_id": "e04-qualification-0177",
+        "forced_decisions": 6,
+        "game_index": 177,
+        "maximum_replay_absolute_error": 1.6218865139805416e-07,
+        "meaningful_decisions": 54,
+        "terminal_result": 0,
+        "wall_seconds": 1.0943035850068554
+      },
+      {
+        "engine_decisions": 61,
+        "episode_id": "e04-qualification-0178",
+        "forced_decisions": 4,
+        "game_index": 178,
+        "maximum_replay_absolute_error": 1.651914116607145e-07,
+        "meaningful_decisions": 57,
+        "terminal_result": 1,
+        "wall_seconds": 1.3335463709954638
+      },
+      {
+        "engine_decisions": 68,
+        "episode_id": "e04-qualification-0179",
+        "forced_decisions": 8,
+        "game_index": 179,
+        "maximum_replay_absolute_error": 1.6227216681485856e-07,
+        "meaningful_decisions": 60,
+        "terminal_result": 1,
+        "wall_seconds": 1.2772758810024243
+      }
+    ],
+    "terminal_boundaries_for_both_players": 180,
+    "terminal_result_counts": {
+      "-1": 0,
+      "0": 99,
+      "1": 81
+    },
+    "zero_tolerance": {
+      "duplicate_requests": 0,
+      "fallback_actions": 0,
+      "invalid_actions": 0,
+      "nonfinite_values": 0,
+      "optimizer_attempts": 0,
+      "out_of_order_requests": 0,
+      "policy_lag": 0,
+      "recurrent_owner_failures": 0,
+      "replay_mismatches": 0,
+      "stale_requests": 0,
+      "terminal_errors": 0,
+      "worker_deaths": 0
+    }
+  },
+  "review_sha256": "5b9708a49fbb1ae044aa0f700d8f9aa409bb382f913e8c454dd08ca6132df0ff",
+  "schema_version": 1,
+  "source_path": "reports/evaluations/e04-qualification-v1.json",
+  "stage": "qualification",
+  "status": "SUCCEEDED"
+}

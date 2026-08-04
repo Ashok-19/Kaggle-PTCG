@@ -1,0 +1,218 @@
+{
+  "consistency": {
+    "both_replay_action_alignment": "PASS",
+    "combined_all_player_active_selection_requests": 61,
+    "combined_luca_active_selection_requests": 37,
+    "current_asset_deck_construction_compatibility": "PASS",
+    "exact_historical_engine_card_mapping_available": false,
+    "exact_historical_legality": "UNPROVEN",
+    "exact_luca_deck_match": true,
+    "luca_deck_multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+    "module_versions": [
+      "1.32.2",
+      "1.32.1"
+    ],
+    "same_environment_identity": true,
+    "same_module_version": false,
+    "same_schema_version": true,
+    "screening_minimum_teacher_decisions": 5000,
+    "screening_teacher_decision_shortfall": 4963
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T18:43:47.144083Z",
+  "decision": "ACCEPT_GOLD_REGION_TEACHER_DECK_CONSISTENCY_MODULE_BOUNDARY_SCREENING_FLOOR_BLOCKED",
+  "episodes": [
+    {
+      "action_alignment": {
+        "active_requests_by_player": {
+          "0": 20,
+          "1": 6
+        },
+        "active_selection_requests": 26,
+        "empty_lagged_selections": 0,
+        "luca_active_selection_requests": 6,
+        "maximum_option_count": 22,
+        "maximum_selection_count": 4,
+        "nonempty_lagged_selections": 26,
+        "status": "PASS"
+      },
+      "agent_names": [
+        "Dominic Peel",
+        "Luca"
+      ],
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 87731214,
+      "file": {
+        "bytes": 574428,
+        "path": "private/g3/e01/luca-gold-teacher-probe-v1/87731214.json",
+        "sha256": "523c74d0e21d8ca7a687a835c178e947844614a95ee00479c0efe6f5dc31125c"
+      },
+      "luca_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "luca_player_index": 1,
+      "luca_reward": -1,
+      "module_version": "1.32.2",
+      "opponent_deck_multiset_sha256": "12f995fd07edd18335972a6b065abcaceab627e5b52526cd52d2877727a5e495",
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 28,
+      "team_names": [
+        "Dominic Peel",
+        "Luca"
+      ]
+    },
+    {
+      "action_alignment": {
+        "active_requests_by_player": {
+          "0": 31,
+          "1": 4
+        },
+        "active_selection_requests": 35,
+        "empty_lagged_selections": 0,
+        "luca_active_selection_requests": 31,
+        "maximum_option_count": 22,
+        "maximum_selection_count": 5,
+        "nonempty_lagged_selections": 35,
+        "status": "PASS"
+      },
+      "agent_names": [
+        "Luca",
+        "junlee789"
+      ],
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 87615736,
+      "file": {
+        "bytes": 738793,
+        "path": "private/g3/e01/luca-gold-teacher-probe-v1/87615736.json",
+        "sha256": "b10f5b2824c7db1b6a3f9c9f1e782da9a0e366595cd06ddc5e86e78d6ce23876"
+      },
+      "luca_deck": {
+        "ace_spec_cards": 1,
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 19,
+        "missing_card_ids": 0,
+        "multiset_sha256": "cafa7652a6349be806d8ac2b9abfdb6c72ca3821f368e0d912e2d989f3b54cdd",
+        "non_basic_energy_name_limit_violations": 0
+      },
+      "luca_player_index": 0,
+      "luca_reward": 1,
+      "module_version": "1.32.1",
+      "opponent_deck_multiset_sha256": "eff68cb08be178b9c7f06c409b61e88ae9200ab6dc26e05f4bf29eed86040455",
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 37,
+      "team_names": [
+        "Luca",
+        "junlee789"
+      ]
+    }
+  ],
+  "inputs": {
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "coverage": {
+      "path": "reports/artifacts/raw/e01-gold-teacher-coverage-v1.json",
+      "sha256": "f73d67ea3aa8450f712ab046f35a97e887d1e287813c9968efbb33f8fd06acb7"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-016_E01_LUCA_GOLD_TEACHER_PROBE.md",
+      "sha256": "e52bf2d91a504db6e9828de3190aa652dde59c46aa93b0035912e675d17792f8"
+    },
+    "prior_consistency_review": {
+      "path": "reports/artifacts/e01-same-submission-consistency-review-v1.json",
+      "review_sha256": "dae9bd135831b745d7050b49872b7f1404bbea45ab49b7cd20195f74885862bb",
+      "sha256": "4ec60a2a4dffeb9ffae898fad8ae44a0e77c0c5e51a50e155df21b90ae665966"
+    },
+    "request": {
+      "authorization_consumed": true,
+      "authorized_request_sha256": "8c1c6eac94cd0dc18ea29117c62255c8871df994e280033063c306f0a58aacf4",
+      "path": "configs/e01_luca_gold_teacher_probe_request_v1.json",
+      "sha256": "b70efe6228d08f78c104e75c3007d4e1b99c747223d05d1d14e9808f975146a2"
+    }
+  },
+  "next_action": "PREPARE_BOUNDED_SAME_VERSION_LUCA_SCREENING_BATCH_REQUEST_WITH_NEW_APPROVAL",
+  "producer": "scripts/e01_luca_teacher_probe_review.py",
+  "qualification": {
+    "action_aligned_supervision_available": true,
+    "current_asset_deck_construction_compatibility_qualified": true,
+    "e01_screening_gate_passed": false,
+    "exact_deck_consistency_qualified": true,
+    "exact_historical_deck_legality_qualified": false,
+    "gold_region_strength_metadata_qualified": true,
+    "minimum_5000_teacher_decisions_met": false,
+    "policy_behavior_consistency_qualified": false,
+    "replay_transfer_authorized": false,
+    "same_module_version_qualified": false,
+    "same_submission_identity_qualified": true,
+    "teacher_strength_qualified": true,
+    "training_authorized": false
+  },
+  "record_id": "e01-luca-gold-teacher-probe-review-v1",
+  "review_sha256": "071784291ac0acc772337c326857f261f1781ab21901d4bf26ab928ec8cb543c",
+  "reviewed_decision": "DEC-016",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-luca-gold-teacher-probe-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "dataset_episode_count": 357,
+    "dataset_seat_0_count": 181,
+    "dataset_seat_1_count": 176,
+    "leaderboard_rank": 2,
+    "leaderboard_team_score": 1190.4,
+    "opposite_player_slots": true,
+    "opposite_terminal_results": true,
+    "same_exact_public_submission_across_episodes": true,
+    "strength_basis": "CURRENT_PUBLIC_GOLD_REGION_SCORE_AND_RANK",
+    "submission_id": 54863653,
+    "submission_ids_bound_by_public_metadata": true,
+    "submission_ids_present_in_replay_bodies": false,
+    "submission_public_score": 1180.9,
+    "team_id": 16448747,
+    "team_name": "Luca"
+  },
+  "transfer": {
+    "action_sequence_exports": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "new_bytes_downloaded": 1313221,
+    "new_files_downloaded": 2,
+    "new_replay_sha256": [
+      "523c74d0e21d8ca7a687a835c178e947844614a95ee00479c0efe6f5dc31125c",
+      "b10f5b2824c7db1b6a3f9c9f1e782da9a0e366595cd06ddc5e86e78d6ce23876"
+    ],
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "overwrite_used": false,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "training_label_exports": 0
+  }
+}

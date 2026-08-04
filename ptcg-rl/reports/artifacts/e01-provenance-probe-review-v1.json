@@ -1,0 +1,167 @@
+{
+  "action_aligned_supervision": {
+    "active_selection_requests": 128,
+    "availability": "PASS",
+    "empty_lagged_selections": 3,
+    "initial_60_card_actions": 2,
+    "maximum_option_count": 25,
+    "maximum_selection_count": 4,
+    "nonempty_lagged_selections": 125,
+    "raw_action_sequence_exported": false,
+    "raw_observation_exported": false,
+    "raw_step_exported": false,
+    "status": "PASS",
+    "steps": 130,
+    "training_labels_created": false
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T16:23:54.663065Z",
+  "decision": "ACCEPT_PROVENANCE_ONLY_E01_SCREENING_BLOCKED",
+  "decks": [
+    {
+      "ace_spec_cards": 1,
+      "basic_pokemon_cards": 9,
+      "cards": 60,
+      "current_asset_construction_checks": "PASS",
+      "distinct_card_ids": 22,
+      "distinct_card_names": 22,
+      "maximum_same_id_count": 4,
+      "missing_card_ids": 0,
+      "multiset_sha256": "606a775392ffe25e058b19c17801d58a4bf30f7cd8c62782388d3de7e7eb5283",
+      "non_basic_energy_name_limit_violations": 0,
+      "ordered_sha256": "606a775392ffe25e058b19c17801d58a4bf30f7cd8c62782388d3de7e7eb5283",
+      "player": 0,
+      "team_name": "Benarg"
+    },
+    {
+      "ace_spec_cards": 1,
+      "basic_pokemon_cards": 10,
+      "cards": 60,
+      "current_asset_construction_checks": "PASS",
+      "distinct_card_ids": 20,
+      "distinct_card_names": 20,
+      "maximum_same_id_count": 5,
+      "missing_card_ids": 0,
+      "multiset_sha256": "eff68cb08be178b9c7f06c409b61e88ae9200ab6dc26e05f4bf29eed86040455",
+      "non_basic_energy_name_limit_violations": 0,
+      "ordered_sha256": "eff68cb08be178b9c7f06c409b61e88ae9200ab6dc26e05f4bf29eed86040455",
+      "player": 1,
+      "team_name": "junlee789"
+    }
+  ],
+  "inputs": {
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-014_E01_SOURCE_SCHEMA_RECONCILED.md",
+      "sha256": "eb53541af1520384cbefa581af2a1dfadc06da29f716e7f18e412b04380ece67"
+    },
+    "dry_run": {
+      "path": "reports/artifacts/e01a-public-replay-dry-run-v1.json",
+      "sha256": "ecec3f97e62d177fbb111b528a3f70ad9b0059991af50935861b937ab87ea599"
+    },
+    "raw_reconciliation": {
+      "path": "reports/artifacts/raw/e01-public-source-schema-reconciliation-raw-v1.json",
+      "sha256": "d14c6666999d6013147f394cb236c45dd2c9429e88b64be461fd3c639b874859"
+    },
+    "reconciliation": {
+      "path": "reports/artifacts/e01-source-schema-reconciliation-v1.json",
+      "sha256": "0c428b9703efa86875b2d98f8077cae1baea99f438b953e7ab8d76e7449a7cb1"
+    },
+    "replay": {
+      "bytes": 3641302,
+      "path": "private/g3/e01/provenance-probe-v1/87703034.json",
+      "sha256": "58089ab3824ac703dddb5d1364718684d4770d3ebf853ea198ca00efdc6a43db"
+    },
+    "request": {
+      "authorization_consumed": true,
+      "authorized_request_sha256": "5fdfb4c3fc11defbc2f3ea271816cc37413d23cb7115acd8c52a064b11f14fc1",
+      "path": "configs/e01_provenance_probe_request_v2.json",
+      "sha256": "b9e27cd30f4ebd8f3db767c3da5708b3330a5052f651b5f666420e02815ce34b"
+    }
+  },
+  "legality": {
+    "current_asset_construction_compatibility": "PASS",
+    "exact_historical_engine_card_mapping_available": false,
+    "exact_historical_legality": "UNPROVEN",
+    "reason": "Replay module version 1.32.2 has no accepted exact engine/card-asset mapping."
+  },
+  "next_action": "PREPARE_A_SEPARATELY_APPROVED_SAME_SUBMISSION_MULTI_EPISODE_SCREENING_REQUEST",
+  "policy_identity": {
+    "agent_version_present": false,
+    "only_environment_module_version_present": true,
+    "policy_id_present": false
+  },
+  "producer": "scripts/e01_provenance_probe_review.py",
+  "qualification": {
+    "action_aligned_supervision_available": true,
+    "e01_screening_gate_passed": false,
+    "exact_deck_hashes_recovered": true,
+    "exact_historical_deck_legality_qualified": false,
+    "policy_consistency_qualified": false,
+    "provenance_probe_passed": true,
+    "replay_transfer_authorized": false,
+    "teacher_strength_qualified": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-provenance-probe-review-v1",
+  "replay_contract": {
+    "environment_name": "cabt",
+    "environment_version": "1.0.0",
+    "episode_id": 87703034,
+    "internal_id": "075bc77e-86c4-11f1-8f0c-0242ac130203",
+    "module_version": "1.32.2",
+    "schema_version": 1,
+    "team_names": [
+      "Benarg",
+      "junlee789"
+    ],
+    "terminal_rewards": [
+      1,
+      -1
+    ],
+    "terminal_statuses": [
+      "DONE",
+      "DONE"
+    ],
+    "top_level_keys": [
+      "configuration",
+      "description",
+      "id",
+      "info",
+      "module_version",
+      "name",
+      "rewards",
+      "schema_version",
+      "specification",
+      "statuses",
+      "steps",
+      "title",
+      "version"
+    ]
+  },
+  "review_sha256": "f09117848e457b836c020c7c8112519d24daf392a74f14ba4c26a81b1618fec7",
+  "reviewed_decision": "DEC-014",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-provenance-probe-review-v1.json",
+  "status": "PASS",
+  "submission_binding": {
+    "episode_and_team_names_match_public_metadata": true,
+    "player_0_submission_id": 54933084,
+    "player_1_submission_id": 54775633,
+    "submission_ids_available_from_reconciled_public_metadata": true,
+    "submission_ids_present_in_replay_body": false
+  },
+  "transfer": {
+    "additional_replays_downloaded": 0,
+    "agent_logs_downloaded": 0,
+    "bytes_downloaded": 3641302,
+    "dataset_owner": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "dataset_version": 1,
+    "files_downloaded": 1,
+    "overwrite_used": false
+  }
+}

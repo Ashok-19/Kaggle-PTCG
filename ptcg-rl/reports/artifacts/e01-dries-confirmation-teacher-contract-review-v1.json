@@ -1,0 +1,96 @@
+{
+  "completed_screening": {
+    "combined_observed_teacher_decisions": 6340,
+    "current_active_submission_changed": true,
+    "current_rank_after_refresh": 4,
+    "e01_screening_gate_passed": true,
+    "minimum_5000_teacher_decisions_met": true,
+    "qualified_files": 38,
+    "rejected_files": 0,
+    "teacher_submission_id": 55004495,
+    "teacher_team_name": "flg"
+  },
+  "confirmation": {
+    "confirmation_gate_passed": false,
+    "probe_completes_confirmation": false,
+    "requires_at_least_200_episodes": true,
+    "requires_at_least_25000_meaningful_teacher_decisions": true,
+    "requires_two_independent_recent_teachers": true
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-27T17:10:11.206630Z",
+  "decision": "ACCEPT_EXACT_TWO_FILE_CURRENT_RANK_1_DRIES_CONFIRMATION_TEACHER_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "completed_screening_request": {
+      "path": "configs/e01_flg_dragapult_screening_expansion_request_v1.json",
+      "sha256": "f16d155948db791e355f561901daf2e4f2ef886d68d638a6fdce4c2d31939583"
+    },
+    "completed_screening_review": {
+      "path": "reports/artifacts/e01-flg-dragapult-screening-expansion-review-v1.json",
+      "review_sha256": "0346535b89f0f14e153df0afeda90609f51e2a0d75b4b959df38be71dfb7df80",
+      "sha256": "38f1e6f4f0d68b52677e6e578ac7f69ca0730f819bc895b5205d42387f7c8fc2"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-022_E01_DRIES_CONFIRMATION_TEACHER_PROBE.md",
+      "sha256": "a6802416e9d2cb03ca267c82a11a482014c22832f575cb310802cb111c93b027"
+    },
+    "live_confirmation_refresh": {
+      "path": "reports/artifacts/raw/e01-live-confirmation-refresh-v1.json",
+      "sha256": "7642598704cca4899235089c57e6429805ebb8ea496e4c5b47befc677e4b80dc"
+    },
+    "request": {
+      "path": "configs/e01_dries_confirmation_teacher_probe_request_v1.json",
+      "sha256": "7eb4d5ec21956f6661ce95248d387a497828c20cd16438f13adb280e7cb670a9"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_TWO_FILE_DRIES_CONFIRMATION_TEACHER_PROBE",
+  "producer": "scripts/e01_dries_confirmation_teacher_contract_review.py",
+  "qualification": {
+    "completed_flg_screening_qualified": true,
+    "confirmation_gate_passed": false,
+    "current_rank_1_dries_strength_metadata_qualified": true,
+    "dries_action_alignment_qualified": false,
+    "dries_confirmation_probe_request_ready": true,
+    "dries_exact_deck_qualified": false,
+    "replay_transfer_authorized": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-dries-confirmation-teacher-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 1135238,
+    "maximum_new_files": 2,
+    "output_directory_exists": false,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "require_same_exact_teacher_deck_across_both_files": true,
+    "required_module_version": "1.32.2",
+    "selected_episode_ids": [
+      88281294,
+      88332011
+    ],
+    "selected_strata": {
+      "seat_0_loss": 1,
+      "seat_1_win": 1
+    },
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "review_sha256": "5238d31a608e56978a9753c1e81f4d9a0d02038c0499c18ebdb50fea4ac44bdd",
+  "reviewed_decision": "DEC-022",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-dries-confirmation-teacher-contract-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "dataset_episode_count": 128,
+    "live_rank_at_refresh": 1,
+    "live_team_score_at_refresh": 1205.2,
+    "submission_id": 55002825,
+    "submission_public_score": 1205.2,
+    "team_id": 16531269,
+    "team_name": "Dries @ Tufa Labs"
+  }
+}

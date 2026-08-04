@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "record_id": "e04-single-process-trace-request-v1",
+  "created_at_utc": "2026-07-24T11:40:00Z",
+  "decision_id": "DEC-011",
+  "stage": "single_process_trace",
+  "games": 1,
+  "minimum_meaningful_decisions": 1,
+  "output_directory": "private/g3/e04/single-process-trace-v1",
+  "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "deck_sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee",
+  "checkpoint_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+  "authorized": false,
+  "optimizer_steps_authorized": 0,
+  "external_compute_authorized": false,
+  "authorization_scope": "CONSUMED_AFTER_SINGLE_APPROVED_EXECUTION",
+  "notes": [
+    "The user explicitly approved exactly one local CPU CABT game on 2026-07-24.",
+    "The exact authorized bytes are preserved beside the bridge checkpoint.",
+    "This request is consumed; any overwrite, rerun or later stage requires separate explicit approval."
+  ],
+  "authorized_at_utc": "2026-07-24T12:06:58Z",
+  "approval_source": "project_chat_user_confirmation",
+  "consumed_at_utc": "2026-07-24T12:10:37Z",
+  "consumed_authorization_path": "private/g3/e04/single-process-trace-v1/e04-native-zero-update-authorization.json",
+  "consumed_authorization_sha256": "8b801f8432e821c3a43be10645f3fc89d1422ab329c2acd2df26ce1aac7a72ad",
+  "bridge_checkpoint_path": "private/g3/e04/single-process-trace-v1/e04-native-zero-update-bridge.json",
+  "bridge_checkpoint_sha256": "bb71dcbee278478af9f1c37c206a99da2a47471b08905c11a7b7ddbb05f0f59f"
+}

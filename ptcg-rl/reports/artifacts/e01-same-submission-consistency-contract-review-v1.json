@@ -1,0 +1,61 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-24T16:29:06.837912Z",
+  "decision": "ACCEPT_ONE_FILE_CONSISTENCY_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-benarg-consistency-candidate-metadata-v1.json",
+      "sha256": "971e4f2b9323aa17bfa98e6b6a16f17a99d4e4b17af2acbae1b7dd02d69ff577"
+    },
+    "completed_probe_request": {
+      "path": "configs/e01_provenance_probe_request_v2.json",
+      "sha256": "b9e27cd30f4ebd8f3db767c3da5708b3330a5052f651b5f666420e02815ce34b"
+    },
+    "completed_probe_review": {
+      "path": "reports/artifacts/e01-provenance-probe-review-v1.json",
+      "review_sha256": "f09117848e457b836c020c7c8112519d24daf392a74f14ba4c26a81b1618fec7",
+      "sha256": "94c8d1e90400f9fb950f1950e1a3ef37b66fca3a81767c0ab502affa5e58d92c"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-015_E01_SAME_SUBMISSION_CONSISTENCY_PROBE.md",
+      "sha256": "884ef8dd592d4296042b474f4900cbb18c89e3bf2ec9e6aebee4e35dde5dda1e"
+    },
+    "request": {
+      "path": "configs/e01_same_submission_consistency_request_v1.json",
+      "sha256": "3cee666da8c141f19c4a6f7ab8ce68e477b8bb27675c48c0427e095941aaaaa2"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_87741212_JSON_CONSISTENCY_PROBE",
+  "producer": "scripts/e01_consistency_contract_review.py",
+  "qualification": {
+    "completed_provenance_probe_passed": true,
+    "e01_screening_gate_passed": false,
+    "exact_historical_deck_legality_qualified": false,
+    "replay_transfer_authorized": false,
+    "same_submission_consistency_qualified": false,
+    "teacher_strength_qualified": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-same-submission-consistency-contract-review-v1",
+  "request": {
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "episode_id": 87741212,
+    "external_compute_authorized": false,
+    "file_name": "87741212.json",
+    "maximum_new_bytes": 559779,
+    "maximum_new_files": 1,
+    "opposite_player_slot": true,
+    "opposite_terminal_result": true,
+    "output_directory_exists": false,
+    "request_ready": true,
+    "same_submission_id": 54933084,
+    "third_replay_authorized": false,
+    "training_authorized": false
+  },
+  "review_sha256": "ce34e1be23d374f3026e306c928f169ed3cf7ae2e3fb64801a5014eb8bf7df37",
+  "reviewed_decision": "DEC-015",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-same-submission-consistency-contract-review-v1.json",
+  "status": "PASS"
+}

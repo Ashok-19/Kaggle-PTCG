@@ -1,0 +1,70 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-07-27T16:02:55.276282Z",
+  "decision": "ACCEPT_EXACT_38_FILE_CURRENT_RANK_1_DRAGAPULT_SCREENING_EXPANSION_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "candidate_metadata": {
+      "path": "reports/artifacts/raw/e01-flg-dragapult-screening-expansion-candidates-v1.json",
+      "sha256": "06afd9c1aaafe5fbf207ad4fd07bf9852fa1097c29ab8aaa9a862124731f1e37"
+    },
+    "completed_calibration_request": {
+      "authorized_request_sha256": "42b97e0fbb26e293a62747e5437315ae2018bdb7d5c07c0d28004dcc604adce7",
+      "path": "configs/e01_flg_dragapult_calibration_request_v1.json",
+      "sha256": "9140bc26599d08c6c343db19a658cfa728b5425f9a59700d9bb627b3c16c89e8"
+    },
+    "completed_calibration_review": {
+      "path": "reports/artifacts/e01-flg-dragapult-calibration-review-v1.json",
+      "review_sha256": "be2704b2f09126a1b77340e25971c4231c2f515e52ca4e41e3c9d32b8daa7282",
+      "sha256": "719c08aac0bfc9d8c66c163cd85cea45cd8af8107a946c006e356ed9df248038"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-021_E01_FLG_DRAGAPULT_SCREENING_EXPANSION.md",
+      "sha256": "3533c0c1b099193ab8f02eee54e60cd89dedab1399eb2e33668041e4c103d23c"
+    },
+    "request": {
+      "path": "configs/e01_flg_dragapult_screening_expansion_request_v1.json",
+      "sha256": "1c9a5b893af29f19dad214b3377919f996b48b62145e5401f189a6dc231ac559"
+    }
+  },
+  "next_action": "REQUEST_EXPLICIT_APPROVAL_FOR_EXACT_38_FILE_FLG_DRAGAPULT_SCREENING_EXPANSION",
+  "producer": "scripts/e01_flg_screening_expansion_contract_review.py",
+  "qualification": {
+    "current_rank_1_teacher_qualified": true,
+    "e01_screening_gate_passed": false,
+    "exact_dragapult_deck_qualified": true,
+    "minimum_5000_teacher_decisions_met": false,
+    "replay_transfer_authorized": false,
+    "same_version_replay_contract_consistency_qualified": true,
+    "screening_expansion_request_ready": true,
+    "training_authorized": false
+  },
+  "record_id": "e01-flg-dragapult-screening-expansion-contract-review-v1",
+  "request": {
+    "additional_replays_authorized": false,
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "balanced_strata": {
+      "seat_0_loss": 10,
+      "seat_0_win": 10,
+      "seat_1_loss": 9,
+      "seat_1_win": 9
+    },
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 254237550,
+    "maximum_new_files": 38,
+    "minimum_target_bytes": 253462708,
+    "output_directory_exists": false,
+    "projection_is_guarantee": false,
+    "raw_exports_authorized": false,
+    "request_ready": true,
+    "required_deck_multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "required_module_version": "1.32.2",
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "review_sha256": "5c78739f354b093c973caccdcc338333f83b0cc3c92ac84d55a5bce7a02d7627",
+  "reviewed_decision": "DEC-021",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-flg-dragapult-screening-expansion-contract-review-v1.json",
+  "status": "PASS"
+}

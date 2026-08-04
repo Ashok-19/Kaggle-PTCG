@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "record_id": "e01-benarg-consistency-candidate-metadata-v1",
+  "created_at_utc": "2026-07-24T16:29:06.837912Z",
+  "source_path": "reports/artifacts/raw/e01-benarg-consistency-candidate-metadata-v1.json",
+  "producer": "current-official-kaggle-client-metadata-only",
+  "client": {
+    "kaggle_cli_version": "2.2.4",
+    "source_commit": "f0afa32699d28c97f82691728ada3ed8c16c5abf",
+    "episode_endpoint": "/api/v1/competitions/submissions/{submission_id}/episodes"
+  },
+  "dataset": {
+    "owner_slug": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-07-23",
+    "version": 1,
+    "dataset_file_pages": 23,
+    "json_files": 4559
+  },
+  "submission": {
+    "submission_id": 54933084,
+    "team_id": 16401597,
+    "team_name": "Benarg",
+    "public_episode_count": 252,
+    "episodes_present_in_dataset": 112,
+    "other_episodes_present_in_dataset": 111
+  },
+  "existing_probe": {
+    "episode_id": 87703034,
+    "file_name": "87703034.json",
+    "bytes": 3641302,
+    "sha256": "58089ab3824ac703dddb5d1364718684d4770d3ebf853ea198ca00efdc6a43db",
+    "create_time": "2026-07-23T18:26:15.370240100Z",
+    "end_time": "2026-07-23T18:32:34.138948200Z",
+    "submission_player_index": 0,
+    "submission_reward": 1,
+    "deck_multiset_sha256": "606a775392ffe25e058b19c17801d58a4bf30f7cd8c62782388d3de7e7eb5283"
+  },
+  "selected_additional_candidate": {
+    "episode_id": 87741212,
+    "file_name": "87741212.json",
+    "declared_bytes": 559779,
+    "create_time": "2026-07-23T23:14:09.809314700Z",
+    "end_time": "2026-07-23T23:14:59.656326Z",
+    "state": "COMPLETED",
+    "type": "EPISODE_TYPE_PUBLIC",
+    "submission_player_index": 1,
+    "submission_reward": -1,
+    "agents": [
+      {
+        "index": 0,
+        "submission_id": 54934597,
+        "team_id": 16566047,
+        "team_name": "jneums",
+        "reward": 1
+      },
+      {
+        "index": 1,
+        "submission_id": 54933084,
+        "team_id": 16401597,
+        "team_name": "Benarg",
+        "reward": -1
+      }
+    ]
+  },
+  "selection_basis": {
+    "same_exact_submission_as_existing_probe": true,
+    "smallest_declared_file_among_other_same_submission_dataset_episodes": true,
+    "opposite_player_slot": true,
+    "opposite_terminal_result": true,
+    "rating_or_leaderboard_score_used": false,
+    "replay_body_used_for_selection": false
+  },
+  "collection_boundary": {
+    "replay_bodies_downloaded": 0,
+    "agent_logs_downloaded": 0,
+    "raw_step_exports": 0,
+    "action_exports": 0,
+    "observation_exports": 0,
+    "training_labels_created": 0,
+    "optimizer_steps": 0,
+    "external_compute": false,
+    "training": false
+  }
+}

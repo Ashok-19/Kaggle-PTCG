@@ -1,0 +1,311 @@
+{
+  "active_public_submissions": {
+    "16380946": [
+      {
+        "date_submitted": "2026-07-26T15:17:47.047Z",
+        "public_score": 1175.1,
+        "submission_id": 55004691
+      },
+      {
+        "date_submitted": "2026-07-26T15:06:39.540Z",
+        "public_score": 1234.2,
+        "submission_id": 55004495
+      }
+    ],
+    "16448747": [
+      {
+        "date_submitted": "2026-07-26T13:17:03.263Z",
+        "public_score": 1073.6,
+        "submission_id": 55002103
+      },
+      {
+        "date_submitted": "2026-07-26T13:16:52.797Z",
+        "public_score": 1114.0,
+        "submission_id": 55002097
+      }
+    ],
+    "16514272": [
+      {
+        "date_submitted": "2026-07-26T12:41:05.657Z",
+        "public_score": 1183.7,
+        "submission_id": 55001357
+      },
+      {
+        "date_submitted": "2026-07-26T02:15:56.857Z",
+        "public_score": 1060.7,
+        "submission_id": 54989332
+      }
+    ],
+    "16531269": [
+      {
+        "date_submitted": "2026-07-26T13:51:57.320Z",
+        "public_score": 1203.0,
+        "submission_id": 55002825
+      },
+      {
+        "date_submitted": "2026-07-25T23:35:38.187Z",
+        "public_score": 1114.1,
+        "submission_id": 54986389
+      }
+    ]
+  },
+  "candidate_coverage": [
+    {
+      "dataset_episode_count": 131,
+      "dataset_total_bytes": 700919925,
+      "live_rank": 1,
+      "live_team_score": 1234.2,
+      "strata": {
+        "seat_0_loss": 19,
+        "seat_0_win": 32,
+        "seat_1_loss": 29,
+        "seat_1_win": 51
+      },
+      "submission_id": 55004495,
+      "submission_public_score": 1244.2,
+      "team_id": 16380946,
+      "team_name": "flg"
+    },
+    {
+      "dataset_episode_count": 128,
+      "dataset_total_bytes": 643312769,
+      "live_rank": 2,
+      "live_team_score": 1203.0,
+      "strata": {
+        "seat_0_loss": 26,
+        "seat_0_win": 36,
+        "seat_1_loss": 24,
+        "seat_1_win": 42
+      },
+      "submission_id": 55002825,
+      "submission_public_score": 1204.8,
+      "team_id": 16531269,
+      "team_name": "Dries @ Tufa Labs"
+    },
+    {
+      "dataset_episode_count": 134,
+      "dataset_total_bytes": 660001761,
+      "live_rank": 3,
+      "live_team_score": 1183.7,
+      "strata": {
+        "seat_0_loss": 18,
+        "seat_0_win": 42,
+        "seat_1_loss": 33,
+        "seat_1_win": 41
+      },
+      "submission_id": 55001357,
+      "submission_public_score": 1188.0,
+      "team_id": 16514272,
+      "team_name": "Dominic Peel"
+    }
+  ],
+  "competition": "pokemon-tcg-ai-battle",
+  "created_at_utc": "2026-07-27T14:48:51.929778Z",
+  "current_user": {
+    "public_score": 754.0,
+    "submission_id": 54757553,
+    "team_name": "NNMax",
+    "user_rank": 1643
+  },
+  "dataset": {
+    "declared_json_bytes": 21474535960,
+    "inventory_sha256": "9b85b11b009d84eb0804259db35a78c0d57a4ffe5dfd61abf351422b8d0706f9",
+    "json_files": 4554,
+    "ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-26/1"
+  },
+  "discussion_refresh": {
+    "bo1_remains": true,
+    "community_learning_observation": "Recent discussion reports mixed results for BC/RL and suggests hybrid BC plus rule guards; these claims are anecdotal and not qualification evidence.",
+    "community_meta_observation": "July 26 top-band analysis reports Grimmsnarl at 51.3 percent share and Mega Lucario at 0.03 percent; this is contextual, not authorization evidence.",
+    "episode_frequency_increases_after_deadline": true,
+    "minor_engine_update_announced_utc": "2026-07-23T21:04:23.760Z",
+    "public_notebook_sharing_deadline_utc": "2026-08-02T23:59:00Z"
+  },
+  "leaderboard_top20": [
+    {
+      "rank": 1,
+      "score": 1234.2,
+      "submission_date": "2026-07-26T15:17:47.046Z",
+      "team_id": 16380946,
+      "team_name": "flg"
+    },
+    {
+      "rank": 2,
+      "score": 1203.0,
+      "submission_date": "2026-07-26T13:51:57.320Z",
+      "team_id": 16531269,
+      "team_name": "Dries @ Tufa Labs"
+    },
+    {
+      "rank": 3,
+      "score": 1183.7,
+      "submission_date": "2026-07-26T12:41:05.656Z",
+      "team_id": 16514272,
+      "team_name": "Dominic Peel"
+    },
+    {
+      "rank": 4,
+      "score": 1173.0,
+      "submission_date": "2026-07-26T21:57:51.196Z",
+      "team_id": 16461850,
+      "team_name": "Matheus, Dieter, Eduardo"
+    },
+    {
+      "rank": 5,
+      "score": 1150.7,
+      "submission_date": "2026-07-27T13:47:03.333Z",
+      "team_id": 16378362,
+      "team_name": "Tanupro"
+    },
+    {
+      "rank": 6,
+      "score": 1149.5,
+      "submission_date": "2026-07-26T21:41:40.223Z",
+      "team_id": 16463316,
+      "team_name": "LiamK"
+    },
+    {
+      "rank": 7,
+      "score": 1134.8,
+      "submission_date": "2026-07-27T14:07:27.993Z",
+      "team_id": 16389043,
+      "team_name": "Pushu?"
+    },
+    {
+      "rank": 8,
+      "score": 1132.3,
+      "submission_date": "2026-07-24T15:18:14.033Z",
+      "team_id": 16375647,
+      "team_name": "James Cox"
+    },
+    {
+      "rank": 9,
+      "score": 1131.3,
+      "submission_date": "2026-07-27T11:30:03.223Z",
+      "team_id": 16499803,
+      "team_name": "Team Rot-Weiß"
+    },
+    {
+      "rank": 10,
+      "score": 1130.2,
+      "submission_date": "2026-07-25T15:06:17.576Z",
+      "team_id": 16489606,
+      "team_name": "junseo lee"
+    },
+    {
+      "rank": 11,
+      "score": 1123.6,
+      "submission_date": "2026-07-25T16:33:23.433Z",
+      "team_id": 16487924,
+      "team_name": "lmaffei"
+    },
+    {
+      "rank": 12,
+      "score": 1120.0,
+      "submission_date": "2026-07-17T02:27:09.746Z",
+      "team_id": 16381823,
+      "team_name": "Yushin Ito"
+    },
+    {
+      "rank": 13,
+      "score": 1116.2,
+      "submission_date": "2026-07-26T15:17:19.560Z",
+      "team_id": 16386246,
+      "team_name": "懒惰的金枪鱼"
+    },
+    {
+      "rank": 14,
+      "score": 1115.2,
+      "submission_date": "2026-07-25T00:37:15.153Z",
+      "team_id": 16374395,
+      "team_name": "Majkel1337"
+    },
+    {
+      "rank": 15,
+      "score": 1114.0,
+      "submission_date": "2026-07-26T13:17:03.263Z",
+      "team_id": 16448747,
+      "team_name": "Luca"
+    },
+    {
+      "rank": 16,
+      "score": 1111.1,
+      "submission_date": "2026-07-25T11:04:49.150Z",
+      "team_id": 16376653,
+      "team_name": "szlachetny snieg"
+    },
+    {
+      "rank": 17,
+      "score": 1111.0,
+      "submission_date": "2026-07-25T14:09:52.420Z",
+      "team_id": 16372782,
+      "team_name": "Pokemon Siuuuu"
+    },
+    {
+      "rank": 18,
+      "score": 1110.6,
+      "submission_date": "2026-07-24T00:54:45.286Z",
+      "team_id": 16422150,
+      "team_name": "junlee789"
+    },
+    {
+      "rank": 19,
+      "score": 1109.5,
+      "submission_date": "2026-07-27T14:13:12.673Z",
+      "team_id": 16430922,
+      "team_name": "taku_Kuma"
+    },
+    {
+      "rank": 20,
+      "score": 1106.1,
+      "submission_date": "2026-07-26T08:11:51.240Z",
+      "team_id": 16561141,
+      "team_name": "A. R. SEKKAT"
+    }
+  ],
+  "record_id": "e01-live-gold-refresh-v1",
+  "schema_version": 1,
+  "selection": {
+    "selected_files": [
+      {
+        "create_time": "2026-07-26T19:08:26.618Z",
+        "declared_bytes": 624407,
+        "end_time": "2026-07-26T19:09:16.282Z",
+        "episode_id": 88302734,
+        "file_name": "88302734.json",
+        "opponent_submission_id": 54977294,
+        "opponent_team_name": "Pokemon Siuuuu",
+        "stratum": "seat_1_loss",
+        "teacher_player_index": 1,
+        "teacher_reward": -1
+      },
+      {
+        "create_time": "2026-07-26T23:00:28.911Z",
+        "declared_bytes": 3371991,
+        "end_time": "2026-07-26T23:01:18.849Z",
+        "episode_id": 88333037,
+        "file_name": "88333037.json",
+        "opponent_submission_id": 55002825,
+        "opponent_team_name": "Dries @ Tufa Labs",
+        "stratum": "seat_0_win",
+        "teacher_player_index": 0,
+        "teacher_reward": 1
+      }
+    ],
+    "selected_total_bytes": 3996398,
+    "selection_rule": "smallest_pair_with_opposite_teacher_seats_and_opposite_teacher_results",
+    "teacher_live_rank": 1,
+    "teacher_live_team_score": 1234.2,
+    "teacher_submission_id": 55004495,
+    "teacher_submission_public_score": 1244.2,
+    "teacher_team_id": 16380946,
+    "teacher_team_name": "flg"
+  },
+  "supersession": {
+    "reason": "Luca moved to rank 14 with a new active submission, while current rank-1 flg submission 55004495 has current July 26 replay coverage.",
+    "superseded_decision": "DEC-018",
+    "superseded_request_executed": false,
+    "superseded_request_path": "configs/e01_luca_screening_expansion_request_v1.json",
+    "superseded_request_sha256": "c293268607ce0fc8762d543508bf2c798087ca9583cec05e3031a1906fc26962"
+  }
+}
