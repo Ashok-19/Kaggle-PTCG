@@ -80,6 +80,9 @@ def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
         for player, spec in enumerate((args.policy0, args.policy1)):
             if spec == "candidate":
                 policies[player] = _load_candidate(args.candidate_import)
+                declared_deck = getattr(policies[player], "deck", None)
+                if declared_deck is not None and tuple(declared_deck) != tuple(candidate_deck):
+                    raise ValueError("candidate policy deck differs from the configured exact deck")
                 decks[player] = candidate_deck
             else:
                 policies[player], decks[player] = _make_policy(
