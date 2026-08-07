@@ -1,0 +1,135 @@
+{
+  "budget_name": "local_screen",
+  "budget_sha256": "2c56fab78fb5680a815cb46eea8b197485703c7ec48889acc57a12a96f0ff2b4",
+  "candidate_source_receipt": {
+    "candidate_config": {
+      "bytes": 6538,
+      "path": "configs/deterministic/b0_ma_control_v1.json",
+      "sha256": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6"
+    },
+    "candidate_imported_module": {
+      "bytes": 598,
+      "path": "src/ptcg_rl/deterministic/policy.py",
+      "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"
+    },
+    "candidate_transitive_00": {
+      "bytes": 1463,
+      "path": "src/ptcg_rl/deterministic/__init__.py",
+      "sha256": "e1a3f2dbae34f7bac77d990edd0068bae179e2b2e068c30723da74f7f7959042"
+    },
+    "candidate_transitive_01": {
+      "bytes": 25717,
+      "path": "src/ptcg_rl/deterministic/control.py",
+      "sha256": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53"
+    },
+    "candidate_transitive_02": {
+      "bytes": 26539,
+      "path": "src/ptcg_rl/deterministic/deck_profile.py",
+      "sha256": "b84d07adae1ec557f4dacc95e8e0ff52978b81839bcec108bd1258bb66c827af"
+    },
+    "candidate_transitive_03": {
+      "bytes": 598,
+      "path": "src/ptcg_rl/deterministic/policy.py",
+      "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"
+    },
+    "candidate_transitive_04": {
+      "bytes": 44738,
+      "path": "src/ptcg_rl/deterministic/state.py",
+      "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+    },
+    "candidate_transitive_05": {
+      "bytes": 15275,
+      "path": "src/ptcg_rl/g1/actions.py",
+      "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907"
+    },
+    "candidate_transitive_06": {
+      "bytes": 16134,
+      "path": "src/ptcg_rl/g1/models.py",
+      "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f"
+    },
+    "candidate_transitive_07": {
+      "bytes": 36407,
+      "path": "src/ptcg_rl/g1/semantic.py",
+      "sha256": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"
+    },
+    "candidate_transitive_08": {
+      "bytes": 18573,
+      "path": "src/ptcg_rl/g2/card_table.py",
+      "sha256": "816f6d8c879299c40cc8ec350f9cab182cc72c374da5d2bc779ea81afdd8bdd1"
+    }
+  },
+  "candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+  "config_sha256": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+  "criteria": {
+    "authorization": "This receipt authorizes only the bounded 64-game all-arm local_screen (32 candidate-arm and 32 control-arm games); it does not authorize local_upper_screen, private_kaggle_arm, confirmation, promotion, deck freeze, submission, or external mutation.",
+    "independent_review": "The receipt binds the exact committed implementation, frozen config, resolved budget and candidate source digest; the prior 16-game canary review prerequisite was satisfied by committed report be41294, but that canary review alone is not reused as scale authorization.",
+    "runtime": "The configured runtime envelope is a per-game/per-request safety guard only, not a B1 acceptance or promotion budget.",
+    "stop_conditions": "The frozen B0 reliability stop condition remains active; any invalid action, fallback, timeout, failure, incomplete game, missing output, metric/cardinality error, or source/config/hash mismatch blocks the run."
+  },
+  "experiment_id": "B0-MA-CONTROL-001",
+  "knowledge_base": {
+    "open_research_questions": 12,
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "unresolved_contradictions": 3,
+    "validation": "PASS"
+  },
+  "launch_command": [
+    "rtk",
+    "uv",
+    "--cache-dir",
+    "data/cache/uv",
+    "run",
+    "python",
+    "scripts/deterministic/b0_control_qualification.py",
+    "--repo",
+    ".",
+    "--engine-root",
+    "private/assets/official/sample_submission/sample_submission",
+    "--private-baselines",
+    "private/baselines",
+    "--budget",
+    "local_screen",
+    "--independent-review-receipt",
+    "reports/deterministic/b0-local-screen-launch-review-v1.json"
+  ],
+  "record_id": "B0-MA-CONTROL-001-local-screen-launch-review-v1",
+  "resolved_budget": {
+    "budget_name": "local_screen",
+    "candidate_arm_games_total": 32,
+    "control_arm_games_total": 32,
+    "game_timeout_seconds": 180,
+    "games_per_anchor_per_candidate_seat": 4,
+    "games_total": 32,
+    "games_total_all_arms": 64,
+    "games_total_per_arm": 32,
+    "games_total_scope": "per_arm",
+    "max_evidence_bytes": 67108864,
+    "request_cap": 20000,
+    "stop_condition": "stop_on_any_invalid_fallback_timeout_failure_or_incomplete_game",
+    "wall_seconds": 1800
+  },
+  "review_kind": "INDEPENDENT_SCALE_LAUNCH_REVIEW",
+  "reviewed_commit": "909f7922d5f34ff69bcdfb047e6b6228cccc58e5",
+  "scale_launch_authorized": true,
+  "schema_version": 1,
+  "scope": {
+    "anchors": [
+      "rule:dragapult-ex",
+      "rule:iono",
+      "rule:mega-abomasnow-ex",
+      "rule:mega-lucario-ex"
+    ],
+    "arms": [
+      "candidate",
+      "control"
+    ],
+    "candidate_seat_balance": true,
+    "games_per_anchor_per_candidate_seat": 4,
+    "games_total": 64,
+    "games_total_per_arm": 32,
+    "games_total_scope": "per_arm",
+    "natural_deployment": true
+  },
+  "status": "PASS"
+}
