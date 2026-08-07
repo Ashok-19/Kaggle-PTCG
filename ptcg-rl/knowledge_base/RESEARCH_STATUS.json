@@ -1,0 +1,169 @@
+{
+  "counts": {
+    "anti_patterns": 14,
+    "archetypes": 17,
+    "cards": 49,
+    "claim_sources": 123,
+    "claims": 62,
+    "contradictions": 6,
+    "decision_rule_candidates": 23,
+    "decision_rules": 36,
+    "interactions": 12,
+    "knowledge_fts": 167,
+    "matchup_plans": 20,
+    "matchups": 12,
+    "observed_replay_patterns": 10,
+    "people": 11,
+    "probability_models": 7,
+    "research_questions": 15,
+    "search_feature_candidates": 16,
+    "search_features": 16,
+    "sources": 56,
+    "strategies": 20
+  },
+  "coverage": {
+    "attack_choice": true,
+    "bench_management": true,
+    "board_development": true,
+    "candidate_deck": true,
+    "common_expert_mistakes": true,
+    "contradictions": true,
+    "current_competition_decks": "partial_exact_anchors_and_public_meta",
+    "deterministic_rule_candidates": true,
+    "evolution_timing": true,
+    "exact_competition_format": true,
+    "hidden_information": true,
+    "important_card_interactions": "prioritized_local_ids; transition regressions pending",
+    "matchup_plans": "hypotheses_pending_controlled_games",
+    "official_rules_mechanics": true,
+    "playing_ahead": true,
+    "playing_behind": true,
+    "prize_mapping": true,
+    "probability_outs": true,
+    "resource_management": true,
+    "retreat_switch_logic": "general_principles; exact card regression pending",
+    "supporter_timing": true,
+    "tactical_search_features": true,
+    "target_selection": true,
+    "top_leaderboard_archetypes": "partial_selected_public_snapshots",
+    "top_player_strategy": true,
+    "turn_sequencing": true,
+    "unresolved_questions": true
+  },
+  "created_at": "2026-08-08",
+  "database": "knowledge_base/ptcg_gold.sqlite",
+  "elite_players_represented": 5,
+  "important_competition_archetypes": 16,
+  "last_updated_at": "2026-08-08",
+  "recommended_next_research": [
+    "Refresh hosted engine/card/version contract before final packaging.",
+    "Run controlled Mega Abomasnow versus four native anchors with natural seat deployment.",
+    "Build exact local card-transition regression capsules for route-critical cards.",
+    "Ablate prize-route, next-attacker, gust, belief, and option-order features separately.",
+    "Revisit user-identified Kaggle discussions through an authorized session and ingest full nested replies."
+  ],
+  "source_tiers": {
+    "A": 26,
+    "B": 14,
+    "C": 16,
+    "D": 0
+  },
+  "status": "SUBSTANTIAL_EVIDENCE_CORPUS_WITH_OPEN_P0_QUESTIONS",
+  "strongest_actionable_findings": [
+    "DR-002",
+    "DR-004",
+    "DR-006",
+    "DR-007",
+    "DR-009",
+    "DR-011",
+    "DR-012",
+    "DR-013",
+    "DR-015",
+    "DR-018",
+    "DR-019",
+    "DR-020",
+    "DR-022",
+    "DR-023",
+    "DR-024",
+    "DR-025",
+    "DR-029",
+    "DR-030",
+    "DR-031",
+    "DR-032"
+  ],
+  "unresolved_contradictions": 3,
+  "unresolved_high_priority_questions": [
+    {
+      "id": "RQ-001",
+      "priority": "P0",
+      "question": "What exact CABT engine/module and card-data version will the final competition host use after the July package and before submission?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-002",
+      "priority": "P0",
+      "question": "Is the local 2,022-row/1,267-ID official card table exactly the legal card universe exposed by the hosted CABT service?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-003",
+      "priority": "P0",
+      "question": "What is the current hidden opponent distribution after the final meta shift, rather than the selected public top-episode distribution?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-004",
+      "priority": "P0",
+      "question": "Which Mega Abomasnow Prize routes and first-attacker choices maximize win probability against each native rule anchor under natural deployment?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-005",
+      "priority": "P1",
+      "question": "Do prize-map distance, next-attacker readiness, and gust conversion improve held-out CABT games over a simpler rule baseline?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-006",
+      "priority": "P1",
+      "question": "Is visible option order predictive after semantic-option and permutation controls?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-007",
+      "priority": "P1",
+      "question": "Which local card interactions involving Rare Candy, evolution effects, recovery, Stadiums, and special Energy differ from tabletop assumptions?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-008",
+      "priority": "P1",
+      "question": "Does selective tactical search improve held-out game outcomes within the conservative CPU/cumulative-time budget?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-009",
+      "priority": "P1",
+      "question": "Does a public-information particle belief model improve robust target selection versus a single deterministic opponent guess?",
+      "status": "OPEN"
+    },
+    {
+      "id": "RQ-010",
+      "priority": "P1",
+      "question": "Do public teacher action patterns transfer to a held-out exact-deck competent policy?",
+      "status": "BLOCKED"
+    },
+    {
+      "id": "RQ-014",
+      "priority": "P1",
+      "question": "What strategic or runtime information is contained in discussions 729644, 731739, and 731352, including nested replies?",
+      "status": "IN_REVIEW"
+    },
+    {
+      "id": "RQ-015",
+      "priority": "P0",
+      "question": "What final deadline, submission-count, active-submission, archive-size, and runtime values are currently enforceable?",
+      "status": "OPEN"
+    }
+  ]
+}
