@@ -1,0 +1,422 @@
+{
+  "record_id": "phase-b1-runtime-oracle-audit-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "IMPLEMENTATION_READY_RESTRICTED_RUNTIME_ORACLE",
+  "audited_head": "54eb85601d387a9fe11109b59161f714c0a85040",
+  "scope": {
+    "mode": "read_only_runtime_compatibility_audit",
+    "candidate_deck": "mega-abomasnow-ex",
+    "production_code_changed": false,
+    "native_runs": 0,
+    "kaggle_runs": 0,
+    "submission_created": false,
+    "deck_frozen": false,
+    "only_owned_file_created": "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json",
+    "design_compared": "reports/deterministic/phase-b1-prize-route-design-v1.json"
+  },
+  "verdict": {
+    "headline": "A bounded current-state route-margin oracle is implementable without successor snapshots, hidden priors, search, or any Phase A PARTIAL effect, but it is not a full Mega Abomasnow prize-route authority yet.",
+    "runtime_oracle": "FEASIBLE_RESTRICTED",
+    "native_b1_route_arm": "BLOCKED",
+    "safe_authority": "B0_CONTROL_UNTIL_METADATA_AND_CAPSULE_GATES_PASS",
+    "reason": "PolicyV1 receives a current EngineObservationV1 and SelectionRequestV1 only. Static numeric attack/HP fields, public board entities, visible own hand, public counts, and legal option semantics are sufficient for a small action-local route margin. They are not sufficient to assert an exact Prize route when the selected line depends on unknown Prize values, an unqualified effect, an unqualified attack, an unresolved request context, or a future response.",
+    "strength_claim": false,
+    "promotion": false
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation_before_report": "PASS",
+    "validation_after_report": "REQUIRED_AND_PERFORMED",
+    "queried_ids": {
+      "decision_rules": ["DR-001", "DR-002", "DR-004", "DR-005", "DR-006", "DR-012", "DR-016", "DR-018", "DR-022", "DR-023", "DR-024", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033"],
+      "strategies": ["STR-001", "STR-002"],
+      "search_features": ["SF-001", "SF-004", "SF-005", "SF-006", "SF-016"],
+      "anti_patterns": ["AP-001", "AP-008", "AP-009", "AP-011", "AP-014"],
+      "research_questions": ["RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-009"],
+      "contradictions": ["CON-001", "CON-004"]
+    },
+    "binding_interpretation": [
+      "DR-004 and STR-001 require route comparison rather than immediate Prize value; this audit can provide only a bounded current-state lower bound.",
+      "DR-005 and DR-006 require robustness and avoidance of losing trades; the runtime formulations use a fail-closed public threat guard, not an opponent prior.",
+      "SF-001, SF-004, SF-005 and SF-006 are usable only with complete public inputs and qualified metadata; unknown values are not assigned favorable estimates.",
+      "DR-018, DR-023 and DR-024 prohibit opponent hidden-card identity or an inferred distribution. The oracle therefore uses visible threats and intervals only.",
+      "DR-025 and DR-033 keep CABT semantics and exact card IDs authoritative; CSV effect prose and static damage metadata do not upgrade a PARTIAL interaction.",
+      "DR-001, DR-002, DR-022 and SF-016 require terminal-first handling and complete current-option scoring. A terminal observation never reaches the PolicyV1 route chooser.",
+      "DR-031 and DR-032 bind the later experiment to natural-seat WDL, not Prize-margin claims; route features remain diagnostics."
+    ],
+    "open_questions_relevant_to_verdict": ["RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-009"]
+  },
+  "source_bindings": {
+    "phase_b1_design": {
+      "path": "reports/deterministic/phase-b1-prize-route-design-v1.json",
+      "sha256_at_audit": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7"
+    },
+    "phase_b_semantics_audit": {
+      "path": "reports/deterministic/phase-b-semantics-audit-v1.json",
+      "sha256_at_audit": "40293c28e87f1f99ce935725f426073b0308318f1490a881807a0820e9c7efed"
+    },
+    "phase_a_closeout": {
+      "path": "reports/deterministic/phase-a-foundation-closeout-v1.json",
+      "sha256_at_audit": "a91a7ebb45e5fd5c7249bf05589abf2141c31861e31697a5d58b7e77be34fd8d"
+    },
+    "policy_api": [
+      "src/ptcg_rl/g1/models.py",
+      "src/ptcg_rl/g1/actions.py",
+      "src/ptcg_rl/deterministic/state.py",
+      "src/ptcg_rl/deterministic/deck_profile.py",
+      "src/ptcg_rl/deterministic/control.py",
+      "src/ptcg_rl/deterministic/policy.py"
+    ],
+    "asset_hashes": {
+      "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+      "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+      "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+      "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd"
+    }
+  },
+  "runtime_boundary": {
+    "allowed_inputs": [
+      "current EngineObservationV1 and current SelectionRequestV1",
+      "public entities and public player counts in that observation",
+      "visible own-hand cards and publicly revealed opponent cards only",
+      "complete current legal options and their canonical semantic fields",
+      "versioned numeric CardStaticV1/AttackStaticV1 metadata and an independently qualified PrizeStaticV1 capsule",
+      "exact Mega Abomasnow deck profile and qualified action-context capsules",
+      "prior public transitions only if retained for lifecycle integrity; the formulations below do not require them"
+    ],
+    "forbidden_inputs": [
+      "successor observations or after-action snapshots",
+      "counterfactual terminal outcomes",
+      "future opponent response classes or response weights",
+      "opponent hidden hand, hidden deck identity, or facedown Prize identity",
+      "an inferred hidden-state prior, determinization, or manually controlled coin outcome",
+      "private native objects, private baseline modules, raw engine mappings, or option order",
+      "effect prose treated as executable semantics",
+      "any route edge depending on Riptide 1042, Swirling Waves 1043, Surfing Beach 1262, Hammer-lanche 1046, or Frost Barrier 1047"
+    ],
+    "terminal_rule": "The engine adapter checks terminal_result before reading selection-local fields. PolicyV1 is never called for a terminal observation; stale terminal selection data is a B0/harness reliability failure, not a route decision. A non-terminal action that might later end the game cannot be labelled an immediate terminal win from the current request alone.",
+    "activation_rule": "A route decision may be SELECTED only when every available current option is covered by a qualified, public, current-state feature contract and the complete compound-action space is covered. Any unsupported option, unknown context, missing qualified metadata, partial-effect dependency, ambiguous semantic tie, or unsupported count/ordering contract returns B0_DELEGATE. B0 delegation is not a final-adapter fallback and must be counted separately.",
+    "compound_action_rule": "To keep PolicyV1 current-only and bounded, native route authority is active only for min_count=max_count=1, or min_count=0/max_count=1 with an explicit semantic STOP candidate. Requests with max_count>1, ORDERED multi-select, or any other compound space delegate to B0 unless a separately reviewed evaluator enumerates every legal sequence/set under a fixed cap and preserves STOP as a first-class action.",
+    "tie_rule": "Compare the named strategic-key prefix first. Exact semantic duplicates may use the canonical semantic action key as a deterministic final tie-break; two non-equivalent actions with equal strategic keys return AMBIGUOUS before that canonical tie-break.",
+    "authority_rule": "A route score is an action-local abstract margin, not a simulated successor or a claim that an exact multi-turn route will occur. It may guide only the covered current request classes after the capsules and mechanical canary pass."
+  },
+  "qualified_metadata_audit": {
+    "currently_available": [
+      "CardTableV1 numeric card identity/type, HP, weakness, resistance, retreat, stage, attack IDs, base damage and energy-count metadata.",
+      "Exact Mega Abomasnow 60-card profile and native deck receipt.",
+      "PASS semantic capsules for Carmine 1192, Lillie's Determination 1227, Ultra Ball 1121, Precious Trolley 1126 and Snover-to-Mega-Abomasnow evolution.",
+      "Public current HP, attached energy counts, active/bench positions, visible own hand, public events, public hand/deck/Prize counts and complete legal options."
+    ],
+    "missing_for_safe_route_authority": [
+      "CardTableV1 has no PrizeStaticV1 field. ex/mega_ex flags are present, but this audit does not assume that those flags alone prove the engine's Prize-unit rule. A versioned card_id-to-prize_units capsule is required.",
+      "The static table records damage and costs but does not itself prove effect execution or damage-modifier timing. Snover attacks 1044/1045 are the smallest candidate attack subset, but an exact no-extra-effect/weakness-resistance capsule must be retained before treating them as route edges.",
+      "The current repository has no versioned numeric mapping from all 49 selection contexts to qualified card-effect contexts. A request must therefore fail closed unless context_card_id/effect_card_id and the full semantic role match an approved capsule.",
+      "No route-critical Mega Abomasnow attack is currently exact: 1046 and 1047 remain PARTIAL. Kyogre 1042 and 1043 and Stadium 1262 also remain PARTIAL."
+    ],
+    "smallest_unblock": {
+      "nonzero_safe_subset": [
+        "Add PrizeStaticV1 for candidate and any publicly revealed target cards, bound to the current engine/card version.",
+        "Retain exact current-request context capsules for the already-PASS actions 1121, 1126, 1192, 1227 and Snover evolution.",
+        "Retain exact attack capsules for Snover 1044 and 1045, including base damage, Water typing, energy threshold and no additional effect, or explicitly keep attack choices delegated.",
+        "Add a public route-decision schema that records coverage, unknowns, partial dependencies and B0 delegation separately from final-adapter fallback."
+      ],
+      "Mega_attacker_usefulness": "To make the oracle useful for actual Mega Abomasnow KO routing, close at least one exact Mega attack capsule, preferably 1046 or 1047 with its complete causal public transition and damage rule. Exact full-deck route authority additionally needs the Kyogre branches and Surfing Beach if those branches are used.",
+      "not_sufficient": "Static CSV prose, aggregate deck-count deltas, the current CardTable damage=0 for variable attacks, or a future fixture successor cannot substitute for these capsules."
+    }
+  },
+  "formulations": [
+    {
+      "id": "B1-R-A-CURRENT-ROBUST-LOWER-BOUND",
+      "status": "IMPLEMENTABLE_AFTER_METADATA_CAPSULES",
+      "material_difference": "Maximin-style lexicographic scoring. It prefers a guaranteed current attack/Prize improvement and a visible safety margin before setup value; unknown route edges are never favorable.",
+      "inputs": ["current active/bench entities", "current legal option semantics", "qualified attack/HP/weakness/resistance metadata", "qualified PrizeStaticV1", "visible energy and hand counts", "public player Prize counts"],
+      "decision_key": [
+        "terminal_override descending (evaluator-only; never a current PolicyV1 action)",
+        "guaranteed_current_ko descending",
+        "public_prize_distance_lower_bound ascending",
+        "visible_threat_loss_guard descending",
+        "next_attacker_energy_deficit_after_action ascending",
+        "backup_attacker_count descending",
+        "bench_liability ascending",
+        "canonical_semantic_action_key ascending only after the strategic-key tie check; non-equivalent equal strategic keys are AMBIGUOUS"
+      ],
+      "feature_definitions": {
+        "guaranteed_current_ko": "For a qualified attack option only: effective static damage, including a qualified weakness/resistance rule and a known public target card, is at least the current public opponent Active HP. No after-action HP is read. This is a non-terminal current-KO predicate, not proof of an immediate game win.",
+        "public_prize_distance_lower_bound": "max(0, opponent public Prize count - qualified Prize units of the current visible Active target) when guaranteed_current_ko is true; otherwise the current public Prize count. This is a lower bound, not a complete route.",
+        "visible_threat_loss_guard": "False if the current public opponent Active has a qualified ready attack that can KO the candidate Active and the action does not itself produce guaranteed KO or a qualified ready replacement. Hidden opponent outs are not estimated.",
+        "next_attacker_energy_deficit_after_action": "Minimum nonnegative Water/Colorless energy deficit to a qualified, visible candidate attacker after applying only the current option's explicit local attach/evolve interpretation. If the target attack is partial, the value is UNKNOWN and the request delegates.",
+        "backup_attacker_count": "Count of visible route-compatible candidate attackers with a qualified ready attack; hand cards are not treated as ready and hidden deck copies are not counted.",
+        "bench_liability": "Only public static Prize units, visible gust/access fields and public bench capacity; unknown spread/effect behavior yields UNKNOWN."
+      },
+      "fail_closed": ["unknown Prize units", "unknown attack capsule", "any PARTIAL effect", "unsupported request context", "incomplete legal option coverage", "non-equivalent tied keys"]
+    },
+    {
+      "id": "B1-R-B-CURRENT-PUBLIC-THREAT-MARGIN",
+      "status": "IMPLEMENTABLE_AFTER_METADATA_CAPSULES",
+      "material_difference": "Threat-first current-state scoring. It may choose preparation or denial over a nominal current Prize improvement when the public board exposes a one-hit threat; it does not use the robust route-distance key as its primary objective.",
+      "inputs": ["same qualified current-state inputs as B1-R-A"],
+      "decision_key": [
+        "terminal_override descending (evaluator-only; never a current PolicyV1 action)",
+        "visible_threat_denial descending",
+        "current_active_survival_slack descending (larger positive slack preferred)",
+        "guaranteed_current_ko descending",
+        "next_attacker_ready_after_action descending",
+        "public_prize_distance_lower_bound ascending",
+        "backup_attacker_count descending",
+        "resource_reserve descending",
+        "bench_liability ascending",
+        "canonical_semantic_action_key ascending only after the strategic-key tie check; non-equivalent equal strategic keys are AMBIGUOUS"
+      ],
+      "feature_definitions": {
+        "visible_threat_denial": "Whether the current option removes a qualified visible one-hit threat or moves the candidate to a qualified visible attacker outside that threat. It never assumes an unknown opponent response.",
+        "current_active_survival_slack": "Candidate Active HP minus the strongest qualified ready attack damage currently visible from the opponent Active. Positive slack is safer and is ranked first. UNKNOWN if attack effect/type metadata or the candidate/opponent target card is not qualified.",
+        "guaranteed_current_ko": "The same current-only predicate as A, retained after the threat terms rather than before them.",
+        "next_attacker_ready_after_action": "Binary current-state threshold after the option's explicit local attach/evolve delta; not a successor observation.",
+        "resource_reserve": "Visible route-compatible Basic Water and recovery/search cards only; hidden slots remain intervals and do not become cards."
+      },
+      "divergence_fixture": "With a qualified 10-damage current KO that leaves the candidate Active in a visible one-hit threat and a qualified attach-to-backup option that removes that public threat but takes no Prize, A may choose the current robust KO when its lower-bound route is shorter, while B chooses the threat-denial/positive-survival-margin option. A second fixture sets the public Prize count to one and verifies that a qualified KO is not rejected by the guard; only the subsequent engine terminal result, not the current PolicyV1 request, can claim an immediate game win.",
+      "fail_closed": ["same as B1-R-A", "plus no public threat comparison when either side lacks qualified attack/type metadata"]
+    }
+  ],
+  "mega_abomasnow_activation_matrix": [
+    {
+      "selection_type": 0,
+      "selection_name": "MAIN",
+      "option_types": [7, 8, 9, 10, 11, 12, 13, 14],
+      "active_coverage": {
+        "PLAY_7": "Only card_id 1121, 1126, 1192 or 1227 with an exact PASS context capsule. Card_id 1262 is always B0_DELEGATE.",
+        "ATTACH_8": "Only a visible own target whose qualified route attack is 1044 or 1045, with an explicit Basic Water attach and no partial dependency. Targets 721 or 723 delegate when the score would use 1042, 1043, 1046 or 1047; unknown targets delegate.",
+        "EVOLVE_9": "The 722-to-723 mechanic is PASS, but a prize-route score for the resulting 723 necessarily references only PARTIAL attacks. Route authority therefore delegates; a future SETUP_ONLY diagnostic may record it without claiming route authority.",
+        "ABILITY_10": "No active candidate coverage. Source 1262 is PARTIAL; other skill sources lack an approved exact context capsule.",
+        "DISCARD_11": "No active route coverage in this version. Ultra Ball's PASS discard cost is a selection_type=CARD (option_type=CARD=3) request in context DISCARD=8, not the MAIN option_type=DISCARD=11; that CARD request is covered only when its exact context/effect capsule matches. All MAIN DISCARD options delegate.",
+        "RETREAT_12": "Always B0_DELEGATE in this version. MAIN RETREAT carries no replacement target; the legal switch target is exposed only by a later request, and consuming that future request would violate the current-only PolicyV1 boundary.",
+        "ATTACK_13": "Only attack_id 1044 or 1045 with a qualified Snover attack capsule and a current Snover Active. Attack IDs 1042, 1043, 1046 and 1047 are always B0_DELEGATE.",
+        "END_14": "Not a route-progress action; delegate to B0 unless a separate no-op contract explicitly marks it equivalent to the frozen control."
+      },
+      "request_activation_condition": "All available options in the complete MAIN request must satisfy the covered set above, and the request must be a supported singleton or optional singleton with explicit STOP semantics. A single available partial or unknown alternative, a later replacement-target dependency, or any unsupported compound count/ordering forces B0_DELEGATE; scoring only a safe prefix would violate DR-002/DR-022 and hide an unsupported route."
+    },
+    {
+      "selection_type": 1,
+      "selection_name": "CARD",
+      "option_types": [3],
+      "active_coverage": "Only exact PASS contexts for Ultra Ball 1121 search-to-hand, Precious Trolley 1126 basic-Pokemon-to-bench, Carmine 1192, or Lillie's Determination 1227. The full context_card_id/effect_card_id and choice_role must match; otherwise B0_DELEGATE. The PASS Snover evolution capsule belongs only to selection_type=EVOLVE (type 7) and does not activate CARD requests.",
+      "request_activation_condition": "Every available card option must be in the same qualified context and all route fields must be public. A mixed request containing an unsupported or partial choice delegates."
+    },
+    {
+      "selection_type": 2,
+      "selection_name": "ATTACHED_CARD",
+      "option_types": [4, 5],
+      "active_coverage": "None in the current Mega Abomasnow capsule set. The known route use is Kyogre Swirling Waves 1043 energy discard and remains PARTIAL.",
+      "request_activation_condition": "Always B0_DELEGATE until a non-partial exact context capsule is added."
+    },
+    {
+      "selection_type": 3,
+      "selection_name": "CARD_OR_ATTACHED_CARD",
+      "option_types": [3, 4, 5],
+      "active_coverage": "CARD type 3 may activate only under the PASS contexts listed for selection type 1. ATTACHED_CARD types 4/5 have no active coverage.",
+      "request_activation_condition": "Any available type 4/5 option, partial context, or mixed unsupported context forces B0_DELEGATE."
+    },
+    {
+      "selection_type": 4,
+      "selection_name": "ENERGY",
+      "option_types": [6],
+      "active_coverage": "None. The known candidate route use is discarding attached energy for Swirling Waves 1043, which is PARTIAL.",
+      "request_activation_condition": "Always B0_DELEGATE until an exact non-partial energy context capsule exists."
+    },
+    {
+      "selection_type": 5,
+      "selection_name": "SKILL",
+      "option_types": [15],
+      "active_coverage": "None. A skill sourced from Stadium 1262 is PARTIAL and other skill contexts are not qualified by the current Phase A PASS matrix.",
+      "request_activation_condition": "Always B0_DELEGATE in this version."
+    },
+    {
+      "selection_type": 6,
+      "selection_name": "ATTACK",
+      "option_types": [13],
+      "active_coverage": "Attack IDs 1044 and 1045 only, after the exact Snover attack capsule closes. IDs 1042, 1043, 1046 and 1047 are always delegated.",
+      "request_activation_condition": "All available options must be qualified attack IDs; one partial or unknown attack option makes the complete request B0_DELEGATE."
+    },
+    {
+      "selection_type": 7,
+      "selection_name": "EVOLVE",
+      "option_types": [9],
+      "active_coverage": "No prize-route authority despite the PASS 722-to-723 evolution mechanic, because the resulting Mega attack routes remain PARTIAL. SETUP_ONLY may be measured separately, never promoted as B1 route authority.",
+      "request_activation_condition": "B0_DELEGATE for the route arm."
+    },
+    {
+      "selection_type": 8,
+      "selection_name": "COUNT",
+      "option_types": [0],
+      "active_coverage": "None. No exact count-choice route capsule is present for this deck.",
+      "request_activation_condition": "Always B0_DELEGATE."
+    },
+    {
+      "selection_type": 9,
+      "selection_name": "YES_NO",
+      "option_types": [1, 2],
+      "active_coverage": "None for the prize-route arm. Although Carmine's card semantics are PASS, a yes/no response's route consequence is not a current-only exact route without a qualified post-choice capsule.",
+      "request_activation_condition": "Always B0_DELEGATE in this version."
+    },
+    {
+      "selection_type": 10,
+      "selection_name": "SPECIAL_CONDITION",
+      "option_types": [16],
+      "active_coverage": "None. No candidate card/effect capsule qualifies this request.",
+      "request_activation_condition": "Always B0_DELEGATE."
+    }
+  ],
+  "coverage_proof": {
+    "candidate_attack_ids": {
+      "all_deck_attacks": [1042, 1043, 1044, 1045, 1046, 1047],
+      "qualified_candidate_subset_after_required_capsule": [1044, 1045],
+      "partial_attack_ids": [1042, 1043, 1046, 1047],
+      "metadata_safe_fraction": "2/6 attack IDs, not an action-frequency estimate",
+      "mega_abomasnow_attack_activation": "0/2 until 1046 or 1047 closes; every Mega Abomasnow attack option is currently PARTIAL",
+      "kyogre_attack_activation": "0/2 until 1042 and 1043 close; both Kyogre attack options are currently PARTIAL",
+      "snover_attack_activation": "2/2 after the exact 1044/1045 capsule closes"
+    },
+    "necessary_b0_states": [
+      "Any terminal/no-selection state or stale terminal selection data, handled by the terminal-first adapter.",
+      "Any current request with an available option depending on 1042, 1043, 1046, 1047 or 1262 effect/skill behavior.",
+      "Any current request whose card/effect context is not in the versioned PASS capsule set, including all attached-energy, energy-count, skill, special-condition and unknown count contexts.",
+      "Any request lacking qualified PrizeStaticV1, attack/type/damage, HP, or context metadata needed by the selected key.",
+      "Any request containing hidden opponent identity, private baseline data, successor data, response weights, or a manual random outcome.",
+      "Any request with an unsupported legal alternative, ambiguous non-equivalent tie, stale identity, incomplete option list, or invalid semantic mapping.",
+      "Any request where a route claim would require a future attacker, future draw, future replacement Active, future opponent response, or a complete multi-turn route rather than the current lower bound."
+    ],
+    "proof_argument": "The route key is defined only over current public values. If a required value is not a current public value or a versioned qualified static/capsule value, two hidden or future worlds can share the current observation while producing different route outcomes. A deterministic public policy cannot distinguish those worlds, so selecting a route-authoritative action would violate DR-018/DR-023/DR-024 and the B1 design boundary. Delegating is therefore necessary, not a conservative performance preference."
+  },
+  "deterministic_fixtures": [
+    {
+      "id": "R01-qualified-metadata-receipt",
+      "purpose": "Bind Prize units, attack capsules, type/weakness/resistance and contexts to the exact current asset hashes.",
+      "expected": "PASS only when every lookup is numeric, version-bound and independently revalidated; no CSV effect prose is executable."
+    },
+    {
+      "id": "R02-snover-attack-readiness",
+      "purpose": "Current public Active/Bench Snover states with 0, 1 and 2 Water energy and legal 1044/1045 options.",
+      "expected": "Readiness deficit is exact from current attached energy; permutation leaves the same semantic choice; no successor snapshot is read."
+    },
+    {
+      "id": "R03-robust-versus-threat-margin-divergence",
+      "purpose": "Two current legal actions: a qualified immediate one-Prize KO with a visible one-hit reply threat, and a qualified attach/retreat setup that removes that threat without a current Prize.",
+      "expected": "A prioritizes guaranteed current route lower bound subject to its guard; B prioritizes visible threat denial/survival margin. A second one-Prize fixture verifies the guard does not reject a qualified decisive KO; only the subsequent engine terminal result can establish a game win."
+    },
+    {
+      "id": "R04-partial-effect-fail-closed",
+      "purpose": "Expose options 1042, 1043, 1046, 1047 and ability source 1262 with otherwise favorable static numbers.",
+      "expected": "Both formulations return B0_DELEGATE, never a guessed route score."
+    },
+    {
+      "id": "R05-prize-metadata-fail-closed",
+      "purpose": "Remove or alter the PrizeStaticV1 receipt while keeping CardStatic ex/mega_ex flags.",
+      "expected": "Route authority is rejected; ex flags are not silently treated as Prize units."
+    },
+    {
+      "id": "R06-hidden-state-invariance",
+      "purpose": "Change opponent hidden hand/deck/face-down Prize identities while preserving every current public field and legal semantic option.",
+      "expected": "Decision and route key are identical, or both requests reject hidden input; no hidden prior is consulted."
+    },
+    {
+      "id": "R07-complete-option-boundary",
+      "purpose": "Add a supported and an unsupported legal option to the same complete request, then permute all options 32 times.",
+      "expected": "The mixed request delegates rather than ranking a safe prefix. A fully supported request is invariant to permutation; non-equivalent equal keys are AMBIGUOUS."
+    },
+    {
+      "id": "R08-context-capsule-boundary",
+      "purpose": "Vary context_card_id/effect_card_id and choice_role for otherwise identical CARD/DISCARD/PLAY options.",
+      "expected": "Only the exact PASS context set activates; unknown or missing context delegates."
+    },
+    {
+      "id": "R09-current-only-lifecycle",
+      "purpose": "Deliver fresh episodes, duplicate requests, stale sequences, terminal markers and a new start marker.",
+      "expected": "Route state is reset/owned by episode and player; no prior successor or terminal data affects a current decision."
+    },
+    {
+      "id": "R10-compound-action",
+      "purpose": "Exercise optional, mandatory, ordered and unordered current requests for all active option classes.",
+      "expected": "The existing CompoundActionBuilder enforces count, uniqueness, STOP legality and trace integrity. Route authority is active only for the explicitly supported singleton/optional-STOP forms; every max_count>1 or otherwise unsupported ordered/unordered compound request delegates to B0, and delegation is not counted as final-adapter fallback."
+    }
+  ],
+  "complexity_and_runtime": {
+    "algorithm": "Single pass over current public entities plus single pass over complete legal options; static metadata lookups are hash-map reads. No branch expansion, successor simulation, sampling, search or network.",
+    "time_complexity": "O(E + O + A), where E is current public entity count, O is complete current legal-option count and A is the small set of qualified current attacker/target records (at most the visible own/opponent Active and Bench records).",
+    "space_complexity": "O(E + O) transient references; no future snapshots or hidden-world particles are retained.",
+    "candidate_static_bound": "The exact deck exposes six attack IDs; the restricted first subset is two Snover attacks. Candidate visible board traversal is bounded by public bench capacity and complete legal options, not a fixed option prefix.",
+      "observed_baseline_reference": "No retained B0 latency artifact with the previously quoted 0.58 ms p50/2.34 ms p99 values is present in this checkout, so those numbers are not evidence. The runtime arm must measure B0 and B1 p50/p95/p99 and cumulative CPU under the same fresh-process canary, and a versioned p99/cumulative-CPU acceptance budget must be frozen before any route launch; this audit does not claim a route latency result.",
+    "randomness": "None introduced; engine randomness remains engine-controlled.",
+      "runtime_safety": "A missing or non-finite metadata value, unknown context, unsupported option, or latency outside the separately versioned acceptance budget is a fail-closed delegation/hard reliability event as defined by the B0-compatible experiment contract. The current B0 config does not yet freeze that latency budget, so this remains a launch prerequisite."
+  },
+  "promotion_experiment_contract": {
+    "experiment_id": "B1-RUNTIME-ORACLE-001",
+    "status": "PREPARED_NOT_ELIGIBLE",
+    "arms": ["B0_CONTROL", "B1-R-A-CURRENT-ROBUST-LOWER-BOUND", "B1-R-B-CURRENT-PUBLIC-THREAT-MARGIN"],
+    "shared_harness": "B0-MA-CONTROL-001",
+    "opponents": ["rule:dragapult-ex", "rule:iono", "rule:mega-abomasnow-ex", "rule:mega-lucario-ex"],
+    "deployment": "Natural deployment with candidate-player-0/player-1 balance. Forced first/second diagnostics remain separate. No paired-seed claim.",
+    "prerequisites": [
+      "PrizeStaticV1 and qualified Snover attack/context capsules pass independent review.",
+      "R01-R10 fresh-process fixtures pass, including the mixed-request fail-closed test.",
+      "Candidate path has no private baseline/native raw imports and exposes per-request route coverage/delegation diagnostics.",
+      "B0 independent mechanical review is PASS with zero hard counters.",
+      "A versioned p99 decision-latency and cumulative-CPU acceptance budget is frozen prospectively; observed timing is not itself a threshold.",
+      "Exact engine, wrapper, card, card-table, deck, source and config receipts are sealed; no unrelated dirty path is included in candidate source hash."
+    ],
+    "mechanical_canary": {
+      "games_per_anchor_per_candidate_seat": 1,
+      "route_arm_launch": "blocked until all prerequisites pass",
+      "purpose": "Interface/reliability only; no strength claim",
+      "stop_on": ["invalid action", "fallback", "post-terminal action", "timeout", "native failure", "stale request", "hidden leak", "unsupported route selected", "hash mismatch", "missing output"]
+    },
+    "local_screen": {
+      "games_per_anchor_per_candidate_seat": 4,
+      "route_activation_floor": "at least 8 games and at least 5 percent of eligible decisions, otherwise INCONCLUSIVE/no-op",
+      "delegation_accounting": "route_active, route_abstention, B0_delegation and final-adapter fallback are separate counters"
+    },
+    "scaled_confirmation": {
+      "private_kaggle_games_per_arm": 128,
+      "confirmation_games_per_arm": 512,
+      "statistics": "Same anchor/seat-stratified independent bootstrap with 10,000 resamples, Wilson 95 percent intervals and candidate-perspective (wins + 0.5 draws)/games as the outcome score.",
+      "hard_reliability_floor": "All requested games complete; zero invalid actions, final-adapter fallbacks, post-terminal actions, timeouts, native failures, stale requests, hidden leaks, unsupported selected routes, NaN/Inf, source/config/card/engine hash mismatches, and violations of the separately versioned p99 decision-latency/cumulative-CPU budget.",
+      "promotion_floor": "A route arm is only an experimental challenger if activation is sufficient, all hard floors pass, every anchor floor passes, and its independent bootstrap 95 percent lower bound over B0 is strictly greater than +0.02 with point estimate at least B0. This does not freeze a deck or authorize submission.",
+      "no_op_rule": "Low route activation is INCONCLUSIVE, not a negative result and not permission to broaden semantics after seeing outcomes."
+    },
+    "external_actions": {
+      "native_runs_in_this_audit": 0,
+      "kaggle_runs_in_this_audit": 0,
+      "submission": false,
+      "training": false
+    }
+  },
+  "implementation_ready_next_task": {
+    "exact_task": "Add a new, separately reviewed current-state route decision module and its fixtures; do not modify the frozen B0 scorer or private anchors.",
+    "ordered_steps": [
+      "Create a versioned PrizeStaticV1 receipt for the exact card/engine package and a qualified attack/context capsule manifest. Start with Snover 1044/1045 and the already-PASS card contexts; keep 1042/1043/1046/1047/1262 PARTIAL.",
+      "Implement B1-R-A and B1-R-B as pure current-observation evaluators with explicit UNKNOWN/DELEGATE outcomes, complete-option coverage and the strategic-prefix tie rule. Do not accept successor snapshots, counterfactual outcomes or response weights in PolicyV1; do not use the canonical semantic key to break non-equivalent strategic ties.",
+      "Add R01-R10 fresh-process unit/contract tests, including hidden-state invariance, unsupported mixed-request delegation, 32 option permutations, lifecycle, singleton/optional STOP, explicit delegation for every max_count>1 or unsupported ordered/unordered compound request, and exact request identity.",
+      "Integrate per-request route_active/abstention/B0_delegation diagnostics into the B0-compatible harness without changing B0 outcome arithmetic.",
+      "Have an independent reviewer recalculate the fixture verdict and inspect the source boundary. Only then run the one-game-per-cell mechanical canary; native A/B screen remains blocked until the route-critical capsule gate passes."
+    ],
+    "do_not_do": [
+      "Do not use CardStatic ex/mega_ex flags as unqualified Prize values.",
+      "Do not score a Mega Abomasnow attack, Kyogre attack, Surfing Beach skill, or any downstream selection as if its PARTIAL semantics were exact.",
+      "Do not rank only a supported prefix when the complete legal request contains an unsupported option.",
+      "Do not use hidden hand/deck/Prize identities, response priors, future snapshots, private baseline code, or manually controlled randomness.",
+      "Do not claim route strength, close RQ-004/RQ-005, freeze the deck, submit, or launch Kaggle from this audit."
+    ]
+  },
+  "verification": {
+    "knowledge_base_validation": "PASS",
+    "report_json_validation": "PASS",
+    "production_code_written": false,
+    "native_or_kaggle_run": false,
+    "report_digest_method": "External digest only: run sha256sum reports/deterministic/phase-b1-runtime-oracle-audit-v1.json after writing. The digest is intentionally not embedded because changing this field would change the digest itself.",
+    "report_digest_record": "The post-write digest is recorded in the audit handoff/message, not in this self-hashed JSON report."
+  }
+}
