@@ -1,0 +1,298 @@
+{
+  "record_id": "phase-b-semantics-audit-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "AUDIT_COMPLETE_NO_ROUTE_UPGRADE",
+  "audited_head": "fda9de6fb0c79c5fbb5b9b8d5654b67d9787e8bd",
+  "scope": {
+    "mode": "read_only_semantics_and_contract_audit",
+    "production_source_changed": false,
+    "private_baselines_changed": false,
+    "external_runs": 0,
+    "submission": false,
+    "candidate_deck": "mega-abomasnow-ex",
+    "engine_scope": "local_official_bundled_CABT_sample_submission"
+  },
+  "knowledge_base": {
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS",
+    "counts": {
+      "sources": 56,
+      "claims": 62,
+      "strategies": 20,
+      "decision_rules": 36,
+      "anti_patterns": 14,
+      "search_features": 16,
+      "archetypes": 17,
+      "cards": 49,
+      "matchups": 12,
+      "matchup_plans": 20,
+      "observed_replay_patterns": 10,
+      "contradictions": 6,
+      "research_questions": 15
+    },
+    "queried_ids": [
+      "DR-001", "DR-002", "DR-004", "DR-005", "DR-009", "DR-010", "DR-012",
+      "DR-013", "DR-014", "DR-015", "DR-018", "DR-022", "DR-023", "DR-024",
+      "DR-025", "DR-030", "DR-031", "DR-032", "DR-033", "DR-034", "DR-035",
+      "DR-036", "AP-009", "AP-010", "AP-014", "RQ-004", "RQ-005", "RQ-006",
+      "RQ-007", "RQ-008", "RQ-009", "CON-001", "CON-002", "CON-004"
+    ],
+    "interpretation": "The KB was validated before and after this audit. Its very-high interface, public-information, CABT-semantics, version-binding, natural-seat, and no-manual-randomness rules remain binding. Route-specific rows are hypotheses until exact native transitions prove them."
+  },
+  "asset_bindings": {
+    "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "phase_a_report": "reports/deterministic/phase-a-native-semantics-v2.json",
+    "phase_a_report_status": "PASS_WITH_ROUTE_STATUS_MATRIX"
+  },
+  "authority_boundary": {
+    "static_metadata_is_not_executable_semantics": true,
+    "card_table_contains": "numeric identity, type, HP, weakness/resistance, retreat, stage, attack IDs, damage and energy-count metadata",
+    "card_table_does_not_bind": "effect text execution, discard/recycle identity, damage modifiers, or per-effect timing",
+    "policy_rule": "No card-specific production authority may be derived from a PARTIAL route. A faithful reproduction of the old native anchor must be labeled FROZEN_CONTROL_REPRODUCTION and is not a new strategic result."
+  },
+  "route_findings": [
+    {
+      "priority": "P0",
+      "card_id": 721,
+      "attack_id": 1042,
+      "label": "Kyogre Riptide",
+      "verdict": "PARTIAL_RETAIN",
+      "source_facts": [
+        "Official CSV and native API identify attack 1042, one Water energy cost, variable damage, and a recycle-like effect description.",
+        "Card table binds Kyogre 721 to attack 1042 with damage metadata 0 and one Water energy requirement."
+      ],
+      "live_evidence": [
+        "14 attack selections were observed.",
+        "All 14 had one public HP_CHANGE event.",
+        "Immediate actor deck-count deltas were 0, 1, 2, 4, 5, 11, 12, or 16, with no retained per-card transition proving the effect.",
+        "The report has zero recycle_basic_water_and_damage causal proofs."
+      ],
+      "cannot_assert": [
+        "that damage is exactly 20 times the Basic Water count in the discard",
+        "that only Basic Water is recycled",
+        "that all eligible discard cards are recycled, or the exact timing of recycle versus damage"
+      ],
+      "upgrade_test": "Run repeated native transitions with known public discard Basic Water counts and a legal Kyogre attack; retain before/after discard and deck counts, public movement events with card IDs where exposed, and HP delta. Require count identity and damage equation in more than one count stratum."
+    },
+    {
+      "priority": "P0",
+      "card_id": 721,
+      "attack_id": 1043,
+      "label": "Kyogre Swirling Waves",
+      "verdict": "PARTIAL_RETAIN",
+      "source_facts": [
+        "Official CSV and native API identify a 130-damage attack with a two-Energy discard description.",
+        "Card table binds attack 1043 to 130 damage metadata and Water/Colorless/Colorless cost encoding."
+      ],
+      "live_evidence": [
+        "One attack selection was observed.",
+        "One public HP_CHANGE event was observed.",
+        "The immediate deck delta was zero and the counted Energy-to-discard movement for Basic Water was zero.",
+        "The report has zero discard_two_energy_and_damage causal proofs."
+      ],
+      "cannot_assert": [
+        "that two attached Energy cards are discarded",
+        "which Energy identities are selected when more than two are attached",
+        "whether the observed HP change is the full 130 after all modifiers"
+      ],
+      "upgrade_test": "Use an actor Kyogre with at least three publicly identified attached Energy cards and a target with controlled HP/weakness/resistance; require exactly two attached-card movement events to discard and an independently reconciled damage delta."
+    },
+    {
+      "priority": "P0",
+      "card_id": 1262,
+      "label": "Surfing Beach",
+      "verdict": "PARTIAL_RETAIN",
+      "source_facts": [
+        "Official CSV and native API identify Stadium 1262 with one Water-Pokemon switch skill.",
+        "Card table binds 1262 as a Stadium with one skill but contains no executable skill semantics."
+      ],
+      "live_evidence": [
+        "Nine play/after observations and nine semantic requests were recorded.",
+        "The branch recorded zero skill actions and zero stadium_skill_water_switch causal proofs.",
+        "No executed, post-play switch event connects the Stadium to the requested skill in the retained aggregate."
+      ],
+      "cannot_assert": [
+        "that the skill was activated",
+        "that it is once per player turn",
+        "that both Active and Bench targets must be Water Pokemon, or that non-Water choices are rejected"
+      ],
+      "upgrade_test": "Play 1262, capture the subsequent SKILL request and execute it with visible Water Active/Bench cards; require a SWITCH event with the same actor and serials, then attempt a second skill in the same turn and a non-Water target in a separate fixture."
+    },
+    {
+      "priority": "P0",
+      "card_id": 723,
+      "attack_id": 1046,
+      "label": "Mega Abomasnow Hammer-lanche",
+      "verdict": "PARTIAL_RETAIN",
+      "source_facts": [
+        "Official CSV and native API identify a six-card top-deck discard and variable 100-damage-per-Basic-Water description.",
+        "Card table binds attack 1046 to damage metadata 0 and two Water energy requirements."
+      ],
+      "live_evidence": [
+        "22 attack selections were observed.",
+        "Every observed attack had actor deck-count delta -6 and one HP_CHANGE event.",
+        "Observed HP_CHANGE values were -100, -300, -400, -500, and -600 with counts 1, 3, 11, 6, and 1 respectively.",
+        "The report has zero discard_top_six_and_damage causal proofs, so the six cards and their Basic-Water identities are not causally retained as a complete transition."
+      ],
+      "cannot_assert": [
+        "that exactly the top six cards were moved to discard rather than another engine transition producing the same count delta",
+        "that each 100-damage increment corresponds exactly to a Basic Water card among those six",
+        "that the damage values are unmodified base values in all contexts"
+      ],
+      "upgrade_test": "Retain all six native public movement events and card identities for several attacks, reconcile deck -6 and discard +6, count Basic Water among exactly those six, and reconcile HP delta after weakness/resistance. Repeat across zero, one, and multiple Basic-Water top-six strata."
+    },
+    {
+      "priority": "P0",
+      "card_id": 723,
+      "attack_id": 1047,
+      "label": "Mega Abomasnow Frost Barrier",
+      "verdict": "PARTIAL_RETAIN",
+      "source_facts": [
+        "Official CSV and native API identify a 200-damage attack and a next-opponent-turn damage reduction description.",
+        "Card table binds attack 1047 to damage metadata 200 and three Water energy requirements."
+      ],
+      "live_evidence": [
+        "Four attack selections were observed and each had one HP_CHANGE event.",
+        "The retained branch recorded four post_barrier_hp_events:0 observations.",
+        "The report deliberately does not infer a damage modifier from those trajectories and has no causal proof."
+      ],
+      "cannot_assert": [
+        "that the reduction is 30 damage",
+        "that it applies only during the opponent's next turn",
+        "whether weakness/resistance ordering, damage counters, effects, or repeated attacks interact with the modifier"
+      ],
+      "upgrade_test": "Run paired native fixtures with identical public setup, a known opponent attack and no weakness/resistance confound; compare next-turn HP delta after Frost Barrier versus a no-Barrier control, then test a later turn and a damage-counter effect separately."
+    }
+  ],
+  "upgrade_decision": {
+    "any_partial_route_upgraded": false,
+    "reason": "The source CSV/native API text is metadata and the Phase A aggregate contains observations but not sufficient per-card causal transition proofs. The strict status matrix remains authoritative.",
+    "generic_phase_b_integration": "NOT_BLOCKED",
+    "card_specific_route_authority": "BLOCKED_UNTIL_FIXTURES",
+    "safe_control_translation": "A standalone policy may reproduce the frozen native anchor's observed priorities for a control comparison, but it must not present those partial-effect assumptions as newly validated strategic rules."
+  },
+  "phase_b_contract_red_team": {
+    "P0_hidden_boundary": {
+      "risk": "A public-only typed policy can still accidentally use raw/private data, hidden entity identities, selection-local identifiers, or opponent hand identities if the adapter leaks them.",
+      "required_tests": [
+        "Static import/source scan rejects NativeRulePolicy, private baseline paths, native raw mappings, cg imports, and opponent-hand traversal from the candidate policy module.",
+        "Adversarial observations vary hidden opponent hand/deck/Prize identities while preserving public counts and legal options; action semantic choice must be unchanged.",
+        "Opponent hand must be None in the semantic snapshot; visible revealed cards and hand_count remain legal public inputs.",
+        "Selection-local deck/looking cards are allowed only because the engine exposes them to the acting player; they must not be treated as a durable deck-order oracle."
+      ],
+      "evidence": ["DR-018", "DR-023", "DR-024", "DR-025", "AP-009"]
+    },
+    "P0_option_contract": {
+      "risk": "Scoring raw indexes, a fixed prefix, or a stale request can silently miss legal lines or submit invalid references.",
+      "required_tests": [
+        "Every option is scored and the final adapter validates type, bounds, availability, uniqueness, source/target semantics, and request identity.",
+        "Permute every option list and require the same semantic choice; compare set equivalence for UNORDERED and sequence equivalence for ORDERED requests.",
+        "Tie fixtures include duplicate semantic fingerprints and distinct cards with the same card ID; the tie policy must be deterministic without consulting original_index or input order, or fail closed on ambiguous ties.",
+        "A forged option with changed source/target/card role but reused original_index or fingerprint is rejected."
+      ],
+      "evidence": ["DR-002", "DR-022", "DR-026", "CON-004", "RQ-006"]
+    },
+    "P0_perspective": {
+      "risk": "A policy or outcome aggregator hard-coded to player 0 can invert target/attacker logic and report the wrong WDL.",
+      "required_tests": [
+        "Run the same semantic board with acting_player 0 and 1 and verify self/opponent roles follow acting_player.",
+        "Mirror a two-player synthetic fixture and require corresponding action semantics, not fixed player IDs.",
+        "Aggregate candidate score as winner==candidate_player, draw==0.5, loss==0; retain actual first_player separately."
+      ],
+      "evidence": ["DR-031", "DR-032", "RQ-004"]
+    },
+    "P0_compound_action": {
+      "risk": "A deterministic scorer can produce a valid-looking prefix but fail ordered multi-select, optional selection, or STOP legality.",
+      "required_tests": [
+        "Cover min=max=0, mandatory single, optional 0..1, mandatory multi-select, optional multi-select with early STOP, and max-count completion.",
+        "STOP is emitted only after min_count and before max_count; it is never emitted at max_count or before minimum.",
+        "Ordered SKILL_ORDER preserves semantic sequence; UNORDERED equivalence compares sets while still submitting unique original indexes.",
+        "Validate the full retained decoder trace and semantic fingerprints, not only submitted indexes."
+      ],
+      "evidence": ["DR-002", "DR-022", "src/ptcg_rl/g1/actions.py:65-184", "src/ptcg_rl/g1/actions.py:187-274"]
+    },
+    "P0_lifecycle": {
+      "risk": "State can leak across games, players, policies, workers, or stale requests even if individual actions are legal.",
+      "required_tests": [
+        "Reset on start/deck, terminal, error, and worker replacement; assert no active state survives the relevant boundary.",
+        "Use two episode UUIDs and both player indexes with the same policy class; assert independent ledgers and no cross-player memory.",
+        "Duplicate identical (selection_seq, request_id) is idempotent; a reused request_id with changed request content is rejected rather than returning a cached action.",
+        "Stale and out-of-order selection sequences fail closed."
+      ],
+      "evidence": ["DR-001", "DR-025", "src/ptcg_rl/g1/recurrent.py:19-82"]
+    },
+    "P1_provenance_and_harness": {
+      "risk": "A passing local tournament can be unreviewable if candidate perspective, source scope, hashes, dirty state, or immutable evidence are ambiguous.",
+      "required_tests": [
+        "Manifest actual engine library, game/API/sim wrappers, card CSV, card-table semantic hash, exact candidate and opponent deck hashes, candidate source/config hashes, resolved config, command, platform, Git commit and dirty digest.",
+        "Use a candidate-only source hash; the existing broad source_tree_hash includes all source/config dirty work and does not by itself identify the candidate implementation.",
+        "Seal completed run artifacts read-only or content-address them; a sidecar digest alone does not make writable JSON immutable.",
+        "Resume validates every existing match record against its digest and immutable run plan; never trust arbitrary files in matches/.",
+        "Retain per-worker terminal/failure/fallback/timeout/invalid counters, action latency, CPU/RSS, and missing-output worker failures."
+      ],
+      "evidence": ["DR-030", "DR-031", "DR-032", "src/ptcg_rl/g1/arena.py:94-117", "src/ptcg_rl/g1/arena.py:150-179", "src/ptcg_rl/g1/arena.py:219-305"]
+    },
+    "P1_private_baseline_coupling": {
+      "risk": "The existing arena's rule adapter is intentionally private-baseline-backed; reusing that path for the new candidate would contaminate the standalone policy claim.",
+      "required_tests": [
+        "Candidate module imports only public G1 models/actions/environment and deterministic public-state/profile modules plus numeric card-table metadata.",
+        "Static and runtime checks prove no private baseline module is loaded by the candidate path.",
+        "Private native anchors remain opponent/control specs only; their decks and receipt hashes are manifest inputs, not candidate implementation dependencies."
+      ],
+      "evidence": ["DR-033", "DR-036", "src/ptcg_rl/g1/arena.py:32-40"]
+    }
+  },
+  "existing_harness_red_flags": [
+    {
+      "file": "src/ptcg_rl/g1/arena.py",
+      "lines": "94-110",
+      "finding": "The existing aggregator computes player0_score_mean, not candidate-perspective WDL. Reusing it for a candidate-versus-anchor claim can invert all games where the candidate is policy1.",
+      "severity": "P0"
+    },
+    {
+      "file": "src/ptcg_rl/g1/arena.py",
+      "lines": "32-40",
+      "finding": "The built-in policy registry only exposes random, first, and private rule adapters. A standalone candidate must use a separate public policy registration path and must not be implemented as NativeRulePolicy.",
+      "severity": "P0"
+    },
+    {
+      "file": "src/ptcg_rl/g1/arena.py",
+      "lines": "160-175",
+      "finding": "The broad source hash and Git dirty digest are useful run context but do not provide a candidate-only source/config hash; unrelated dirty work is intentionally present.",
+      "severity": "P1"
+    },
+    {
+      "file": "src/ptcg_rl/g1/evidence.py",
+      "lines": "55-70",
+      "finding": "write_immutable_json uses exclusive creation and fsync but does not seal files read-only. A digest sidecar is integrity evidence, not immutable storage by itself.",
+      "severity": "P1"
+    },
+    {
+      "file": "src/ptcg_rl/g1/arena.py",
+      "lines": "219-233",
+      "finding": "Resume trusts existing match JSON files by game_id and does not independently verify per-record content hashes against an append-only manifest.",
+      "severity": "P1"
+    }
+  ],
+  "next_falsifiable_work_order": [
+    "Keep all five route statuses PARTIAL and exclude their effect-specific rules from production authority.",
+    "Finish public-only standalone control and contract tests first: permutation, semantic tie behavior, perspective, STOP/multiselect, lifecycle, and private-baseline scan.",
+    "Repair candidate-perspective and provenance/immutability requirements in the Phase B harness before any policy-strength tournament.",
+    "Build one exact native causal fixture at a time, starting with Swirling Waves or Surfing Beach because their expected transitions are easiest to isolate; re-query the KB after every surprising result.",
+    "Run only the one-request-per-cell mechanical canary until the independent contract review passes; do not launch Kaggle or claim route improvement from this audit."
+  ],
+  "verification": {
+    "kb_validation": "PASS",
+    "native_api_metadata_read": "PASS",
+    "card_csv_route_identity_read": "PASS",
+    "phase_a_route_report_recalculated": "PARTIAL_FOR_ALL_FIVE",
+    "production_code_changed": false,
+    "owned_report": "reports/deterministic/phase-b-semantics-audit-v1.json"
+  }
+}
