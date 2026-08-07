@@ -1,0 +1,897 @@
+{
+  "claims": {
+    "native_semantic_boundary_qualified": true,
+    "observed_but_unverifiable_status": "PARTIAL",
+    "policy_strength_established": false,
+    "promotion_authorized": false,
+    "route_specific_effects_qualified": false,
+    "unobserved_effects_status": "INCONCLUSIVE"
+  },
+  "created_at_utc": "2026-08-07T21:52:34.642916+00:00",
+  "decision": "PASS_WITH_ROUTE_STATUS_MATRIX",
+  "knowledge_base_ids": [
+    "DR-025",
+    "DR-030",
+    "DR-033",
+    "AP-009",
+    "AP-010",
+    "AP-014",
+    "RQ-007"
+  ],
+  "live": {
+    "complete_legal_options": {
+      "native_option_lists_not_truncated": true,
+      "status": "PASS"
+    },
+    "face_down_and_public_reveal": {
+      "face_down_slots": 6852,
+      "public_reveal_entities": 31469,
+      "status": "PASS"
+    },
+    "fail_closed_counters": {
+      "fallback_actions": 0,
+      "hidden_hand_leaks": 0,
+      "invalid_actions": 0,
+      "manual_randomness_controls": 0,
+      "native_failures": 0,
+      "option_bounds_failures": 0,
+      "option_count_mismatches": 0,
+      "public_delta_contract_failures": 0,
+      "request_cap_failures": 0,
+      "semantic_contract_failures": 0,
+      "timeouts": 0,
+      "unknown_observed_card_ids": 0
+    },
+    "games": [
+      {
+        "candidate_player": 0,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.692544,
+        "game_index": 0,
+        "opponent_baseline": "iono",
+        "requests": 204,
+        "status": "PASS",
+        "terminal_result": 1
+      },
+      {
+        "candidate_player": 1,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.124076,
+        "game_index": 1,
+        "opponent_baseline": "iono",
+        "requests": 46,
+        "status": "PASS",
+        "terminal_result": 0
+      },
+      {
+        "candidate_player": 0,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.66532,
+        "game_index": 2,
+        "opponent_baseline": "iono",
+        "requests": 202,
+        "status": "PASS",
+        "terminal_result": 0
+      },
+      {
+        "candidate_player": 1,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.216799,
+        "game_index": 3,
+        "opponent_baseline": "iono",
+        "requests": 76,
+        "status": "PASS",
+        "terminal_result": 1
+      },
+      {
+        "candidate_player": 0,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.143096,
+        "game_index": 4,
+        "opponent_baseline": "mega-abomasnow-ex",
+        "requests": 42,
+        "status": "PASS",
+        "terminal_result": 0
+      },
+      {
+        "candidate_player": 1,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.1584,
+        "game_index": 5,
+        "opponent_baseline": "mega-abomasnow-ex",
+        "requests": 48,
+        "status": "PASS",
+        "terminal_result": 0
+      },
+      {
+        "candidate_player": 0,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.180544,
+        "game_index": 6,
+        "opponent_baseline": "mega-abomasnow-ex",
+        "requests": 55,
+        "status": "PASS",
+        "terminal_result": 0
+      },
+      {
+        "candidate_player": 1,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "public_delta_contract_failures": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "elapsed_seconds": 0.226348,
+        "game_index": 7,
+        "opponent_baseline": "mega-abomasnow-ex",
+        "requests": 66,
+        "status": "PASS",
+        "terminal_result": 0
+      }
+    ],
+    "matrix": {
+      "iono": {
+        "completed": 4,
+        "games": 4
+      },
+      "mega-abomasnow-ex": {
+        "completed": 4,
+        "games": 4
+      }
+    },
+    "public_before_request_action_after": {
+      "note": "Digest covers complete sanitized public projections and exact semantic request/action/after deltas; raw snapshots are not retained.",
+      "status": "PASS",
+      "transition_count": 739,
+      "transition_digest": "a9c41d88781305f5ef452f68b1db0bc2d9793a63a7bc2704d1713f0c46172d39",
+      "transition_shape_counts": {
+        "logs:0:moves:0:zone_deltas:0": 175,
+        "logs:103:moves:8:zone_deltas:4": 1,
+        "logs:10:moves:2:zone_deltas:0": 1,
+        "logs:10:moves:4:zone_deltas:2": 3,
+        "logs:10:moves:5:zone_deltas:3": 6,
+        "logs:10:moves:5:zone_deltas:4": 1,
+        "logs:10:moves:6:zone_deltas:3": 1,
+        "logs:11:moves:2:zone_deltas:0": 1,
+        "logs:11:moves:3:zone_deltas:1": 1,
+        "logs:11:moves:4:zone_deltas:2": 5,
+        "logs:11:moves:5:zone_deltas:3": 1,
+        "logs:11:moves:5:zone_deltas:5": 1,
+        "logs:11:moves:5:zone_deltas:6": 1,
+        "logs:11:moves:6:zone_deltas:3": 3,
+        "logs:11:moves:7:zone_deltas:4": 1,
+        "logs:11:moves:7:zone_deltas:5": 2,
+        "logs:11:moves:8:zone_deltas:6": 1,
+        "logs:11:moves:9:zone_deltas:5": 1,
+        "logs:12:moves:4:zone_deltas:3": 1,
+        "logs:12:moves:4:zone_deltas:4": 1,
+        "logs:12:moves:5:zone_deltas:2": 1,
+        "logs:12:moves:5:zone_deltas:4": 1,
+        "logs:12:moves:7:zone_deltas:3": 1,
+        "logs:12:moves:7:zone_deltas:7": 1,
+        "logs:13:moves:4:zone_deltas:3": 1,
+        "logs:13:moves:4:zone_deltas:4": 1,
+        "logs:13:moves:5:zone_deltas:4": 1,
+        "logs:13:moves:5:zone_deltas:6": 2,
+        "logs:13:moves:5:zone_deltas:7": 1,
+        "logs:13:moves:6:zone_deltas:3": 2,
+        "logs:13:moves:6:zone_deltas:4": 1,
+        "logs:13:moves:6:zone_deltas:6": 3,
+        "logs:13:moves:7:zone_deltas:3": 1,
+        "logs:14:moves:4:zone_deltas:2": 2,
+        "logs:14:moves:5:zone_deltas:5": 1,
+        "logs:14:moves:8:zone_deltas:2": 1,
+        "logs:14:moves:9:zone_deltas:3": 1,
+        "logs:14:moves:9:zone_deltas:9": 1,
+        "logs:15:moves:5:zone_deltas:1": 1,
+        "logs:15:moves:7:zone_deltas:3": 2,
+        "logs:16:moves:10:zone_deltas:6": 1,
+        "logs:16:moves:3:zone_deltas:1": 1,
+        "logs:16:moves:4:zone_deltas:0": 1,
+        "logs:16:moves:4:zone_deltas:2": 1,
+        "logs:16:moves:4:zone_deltas:4": 1,
+        "logs:16:moves:5:zone_deltas:0": 1,
+        "logs:16:moves:5:zone_deltas:5": 2,
+        "logs:16:moves:6:zone_deltas:5": 1,
+        "logs:16:moves:7:zone_deltas:5": 1,
+        "logs:16:moves:8:zone_deltas:4": 1,
+        "logs:17:moves:10:zone_deltas:5": 1,
+        "logs:17:moves:3:zone_deltas:1": 2,
+        "logs:17:moves:6:zone_deltas:4": 1,
+        "logs:17:moves:7:zone_deltas:4": 1,
+        "logs:17:moves:8:zone_deltas:5": 1,
+        "logs:18:moves:4:zone_deltas:1": 1,
+        "logs:18:moves:4:zone_deltas:2": 1,
+        "logs:18:moves:9:zone_deltas:2": 1,
+        "logs:18:moves:9:zone_deltas:6": 1,
+        "logs:19:moves:2:zone_deltas:0": 1,
+        "logs:19:moves:2:zone_deltas:1": 1,
+        "logs:19:moves:3:zone_deltas:1": 1,
+        "logs:19:moves:5:zone_deltas:2": 1,
+        "logs:19:moves:6:zone_deltas:1": 2,
+        "logs:19:moves:6:zone_deltas:5": 1,
+        "logs:1:moves:1:zone_deltas:1": 47,
+        "logs:1:moves:1:zone_deltas:2": 181,
+        "logs:1:moves:2:zone_deltas:0": 1,
+        "logs:1:moves:2:zone_deltas:3": 3,
+        "logs:1:moves:2:zone_deltas:4": 40,
+        "logs:20:moves:8:zone_deltas:2": 1,
+        "logs:21:moves:1:zone_deltas:1": 1,
+        "logs:23:moves:3:zone_deltas:1": 1,
+        "logs:23:moves:4:zone_deltas:1": 1,
+        "logs:23:moves:5:zone_deltas:3": 1,
+        "logs:23:moves:7:zone_deltas:4": 1,
+        "logs:25:moves:5:zone_deltas:2": 1,
+        "logs:25:moves:6:zone_deltas:3": 1,
+        "logs:25:moves:7:zone_deltas:3": 1,
+        "logs:25:moves:7:zone_deltas:4": 1,
+        "logs:25:moves:8:zone_deltas:3": 1,
+        "logs:27:moves:1:zone_deltas:0": 1,
+        "logs:27:moves:8:zone_deltas:6": 1,
+        "logs:28:moves:3:zone_deltas:2": 1,
+        "logs:28:moves:4:zone_deltas:2": 1,
+        "logs:2:moves:0:zone_deltas:0": 1,
+        "logs:2:moves:1:zone_deltas:1": 4,
+        "logs:2:moves:1:zone_deltas:2": 29,
+        "logs:2:moves:2:zone_deltas:1": 5,
+        "logs:2:moves:2:zone_deltas:2": 21,
+        "logs:2:moves:2:zone_deltas:3": 6,
+        "logs:2:moves:2:zone_deltas:4": 2,
+        "logs:30:moves:5:zone_deltas:3": 1,
+        "logs:30:moves:6:zone_deltas:3": 2,
+        "logs:30:moves:8:zone_deltas:4": 1,
+        "logs:30:moves:8:zone_deltas:5": 1,
+        "logs:31:moves:1:zone_deltas:1": 1,
+        "logs:31:moves:3:zone_deltas:2": 1,
+        "logs:32:moves:6:zone_deltas:3": 2,
+        "logs:35:moves:6:zone_deltas:3": 1,
+        "logs:35:moves:9:zone_deltas:1": 1,
+        "logs:36:moves:3:zone_deltas:1": 1,
+        "logs:36:moves:5:zone_deltas:2": 1,
+        "logs:37:moves:7:zone_deltas:5": 1,
+        "logs:39:moves:3:zone_deltas:1": 1,
+        "logs:39:moves:6:zone_deltas:3": 1,
+        "logs:39:moves:7:zone_deltas:4": 2,
+        "logs:3:moves:1:zone_deltas:0": 1,
+        "logs:3:moves:1:zone_deltas:1": 2,
+        "logs:3:moves:2:zone_deltas:2": 1,
+        "logs:3:moves:3:zone_deltas:2": 1,
+        "logs:3:moves:3:zone_deltas:3": 4,
+        "logs:3:moves:3:zone_deltas:4": 6,
+        "logs:3:moves:3:zone_deltas:5": 3,
+        "logs:3:moves:4:zone_deltas:4": 1,
+        "logs:40:moves:4:zone_deltas:1": 1,
+        "logs:40:moves:8:zone_deltas:6": 1,
+        "logs:43:moves:5:zone_deltas:2": 1,
+        "logs:45:moves:6:zone_deltas:4": 1,
+        "logs:46:moves:8:zone_deltas:4": 1,
+        "logs:48:moves:3:zone_deltas:0": 1,
+        "logs:48:moves:4:zone_deltas:4": 1,
+        "logs:48:moves:5:zone_deltas:0": 1,
+        "logs:49:moves:4:zone_deltas:3": 1,
+        "logs:4:moves:1:zone_deltas:1": 1,
+        "logs:4:moves:2:zone_deltas:0": 4,
+        "logs:4:moves:2:zone_deltas:2": 1,
+        "logs:4:moves:2:zone_deltas:3": 28,
+        "logs:4:moves:3:zone_deltas:2": 1,
+        "logs:4:moves:3:zone_deltas:4": 1,
+        "logs:4:moves:4:zone_deltas:5": 1,
+        "logs:4:moves:8:zone_deltas:5": 1,
+        "logs:55:moves:9:zone_deltas:5": 1,
+        "logs:56:moves:8:zone_deltas:4": 1,
+        "logs:5:moves:2:zone_deltas:0": 2,
+        "logs:5:moves:3:zone_deltas:5": 1,
+        "logs:5:moves:4:zone_deltas:4": 1,
+        "logs:5:moves:4:zone_deltas:5": 1,
+        "logs:5:moves:5:zone_deltas:5": 2,
+        "logs:61:moves:6:zone_deltas:4": 1,
+        "logs:62:moves:7:zone_deltas:4": 1,
+        "logs:6:moves:3:zone_deltas:0": 2,
+        "logs:6:moves:3:zone_deltas:3": 1,
+        "logs:6:moves:5:zone_deltas:6": 1,
+        "logs:71:moves:6:zone_deltas:3": 1,
+        "logs:71:moves:9:zone_deltas:5": 1,
+        "logs:7:moves:3:zone_deltas:0": 1,
+        "logs:7:moves:3:zone_deltas:4": 1,
+        "logs:7:moves:5:zone_deltas:2": 1,
+        "logs:7:moves:6:zone_deltas:7": 1,
+        "logs:8:moves:4:zone_deltas:2": 1,
+        "logs:8:moves:4:zone_deltas:5": 1,
+        "logs:8:moves:5:zone_deltas:2": 1,
+        "logs:8:moves:7:zone_deltas:7": 1,
+        "logs:8:moves:8:zone_deltas:4": 1,
+        "logs:9:moves:2:zone_deltas:0": 1,
+        "logs:9:moves:3:zone_deltas:1": 1,
+        "logs:9:moves:4:zone_deltas:1": 1,
+        "logs:9:moves:4:zone_deltas:2": 3,
+        "logs:9:moves:5:zone_deltas:2": 1,
+        "logs:9:moves:5:zone_deltas:5": 1,
+        "logs:9:moves:5:zone_deltas:7": 2,
+        "logs:9:moves:7:zone_deltas:2": 1,
+        "logs:9:moves:9:zone_deltas:5": 1
+      }
+    },
+    "route_branches": {
+      "carmine": {
+        "causal_proofs": {
+          "discard_hand_draw_five": 6
+        },
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 9,
+        "play_actions": 9,
+        "public_after_deltas": 9,
+        "public_log_events": 92,
+        "request_bounds": {
+          "hand:-3:discard:8:draw:5": 2,
+          "hand:0:discard:5:draw:5": 1,
+          "hand:1:discard:4:draw:5": 3,
+          "hand:2:discard:3:draw:5": 2,
+          "hand:3:discard:2:draw:5": 1
+        },
+        "request_contexts": {
+          "2": 1,
+          "5": 2,
+          "6": 6
+        },
+        "selected_actions": 9,
+        "selected_card_ids": {},
+        "semantic_requests": 0,
+        "skill_actions": 0,
+        "status": "PASS"
+      },
+      "kyogre_riptide": {
+        "causal_proofs": {},
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 61,
+        "play_actions": 14,
+        "public_after_deltas": 14,
+        "public_log_events": 27,
+        "request_bounds": {
+          "1:1": 47,
+          "deck_delta:0": 3,
+          "deck_delta:1": 3,
+          "deck_delta:11": 1,
+          "deck_delta:12": 1,
+          "deck_delta:16": 1,
+          "deck_delta:2": 2,
+          "deck_delta:4": 2,
+          "deck_delta:5": 1
+        },
+        "request_contexts": {
+          "0": 47,
+          "damage_events:1": 14,
+          "energy_recycle_events:0": 3,
+          "energy_recycle_events:1": 3,
+          "energy_recycle_events:11": 1,
+          "energy_recycle_events:12": 1,
+          "energy_recycle_events:16": 1,
+          "energy_recycle_events:2": 2,
+          "energy_recycle_events:4": 2,
+          "energy_recycle_events:5": 1
+        },
+        "selected_actions": 14,
+        "selected_card_ids": {
+          "1042": 14
+        },
+        "semantic_requests": 47,
+        "skill_actions": 0,
+        "status": "PARTIAL"
+      },
+      "kyogre_swirling_waves": {
+        "causal_proofs": {},
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 2,
+        "play_actions": 1,
+        "public_after_deltas": 1,
+        "public_log_events": 2,
+        "request_bounds": {
+          "1:1": 1,
+          "deck_delta:0": 1
+        },
+        "request_contexts": {
+          "0": 1,
+          "damage_events:1": 1,
+          "energy_discard_events:0": 1
+        },
+        "selected_actions": 1,
+        "selected_card_ids": {
+          "1043": 1
+        },
+        "semantic_requests": 1,
+        "skill_actions": 0,
+        "status": "PARTIAL"
+      },
+      "lillie_determination": {
+        "causal_proofs": {
+          "shuffle_hand_draw_6": 11,
+          "shuffle_hand_draw_8": 9
+        },
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 20,
+        "play_actions": 20,
+        "public_after_deltas": 20,
+        "public_log_events": 109,
+        "request_bounds": {
+          "hand:-1:draw:6": 1,
+          "hand:0:draw:6": 5,
+          "hand:1:draw:6": 3,
+          "hand:1:draw:8": 1,
+          "hand:2:draw:6": 1,
+          "hand:3:draw:6": 1,
+          "hand:3:draw:8": 1,
+          "hand:4:draw:8": 3,
+          "hand:5:draw:8": 1,
+          "hand:6:draw:8": 3
+        },
+        "request_contexts": {
+          "2": 3,
+          "3": 1,
+          "4": 2,
+          "5": 5,
+          "6": 9
+        },
+        "selected_actions": 20,
+        "selected_card_ids": {},
+        "semantic_requests": 0,
+        "skill_actions": 0,
+        "status": "PASS"
+      },
+      "mega_abomasnow_frost_barrier": {
+        "causal_proofs": {},
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 25,
+        "play_actions": 4,
+        "public_after_deltas": 4,
+        "public_log_events": 8,
+        "request_bounds": {
+          "1:1": 21,
+          "deck_delta:0": 4
+        },
+        "request_contexts": {
+          "0": 21,
+          "damage_events:1": 4,
+          "post_barrier_hp_events:0": 4
+        },
+        "selected_actions": 4,
+        "selected_card_ids": {
+          "1047": 4
+        },
+        "semantic_requests": 21,
+        "skill_actions": 0,
+        "status": "PARTIAL"
+      },
+      "mega_abomasnow_hammer_lanche": {
+        "causal_proofs": {},
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 100,
+        "play_actions": 22,
+        "public_after_deltas": 22,
+        "public_log_events": 38,
+        "request_bounds": {
+          "1:1": 78,
+          "deck_delta:-6": 22
+        },
+        "request_contexts": {
+          "0": 78,
+          "damage_events:1": 22,
+          "energy_discard_events:1": 1,
+          "energy_discard_events:3": 3,
+          "energy_discard_events:4": 11,
+          "energy_discard_events:5": 6,
+          "energy_discard_events:6": 1,
+          "hammer_damage_values:-100": 1,
+          "hammer_damage_values:-300": 3,
+          "hammer_damage_values:-400": 11,
+          "hammer_damage_values:-500": 6,
+          "hammer_damage_values:-600": 1,
+          "top_six_deck_delta:1": 22
+        },
+        "selected_actions": 22,
+        "selected_card_ids": {
+          "1046": 22
+        },
+        "semantic_requests": 78,
+        "skill_actions": 0,
+        "status": "PARTIAL"
+      },
+      "precious_trolley": {
+        "causal_proofs": {
+          "search_basic_pokemon_to_bench": 1
+        },
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 3,
+        "play_actions": 2,
+        "public_after_deltas": 2,
+        "public_log_events": 0,
+        "request_bounds": {
+          "0:5": 1,
+          "bench_delta:5:before:0:after:5:capacity:5": 1
+        },
+        "request_contexts": {
+          "5": 1
+        },
+        "selected_actions": 2,
+        "selected_card_ids": {
+          "721": 2,
+          "722": 3
+        },
+        "semantic_requests": 1,
+        "skill_actions": 0,
+        "status": "PASS"
+      },
+      "snover_evolution": {
+        "causal_proofs": {
+          "evolve_snover_to_mega_abomasnow": 20
+        },
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 50,
+        "play_actions": 20,
+        "public_after_deltas": 20,
+        "public_log_events": 57,
+        "request_bounds": {},
+        "request_contexts": {
+          "evolve_logs:1": 30
+        },
+        "selected_actions": 20,
+        "selected_card_ids": {
+          "723->722": 20
+        },
+        "semantic_requests": 30,
+        "skill_actions": 0,
+        "status": "PASS"
+      },
+      "surfing_beach": {
+        "causal_proofs": {},
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 18,
+        "play_actions": 9,
+        "public_after_deltas": 9,
+        "public_log_events": 19,
+        "request_bounds": {
+          "1:1": 9
+        },
+        "request_contexts": {
+          "3": 9
+        },
+        "selected_actions": 9,
+        "selected_card_ids": {},
+        "semantic_requests": 9,
+        "skill_actions": 0,
+        "status": "PARTIAL"
+      },
+      "ultra_ball": {
+        "causal_proofs": {
+          "play_discard_two_from_hand": 18,
+          "search_pokemon_to_hand": 18
+        },
+        "invariant_failures": {},
+        "log_event_types": {},
+        "observations": 58,
+        "play_actions": 20,
+        "public_after_deltas": 20,
+        "public_log_events": 102,
+        "request_bounds": {
+          "0:1": 18,
+          "2:2": 20
+        },
+        "request_contexts": {
+          "7": 18,
+          "8": 20
+        },
+        "selected_actions": 20,
+        "selected_card_ids": {
+          "1227": 1,
+          "3": 16,
+          "721": 2,
+          "722": 5,
+          "723": 10
+        },
+        "semantic_requests": 38,
+        "skill_actions": 0,
+        "status": "PASS"
+      }
+    },
+    "route_card_observations": {
+      "public_after_delta_mentions": {
+        "1121": 227,
+        "1126": 13,
+        "1192": 99,
+        "1227": 116,
+        "1262": 119,
+        "3": 250,
+        "721": 153,
+        "722": 193,
+        "723": 224
+      },
+      "public_log_mentions": {
+        "1121": 102,
+        "1126": 13,
+        "1192": 92,
+        "1227": 109,
+        "1262": 63,
+        "3": 930,
+        "721": 155,
+        "722": 194,
+        "723": 283
+      },
+      "selected_action_mentions": {
+        "1121": 20,
+        "1126": 2,
+        "1192": 9,
+        "1227": 21,
+        "1262": 18,
+        "3": 74,
+        "721": 57,
+        "722": 75,
+        "723": 92
+      },
+      "semantic_request_mentions": {
+        "1121": 171,
+        "1126": 3,
+        "1192": 54,
+        "1227": 60,
+        "1262": 81,
+        "3": 96,
+        "721": 108,
+        "722": 130,
+        "723": 146
+      },
+      "zone_deltas": {
+        "basic_water_energy": {
+          "DISCARD:3": 86,
+          "ENERGY:3": 54,
+          "HAND:3": -221
+        },
+        "carmine": {
+          "DISCARD:1192": 26,
+          "HAND:1192": -19
+        },
+        "kyogre": {
+          "ACTIVE:721": 3,
+          "BENCH:721": 8,
+          "HAND:721": -6
+        },
+        "lillie_determination": {
+          "DISCARD:1227": 30,
+          "HAND:1227": -12
+        },
+        "mega_abomasnow": {
+          "ACTIVE:723": 14,
+          "BENCH:723": 6,
+          "DISCARD:723": 9,
+          "HAND:723": -19
+        },
+        "precious_trolley": {
+          "DISCARD:1126": 4,
+          "HAND:1126": 0
+        },
+        "snover": {
+          "ACTIVE:722": -1,
+          "BENCH:722": 5,
+          "DISCARD:722": 4,
+          "HAND:722": -15,
+          "PRE_EVOLUTION:722": 20
+        },
+        "surfing_beach": {
+          "DISCARD:1262": 4,
+          "HAND:1262": -3
+        },
+        "ultra_ball": {
+          "DISCARD:1121": 27,
+          "HAND:1121": -14
+        }
+      }
+    },
+    "semantic_requests_and_logs": {
+      "public_log_events": 7754,
+      "request_count": 739,
+      "status": "PASS"
+    },
+    "terminal_first": {
+      "checks": 8,
+      "stale_terminal_selections_observed": 8,
+      "status": "PASS"
+    },
+    "terminal_results": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "phase": "A",
+  "provenance": {
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "baseline_hashes": {
+      "iono": {
+        "deck": "e36d46c5bcafdef8a5d0e6caeb34dd8db09119c62d8fb67c99e89e7eed39f974",
+        "policy": "9fa360307e0b9ccd4cd8469aad50c93872468c8dfa8ff8ebb6718cacf9faa8fa"
+      },
+      "mega-abomasnow-ex": {
+        "deck": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+        "policy": "d1ef4a86413b7f548270657385c6d5c3cb114b473082cd04e2a0f1733158482b"
+      }
+    },
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "config_path": "configs/deterministic/phase_a_native_semantics_v2.json",
+    "config_sha256": "6c41e7ffec5c3f7bba0c8ac1197f9894e4d804ed4e561d19d392ec65f35178c2",
+    "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "native_randomness": "engine-controlled; no manual coin/random outcome",
+    "runner_path": "scripts/deterministic/phase_a_native_semantics_v2.py",
+    "runner_sha256": "5c0aae2907f6ec83f109a2c77c90af027773511fc7fd70750c89c00ecf516b16",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2"
+  },
+  "record_id": "phase-a-native-semantics-v2",
+  "schema_version": 2,
+  "scope": {
+    "candidate_baseline": "mega-abomasnow-ex",
+    "deck_frozen": false,
+    "games_completed": 8,
+    "games_requested": 8,
+    "matrix": [
+      {
+        "games": 4,
+        "opponent_baseline": "iono"
+      },
+      {
+        "games": 4,
+        "opponent_baseline": "mega-abomasnow-ex"
+      }
+    ],
+    "policy_strength_claimed": false,
+    "request_cap_per_game": 20000,
+    "wall_seconds_cap": 180
+  },
+  "static_checks": {
+    "candidate_deck_distinct_ids": 9,
+    "candidate_deck_size": 60,
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_attacks": 1556,
+    "card_table_cards": 1267,
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_schema_version": 1,
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "csv_rows": 2022,
+    "note": "Static effect text is metadata only; executable effects require live public transition evidence.",
+    "route_attack_cards_checked": [
+      721,
+      722,
+      723
+    ],
+    "route_attack_ids_checked": [
+      1042,
+      1043,
+      1044,
+      1045,
+      1046,
+      1047
+    ],
+    "route_cards_checked": [
+      3,
+      721,
+      722,
+      723,
+      1121,
+      1126,
+      1192,
+      1227,
+      1262
+    ],
+    "status": "PASS"
+  },
+  "status": "SUCCEEDED"
+}

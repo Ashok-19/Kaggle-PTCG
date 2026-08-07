@@ -51,6 +51,10 @@ _ROUTE_CARD_METADATA = {
     1227: ("Lillie's Determination", "Supporter", "n/a"),
     1262: ("Surfing Beach", "Stadium", "n/a"),
 }
+_EXPECTED_STATIC_CARD_IDS = frozenset(_ROUTE_CARD_METADATA)
+_EXPECTED_STATIC_ATTACK_CARD_IDS = frozenset({721, 722, 723})
+_EXPECTED_ROUTE_EFFECT_CARD_IDS = frozenset({1121, 1126, 1192, 1227, 1262})
+_EXPECTED_ROUTE_ATTACK_CARD_IDS = frozenset({721, 722, 723})
 
 
 class _CanaryContractViolation(ContractViolation):
@@ -152,6 +156,14 @@ def load_config(path: Path = DEFAULT_CONFIG) -> dict[str, Any]:
             raise ValueError(f"coverage.{name} must be an integer list")
     if coverage["unobserved_status"] != "INCONCLUSIVE":
         raise ValueError("unobserved routes must remain INCONCLUSIVE")
+    if set(coverage["required_static_cards"]) != _EXPECTED_STATIC_CARD_IDS:
+        raise ValueError("required static card coverage differs from the route contract")
+    if set(coverage["required_static_attack_cards"]) != _EXPECTED_STATIC_ATTACK_CARD_IDS:
+        raise ValueError("required static attack card coverage differs from the route contract")
+    if set(coverage["route_effect_card_ids"]) != _EXPECTED_ROUTE_EFFECT_CARD_IDS:
+        raise ValueError("route effect card coverage differs from the route contract")
+    if set(coverage["route_attack_card_ids"]) != _EXPECTED_ROUTE_ATTACK_CARD_IDS:
+        raise ValueError("route attack card coverage differs from the route contract")
     return dict(value)
 
 
@@ -216,6 +228,12 @@ def run_static_checks(config: Mapping[str, Any], hashes: Mapping[str, str]) -> d
     verification = verify_card_table(table)
     if verification["table_sha256"] != config["assets"]["card_table"]["semantic_sha256"]:
         raise ValueError("card table semantic hash differs from config")
+    if table.card_data_sha256 != hashes["card_data"]:
+        raise ValueError("card table card-data hash differs from config")
+    if table.engine_library_sha256 != hashes["engine_library"]:
+        raise ValueError("card table engine hash differs from config")
+    if table.wrapper_api_sha256 != hashes["api"]:
+        raise ValueError("card table API hash differs from config")
     rows = _load_card_rows(_repo_path(config["assets"]["card_data"]["path"]))
     expected_ids = tuple(config["coverage"]["required_static_cards"])
     checked: list[int] = []
@@ -242,6 +260,16 @@ def run_static_checks(config: Mapping[str, Any], hashes: Mapping[str, str]) -> d
         if any(row["Effect Explanation"] not in {"", "n/a"} for row in static_rows):
             effect_rows.append(card_id)
         checked.append(card_id)
+    # Keep the separately declared attack-card coverage meaningful.  A caller
+    # must not be able to replace it with an unknown/non-attacking card while
+    # still receiving a static PASS.
+    required_attack_cards = config["coverage"]["required_static_attack_cards"]
+    if not set(required_attack_cards).issubset(set(expected_ids)):
+        raise ValueError("required static attack cards must be among required static cards")
+    for card_id in required_attack_cards:
+        card = by_id.get(card_id)
+        if card is None or not card.attack_ids:
+            raise ValueError(f"missing required static attack card metadata: {card_id}")
     deck = load_deck(_repo_path(config["assets"]["candidate_deck"]["path"]))
     deck_counts = Counter(deck)
     missing_from_deck = [card_id for card_id in expected_ids if deck_counts[card_id] == 0]
@@ -370,8 +398,13 @@ def _observe_request(
         aggregate["transient_effect_contexts"] += 1
     aggregate["public_log_events"] += len(observation.public_events)
     aggregate["transitions_with_logs"] += bool(observation.public_events)
+    # Selection-local entities are transient even though their factual AREA
+    # enum values precede the pseudo-area range (DECK=1, LOOKING=12,
+    # PLAYING=13, TEMPORARY=24).  Counting only zones >= ME silently missed
+    # every normal deck/search/effect transient.
+    transient_zones = {AREA["DECK"], AREA["LOOKING"], AREA["PLAYING"], AREA["TEMPORARY"]}
     aggregate["transient_entity_zones"] += sum(
-        entity.zone >= AREA["ME"] for entity in observation.entities
+        entity.zone in transient_zones for entity in observation.entities
     )
 
 
@@ -473,7 +506,7 @@ def _run_one_game(
         left_policy.reset(f"phase-a-{game_index}", 0, "start")
         right_policy.reset(f"phase-a-{game_index}", 1, "start")
         raw = engine.start(left_deck, right_deck)
-        for transition_id in range(config["limits"]["request_cap_per_game"] + 1):
+        for transition_id in range(config["limits"]["request_cap_per_game"]):
             if time.monotonic() - started > config["limits"]["wall_seconds"]:
                 game["counters"]["timeouts"] += 1
                 aggregate["counters"]["timeouts"] += 1
