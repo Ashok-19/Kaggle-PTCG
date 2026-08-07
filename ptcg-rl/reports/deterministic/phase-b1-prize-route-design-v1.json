@@ -1,0 +1,610 @@
+{
+  "record_id": "phase-b1-prize-route-design-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "DESIGN_REVIEWED_WITH_REQUIRED_GATES_NOT_IMPLEMENTED",
+  "audited_head": "f2c8a33b3fc9e5395901c668acce7bbe38b40c74",
+  "scope": {
+    "mode": "read_only_phase_b1_experiment_design",
+    "production_source_changed": false,
+    "only_owned_file_created": "reports/deterministic/phase-b1-prize-route-design-v1.json",
+    "candidate_deck": "mega-abomasnow-ex",
+    "native_engine_scope": "official bundled CABT sample-submission engine",
+    "external_runs": 0,
+    "kaggle_runs": 0,
+    "submission": false,
+    "deck_freeze": false,
+    "promotion": false
+  },
+  "ledger_check": {
+    "checked": [
+      "reports/deterministic/*.json",
+      "reports/experiments/*.json",
+      "experiments/*/manifest.json",
+      "configs/deterministic/*.json",
+      "scripts/deterministic/*.py",
+      "src/ptcg_rl/deterministic/*.py",
+      "tests/deterministic/*.py"
+    ],
+    "existing_b1_route_planner": false,
+    "existing_prize_route_experiment": false,
+    "existing_route_ledger": false,
+    "overlap": "B0-MA-CONTROL-001 is the existing mechanical public-only control qualification. This design reuses its anchor, seat, permutation, reliability and budget contracts but does not duplicate or modify its implementation.",
+    "b0_files_observed_but_not_modified": [
+      "configs/deterministic/b0_ma_control_v1.json",
+      "scripts/deterministic/b0_control_qualification.py",
+      "src/ptcg_rl/deterministic/control.py",
+      "src/ptcg_rl/deterministic/policy.py",
+      "src/ptcg_rl/deterministic/harness.py",
+      "src/ptcg_rl/deterministic/diagnostics.py"
+    ],
+    "b0_commits_observed": [
+      "afee434 exp: add bounded deterministic B0 harness",
+      "b8aba6b fix: reset policies during semantic permutation control",
+      "f2c8a33 fix: bind B0 candidate to exact configured deck"
+    ],
+    "uncommitted_public_control_is_not_qualification_evidence": true
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "requeried_during_design": true,
+    "exact_queries": [
+      "SELECT * FROM decision_rules WHERE id IN ('DR-004','DR-005','DR-006')",
+      "SELECT * FROM strategies WHERE id IN ('STR-001','STR-002')",
+      "SELECT * FROM search_features WHERE id IN ('SF-001','SF-002','SF-004','SF-005','SF-006','SF-016')",
+      "SELECT * FROM anti_patterns WHERE id IN ('AP-001','AP-004','AP-006','AP-008','AP-009','AP-011','AP-013','AP-014')",
+      "SELECT * FROM matchup_plans WHERE id IN ('MUP-002','MUP-004','MUP-005','MUP-006','MUP-007','MUP-009','MUP-011','MUP-012')",
+      "SELECT * FROM research_questions WHERE id IN ('RQ-004','RQ-005','RQ-009')"
+    ],
+    "binding_rows": {
+      "DR-004": "Before a non-terminal KO compare immediate prizes, remaining KOs, attacker sequence, gust, and retaliation.",
+      "DR-005": "Prefer the shorter/robuster route with fewer uncertain pieces; do not maximize immediate Prize value alone.",
+      "DR-006": "When the next attacker is not ready and the opponent has a faster credible route, develop, disrupt, or pivot instead of a cosmetic KO.",
+      "STR-001": "Enumerate plausible target/attacker sequences and prefer shortest robust completion with acceptable retaliation.",
+      "STR-002": "Avoid an unfavourable attacker-for-attacker trade unless terminal or it blocks the opponent's only win.",
+      "SF-001": "prize_map_distance; minimize; enumerate target sequences and penalize inaccessible or low-confidence pieces; terminal override.",
+      "SF-002": "immediate_ko_threat; minimize; exact public damage/HP/attack/target/access computation plus explicit opponent-belief boundary.",
+      "SF-004": "next_attacker_ready; maximize; binary plus distance-to-threshold, not attacker count alone.",
+      "SF-005": "backup_attacker_count; maximize; route-compatible attackers weighted by energy/recovery/accessibility.",
+      "SF-006": "bench_liability; minimize; Prize value, gust access, spread thresholds, and role necessity.",
+      "SF-016": "terminal_outcome; exact engine WDL; terminal override before heuristic features; value in {-1,0,1}.",
+      "AP-001": "Do not start a losing Prize trade for a cosmetic KO.",
+      "AP-008": "Do not optimize damage when it does not shorten the route or cross a decisive threshold.",
+      "AP-009": "Do not assert unseen hand/deck/Prize identities from compatible actions.",
+      "AP-011": "Raw option order is not strategy; require semantic permutation controls.",
+      "AP-013": "Low deck count is not a deck-out proof without a complete route comparison.",
+      "AP-014": "Never control engine randomness manually.",
+      "RQ-004": "Open P0: exact Mega Abomasnow routes versus each native anchor under natural deployment.",
+      "RQ-005": "Open P1: held-out CABT ablation of prize distance, attacker readiness, and gust conversion.",
+      "RQ-009": "Belief model remains a separate open question; B1 must not silently become hidden-state inference."
+    },
+    "interpretation": "These rows support testable route hypotheses, not executable effect semantics or a strength claim. Exact native transitions and held-out WDL are still required."
+  },
+  "source_evidence": {
+    "phase_a_report": "reports/deterministic/phase-a-native-semantics-v2.json",
+    "phase_a_decision": "PASS_WITH_ROUTE_STATUS_MATRIX",
+    "phase_a_scope": "8 complete games, candidate Mega Abomasnow versus Iono and Mega Abomasnow anchors; public transition and legal-option checks passed; no policy strength claim.",
+    "phase_a_route_status": {
+      "721:1042": "PARTIAL_RETAIN_Kyogre_Riptide",
+      "721:1043": "PARTIAL_RETAIN_Kyogre_Swirling_Waves",
+      "1262": "PARTIAL_RETAIN_Surfing_Beach",
+      "723:1046": "PARTIAL_RETAIN_Mega_Abomasnow_Hammer-lanche",
+      "723:1047": "PARTIAL_RETAIN_Mega_Abomasnow_Frost_Barrier"
+    },
+    "assets": {
+      "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+      "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+      "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced"
+    },
+    "card_table_authority": {
+      "allowed": [
+        "card_id and exact card type",
+        "energy type",
+        "HP, weakness, resistance and retreat cost",
+        "stage and card-role flags",
+        "attack IDs",
+        "attack damage metadata and 12-slot energy-count metadata"
+      ],
+      "not_allowed": [
+        "effect prose as executable rules",
+        "discard/recycle identity or timing without native public transition proof",
+        "damage-modifier timing or ordering without native proof",
+        "any of the five Phase A PARTIAL routes as a planner authority"
+      ]
+    }
+  },
+  "common_contract": {
+    "purpose": "A bounded, public-information route-ranking experiment layered beside the frozen B0 control. It is not a production implementation or a deck-freeze decision.",
+    "candidate_policy": "deterministic-strategic-mega-abomasnow-v1",
+    "public_observable_inputs": {
+      "observation": [
+        "schema_version, battle_id, transition_id, acting_player, terminal_result",
+        "turn, turn_action_count, first_player",
+        "supporter_played, stadium_played, energy_attached, retreated",
+        "both PlayerViewV1 rows: player_index, bench_max, deck_count, hand_count, prize_count, visible_prize_count, hand_visible, facedown_active_count",
+        "all VisibleEntityV1 fields exposed by the observation: entity_key, card_id, serial, owner, zone, position, parent_entity_key, hp, max_hp, damage, appear_this_turn, energy_types, attached_energy_count, attached_tool_count, evolution_depth, statuses, visible",
+        "public event type/name and numeric or explicitly exposed fields only"
+      ],
+      "current_selection": [
+        "SelectionRequestV1 identity, acting_player, selection_type, selection_context, min_count, max_count, remain_damage_counter, remain_energy_cost, context_card_id, effect_card_id, ordering",
+        "the complete LegalOptionV1 list, including option type/context, card/attack ID, source/target entity references, choice_role, count bounds, in-play position, energy/tool indexes, availability and semantic fingerprint"
+      ],
+      "static_and_ledger": [
+        "CardStaticV1 and AttackStaticV1 numeric fields from the versioned card table",
+        "exact candidate deck profile and route-role counts",
+        "public ResourceLedgerSeedV1 visible_card_counts, visible_zone_counts and hidden_slot_counts",
+        "native public successor snapshots and public response classes in a fixture/run receipt"
+      ],
+      "runtime_boundary": {
+        "policy_v1_runtime_inputs": [
+          "the current EngineObservationV1 and current SelectionRequestV1 only",
+          "versioned numeric CardStaticV1/AttackStaticV1 metadata and exact candidate deck profile",
+          "prior public transitions already delivered to this policy instance"
+        ],
+        "offline_fixture_only_inputs": [
+          "native public successor snapshots captured after an action",
+          "declared public response classes and their sealed weights",
+          "terminal outcomes of counterfactual candidate actions"
+        ],
+        "boundary_rule": "The PolicyV1 choose call must never consume a successor snapshot, counterfactual outcome, response weight, or other future-state value. Those values may be used only by a separately labelled offline fixture evaluator. No native route arm is eligible until an independently reviewed runtime-compatible source for every route feature exists."
+      },
+      "integrity_only": [
+        "raw original_index may validate/replay the engine adapter but must not affect route score",
+        "semantic_fingerprint may detect action identity/permutation errors but is not a substitute for executable effect proof"
+      ]
+    },
+    "explicitly_forbidden_inputs": [
+      "opponent hand, deck or facedown Prize identities unless publicly revealed",
+      "native private objects or hidden engine state",
+      "card-effect text treated as executable semantics",
+      "manual random or coin outcomes",
+      "raw option-prefix or generation-order features",
+      "post-action information from a future request",
+      "successor snapshots, counterfactual outcomes, or response weights obtained after the candidate action",
+      "any inferred hidden belief from RQ-009 in the first B1 comparison",
+      "Riptide, Swirling Waves, Surfing Beach, Hammer-lanche or Frost Barrier behavior as a certain route edge"
+    ],
+    "route_graph_limits": {
+      "horizon": "At most 4 public attacker/target transitions or the exact configured request budget, whichever is smaller; report pruned branches.",
+      "branching": "Complete legal option set at each node; no first-N truncation. Public response classes must be declared by the native receipt or deterministic fixture.",
+      "resource_rule": "Known visible counts are exact. Hidden slots remain unknown intervals; no card identity may be allocated to a hidden slot without a separate approved belief experiment.",
+      "terminal_rule": "Read terminal_result before selection or route data. A forced terminal win dominates every heuristic route.",
+      "stop_rule": "STOP is a real legal option only when the engine exposes it and the selection contract permits it; it receives a semantic action record and never acts as an implicit empty choice.",
+      "equivalence_rule": "Equivalent semantic actions are compared by canonical semantic key. Non-equivalent ties return AMBIGUOUS rather than using option order."
+    }
+  },
+  "formulations": [
+    {
+      "id": "B1-A-LEXICOGRAPHIC-ROBUST-ROUTE",
+      "name": "Lexicographic robust route",
+      "execution_status": "OFFLINE_FIXTURE_ONLY_UNTIL_RUNTIME_ORACLE_GATE",
+      "material_difference": "Strict worst-case route selection. One bad declared public response prevents a route from outranking a route that survives all declared responses, even when its nominal immediate Prize value is larger.",
+      "falsifiable_hypothesis": "On sealed public successor fixtures, complete public route mapping with a worst-case retaliation guard selects the declared robust route and avoids AP-001/AP-008 decisions. A held-out native WDL hypothesis is deferred until a runtime-compatible route oracle and exact route-critical semantics are independently qualified; this arm must not activate on unsupported or incomplete semantics.",
+      "route_worlds": "All declared public legal response classes in the sealed offline fixture are adversarial for robustness. Unknown response coverage is not silently assigned a probability; no successor class is read by PolicyV1 at runtime.",
+      "decision_key_order": [
+        "forced_terminal_win descending",
+        "survives_every_declared_public_response descending",
+        "worst_case_remaining_prize_turns ascending",
+        "worst_case_required_unknown_or_unavailable_edges ascending",
+        "next_attacker_ready descending",
+        "opponent_route_distance_after_action descending",
+        "bench_liability ascending",
+        "resource_reserve descending",
+        "canonical_semantic_route_key ascending"
+      ],
+      "feature_definitions": {
+        "worst_case_remaining_prize_turns": "Maximum declared-response route distance to a terminal Prize win; UNKNOWN if any required edge depends on a Phase A PARTIAL effect.",
+        "worst_case_required_unknown_or_unavailable_edges": "Maximum count of required cards/energy/attacker/effect transitions that are not publicly accessible or semantically proven.",
+        "next_attacker_ready": "Exact public binary threshold plus distance-to-threshold from SF-004; unknown is not ready.",
+        "opponent_route_distance_after_action": "Minimum publicly declared opponent terminal route length after the candidate action; unknown response coverage is a robustness failure, not a favourable estimate.",
+        "bench_liability": "Public Prize value, gust exposure, spread threshold and role necessity from SF-006; partial effect dependencies are unknown.",
+        "resource_reserve": "Publicly countable route-compatible energy, recovery, evolution and gust reserve, with inaccessible copies excluded."
+      },
+      "expected_behavior": "Choose the lower-Prize or denial line when it has the shorter robust completion, reject cosmetic KOs without a ready follow-up, and choose a forced terminal action first."
+    },
+    {
+      "id": "B1-B-FINITE-PUBLIC-ENVELOPE",
+      "name": "Finite public-response completion route",
+      "execution_status": "OFFLINE_FIXTURE_ONLY_UNTIL_RUNTIME_ORACLE_GATE",
+      "material_difference": "Expected-route selection over a fixed, explicitly declared public response envelope. A higher-mean line can beat a robust line when its response classes and weights are fully public and its tail remains above the fail threshold; this is not hidden-card belief.",
+      "falsifiable_hypothesis": "On sealed public successor fixtures, a finite public response envelope can select a higher-mean route than A in states where A is overly conservative, while passing the declared tail guard. A held-out native WDL hypothesis is deferred until a runtime-compatible route oracle and exact route-critical semantics are independently qualified. If public response weights are missing, B is fixture-inactive rather than inventing them.",
+      "route_worlds": "Only synthetic fixture classes with a sealed, predeclared weight are allowed in this first implementation. A future native arm may add public successor classes only after a separately reviewed runtime-compatible oracle is available. Weights are configuration/receipt inputs, not estimates of unseen hand or Prize identities. Every class must be public-state complete through the bounded horizon.",
+      "decision_key_order": [
+        "forced_terminal_win descending",
+        "expected_route_completion_score descending",
+        "probability_of_no_catastrophic_public_response descending",
+        "lower_tail_route_completion_score_at_10th_percentile descending",
+        "expected_remaining_prize_turns ascending",
+        "next_attacker_ready descending",
+        "resource_reserve descending",
+        "bench_liability ascending",
+        "canonical_semantic_route_key ascending"
+      ],
+      "feature_definitions": {
+        "expected_route_completion_score": "Predeclared-weight mean over finite public classes of terminal completion score, with terminal win=1, draw=0.5 and loss=0 only when the public successor receipt reaches a terminal result; otherwise a normalized bounded route-completion score is used and labelled proxy.",
+        "probability_of_no_catastrophic_public_response": "Weight of classes whose bounded response does not expose a proven immediate loss or AP-001 retaliation; UNKNOWN is forbidden in B's active set.",
+        "lower_tail_route_completion_score_at_10th_percentile": "Weighted lower-tail score over the same public classes; it prevents the mean from hiding a declared catastrophic tail.",
+        "expected_remaining_prize_turns": "Predeclared-weight mean of complete public route distances, not a hidden-belief estimate."
+      },
+      "expected_behavior": "Choose a higher-mean route only when all public classes, weights and bounded successors are present and the tail guard passes; otherwise return UNRESOLVED and leave B0 control authority in place."
+    }
+  ],
+  "decision_output_contract": {
+    "record": "RouteDecisionV1 (design contract only; no implementation in this report)",
+    "fields": [
+      "schema_version, request_id, selection_seq, acting_player, policy_id",
+      "status: SELECTED, NO_SAFE_ROUTE, AMBIGUOUS, UNSUPPORTED, B0_DELEGATE, TERMINAL_OVERRIDE",
+      "formulation_id and authority: EXPERIMENTAL_PUBLIC_ROUTE or B0_CONTROL",
+      "chosen_semantic_action_key and chosen_option_fingerprints; never chosen raw index as authority",
+      "decision_key with named values, units, source and known/unknown status",
+      "candidate_count, complete_route_count, pruned_count, declared_response_class_count",
+      "fail_closed_reason and partial_effect_dependencies",
+      "route_activation_id and route_key_sha256 for trace joining"
+    ],
+    "status_rules": {
+      "TERMINAL_OVERRIDE": "Evaluator-only status after an exact engine terminal check identifies a terminal win/draw/loss; the PolicyV1 runtime never receives a terminal selection request and must not claim this status for a current action.",
+      "SELECTED": "Only if all features needed by the selected key are public, complete and non-ambiguous within horizon.",
+      "NO_SAFE_ROUTE": "No complete route survives the formulation's safety guard; the native adapter maps this abstention to authority=B0_CONTROL, not to a submission fallback.",
+      "UNSUPPORTED": "Selection/effect/card semantics or public successor data is not supported, including any required Phase A PARTIAL route; the native adapter maps this abstention to authority=B0_CONTROL.",
+      "AMBIGUOUS": "Two or more non-equivalent semantic routes have identical keys; no option-order tie break is permitted. The native adapter maps this abstention to authority=B0_CONTROL.",
+      "B0_DELEGATE": "Runtime route authority abstains and invokes the frozen public B0 control. This is a route abstention/delegation, not a fallback action; only a failure of B0 or the final adapter counts as fallback."
+    }
+  },
+  "fail_closed_matrix": [
+    {
+      "condition": "terminal_result is non-null",
+      "response": "TERMINAL_OVERRIDE in the evaluator before reading selection; no runtime action is emitted",
+      "promotion_effect": "Any post-terminal action is a hard reliability failure"
+    },
+    {
+      "condition": "unknown selection enum, malformed request, missing required field or impossible source/target reference",
+      "response": "UNSUPPORTED with authority=B0_CONTROL (runtime status B0_DELEGATE); retain compact reproduction capsule",
+      "promotion_effect": "Hard reliability failure"
+    },
+    {
+      "condition": "hidden/private field appears in route input or future-state information is observed",
+      "response": "UNSUPPORTED with authority=B0_CONTROL and hidden_leak_rejections += 1 (runtime status B0_DELEGATE)",
+      "promotion_effect": "Hard reliability failure"
+    },
+    {
+      "condition": "required route edge depends on Riptide, Swirling Waves, Surfing Beach, Hammer-lanche or Frost Barrier behavior not proven in Phase A",
+      "response": "UNSUPPORTED with authority=B0_CONTROL; no card-specific authority (runtime status B0_DELEGATE)",
+      "promotion_effect": "Candidate may remain a B0 control only; route arm cannot promote"
+    },
+    {
+      "condition": "A has an unknown declared response or B lacks a complete finite public class/weight",
+      "response": "A fails robust comparison; B returns UNRESOLVED; neither guesses and the native adapter delegates to B0",
+      "promotion_effect": "Activation is inactive, not a win/loss result"
+    },
+    {
+      "condition": "non-equivalent key tie or semantic duplicate cannot be canonicalized",
+      "response": "AMBIGUOUS; never select by original_index; the native adapter delegates to B0",
+      "promotion_effect": "Ambiguous count is reported; repeated ambiguity blocks route authority"
+    },
+    {
+      "condition": "horizon or branch budget truncates any candidate needed for the key",
+      "response": "NO_SAFE_ROUTE with max_horizon_pruned += 1; the native adapter delegates to B0",
+      "promotion_effect": "No strength conclusion from that decision"
+    },
+    {
+      "condition": "optional STOP is not legal or multiselect count is outside min/max",
+      "response": "Reject that action; do not synthesize STOP/empty selection",
+      "promotion_effect": "Invalid action is a hard reliability failure"
+    }
+  ],
+  "deterministic_fixtures": [
+    {
+      "id": "F01-terminal-override",
+      "purpose": "A forced terminal legal action outranks every non-terminal route.",
+      "setup": "The current public observation has terminal_result set to an exact engine win/draw/loss and no usable selection request; any stale selection payload is intentionally present only in the fixture record.",
+      "expected": "The evaluator returns TERMINAL_OVERRIDE before reading selection data; no route action is emitted. A non-terminal action whose successor later becomes terminal is evaluated only in the offline successor fixture, not by pretending the current request is terminal.",
+      "counterexample_protected": "A planner that reads select data before terminal state or treats a current non-terminal request as already terminal fails."
+    },
+    {
+      "id": "F02-losing-prize-trade",
+      "purpose": "Detect AP-001/DR-006 cosmetic KO.",
+      "setup": "A public non-terminal KO exists, no next attacker is ready, opponent has a public ready attacker and faster declared retaliation; a develop/deny option preserves a route.",
+      "expected": "A rejects the cosmetic KO. B rejects it when the retaliation class is complete and its weight is nonzero; otherwise B is UNRESOLVED, never optimistic.",
+      "counterexample_protected": "Largest immediate Prize must not win by itself."
+    },
+    {
+      "id": "F03-damage-not-route",
+      "purpose": "Detect AP-008 greedy damage.",
+      "setup": "High damage leaves the opponent engine/attacker intact; lower damage denies a publicly route-critical target and has a complete follow-up.",
+      "expected": "A selects the robust denial route. B selects it unless the declared envelope genuinely gives the high-damage route a higher mean while passing its tail guard.",
+      "counterexample_protected": "Damage metadata is not a route result."
+    },
+    {
+      "id": "F04-a-b-divergence",
+      "purpose": "Prove formulations are materially distinct.",
+      "setup": "Two actions have declared public response classes: action X has completion scores [0.9, 0.9] and action Y has [1.0, 0.2], equal weights; X worst case is better, Y mean is better.",
+      "expected": "A selects X by worst-case robustness; B selects Y only if its lower-tail/catastrophic guard passes. The fixture must include a second Y version where 0.2 is catastrophic and B correctly rejects it.",
+      "counterexample_protected": "A and B must not collapse to one weighted score or one shared tie-break."
+    },
+    {
+      "id": "F05-partial-effect-boundary",
+      "purpose": "Prevent unsupported Phase A semantics becoming route authority.",
+      "setup": "Legal options require one of 721:1042, 721:1043, 1262, 723:1046 or 723:1047 to complete the route.",
+      "expected": "The dependent candidate is UNSUPPORTED for both arms and B0 authority remains; no guessed effect, timing or damage modifier is emitted.",
+      "counterexample_protected": "Static CSV prose and aggregate HP/deck deltas must not upgrade PARTIAL to exact."
+    },
+    {
+      "id": "F06-hidden-state-rejection",
+      "purpose": "Detect private baseline or hidden-card leakage.",
+      "setup": "Two otherwise identical states differ only in an opponent hidden hand or facedown Prize identity; the route input includes no public reveal.",
+      "expected": "Decision and route key are identical, or both requests are rejected if hidden data is supplied; no output may depend on hidden identity.",
+      "counterexample_protected": "Opponent hand/deck certainty and private-baseline coupling are prohibited."
+    },
+    {
+      "id": "F07-option-permutation-and-equivalence",
+      "purpose": "Detect AP-011 and action-order dependence.",
+      "setup": "Permute complete legal options 32 times and duplicate a semantically equivalent option under a different original index.",
+      "expected": "Selected canonical semantic key is unchanged. Exact semantic duplicates are grouped; non-equivalent equal keys return AMBIGUOUS.",
+      "counterexample_protected": "No first-N or index tie break."
+    },
+    {
+      "id": "F08-perspective-mirror",
+      "purpose": "Detect player-perspective inversion.",
+      "setup": "Mirror the same public state for acting_player 0 and 1, including ownership, source/target references and candidate win code.",
+      "expected": "Role-relative route decision is invariant after canonical player remapping; opponent and candidate are never swapped.",
+      "counterexample_protected": "Natural seat is a diagnostic/evaluation factor, not an accidental policy perspective."
+    },
+    {
+      "id": "F09-public-resource-and-prize-ledger",
+      "purpose": "Detect inaccessible-copy counting.",
+      "setup": "A visible discard/reveal removes the only accessible copy of a required attacker or energy; remaining hidden slots are unknown.",
+      "expected": "The route cannot count the inaccessible copy as live; unknown hidden availability stays unknown and may force fail-closed.",
+      "counterexample_protected": "DR-012/DR-023/DR-024 and AP-009."
+    },
+    {
+      "id": "F10-stop-and-multiselect",
+      "purpose": "Check current selection contract composition.",
+      "setup": "Use an optional ordered multiselect with legal STOP and a complete min/max range; permute ordinary options.",
+      "expected": "STOP is scored only when legal, has its own semantic action record, and replay contribution; count/range/uniqueness remain exact.",
+      "counterexample_protected": "No implicit empty list, stale STOP, duplicate selection or option truncation."
+    },
+    {
+      "id": "F11-horizon-fail-closed",
+      "purpose": "Prevent bounded search from presenting an incomplete line as a win.",
+      "setup": "A route needs one transition beyond H or exceeds branch budget, while a shorter line is incomplete but tempting.",
+      "expected": "Candidate is NO_SAFE_ROUTE and reports max_horizon_pruned; no strength score is attributed to the planner."
+    },
+    {
+      "id": "F12-bench-liability",
+      "purpose": "Exercise SF-006 and DR-015 without card-effect guessing.",
+      "setup": "Two public routes have equal terminal distance; one fills a bench slot with a visible high-Prize liability, the other preserves capacity and a live backup.",
+      "expected": "A uses bench_liability as a later key; B uses the same public feature only after its expected route key ties."
+    }
+  ],
+  "activation_diagnostics": {
+    "per_request": [
+      "route_candidate_count",
+      "complete_route_count",
+      "terminal_candidate_count",
+      "unsupported_partial_semantic_count",
+      "unknown_resource_count",
+      "unknown_opponent_response_count",
+      "declared_response_class_count",
+      "catastrophic_route_count",
+      "tie_count",
+      "ambiguous_tie_count",
+      "no_safe_route_count",
+      "max_horizon_pruned",
+      "hidden_leak_rejections",
+      "route_active",
+      "route_override",
+      "inactive_reason",
+      "route_key_sha256",
+      "decision_latency_microseconds",
+      "route_abstention_count",
+      "b0_delegation_count"
+    ],
+    "per_game_and_arm": [
+      "route_requests",
+      "route_active_requests",
+      "route_override_requests",
+      "unsupported_requests",
+      "ambiguous_requests",
+      "fallback_actions",
+      "invalid_actions",
+      "post_terminal_actions",
+      "timeouts",
+      "native_failures",
+      "stale_or_out_of_order_requests",
+      "hidden_state_leak_rejections",
+      "candidate_wdl_and_score",
+      "route_active_wdl_and_score",
+      "inactive_wdl_and_score",
+      "p99_decision_latency"
+    ],
+    "activation_gate": "A/B may claim an active offline fixture route only when non-terminal, at least two non-equivalent legal candidates exist, all selected-key fields are public and complete, the bounded horizon is complete for those candidates, no required edge uses a Phase A PARTIAL effect, and A/B-specific response coverage is satisfied. A native runtime route may additionally activate only after the runtime-oracle gate and route-critical semantic capsules are independently passed.",
+    "no_op_rule": "If fewer than 8 route-active games or fewer than 5 percent of eligible decisions are active in the local screen, label the route arm INCONCLUSIVE/no-op and do not promote it; route-inactive decisions delegate to B0 and are not submission fallbacks. Expand only under a predeclared budget, never cherry-pick active games."
+  },
+  "evaluation_matrix": {
+    "arms": [
+      "B0_CONTROL",
+      "B1_A_LEXICOGRAPHIC_ROBUST_ROUTE",
+      "B1_B_FINITE_PUBLIC_ENVELOPE"
+    ],
+    "opponents": [
+      "rule:dragapult-ex",
+      "rule:iono",
+      "rule:mega-abomasnow-ex",
+      "rule:mega-lucario-ex"
+    ],
+    "deployment": "Natural deployment with candidate seat balance. Forced actual-first/second is a separate diagnostic and cannot be mixed into the primary estimate. No paired-seed claim.",
+    "route_arm_execution_gate": {
+      "status": "BLOCKED_FOR_NATIVE_EXECUTION",
+      "reason": "The current PolicyV1 runtime receives only the current observation/request, while the route formulations require bounded successor classes. All Mega Abomasnow route-critical attack/effect semantics identified in Phase A remain PARTIAL.",
+      "offline_fixture_work_allowed": true,
+      "required_before_native_b1": [
+        "exact native semantic capsules for each route-critical Abomasnow attack/effect used by the candidate",
+        "independently reviewed runtime-compatible public route oracle that does not consume future successor data",
+        "fresh-process fail-closed tests proving B0 delegation is not counted as final-adapter fallback"
+      ]
+    },
+    "mechanical_canary": {
+      "games_per_anchor_per_candidate_seat": 1,
+      "games_per_candidate_arm": 8,
+      "games_per_control_arm": 8,
+      "games_total_all_three_arms": 32,
+      "workers": 1,
+      "stop_on_any_failure": true,
+      "purpose": "B0 native mechanical adapter qualification only; no B1 native route arm is permitted while route_arm_execution_gate is BLOCKED. B1 fixture suite must pass independently."
+    },
+    "local_screen": {
+      "games_per_anchor_per_candidate_seat": 4,
+      "games_per_arm": 32,
+      "purpose": "B0 native reliability screen with equal-budget bookkeeping. A/B route arms remain offline-fixture-only until route_arm_execution_gate passes."
+    },
+    "local_upper_screen": {
+      "games_per_anchor_per_candidate_seat": 8,
+      "games_per_arm": 64,
+      "purpose": "Only if the independent local screen review is clean; B1 route arms still require the runtime gate and this remains a non-strength screen."
+    },
+    "private_kaggle": {
+      "games_per_anchor_per_candidate_seat": 16,
+      "games_per_arm": 128,
+      "user_authorized_bounded_private_compute": true,
+      "technical_prerequisites_met": false,
+      "launch_blocked_by_prerequisites": true,
+      "prerequisites": [
+        "B0 independent review complete",
+        "all deterministic fixtures pass in a fresh process",
+        "local screen has zero hard reliability counters",
+        "source/config/engine/card-table hashes sealed",
+        "no hidden-state or private-baseline dependency",
+        "route_arm_execution_gate is PASS for any native A/B launch"
+      ]
+    },
+    "confirmation": {
+      "games_per_anchor_per_candidate_seat": 64,
+      "games_per_arm": 512,
+      "user_authorized_bounded_private_compute": true,
+      "technical_prerequisites_met": false,
+      "launch_blocked_by_prerequisites": true,
+      "purpose": "Held-out comparison only after private Kaggle screen review and route_arm_execution_gate PASS for any native A/B arm."
+    },
+    "statistics": {
+      "score": "(wins + 0.5 * draws) / completed_games",
+      "wilson_confidence": 0.95,
+      "bootstrap_resamples": 10000,
+      "delta": "independent arm score minus B0 control, with retained game-level outcomes",
+      "resampling": "anchor-and-candidate-seat-stratified independent bootstrap: resample candidate and B0 games independently within each (anchor, candidate_seat) cell, compute each cell score delta, then average the eight cell deltas with fixed equal weights; never pair by engine seed or trajectory",
+      "weights": "equal fixed anchor-and-seat-cell weights; no replay-derived current-meta claim",
+      "power_note": "At 512 games per arm, a worst-case binary-outcome approximation gives a difference standard error near 0.031, so a 95 percent lower bound above +0.02 generally requires an observed gap around +0.08 or larger. This is an intentionally demanding promotion floor, not a negative-result test: a lower bound at or below +0.02 remains unresolved rather than proof of no value."
+    }
+  },
+  "promotion_and_rejection": {
+    "hard_reliability_floor": [
+      "all requested games complete",
+      "zero invalid selections",
+      "zero final-adapter fallback actions (route abstentions/B0 delegations are tracked separately and are not failures)",
+      "zero post-terminal actions",
+      "zero timeouts, native failures, crashes and swallowed exceptions",
+      "zero stale/out-of-order recurrent requests",
+      "zero NaN/Inf and zero action/replay mismatches",
+      "zero hidden-state leaks and zero manual-randomness controls",
+      "zero package/source/config/card-table/engine hash mismatch",
+      "p99 route latency within the frozen B0 budget"
+    ],
+    "qualification": {
+      "fixture_contract": "PASS required; any failure blocks native arm execution.",
+      "mechanical_canary": "PASS only with every requested complete game and every hard counter zero; otherwise REJECT.",
+      "local_screen": "B0 is eligible for its own native screen after independent review and zero hard counters. A/B route arms remain blocked until the runtime-oracle and route-critical semantic gates pass; after that gate, private Kaggle eligibility additionally requires zero hard counters, route activation >=8 games and >=5 percent of eligible decisions. Lower activation is INCONCLUSIVE/no-op, not a win.",
+      "private_kaggle": "Screen result is NOT_REVIEWED until independent raw-ledger recalculation; it cannot authorize confirmation by itself. Bounded private Kaggle compute is already user-authorized, but no native A/B launch is technically eligible while the runtime-oracle or route-critical semantic gate is BLOCKED."
+    },
+    "confirmation_promotion": {
+      "required_games": 512,
+      "all_hard_counters_zero": true,
+      "route_activation_minimum": "32 activated decisions per arm, otherwise INCONCLUSIVE",
+      "aggregate_delta": "anchor/seat-stratified independent bootstrap 95 percent lower bound for candidate minus B0 must be strictly greater than +0.02 and point estimate must be at least B0",
+      "anchor_floor": "No anchor point estimate may be more than 0.10 below B0; any hard catastrophic matchup failure rejects the arm regardless of aggregate mean.",
+      "winner_rule": "A/B winner only if its confirmation lower bound is >+0.02, the other arm is not also independently above +0.02, and all anchor floors pass. If both pass, retain both challenger records and choose the larger preregistered score only with overlapping-interval disclosure.",
+      "authority": "A passing arm is an experimental route challenger, not a deck freeze or gold/medal claim. Separate explicit approval is required for production authority."
+    },
+    "rejection": [
+      "Any hard reliability counter is non-promotable regardless of WDL.",
+      "No activation or insufficient active decisions is INCONCLUSIVE, not evidence of no strategic value; route inactivity delegates to B0 and is not a fallback failure.",
+      "Bootstrap 95 percent upper bound below zero rejects the route challenger against B0.",
+      "Aggregate lower bound not above +0.02 retains B0 and marks the challenger unresolved.",
+      "Any per-anchor catastrophic degradation beyond the declared 0.10 floor rejects.",
+      "Any partial-effect use, hidden/private input, raw-index dependence or manual randomness rejects the arm and its evidence.",
+      "No B1 result may replace the trusted private native anchor or freeze the candidate deck."
+    ]
+  },
+  "open_risks_and_required_followups": [
+    {
+      "priority": "P0",
+      "risk": "A route evaluator can look complete while native effect transitions remain PARTIAL.",
+      "mitigation": "Keep the five route-specific effects as UNSUPPORTED dependencies until the exact native upgrade tests in Phase A are independently retained."
+    },
+    {
+      "priority": "P0",
+      "risk": "B's public response envelope could smuggle a hidden-state prior into the feature or be mistaken for a runtime policy input.",
+      "mitigation": "Keep B fixture-only in this phase; require sealed synthetic public successor classes, explicit predeclared weights and source receipts, reject missing weights, and keep RQ-009 separate. A native B arm needs a new runtime-oracle review."
+    },
+    {
+      "priority": "P0",
+      "risk": "A/B appear different in synthetic fixtures but activate identically in native games.",
+      "mitigation": "Require F04 divergence and activation diagnostics; report no-op activation rather than claiming a formulation comparison."
+    },
+    {
+      "priority": "P1",
+      "risk": "B0 and B1 share adapter or native baseline bugs, hiding regressions.",
+      "mitigation": "Use the same frozen native engine receipts but independently recalculate game outcomes and run 32 option permutations; never use private baseline outputs as candidate observations."
+    },
+    {
+      "priority": "P1",
+      "risk": "Equal game counts do not equal equal compute if route search is slower.",
+      "mitigation": "Record p50/p95/p99 decision latency and cumulative per-game CPU; reject outside the declared B0 budget."
+    },
+    {
+      "priority": "P1",
+      "risk": "Natural-seated observations are insufficient to separate seat from route effects.",
+      "mitigation": "Balance candidate seats in the primary matrix and label forced-first/second diagnostics separately."
+    },
+    {
+      "priority": "P1",
+      "risk": "A fixed H can make a route appear worse through pruning.",
+      "mitigation": "Emit max_horizon_pruned and classify affected decisions as unresolved; do not extend after seeing outcomes without a new preregistration."
+    }
+  ],
+  "next_falsifiable_work_order": [
+    "1. Independently review B0 implementation and close its mechanical canary before adding route authority.",
+    "2. Implement only the B1 offline fixture schema/evaluator in a new owned change, with F01-F12 and fresh-process permutation tests; do not modify Phase A semantics or feed fixture successors to PolicyV1.",
+    "3. Run a no-engine deterministic A/B divergence and fail-closed qualification; retain raw fixture ledger and independent recalculation, including explicit B weights as fixture configuration rather than learned priors.",
+    "4. Before any native A/B arm, retain exact route-critical semantic capsules for the Mega Abomasnow route attacks/effects and independently review a runtime-compatible public route oracle; until then native A/B activation is BLOCKED and only B0 may run native screens.",
+    "5. After the runtime gate, run equal-budget local native screen arms beside B0, with route activation, B0 delegation and hard reliability counters retained per request.",
+    "6. Once the fixed technical prerequisites are met, launch the already user-authorized bounded private Kaggle screen under this contract; no routine additional compute approval is implied, and never submit to Kaggle.",
+    "7. Treat RQ-004/RQ-005 as unresolved until held-out confirmation meets this report's predeclared thresholds."
+  ],
+  "audit_review": {
+    "status": "IMPLEMENTATION_READY_FOR_OFFLINE_FIXTURE_ONLY",
+    "findings_closed": [
+      "provenance now binds the design to audited HEAD f2c8a33 and records the observed B0 commits",
+      "runtime current-state inputs are separated from fixture-only successor snapshots, counterfactual outcomes and response weights",
+      "TERMINAL_OVERRIDE is evaluator-only; current terminal observations emit no action",
+      "NO_SAFE_ROUTE, UNSUPPORTED and AMBIGUOUS explicitly delegate to B0 and do not count as final-adapter fallback",
+      "native B1 activation is blocked until exact route-critical semantic capsules and a runtime-compatible public route oracle are independently qualified",
+      "the confirmation statistic is preregistered as anchor/seat-stratified independent bootstrap with an explicit 512-game power note"
+    ],
+    "remaining_blockers": [
+      "five Phase A route-specific semantics remain PARTIAL",
+      "no runtime-compatible bounded route successor oracle exists in the current PolicyV1 API",
+      "no native B1 strength result exists"
+    ],
+    "verdict": "Proceed only with offline F01-F12 fixture evaluator and its independent recalculation. Do not launch a native A/B route tournament or treat B response weights as runtime evidence until route_arm_execution_gate is PASS."
+  },
+  "verification": {
+    "knowledge_base_requeried_before_report": true,
+    "production_code_written": false,
+    "report_only_new_owned_artifact": true,
+    "commit_created": false,
+    "report_hash_to_compute_after_write": "sha256sum reports/deterministic/phase-b1-prize-route-design-v1.json"
+  }
+}
