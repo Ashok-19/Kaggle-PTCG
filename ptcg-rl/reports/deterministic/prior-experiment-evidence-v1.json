@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "record_id": "prior-experiment-evidence-v1",
+  "status": "ASSIMILATED_NOT_PROMOTED",
+  "created_at_utc": "2026-08-07T20:12:03Z",
+  "source_commit": "fef015f4c7be47cbd8c9c996d0f473da01ccaeb5",
+  "frozen_prework": {
+    "reference_head": "56a88794bf27ee63a95adfb7b29ce34808ca8ed4",
+    "dirty_entries": 406,
+    "dirty_bytes": 38145,
+    "dirty_sha256_prefix": "464030...",
+    "note": "Frozen Phase 0 handoff fact; do not clean, restore, or rewrite these paths."
+  },
+  "observed_status_snapshot": {
+    "observation_timing": "recomputed_during_independent_review_after_phase_0_draft_authorship; not a frozen pre-authorship fact",
+    "branch": "main",
+    "head": "fef015f4c7be47cbd8c9c996d0f473da01ccaeb5",
+    "porcelain_expanded_entries": 403,
+    "porcelain_expanded_bytes": 38098,
+    "porcelain_expanded_sha256": "74b249bb5ebdf41845f09a6e99269a70ad3b289d1e76ed628f73194aa2ffb0b6",
+    "owned_paths": [
+      "reports/deterministic/deterministic-gold-architecture-v1.md",
+      "reports/deterministic/prior-experiment-evidence-v1.json",
+      "reports/deterministic/CURRENT_HANDOFF.md"
+    ],
+    "preexisting_paths": "Every dirty path in the frozen and observed inventories other than the three owned paths."
+  },
+  "knowledge_base": {
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS",
+    "counts": {
+      "sources": 56,
+      "claims": 62,
+      "strategies": 20,
+      "decision_rules": 36,
+      "anti_patterns": 14,
+      "search_features": 16,
+      "archetypes": 17,
+      "cards": 49,
+      "matchups": 12,
+      "matchup_plans": 20,
+      "contradictions": 6,
+      "research_questions": 15
+    },
+    "relevant_ids": {
+      "interface_and_public_information": {
+        "very_high": ["DR-001", "DR-002", "DR-003", "DR-022", "DR-023", "DR-024", "DR-025", "DR-029", "DR-031", "DR-032", "DR-033", "DR-035", "DR-036"],
+        "high": ["DR-030"]
+      },
+      "strategies": {
+        "high": ["STR-001", "STR-002", "STR-003", "STR-004", "STR-005", "STR-006", "STR-007", "STR-008", "STR-009", "STR-010", "STR-013", "STR-014", "STR-015", "STR-016", "STR-019", "STR-020"],
+        "medium": ["STR-011", "STR-012", "STR-017"],
+        "hypothesis": ["STR-018"]
+      },
+      "search_features": {
+        "high_or_very_high": ["SF-001", "SF-002", "SF-003", "SF-004", "SF-005", "SF-006", "SF-007", "SF-008", "SF-009", "SF-010", "SF-012", "SF-013", "SF-016"],
+        "medium": ["SF-011", "SF-014", "SF-015"]
+      },
+      "anti_patterns": {
+        "critical_or_high": ["AP-001", "AP-002", "AP-003", "AP-004", "AP-005", "AP-007", "AP-008", "AP-009", "AP-010", "AP-011", "AP-012", "AP-013", "AP-014"],
+        "medium": ["AP-006"]
+      },
+      "matchups": ["MU-001", "MU-002", "MU-003", "MU-004"],
+      "matchup_plans": ["MUP-001", "MUP-002", "MUP-003", "MUP-004", "MUP-005", "MUP-006", "MUP-007", "MUP-008", "MUP-009", "MUP-010", "MUP-011", "MUP-012"],
+      "contradictions_unresolved": ["CON-001", "CON-002", "CON-004"],
+      "research_questions_p0": ["RQ-001", "RQ-002", "RQ-003", "RQ-004", "RQ-015"],
+      "research_questions_p1": ["RQ-005", "RQ-006", "RQ-007", "RQ-008", "RQ-009", "RQ-010", "RQ-014"]
+    }
+  },
+  "asset_hashes": {
+    "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "qualified_g2_checkpoint_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+    "g1r_rule_config_sha256": "048311466cae78a3d67b3daead2efc1dd1f5d11e607f1880a7411730a9b42feb"
+  },
+  "exact_anchor_decks": {
+    "mega-abomasnow-ex": {"bytes": 248, "deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd", "adapter_sha256": "d1ef4a86413b7f548270657385c6d5c3cb114b473082cd04e2a0f1733158482b"},
+    "mega-lucario-ex": {"bytes": 305, "deck_sha256": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee", "adapter_sha256": "ab8563b67b88b3666c2ff9c308505085a84fdac676c194c5b484d8544478c3b2"},
+    "dragapult-ex": {"bytes": 321, "deck_sha256": "30c8c7365c75f38fd6e7e1d8543c42ce7055ed6fd1c6e9eb244e44484b78e724", "adapter_sha256": "ef8936859fd215e6c704071042e5438d55e2e972b8f1806fb6eddbd03027e0b9"},
+    "iono": {"bytes": 279, "deck_sha256": "e36d46c5bcafdef8a5d0e6caeb34dd8db09119c62d8fb67c99e89e7eed39f974", "adapter_sha256": "9fa360307e0b9ccd4cd8469aad50c93872468c8dfa8ff8ebb6718cacf9faa8fa"}
+  },
+  "strongest_control": {
+    "artifact": "terminal-macro-all-anchor-confirmation-v1",
+    "artifact_sha256": "7095c59bec3c74fb1fddc7fb90e34a509c36df89149490885bb914679e7fa669",
+    "controlled_agent_deck": "mega-lucario-ex",
+    "opponents": ["dragapult-ex", "iono", "mega-abomasnow-ex", "mega-lucario-ex"],
+    "seat_balance": "natural seat 0 and seat 1 are both exercised",
+    "games": 64,
+    "wins": 42,
+    "losses": 22,
+    "draws": 0,
+    "score_recalculated": 0.65625,
+    "formula": "(wins + 0.5 * draws) / games",
+    "reliability": {
+      "artifact_counters_recorded": false,
+      "action_validation": "fail_fast_harness_validation_recorded_by_source_script",
+      "promotion_eligible": false,
+      "note": "The scratch JSON has no complete gate-style invalid/fallback/timeout/crash counter set; do not interpret completed WDL output as a reliability qualification."
+    },
+    "per_anchor": {
+      "dragapult-ex": {"games": 16, "wins": 11, "losses": 5, "draws": 0, "score": 0.6875},
+      "iono": {"games": 16, "wins": 14, "losses": 2, "draws": 0, "score": 0.875},
+      "mega-abomasnow-ex": {"games": 16, "wins": 9, "losses": 7, "draws": 0, "score": 0.5625},
+      "mega-lucario-ex": {"games": 16, "wins": 8, "losses": 8, "draws": 0, "score": 0.5}
+    }
+  },
+  "bc": {
+    "execution_report_sha256": "a8376c62d65b6b5c0829e92a32574371d3acb97e31d120bc347fb2323bf9bba7",
+    "checkpoint_sha256": "76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde",
+    "head_to_head_artifact_sha256": "e0ecf315d1a378740427bd9f4fcbcaa4a74e9c21f369cd49ae61ca6d2fa08af0",
+    "train_episodes": 284,
+    "validation_episodes": 32,
+    "epochs": 4,
+    "optimizer_steps": 840,
+    "selected_epoch": 4,
+    "validation_targets": 2318,
+    "validation_nll": [1.8327710452369825, 1.5423374895128559, 1.4449107404312118, 1.4087406895101324, 1.374653459911766],
+    "test_replay_bodies_read": 0,
+    "promoted": false,
+    "head_to_head": {
+      "games": 16,
+      "rule": {"wins": 11, "losses": 5, "draws": 0, "score": 0.6875},
+      "pure_bc": {"wins": 2, "losses": 14, "draws": 0, "score": 0.125},
+      "bc_main_rule_subselections": {"wins": 4, "losses": 12, "draws": 0, "score": 0.25}
+    },
+    "decision": "ADVISOR_ONLY_NOT_DECISION_AUTHORITY"
+  },
+  "prior_experiments": [
+    {"id": "cabt-search-feasibility-canary-v1", "artifact_sha256": "072354df44294db56973ed98bcece4ee5b334604350198b9d8bbb495375752a7", "games": 0, "result": "MECHANICAL_PASS_ONLY", "reason": "State branching and fail-closed edge checks passed; no strength claim."},
+    {"id": "hybrid-search-rule-tournament-v1", "artifact_sha256": "dfe76cfcf9bc4a7b0bf0cb712f13a8ed440d4dea806618272c5127d209b5160b", "control": "rule 7/16", "variants": {"oneply0": "1/16", "oneply50": "7/16", "beam": "7/16", "puct": "6/16"}, "result": "REJECT_GENERAL_SEARCH", "reason": "No gain; raw overrides and leaf quality insufficient."},
+    {"id": "hybrid-search-conservative-sweep-v1", "artifact_sha256": "2c01fb9940ef8a70bf78d2a3f4cc0eb2ce151097fdacf05df9c276947aff4506", "control": "rule 8/16", "variants": {"oneply25": "7/16", "oneply50": "8/16", "oneply100": "8/16", "oneply200": "12/16", "beam4": "8/16", "puct90": "10/16"}, "result": "INCONCLUSIVE_NOT_PROMOTED", "reason": "Small sample; apparent oneply200/PUCT gain lacked robust confirmation."},
+    {"id": "hybrid-search-dragapult-confirmation-v1", "artifact_sha256": "a5cadeb2a1861847b28e3d70b49d0cd7fc226a3a8003ba27245ccab9da1b1fd2", "control": "rule 11/16", "variants": {"oneply50": "7/16", "puct90": "10/16", "puct95": "7/16", "puct98": "8/16"}, "result": "REJECT_PUCT_GENERAL_PROMOTION", "reason": "Larger Dragapult confirmation did not beat the rule control."},
+    {"id": "macro-heuristic-tournament-v1", "artifact_sha256": "dabe53b73f3e9e418ad3e58e7ff39d11e5500ad8be9ba5bdb6c2a76bc58d3d02", "control": "rule 5/8", "variants": {"margin0": "0/8", "margin10": "3/8", "margin20": "2/8", "margin40": "3/8"}, "result": "REJECT_STATIC_MACRO_LEAF", "reason": "Every tested margin was below control."},
+    {"id": "terminal-macro-all-anchor-confirmation-v1", "artifact_sha256": "7095c59bec3c74fb1fddc7fb90e34a509c36df89149490885bb914679e7fa669", "control": "42/64", "variant": "terminal8 28/64", "result": "REJECT_BROAD_TERMINAL_MACRO", "reason": "Search was slower and materially harmful."},
+    {"id": "full-corpus-value-oneply-sweep-v1", "artifact_sha256": "1748d1ee12824feeed6648fb556ce9545ac8539ef311455cfc135085df815941", "control": "12/16", "variants": {"m010": "6/16", "m020": "8/16", "m030": "7/16", "m050": "10/16"}, "result": "REJECT_VALUE_LEAF_AUTHORITY", "reason": "Replay-trained value did not rank counterfactual choices better than rule control."},
+    {"id": "learned-value-search-tournament-v1", "artifact_sha256": "4bc50a81f5376eb7a40713fa1aa99b62b5c95b1319c929f02c723733fd969a4c", "control": "9/16", "variant": "learned-puct 8/16", "result": "REJECT_LEARNED_PUCT_AUTHORITY", "reason": "Replay sign accuracy up to 1.0 on eight-episode validation did not transfer to action ranking."},
+    {"id": "learned-value-oneply-sweep-v1", "artifact_sha256": "397c3dc312868dd7a655e98a9d2f14e26a73e15135a19ff1e279f96b31d22675", "control": "8/16", "variants": {"margin0.00": "1/16", "margin0.10": "5/16", "margin0.20": "4/16", "margin0.30": "2/16"}, "result": "REJECT_LEARNED_ONEPLY", "reason": "No margin produced a control gain."},
+    {"id": "direct-terminal-search-tournament-v1", "artifact_sha256": "10f18502aad76787277df577a42a787ecae9ec6fe69f48478a56d9d6081f2f10", "manual_coin": true, "control": "30/64", "variant": "39/64", "result": "INVALID_NON_AUTHORITATIVE", "reason": "Manual coin handling violates engine randomness semantics; never use as strength evidence."}
+  ],
+  "timing": {
+    "artifact": "top20-recent-action-timing-v1",
+    "artifact_sha256": "9928b22a8f97be10e996fbeccd7722448796dc9b9f99e6c2e9e26549eb984828",
+    "replays_scanned": 14182,
+    "matched_replay_files": 5248,
+    "score_vs_median_call_pearson": 0.021976508777979298,
+    "rank_vs_median_call_pearson": -0.18651755758165092,
+    "representative_median_main_seconds": {"LiamK": 0.062814, "flg": 0.08161, "matsurih": 0.041461, "Marshall Maximizer": 0.386392, "Petit Canard": 0.9216055},
+    "decision": "FAST_DEFAULT_SELECTIVE_EXPENSIVE_BRANCHES"
+  },
+  "recalculation_checks": {
+    "outcome_score_formula": "(wins + 0.5 * draws) / games",
+    "all_reported_win_loss_draw_totals_match_games": true,
+    "selected_control_reliability_counters_recorded": false,
+    "prior_search_strength_claims": "not promoted"
+  },
+  "experiment_provenance_note": "The retained scratch experiment JSONs predate the fef015f4 KB-support commit and do not record a tested Git commit. source_commit identifies this audit/KB source, not an inferred experiment implementation commit.",
+  "prior_experiment_scope": {
+    "tournament_controlled_agent_deck": "mega-lucario-ex",
+    "tournament_opponents": ["dragapult-ex", "iono", "mega-abomasnow-ex", "mega-lucario-ex"],
+    "seat_balance": "natural seat 0 and seat 1 loops in the retained tournament harnesses",
+    "engine_scope": "local official bundled CABT sample submission library",
+    "required_field_limits": "WDL, variant results, sample counts, and artifact hashes are retained; scratch artifacts do not provide a uniform gate reliability counter set, confidence intervals, or a tested Git commit, so those are not claimed."
+  },
+  "promotion_protocol": {
+    "required": ["complete legal options", "zero invalid/post-terminal/fallback/crash/timeout", "natural-seat balance", "held-out WDL improvement", "per-matchup uncertainty", "exact engine/card/deck/source hashes", "scaled confirmation"],
+    "ordering": ["reliability", "catastrophic-matchup floors", "meta-weighted WDL score", "runtime/package"],
+    "never_promote_on": ["Prize margin", "timing alone", "raw search confidence", "replay rank", "manual randomness", "tiny screen"],
+    "submission": "not authorized"
+  },
+  "phase_a": {
+    "deck_harness": "mega-abomasnow-ex",
+    "hypothesis": "Exact public state plus route, attacker continuity, resource/Prize ledger, threat and sequencing components can improve the rule control before search.",
+    "implementation_scope": ["public_normalized_state", "exact_deck_profile", "semantic_state_fixtures"],
+    "strategic_authority": "none until later component-specific ablations and held-out natural-seat confirmation",
+    "modules": ["state", "deck_profile", "ledger", "threats", "prize_route", "attackers", "sequencing", "resources", "bench", "gust", "belief", "matchups", "planner", "search", "policy", "diagnostics"],
+    "boundary": "New deterministic package only; existing G1/G2/native/card/private assets remain unchanged.",
+    "first_task": "Re-query KB, build exact semantic/state fixtures, and qualify route-critical Mega Abomasnow transitions before implementation authority."
+  },
+  "baseline_test_gap": {
+    "command": "rtk uv run pytest -q",
+    "result": "471 passed, 1 failed in 28.55s",
+    "failure": "tests/g3/test_competence_plan_report.py:149 expects DEC-028 while pre-existing dirty reports/gates/g3b.json reports DEC-047",
+    "owned_change": false
+  }
+}
