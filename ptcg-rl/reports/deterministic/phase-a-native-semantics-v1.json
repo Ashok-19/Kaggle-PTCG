@@ -1,0 +1,275 @@
+{
+  "claims": {
+    "native_semantic_boundary_qualified": true,
+    "policy_strength_established": false,
+    "promotion_authorized": false,
+    "route_specific_effects_qualified": false
+  },
+  "created_at_utc": "2026-08-07T20:57:32.282912+00:00",
+  "decision": "PASS_WITH_INCONCLUSIVE_ROUTE_COVERAGE",
+  "knowledge_base_ids": [
+    "DR-025",
+    "DR-030",
+    "DR-033",
+    "AP-009",
+    "AP-010",
+    "AP-014",
+    "RQ-001",
+    "RQ-002",
+    "RQ-007"
+  ],
+  "live": {
+    "complete_legal_options": {
+      "native_option_lists_not_truncated": true,
+      "status": "PASS"
+    },
+    "face_down_and_public_reveal": {
+      "face_down_slots": 3323,
+      "public_reveal_entities": 20183,
+      "status": "PASS"
+    },
+    "fail_closed_counters": {
+      "fallback_actions": 0,
+      "hidden_hand_leaks": 0,
+      "invalid_actions": 0,
+      "manual_randomness_controls": 0,
+      "native_failures": 0,
+      "option_bounds_failures": 0,
+      "option_count_mismatches": 0,
+      "request_cap_failures": 0,
+      "semantic_contract_failures": 0,
+      "timeouts": 0,
+      "unknown_observed_card_ids": 0
+    },
+    "games": [
+      {
+        "candidate_baseline": "mega-abomasnow-ex",
+        "candidate_player": 0,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "coverage": {
+          "face_down_slots": 1502,
+          "multiselect_requests": 6,
+          "optional_requests": 5,
+          "ordered_requests": 0,
+          "public_log_events": 761,
+          "public_reveal_entities": 9446,
+          "stop_actions": 0,
+          "transient_effect_contexts": 64
+        },
+        "elapsed_seconds": 0.254653,
+        "game_index": 0,
+        "opponent_baseline": "iono",
+        "requests": 175,
+        "status": "PASS",
+        "terminal_result": 0
+      },
+      {
+        "candidate_baseline": "mega-abomasnow-ex",
+        "candidate_player": 1,
+        "counters": {
+          "fallback_actions": 0,
+          "hidden_hand_leaks": 0,
+          "invalid_actions": 0,
+          "manual_randomness_controls": 0,
+          "native_failures": 0,
+          "option_bounds_failures": 0,
+          "option_count_mismatches": 0,
+          "request_cap_failures": 0,
+          "semantic_contract_failures": 0,
+          "timeouts": 0,
+          "unknown_observed_card_ids": 0
+        },
+        "coverage": {
+          "face_down_slots": 1821,
+          "multiselect_requests": 18,
+          "optional_requests": 15,
+          "ordered_requests": 0,
+          "public_log_events": 1450,
+          "public_reveal_entities": 10737,
+          "stop_actions": 0,
+          "transient_effect_contexts": 139
+        },
+        "elapsed_seconds": 0.263854,
+        "game_index": 1,
+        "opponent_baseline": "iono",
+        "requests": 179,
+        "status": "PASS",
+        "terminal_result": 0
+      }
+    ],
+    "max_option_count": 32,
+    "option_count_total": 2289,
+    "optional_and_multiselect": {
+      "multiselect_requests": 18,
+      "optional_requests": 15,
+      "ordered_requests": 0,
+      "status": "PASS",
+      "stop_actions": 0
+    },
+    "request_count": 354,
+    "route_card_observations": {
+      "known_card_vocabulary_size": 1267,
+      "observed_attack_ids": [
+        363,
+        1042,
+        1044,
+        1046
+      ],
+      "observed_option_card_ids": [],
+      "route_attacks": {
+        "missing_ids": [],
+        "observed_ids": [
+          721,
+          722,
+          723
+        ],
+        "required_ids": [
+          721,
+          722,
+          723
+        ],
+        "status": "PASS"
+      },
+      "route_effects": {
+        "missing_ids": [
+          1192,
+          1227
+        ],
+        "observed_ids": [
+          1121,
+          1126,
+          1262
+        ],
+        "required_ids": [
+          1121,
+          1126,
+          1192,
+          1227,
+          1262
+        ],
+        "status": "INCONCLUSIVE"
+      }
+    },
+    "selection_type_counts": {
+      "0": 180,
+      "1": 156,
+      "2": 14,
+      "4": 1,
+      "8": 1,
+      "9": 2
+    },
+    "terminal_first": {
+      "checks": 2,
+      "stale_terminal_selections_observed": 2,
+      "status": "PASS"
+    },
+    "terminal_results": [
+      0,
+      0
+    ],
+    "transient_effect_and_logs": {
+      "effect_or_context_requests": 139,
+      "observed_context_effect_card_ids": [
+        269,
+        271,
+        1086,
+        1097,
+        1110,
+        1118,
+        1121,
+        1126,
+        1152,
+        1233,
+        1254,
+        1262
+      ],
+      "public_log_events": 1450,
+      "status": "PASS",
+      "transient_entity_zone_observations": 0
+    }
+  },
+  "phase": "A",
+  "provenance": {
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_policy_sha256": "d1ef4a86413b7f548270657385c6d5c3cb114b473082cd04e2a0f1733158482b",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "config_path": "configs/deterministic/phase_a_native_semantics_v1.json",
+    "config_sha256": "a2efa9f617493c11c5b870fbafb5c8a45644f214cd5894657651c2222e62e531",
+    "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "native_randomness": "engine-controlled; no manual coin/random outcome",
+    "opponent_deck_sha256": "e36d46c5bcafdef8a5d0e6caeb34dd8db09119c62d8fb67c99e89e7eed39f974",
+    "opponent_policy_sha256": "9fa360307e0b9ccd4cd8469aad50c93872468c8dfa8ff8ebb6718cacf9faa8fa",
+    "runner_path": "scripts/deterministic/phase_a_native_semantics.py",
+    "runner_sha256": "e18859b645b5bcda738e4e007780898de2a93dc20e636c4cf54504f27b909f0c",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2"
+  },
+  "record_id": "phase-a-native-semantics-v1",
+  "schema_version": 1,
+  "scope": {
+    "candidate_baseline": "mega-abomasnow-ex",
+    "deck_frozen": false,
+    "games_completed": 2,
+    "games_requested": 2,
+    "opponent_baseline": "iono",
+    "policy_strength_claimed": false,
+    "request_cap_per_game": 20000,
+    "wall_seconds_cap": 180
+  },
+  "static_checks": {
+    "candidate_deck_distinct_ids": 9,
+    "candidate_deck_size": 60,
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_attacks": 1556,
+    "card_table_cards": 1267,
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_schema_version": 1,
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "csv_rows": 2022,
+    "local_effect_metadata_rows_available": [
+      721,
+      723,
+      1121,
+      1126,
+      1192,
+      1227,
+      1262
+    ],
+    "note": "Static effect text is metadata only; executable effects are counted only after a live observation.",
+    "route_attack_ids_checked": [
+      1042,
+      1043,
+      1044,
+      1045,
+      1046,
+      1047
+    ],
+    "route_cards_checked": [
+      3,
+      721,
+      722,
+      723,
+      1121,
+      1126,
+      1192,
+      1227,
+      1262
+    ],
+    "status": "PASS"
+  },
+  "status": "SUCCEEDED"
+}

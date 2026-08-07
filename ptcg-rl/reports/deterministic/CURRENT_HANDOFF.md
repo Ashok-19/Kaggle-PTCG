@@ -1,6 +1,6 @@
 # Current Deterministic Handoff
 
-Status: `PHASE_0_ASSIMILATION_COMPLETE_NOT_IMPLEMENTED`
+Status: `PHASE_A_NATIVE_SEMANTICS_CANARY_SUCCEEDED_WITH_INCONCLUSIVE_ROUTE_COVERAGE`
 
 ## Checkpoint
 
@@ -10,7 +10,7 @@ Status: `PHASE_0_ASSIMILATION_COMPLETE_NOT_IMPLEMENTED`
 - Frozen pre-work reference: `56a88794bf27ee63a95adfb7b29ce34808ca8ed4`
 - Frozen pre-work dirty snapshot: 406 entries / 38145 bytes / SHA-256 prefix `464030...`
 - Independent-review status snapshot, recomputed after the Phase 0 draft was authored (not a frozen pre-authorship fact): 403 expanded porcelain entries / 38098 bytes / SHA-256 `74b249bb5ebdf41845f09a6e99269a70ad3b289d1e76ed628f73194aa2ffb0b6`
-- Owned paths in this milestone: `reports/deterministic/deterministic-gold-architecture-v1.md`, `reports/deterministic/prior-experiment-evidence-v1.json`, and this file. The audit content is committed above; this handoff update records the post-review state.
+- The Phase A canary audit owns exactly `configs/deterministic/phase_a_native_semantics_v1.json`, `scripts/deterministic/phase_a_native_semantics.py`, `tests/deterministic/test_phase_a_native_semantics.py`, `reports/deterministic/phase-a-native-semantics-v1.json`, and this file. Existing Phase 0 content remains unchanged.
 - Kaggle runs for this milestone: none. No Kaggle submission, external mutation, training launch, deck freeze, private-asset mutation, or production source change occurred.
 
 ## Current Best Candidate and Control
@@ -40,6 +40,31 @@ BC-MAIN/rule-subselections `4-12`.
 - Search feasibility canary is mechanical PASS only. It does not establish
   outcome strength.
 
+## Phase A Native Semantic Canary
+
+The retained report `phase-a-native-semantics-v1.json` is `SUCCEEDED` with
+decision `PASS_WITH_INCONCLUSIVE_ROUTE_COVERAGE`. It completed exactly two
+native games under the configured two-game/20,000-request/180-second limits,
+balanced candidate seat assignment across the two games, and recorded zero
+semantic, invalid-action, option-bound, hidden-hand, unknown-card, timeout,
+native-failure, fallback, request-cap, or manual-randomness-control failures.
+The terminal-first checks observed and ignored stale terminal selection data;
+all native option lists were checked without truncation, and optional and
+multi-select requests were exercised. The report has no policy-strength or
+promotion claim, and the candidate's two-game outcomes are not an evaluation
+result.
+
+The report is hash-bound to the configured card data, card table, engine,
+wrapper/API, both baseline decks and both loaded baseline modules. The runner
+also verifies at runtime that the policy bytes and receipt deck hashes match
+the configured assets. Output is aggregate-only and contains no absolute
+paths or raw native observations. A fresh independent two-game rerun also
+completed with zero fail-closed counters; native engine entropy changed which
+route attacks/effects were observed, so those observations are not treated as
+deterministic. Route-effect coverage remains explicitly `INCONCLUSIVE` (the
+retained report is missing Carmine and Lillie's Determination), and no
+route-specific effect is qualified.
+
 ## Active KB IDs
 
 Interface invariants: `DR-001`, `DR-002`, `DR-003`, `DR-022`, `DR-023`, `DR-024`,
@@ -65,6 +90,14 @@ was `0.0219765`, supporting fast deterministic defaults with selective expensive
 branches. Direct terminal-search results with manual coin handling are invalid
 and must never be cited as strength evidence.
 
+Phase A focused Ruff checks passed, and the canary/config/deck tests passed
+(`8 passed`). The full repository suite currently reports `484 passed, 3
+failed`: the known unrelated DEC-047 report-drift assertion, plus two
+deterministic state-fixture failures from concurrent unowned state-module
+changes. Those failures are not part of the native canary paths and were not
+silently repaired here. KB validation remains `PASS` with the documented 12
+open/in-review/blocked P0/P1 questions and 3 unresolved contradictions.
+
 ## Exact Assets and Deck Labels
 
 The first research harness is exact `mega-abomasnow-ex`; other exact native
@@ -74,13 +107,12 @@ hash are recorded without private paths in the architecture report and JSON.
 
 ## Exact Next Task
 
-1. Independently review the three owned Phase 0 files and the JSON recalculations.
-2. Re-run `UV_CACHE_DIR=/tmp/ptcg-uv-cache uv run python knowledge_base/validate_db.py`
-   and the exact route/belief/search/matchup queries before Phase A changes.
-3. Create semantic/state regression fixtures for Mega Abomasnow route-critical
-   cards and transient/public CABT states; add no search or BC authority.
-4. Implement only the smallest new public-state foundation under
-   `src/ptcg_rl/deterministic/`, preserving the G1/G2 action validator and all
-   private baseline/assets.
-5. Close the Phase A canary with raw evidence before any tournament or deck
-   decision. Keep all external training, submissions, and deck freeze blocked.
+1. Add the smallest exact card-transition fixtures needed to cover the
+   still-unobserved route-effect cards, without converting metadata into
+   executable effect assumptions.
+2. Preserve the native canary's public/private, terminal-first, complete-option,
+   no-manual-randomness, exact-hash, fail-closed, and sanitized-output
+   boundaries in every follow-on transition test.
+3. Keep route-effect claims, deterministic policy strength, deck selection,
+   deck freeze, external training, and submissions blocked until independent
+   natural-seat outcome evidence exists.
