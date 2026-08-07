@@ -1,0 +1,2528 @@
+{
+  "created_at_utc": "2026-08-07T23:17:09.054916+00:00",
+  "decision": "ROUTE_STATUS_MATRIX",
+  "fail_closed_counters": {
+    "fallbacks": 0,
+    "incomplete_games": 0,
+    "invalid_actions": 0,
+    "native_errors": 0,
+    "other_failures": 0,
+    "post_terminal_actions": 0,
+    "request_cap_failures": 0,
+    "semantic_contract_failures": 0,
+    "timeouts": 0,
+    "unclassified_terminal": 0
+  },
+  "games": [
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 0,
+      "requests": 10,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 1,
+      "requests": 48,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 2,
+      "requests": 12,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 3,
+      "requests": 100,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 4,
+      "requests": 12,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 5,
+      "requests": 100,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 6,
+      "requests": 102,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 7,
+      "requests": 102,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 8,
+      "requests": 122,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 9,
+      "requests": 11,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 10,
+      "requests": 121,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 11,
+      "requests": 11,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 12,
+      "requests": 114,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 13,
+      "requests": 22,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 14,
+      "requests": 100,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 15,
+      "requests": 139,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 16,
+      "requests": 110,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 17,
+      "requests": 102,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 18,
+      "requests": 125,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 19,
+      "requests": 98,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 20,
+      "requests": 98,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 21,
+      "requests": 35,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 22,
+      "requests": 120,
+      "route": "riptide",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 23,
+      "requests": 104,
+      "route": "riptide",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 0,
+      "requests": 24,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 1,
+      "requests": 19,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 2,
+      "requests": 28,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 3,
+      "requests": 32,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 4,
+      "requests": 27,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 5,
+      "requests": 16,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 6,
+      "requests": 26,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 7,
+      "requests": 17,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 8,
+      "requests": 19,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 9,
+      "requests": 17,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 10,
+      "requests": 12,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 11,
+      "requests": 19,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 12,
+      "requests": 19,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 13,
+      "requests": 20,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 14,
+      "requests": 10,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 15,
+      "requests": 33,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 16,
+      "requests": 39,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 17,
+      "requests": 15,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 18,
+      "requests": 32,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 19,
+      "requests": 20,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 20,
+      "requests": 12,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 21,
+      "requests": 18,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 22,
+      "requests": 18,
+      "route": "swirling_waves",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 23,
+      "requests": 28,
+      "route": "swirling_waves",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 0,
+      "requests": 58,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 1,
+      "requests": 207,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 2,
+      "requests": 105,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 3,
+      "requests": 59,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 4,
+      "requests": 52,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 5,
+      "requests": 12,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 6,
+      "requests": 18,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 7,
+      "requests": 128,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 8,
+      "requests": 54,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 9,
+      "requests": 112,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 10,
+      "requests": 34,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 11,
+      "requests": 124,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 12,
+      "requests": 56,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 13,
+      "requests": 18,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 14,
+      "requests": 119,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 15,
+      "requests": 60,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 16,
+      "requests": 97,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 17,
+      "requests": 99,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 18,
+      "requests": 66,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 19,
+      "requests": 181,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 20,
+      "requests": 164,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 21,
+      "requests": 12,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 22,
+      "requests": 12,
+      "route": "surfing_beach",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 23,
+      "requests": 54,
+      "route": "surfing_beach",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 0,
+      "requests": 93,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 1,
+      "requests": 84,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 2,
+      "requests": 145,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 3,
+      "requests": 89,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 4,
+      "requests": 78,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 5,
+      "requests": 136,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 6,
+      "requests": 75,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 7,
+      "requests": 110,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 8,
+      "requests": 12,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 9,
+      "requests": 76,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 10,
+      "requests": 58,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 11,
+      "requests": 32,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 12,
+      "requests": 109,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 13,
+      "requests": 65,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 14,
+      "requests": 85,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 15,
+      "requests": 98,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 16,
+      "requests": 115,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 17,
+      "requests": 138,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 18,
+      "requests": 93,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 19,
+      "requests": 111,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 20,
+      "requests": 136,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 21,
+      "requests": 110,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 22,
+      "requests": 62,
+      "route": "hammer_lanche",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 23,
+      "requests": 139,
+      "route": "hammer_lanche",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 0,
+      "requests": 22,
+      "route": "frost_barrier",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 1,
+      "requests": 24,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 2,
+      "requests": 118,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 3,
+      "requests": 14,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 4,
+      "requests": 121,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 5,
+      "requests": 116,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 6,
+      "requests": 117,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 7,
+      "requests": 117,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 8,
+      "requests": 115,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 9,
+      "requests": 118,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 10,
+      "requests": 21,
+      "route": "frost_barrier",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 11,
+      "requests": 29,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 12,
+      "requests": 117,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 13,
+      "requests": 121,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 14,
+      "requests": 118,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 15,
+      "requests": 49,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 16,
+      "requests": 37,
+      "route": "frost_barrier",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 17,
+      "requests": 16,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 18,
+      "requests": 19,
+      "route": "frost_barrier",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 19,
+      "requests": 113,
+      "route": "frost_barrier",
+      "terminal_result": 0
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 20,
+      "requests": 119,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 21,
+      "requests": 119,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 0,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 22,
+      "requests": 120,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    },
+    {
+      "candidate_player": 1,
+      "counters": {
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "game_index": 23,
+      "requests": 37,
+      "route": "frost_barrier",
+      "terminal_result": 1
+    }
+  ],
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "ids": [
+      "DR-025",
+      "DR-030",
+      "DR-033",
+      "AP-014",
+      "RQ-007"
+    ],
+    "requeried_before_run": true
+  },
+  "provenance": {
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "command": "rtk uv --cache-dir data/cache/uv run python scripts/deterministic/phase_a_route_capsules_v1.py",
+    "config_path": "configs/deterministic/phase_a_route_capsules_v1.json",
+    "config_sha256": "73e63aab39a509a51120d8587fcc44cfd8c1d9868405bd7a65321ecd60c30b2f",
+    "deck_multiset_sha256": {
+      "frost_barrier": "7d5f90c8c53f22fcdba99acce88a9e76c8a91f7e9e5a5b41315dd9dbcd2a0aa2",
+      "hammer_lanche": "7d5f90c8c53f22fcdba99acce88a9e76c8a91f7e9e5a5b41315dd9dbcd2a0aa2",
+      "hammer_lanche_multiple": "59d31c0a1cbfde0ed3550d6e2acd9756b653c8a939dea37f3e06c41e0e7a6fed",
+      "hammer_lanche_one": "5fe71714fc2d30685cf1b118e47b4ecc5354cfb65340bfcddfbed8fddec786e9",
+      "hammer_lanche_zero": "c72e2f0945e49fb00a936f7c896e9fc7749ac030346027897c195319769f3f61",
+      "opponent": "5076745d4cb1559e24ed0fc3f57db4f3aa7c363a9badd75371d9411cbfa01ab7",
+      "riptide": "3f7128363c90f32bb93c2064f2e27200d89c3787f61ab91509a202a37885bd87",
+      "surfing_beach": "a0a5b999d254a253634d51fcc3e80601094cabd0cba6fba00ddb2eccca7787b6",
+      "swirling_waves": "a0a5b999d254a253634d51fcc3e80601094cabd0cba6fba00ddb2eccca7787b6"
+    },
+    "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "native_randomness": "official engine controlled; no manual coin/random outcome",
+    "observed_asset_hashes": {
+      "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+      "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2"
+    },
+    "runner_path": "scripts/deterministic/phase_a_route_capsules_v1.py",
+    "runner_sha256": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+    "source_hashes": {
+      "scripts/deterministic/phase_a_route_capsules_v1.py": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/native.py": "0e8daa0c46569f5bb1ba33c30ecff78347a39f35fe5c85b36de3b3ad5c2ce6fa",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"
+    },
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2"
+  },
+  "raw_evidence": {
+    "bytes": 10948371,
+    "content": "complete native transition capsules retained privately under ignored runs/",
+    "path": "runs/phase-a-route-capsules-20260807T231709Z-46f30db4ef7d/raw-evidence.json",
+    "sealed_read_only": true,
+    "sha256": "a07e4c5e984752ef9f4d0db5839782084057ecf22e909e601a4faf05f1cd9cb2"
+  },
+  "record_id": "phase-a-route-capsules-v1",
+  "route_results": {
+    "frost_barrier": {
+      "candidate_attack_attempts": 8,
+      "capsule_count": 48,
+      "capsule_digest": "4d3985e3563afcafa297492cbd416c7419e548f7c68a6812c9bf385b2366c06b",
+      "evidence_summary": {
+        "frost_barrier_attack_observed": {
+          "count": 18,
+          "transition_digest": "9f48559d09b89251583b0a7e0bbe20d642cebacd1457d048bb1eec0436fad546"
+        }
+      },
+      "games_completed": 24,
+      "games_requested": 24,
+      "invariant_failures": {},
+      "proof_capsule_count": 18,
+      "proof_capsule_digest": "fbe3de2eef220262b0862c1f49535367516c4161a41f7b4298265a3fa970e137",
+      "proofs": {
+        "frost_barrier_attack_observed": 18
+      },
+      "reason": "Barrier attack observed; next-turn fixed-response/control comparison remains unproven",
+      "status": "PARTIAL",
+      "strata": {}
+    },
+    "hammer_lanche": {
+      "candidate_attack_attempts": 10,
+      "capsule_count": 48,
+      "capsule_digest": "911e3b831e517449f3a0e01519f3fb4d1591b42f56bf4fdee4bd2dba5e8d537e",
+      "evidence_summary": {
+        "hammer_six_top_discard_and_damage": {
+          "count": 19,
+          "damage_values": [
+            0,
+            100,
+            500
+          ],
+          "discard_count_values": [
+            6
+          ],
+          "transition_digest": "76f53d98815eada0b2ab4f232b7f79d92e3c79d32c1661cfc80d780f75374639",
+          "water_count_values": [
+            0,
+            1,
+            5
+          ]
+        }
+      },
+      "games_completed": 24,
+      "games_requested": 24,
+      "invariant_failures": {},
+      "proof_capsule_count": 19,
+      "proof_capsule_digest": "b23cb54474b5f3ebd225b6ad7d0d814174d972681c4693f148c1cb497b3cf931",
+      "proofs": {
+        "hammer_six_top_discard_and_damage": 19
+      },
+      "reason": "six new discard serials and HP deltas observed in zero/one/multiple-Water strata",
+      "status": "PASS",
+      "strata": {
+        "multiple": 2,
+        "one": 8,
+        "zero": 9
+      }
+    },
+    "riptide": {
+      "candidate_attack_attempts": 671,
+      "capsule_count": 48,
+      "capsule_digest": "e0c57baad0d6eac9b823512594114ac202653c152f76a4e77c1bfcb416fd8ba3",
+      "evidence_summary": {
+        "riptide_recycle_and_damage": {
+          "count": 21,
+          "damage_values": [
+            20,
+            40,
+            60,
+            80
+          ],
+          "recycled_water_count_values": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "transition_digest": "5369512205beb98daf1c7ed69798f0a52bb231308a8ab7407401355e18c9bd48"
+        }
+      },
+      "games_completed": 24,
+      "games_requested": 24,
+      "invariant_failures": {},
+      "proof_capsule_count": 21,
+      "proof_capsule_digest": "4f67391feabb036add0227bd5573f9d971b583db5cfec3913eab5a64e585e50b",
+      "proofs": {
+        "riptide_recycle_and_damage": 21
+      },
+      "reason": "recycled-water counts 1/2/3 each reconcile to deck increment and 20-per-water damage",
+      "status": "PASS",
+      "strata": {}
+    },
+    "surfing_beach": {
+      "candidate_attack_attempts": 0,
+      "capsule_count": 48,
+      "capsule_digest": "a1c053be871965cced46d9bb98a63933d5cd08bc3ee484e80a4637bbaacfa9c6",
+      "evidence_summary": {
+        "surfing_beach_play": {
+          "count": 19,
+          "game_count": 19,
+          "transition_digest": "d3cb9aecdb162b604e81ada8244a32ba94fca9381b6338c2489c9f6117900807"
+        },
+        "surfing_beach_water_switch": {
+          "count": 147,
+          "game_count": 17,
+          "transition_digest": "7d3f59ebdae0745f0fc3c683eb4179ca7167530f13164fddbf95ed19e92387dc"
+        }
+      },
+      "games_completed": 24,
+      "games_requested": 24,
+      "invariant_failures": {},
+      "proof_capsule_count": 2,
+      "proof_capsule_digest": "405307738b5c8f3446c28303ac09747ba9898936227180e39a537d3a7a470831",
+      "proofs": {
+        "surfing_beach_play": 19,
+        "surfing_beach_water_switch": 147
+      },
+      "reason": "stadium PLAY and later effect-bound Water SWITCH share a game, player, and turn order",
+      "status": "PASS",
+      "strata": {}
+    },
+    "swirling_waves": {
+      "candidate_attack_attempts": 21,
+      "capsule_count": 48,
+      "capsule_digest": "23dc4298707acc25ec820410c8e40252523723db995f7e498f015c957c0384d5",
+      "evidence_summary": {
+        "swirling_two_energy_and_130_damage": {
+          "count": 14,
+          "damage_values": [
+            130
+          ],
+          "discarded_energy_count_values": [
+            2
+          ],
+          "transition_digest": "17d11466eb31bed93af2469506a579ea50e3df93360adf06151c6f2676eb5e1c"
+        }
+      },
+      "games_completed": 24,
+      "games_requested": 24,
+      "invariant_failures": {},
+      "proof_capsule_count": 14,
+      "proof_capsule_digest": "4e1d70d527b21b593db93b09ffd2390c5ff467f72cf07e2dd77b9dbf1c88f981",
+      "proofs": {
+        "swirling_two_energy_and_130_damage": 14
+      },
+      "reason": "exactly two attached Water serials moved to discard with 130 HP delta",
+      "status": "PASS",
+      "strata": {}
+    }
+  },
+  "schema_version": 1,
+  "scope": {
+    "candidate": "mega-abomasnow-route-probe",
+    "deck_frozen": false,
+    "games": 120,
+    "games_completed": 120,
+    "games_requested": 120,
+    "policy_strength_claimed": false,
+    "promotion_authorized": false,
+    "routes": [
+      "riptide",
+      "swirling_waves",
+      "surfing_beach",
+      "hammer_lanche",
+      "frost_barrier"
+    ]
+  },
+  "status": "SUCCEEDED"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-a-route-capsules-v1",
+  "candidate": "mega-abomasnow-route-probe",
+  "opponent": "passive-kyogre-probe",
+  "knowledge_base_ids": ["DR-025", "DR-030", "DR-033", "AP-014", "RQ-007"],
+  "assets": {
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "engine_root": "private/assets/official/sample_submission/sample_submission"
+  },
+  "limits": {
+    "games_per_route": 24,
+    "request_cap_per_game": 1200,
+    "wall_seconds": 240,
+    "max_capsules_per_route": 48
+  },
+  "routes": [
+    {"id": "riptide", "attack_id": 1042, "card_id": 721},
+    {"id": "swirling_waves", "attack_id": 1043, "card_id": 721},
+    {"id": "surfing_beach", "attack_id": null, "card_id": 1262},
+    {"id": "hammer_lanche", "attack_id": 1046, "card_id": 723},
+    {"id": "frost_barrier", "attack_id": 1047, "card_id": 723}
+  ],
+  "deck_specs": {
+    "opponent": {"721": 4, "722": 4, "3": 52},
+    "riptide": {"721": 4, "722": 4, "723": 4, "1121": 4, "1262": 3, "3": 41},
+    "swirling_waves": {"721": 4, "722": 4, "723": 4, "1262": 4, "3": 44},
+    "surfing_beach": {"721": 4, "722": 4, "723": 4, "1262": 4, "3": 44},
+    "hammer_lanche": {"265": 4, "721": 4, "722": 4, "723": 4, "1086": 4, "1097": 4, "1118": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 4, "3": 15},
+    "hammer_lanche_zero": {"265": 4, "268": 1, "721": 4, "722": 4, "723": 4, "1086": 4, "1097": 4, "1118": 4, "1121": 4, "1126": 1, "1152": 4, "1192": 4, "1227": 4, "1233": 4, "1254": 4, "1262": 4, "3": 2},
+    "hammer_lanche_one": {"265": 4, "721": 4, "722": 4, "723": 4, "1086": 4, "1097": 4, "1118": 4, "1121": 4, "1126": 1, "1152": 4, "1192": 4, "1227": 4, "1233": 4, "1254": 2, "1262": 4, "3": 5},
+    "hammer_lanche_multiple": {"265": 4, "721": 4, "722": 4, "723": 4, "1121": 4, "1126": 1, "1192": 4, "3": 35},
+    "frost_barrier": {"265": 4, "721": 4, "722": 4, "723": 4, "1086": 4, "1097": 4, "1118": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 4, "3": 15}
+  }
+}
