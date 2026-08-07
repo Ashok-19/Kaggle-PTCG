@@ -14,7 +14,7 @@ from ptcg_rl.deterministic.state import (
     hidden_slot_key,
     known_entity_key,
 )
-from ptcg_rl.g1.models import PublicEventV1
+from ptcg_rl.g1.models import PublicEventV1, stable_hash
 from ptcg_rl.g1.semantic import semantic_snapshot
 
 from ..g1_fixtures import raw_observation
@@ -65,7 +65,14 @@ def test_known_and_hidden_slot_keys_and_lifetimes_are_canonical() -> None:
     assert hidden_slot_key(1, 6, 2) == "slot:p1:z6:i2"
     observation, _ = snapshot()
     hidden = next(entity for entity in observation.entities if entity.serial is None)
-    known = replace(hidden, entity_key=known_entity_key(0, 7), card_id=100, serial=7, visible=True)
+    known = replace(
+        hidden,
+        entity_key=known_entity_key(0, 7),
+        card_id=100,
+        serial=7,
+        metadata_ref=f"card:100@{'c' * 64}",
+        visible=True,
+    )
     assert entity_lifetime(known) == EntityLifetime.STABLE
     assert entity_lifetime(hidden) == EntityLifetime.STABLE
 
@@ -110,6 +117,7 @@ def test_public_boundary_rejects_opponent_hand_and_duplicate_identity() -> None:
         entity_key=known_entity_key(1, 77),
         card_id=100,
         serial=77,
+        metadata_ref=f"card:100@{'c' * 64}",
         owner=1,
         zone=2,
         position=0,
@@ -131,6 +139,7 @@ def test_transient_and_stable_slots_are_not_conflated() -> None:
         entity_key=known_entity_key(0, 19),
         card_id=100,
         serial=19,
+        metadata_ref=f"card:100@{'c' * 64}",
         zone=1,
         visible=True,
     )
@@ -150,6 +159,7 @@ def test_ledger_residual_counts_only_unrepresented_public_cards() -> None:
         entity_key=known_entity_key(0, 88),
         card_id=100,
         serial=88,
+        metadata_ref=f"card:100@{'c' * 64}",
         owner=0,
         zone=2,
         position=0,
@@ -191,3 +201,95 @@ def test_ongoing_without_request_is_only_allowed_for_start_marker() -> None:
     assert request is None
     state = PublicStateV1.from_engine(observation, None)
     assert state.acting_player is None
+
+
+def test_request_episode_must_match_observation_battle() -> None:
+    observation, request = snapshot(options=[{"type": 1}])
+    assert request is not None
+    with pytest.raises(PublicStateError, match="episode_uuid"):
+        PublicStateV1.from_engine(observation, replace(request, episode_uuid="other-battle"))
+
+
+def test_public_players_have_exact_canonical_rows_and_nonnegative_counts() -> None:
+    observation, request = snapshot(options=[{"type": 1}])
+    with pytest.raises(PublicStateError, match="exactly two"):
+        PublicStateV1.from_engine(replace(observation, players=observation.players[:1]), request)
+    with pytest.raises(PublicStateError, match="canonical player"):
+        PublicStateV1.from_engine(
+            replace(observation, players=(replace(observation.players[0], player_index=1), observation.players[1])),
+            request,
+        )
+    with pytest.raises(PublicStateError, match="nonnegative"):
+        PublicStateV1.from_engine(
+            replace(observation, players=(replace(observation.players[0], hand_count=-1), observation.players[1])),
+            request,
+        )
+    with pytest.raises(PublicStateError, match="opponent hand visibility"):
+        PublicStateV1.from_engine(
+            replace(observation, players=(observation.players[0], replace(observation.players[1], hand_visible=True))),
+            request,
+        )
+    with pytest.raises(PublicStateError, match="malformed"):
+        PublicStateV1.from_engine(replace(observation, players=None), request)  # type: ignore[arg-type]
+
+
+def test_start_marker_is_strictly_empty_and_has_no_turn_metadata() -> None:
+    start, _ = semantic_snapshot({"logs": []}, "start", 0, CARD_HASH)
+    with pytest.raises(PublicStateError, match="start marker"):
+        PublicStateV1.from_engine(replace(start, turn=0), None)
+    ordinary, _ = snapshot(options=[{"type": 1}])
+    with pytest.raises(PublicStateError, match="start marker"):
+        PublicStateV1.from_engine(replace(start, entities=(ordinary.entities[0],)), None)
+
+
+def test_option_integrity_checks_name_refs_and_semantic_fingerprint() -> None:
+    observation, request = snapshot(options=[{"type": 1}])
+    assert request is not None
+    with pytest.raises(PublicStateError, match="option name"):
+        PublicStateV1.from_engine(
+            observation, replace(request, options=(replace(request.options[0], option_name="NO"),))
+        )
+    with pytest.raises(PublicStateError, match="fingerprint"):
+        PublicStateV1.from_engine(
+            observation, replace(request, options=(replace(request.options[0], semantic_fingerprint="0" * 64),))
+        )
+    tampered = replace(request.options[0], source_ref="pseudo:tampered")
+    tampered = replace(tampered, semantic_fingerprint=stable_hash(tampered.semantic_payload()))
+    with pytest.raises(PublicStateError, match="reference"):
+        PublicStateV1.from_engine(
+            observation, replace(request, options=(tampered,))
+        )
+
+
+def test_public_metadata_and_enum_types_are_canonical() -> None:
+    observation, request = snapshot(options=[{"type": 1}])
+    with pytest.raises(PublicStateError, match="metadata"):
+        PublicStateV1.from_engine(
+            replace(observation, entities=(replace(
+                observation.entities[0], metadata_ref="private-information"
+            ),)),
+            request,
+        )
+    with pytest.raises(PublicStateError, match="terminal result"):
+        PublicStateV1.from_engine(replace(observation, terminal_result=0.0), request)
+    with pytest.raises(PublicStateError, match="first_player"):
+        PublicStateV1.from_engine(replace(observation, first_player=0.0), request)
+
+
+def test_option_rejects_noncanonical_nonentity_references() -> None:
+    observation, request = snapshot(options=[{"type": 1}])
+    assert request is not None
+    option = request.options[0]
+    tampered = replace(option, source_kind="PSEUDO", source_ref="private:secret")
+    tampered = replace(tampered, semantic_fingerprint=stable_hash(tampered.semantic_payload()))
+    with pytest.raises(PublicStateError, match="pseudo reference"):
+        PublicStateV1.from_engine(observation, replace(request, options=(tampered,)))
+
+
+def test_request_rejects_malformed_numeric_metadata_and_ordering() -> None:
+    observation, request = snapshot(options=[{"type": 1}])
+    assert request is not None
+    with pytest.raises(PublicStateError, match="remain_energy_cost"):
+        PublicStateV1.from_engine(observation, replace(request, remain_energy_cost=1.5))
+    with pytest.raises(PublicStateError, match="ordering"):
+        PublicStateV1.from_engine(observation, replace(request, ordering="ORDERED"))

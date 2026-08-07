@@ -83,6 +83,10 @@ class RoleAssignmentV1:
 
     def __post_init__(self) -> None:
         _positive_int(self.card_id, "role card_id")
+        if not isinstance(self.roles, tuple):
+            raise DeckProfileError("roles must be an immutable tuple")
+        if any(not isinstance(role, str) for role in self.roles):
+            raise DeckProfileError("roles must contain strings")
         if any(role not in ROLE_LABELS for role in self.roles):
             raise DeckProfileError("role label is not in the deterministic allowlist")
         if not self.roles or tuple(sorted(set(self.roles))) != self.roles:
@@ -98,10 +102,12 @@ class EvolutionRequirementV1:
 
     def __post_init__(self) -> None:
         _positive_int(self.card_id, "evolution card_id")
-        if not self.previous_card_ids or tuple(sorted(set(self.previous_card_ids))) != self.previous_card_ids:
-            raise DeckProfileError("evolution previous_card_ids must be sorted and unique")
+        if not isinstance(self.previous_card_ids, tuple):
+            raise DeckProfileError("evolution previous_card_ids must be an immutable tuple")
         for card_id in self.previous_card_ids:
             _positive_int(card_id, "evolution previous card_id")
+        if not self.previous_card_ids or tuple(sorted(set(self.previous_card_ids))) != self.previous_card_ids:
+            raise DeckProfileError("evolution previous_card_ids must be sorted and unique")
 
     @property
     def previous_card_id(self) -> int:
@@ -148,7 +154,11 @@ class DeckProfileV1:
     profile_hash: str
 
     def __post_init__(self) -> None:
-        if self.schema_version != DECK_PROFILE_SCHEMA_VERSION:
+        if (
+            isinstance(self.schema_version, bool)
+            or not isinstance(self.schema_version, int)
+            or self.schema_version != DECK_PROFILE_SCHEMA_VERSION
+        ):
             raise DeckProfileError("unknown deck profile schema version")
         if not isinstance(self.deck_id, str) or not self.deck_id:
             raise DeckProfileError("deck_id must be a nonempty string")
@@ -156,10 +166,10 @@ class DeckProfileV1:
         _digest(self.card_data_sha256, "card_data_sha256")
         _digest(self.engine_library_sha256, "engine_library_sha256")
         _digest(self.wrapper_api_sha256, "wrapper_api_sha256")
-        if len(self.ordered_card_ids) != EXACT_DECK_SIZE:
-            raise DeckProfileError("deck must contain exactly 60 cards")
         if not isinstance(self.ordered_card_ids, tuple):
             raise DeckProfileError("ordered card IDs must be an immutable tuple")
+        if len(self.ordered_card_ids) != EXACT_DECK_SIZE:
+            raise DeckProfileError("deck must contain exactly 60 cards")
         if any(isinstance(card_id, bool) or not isinstance(card_id, int) or card_id <= 0 for card_id in self.ordered_card_ids):
             raise DeckProfileError("ordered card IDs must be positive integers")
         if not isinstance(self.roles, tuple) or not isinstance(self.evolution_requirements, tuple) or not isinstance(self.attack_requirements, tuple):
@@ -177,9 +187,13 @@ class DeckProfileV1:
         evolution_keys = [(row.card_id, row.previous_card_ids) for row in self.evolution_requirements]
         if len(evolution_keys) != len(set(evolution_keys)):
             raise DeckProfileError("duplicate evolution requirement")
+        if evolution_keys != sorted(evolution_keys):
+            raise DeckProfileError("evolution requirements must be in canonical sorted order")
         attack_keys = [(row.card_id, row.attack_id) for row in self.attack_requirements]
         if len(attack_keys) != len(set(attack_keys)):
             raise DeckProfileError("duplicate attack requirement")
+        if attack_keys != sorted(attack_keys):
+            raise DeckProfileError("attack requirements must be in canonical sorted order")
         expected = self._hash_payloads()
         for name, actual in expected.items():
             if actual != getattr(self, name):
@@ -196,7 +210,11 @@ class DeckProfileV1:
         evolution_requirements: Sequence[EvolutionRequirementV1] = (),
         attack_requirements: Sequence[AttackRequirementV1] = (),
     ) -> "DeckProfileV1":
-        if card_table.schema_version != 1:
+        if (
+            isinstance(card_table.schema_version, bool)
+            or not isinstance(card_table.schema_version, int)
+            or card_table.schema_version != 1
+        ):
             raise DeckProfileError("profile requires CardTableV1")
         try:
             verify_card_table(card_table)
@@ -426,30 +444,49 @@ class DeckProfileV1:
         """Parse canonical profile data and verify all tamper-evident hashes."""
 
         try:
+            if not isinstance(value, Mapping):
+                raise DeckProfileError("profile must be a mapping")
             payload = dict(value)
+            sequence_fields = (
+                "ordered_card_ids", "roles", "evolution_requirements", "attack_requirements"
+            )
+            if any(type(payload.get(field)) not in (list, tuple) for field in sequence_fields):
+                field = next(field for field in sequence_fields if type(payload.get(field)) not in (list, tuple))
+                raise DeckProfileError(f"{field} must be a list or tuple")
             if not isinstance(payload.get("ordered_card_ids"), (list, tuple)):
                 raise DeckProfileError("ordered_card_ids must be a list or tuple")
-            if not isinstance(payload.get("roles"), (list, tuple)):
-                raise DeckProfileError("roles must be a list or tuple")
-            if not isinstance(payload.get("evolution_requirements"), (list, tuple)):
-                raise DeckProfileError("evolution_requirements must be a list or tuple")
-            if not isinstance(payload.get("attack_requirements"), (list, tuple)):
-                raise DeckProfileError("attack_requirements must be a list or tuple")
             if any(isinstance(item, bool) or not isinstance(item, int) for item in payload["ordered_card_ids"]):
                 raise DeckProfileError("ordered_card_ids must contain integers")
             payload["ordered_card_ids"] = tuple(payload["ordered_card_ids"])
-            payload["roles"] = tuple(
-                RoleAssignmentV1(item["card_id"], tuple(item["roles"]))
-                for item in payload["roles"]
-            )
-            payload["evolution_requirements"] = tuple(
-                EvolutionRequirementV1(item["card_id"], tuple(item["previous_card_ids"]))
-                for item in payload["evolution_requirements"]
-            )
-            payload["attack_requirements"] = tuple(
-                AttackRequirementV1(item["card_id"], item["attack_id"], tuple(item["energy_counts"]))
-                for item in payload["attack_requirements"]
-            )
+
+            role_rows = []
+            for item in payload["roles"]:
+                if not isinstance(item, Mapping):
+                    raise DeckProfileError("role records must be mappings")
+                if type(item.get("roles")) not in (list, tuple):
+                    raise DeckProfileError("role roles must be a list or tuple")
+                role_rows.append(RoleAssignmentV1(item["card_id"], tuple(item["roles"])))
+            payload["roles"] = tuple(role_rows)
+
+            evolution_rows = []
+            for item in payload["evolution_requirements"]:
+                if not isinstance(item, Mapping):
+                    raise DeckProfileError("evolution records must be mappings")
+                if type(item.get("previous_card_ids")) not in (list, tuple):
+                    raise DeckProfileError("evolution previous_card_ids must be a list or tuple")
+                evolution_rows.append(
+                    EvolutionRequirementV1(item["card_id"], tuple(item["previous_card_ids"])))
+            payload["evolution_requirements"] = tuple(evolution_rows)
+
+            attack_rows = []
+            for item in payload["attack_requirements"]:
+                if not isinstance(item, Mapping):
+                    raise DeckProfileError("attack records must be mappings")
+                if type(item.get("energy_counts")) not in (list, tuple):
+                    raise DeckProfileError("attack energy_counts must be a list or tuple")
+                attack_rows.append(
+                    AttackRequirementV1(item["card_id"], item["attack_id"], tuple(item["energy_counts"])))
+            payload["attack_requirements"] = tuple(attack_rows)
             return cls(**payload)
         except (KeyError, TypeError, ValueError, DeckProfileError) as error:
             raise DeckProfileError(f"invalid deck profile mapping: {error}") from error
@@ -488,7 +525,7 @@ def mega_abomasnow_profile(card_table: CardTableV1) -> DeckProfileV1:
     role_rows = (
         RoleAssignmentV1(3, ("BASIC_ENERGY",)),
         RoleAssignmentV1(721, ("BASIC_POKEMON", "OPENING")),
-        RoleAssignmentV1(722, ("EVOLUTION_PIECE",)),
+        RoleAssignmentV1(722, ("BASIC_POKEMON",)),
         RoleAssignmentV1(723, ("PRIMARY_ATTACKER",)),
         RoleAssignmentV1(1121, ("SEARCH",)),
         RoleAssignmentV1(1126, ("ACE_SPEC", "SEARCH")),

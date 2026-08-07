@@ -28,12 +28,12 @@ def card_table() -> CardTableV1:
             energy_type=3 if card_id == 3 else 0,
             weakness_type=-1,
             resistance_type=-1,
-            stage_code=1 if card_id == 721 else (2 if card_id == 722 else 3 if card_id == 723 else 0),
+            stage_code=1 if card_id in {721, 722} else (2 if card_id == 723 else 0),
             hp=100,
             retreat_cost=1,
-            basic=card_id == 721,
-            stage1=card_id == 722,
-            stage2=card_id == 723,
+            basic=card_id in {721, 722},
+            stage1=card_id == 723,
+            stage2=False,
             ex=card_id == 723,
             mega_ex=card_id == 723,
             tera=False,
@@ -76,7 +76,7 @@ def all_roles() -> tuple[RoleAssignmentV1, ...]:
     return (
         RoleAssignmentV1(3, ("BASIC_ENERGY",)),
         RoleAssignmentV1(721, ("BASIC_POKEMON", "OPENING")),
-        RoleAssignmentV1(722, ("EVOLUTION_PIECE",)),
+        RoleAssignmentV1(722, ("BASIC_POKEMON",)),
         RoleAssignmentV1(723, ("PRIMARY_ATTACKER",)),
         RoleAssignmentV1(1121, ("SEARCH",)),
         RoleAssignmentV1(1126, ("ACE_SPEC", "SEARCH")),
@@ -164,7 +164,7 @@ def test_role_coverage_ace_spec_and_provenance_fail_closed() -> None:
     with pytest.raises(DeckProfileError, match="predecessor stage"):
         DeckProfileV1.build(
             card_table(), MEGA_ABOMASNOW_ORDERED_CARD_IDS, deck_id="bad-evolution", roles=all_roles(),
-            evolution_requirements=(EvolutionRequirementV1(723, (721,)),),
+            evolution_requirements=(EvolutionRequirementV1(723, (723,)),),
         )
 
 
@@ -180,3 +180,40 @@ def test_profile_parser_rejects_type_coercion_and_exposes_asset_bindings() -> No
     tampered["roles"][0]["card_id"] = str(tampered["roles"][0]["card_id"])
     with pytest.raises(DeckProfileError, match="invalid deck profile mapping"):
         DeckProfileV1.from_mapping(tampered)
+
+
+def test_profile_rejects_bool_schema_and_unsorted_requirement_records() -> None:
+    profile = DeckProfileV1.build(
+        card_table(),
+        MEGA_ABOMASNOW_ORDERED_CARD_IDS,
+        deck_id="requirements",
+        roles=all_roles(),
+        evolution_requirements=(EvolutionRequirementV1(723, (722,)),),
+        attack_requirements=(
+            AttackRequirementV1(721, 1, (0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0)),
+            AttackRequirementV1(723, 1, (0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0)),
+        ),
+    )
+    with pytest.raises(DeckProfileError, match="schema version"):
+        DeckProfileV1.from_mapping({**profile.canonical_dict(), "schema_version": True})
+    tampered = profile.canonical_dict()
+    tampered["attack_requirements"] = list(reversed(tampered["attack_requirements"]))
+    with pytest.raises(DeckProfileError, match="sorted"):
+        DeckProfileV1.from_mapping(tampered)
+
+
+def test_profile_parser_requires_nested_mappings_and_tuples() -> None:
+    profile = mega_abomasnow_profile(card_table())
+    tampered = profile.canonical_dict()
+    tampered["roles"][0] = ["not", "a", "mapping"]
+    with pytest.raises(DeckProfileError, match="invalid deck profile mapping"):
+        DeckProfileV1.from_mapping(tampered)
+    tampered = profile.canonical_dict()
+    tampered["roles"][0]["roles"] = {"BASIC_ENERGY": True}
+    with pytest.raises(DeckProfileError, match="invalid deck profile mapping"):
+        DeckProfileV1.from_mapping(tampered)
+
+
+def test_evolution_requirement_rejects_mixed_id_types_without_leaking_type_error() -> None:
+    with pytest.raises(DeckProfileError, match="positive integer"):
+        EvolutionRequirementV1(723, ("722",))  # type: ignore[arg-type]
