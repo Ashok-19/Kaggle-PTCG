@@ -1,0 +1,241 @@
+{
+  "record_id": "B0-MA-CONTROL-001-b0-ma-control-20260807T225553.105921Z-5bd7d7f197ab-independent-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-07T23:04:27Z",
+  "status": "AUDIT_COMPLETE_PASS_WITH_SCALING_BLOCKER",
+  "verdict": "PASS_FOR_16_GAME_MECHANICAL_CANARY_ONLY",
+  "scope": {
+    "mode": "independent_read_only_raw_run_audit",
+    "run_id": "b0-ma-control-20260807T225553.105921Z-5bd7d7f197ab",
+    "raw_run_dir": "runs/b0-ma-control-20260807T225553.105921Z-5bd7d7f197ab",
+    "candidate": "deterministic-strategic-mega-abomasnow-v1",
+    "candidate_deck_profile": "mega-abomasnow-ex",
+    "candidate_perspective": true,
+    "natural_deployment": true,
+    "paired_seed_claim": false,
+    "strength_claim": false,
+    "promotion_claim": false,
+    "kaggle_runs": 0,
+    "submissions": 0,
+    "training": false
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "integrity_check": "ok",
+    "counts": {
+      "sources": 56,
+      "claims": 62,
+      "strategies": 20,
+      "decision_rules": 36,
+      "anti_patterns": 14,
+      "search_features": 16,
+      "archetypes": 17,
+      "cards": 49,
+      "matchups": 12,
+      "matchup_plans": 20,
+      "observed_replay_patterns": 10,
+      "contradictions": 6,
+      "research_questions": 15
+    },
+    "requeried_rows": {
+      "decision_rules": [
+        "DR-001",
+        "DR-002",
+        "DR-022",
+        "DR-023",
+        "DR-024",
+        "DR-025",
+        "DR-030",
+        "DR-031",
+        "DR-032",
+        "DR-033"
+      ],
+      "anti_patterns": ["AP-009", "AP-011"],
+      "research_questions": ["RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-008", "RQ-009"],
+      "contradictions": ["CON-001", "CON-002", "CON-004"]
+    },
+    "binding_interpretation": "Terminal-first handling, current legal options, no option truncation, public-information uncertainty, simulator semantics, version binding, natural-seat balance, terminal WDL evaluation, and exact card IDs were treated as binding. RQ-004 through RQ-009 remain open; CON-001, CON-002, and CON-004 remain unresolved. This canary cannot close any of them."
+  },
+  "run_provenance": {
+    "run_manifest_sha256": "c7183a406db5120d01a3d58d2b4dbf99547407d82706ded85f9d781db8d3c5b7",
+    "run_plan_sha256": "17574267b6bfbe0b9813546ed5417410507caa5cef4e93977f185d6408517eaf",
+    "manifest_sidecar_sha256": "287c57bd81dacc509c44a2ba52970d9c08c5646c21cf7774e00c08804a97ec1e",
+    "plan_sidecar_sha256": "ffd871ba6fad493bc139ebfb65ebc30e9923c171c1895f4bc9ff85ec5701b4e6",
+    "sealed_json_count": 18,
+    "sealed_sidecar_count": 18,
+    "all_sealed_json_sidecars_verified": true,
+    "all_sealed_files_read_only": true,
+    "all_manifest_match_digests_verified": true,
+    "match_json_count": 16,
+    "declared_evidence_bytes_before_manifest": 85166,
+    "retained_directory_bytes_at_review": 130981,
+    "evidence_cap_bytes": 67108864,
+    "command": [
+      "scripts/deterministic/b0_control_qualification.py",
+      "--repo",
+      ".",
+      "--engine-root",
+      "private/assets/official/sample_submission/sample_submission",
+      "--private-baselines",
+      "private/baselines"
+    ],
+    "repository_at_run": {
+      "commit": "e25100a755a61d6c2ec6f9bbfe0006f57f4c1268",
+      "dirty": true,
+      "dirty_digest_sha256": "2aa953dc54948ad9969b20aaa83d805625f1e9afdc8395238410b3fc670b6dcf",
+      "status_entry_count": 176
+    },
+    "platform": {
+      "machine": "x86_64",
+      "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.35",
+      "python": "3.11.14"
+    },
+    "source_hash": {
+      "recorded_source_sha256": "798bf58f47863ab1454f5b6196cebda368356bba3bc3ff0b0216c3ccb7f967f9",
+      "recorded_candidate_source_sha256": "bb7eb4388976793b4fff88b0bd50610287e3c9538737f0244633720572209c4f",
+      "candidate_source_receipt_recomputed_now": true,
+      "whole_tree_hash_recomputed_now": false,
+      "reason": "The run was intentionally executed on a dirty checkout and the checkout has changed since the run. The immutable run plan records the commit and dirty digest plus the source hash, but the historical dirty tree is not retained, so the whole-tree source hash cannot be reconstructed from the current checkout.",
+      "verdict": "RECORDED_WITH_POST_RUN_RECOMPUTATION_LIMITATION"
+    }
+  },
+  "asset_receipts": {
+    "all_31_loaded_artifact_receipts_match_current_files": true,
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "game_wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "sim_wrapper_sha256": "1555f57f5d22bf4c09d70e0e667a916e575e68c9dd1de9ead34ba5e7e4968655",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_import_spec": "ptcg_rl.deterministic.policy:DeterministicStrategicPolicy",
+    "candidate_deck_binding_verified": true,
+    "card_table_verification": {
+      "status": "pass",
+      "cards": 1267,
+      "attacks": 1556,
+      "csv_rows": 2022
+    }
+  },
+  "criteria": {
+    "exact_game_counts": {
+      "verdict": "PASS",
+      "requested": 16,
+      "recorded": 16,
+      "completed": 16,
+      "candidate_arm_requested_completed": [8, 8],
+      "control_arm_requested_completed": [8, 8]
+    },
+    "candidate_perspective_wdl": {
+      "verdict": "PASS",
+      "independent_recomputation": true,
+      "candidate_arm": {"wins": 6, "draws": 0, "losses": 2, "score": 0.75},
+      "control_arm": {"wins": 3, "draws": 0, "losses": 5, "score": 0.375},
+      "independent_score_delta": 0.375,
+      "recorded_bootstrap": {
+        "resamples": 10000,
+        "seed": 17,
+        "percentile_2_5": -0.125,
+        "percentile_50": 0.375,
+        "percentile_97_5": 0.75
+      },
+      "interpretation": "Result code 0/1 was independently mapped to the recorded candidate_player, including all eight player-1 cases. This is an 8-game-per-arm canary result, not evidence of policy strength."
+    },
+    "reliability": {
+      "verdict": "PASS",
+      "invalid_selections": 0,
+      "fallback_actions": 0,
+      "post_terminal_actions": 0,
+      "timeouts": 0,
+      "failures": 0,
+      "incomplete_games": 0,
+      "missing_outputs": 0,
+      "all_records_status_pass": true,
+      "stop_reason": null
+    },
+    "seat_balance": {
+      "verdict": "PASS",
+      "candidate_arm": {"candidate_player_0": 4, "candidate_player_1": 4},
+      "control_arm": {"candidate_player_0": 4, "candidate_player_1": 4},
+      "natural_first_player_is_retained_separately": true
+    },
+    "latency": {
+      "verdict": "PASS",
+      "all_action_latency_arrays_finite_nonnegative": true,
+      "all_action_latency_array_lengths_equal_engine_requests": true,
+      "candidate_policy_only": {
+        "candidate_arm_count": 248,
+        "candidate_arm_p50_ms": 3.276682000432629,
+        "candidate_arm_p95_ms": 5.6715280006756075,
+        "candidate_arm_p99_ms": 6.780634001188446,
+        "candidate_arm_max_ms": 7.854329996916931,
+        "control_arm_count": 245,
+        "control_arm_p50_ms": 0.42702000064309686,
+        "control_arm_p95_ms": 0.7452249992638826,
+        "control_arm_p99_ms": 1.030881998303812,
+        "control_arm_max_ms": 1.8872969958465546
+      },
+      "attribution": "Candidate latency is attributed from the exact transition request sequence; the worker fails closed on latency/request cardinality mismatch."
+    },
+    "resource_and_budget_caps": {
+      "verdict": "PASS",
+      "max_engine_requests_per_game": 203,
+      "request_cap": 20000,
+      "max_process_wall_seconds": 0.4897420530032832,
+      "game_timeout_seconds": 180,
+      "session_wall_seconds": 6.325738197003375,
+      "cumulative_wall_seconds": 6.327516555786133,
+      "wall_seconds_cap": 1800,
+      "candidate_cpu_seconds": 2.773881553,
+      "control_cpu_seconds": 1.750468626,
+      "candidate_peak_rss_bytes": 42594304,
+      "control_peak_rss_bytes": 45289472,
+      "interpretation": "All observed values are within the configured caps; RSS is also far below the conservative 8 GiB inference envelope. B0 does not define a separate CPU or RSS promotion threshold."
+    },
+    "permutation_control": {
+      "verdict": "PASS_WITH_COVERAGE_LIMITATION",
+      "candidate_games_checked": 8,
+      "permutations_requested_per_game": 32,
+      "permutations_executed": 256,
+      "true_permutation_generation": true,
+      "ordering": "UNORDERED",
+      "equivalence": "set",
+      "equivalent": 256,
+      "non_equivalent": 0,
+      "policy_reset_before_each_permutation": true,
+      "paired_seed_claim": false,
+      "coverage_limitation": "The worker selects the first candidate transition with at least five options, so this certifies the selected transition in each game, not every candidate decision in the full trajectory."
+    },
+    "external_action_firewall": {
+      "verdict": "PASS",
+      "training": false,
+      "kaggle_runs": 0,
+      "submission_created": false,
+      "private_baseline_only_for_frozen_anchors": true
+    }
+  },
+  "scale_selection": {
+    "verdict": "BLOCKED_FOR_CURRENT_CLI",
+    "declared_scale_budgets": {
+      "local_screen_per_arm": 32,
+      "local_upper_screen_per_arm": 64,
+      "private_kaggle_arm_per_arm": 128,
+      "confirmation_per_arm": 512
+    },
+    "current_config_games_per_anchor_per_candidate_seat": 1,
+    "current_config_total_games_all_arms": 16,
+    "help_surface_has_budget_selector": false,
+    "reason": "The current b0_control_qualification.py CLI exposes no budget selector or games-per-seat override. Its task builder reads the fixed mechanical_canary value from the selected config, so the advertised scale budgets are declarations rather than directly selectable runs.",
+    "required_next_step": "Prepare a separate frozen scale config or a reviewed budget selector, run the exact selected arm budget only after this review, and independently review it before any Kaggle scale launch. Do not infer scale evidence from this 16-game canary."
+  },
+  "limitations_and_nonclaims": [
+    "The raw run was produced on a dirty checkout. The immutable plan records the run commit, dirty digest, source hash, candidate receipt, and loaded artifact receipts, but the historical dirty source tree is not retained for a second whole-tree hash reconstruction.",
+    "The canary has only one game per anchor per candidate seat and cannot establish competence, matchup strength, confidence, or promotion eligibility.",
+    "The permutation test covers one selected candidate transition per candidate game, not all transitions.",
+    "The bootstrap interval is descriptive at n=8 per arm and is not a medal or deployment estimate.",
+    "No native route-specific Phase A PARTIAL status is upgraded by this control qualification."
+  ],
+  "next_task": "Keep the raw run sealed. Close this review as conclusive mechanical canary evidence, then add or freeze an explicit scale-budget execution path and obtain a new independent review before any larger B0 run."
+}
