@@ -10,6 +10,7 @@ one-active-battle contract and makes worker failures observable.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib
 import importlib.util
 import inspect
@@ -33,6 +34,7 @@ from ptcg_rl.deterministic.harness import (  # noqa: E402
     B0_EXPERIMENT_ID,
     aggregate_candidate_records,
     candidate_source_sha256,
+    latency_summary,
     permutation_control,
     sanitized_report,
     source_receipt,
@@ -120,6 +122,259 @@ def _fresh_session_deadline(wall_seconds: int, now: float | None = None) -> floa
     if wall_seconds <= 0:
         raise ValueError("session wall budget must be positive")
     return (time.monotonic() if now is None else now) + wall_seconds
+
+
+_B0_BUDGET_NAMES = (
+    "mechanical_canary",
+    "local_screen",
+    "local_upper_screen",
+    "private_kaggle_arm",
+    "confirmation",
+)
+
+_EXPECTED_B0_BUDGETS = {
+    "mechanical_canary": {
+        "games_per_anchor_per_candidate_seat": 1,
+        "games_total": 16,
+        "games_total_scope": "all_arms",
+        "games_total_per_arm": 8,
+        "games_total_all_arms": 16,
+    },
+    "local_screen": {
+        "games_per_anchor_per_candidate_seat": 4,
+        "games_total": 32,
+        "games_total_scope": "per_arm",
+        "games_total_per_arm": 32,
+        "games_total_all_arms": 64,
+    },
+    "local_upper_screen": {
+        "games_per_anchor_per_candidate_seat": 8,
+        "games_total": 64,
+        "games_total_scope": "per_arm",
+        "games_total_per_arm": 64,
+        "games_total_all_arms": 128,
+    },
+    "private_kaggle_arm": {
+        "games_per_anchor_per_candidate_seat": 16,
+        "games_total": 128,
+        "games_total_scope": "per_arm",
+        "games_total_per_arm": 128,
+        "games_total_all_arms": 256,
+    },
+    "confirmation": {
+        "games_per_anchor_per_candidate_seat": 64,
+        "games_total": 512,
+        "games_total_scope": "per_arm",
+        "games_total_per_arm": 512,
+        "games_total_all_arms": 1024,
+    },
+}
+
+
+def _canonical_sha256(value: Any) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _resolve_runtime_envelope(config: dict[str, Any]) -> dict[str, Any]:
+    envelope = config.get("runtime_safety_envelope")
+    if not isinstance(envelope, dict):
+        raise ValueError("B0 config must freeze runtime_safety_envelope")
+    if envelope.get("label") != "EXPERIMENT_LOCAL_BOUNDED_RUN_GUARD":
+        raise ValueError("runtime safety envelope must be the bounded-run guard")
+    if envelope.get("promotion_criteria_change") is not False:
+        raise ValueError("bounded-run guard cannot change promotion criteria")
+    if envelope.get("metric_scope") != {
+        "latency": "per_request",
+        "cumulative_cpu_seconds": "per_game_process",
+        "peak_rss_bytes": "per_game_process",
+    }:
+        raise ValueError("runtime safety metrics must declare per-request/per-game scope")
+    if envelope.get("latency_threshold_role") != "safety_guard_only_not_b1_acceptance_budget":
+        raise ValueError("B0 latency guard cannot masquerade as a B1 acceptance budget")
+    latency = envelope.get("latency_ms")
+    if not isinstance(latency, dict):
+        raise ValueError("runtime safety envelope must declare latency caps")
+    for name in ("p50_max", "p95_max", "p99_max", "max_max"):
+        value = latency.get(name)
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)) or float(value) < 0:
+            raise ValueError(f"runtime safety latency cap {name} must be finite and nonnegative")
+    for name in ("cumulative_cpu_seconds_max", "peak_rss_bytes_max"):
+        value = envelope.get(name)
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)) or float(value) <= 0:
+            raise ValueError(f"runtime safety cap {name} must be finite and positive")
+    if envelope.get("finite_nonnegative_metrics_required") is not True:
+        raise ValueError("runtime safety envelope must reject nonfinite metrics")
+    if envelope.get("latency_request_cardinality_required") is not True:
+        raise ValueError("runtime safety envelope must require latency cardinality")
+    return json.loads(json.dumps(envelope, sort_keys=True))
+
+
+def _resolve_budget(config: dict[str, Any], budget_name: str, anchor_count: int) -> dict[str, Any]:
+    """Resolve one named, config-owned budget without permitting CLI overrides."""
+    if budget_name not in _B0_BUDGET_NAMES:
+        raise ValueError(f"unknown B0 budget: {budget_name}")
+    expected = _EXPECTED_B0_BUDGETS[budget_name]
+    if budget_name == "mechanical_canary":
+        source = config.get("mechanical_canary")
+        expected_scope = "all_arms"
+    else:
+        source = config.get("scale_budgets", {}).get(budget_name)
+        expected_scope = "per_arm"
+    if not isinstance(source, dict):
+        raise ValueError(f"B0 budget is absent from frozen config: {budget_name}")
+    try:
+        per_seat = int(source["games_per_anchor_per_candidate_seat"])
+        declared_per_arm = int(source["games_total_per_arm"])
+        declared_all_arms = int(source["games_total_all_arms"])
+        declared_total = int(source["games_total"])
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError(f"B0 budget {budget_name} has incomplete totals") from error
+    expected_per_arm = per_seat * anchor_count * 2
+    if per_seat <= 0 or declared_per_arm != expected_per_arm or declared_all_arms != declared_per_arm * 2:
+        raise ValueError(f"B0 budget {budget_name} has inconsistent arm totals")
+    if source.get("games_total_scope") != expected_scope:
+        raise ValueError(f"B0 budget {budget_name} has an invalid total scope")
+    expected_total = declared_all_arms if expected_scope == "all_arms" else declared_per_arm
+    if declared_total != expected_total:
+        raise ValueError(f"B0 budget {budget_name} games_total is inconsistent")
+    for key, expected_value in expected.items():
+        if source.get(key) != expected_value:
+            raise ValueError(f"B0 budget {budget_name} does not match frozen {key}")
+    mechanical = config.get("mechanical_canary")
+    if not isinstance(mechanical, dict):
+        raise ValueError("B0 config must freeze mechanical_canary caps")
+    resolved: dict[str, Any] = {
+        "budget_name": budget_name,
+        "games_per_anchor_per_candidate_seat": per_seat,
+        "games_total": declared_total,
+        "games_total_scope": source["games_total_scope"],
+        "games_total_per_arm": declared_per_arm,
+        "games_total_all_arms": declared_all_arms,
+        "candidate_arm_games_total": declared_per_arm,
+        "control_arm_games_total": declared_per_arm,
+        "request_cap": int(source.get("request_cap", mechanical["request_cap"])),
+        "game_timeout_seconds": int(source.get("game_timeout_seconds", mechanical["game_timeout_seconds"])),
+        "wall_seconds": int(source.get("wall_seconds", mechanical["wall_seconds"])),
+        "max_evidence_bytes": int(source.get("max_evidence_bytes", mechanical["max_evidence_bytes"])),
+        "stop_condition": source.get("stop_condition", mechanical["stop_condition"]),
+    }
+    for key in ("request_cap", "game_timeout_seconds", "wall_seconds", "max_evidence_bytes"):
+        if resolved[key] <= 0:
+            raise ValueError(f"B0 budget {budget_name} cap {key} must be positive")
+    if resolved["stop_condition"] != "stop_on_any_invalid_fallback_timeout_failure_or_incomplete_game":
+        raise ValueError(f"B0 budget {budget_name} has an unsupported stop condition")
+    return resolved
+
+
+def _validate_resume_budget(plan: dict[str, Any], selected: dict[str, Any], budget_sha256: str) -> None:
+    if plan.get("budget_name") != selected["budget_name"]:
+        raise ValueError("resume budget name differs from immutable run plan")
+    if plan.get("resolved_budget") != selected:
+        raise ValueError("resume resolved budget differs from immutable run plan")
+    if plan.get("budget_sha256") != budget_sha256:
+        raise ValueError("resume budget digest differs from immutable run plan")
+
+
+def _validate_scale_review_receipt(
+    *,
+    config: dict[str, Any],
+    budget_name: str,
+    budget_sha256: str,
+    config_sha256: str,
+    candidate_source_digest: str,
+    receipt_path: Path | None,
+    repo: Path,
+) -> Path | None:
+    """Require a sealed, budget-bound independent review before any scale run."""
+    if budget_name == "mechanical_canary":
+        if receipt_path is not None:
+            raise ValueError("mechanical canary does not accept a scale review receipt")
+        return None
+    scale = config["scale_budgets"][budget_name]
+    if scale.get("independent_review_required_before_launch") is not True:
+        raise ValueError(f"scale budget {budget_name} must require independent review")
+    if receipt_path is None:
+        raise ValueError(
+            f"scale budget {budget_name} requires --independent-review-receipt; "
+            "the 16-game canary review does not authorize scaling"
+        )
+    receipt = _inside(receipt_path, repo)
+    verify_sealed_json(receipt)
+    review = json.loads(receipt.read_text(encoding="utf-8"))
+    if not isinstance(review, dict):
+        raise ValueError("independent scale review receipt must contain a JSON object")
+    expected = {
+        "experiment_id": B0_EXPERIMENT_ID,
+        "budget_name": budget_name,
+        "budget_sha256": budget_sha256,
+        "config_sha256": config_sha256,
+        "candidate_source_sha256": candidate_source_digest,
+        "status": "PASS",
+        "scale_launch_authorized": True,
+    }
+    for key, value in expected.items():
+        if review.get(key) != value:
+            raise ValueError(f"independent scale review receipt does not prove {key}")
+    return receipt
+
+
+def _validate_runtime_record(
+    record: dict[str, Any], envelope: dict[str, Any], budget: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Fail closed on bad metrics before they can be filtered or aggregated."""
+    summary = record.get("summary")
+    metrics = record.get("process_metrics")
+    latencies = record.get("action_latencies_ms")
+    candidate_latencies = record.get("candidate_action_latencies_ms")
+    if not isinstance(summary, dict) or not isinstance(metrics, dict):
+        raise ValueError("runtime record metrics are missing")
+    if not isinstance(latencies, (list, tuple)) or not isinstance(candidate_latencies, (list, tuple)):
+        raise ValueError("runtime latency arrays are missing")
+    requests = summary.get("engine_requests")
+    if not isinstance(requests, int) or isinstance(requests, bool) or requests < 0:
+        raise ValueError("runtime engine request count is invalid")
+    if len(latencies) != requests:
+        raise ValueError("latency/request cardinality mismatch")
+    if len(candidate_latencies) > len(latencies):
+        raise ValueError("candidate latency cardinality exceeds all requests")
+    evaluated_requests = summary.get("evaluated_policy_requests")
+    if (
+        not isinstance(evaluated_requests, int)
+        or isinstance(evaluated_requests, bool)
+        or evaluated_requests < 0
+        or evaluated_requests != len(candidate_latencies)
+    ):
+        raise ValueError("evaluated-policy latency cardinality is missing or incorrect")
+    if record.get("evaluated_policy_player") != record.get("candidate_player"):
+        raise ValueError("evaluated-policy player attribution is missing or incorrect")
+    for label, values in (("action latency", latencies), ("candidate latency", candidate_latencies)):
+        for value in values:
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)) or float(value) < 0:
+                raise ValueError(f"{label} must be finite and nonnegative")
+    for label in ("cpu_seconds", "wall_seconds", "peak_rss_bytes"):
+        value = metrics.get(label)
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(float(value)) or float(value) < 0:
+            raise ValueError(f"runtime {label} must be finite and nonnegative")
+    if float(metrics["cpu_seconds"]) > float(envelope["cumulative_cpu_seconds_max"]):
+        raise ValueError("runtime cumulative CPU exceeds bounded-run guard")
+    if float(metrics["peak_rss_bytes"]) > float(envelope["peak_rss_bytes_max"]):
+        raise ValueError("runtime RSS exceeds bounded-run guard")
+    caps = envelope["latency_ms"]
+    if budget is not None and float(metrics["wall_seconds"]) > float(budget["game_timeout_seconds"]):
+        raise ValueError("runtime wall time exceeds selected game timeout")
+    latency_summaries = {
+        "all_requests": latency_summary((record,)),
+        "candidate_policy": latency_summary((record,), "candidate_action_latencies_ms"),
+    }
+    for label, latency in latency_summaries.items():
+        for key in ("p50", "p95", "p99"):
+            value = latency[f"{key}_ms"]
+            if value is not None and float(value) > float(caps[f"{key}_max"]):
+                raise ValueError(f"runtime {label} {key} latency exceeds bounded-run guard")
+        if latency["max_ms"] is not None and float(latency["max_ms"]) > float(caps["max_max"]):
+            raise ValueError(f"runtime {label} maximum latency exceeds bounded-run guard")
+    return {"latency": latency_summaries, "process_metrics": dict(metrics)}
 
 
 def _should_stop_after_record(record: dict[str, Any], stop_condition: str) -> bool:
@@ -228,8 +483,13 @@ def _worker_command(
     request_cap: int,
     game_timeout: int,
     permutation_count: int,
+    budget_name: str = "mechanical_canary",
+    budget_sha256: str | None = None,
+    resolved_budget: dict[str, Any] | None = None,
+    runtime_safety_envelope: dict[str, Any] | None = None,
+    independent_review_receipt: Path | None = None,
 ) -> list[str]:
-    return [
+    command = [
         sys.executable,
         str(script_path),
         "--single-game",
@@ -269,16 +529,76 @@ def _worker_command(
         str(game_timeout),
         "--permutation-count",
         str(permutation_count),
+        "--budget-name",
+        budget_name,
     ]
+    if budget_sha256 is not None:
+        command.extend(("--budget-sha256", budget_sha256))
+    if resolved_budget is not None:
+        command.extend(("--resolved-budget-json", json.dumps(resolved_budget, sort_keys=True, separators=(",", ":"))))
+    if runtime_safety_envelope is not None:
+        command.extend(("--runtime-safety-json", json.dumps(runtime_safety_envelope, sort_keys=True, separators=(",", ":"))))
+    if independent_review_receipt is not None:
+        command.extend(("--independent-review-receipt", str(independent_review_receipt)))
+    return command
 
 
 def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
     process_started = time.process_time()
     wall_started = time.monotonic()
     repo = repo.resolve(strict=True)
+    worker_config_path = _inside(args.config, repo)
+    worker_config = json.loads(worker_config_path.read_text(encoding="utf-8"))
     configured_import = _worker_config_import(args.config, repo)
     if args.candidate_import != configured_import:
         raise ValueError("worker candidate import differs from configured candidate import")
+    configured_source_files = worker_config.get("candidate", {}).get("source_files")
+    if not isinstance(configured_source_files, list) or not configured_source_files:
+        raise ValueError("worker config must list candidate source_files")
+    _, imported_candidate_source = _resolve_candidate_import(
+        configured_import, repo, expected_import=configured_import
+    )
+    candidate_source_paths = [_inside(repo / source_name, repo) for source_name in configured_source_files]
+    if imported_candidate_source not in candidate_source_paths:
+        raise ValueError("worker imported candidate module is absent from source_files")
+    candidate_source_files = {
+        "candidate_config": worker_config_path,
+        "candidate_imported_module": imported_candidate_source,
+        **{
+            f"candidate_transitive_{index:02d}": path
+            for index, path in enumerate(candidate_source_paths)
+        },
+    }
+    candidate_source_digest = candidate_source_sha256(candidate_source_files, repo)
+    config_sha256 = sha256_file(worker_config_path)
+    budget_name = getattr(args, "budget_name", None) or "mechanical_canary"
+    resolved_budget = _resolve_budget(worker_config, budget_name, len(worker_config["anchors"]))
+    budget_sha256 = _canonical_sha256(resolved_budget)
+    supplied_budget_sha256 = getattr(args, "budget_sha256", None)
+    if supplied_budget_sha256 is not None and supplied_budget_sha256 != budget_sha256:
+        raise ValueError("worker budget digest differs from frozen config")
+    supplied_budget_json = getattr(args, "resolved_budget_json", None)
+    if supplied_budget_json is not None and json.loads(supplied_budget_json) != resolved_budget:
+        raise ValueError("worker resolved budget differs from frozen config")
+    runtime_safety_envelope = _resolve_runtime_envelope(worker_config)
+    _validate_scale_review_receipt(
+        config=worker_config,
+        budget_name=budget_name,
+        budget_sha256=budget_sha256,
+        config_sha256=config_sha256,
+        candidate_source_digest=candidate_source_digest,
+        receipt_path=getattr(args, "independent_review_receipt", None),
+        repo=repo,
+    )
+    supplied_runtime_json = getattr(args, "runtime_safety_json", None)
+    if supplied_runtime_json is not None and json.loads(supplied_runtime_json) != runtime_safety_envelope:
+        raise ValueError("worker runtime safety envelope differs from frozen config")
+    if args.request_cap != resolved_budget["request_cap"]:
+        raise ValueError("worker request cap differs from selected budget")
+    if args.game_timeout != resolved_budget["game_timeout_seconds"]:
+        raise ValueError("worker game timeout differs from selected budget")
+    if args.permutation_count != int(worker_config["permutation_control"]["permutations"]):
+        raise ValueError("worker permutation count differs from frozen config")
     engine_root = _inside(args.engine_root, repo)
     card_data = _inside(args.card_data, repo)
     default_deck = _inside(args.default_deck, repo)
@@ -364,12 +684,13 @@ def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
             "wall_seconds": time.monotonic() - wall_started,
             "peak_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
         }
-        return {
+        record = {
             "schema_version": 1,
             "game_id": args.game_id,
             "arm": args.arm,
             "evaluated_player": args.evaluated_player,
             "candidate_player": args.evaluated_player,
+            "evaluated_policy_player": args.evaluated_player,
             "anchor": getattr(args, "anchor", "unknown"),
             "policy0": args.policy0,
             "policy1": args.policy1,
@@ -378,6 +699,7 @@ def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
                 "terminal_result": summary.terminal_result,
                 "first_player": summary.first_player,
                 "engine_requests": summary.engine_requests,
+                "evaluated_policy_requests": len(candidate_latencies),
                 "invalid_selections": summary.invalid_selections,
                 "fallback_actions": summary.fallback_actions,
                 "post_terminal_actions": summary.post_terminal_actions,
@@ -387,7 +709,13 @@ def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
             "candidate_action_latencies_ms": candidate_latencies,
             "process_metrics": process_metrics,
             "permutation_control": permutation,
+            "budget_name": budget_name,
+            "budget_sha256": budget_sha256,
+            "resolved_budget": resolved_budget,
+            "runtime_safety_envelope": runtime_safety_envelope,
         }
+        _validate_runtime_record(record, runtime_safety_envelope, resolved_budget)
+        return record
     except Exception as error:  # The orchestrator records, rather than hides, worker errors.
         return {
             "schema_version": 1,
@@ -395,6 +723,7 @@ def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
             "arm": args.arm,
             "evaluated_player": args.evaluated_player,
             "candidate_player": args.evaluated_player,
+            "evaluated_policy_player": args.evaluated_player,
             "anchor": getattr(args, "anchor", "unknown"),
             "policy0": args.policy0,
             "policy1": args.policy1,
@@ -404,6 +733,8 @@ def run_single_game(args: argparse.Namespace, repo: Path) -> dict[str, Any]:
             "error_message": str(error)[:300],
             "summary": {
                 "terminal_result": None,
+                "engine_requests": 0,
+                "evaluated_policy_requests": 0,
                 "invalid_selections": 0,
                 "fallback_actions": 0,
                 "post_terminal_actions": 0,
@@ -444,6 +775,29 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--request-cap", type=int, default=20_000)
     parser.add_argument("--game-timeout", type=int, default=180)
     parser.add_argument("--permutation-count", type=int, default=32)
+    budget_group = parser.add_mutually_exclusive_group()
+    budget_group.add_argument(
+        "--budget",
+        dest="budget_name",
+        choices=_B0_BUDGET_NAMES,
+        default=None,
+        help="select one frozen B0 budget; no custom count overrides are accepted",
+    )
+    budget_group.add_argument(
+        "--budget-name",
+        dest="budget_name",
+        choices=_B0_BUDGET_NAMES,
+        default=None,
+        help="alias for --budget; choose only one",
+    )
+    parser.add_argument(
+        "--independent-review-receipt",
+        type=Path,
+        help="sealed PASS receipt binding this exact scale budget, config, and candidate source",
+    )
+    parser.add_argument("--budget-sha256")
+    parser.add_argument("--resolved-budget-json")
+    parser.add_argument("--runtime-safety-json")
     parser.add_argument("--resume-run", type=Path)
     return parser
 
@@ -472,6 +826,7 @@ def _failure_record(
         "anchor": anchor,
         "evaluated_player": player,
         "candidate_player": player,
+        "evaluated_policy_player": player,
         "policy0": policy0,
         "policy1": policy1,
         "status": "fail",
@@ -482,6 +837,7 @@ def _failure_record(
             "terminal_result": None,
             "first_player": None,
             "engine_requests": 0,
+            "evaluated_policy_requests": 0,
             "invalid_selections": 0,
             "fallback_actions": 0,
             "post_terminal_actions": 0,
@@ -506,7 +862,14 @@ def _sealed_payload_size(path: Path, value: dict[str, Any]) -> int:
 
 def _validate_budget_scopes(config: dict[str, Any], anchor_count: int) -> None:
     """Reject ambiguous or arithmetically inconsistent arm budgets."""
+    declared_scale_names = set(config.get("scale_budgets", {}))
+    expected_scale_names = set(_B0_BUDGET_NAMES) - {"mechanical_canary"}
+    if declared_scale_names != expected_scale_names:
+        raise ValueError("B0 scale budgets do not match the frozen selector set")
     canary = config["mechanical_canary"]
+    for key, expected_value in _EXPECTED_B0_BUDGETS["mechanical_canary"].items():
+        if canary.get(key) != expected_value:
+            raise ValueError(f"mechanical canary has inconsistent arm totals or frozen {key}")
     canary_per_arm = int(canary["games_per_anchor_per_candidate_seat"]) * anchor_count * 2
     if canary.get("games_total_scope") != "all_arms":
         raise ValueError("mechanical canary games_total must be scoped to all_arms")
@@ -521,6 +884,9 @@ def _validate_budget_scopes(config: dict[str, Any], anchor_count: int) -> None:
     if int(canary.get("control_arm_games_total", -1)) != canary_per_arm:
         raise ValueError("mechanical canary control-arm total is inconsistent")
     for name, budget in config.get("scale_budgets", {}).items():
+        for key, expected_value in _EXPECTED_B0_BUDGETS[name].items():
+            if budget.get(key) != expected_value:
+                raise ValueError(f"scale budget {name} has inconsistent arm totals or frozen {key}")
         per_arm = int(budget.get("games_total_per_arm", -1))
         all_arms = int(budget.get("games_total_all_arms", -1))
         expected_per_arm = int(budget.get("games_per_anchor_per_candidate_seat", -1)) * anchor_count * 2
@@ -616,16 +982,33 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
     command = _sanitized_command(list(sys.argv), repo)
     anchors = tuple(config["anchors"])
     _validate_budget_scopes(config, len(anchors))
-    per_seat = int(config["mechanical_canary"]["games_per_anchor_per_candidate_seat"])
-    if per_seat <= 0:
-        raise ValueError("mechanical canary games per seat must be positive")
-    args.permutation_count = int(config["permutation_control"]["permutations"])
-    if args.permutation_count < 1:
-        raise ValueError("permutation count must be positive")
-    if config["mechanical_canary"]["stop_condition"] != (
+    args.budget_name = args.budget_name or "mechanical_canary"
+    selected_budget = _resolve_budget(config, args.budget_name, len(anchors))
+    budget_sha256 = _canonical_sha256(selected_budget)
+    runtime_safety_envelope = _resolve_runtime_envelope(config)
+    runtime_safety_sha256 = _canonical_sha256(runtime_safety_envelope)
+    independent_review_path = _validate_scale_review_receipt(
+        config=config,
+        budget_name=selected_budget["budget_name"],
+        budget_sha256=budget_sha256,
+        config_sha256=config_sha256,
+        candidate_source_digest=candidate_source_digest,
+        receipt_path=args.independent_review_receipt,
+        repo=repo,
+    )
+    per_seat = int(selected_budget["games_per_anchor_per_candidate_seat"])
+    configured_permutations = int(config["permutation_control"]["permutations"])
+    if args.request_cap != int(selected_budget["request_cap"]):
+        raise ValueError("custom request-cap overrides are not permitted")
+    if args.game_timeout != int(selected_budget["game_timeout_seconds"]):
+        raise ValueError("custom game-timeout overrides are not permitted")
+    if args.permutation_count != configured_permutations:
+        raise ValueError("custom permutation-count overrides are not permitted")
+    args.permutation_count = configured_permutations
+    if selected_budget["stop_condition"] != (
         "stop_on_any_invalid_fallback_timeout_failure_or_incomplete_game"
     ):
-        raise ValueError("unsupported B0 stop condition")
+        raise ValueError("unsupported selected B0 stop condition")
 
     tasks = []
     for arm, evaluated_policy in (("candidate", "candidate"), ("control", "rule:mega-abomasnow-ex")):
@@ -635,13 +1018,12 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
                     policy0 = evaluated_policy if player == 0 else anchor
                     policy1 = anchor if player == 0 else evaluated_policy
                     tasks.append((arm, anchor, player, ordinal, policy0, policy1))
-    canary = config["mechanical_canary"]
-    max_evidence_bytes = int(canary["max_evidence_bytes"])
+    max_evidence_bytes = int(selected_budget["max_evidence_bytes"])
     if max_evidence_bytes <= 0:
         raise ValueError("maximum evidence bytes must be positive")
-    if int(canary["wall_seconds"]) <= 0 or int(canary["game_timeout_seconds"]) <= 0:
+    if int(selected_budget["wall_seconds"]) <= 0 or int(selected_budget["game_timeout_seconds"]) <= 0:
         raise ValueError("B0 wall and game timeouts must be positive")
-    if int(canary["request_cap"]) <= 0:
+    if int(selected_budget["request_cap"]) <= 0:
         raise ValueError("B0 request cap must be positive")
 
     loaded_paths: dict[str, Path] = {
@@ -655,6 +1037,8 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
         "sim_wrapper": args.engine_root / "cg" / "sim.py",
     }
     loaded_paths.update(candidate_source_files)
+    if independent_review_path is not None:
+        loaded_paths["independent_scale_review"] = independent_review_path
     loaded_paths.update(
         {
             f"anchor_{anchor.replace(':', '_')}_{name}": private_path / name
@@ -681,6 +1065,11 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
         plan = json.loads(plan_path.read_text(encoding="utf-8"))
         if plan.get("config_sha256") != config_sha256:
             raise ValueError("resume config differs from immutable run plan")
+        _validate_resume_budget(plan, selected_budget, budget_sha256)
+        if plan.get("runtime_safety_envelope") != runtime_safety_envelope:
+            raise ValueError("resume runtime safety envelope differs from immutable run plan")
+        if plan.get("runtime_safety_sha256") != runtime_safety_sha256:
+            raise ValueError("resume runtime safety digest differs from immutable run plan")
         if plan.get("config_path") != config_path.relative_to(repo).as_posix():
             raise ValueError("resume config path differs from immutable run plan")
         if plan.get("candidate_import_spec") != args.candidate_import:
@@ -726,6 +1115,13 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
             expected[0], expected[1], expected[2], expected[4], expected[5]
         ):
             raise ValueError("resume match record identity differs from the immutable task plan")
+        if record.get("budget_name") != selected_budget["budget_name"]:
+            raise ValueError("resume match record budget differs from immutable run plan")
+        if record.get("budget_sha256") != budget_sha256:
+            raise ValueError("resume match record budget digest differs from immutable run plan")
+        if record.get("resolved_budget") != selected_budget:
+            raise ValueError("resume match record resolved budget differs from immutable run plan")
+        _validate_runtime_record(record, runtime_safety_envelope, selected_budget)
         records[arm].append(record)
 
     if plan is None:
@@ -736,6 +1132,16 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
             "config": config,
             "config_path": config_path.relative_to(repo).as_posix(),
             "config_sha256": config_sha256,
+            "budget_name": selected_budget["budget_name"],
+            "budget_sha256": budget_sha256,
+            "resolved_budget": selected_budget,
+            "runtime_safety_envelope": runtime_safety_envelope,
+            "runtime_safety_sha256": runtime_safety_sha256,
+            "independent_review_receipt": (
+                independent_review_path.relative_to(repo).as_posix()
+                if independent_review_path is not None
+                else None
+            ),
             "command": command,
             "repository": git_state(repo),
             "platform": platform_record(),
@@ -757,7 +1163,7 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
 
     session_started_monotonic = time.monotonic()
     session_deadline_monotonic = _fresh_session_deadline(
-        int(canary["wall_seconds"]), session_started_monotonic
+        int(selected_budget["wall_seconds"]), session_started_monotonic
     )
     session_id = unique_run_id("b0-session")
     script_path = Path(__file__).resolve()
@@ -799,9 +1205,14 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
                 player=player,
                 policy0=policy0,
                 policy1=policy1,
-                request_cap=config["mechanical_canary"]["request_cap"],
-                game_timeout=config["mechanical_canary"]["game_timeout_seconds"],
+                request_cap=selected_budget["request_cap"],
+                game_timeout=selected_budget["game_timeout_seconds"],
                 permutation_count=args.permutation_count,
+                budget_name=selected_budget["budget_name"],
+                budget_sha256=budget_sha256,
+                resolved_budget=selected_budget,
+                runtime_safety_envelope=runtime_safety_envelope,
+                independent_review_receipt=independent_review_path,
             )
             try:
                 completed = subprocess.run(
@@ -810,7 +1221,7 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
                     text=True,
                     capture_output=True,
                     check=False,
-                    timeout=int(config["mechanical_canary"]["game_timeout_seconds"]) + 10,
+                    timeout=int(selected_budget["game_timeout_seconds"]) + 10,
                     env={
                         **os.environ,
                         "UV_CACHE_DIR": str(repo / "data/cache/uv"),
@@ -883,10 +1294,19 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
         if _evidence_bytes(run_dir) + _sealed_payload_size(match_path, record) > max_evidence_bytes:
             stop_reason = "evidence_cap"
             break
+        if record.get("budget_name") not in (None, selected_budget["budget_name"]):
+            raise ValueError("worker selected a different B0 budget")
+        if record.get("budget_sha256") not in (None, budget_sha256):
+            raise ValueError("worker selected a different B0 budget digest")
+        record.setdefault("budget_name", selected_budget["budget_name"])
+        record.setdefault("budget_sha256", budget_sha256)
+        record.setdefault("resolved_budget", selected_budget)
+        record.setdefault("runtime_safety_envelope", runtime_safety_envelope)
+        _validate_runtime_record(record, runtime_safety_envelope, selected_budget)
         records[arm].append(record)
         write_sealed_json(match_path, record)
         seen_ids.add(game_id)
-        if _should_stop_after_record(record, config["mechanical_canary"]["stop_condition"]):
+        if _should_stop_after_record(record, selected_budget["stop_condition"]):
             stop_reason = record.get("failure_kind") or record.get("summary", {}).get(
                 "failure_kind", "reliability_failure"
             )
@@ -925,6 +1345,11 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
         "paired_seed_claim": False,
     }
     aggregate = {
+        "budget_name": selected_budget["budget_name"],
+        "budget_sha256": budget_sha256,
+        "resolved_budget": selected_budget,
+        "runtime_safety_envelope": runtime_safety_envelope,
+        "runtime_safety_sha256": runtime_safety_sha256,
         "candidate_arm": candidate_aggregate,
         "control_arm": control_aggregate,
         "candidate_control_bootstrap_delta": candidate_aggregate.get("control_bootstrap_score_delta"),
@@ -982,6 +1407,11 @@ def run_b0(args: argparse.Namespace) -> dict[str, Any]:
     }
     manifest = {
         **report,
+        "budget_name": selected_budget["budget_name"],
+        "budget_sha256": budget_sha256,
+        "resolved_budget": selected_budget,
+        "runtime_safety_envelope": runtime_safety_envelope,
+        "runtime_safety_sha256": runtime_safety_sha256,
         "run_plan_sha256": sha256_file(run_dir / "run-plan.json"),
         "raw_run_dir": run_dir.relative_to(repo).as_posix(),
         "match_digests": match_digests,

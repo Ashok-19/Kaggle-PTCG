@@ -80,14 +80,16 @@
       "games_total": 32,
       "games_total_scope": "per_arm",
       "games_total_per_arm": 32,
-      "games_total_all_arms": 64
+      "games_total_all_arms": 64,
+      "independent_review_required_before_launch": true
     },
     "local_upper_screen": {
       "games_per_anchor_per_candidate_seat": 8,
       "games_total": 64,
       "games_total_scope": "per_arm",
       "games_total_per_arm": 64,
-      "games_total_all_arms": 128
+      "games_total_all_arms": 128,
+      "independent_review_required_before_launch": true
     },
     "private_kaggle_arm": {
       "games_per_anchor_per_candidate_seat": 16,
@@ -107,6 +109,31 @@
       "launch_authorized": true,
       "independent_review_required_before_launch": true
     }
+  },
+  "runtime_safety_envelope": {
+    "label": "EXPERIMENT_LOCAL_BOUNDED_RUN_GUARD",
+    "promotion_criteria_change": false,
+    "basis": [
+      "published competition envelope: approximately 8 GiB inference RSS",
+      "published competition envelope: 600 cumulative CPU seconds per agent game",
+      "B0 bounded-run guard: finite nonnegative metrics and explicit latency percentiles"
+    ],
+    "latency_ms": {
+      "p50_max": 1000.0,
+      "p95_max": 5000.0,
+      "p99_max": 10000.0,
+      "max_max": 60000.0
+    },
+    "cumulative_cpu_seconds_max": 600.0,
+    "peak_rss_bytes_max": 8589934592,
+    "metric_scope": {
+      "latency": "per_request",
+      "cumulative_cpu_seconds": "per_game_process",
+      "peak_rss_bytes": "per_game_process"
+    },
+    "latency_threshold_role": "safety_guard_only_not_b1_acceptance_budget",
+    "finite_nonnegative_metrics_required": true,
+    "latency_request_cardinality_required": true
   },
   "permutation_control": {
     "permutations": 32,

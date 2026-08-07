@@ -24,9 +24,14 @@ from ptcg_rl.deterministic.harness import (
 from scripts.deterministic.b0_control_qualification import (
     _candidate_latency_values,
     _fresh_session_deadline,
+    _resolve_budget,
     _resolve_candidate_import,
+    _parser,
     _should_stop_after_record,
     _validate_budget_scopes,
+    _validate_scale_review_receipt,
+    _validate_runtime_record,
+    _validate_resume_budget,
     _worker_command,
     _worker_config_import,
 )
@@ -85,11 +90,16 @@ def _record(
         "policy0": "candidate" if candidate_player == 0 else "anchor",
         "policy1": "anchor" if candidate_player == 0 else "candidate",
         "candidate_player": candidate_player,
+        "evaluated_policy_player": candidate_player,
         "anchor": anchor,
         "status": status,
         "missing_output": missing_output,
         "summary": {
             "terminal_result": terminal_result,
+            "engine_requests": len(latencies),
+            "evaluated_policy_requests": len(
+                candidate_latencies if candidate_latencies is not None else latencies
+            ),
             "invalid_selections": invalid,
             "fallback_actions": fallback,
             "post_terminal_actions": post_terminal,
@@ -200,6 +210,120 @@ def test_b0_budget_scope_is_explicit_and_arithmetic_is_checked() -> None:
     config["scale_budgets"]["local_screen"]["games_total_all_arms"] = 32
     with pytest.raises(ValueError, match="inconsistent arm totals"):
         _validate_budget_scopes(config, len(config["anchors"]))
+
+
+def test_explicit_budget_selector_resolves_frozen_per_arm_and_all_arm_totals() -> None:
+    import json
+
+    config = json.loads(
+        (Path(__file__).resolve().parents[2] / "configs/deterministic/b0_ma_control_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    mechanical = _resolve_budget(config, "mechanical_canary", len(config["anchors"]))
+    screen = _resolve_budget(config, "local_screen", len(config["anchors"]))
+    assert mechanical["budget_name"] == "mechanical_canary"
+    assert mechanical["games_total_scope"] == "all_arms"
+    assert mechanical["games_total_all_arms"] == 16
+    assert screen["budget_name"] == "local_screen"
+    assert screen["games_total_scope"] == "per_arm"
+    assert screen["games_total_per_arm"] == 32
+    assert screen["games_total_all_arms"] == 64
+    assert screen["games_total"] == 32
+    assert screen["request_cap"] == mechanical["request_cap"]
+    expected = {
+        "mechanical_canary": (16, "all_arms"),
+        "local_screen": (64, "per_arm"),
+        "local_upper_screen": (128, "per_arm"),
+        "private_kaggle_arm": (256, "per_arm"),
+        "confirmation": (1024, "per_arm"),
+    }
+    for name, (all_arms, scope) in expected.items():
+        resolved = _resolve_budget(config, name, len(config["anchors"]))
+        assert resolved["games_total_all_arms"] == all_arms
+        assert resolved["games_total_scope"] == scope
+    with pytest.raises(ValueError, match="unknown B0 budget"):
+        _resolve_budget(config, "not_a_budget", len(config["anchors"]))
+
+
+def test_budget_aliases_have_one_default_and_reject_conflicting_duplicates() -> None:
+    assert _parser().parse_args([]).budget_name is None
+    assert _parser().parse_args(["--budget", "local_screen"]).budget_name == "local_screen"
+    assert _parser().parse_args(["--budget-name", "local_upper_screen"]).budget_name == "local_upper_screen"
+    with pytest.raises(SystemExit):
+        _parser().parse_args(["--budget", "local_screen", "--budget-name", "confirmation"])
+
+
+def test_scale_budget_requires_a_budget_bound_independent_review_receipt() -> None:
+    import json
+
+    config = json.loads(
+        (Path(__file__).resolve().parents[2] / "configs/deterministic/b0_ma_control_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    with pytest.raises(ValueError, match="requires --independent-review-receipt"):
+        _validate_scale_review_receipt(
+            config=config,
+            budget_name="local_screen",
+            budget_sha256="budget",
+            config_sha256="config",
+            candidate_source_digest="source",
+            receipt_path=None,
+            repo=Path(__file__).resolve().parents[2],
+        )
+
+
+def test_resume_rejects_a_different_selected_budget_or_budget_digest() -> None:
+    import json
+
+    config = json.loads(
+        (Path(__file__).resolve().parents[2] / "configs/deterministic/b0_ma_control_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    selected = _resolve_budget(config, "local_screen", len(config["anchors"]))
+    plan = {"budget_name": "mechanical_canary", "resolved_budget": selected, "budget_sha256": "x"}
+    with pytest.raises(ValueError, match="budget name"):
+        _validate_resume_budget(plan, selected, "different")
+    matching = {"budget_name": "local_screen", "resolved_budget": selected, "budget_sha256": "x"}
+    with pytest.raises(ValueError, match="budget digest"):
+        _validate_resume_budget(matching, selected, "different")
+
+
+def test_runtime_guard_rejects_nonfinite_latency_and_cardinality() -> None:
+    record = _record(game_id="runtime", candidate_player=0, terminal_result=0, latencies=(1.0, 2.0))
+    record["process_metrics"] = {"cpu_seconds": 1.0, "wall_seconds": 1.0, "peak_rss_bytes": 1.0}
+    record["summary"]["engine_requests"] = 3
+    with pytest.raises(ValueError, match="latency/request cardinality"):
+        _validate_runtime_record(record, {
+            "latency_ms": {"p50_max": 1000.0, "p95_max": 5000.0, "p99_max": 10000.0, "max_max": 60000.0},
+            "cumulative_cpu_seconds_max": 600.0,
+            "peak_rss_bytes_max": 8 * 1024**3,
+        })
+    record["summary"]["engine_requests"] = 2
+    record["action_latencies_ms"] = (float("nan"), 2.0)
+    with pytest.raises(ValueError, match="finite"):
+        _validate_runtime_record(record, {
+            "latency_ms": {"p50_max": 1000.0, "p95_max": 5000.0, "p99_max": 10000.0, "max_max": 60000.0},
+            "cumulative_cpu_seconds_max": 600.0,
+            "peak_rss_bytes_max": 8 * 1024**3,
+        })
+    record["action_latencies_ms"] = [1.0, 70_000.0]
+    with pytest.raises(ValueError, match="latency exceeds"):
+        _validate_runtime_record(record, {
+            "latency_ms": {"p50_max": 1000.0, "p95_max": 5000.0, "p99_max": 10000.0, "max_max": 60000.0},
+            "cumulative_cpu_seconds_max": 600.0,
+            "peak_rss_bytes_max": 8 * 1024**3,
+        })
+    record["action_latencies_ms"] = [1.0, 2.0]
+    record["process_metrics"]["cpu_seconds"] = 600.1
+    with pytest.raises(ValueError, match="cumulative CPU"):
+        _validate_runtime_record(record, {
+            "latency_ms": {"p50_max": 1000.0, "p95_max": 5000.0, "p99_max": 10000.0, "max_max": 60000.0},
+            "cumulative_cpu_seconds_max": 600.0,
+            "peak_rss_bytes_max": 8 * 1024**3,
+        })
 
 
 def test_worker_command_propagates_and_enforces_repo_local_config() -> None:
