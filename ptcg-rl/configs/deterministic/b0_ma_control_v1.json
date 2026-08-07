@@ -5,9 +5,36 @@
   "purpose": "Bounded natural-seat mechanical qualification of the public deterministic Mega Abomasnow candidate against frozen native rule anchors",
   "candidate": {
     "policy_id": "deterministic-strategic-mega-abomasnow-v1",
+    "import_spec": "ptcg_rl.deterministic.policy:DeterministicStrategicPolicy",
+    "source_files": [
+      "src/ptcg_rl/deterministic/__init__.py",
+      "src/ptcg_rl/deterministic/control.py",
+      "src/ptcg_rl/deterministic/deck_profile.py",
+      "src/ptcg_rl/deterministic/policy.py",
+      "src/ptcg_rl/deterministic/state.py",
+      "src/ptcg_rl/g1/actions.py",
+      "src/ptcg_rl/g1/models.py",
+      "src/ptcg_rl/g1/semantic.py",
+      "src/ptcg_rl/g2/card_table.py"
+    ],
     "deck_profile": "mega-abomasnow-ex",
     "public_observation_only": true,
     "private_baseline_dependency": false
+  },
+  "assets": {
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "card_table": {
+      "path": "private/g2/card-table-v1.json",
+      "sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0"
+    },
+    "candidate_deck": {
+      "path": "private/baselines/mega-abomasnow-ex/deck.csv",
+      "sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd"
+    }
   },
   "anchors": [
     "rule:dragapult-ex",
@@ -42,26 +69,43 @@
     "wall_seconds": 1800,
     "max_evidence_bytes": 67108864,
     "stop_condition": "stop_on_any_invalid_fallback_timeout_failure_or_incomplete_game",
+    "games_total_scope": "all_arms",
+    "games_total_per_arm": 8,
+    "games_total_all_arms": 16,
     "independent_review_required_before_scaling": true
   },
   "scale_budgets": {
     "local_screen": {
       "games_per_anchor_per_candidate_seat": 4,
-      "games_total": 32
+      "games_total": 32,
+      "games_total_scope": "per_arm",
+      "games_total_per_arm": 32,
+      "games_total_all_arms": 64
     },
     "local_upper_screen": {
       "games_per_anchor_per_candidate_seat": 8,
-      "games_total": 64
+      "games_total": 64,
+      "games_total_scope": "per_arm",
+      "games_total_per_arm": 64,
+      "games_total_all_arms": 128
     },
     "private_kaggle_arm": {
       "games_per_anchor_per_candidate_seat": 16,
       "games_total": 128,
-      "launch_authorized": false
+      "games_total_scope": "per_arm",
+      "games_total_per_arm": 128,
+      "games_total_all_arms": 256,
+      "launch_authorized": true,
+      "independent_review_required_before_launch": true
     },
     "confirmation": {
       "games_per_anchor_per_candidate_seat": 64,
       "games_total": 512,
-      "launch_authorized": false
+      "games_total_scope": "per_arm",
+      "games_total_per_arm": 512,
+      "games_total_all_arms": 1024,
+      "launch_authorized": true,
+      "independent_review_required_before_launch": true
     }
   },
   "permutation_control": {
@@ -75,7 +119,8 @@
     "post_terminal_actions",
     "timeouts",
     "failures",
-    "incomplete_games"
+    "incomplete_games",
+    "missing_outputs"
   ],
   "knowledge_base_ids": {
     "decision_rules": [
@@ -129,7 +174,9 @@
     "raw_runs_root": "runs",
     "sanitized_report_root": "reports/deterministic",
     "report_is_immutable": true,
-    "absolute_paths_forbidden_in_committed_report": true
+    "absolute_paths_forbidden_in_committed_report": true,
+    "per_match_digest_required": true,
+    "resume_digest_verification_required": true
   },
   "external_actions": {
     "kaggle_runs": 0,

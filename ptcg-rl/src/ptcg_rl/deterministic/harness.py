@@ -9,6 +9,7 @@ as player-zero results.
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import random
 import statistics
@@ -23,6 +24,15 @@ from ptcg_rl.g1.evidence import sha256_file, write_immutable_json
 B0_EXPERIMENT_ID = "B0-MA-CONTROL-001"
 B0_SCHEMA_VERSION = 1
 B0_BOOTSTRAP_RESAMPLES = 10_000
+RELIABILITY_COUNTERS = (
+    "invalid_selections",
+    "fallback_actions",
+    "post_terminal_actions",
+    "timeouts",
+    "failures",
+    "incomplete_games",
+    "missing_outputs",
+)
 
 
 def candidate_outcome(terminal_result: int | None, candidate_player: int) -> str:
@@ -67,11 +77,13 @@ def _percentile(values: Sequence[float], fraction: float) -> float | None:
     return ordered[index]
 
 
-def latency_summary(records: Iterable[Mapping[str, Any]]) -> dict[str, float | int | None]:
+def latency_summary(
+    records: Iterable[Mapping[str, Any]], field: str = "action_latencies_ms"
+) -> dict[str, float | int | None]:
     latencies = [
         float(value)
         for record in records
-        for value in record.get("action_latencies_ms", ())
+        for value in record.get(field, ())
         if math.isfinite(float(value)) and float(value) >= 0
     ]
     return {
@@ -136,15 +148,102 @@ def bootstrap_score_delta(
 
 def _reliability(record: Mapping[str, Any]) -> dict[str, int]:
     summary = record.get("summary", {})
+    if not isinstance(summary, Mapping):
+        summary = {}
     failure_kind = summary.get("failure_kind") or record.get("failure_kind")
+    missing_output = int(
+        bool(record.get("missing_output", 0))
+        or not isinstance(record.get("summary"), Mapping)
+    )
+    invalid = int(summary.get("invalid_selections", 0))
+    fallback = int(summary.get("fallback_actions", 0))
+    post_terminal = int(summary.get("post_terminal_actions", 0))
+    incomplete = int(summary.get("terminal_result") is None)
+    timeout = int(failure_kind in {"timeout", "process_timeout", "arena_wall_timeout"})
+    failed = int(
+        missing_output
+        or record.get("status") != "pass"
+        or failure_kind is not None
+        or invalid
+        or fallback
+        or post_terminal
+        or incomplete
+    )
     return {
-        "invalid_selections": int(summary.get("invalid_selections", 0)),
-        "fallback_actions": int(summary.get("fallback_actions", 0)),
-        "post_terminal_actions": int(summary.get("post_terminal_actions", 0)),
-        "incomplete_games": int(summary.get("terminal_result") is None),
-        "timeouts": int(failure_kind in {"timeout", "process_timeout", "arena_wall_timeout"}),
-        "failures": int(record.get("status") != "pass" or failure_kind is not None),
+        "invalid_selections": invalid,
+        "fallback_actions": fallback,
+        "post_terminal_actions": post_terminal,
+        "incomplete_games": incomplete,
+        "timeouts": timeout,
+        "failures": failed,
+        "missing_outputs": missing_output,
     }
+
+
+def _anchor(record: Mapping[str, Any]) -> str:
+    value = record.get("anchor")
+    if isinstance(value, str) and value:
+        return value
+    policy0 = record.get("policy0")
+    policy1 = record.get("policy1")
+    if policy0 == "candidate":
+        return str(policy1)
+    if policy1 == "candidate":
+        return str(policy0)
+    return "unknown"
+
+
+def _aggregate_summary(
+    records: Sequence[Mapping[str, Any]],
+    *,
+    control_scores: Sequence[float] | None = None,
+    bootstrap_seed: int = 17,
+) -> dict[str, Any]:
+    wins = draws = losses = 0
+    scores: list[float] = []
+    reliability = {key: 0 for key in RELIABILITY_COUNTERS}
+    for record in records:
+        summary = record.get("summary", {})
+        if not isinstance(summary, Mapping):
+            summary = {}
+        score = candidate_score(summary.get("terminal_result"), record["candidate_player"])
+        for key, value in _reliability(record).items():
+            reliability[key] += value
+        if score is None:
+            continue
+        scores.append(score)
+        outcome = candidate_outcome(summary.get("terminal_result"), record["candidate_player"])
+        if outcome == "win":
+            wins += 1
+        elif outcome == "draw":
+            draws += 1
+        else:
+            losses += 1
+    completed = len(scores)
+    report: dict[str, Any] = {
+        "games_requested": len(records),
+        "games_completed": completed,
+        "candidate_wins": wins,
+        "candidate_draws": draws,
+        "candidate_losses": losses,
+        "wins": wins,
+        "draws": draws,
+        "losses": losses,
+        "candidate_score": statistics.fmean(scores) if scores else None,
+        "candidate_win_rate_wilson_95": wilson_interval(wins, completed),
+        "seat_balance": natural_seat_balance(records),
+        "reliability": reliability,
+        "promotable_reliability": completed == len(records) and not any(reliability.values()),
+        "latency": latency_summary(records),
+        "candidate_latency": latency_summary(records, "candidate_action_latencies_ms"),
+        "paired_seed_claim": False,
+        "candidate_scores": scores,
+    }
+    if control_scores is not None:
+        report["control_bootstrap_score_delta"] = bootstrap_score_delta(
+            scores, control_scores, seed=bootstrap_seed
+        )
+    return report
 
 
 def aggregate_candidate_records(
@@ -153,53 +252,20 @@ def aggregate_candidate_records(
     control_scores: Sequence[float] | None = None,
     bootstrap_seed: int = 17,
 ) -> dict[str, Any]:
-    wins = draws = losses = 0
-    scores: list[float] = []
-    reliability = {
-        "invalid_selections": 0,
-        "fallback_actions": 0,
-        "post_terminal_actions": 0,
-        "incomplete_games": 0,
-        "timeouts": 0,
-        "failures": 0,
-    }
-    for record in records:
-        score = candidate_score(record.get("summary", {}).get("terminal_result"), record["candidate_player"])
-        for key, value in _reliability(record).items():
-            reliability[key] += value
-        if score is None:
-            continue
-        scores.append(score)
-        outcome = candidate_outcome(
-            record.get("summary", {}).get("terminal_result"), record["candidate_player"]
-        )
-        if outcome == "win":
-            wins += 1
-        elif outcome == "draw":
-            draws += 1
-        else:
-            losses += 1
-    completed = len(scores)
-    score_mean = statistics.fmean(scores) if scores else None
-    report: dict[str, Any] = {
-        "games_requested": len(records),
-        "games_completed": completed,
-        "candidate_wins": wins,
-        "candidate_draws": draws,
-        "candidate_losses": losses,
-        "candidate_score": score_mean,
-        "candidate_win_rate_wilson_95": wilson_interval(wins, completed),
-        "seat_balance": natural_seat_balance(records),
-        "reliability": reliability,
-        "promotable_reliability": completed == len(records) and not any(reliability.values()),
-        "latency": latency_summary(records),
-        "paired_seed_claim": False,
-        "candidate_scores": scores,
-    }
-    if control_scores is not None:
-        report["control_bootstrap_score_delta"] = bootstrap_score_delta(
-            scores, control_scores, seed=bootstrap_seed
-        )
+    materialized = tuple(records)
+    report = _aggregate_summary(
+        materialized, control_scores=control_scores, bootstrap_seed=bootstrap_seed
+    )
+    groups: dict[tuple[str, int], list[Mapping[str, Any]]] = {}
+    for record in materialized:
+        player = record.get("candidate_player")
+        if player not in (0, 1):
+            raise ValueError("every record must identify candidate_player as 0 or 1")
+        groups.setdefault((_anchor(record), player), []).append(record)
+    cells: dict[str, dict[str, Any]] = {}
+    for (anchor, player), group in sorted(groups.items()):
+        cells.setdefault(anchor, {})[f"candidate_player_{player}"] = _aggregate_summary(group)
+    report["cells"] = cells
     return report
 
 
@@ -214,19 +280,29 @@ def permutation_control(
         raise ValueError("at least one option permutation is required")
     baseline_policy = policy_factory()
     baseline_policy.reset(request.episode_uuid, request.acting_player, "start")
-    baseline = baseline_policy.choose(observation, request).submitted_original_indices
+    baseline_action = baseline_policy.choose(observation, request)
+    baseline = baseline_action.submitted_original_indices
     outcomes = []
     for permutation in permutations:
+        if sorted(permutation) != list(range(len(request.options))):
+            raise ValueError("permutation control requires true option permutations")
         policy = policy_factory()
         policy.reset(request.episode_uuid, request.acting_player, "start")
         permuted = permute_request(request, permutation)
         action = policy.choose(observation, permuted)
-        outcomes.append(tuple(action.submitted_original_indices) == tuple(baseline))
+        if request.ordering == "ORDERED":
+            outcomes.append(tuple(action.submitted_original_indices) == tuple(baseline))
+        elif request.ordering == "UNORDERED":
+            outcomes.append(set(action.submitted_original_indices) == set(baseline))
+        else:
+            raise ValueError("permutation control requires ORDERED or UNORDERED request ordering")
     return {
         "permutations_requested": len(permutations),
         "equivalent": sum(outcomes),
         "non_equivalent": len(outcomes) - sum(outcomes),
         "pass": all(outcomes),
+        "ordering": request.ordering,
+        "equivalence": "sequence" if request.ordering == "ORDERED" else "set",
         "paired_seed_claim": False,
     }
 
@@ -247,6 +323,13 @@ def source_receipt(paths: Mapping[str, Path], project_root: Path) -> dict[str, d
     return receipt
 
 
+def candidate_source_sha256(paths: Mapping[str, Path], project_root: Path) -> str:
+    """Hash only the candidate implementation/config receipt, not the dirty tree."""
+    receipt = source_receipt(paths, project_root)
+    payload = json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def write_sealed_json(path: Path, value: Mapping[str, Any]) -> str:
     """Write content-addressable evidence once and return its SHA-256."""
     write_immutable_json(path, value)
@@ -260,6 +343,24 @@ def write_sealed_json(path: Path, value: Mapping[str, Any]) -> str:
     return digest
 
 
+def verify_sealed_json(path: Path) -> bool:
+    """Verify the digest sidecar and read-only mode for retained evidence."""
+    path = path.resolve(strict=True)
+    sidecar = path.with_name(path.name + ".sha256")
+    try:
+        descriptor = sidecar.read_text(encoding="ascii").strip().split()
+    except (OSError, UnicodeError) as error:
+        raise ValueError("sealed evidence digest sidecar is missing or unreadable") from error
+    if len(descriptor) != 2 or descriptor[1] != path.name:
+        raise ValueError("sealed evidence digest sidecar is malformed")
+    actual = sha256_file(path)
+    if descriptor[0] != actual:
+        raise ValueError("sealed evidence digest does not match content")
+    if path.stat().st_mode & 0o222 or sidecar.stat().st_mode & 0o222:
+        raise ValueError("sealed evidence is writable")
+    return True
+
+
 def sanitized_report(
     *,
     run_id: str,
@@ -270,6 +371,9 @@ def sanitized_report(
     source_sha256: str,
     loaded_artifacts: Mapping[str, Any],
     permutation: Mapping[str, Any],
+    command: Sequence[str] | None = None,
+    candidate_source_sha256: str | None = None,
+    card_table_semantic_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Build the committed aggregate report without private absolute paths."""
     sanitized_artifacts = {
@@ -279,11 +383,14 @@ def sanitized_report(
         }
         for label, value in sorted(loaded_artifacts.items())
     }
+    reliable = bool(aggregate.get("promotable_reliability"))
+    complete = aggregate.get("games_completed") == aggregate.get("games_requested")
+    permutation_pass = permutation.get("pass") is True
     return {
         "schema_version": B0_SCHEMA_VERSION,
         "record_id": f"{B0_EXPERIMENT_ID}-{run_id}",
         "experiment_id": B0_EXPERIMENT_ID,
-        "status": "SUCCEEDED" if aggregate["games_completed"] == aggregate["games_requested"] else "FAILED",
+        "status": "SUCCEEDED" if complete and reliable and permutation_pass else "FAILED",
         "decision": "NOT_REVIEWED",
         "candidate_perspective": True,
         "natural_deployment": True,
@@ -294,6 +401,9 @@ def sanitized_report(
         "repository": dict(repository),
         "platform": dict(platform),
         "source_sha256": source_sha256,
+        "candidate_source_sha256": candidate_source_sha256,
+        "card_table_semantic_sha256": card_table_semantic_sha256,
+        "command": list(command or ()),
         "loaded_artifacts": sanitized_artifacts,
         "training_performed": False,
         "kaggle_runs": 0,
@@ -313,6 +423,8 @@ __all__ = [
     "permutation_control",
     "sanitized_report",
     "source_receipt",
+    "candidate_source_sha256",
+    "verify_sealed_json",
     "wilson_interval",
     "write_sealed_json",
 ]
