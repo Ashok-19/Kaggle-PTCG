@@ -1,0 +1,567 @@
+{
+  "record_id": "phase-b2-continuity-design-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "DESIGN_COMPLETE_NATIVE_BLOCKED",
+  "scope": {
+    "mode": "read_only_phase_b2_continuity_experiment_design",
+    "component": "next-attacker-and-backup-attacker-continuity",
+    "candidate_deck": "mega-abomasnow-ex",
+    "production_source_changed": false,
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "submission": false,
+    "deck_freeze": false,
+    "promotion": false,
+    "only_owned_file_created": "reports/deterministic/phase-b2-continuity-design-v1.json",
+    "negative_claims": [],
+    "strength_claim": false,
+    "reason_for_blocked_native_readiness": "No continuity implementation or complete B2-qualified runtime attack-capability/evolution records are available. The committed Phase A route milestone qualifies 1042 Riptide, 1043 Swirling Waves, 1046 Hammer-lanche, and Surfing Beach 1262 only within its sealed evidence bounds; 1047 Frost Barrier remains PARTIAL. This report therefore defines a fixture-only design and a later B0-compatible experiment; it does not authorize or execute a game."
+  },
+  "repository_assimilation": {
+    "actual_head_at_design": "459b104399f26dca67d71da86a0aa8b3ffc01aaf",
+    "head_after_concurrent_b0_closeout_observed": "be412940a26b1c44ae575d1e2a46ddee028df787",
+    "authoritative_prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "existing_design_and_contract_inputs": [
+      {
+        "path": "reports/deterministic/phase-b1-prize-route-design-v1.json",
+        "sha256": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7",
+        "note": "B1 current-state oracle and complete-option/fail-closed contract."
+      },
+      {
+        "path": "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json",
+        "sha256": "4eb6f523185e9156827aad1a8ba1956ecd0428a2ab503c82ef5282b584c4cb43",
+        "note": "Restricted current-state runtime oracle is feasible in principle; native B1 remains blocked."
+      },
+      {
+        "path": "reports/deterministic/phase-b-semantics-audit-v1.json",
+        "sha256": "40293c28e87f1f99ce935725f426073b0308318f1490a881807a0820e9c7efed",
+        "note": "Superseded for route authority by the independently reviewed committed Phase A route milestone below; this historical audit remains retained and is not erased."
+      },
+      {
+        "path": "reports/deterministic/phase-a-route-capsules-v1.json",
+        "sha256": "af5dcf779295ad9db465ea947e202ad96870c5d05f35aed3fb93133de57c77d7",
+        "commit": "e1f1197fbc250d5507d6e2ef6c8ec112b0c84ee9",
+        "note": "Independently reviewed committed Phase A route authority: 1042 Riptide, 1043 Swirling Waves, 1046 Hammer-lanche, and Surfing Beach 1262 PASS within sealed bounds; 1047 Frost Barrier PARTIAL. This does not qualify 1044/1045 or any evolution/local-delta capability automatically."
+      },
+      {
+        "path": "configs/deterministic/b0_ma_control_v1.json",
+        "sha256": "0208ee76d3a9d733d86eb1be68a887c41dcb7fc956d49ddcb011d1be7f1aa65c",
+        "note": "Existing B0 mechanical qualification, natural-seat matrix, permutation, reliability, and budget contract."
+      },
+      {
+        "path": "reports/deterministic/b0-ma-control-canary-review-v1.json",
+        "sha256": "b46c6c2a9c3b7e5fc2c15017a9e9eb506d61e58a26abb541a122daabd5f82bf6",
+        "note": "Independent PASS for the 16-game B0 mechanical canary only; scale remains blocked because the CLI has no reviewed budget selector."
+      }
+    ],
+    "public_api_inputs": [
+      {
+        "path": "src/ptcg_rl/g1/models.py",
+        "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f"
+      },
+      {
+        "path": "src/ptcg_rl/g1/actions.py",
+        "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/state.py",
+        "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/control.py",
+        "sha256": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/policy.py",
+        "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/deck_profile.py",
+        "sha256": "b84d07adae1ec557f4dacc95e8e0ff52978b81839bcec108bd1258bb66c827af"
+      }
+    ],
+    "private_reference_inputs_read_only": [
+      "private/baselines/mega-abomasnow-ex/main.py",
+      "private/baselines/mega-abomasnow-ex/deck.csv",
+      "private/g2/card-table-v1.json",
+      "private/assets/official/sample_submission/sample_submission/cg/api.py"
+    ]
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation_before_design": "PASS",
+    "validation_after_design": "REQUIRED",
+    "queried_ids": {
+      "decision_rules": ["DR-007", "DR-008", "DR-016", "DR-002", "DR-022", "DR-023", "DR-024", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033"],
+      "strategies": ["STR-003"],
+      "search_features": ["SF-004", "SF-005"],
+      "anti_patterns": ["AP-001", "AP-002", "AP-005", "AP-009", "AP-011", "AP-014"],
+      "research_questions": ["RQ-004", "RQ-005", "RQ-006", "RQ-007"],
+      "contradictions": ["CON-001", "CON-004"]
+    },
+    "binding_interpretation": {
+      "DR-007": "Prepare a live next attacker before a non-terminal trade when the opponent can answer or strand the active; this is a hypothesis to isolate, not an executable effect rule.",
+      "DR-008": "Preserve a backup when the route needs multiple future attacks, subject to deck-specific opportunity cost; the backup count must be public, route-compatible, and not hidden-card inferred.",
+      "DR-016": "Attach for the next attack rather than a doomed active when the future attacker is below threshold; only explicit current attach deltas may be used at PolicyV1 runtime.",
+      "STR-003": "Treat next usable attacker plus its resource threshold as a prerequisite for a non-terminal trade.",
+      "SF-004": "Use binary readiness plus distance-to-threshold rather than a raw attacker count.",
+      "SF-005": "Measure count and quality of visible route-compatible backups; a raw count alone is insufficient.",
+      "CON-001": "Continuity must not be blended into immediate-Prize value. The fixtures deliberately expose the trade between readiness and chain robustness.",
+      "CON-004": "Semantic option identity is authoritative. All variant comparisons require permutation controls; raw option order is never a feature.",
+      "RQ-004": "The exact Mega Abomasnow route and first-attacker choice remain open; B2 supplies continuity diagnostics, not a route claim.",
+      "RQ-005": "The isolated held-out CABT ablation of readiness/backup features remains open and is the later WDL experiment.",
+      "RQ-006": "Option-order predictiveness remains unresolved; the B2 contract forbids using it.",
+      "RQ-007": "Card/evolution/attack interactions require exact native capsules; static card prose is not enough."
+    },
+    "design_conclusion": "The KB supports two isolated, falsifiable continuity hypotheses. It does not authorize an assumption that any Mega Abomasnow variable attack, Trainer effect, or hidden card is known at runtime."
+  },
+  "candidate_deck_and_static_metadata": {
+    "deck_profile": "mega-abomasnow-ex",
+    "deck_csv_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "card_table_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "card_counts": {
+      "721": 2,
+      "722": 4,
+      "723": 4,
+      "1121": 4,
+      "1126": 1,
+      "1192": 4,
+      "1227": 4,
+      "1262": 3,
+      "3": 34
+    },
+    "card_static_rows": {
+      "3": {"card_type": 5, "energy_type": 3, "basic_energy": true},
+      "721": {"card_type": 0, "energy_type": 3, "hp": 150, "retreat_cost": 3, "basic": true, "attack_ids": [1042, 1043]},
+      "722": {"card_type": 0, "energy_type": 3, "hp": 90, "retreat_cost": 3, "basic": true, "attack_ids": [1044, 1045]},
+      "723": {"card_type": 0, "energy_type": 3, "hp": 350, "retreat_cost": 4, "stage1": true, "mega_ex": true, "attack_ids": [1046, 1047]}
+    },
+    "attack_static_rows": {
+      "1042": {"card_id": 721, "damage": 0, "energy_counts": [0, 0, 0, 1], "effect_semantics": "QUALIFIED_CABT_CAPSULE_ROUTE_BOUNDED"},
+      "1043": {"card_id": 721, "damage": 130, "energy_counts": [1, 0, 0, 2], "effect_semantics": "QUALIFIED_CABT_CAPSULE_ROUTE_BOUNDED"},
+      "1044": {"card_id": 722, "damage": 10, "energy_counts": [0, 0, 0, 1], "effect_semantics": "QUALIFICATION_REQUIRED"},
+      "1045": {"card_id": 722, "damage": 30, "energy_counts": [0, 0, 0, 2], "effect_semantics": "QUALIFICATION_REQUIRED"},
+      "1046": {"card_id": 723, "damage": 0, "energy_counts": [0, 0, 0, 2], "effect_semantics": "QUALIFIED_CABT_CAPSULE_ROUTE_BOUNDED"},
+      "1047": {"card_id": 723, "damage": 200, "energy_counts": [0, 0, 0, 3], "effect_semantics": "PARTIAL"}
+    },
+    "route_capsule_authority": {
+      "commit": "e1f1197fbc250d5507d6e2ef6c8ec112b0c84ee9",
+      "report_sha256": "af5dcf779295ad9db465ea947e202ad96870c5d05f35aed3fb93133de57c77d7",
+      "raw_evidence_sha256": "a07e4c5e984752ef9f4d0db5839782084057ecf22e909e601a4faf05f1cd9cb2",
+      "pass_within_bounds": {
+        "1042": "riptide recycle/damage relation for observed recycled-Water strata 1/2/3/4",
+        "1043": "swirling-waves exact two-Water discard and 130 damage",
+        "1046": "hammer-lanche six-card discard and observed damage strata",
+        "1262": "Surfing Beach play followed by effect-bound Water SWITCH in the same game/player/order"
+      },
+      "partial": {
+        "1047": "Frost Barrier attack observed, but next-turn fixed-response/control comparison remains unproven"
+      },
+      "not_qualified_by_this_milestone": [
+        "1044 and 1045 Kyogre/Snover attack capability records",
+        "722-to-723 evolution legality/status/local-delta record",
+        "Any generic B2 attacker capability whose target, status, evolution, or local-delta fields are not bound by a complete capsule"
+      ]
+    },
+    "metadata_use_rule": "The numeric rows may define a candidate capability only after an independently sealed CABT attack/evolution capsule binds card ID, attack ID, required energy, legality/status constraints, and absence or exact meaning of additional effects. The committed Phase A route capsule supplies route-bounded effect evidence for 1042, 1043, 1046, and 1262 only; it does not grant 1044/1045 or evolution authority, and it is not by itself a complete B2 capability record. No hidden deck copy is a ready attacker."
+  },
+  "runtime_boundary": {
+    "policy_v1_allowed": [
+      "Current EngineObservationV1 and current SelectionRequestV1 only.",
+      "Public own Active/Bench entities, visible own hand/discard/looking cards exposed by the adapter, public counts, statuses, attached energy types/counts, and public event fields.",
+      "Complete current legal options and canonical semantic fields, resolved to current public entity keys.",
+      "Exact candidate deck profile and versioned numeric card/attack metadata plus independently qualified attack/evolution capsules.",
+      "Prior public transitions only for lifecycle integrity; no successor observation is used as a feature."
+    ],
+    "policy_v1_forbidden": [
+      "Successor snapshots, post-action HP/zone/energy state, counterfactual terminal result, or opponent response class/weight.",
+      "Opponent hidden hand/deck/facedown Prize identities, inferred archetype certainty, or hidden-card allocation.",
+      "Raw native objects, private baseline modules, effect prose treated as executable semantics, and original option order/index as a score feature.",
+      "Any attack/effect route edge marked PARTIAL, including 1047, or any use of the route-bounded 1042, 1043, 1046, or 1262 evidence outside its sealed Phase A bounds and a complete B2 capability/local-delta record.",
+      "A belief particle, determinization, or manually controlled random outcome."
+    ],
+    "current_action_delta_rule": {
+      "attach": "For a current MAIN ATTACH option, apply only the explicitly qualified local delta of one legal current manual Energy attachment to the resolved public target. Do not read a successor to discover whether it succeeded.",
+      "evolve": "For a current MAIN EVOLVE option, apply only a sealed local 722-to-723 or other exact candidate evolution capsule. Unknown evolution target, status, or effect delegates.",
+      "play_or_search": "PLAY, CARD, CARD_OR_ATTACHED_CARD, ABILITY, RETREAT, ATTACK, and all follow-up effect requests delegate unless a future capsule explicitly supplies a complete current local delta. A play that might later bench a card is not treated as a ready attacker now.",
+      "status_and_legality": "A candidate is ready only when the qualified attack capability, visible entity, required energy matching, evolution/status constraints, and current legal-action contract are all known. Unknown is not ready and does not become a favorable estimate."
+    },
+    "terminal_and_compound_rules": {
+      "terminal_first": "Terminal result is checked before selection-local fields; PolicyV1 is never called for a terminal selection. A current attack is not called an immediate win merely because a static damage predicate crosses HP.",
+      "complete_options": "Every available legal option in the request must be covered. A safe prefix is not scored while an unsupported alternative is ignored.",
+      "compound": "Activation is limited to min_count=max_count=1, or min_count=0/max_count=1 with an explicitly legal semantic STOP. max_count>1, ordered multi-select, and unresolved STOP contracts delegate to B0.",
+      "tie": "Distinct non-equivalent options with equal formulation keys return AMBIGUOUS and delegate. A canonical semantic fingerprint may resolve only exact semantic duplicates after the strategic key is unequal or equivalence is proven.",
+      "delegation": "B0_DELEGATE is experimental abstention to the frozen public control, not a final-adapter fallback. It must have a separate counter and must never be reported as a continuity selection."
+    }
+  },
+  "continuity_feature_contract": {
+    "schema_version": 1,
+    "attacker_capability_record": {
+      "required_fields": ["card_id", "attack_id", "qualification_id", "qualification_status", "energy_counts", "evolution_requirement", "status_constraints", "public_target_requirements"],
+      "qualification_status_allowlist": ["QUALIFIED_CABT_CAPSULE", "FIXTURE_ONLY", "PARTIAL", "UNKNOWN"],
+      "runtime_allowlist": ["QUALIFIED_CABT_CAPSULE"],
+      "energy_rule": "Use a versioned energy-matching function bound to CardTableV1 and the native capsule. For this deck, card 3 is Water type 3; do not infer general colorless matching from prose."
+    },
+    "candidate_sets": {
+      "next_attacker": "Visible own Bench entities with at least one runtime-qualified attack capability; a visible own-hand card is accessible but not ready, and a hidden deck/Prize slot is never a candidate.",
+      "backup_attacker": "Visible own Bench entities distinct from the current Active that are already ready under the same qualified capability contract. A card in hand or a hidden copy cannot count as a backup.",
+      "near_ready": "A visible Bench candidate with all non-energy requirements satisfied and exactly one energy unit short of a qualified attack after the local current-action delta. If the energy matching or evolution/status condition is unknown, near_ready is UNKNOWN rather than zero.",
+      "active": "The current Active may be recorded for context and current-attack readiness but is excluded from backup count. Attaching to Active does not create a backup."
+    },
+    "action_local_values": {
+      "ready_after": "Number of visible qualified next/backup candidates satisfying all requirements after applying only the selected local delta.",
+      "best_deficit_after": "Minimum known nonnegative energy deficit among qualified visible Bench candidates after the selected local delta; UNKNOWN if no qualified candidate or any required capability is unresolved.",
+      "two_backup_tail_after": "For at least two qualified visible Bench candidates, sort their known nonnegative deficits ascending and return the second-smallest deficit. This is the one-loss chain-tail proxy; UNKNOWN when fewer than two candidates or an unresolved required field exists.",
+      "unresolved_count": "Count of candidate feature fields that are unknown or depend on a PARTIAL capsule. It is diagnostic and a fail-closed reason, not a favorable score.",
+      "no_successor_claim": "All *_after values are virtual local-delta values. They are not observed post-action state and cannot establish that the attack or evolution actually executed."
+    }
+  },
+  "formulations": [
+    {
+      "id": "B2-A-NEXT-THRESHOLD",
+      "name": "Next-attacker threshold first",
+      "status": "FIXTURE_ONLY_UNTIL_QUALIFIED_CAPSULES_AND_IMPLEMENTATION",
+      "falsifiable_hypothesis": "When one complete current attach/evolve option crosses a visible qualified future-attacker threshold and competing options do not, this arm selects that option independent of option order. It should differ from B2-B on a balanced-chain fixture where threshold crossing concentrates the chain.",
+      "decision_key": [
+        "current terminal override is evaluator-only and never a PolicyV1 action",
+        "next_attacker_ready_after descending",
+        "best_deficit_after ascending",
+        "backup_ready_count_after descending",
+        "backup_near_ready_count_after descending",
+        "non_active_target_role descending",
+        "canonical semantic action key only after the strategic prefix; non-equivalent ties are AMBIGUOUS"
+      ],
+      "feature_use": {
+        "next_attacker_ready_after": "Binary/ count threshold for the best visible Bench follow-up after the current local delta; it does not use hidden deck copies or a future response.",
+        "best_deficit_after": "Minimum exact energy deficit among qualified visible future attackers; not an estimated draw probability.",
+        "backup_ready_count_after": "Count of ready visible Bench attackers after the local delta; no quality multiplier or blended score."
+      },
+      "expected_fixture_behavior": {
+        "fixture": "B2-F01",
+        "select_semantic_target": "p0:s11",
+        "reason": "The option attaches one Water Energy to a 723 with one of two required Water units, producing best_deficit=0 and one ready backup."
+      },
+      "fail_closed": ["missing qualified attack capability", "PARTIAL attack/effect dependency", "unknown energy matching", "unknown evolution/status constraint", "unsupported request context", "incomplete legal option set", "compound request", "non-equivalent key tie"]
+    },
+    {
+      "id": "B2-B-TWO-ATTACKER-TAIL",
+      "name": "Two-attacker chain-tail robustness",
+      "status": "FIXTURE_ONLY_UNTIL_QUALIFIED_CAPSULES_AND_IMPLEMENTATION",
+      "falsifiable_hypothesis": "When options trade an immediately ready single backup for a lower second-smallest deficit across two future attackers, this arm selects the lower two-attacker tail. It must preserve semantic/permutation invariance and can select an option that B2-A rejects because it does not immediately cross a threshold.",
+      "decision_key": [
+        "current terminal override is evaluator-only and never a PolicyV1 action",
+        "two_backup_tail_after ascending",
+        "backup_ready_count_after descending",
+        "best_deficit_after ascending",
+        "backup_near_ready_count_after descending",
+        "next_attacker_ready_after descending",
+        "canonical semantic action key only after the strategic prefix; non-equivalent ties are AMBIGUOUS"
+      ],
+      "feature_use": {
+        "two_backup_tail_after": "The second-smallest visible qualified Bench energy deficit after the local delta; it encodes a one-loss chain tail without assigning hidden response probabilities.",
+        "backup_ready_count_after": "A secondary guard prevents the tail proxy from preferring an option with no ready backup when a same-tail option has one.",
+        "no_blended_score": "The key is lexicographic and names each feature; no arbitrary weighted sum or aggregate gold score is introduced."
+      },
+      "expected_fixture_behavior": {
+        "fixture": "B2-F01",
+        "select_semantic_target": "p0:s12",
+        "reason": "Attaching to the zero-energy 723 yields backup deficits [1,1,3], with two-attacker tail=1, versus [0,2,3] when attaching to p0:s11."
+      },
+      "fail_closed": ["fewer than two qualified visible Bench candidates", "any unresolved candidate deficit", "PARTIAL attack/effect dependency", "unsupported request context", "incomplete legal option set", "compound request", "non-equivalent key tie"]
+    }
+  ],
+  "fixture_contract": {
+    "fixture_schema": "Every fixture must materialize as a valid G1 EngineObservationV1 plus SelectionRequestV1. Dataclass defaults may fill only optional fields; required option fields, canonical known-entity metadata_ref values, source/target references, semantic fingerprints, request identity, and all option/request enum fields must be present or deterministically derived from the fixture before PublicStateV1 validation. The semantic_target field is a fixture assertion and must be stripped before constructing LegalOptionV1. A shorthand fixture row is not a legal runtime input.",
+    "fixture_metadata_rule": "The attack capability rows in these fixtures are FIXTURE_ONLY unless their qualification_id is replaced by a sealed native capsule. Fixture pass proves arithmetic, boundary, and divergence behavior only; it cannot qualify native semantics or policy strength. Fixture-only capability rows must still carry the complete capability-record shape; shorthand required_water alone is not accepted by the evaluator.",
+    "common_public_state": {
+      "schema_version": 2,
+      "public_state_schema_version": 1,
+      "battle_id": "b2-fixture-0001",
+      "transition_id": 7,
+      "acting_player": 0,
+      "terminal_result": null,
+      "turn": 5,
+      "turn_action_count": 1,
+      "first_player": 0,
+      "supporter_played": false,
+      "stadium_played": false,
+      "energy_attached": false,
+      "retreated": false,
+      "fixture_metadata_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "players": [
+        {"player_index": 0, "bench_max": 5, "deck_count": 34, "hand_count": 4, "prize_count": 4, "visible_prize_count": 0, "hand_visible": true, "facedown_active_count": 0},
+        {"player_index": 1, "bench_max": 5, "deck_count": 40, "hand_count": 6, "prize_count": 5, "visible_prize_count": 0, "hand_visible": false, "facedown_active_count": 0}
+      ],
+      "own_entities": [
+        {"entity_key": "p0:s10", "card_id": 723, "serial": 10, "metadata_ref": "card:723@ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "owner": 0, "zone": 4, "position": 0, "hp": 350, "max_hp": 350, "damage": 0, "attached_energy_count": 2, "energy_types": [3, 3], "evolution_depth": 1, "statuses": [], "visible": true},
+        {"entity_key": "p0:s11", "card_id": 723, "serial": 11, "metadata_ref": "card:723@ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "owner": 0, "zone": 5, "position": 0, "hp": 350, "max_hp": 350, "damage": 0, "attached_energy_count": 1, "energy_types": [3], "evolution_depth": 1, "statuses": [], "visible": true},
+        {"entity_key": "p0:s12", "card_id": 723, "serial": 12, "metadata_ref": "card:723@ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "owner": 0, "zone": 5, "position": 1, "hp": 350, "max_hp": 350, "damage": 0, "attached_energy_count": 0, "energy_types": [], "evolution_depth": 1, "statuses": [], "visible": true},
+        {"entity_key": "p0:s13", "card_id": 721, "serial": 13, "metadata_ref": "card:721@ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "owner": 0, "zone": 5, "position": 2, "hp": 150, "max_hp": 150, "damage": 0, "attached_energy_count": 0, "energy_types": [], "evolution_depth": 0, "statuses": [], "visible": true},
+        {"entity_key": "p0:s20", "card_id": 3, "serial": 20, "metadata_ref": "card:3@ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "owner": 0, "zone": 2, "position": 0, "energy_types": [], "visible": true}
+      ],
+      "opponent_public_entities": [],
+      "hidden_opponent_state": "No opponent card identities are present; hidden counts remain the player-view counts only."
+    },
+    "fixture_capabilities": [
+      {"card_id": 723, "attack_id": 1046, "energy_counts": [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0], "evolution_requirement": "fixture-only-stage1-723", "status_constraints": [], "public_target_requirements": "fixture-only-opponent-active", "qualification_id": "fixture-only-723-1046", "qualification_status": "FIXTURE_ONLY"},
+      {"card_id": 721, "attack_id": 1043, "energy_counts": [1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0], "evolution_requirement": "fixture-only-basic-721", "status_constraints": [], "public_target_requirements": "fixture-only-opponent-active", "qualification_id": "fixture-only-721-1043", "qualification_status": "FIXTURE_ONLY"}
+    ],
+    "fixture_cases": [
+      {
+        "id": "B2-F01",
+        "purpose": "Formulation divergence with complete current singleton attach options.",
+        "request": {
+          "schema_version": 2,
+          "episode_uuid": "b2-fixture-0001",
+          "selection_seq": 7,
+          "request_id": "b2-fixture-0001-r7-f01",
+          "acting_player": 0,
+          "selection_type": 0,
+          "selection_context": 0,
+          "min_count": 1,
+          "max_count": 1,
+          "ordering": "UNORDERED",
+          "remain_damage_counter": null,
+          "remain_energy_cost": null,
+          "context_card_id": null,
+          "effect_card_id": null,
+          "options": [
+            {"schema_version": 2, "original_index": 0, "selection_type": 0, "selection_context": 0, "option_type": 8, "option_name": "ATTACH", "area": 2, "index": 0, "in_play_area": 4, "in_play_index": 0, "source_kind": "ENTITY", "source_ref": "p0:s20", "source_entity_key": "p0:s20", "target_kind": "ENTITY", "target_ref": "p0:s10", "target_entity_key": "p0:s10", "semantic_target": "p0:s10", "choice_role": "ATTACH", "available": true, "semantic_fingerprint": "36199cfe1a58ea1d8220eb20b8b74c61be21610581098b0c0ad56c9208ae6aa0"},
+            {"schema_version": 2, "original_index": 1, "selection_type": 0, "selection_context": 0, "option_type": 8, "option_name": "ATTACH", "area": 2, "index": 0, "in_play_area": 5, "in_play_index": 0, "source_kind": "ENTITY", "source_ref": "p0:s20", "source_entity_key": "p0:s20", "target_kind": "ENTITY", "target_ref": "p0:s11", "target_entity_key": "p0:s11", "semantic_target": "p0:s11", "choice_role": "ATTACH", "available": true, "semantic_fingerprint": "c924462a8cd0d5cbce397ea630f581baab30d5cd5732d62efd422ae7e2c19c50"},
+            {"schema_version": 2, "original_index": 2, "selection_type": 0, "selection_context": 0, "option_type": 8, "option_name": "ATTACH", "area": 2, "index": 0, "in_play_area": 5, "in_play_index": 1, "source_kind": "ENTITY", "source_ref": "p0:s20", "source_entity_key": "p0:s20", "target_kind": "ENTITY", "target_ref": "p0:s12", "target_entity_key": "p0:s12", "semantic_target": "p0:s12", "choice_role": "ATTACH", "available": true, "semantic_fingerprint": "90602e507ae993eb65630c8a5e4042651e0cd3edfdb8b63155e46a4fcc9f1fc7"},
+            {"schema_version": 2, "original_index": 3, "selection_type": 0, "selection_context": 0, "option_type": 8, "option_name": "ATTACH", "area": 2, "index": 0, "in_play_area": 5, "in_play_index": 2, "source_kind": "ENTITY", "source_ref": "p0:s20", "source_entity_key": "p0:s20", "target_kind": "ENTITY", "target_ref": "p0:s13", "target_entity_key": "p0:s13", "semantic_target": "p0:s13", "choice_role": "ATTACH", "available": true, "semantic_fingerprint": "d2e70f3499e42cbb82df525209b0d3da72b9eeaead765d072d16e81c6722d0f4"}
+          ]
+        },
+        "expected": {
+          "B2-A-NEXT-THRESHOLD": "p0:s11",
+          "B2-B-TWO-ATTACKER-TAIL": "p0:s12",
+          "control_or_unqualified_native": "not evaluated by this fixture; native authority must B0_DELEGATE until capsule gates pass"
+        }
+      },
+      {
+        "id": "B2-F02",
+        "purpose": "Complete-option fail-closed behavior for a PARTIAL attack dependency.",
+        "mutation": "Replace one fixture capability qualification_status with PARTIAL, or add a legal 1046/1262-dependent option to the request.",
+        "expected": "B0_DELEGATE with reason PARTIAL_CAPABILITY_OR_EFFECT; no safe-option prefix is submitted."
+      },
+      {
+        "id": "B2-F03",
+        "purpose": "Permutation and hidden-state invariance.",
+        "mutations": [
+          "Apply every permutation of the four option rows while preserving semantic payloads.",
+          "Change only hidden opponent identities/count-consistent private allocation, which must not be represented as opponent hand entities.",
+          "Use acting_player=1 with a player-mirrored public fixture and remapped entity keys."
+        ],
+        "expected": "A selects the same semantic target p0:s11 and B selects p0:s12 under all option permutations; mirrored player selects the corresponding self-owned target; hidden mutations do not change either semantic action."
+      },
+      {
+        "id": "B2-F04",
+        "purpose": "Ambiguous strategic tie and no hidden ready attacker.",
+        "mutation": "Make two distinct visible attach targets produce the same complete formulation key, or remove all visible qualified Bench candidates while leaving hidden hand/deck counts nonzero.",
+        "expected": "Distinct tied actions return AMBIGUOUS and delegate; hidden-only candidates produce UNKNOWN_NO_PUBLIC_CANDIDATE and delegate."
+      },
+      {
+        "id": "B2-F05",
+        "purpose": "Compound and STOP contract.",
+        "mutations": [
+          "Change min_count/max_count to 1/2 or ordering to ORDERED.",
+          "Change min_count/max_count to 0/1. STOP is not a LegalOptionV1 row; it is legal only through the G1 CompoundActionBuilder mask when min_count=0 and max_count>0."
+        ],
+        "expected": "The 1/2 and ORDERED requests delegate. The optional singleton may emit a real STOP only when the G1 legality mask allows it and the formulation has no covered positive continuity action; the decoder trace retains the STOP token. Empty output is never an implicit STOP."
+      },
+      {
+        "id": "B2-F06",
+        "purpose": "Current-only action delta boundary.",
+        "mutation": "Attach/evolve metadata is omitted, contains an unknown required field, or a successor-only value is supplied to the evaluator. The fixture evaluator must reject extra successor fields rather than silently ignore them.",
+        "expected": "B0_DELEGATE with SUCCESSOR_VALUE_FORBIDDEN or MISSING_LOCAL_DELTA; no post-action field is read."
+      }
+    ]
+  },
+  "activation_and_delegation": {
+    "active_request_classes": [
+      "MAIN selection_type=0, selection_context=0, ordering=UNORDERED, context_card_id/effect_card_id null, with only qualified ATTACH option_type=8 singleton alternatives; every ATTACH source must be a visible own Basic Water card in HAND, every target must be a visible own Active/Bench entity, and energy_attached=false.",
+      "MAIN selection_type=0, selection_context=0, ordering=UNORDERED, context_card_id/effect_card_id null, with only qualified EVOLVE option_type=9 singleton alternatives after a sealed exact evolution capsule; every source and target must resolve to the current public snapshot.",
+      "Optional singleton 0..1 with no STOP option row: G1's explicit STOP token is legal only when the request bounds permit it, subject to the same complete-option and no-positive-action rule."
+    ],
+    "always_delegate_currently": [
+      "Any request containing 1047, 1044, 1045, an unresolved evolution capability, or another PARTIAL/UNKNOWN capability. Route-bounded evidence for 1042, 1043, 1046, and Surfing Beach 1262 may not activate B2 until the complete capability, target/status/evolution constraints, and current local-delta contract are independently bound; otherwise delegate.",
+      "PLAY/search/effect chains whose future bench/evolution/energy result is not an explicit current local delta.",
+      "CARD, ATTACHED_CARD, CARD_OR_ATTACHED_CARD, ENERGY, SKILL, ABILITY, RETREAT, ATTACK, COUNT, YES_NO, SPECIAL_CONDITION, and unresolved setup requests.",
+      "Any max_count>1 or ORDERED compound request, any incomplete option set, duplicate semantic fingerprint, unsupported enum/field, stale lifecycle identity, or missing public entity.",
+      "Any formulation feature that is UNKNOWN, uses a hidden identity, or needs a successor/response/terminal value."
+    ],
+    "mapping": {
+      "SELECTED": "Return a CompoundActionV1 built through the existing action builder and final boundary validator; record authority=EXPERIMENTAL_CONTINUITY.",
+      "B0_DELEGATE": "Invoke the frozen public B0 control through a separately identified delegation path; count delegation, not fallback.",
+      "AMBIGUOUS": "Do not use option order; delegate to B0 and retain the tied semantic keys.",
+      "UNSUPPORTED": "Delegate to B0 with a compact reason capsule.",
+      "NO_SAFE_CONTINUITY": "Delegate to B0; this does not mean a submission fallback was used.",
+      "TERMINAL_OVERRIDE": "Evaluator/harness-only status after terminal-first processing; never emitted as a current PolicyV1 selection."
+    }
+  },
+  "diagnostics": {
+    "required_per_decision": [
+      "schema_version, request_id, selection_seq, episode_uuid, acting_player, policy_id, formulation_id",
+      "status, authority, selected semantic fingerprint/action key, complete option digest, option permutation digest, request ordering and bounds",
+      "candidate entity keys and card/attack capability IDs with qualification status",
+      "ready_before, ready_after, best_deficit_before, best_deficit_after, two_backup_tail_before, two_backup_tail_after, backup_ready_count_after, backup_near_ready_count_after",
+      "unknown fields, partial dependency IDs, fail_closed_reason, and whether a local delta rather than a successor was used",
+      "B0 delegation count and final-adapter fallback count as separate fields"
+    ],
+    "required_run_aggregates": [
+      "continuity decisions by formulation, selection context, card/attack capability, anchor, candidate seat, and natural first-player seat",
+      "selected/delegated/ambiguous/unsupported counts",
+      "permutation semantic-equivalence failures and hidden-state invariance failures",
+      "invalid selections, post-terminal actions, fallbacks, stale requests, crashes, timeouts, incomplete games, and missing outputs",
+      "candidate-only request count, p50/p90/p95/p99 latency, CPU seconds/game, peak RSS, and cumulative overage",
+      "candidate-perspective wins/draws/losses and WDL score per anchor and seat; no player-0-only aggregate"
+    ],
+    "interpretation_guard": "Diagnostics describe activation and behavior. They do not prove WDL improvement, route completion, terminal wins, or card-effect semantics."
+  },
+  "comparison_contract": {
+    "estimand": "For each formulation, anchor, candidate seat, and natural-deployment stratum, estimate candidate-perspective terminal WDL score (wins + 0.5*draws) / completed_games against the named frozen anchor; the aggregate is descriptive across the preregistered cells only.",
+    "sampling": "Candidate and frozen-control arms are independent native game samples. Do not pair games, claim paired seeds, reuse a trajectory, or treat option permutations as independent games.",
+    "uncertainty": {
+      "per_cell_wdl": "Report wins, draws, losses, completed/requested games, and a 95% Wilson interval for the candidate score in every anchor x candidate-seat cell.",
+      "candidate_control_delta": "Report the observed candidate-minus-control score delta and a 10,000-resample independent two-sample bootstrap percentile interval using game-level terminal scores within each arm; preserve the bootstrap seed and raw score vectors.",
+      "activation": "Report activation/selection/delegation counts and exact denominators separately; no activation rate is a WDL substitute."
+    },
+    "target_cell_rule": "Before Stage 4, name the target anchor/seat cells and formulation in the immutable run plan. A targeted signal means the independent-bootstrap 95% lower percentile for candidate-minus-control is greater than zero in at least one named target cell, with all requested games complete and all reliability counters zero. This is an experiment continuation criterion, not a promotion claim.",
+    "incomplete_or_invalid": "Any incomplete game, invalid action, fallback, stale request, timeout, crash, missing output, permutation failure, nonfinite metric, or provenance mismatch blocks that arm; do not score incomplete games or silently replace them.",
+    "no_blended_score": "Do not average activation, runtime, route diagnostics, or matchup cells into a blended gold score. Runtime and reliability are eligibility gates; terminal WDL is the only primary effectiveness metric."
+  },
+  "staged_b0_compatible_native_experiment": {
+    "status": "DESIGNED_NOT_AUTHORIZED_IN_THIS_SUBTASK",
+    "shared_provenance": {
+      "candidate_deck": "mega-abomasnow-ex",
+      "opponents": ["rule:dragapult-ex", "rule:iono", "rule:mega-abomasnow-ex", "rule:mega-lucario-ex"],
+      "natural_deployment": true,
+      "candidate_seat_balance": true,
+      "candidate_perspective_wdl": true,
+      "paired_seed_claim": false,
+      "permutation_count_per_candidate_game": 32,
+      "raw_option_order_authority": false,
+      "terminal_outcome_only_primary_metric": true,
+      "exact_deck_and_asset_receipts": "Reuse B0 config hashes, but hash the actual loaded engine, wrapper, card data, candidate source/config, and each native anchor/deck."
+    },
+    "stage_0_fixture_gate": {
+      "games": 0,
+      "required": [
+        "Implement B2-A and B2-B as isolated variants without editing the frozen B0 control.",
+        "Materialize B2-F01 as valid EngineObservationV1/SelectionRequestV1/PublicStateV1 records, including source hand energy, canonical metadata_ref values, complete option fields, entity references, and canonical semantic fingerprints.",
+        "Pass B2-F01 through B2-F06, including exact divergence, all 24 permutations of the four fixture options plus the B0 32-permutation contract at the native boundary, mirrored player, hidden-state invariance, duplicate/tie rejection, compound/STOP trace, and successor-forbidden checks.",
+        "Static/runtime import scan proves no private baseline/native object dependency in the candidate variant.",
+        "Independent review confirms every capability is FIXTURE_ONLY or QUALIFIED_CABT_CAPSULE and every current unknown delegates."
+      ],
+      "stop_condition": "Any boundary or fixture failure blocks native execution; no game may be used to paper over a design defect."
+    },
+    "stage_1_mechanical_canary": {
+      "runs": "Two separate B0-compatible runs, one for B2-A and one for B2-B; each run has 8 candidate games and 8 frozen-control games, one game per anchor per candidate seat.",
+      "total_games": 32,
+      "workers": 1,
+      "request_cap": 20000,
+      "game_timeout_seconds": 180,
+      "wall_seconds": 1800,
+      "max_evidence_bytes": 67108864,
+      "stop_on": ["any invalid selection", "fallback", "post-terminal action", "timeout", "failure", "incomplete game", "missing output", "stale request", "permutation mismatch", "nonfinite diagnostic", "provenance mismatch"],
+      "candidate_imports": [
+        "BLOCKED_UNTIL_IMPLEMENTATION: exact repo-local import spec, policy_id, owned source receipt, transitive source/config hashes, and clean dependency scan for B2-A",
+        "BLOCKED_UNTIL_IMPLEMENTATION: exact repo-local import spec, policy_id, owned source receipt, transitive source/config hashes, and clean dependency scan for B2-B"
+      ],
+      "control": "The frozen deterministic-strategic-mega-abomasnow-v1 public B0 control, not a private rule policy, remains the baseline control path for candidate comparison.",
+      "promotion_from_stage": "No promotion or strength claim. A pass only establishes mechanical reliability and independently reviewed diagnostic integrity."
+    },
+    "stage_2_local_screen": {
+      "prerequisite": "Stage 1 independently reviewed PASS for the relevant arm.",
+      "games_per_arm": 32,
+      "games_all_arms_if_both_variants": 128,
+      "seat_and_anchor_matrix": "Four anchors x four candidate games per seat per arm, natural deployment.",
+      "analysis": "Report activation and candidate-perspective WDL per anchor/seat; retain continuity decision traces and compare each variant separately to its independently sampled control. Use the comparison_contract uncertainty rules. No blended component score."
+    },
+    "stage_3_private_kaggle_cpu_screen": {
+      "prerequisite": "Stage 2 zero-reliability review plus technical approval of exact notebook/config and private artifact destination.",
+      "games_per_arm": 128,
+      "games_all_arms_if_both_variants": 512,
+      "launch": "Private bounded Kaggle CPU only; no submission and no GPU/training.",
+      "review": "Independent raw-manifest and candidate-perspective recalculation required before any confirmation."
+    },
+    "stage_4_confirmation": {
+      "prerequisite": "A preregistered arm shows fixture-consistent behavior, zero reliability defects, and the comparison_contract target-cell rule passes without an unexplained anchor/seat regression.",
+      "games_per_arm": 512,
+      "games_all_arms_if_both_variants": 2048,
+      "metric": "Candidate-perspective (wins + 0.5*draws)/completed_games with Wilson/bootstrap uncertainty, per anchor and seat; never a blended gold score.",
+      "promotion_rule": "Only after independent review, zero tolerance counters, preserved off-target behavior or the predeclared target-cell rule, no unexplained catastrophic matchup regression, and a scaled held-out confirmation. This report does not promote either formulation."
+    }
+  },
+  "runtime_budget_prerequisites": {
+    "policy_shape": "Current-only O(number of public entities x qualified capability records); no search, successor simulation, belief sampling, or network.",
+    "pre_registered_candidate_limits": {
+      "request_p99_wall_ms": 100,
+      "candidate_cpu_seconds_per_game": 1.0,
+      "peak_rss_mib": 512,
+      "competition_cumulative_overage_seconds": 600,
+      "conservative_process_envelope": "At most the conservative competition envelope of approximately 1.6 vCPU and 8 GiB; no GPU at inference."
+    },
+    "measurement_rule": "Measure candidate-only callback time and CPU/RSS from the actual run. A delegation to B0 is not allowed to hide a slow continuity calculation; count both paths separately.",
+    "budget_blockers": [
+      "No implementation exists yet to measure these limits.",
+      "No native run may start until the exact import specs, source/config hashes, clean candidate dependency scan, and resolved B0-compatible config are reviewed.",
+      "If a future formulation requires compound search or successor simulation, it is a new experiment and cannot reuse this budget."
+    ]
+  },
+  "readiness": {
+    "design_ready": true,
+    "fixture_ready": false,
+    "native_ready": false,
+    "native_blockers": [
+      "Implementer must add isolated B2-A/B variants and tests; this report intentionally does not add production code.",
+      "The committed Phase A route milestone qualifies 1042 Riptide, 1043 Swirling Waves, 1046 Hammer-lanche, and Surfing Beach 1262 within sealed evidence bounds; 1047 Frost Barrier remains PARTIAL. That route evidence does not automatically qualify 1044/1045 or the exact 722-to-723 evolution/status/local-delta capability required by B2.",
+      "Every runtime capability needs a version-bound qualified CABT capsule; CardTable damage/energy metadata alone is insufficient.",
+      "The existing B0 harness must be extended or configured to load each isolated candidate variant while preserving its provenance, reliability, permutation, seat, and resume contracts.",
+      "Stage 0 independent review must pass before any native or Kaggle game."
+    ],
+    "next_exact_task": "Implement only the B2-A and B2-B fixture evaluator and tests in an isolated owned change, using the report's exact fixture contract; then run the fixture gate and return a reviewable raw diagnostic before preparing the B0-compatible native canary.",
+    "not_authorized": ["native games", "Kaggle runs", "production authority", "deck freeze", "submission"]
+  },
+  "verification": {
+    "knowledge_base_validation_before_design": "PASS",
+    "knowledge_base_queries_before_design": "DR-007/008/016, STR-003, SF-004/005, CON-001/004, RQ-004/005/006/007 and related anti-patterns",
+    "knowledge_base_validation_after_design": "PASS",
+    "knowledge_base_requery_after_design": "DR-007/008 and next-attacker/backup-attacker search; no database mutation",
+    "independent_red_team_audit": {
+      "status": "REVIEWED_WITH_REPORT_ONLY_FIXES",
+      "scope": "Public contract, fixture materialization, current-only boundary, committed Phase A route-capsule authority and prerequisites, fail-closed delegation, permutation/lifecycle/STOP coverage, and B0 comparison statistics",
+      "fixes_applied": [
+        "Made the F01 fixture materializable under the actual G1 contract: observation schema version, canonical metadata refs, visible hand Water source, request identity/scalars, complete option fields, and verified semantic fingerprints.",
+        "Made fixture capability records complete and explicitly FIXTURE_ONLY instead of relying on required_water shorthand.",
+        "Clarified that G1 STOP is a builder token governed by request bounds, not a LegalOptionV1 row, and successor-only/unknown fields must be rejected rather than ignored.",
+        "Made native activation require the exact current MAIN singleton attach/evolve boundary and replaced placeholder candidate imports with explicit implementation blockers.",
+        "Re-assimilated committed Phase A route milestone e1f1197: 1042, 1043, 1046, and 1262 are PASS only within sealed route bounds; 1047 remains PARTIAL, and 1044/1045/evolution remain unqualified.",
+        "Added an independent-sample WDL/uncertainty/target-cell comparison contract with no paired-seed or blended-score claim."
+      ],
+      "remaining_blockers": [
+        "B2-A/B implementation and fixture tests do not yet exist.",
+        "The committed Phase A route milestone establishes route-bounded semantics for 1042, 1043, 1046, and 1262, but it does not establish all B2 runtime capability fields; 1047 remains PARTIAL, while 1044/1045 and evolution/status/local-delta capsules remain unqualified.",
+        "No native or Kaggle run is authorized by this design."
+      ],
+      "verification_commands": [
+        "uv --cache-dir data/cache/uv run python -c '<F01 materialization through PublicStateV1.from_engine>'",
+        "uv --cache-dir data/cache/uv run python knowledge_base/validate_db.py"
+      ]
+    },
+    "production_code_changed": false,
+    "native_or_kaggle_run": false,
+    "report_is_machine_readable": "PASS",
+    "report_is_immutable": "not_applicable_design_artifact",
+    "absolute_paths_in_report": false,
+    "private_baselines_modified": false
+  }
+}
