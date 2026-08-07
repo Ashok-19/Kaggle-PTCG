@@ -213,10 +213,12 @@ def permutation_control(
     if len(permutations) == 0:
         raise ValueError("at least one option permutation is required")
     baseline_policy = policy_factory()
+    baseline_policy.reset(request.episode_uuid, request.acting_player, "start")
     baseline = baseline_policy.choose(observation, request).submitted_original_indices
     outcomes = []
     for permutation in permutations:
         policy = policy_factory()
+        policy.reset(request.episode_uuid, request.acting_player, "start")
         permuted = permute_request(request, permutation)
         action = policy.choose(observation, permuted)
         outcomes.append(tuple(action.submitted_original_indices) == tuple(baseline))
