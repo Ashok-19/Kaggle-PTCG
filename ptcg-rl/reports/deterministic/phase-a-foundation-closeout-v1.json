@@ -1,0 +1,134 @@
+{
+  "record_id": "phase-a-foundation-closeout-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-07T22:01:46Z",
+  "audited_head": {
+    "branch": "main",
+    "commit": "59b91d30852f8b84078aa6928dca6edcc1eb7fb3",
+    "worktree_dirty": true,
+    "dirty_worktree_is_pre_existing": true
+  },
+  "verdicts": {
+    "public_state_deck_profile_foundation": {
+      "status": "PASS",
+      "basis": [
+        "PublicStateV1 normalizes only the public observation boundary and rejects opponent-hand identities.",
+        "ResourceLedgerSeedV1 derives visible counts and hidden slot lengths without guessing hidden card identities.",
+        "DeckProfileV1 is immutable, exact-60, canonical-hash-bound, and validates every card/attack/evolution requirement against CardTableV1.",
+        "The sanctioned Mega Abomasnow numeric deck has 60 cards and 9 distinct IDs, with the native deck.csv order matching the fixture exactly."
+      ]
+    },
+    "native_semantic_boundary_mechanical_canary": {
+      "status": "PASS",
+      "basis": [
+        "The v2 native canary completed its exact 8-game bounded matrix with balanced candidate seats and zero fail-closed counters.",
+        "Terminal-first handling, complete legal option coverage, public-only snapshots, exact request/action/after deltas, and engine-controlled randomness were exercised.",
+        "The result is mechanical/interface evidence only, not policy-strength or promotion evidence."
+      ]
+    },
+    "route_specific_card_semantics": {
+      "status": "PARTIAL",
+      "pass_cards": ["Carmine", "Lillie's Determination", "Ultra Ball", "Precious Trolley", "Snover evolution"],
+      "partial_cards": ["Kyogre Riptide", "Kyogre Swirling Waves", "Surfing Beach", "Hammer-lanche", "Frost Barrier"],
+      "rule": "Do not use PARTIAL route semantics as card-specific production rules. Add exact native transition fixtures before such rules become executable authority."
+    }
+  },
+  "phase_boundaries": {
+    "generic_phase_b_integration": "NOT_BLOCKED_BY_THIS_CLOSEOUT",
+    "policy_strength_claimed": false,
+    "promotion_authorized": false,
+    "deck_frozen": false,
+    "external_training_launched": false,
+    "card_specific_partial_semantics_production_authority": false
+  },
+  "commit_scopes": [
+    {"commit": "a768465822832ce6aa90e99ee7e26da99a8f5278", "subject": "exp: qualify phase A native semantics canary", "paths": ["configs/deterministic/phase_a_native_semantics_v1.json", "reports/deterministic/CURRENT_HANDOFF.md", "reports/deterministic/phase-a-native-semantics-v1.json", "scripts/deterministic/phase_a_native_semantics.py", "tests/deterministic/test_phase_a_native_semantics.py"]},
+    {"commit": "9177a55ff9b5b27cb42e21c031ec375ad5723142", "subject": "feat: add deterministic public state foundation", "paths": ["src/ptcg_rl/deterministic/__init__.py", "src/ptcg_rl/deterministic/deck_profile.py", "src/ptcg_rl/deterministic/state.py", "tests/deterministic/__init__.py", "tests/deterministic/test_deck_profile.py", "tests/deterministic/test_state.py"]},
+    {"commit": "8f54c1623eb6bc46e073a711e9fff71cde2f5177", "subject": "fix: harden deterministic Phase A contracts", "paths": ["src/ptcg_rl/deterministic/deck_profile.py", "src/ptcg_rl/deterministic/state.py", "tests/deterministic/test_deck_profile.py", "tests/deterministic/test_state.py"]},
+    {"commit": "59b91d30852f8b84078aa6928dca6edcc1eb7fb3", "subject": "exp: extend phase A transition coverage", "paths": ["configs/deterministic/phase_a_native_semantics_v2.json", "reports/deterministic/phase-a-native-semantics-v2.json", "scripts/deterministic/phase_a_native_semantics.py", "scripts/deterministic/phase_a_native_semantics_v2.py", "tests/deterministic/test_phase_a_native_semantics.py", "tests/deterministic/test_phase_a_native_semantics_v2.py"]}
+  ],
+  "source_and_report_hashes": {
+    "configs/deterministic/phase_a_native_semantics_v1.json": "a2efa9f617493c11c5b870fbafb5c8a45644f214cd5894657651c2222e62e531",
+    "configs/deterministic/phase_a_native_semantics_v2.json": "6c41e7ffec5c3f7bba0c8ac1197f9894e4d804ed4e561d19d392ec65f35178c2",
+    "scripts/deterministic/phase_a_native_semantics.py": "37392d920e7d15123888e44f7bb10de7a07ecfe90eaba80e729228007666e25b",
+    "scripts/deterministic/phase_a_native_semantics_v2.py": "5c0aae2907f6ec83f109a2c77c90af027773511fc7fd70750c89c00ecf516b16",
+    "src/ptcg_rl/deterministic/__init__.py": "e1a3f2dbae34f7bac77d990edd0068bae179e2b2e068c30723da74f7f7959042",
+    "src/ptcg_rl/deterministic/deck_profile.py": "b84d07adae1ec557f4dacc95e8e0ff52978b81839bcec108bd1258bb66c827af",
+    "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709",
+    "tests/deterministic/test_deck_profile.py": "a36125fd634394a2281b214387f2f3bfe3383c115ad03eec8e3563fae4a5b683",
+    "tests/deterministic/test_state.py": "ecc630c7054276921be5c86415de339c128adaca3cae69790f7aafcab961d001",
+    "tests/deterministic/test_phase_a_native_semantics.py": "e5d6833bf928914b1b1a456cb4b6f70582c6abbfb25cc6ebd8496bc6a24bbc07",
+    "tests/deterministic/test_phase_a_native_semantics_v2.py": "c0e2204d407160607ee5e2d82a9cf116f6a3377bec07b25b10590e7a0dfb6209",
+    "reports/deterministic/phase-a-native-semantics-v1.json": "834b9b7f4c8322d1d971da167d5ffca76b39e910bac5ab87cd2fceccc10f07f6",
+    "reports/deterministic/phase-a-native-semantics-v2.json": "0ea3213e6b879bace25b7962d698717c27c57e66594e4bded8ea721249cbfb05"
+  },
+  "asset_bindings": {
+    "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_policy_sha256": "d1ef4a86413b7f548270657385c6d5c3cb114b473082cd04e2a0f1733158482b",
+    "opponent_iono_deck_sha256": "e36d46c5bcafdef8a5d0e6caeb34dd8db09119c62d8fb67c99e89e7eed39f974",
+    "opponent_iono_policy_sha256": "9fa360307e0b9ccd4cd8469aad50c93872468c8dfa8ff8ebb6718cacf9faa8fa"
+  },
+  "actual_deck_and_card_table_construction": {
+    "status": "PASS",
+    "card_table_loaded_and_verified": {"cards": 1267, "attacks": 1556, "csv_rows": 2022, "ambiguous_type_cards": 196, "semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0"},
+    "card_table_rebuilt_from_official_csv_and_native_catalog": {"status": "PASS", "cards": 1267, "attacks": 1556, "csv_rows": 2022, "semantic_sha256_matches_stored": true},
+    "candidate_deck": {"native_deck_csv_matches_numeric_fixture": true, "cards": 60, "distinct_ids": 9, "profile_sha256": "cb438f9e2083e53f93ed3df6bf8555d95acf6487b421ae194d2e2963ce220ce7", "profile_card_table_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0"},
+    "authority_boundary": "Static card text is metadata; executable effects require native public transition evidence."
+  },
+  "canary_arithmetic": {
+    "source_report": "reports/deterministic/phase-a-native-semantics-v2.json",
+    "status": "SUCCEEDED",
+    "games_requested": 8,
+    "games_completed": 8,
+    "matrix": {"iono": {"games": 4, "completed": 4}, "mega-abomasnow-ex": {"games": 4, "completed": 4}},
+    "candidate_seat_counts": {"player_0": 4, "player_1": 4},
+    "terminal_results_diagnostic_only": [1, 0, 0, 1, 0, 0, 0, 0],
+    "requests": 739,
+    "public_log_events": 7754,
+    "face_down_slots": 6852,
+    "public_reveal_entities": 31469,
+    "terminal_first_checks": 8,
+    "stale_terminal_selections_observed": 8,
+    "transition_digest": "a9c41d88781305f5ef452f68b1db0bc2d9793a63a7bc2704d1713f0c46172d39",
+    "fail_closed_counters": {"fallback_actions": 0, "hidden_hand_leaks": 0, "invalid_actions": 0, "manual_randomness_controls": 0, "native_failures": 0, "option_bounds_failures": 0, "option_count_mismatches": 0, "public_delta_contract_failures": 0, "request_cap_failures": 0, "semantic_contract_failures": 0, "timeouts": 0, "unknown_observed_card_ids": 0}
+  },
+  "route_status_matrix": {
+    "Carmine": {"card_id": 1192, "status": "PASS", "causal_proofs": {"discard_hand_draw_five": 6}},
+    "Lillie's Determination": {"card_id": 1227, "status": "PASS", "causal_proofs": {"shuffle_hand_draw_6": 11, "shuffle_hand_draw_8": 9}},
+    "Ultra Ball": {"card_id": 1121, "status": "PASS", "causal_proofs": {"play_discard_two_from_hand": 18, "search_pokemon_to_hand": 18}},
+    "Precious Trolley": {"card_id": 1126, "status": "PASS", "causal_proofs": {"search_basic_pokemon_to_bench": 1}},
+    "Snover evolution": {"card_id": 723, "status": "PASS", "causal_proofs": {"evolve_snover_to_mega_abomasnow": 20}},
+    "Kyogre Riptide": {"card_id": 721, "attack_id": 1042, "status": "PARTIAL", "reason": "Attack and semantic requests were observed, but recycle-plus-damage causal proof was absent."},
+    "Kyogre Swirling Waves": {"card_id": 721, "attack_id": 1043, "status": "PARTIAL", "reason": "Attack and one semantic request were observed, but discard-two-energy-plus-damage causal proof was absent."},
+    "Surfing Beach": {"card_id": 1262, "status": "PARTIAL", "reason": "Stadium selection was observed, but the water-switch skill causal proof was absent."},
+    "Hammer-lanche": {"card_id": 723, "attack_id": 1046, "status": "PARTIAL", "reason": "Top-six/damage observations were retained, but the complete discard-top-six causal proof was absent."},
+    "Frost Barrier": {"card_id": 723, "attack_id": 1047, "status": "PARTIAL", "reason": "Attack and follow-up HP events were observed, but the next-turn damage modifier is not causally identified by this canary."}
+  },
+  "knowledge_base": {
+    "validation": "PASS",
+    "counts": {"sources": 56, "claims": 62, "strategies": 20, "decision_rules": 36, "anti_patterns": 14, "search_features": 16, "archetypes": 17, "cards": 49, "matchups": 12, "matchup_plans": 20, "observed_replay_patterns": 10, "contradictions": 6, "research_questions": 15},
+    "bound_ids": ["DR-025", "DR-030", "DR-033", "AP-009", "AP-010", "AP-014", "RQ-007"],
+    "audit_ids": ["DR-001", "DR-002", "DR-003", "DR-022", "DR-023", "DR-024", "DR-025", "DR-029", "DR-030", "DR-031", "DR-032", "DR-033", "DR-035", "DR-036", "STR-001", "STR-002", "STR-005", "STR-006", "STR-010", "STR-015", "STR-018", "STR-020", "CON-001", "CON-002", "CON-004", "RQ-004", "RQ-007", "RQ-008", "RQ-009"],
+    "warnings": ["3 contradictions remain unresolved", "12 P0/P1 research questions remain open, in review, or blocked"]
+  },
+  "verification": {
+    "focused_tests": {"command": "env UV_CACHE_DIR=data/cache/uv rtk uv run pytest -q tests/deterministic/test_deck_profile.py tests/deterministic/test_state.py tests/deterministic/test_phase_a_native_semantics.py tests/deterministic/test_phase_a_native_semantics_v2.py", "result": "41 passed in 0.35s"},
+    "ruff": {"command": "env UV_CACHE_DIR=data/cache/uv rtk uv run ruff check src/ptcg_rl/deterministic tests/deterministic scripts/deterministic/phase_a_native_semantics.py scripts/deterministic/phase_a_native_semantics_v2.py", "result": "All checks passed"},
+    "lead_full_suite": {"command": "rtk uv run pytest -q", "result": "512 passed, 1 failed in 27.99s", "status": "KNOWN_UNRELATED_FAILURE", "failure": "tests/g3/test_competence_plan_report.py:149 expects DEC-028_CORPUS_V2_337_EPISODES_23460_TARGETS_BC_CANARY_PASS_PRODUCTION_TRAINING_BLOCKED while dirty reports/gates/g3b.json contains DEC-047_PRODUCTION_BC_NOTEBOOK_V3_RENEWED_APPROVAL_READY_UNAUTHORIZED"},
+    "isolated_pre_existing_failure_rerun": {"result": "1 failed in 0.04s", "status": "CONFIRMED_UNRELATED", "changed_by_this_closeout": false}
+  },
+  "external_actions": {"kaggle_runs": 0, "kaggle_submissions": 0, "external_service_mutations": 0, "training_launches": 0, "deck_freeze": false},
+  "next_task": [
+    "Add the smallest exact native public-transition fixtures for Riptide, Swirling Waves, Surfing Beach, Hammer-lanche, and Frost Barrier.",
+    "Preserve terminal-first, complete-option, public-only, no-manual-randomness, exact-hash, fail-closed, and sanitized-output boundaries.",
+    "Keep PARTIAL route semantics out of card-specific production rules; generic Phase B boundary integration may proceed without those rules.",
+    "Do not claim policy strength, freeze a deck, launch external training, or submit without independent natural-seat outcome evidence."
+  ],
+  "residual_blockers": ["Five route-specific card semantics remain PARTIAL.", "This foundation and canary provide no policy-strength evidence.", "Hosted engine/card parity and final runtime limits remain unresolved (RQ-001, RQ-002, RQ-015).", "The known unrelated DEC-047-vs-DEC-028 dirty-worktree test failure remains untouched."]
+}
