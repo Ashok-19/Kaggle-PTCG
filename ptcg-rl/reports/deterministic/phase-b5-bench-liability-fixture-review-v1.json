@@ -1,0 +1,170 @@
+{
+  "record_id": "phase-b5-bench-liability-fixture-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T04:53:15Z",
+  "status": "REVIEW_COMPLETE_PASS",
+  "verdict": "PASS_FIXTURE_ONLY_NATIVE_NOT_AUTHORIZED",
+  "reviewed_design": "reports/deterministic/phase-b5-bench-liability-design-v1.json",
+  "reviewed_design_sha256": "6cd3239b57181290ac2729829e444352e7578496211d56457bdd04b6eed8b899",
+  "reviewed_design_review": "reports/deterministic/phase-b5-bench-liability-design-v1-review.json",
+  "reviewed_design_review_sha256": "abea09194d9e43bedf34ebc00b4a163edeb0a06793e020c48428260b1295b8e7",
+  "scope": {
+    "mode": "independent_read_only_fixture_red_team",
+    "branch": "main",
+    "audited_head": "41be61f",
+    "implementation_commit_status": "UNCOMMITTED_UNTRACKED",
+    "implementation_path": "src/ptcg_rl/deterministic/b5_bench.py",
+    "config_path": "configs/deterministic/phase_b5_bench_liability_fixture_v1.json",
+    "test_path": "tests/deterministic/test_phase_b5_bench_liability.py",
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission_created": false,
+    "production_authority": false,
+    "deck_freeze": false,
+    "commit_created": false,
+    "implementation_or_config_edited": false,
+    "review_owned_path": "reports/deterministic/phase-b5-bench-liability-fixture-review-v1.json",
+    "worktree_note": "Only this review artifact was edited. B5 source/config/tests and the rest of the worktree were treated as concurrent dirty work and were not staged, reverted or committed."
+  },
+  "review_basis": {
+    "master_prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "public_action_contracts": {
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+      "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+    },
+    "implementation_hashes": {
+      "src/ptcg_rl/deterministic/b5_bench.py": "f40d76fc7a9459533503b4deb2b21779da76b571f35ca6e5323ad0c3de2e719d",
+      "configs/deterministic/phase_b5_bench_liability_fixture_v1.json": "8853b8f1f823e2b9e7a265f5a6da1a435962de7c04a9de5aece8c1e336eafc58",
+      "tests/deterministic/test_phase_b5_bench_liability.py": "dd781133b7e1a8a260b5bdbe2921b5dbaa0af4c1791848c3360eb32c3d0b3147"
+    },
+    "knowledge_base": {
+      "database": "knowledge_base/ptcg_gold.sqlite",
+      "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "validation": "PASS",
+      "requeried_ids": [
+        "DR-002", "DR-008", "DR-015", "DR-022", "DR-025", "DR-030", "DR-033",
+        "STR-003", "STR-004", "STR-005", "STR-007", "STR-016", "SF-006",
+        "AP-001", "AP-002", "AP-011", "AP-014", "CON-001", "CON-002", "CON-004",
+        "RQ-003", "RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-013"
+      ],
+      "interpretation": "The KB supports route-role reserve and liability as research hypotheses only. DR-002/DR-022/STR-016 make complete semantic options a correctness invariant; DR-030 requires actual version/hash binding; CON-001/CON-002/CON-004 require route-floor, opportunity-cost and semantic-option controls. Validation still reports 12 P0/P1 open/in-review/blocked questions and 3 unresolved contradictions."
+    }
+  },
+  "test_execution": {
+    "targeted_command": "UV_CACHE_DIR=data/cache/uv uv run pytest tests/deterministic/test_phase_b5_bench_liability.py -q",
+    "targeted_result": "PASS: 25 passed in 2.68s",
+    "deterministic_suite_command": "UV_CACHE_DIR=data/cache/uv uv run pytest tests/deterministic -q",
+    "deterministic_suite_result": "PASS: 288 passed in 8.73s",
+    "lint_command": "UV_CACHE_DIR=data/cache/uv uv run ruff check src/ptcg_rl/deterministic/b5_bench.py tests/deterministic/test_phase_b5_bench_liability.py",
+    "lint_result": "PASS",
+    "compile_command": "UV_CACHE_DIR=data/cache/uv uv run python -m compileall -q src/ptcg_rl/deterministic/b5_bench.py tests/deterministic/test_phase_b5_bench_liability.py",
+    "compile_result": "PASS",
+    "fresh_process": "PASS: fresh process loaded and evaluated all 12 fixture cases; no native engine or external service was imported.",
+    "kb_command": "UV_CACHE_DIR=data/cache/uv uv run python knowledge_base/validate_db.py",
+    "kb_result": "PASS with 12 P0/P1 open/in-review/blocked questions and 3 unresolved contradictions",
+    "native": "NOT_RUN_BY_SCOPE"
+  },
+  "fixture_matrix": {
+    "B5_F01": "PASS: independent evaluator instances select X under A and Y under B; no fallback.",
+    "B5_F02": "PASS: both formulations select X in the strict-dominance control.",
+    "B5_F03": "PASS: full bench delegates BENCH_CAPACITY_EXHAUSTED without fallback.",
+    "B5_F04": "PASS: terminal-first returns TERMINAL_OVERRIDE with zero successor reads.",
+    "B5_F05": "PASS: player mirror preserves role-relative semantic action.",
+    "B5_F06": "PASS: transport permutations preserve the semantic selection.",
+    "B5_F07": "PASS: unknown, hidden, successor, prose and unallowlisted current-field mutations delegate with distinct bounded reasons.",
+    "B5_F08": "PASS: nonfinite/fractional/out-of-scale mutations delegate before scoring; malformed scale constructors reject.",
+    "B5_F09": "PASS: duplicate/conflicting role axes delegate before ranking.",
+    "B5_F10": "PASS: legal STOP is a CompoundActionBuilder token and compound requests delegate.",
+    "B5_F11": "PASS: duplicate identity, reset and exact stale replay after a newer sequence are isolated.",
+    "B5_F12": "PASS: unregistered, nested, cross-case, self-consistent and manifest-forged receipt mutations delegate."
+  },
+  "adversarial_findings": [
+    {
+      "id": "B5-FIX-001..011",
+      "severity": "P0/P1",
+      "status": "CLOSED_BY_REPAIR",
+      "finding": "The previous review found local-delta self-forgery, caller-controlled fixture authority, incomplete option authority, missing hard role floors, incomplete field allowlisting, numeric/scale acceptance, malformed STOP bounds, duplicate receipt axes, schema/provenance drift, stale source markers and cache-order stale replay.",
+      "evidence": "Repaired source lines 1102-1344, 1365-1402, 1405-1754; focused tests plus independent mutation probes. Resealed local/whole/cross-case/manifest mutations, missing options, role-floor mutations, hidden/successor/prose/static markers, fractional/out-of-scale values, duplicate axes and old replay after newer sequence all returned B0_DELEGATE or bounded terminal behavior. Exact source marker and config/dependency/KB digests matched.",
+      "impact": "No remaining selected-path forgery was found for the committed canonical fixture authority.",
+      "required_fix": "None for the tested canonical fixture boundary. Keep the milestone fixture-only and obtain a separate review after any source/config change."
+    },
+    {
+      "id": "B5-FIX-012",
+      "severity": "P1",
+      "status": "CLOSED_AFTER_REPAIR",
+      "finding": "Malformed local-delta values that are not BenchLocalDeltaV1 could raise before bounded delegation in the pre-repair implementation. The current evaluator validates/hash-guards malformed payloads and delegates with a bounded reason instead of raising.",
+      "evidence": "Independent fresh-evaluator probes: CurrentBenchLiabilityEvaluatorV1(c.receipt).evaluate(c.state, {canonical_fingerprint: object()}, A_FORMULATION, fixture=c) raised TypeError instead of B0_DELEGATE. Dict/None values are rejected later, but arbitrary non-JSON values are not fail-closed.",
+      "impact": "A malformed adapter payload can escape the required bounded development failure contract before receipt validation. This is not a native run and does not establish policy strength, but it blocks fixture boundary closure.",
+      "required_fix": "CLOSED. Current implementation uses a safe payload-hash boundary and explicit MALFORMED_LOCAL_DELTAS delegation. The focused regression test covers object() and set payloads; direct closure rerun passed."
+    },
+    {
+      "id": "B5-FIX-013",
+      "severity": "P1",
+      "status": "CLOSED_AFTER_REPAIR",
+      "finding": "The pre-repair config loader accepted content-digest-only mutations. The current loader recomputes nested content seals while excluding only the self-referential config digest fields, so stale nested content_sha256 values fail during materialization.",
+      "evidence": "Independent in-memory loader probe changed fixture_records[0].receipt.content_sha256 only and observed LOADED. Changing a nested role/local-delta content_sha256 only also loaded. The evaluator later delegates because aggregate receipt content is checked, so no selected-path bypass was observed; the loader authority itself is incomplete.",
+      "impact": "Fresh-process config loading can claim an authority bundle containing stale nested content hashes. Exact content integrity is deferred to evaluation rather than being sealed at the canonical loader boundary.",
+      "required_fix": "CLOSED. Current materialization validates nested role/local-delta/Prize/gust/spread/receipt/scale content seals. The content-seal-only mutation regression and direct closure rerun passed."
+    }
+  ],
+  "adversarial_assurance": {
+    "canonical_authority": "PASS for canonical file-backed fixture: evaluator reloads the default config, binds case identity/request/observation/options/local deltas and rejects caller-supplied self-consistent alternatives.",
+    "role_floor": "PASS for canonical role graph and all tested mutations; unmet required roles delegate before ranking.",
+    "liability_dominance": "PASS for F01/F02 and out-of-scale/forged-axis rejection; incomparable B vectors remain delegated.",
+    "current_option_entity_semantics": "PASS for source/target/action payload, owner/zone/metadata and option fingerprint mutation probes.",
+    "complete_options_stop_compound": "PASS for canonical complete graph, permutation, missing-option and malformed singleton/compound boundaries.",
+    "terminal_first": "PASS: terminal observations return before request/receipt reads.",
+    "identity_lifecycle": "PASS for duplicate idempotency, same-identity mutation, reset and stale-after-newer sequence.",
+    "hidden_successor_prose": "PASS for explicit hidden, successor, prose/static and unknown-field reasons.",
+    "numeric_and_duplicate_receipts": "PASS for fractional/nonfinite/out-of-scale values and duplicate role/prize/gust/spread axes.",
+    "malformed_runtime_types": "PASS after B5-FIX-012 repair: non-serializable/invalid local-delta payload values delegate with MALFORMED_LOCAL_DELTAS rather than escaping the bounded decision boundary.",
+    "loader_content_integrity": "PASS after B5-FIX-013 repair: nested content seals are recomputed at materialization and content-seal-only mutations are rejected before evaluation.",
+    "b0_delegation_vs_fallback": "PASS for all exercised reject paths: B0_DELEGATE, no action and fallback_used=false.",
+    "native_readiness": "NOT_AUTHORIZED_BY_THIS_REVIEW: the isolated fixture boundary is closed, but native execution requires a separate current CABT receipt/integration qualification."
+  },
+  "final_closure": {
+    "updated_at_utc": "2026-08-08T08:30:00Z",
+    "scope": "Post-repair closure verification of the isolated B5 fixture boundary only; no native games, Kaggle runs, training, deck freeze, production activation or submission.",
+    "blocker_closure": {
+      "B5-FIX-012": "CLOSED: test_b5_malformed_local_delta_payload_hash_delegates covers object() and set payloads; direct targeted rerun passed and malformed values now delegate rather than raise.",
+      "B5-FIX-013": "CLOSED: test_b5_config_loader_rejects_content_seal_only_mutation proves stale nested content seals are rejected at materialization; direct targeted rerun passed."
+    },
+    "validation": {
+      "focused_b5": "PASS: 28 passed in 3.51s",
+      "direct_blocker_regressions": "PASS: 3 passed in 0.27s",
+      "deterministic_suite": "PASS: 291 passed in 9.69s",
+      "ruff": "PASS",
+      "compileall": "PASS",
+      "knowledge_base": "PASS with 12 P0/P1 open/in-review/blocked questions and 3 unresolved contradictions"
+    },
+    "knowledge_base_recheck": {
+      "interpretation": "DR-015/CLM-024/CLM-035 and related route/resource/gust/spread records still support bench capacity and liability only as public-current research hypotheses. Unknown hidden information remains unknown, complete semantic options remain authoritative, and no matchup-specific low-confidence row was promoted."
+    },
+    "final_verdict": "PASS for B5 fixture-only arithmetic, public-current boundary, canonical receipt/content integrity, semantic option invariance, lifecycle, STOP/compound, numeric, role-floor and malformed-input behavior. Native and production authority are not granted by this fixture review."
+  },
+  "readiness": {
+    "fixture": "PASS_FIXTURE_ONLY",
+    "native": "NOT_AUTHORIZED_REQUIRES_SEPARATE_NATIVE_INTEGRATION_QUALIFICATION",
+    "production": "NOT_AUTHORIZED",
+    "next_exact_task": "Commit the closed B5 fixture milestone, then continue Phase B with the preregistered B6 gust-route fixture implementation/review. Do not infer native strength from B5 fixture behavior."
+  },
+  "verification": {
+    "design_json_hash": "6cd3239b57181290ac2729829e444352e7578496211d56457bdd04b6eed8b899",
+    "design_review_json_hash": "abea09194d9e43bedf34ebc00b4a163edeb0a06793e020c48428260b1295b8e7",
+    "implementation_sha256": "5d7558abdac8d6dd923b7205206dc40eae635df4c21c43485813fe88cbaff098",
+    "config_sha256": "990f5109eef7c81e77216b495e85cec8c169237f6a15546050ea771222e7745b",
+    "tests_sha256": "73299bcc4db11e012e4ff4ea7dce13e1d442e9dcc85d656cc25629b2cef7dce0",
+    "knowledge_base_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "review_json_validation": "PASS_AFTER_FINAL_WRITE_REVALIDATION_REQUIRED",
+    "implementation_or_config_changed_since_initial_blocked_review": true,
+    "native_or_kaggle_execution": false,
+    "commit_created": false,
+    "self_digest": "NOT_EMBEDDED_TO_AVOID_RECURSIVE_SELF_HASH"
+  }
+}
