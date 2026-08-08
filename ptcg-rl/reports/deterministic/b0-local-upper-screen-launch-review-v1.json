@@ -1,0 +1,111 @@
+{
+  "record_id": "B0-MA-CONTROL-001-local-upper-screen-launch-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-07T23:55:00Z",
+  "status": "PASS",
+  "scale_launch_authorized": true,
+  "review_kind": "INDEPENDENT_SCALE_LAUNCH_REVIEW",
+  "experiment_id": "B0-MA-CONTROL-001",
+  "budget_name": "local_upper_screen",
+  "budget_sha256": "83223de59851a91fd9cb385391943be6bb55825b78cec553b0acf183224eca20",
+  "config_path": "configs/deterministic/b0_ma_control_v1.json",
+  "config_sha256": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+  "candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+  "reviewed_commit": "a951ce94459f9b451d260139bdc94b7fbd44898c",
+  "prior_screen_review": {
+    "path": "reports/deterministic/b0-local-screen-review-v1.json",
+    "sha256": "6f4e56be19346a9de106535848fa6447d630e743bdde5b4e6cce1adba9106fa9",
+    "verdict": "PASS_FOR_64_GAME_LOCAL_SCREEN_EXECUTION_ONLY",
+    "candidate_wdl": [15, 0, 17],
+    "control_wdl": [13, 0, 19],
+    "candidate_minus_control_score_delta": 0.0625,
+    "bootstrap_percentile_2_5": -0.1875,
+    "bootstrap_percentile_97_5": 0.3125,
+    "reliability_counters_zero": true
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS",
+    "open_p0_p1_questions": 12,
+    "unresolved_contradictions": 3,
+    "requeried_before_review": true,
+    "interpretation": "The upper screen is uncertainty and reliability staging only; open research questions and contradictions remain binding."
+  },
+  "scope": {
+    "anchors": [
+      "rule:dragapult-ex",
+      "rule:iono",
+      "rule:mega-abomasnow-ex",
+      "rule:mega-lucario-ex"
+    ],
+    "arms": ["candidate", "control"],
+    "candidate": "deterministic-strategic-mega-abomasnow-v1",
+    "candidate_deck_profile": "mega-abomasnow-ex",
+    "candidate_seat_balance": true,
+    "natural_deployment": true,
+    "games_per_anchor_per_candidate_seat": 8,
+    "games_total_per_arm": 64,
+    "games_total_all_arms": 128,
+    "games_total_scope": "per_arm",
+    "no_paired_seed_claim": true,
+    "no_strength_or_promotion_claim": true
+  },
+  "resolved_budget": {
+    "budget_name": "local_upper_screen",
+    "games_per_anchor_per_candidate_seat": 8,
+    "games_total": 64,
+    "games_total_scope": "per_arm",
+    "games_total_per_arm": 64,
+    "games_total_all_arms": 128,
+    "candidate_arm_games_total": 64,
+    "control_arm_games_total": 64,
+    "request_cap": 20000,
+    "game_timeout_seconds": 180,
+    "wall_seconds": 1800,
+    "max_evidence_bytes": 67108864,
+    "stop_condition": "stop_on_any_invalid_fallback_timeout_failure_or_incomplete_game"
+  },
+  "candidate_source_receipt": {
+    "candidate_config": {"path": "configs/deterministic/b0_ma_control_v1.json", "bytes": 6538, "sha256": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6"},
+    "candidate_imported_module": {"path": "src/ptcg_rl/deterministic/policy.py", "bytes": 598, "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"},
+    "candidate_transitive_00": {"path": "src/ptcg_rl/deterministic/__init__.py", "bytes": 1463, "sha256": "e1a3f2dbae34f7bac77d990edd0068bae179e2b2e068c30723da74f7f7959042"},
+    "candidate_transitive_01": {"path": "src/ptcg_rl/deterministic/control.py", "bytes": 25717, "sha256": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53"},
+    "candidate_transitive_02": {"path": "src/ptcg_rl/deterministic/deck_profile.py", "bytes": 26539, "sha256": "b84d07adae1ec557f4dacc95e8e0ff52978b81839bcec108bd1258bb66c827af"},
+    "candidate_transitive_03": {"path": "src/ptcg_rl/deterministic/policy.py", "bytes": 598, "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"},
+    "candidate_transitive_04": {"path": "src/ptcg_rl/deterministic/state.py", "bytes": 44738, "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"},
+    "candidate_transitive_05": {"path": "src/ptcg_rl/g1/actions.py", "bytes": 15275, "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907"},
+    "candidate_transitive_06": {"path": "src/ptcg_rl/g1/models.py", "bytes": 16134, "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f"},
+    "candidate_transitive_07": {"path": "src/ptcg_rl/g1/semantic.py", "bytes": 36407, "sha256": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"},
+    "candidate_transitive_08": {"path": "src/ptcg_rl/g2/card_table.py", "bytes": 18573, "sha256": "816f6d8c879299c40cc8ec350f9cab182cc72c374da5d2bc779ea81afdd8bdd1"}
+  },
+  "asset_receipts": {
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "game_wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "sim_wrapper_sha256": "1555f57f5d22bf4c09d70e0e667a916e575e68c9dd1de9ead34ba5e7e4968655",
+    "candidate_deck_binding": "exact_configured_deck_only"
+  },
+  "launch_conditions": {
+    "authorization": "This receipt authorizes only the bounded 128-game all-arm local_upper_screen: 64 candidate-arm and 64 control-arm games.",
+    "not_authorized": ["private_kaggle_arm", "confirmation", "training", "deck_freeze", "submission", "external_service_mutation"],
+    "training_performed": false,
+    "kaggle_runs": 0,
+    "submission_created": false,
+    "stop_on_any_reliability_defect": true,
+    "fresh_run_required": true,
+    "raw_evidence_must_be_sealed": true,
+    "independent_post_run_review_required": true
+  },
+  "rationale": "The preregistered local_upper_screen is the next uncertainty/reliability stage after a complete clean 64-game local screen. The prior candidate arm was 15-0-17 versus control 13-0-19, with delta +0.0625 and a bootstrap interval crossing zero. The additional 64 games per arm are therefore justified to reduce bounded uncertainty, not to claim strength or promotion.",
+  "current_checkout": {
+    "commit": "a951ce94459f9b451d260139bdc94b7fbd44898c",
+    "dirty": true,
+    "historical_dirty_tree_note": "The prior execution was dirty; this receipt binds the current config and candidate source receipts and does not claim a clean worktree."
+  },
+  "next_step": "Run the exact local_upper_screen command with this receipt only if the parent continues the bounded experiment. Retain a unique sealed raw run, then obtain an independent raw review before considering any further scale."
+}
