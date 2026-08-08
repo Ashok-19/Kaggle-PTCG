@@ -1,0 +1,394 @@
+{
+  "schema_version": "phase-a-semantic-status-v2",
+  "record_id": "phase-a-semantic-status-v2",
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "AUTHORITATIVE_SEMANTIC_STATUS_RECONCILIATION",
+  "scope": {
+    "purpose": "Reconcile the current Phase A native semantic authority without rewriting or weakening historical evidence.",
+    "candidate": "mega-abomasnow-ex route probe",
+    "engine_scope": "official bundled CABT sample-submission engine",
+    "native_games_run_by_this_report": 0,
+    "kaggle_runs_by_this_report": 0,
+    "submission_created": false,
+    "deck_frozen": false,
+    "policy_strength_claim": false,
+    "promotion_authorized": false,
+    "production_authority_granted": false
+  },
+  "authority_interpretation": {
+    "current_rule": "A PASS below is a semantic interaction qualification only for the named cards, option/effect context, public transition, and sealed evidence stratum. It is not a policy-strength, route-win, deck, promotion, or submission claim.",
+    "historical_reports": "Earlier PARTIAL or rejected reports remain valid historical evidence for their tested formulations. A later, narrower PASS supersedes only the exact bounded criterion it closes; it does not erase, generalize, or contradict the older result.",
+    "knowledge_base_rule": "The current engine transition and version-bound evidence govern over tabletop assumptions; unknown or unqualified semantics fail closed.",
+    "generalization_rule": "No unlisted attack, effect, evolution, response, target, context, status, or local-delta behavior is qualified by analogy."
+  },
+  "chronology": [
+    {
+      "commit": "fda9de6",
+      "commit_timestamp_utc": "2026-08-07T22:07:22Z",
+      "milestone": "Phase A deterministic foundation closeout",
+      "artifact": "reports/deterministic/phase-a-foundation-closeout-v1.json",
+      "interpretation": "Foundation and transition contracts closed; route-specific behavior still required native capsules."
+    },
+    {
+      "commit": "53f1c3a",
+      "commit_timestamp_utc": "2026-08-07T22:18:37Z",
+      "milestone": "Phase B semantic and harness audit",
+      "artifact": "reports/deterministic/phase-b-semantics-audit-v1.json",
+      "interpretation": "The audit intentionally did not upgrade routes on incomplete causal evidence; its older PARTIAL findings are historical audit evidence, not a reversal of later sealed capsules."
+    },
+    {
+      "commit": "e1f1197",
+      "commit_timestamp_utc": "2026-08-07T23:19:02Z",
+      "milestone": "Native Mega Abomasnow route capsules",
+      "artifact": "reports/deterministic/phase-a-route-capsules-v1.json",
+      "interpretation": "Riptide 1042, Swirling Waves 1043, Hammer-lanche 1046, and Surfing Beach 1262 closed within their sealed route strata. Frost Barrier was explicitly PARTIAL because the fixed response comparison was not proven."
+    },
+    {
+      "commit": "6153f4e",
+      "commit_timestamp_utc": "2026-08-07T23:25:00Z",
+      "milestone": "Phase B2 continuity design",
+      "artifact": "reports/deterministic/phase-b2-continuity-design-v1.json",
+      "interpretation": "Fixture-only design; native B2 is BLOCKED pending implementation, qualified capability capsules, and independent fixture review."
+    },
+    {
+      "commit": "492701f",
+      "commit_timestamp_utc": "2026-08-07T23:47:40Z",
+      "milestone": "Frost Barrier response probe v1",
+      "artifact": "reports/deterministic/phase-a-frost-barrier-capsule-v1.json",
+      "interpretation": "Rejected as a mismatched response contract: the tested 40-damage baseline did not establish the required 1042/static-40 response. This remains a useful negative result, not a contradiction."
+    },
+    {
+      "commit": "b7b53f7",
+      "commit_timestamp_utc": "2026-08-08T00:10:41Z",
+      "milestone": "Restricted Phase B1 current-state runtime oracle boundary",
+      "artifact": "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json",
+      "interpretation": "A current-only restricted oracle is implementation-feasible, but B1 native route authority remains BLOCKED until the exact capability and runtime receipt gates close."
+    },
+    {
+      "commit": "baaeb55",
+      "commit_timestamp_utc": "2026-08-08T00:15:43Z",
+      "milestone": "Frost Barrier response probe v2 and independent review",
+      "artifacts": [
+        "reports/deterministic/phase-a-frost-barrier-capsule-v2.json",
+        "reports/deterministic/phase-a-frost-barrier-capsule-v2-review.json"
+      ],
+      "interpretation": "The exact primary 1047 to 754:1089 next-turn contract closed PASS; the secondary 1043-response stratum remained PARTIAL."
+    }
+  ],
+  "criterion_matrix": [
+    {
+      "criterion_id": "PA-1042-RIPTIDE",
+      "card_or_route": "1042 Riptide",
+      "status": "PASS",
+      "qualification": "WITHIN_SEALED_EVIDENCE_BOUNDS",
+      "evidence": {
+        "games_completed": 24,
+        "proof_capsules": 21,
+        "recycled_water_count_values": [1, 2, 3, 4],
+        "damage_values": [20, 40, 60, 80],
+        "claim": "Observed recycled-Water counts reconcile with deck increments and 20 damage per Water in the tested public transition strata."
+      },
+      "not_proven": ["all contexts", "all target choices", "all deck/evolution states", "policy strength"]
+    },
+    {
+      "criterion_id": "PA-1043-SWIRLING-WAVES",
+      "card_or_route": "1043 Swirling Waves",
+      "status": "PASS",
+      "qualification": "WITHIN_SEALED_EVIDENCE_BOUNDS",
+      "evidence": {
+        "games_completed": 24,
+        "proof_capsules": 14,
+        "damage_values": [130],
+        "discarded_energy_count_values": [2],
+        "claim": "Exactly two attached Water serials moved to discard with the observed 130 HP delta in the tested native attack context."
+      },
+      "not_proven": ["all contexts", "other energy types", "all targets", "policy strength"]
+    },
+    {
+      "criterion_id": "PA-1262-SURFING-BEACH",
+      "card_or_route": "1262 Surfing Beach",
+      "status": "PASS",
+      "qualification": "WITHIN_SEALED_EVIDENCE_BOUNDS",
+      "evidence": {
+        "games_completed": 24,
+        "play_proof_count": 19,
+        "water_switch_proof_count": 147,
+        "claim": "Stadium PLAY and the later effect-bound Water SWITCH were observed in the same game, player, and turn-order strata."
+      },
+      "not_proven": ["all stadium contexts", "all switch targets", "all effect chains", "policy strength"]
+    },
+    {
+      "criterion_id": "PA-1046-HAMMER-LANCHE",
+      "card_or_route": "1046 Hammer-lanche",
+      "status": "PASS",
+      "qualification": "WITHIN_SEALED_EVIDENCE_BOUNDS",
+      "evidence": {
+        "games_completed": 24,
+        "proof_capsules": 19,
+        "discard_count_values": [6],
+        "damage_values": [0, 100, 500],
+        "water_count_values": [0, 1, 5],
+        "strata": ["zero-Water", "one-Water", "multiple-Water"],
+        "claim": "Six new discard serials and the corresponding HP deltas were observed across the named zero, one, and multiple-Water strata."
+      },
+      "not_proven": ["all discard compositions", "all target/effect contexts", "all attack chains", "policy strength"]
+    },
+    {
+      "criterion_id": "PA-1047-FROST-BARRIER-PRIMARY",
+      "card_or_route": "1047 Frost Barrier protecting source card 723 from response card 754 attack 1089",
+      "status": "PASS",
+      "qualification": "WITHIN_SEALED_EVIDENCE_BOUNDS",
+      "evidence": {
+        "games_completed": 12,
+        "barrier_count": 2,
+        "candidate_attack_attempts": 7,
+        "complete_response_pairs": 2,
+        "response_event_count": 4,
+        "proof_pairs_per_candidate_seat": {
+          "player_0": 1,
+          "player_1": 1
+        },
+        "covered_damage": 10,
+        "expired_damage": 40,
+        "claim": "The same card-723 source serial received 10 damage on the immediately next opponent turn from card-754 attack 1089, then 40 damage after the barrier window expired."
+      },
+      "independent_review": "PASS",
+      "not_proven": ["other response attacks", "other source/target serials", "other turns or windows", "1047 generalization", "policy strength"]
+    },
+    {
+      "criterion_id": "PA-1047-FROST-BARRIER-SECONDARY-1043",
+      "card_or_route": "1047 Frost Barrier with the 1043 response stratum",
+      "status": "PARTIAL",
+      "qualification": "DIAGNOSTIC_ONLY",
+      "evidence": {
+        "baseline_groups": 8,
+        "barrier_count": 0,
+        "complete_expiry_pairs": 0,
+        "reason": "The native barrier sequence was sparse; no complete 1043 response pair was captured."
+      },
+      "not_proven": ["1043 response protection", "any cross-response generalization", "policy strength"]
+    },
+    {
+      "criterion_id": "PA-HISTORICAL-FROST-V1",
+      "card_or_route": "Frost Barrier v1 fixed-response formulation",
+      "status": "REJECTED_HISTORICAL_FORMULATION",
+      "qualification": "RETAINED_NEGATIVE_EVIDENCE",
+      "evidence": {
+        "reason": "The tested 40-damage response did not establish the required 1042/static-40 contract.",
+        "superseded_scope": "Only the later exact 754:1089 primary response contract is closed; v1 is not silently upgraded."
+      },
+      "not_proven": ["the v1 response contract", "any Frost response outside the v2 primary stratum"]
+    },
+    {
+      "criterion_id": "PA-ROUTE-GENERALIZATION",
+      "card_or_route": "Any route/effect outside the named native capsules",
+      "status": "BLOCKED",
+      "qualification": "FAIL_CLOSED",
+      "evidence": {
+        "reason": "The exact current public transition and causal option/effect contract are not retained for unevidenced variants.",
+        "required_action": "Add a version-bound native capsule and independent recalculation before authority is considered."
+      },
+      "not_proven": ["1044 Snover", "1045 Snover", "722-to-723 evolution", "status/evolution/local deltas", "other response effects"]
+    }
+  ],
+  "historical_reconciliation": {
+    "older_partial_reports_are_not_contradictions": true,
+    "explanation": [
+      "The e1f1197 four-route report correctly left Frost Barrier PARTIAL because its observed barrier attack lacked a fixed response comparison.",
+      "The 492701f v1 Frost report correctly rejected its own mismatched response formulation.",
+      "The baaeb55 v2 report and independent review close a narrower primary contract: 1047 against 754:1089 for the immediate next opponent turn and post-expiry comparison.",
+      "The v2 report explicitly leaves the secondary 1043-response stratum PARTIAL, so no earlier partial result is being generalized away."
+    ],
+    "semantic_authority_order": [
+      "exact current native transition capsule",
+      "independent raw-manifest recalculation",
+      "version-bound report and source receipts",
+      "historical hypothesis or general strategy only"
+    ]
+  },
+  "remaining_b1_blockers": [
+    {
+      "blocker_id": "B1-SNOVER-1044-1045",
+      "description": "Close exact, version-bound capability capsules for Snover attacks 1044 and 1045, including attack/type/damage and every runtime field used by the current-only oracle.",
+      "required_evidence": "Independent native capsule, complete public option coverage, source/config receipts, and fail-closed tests."
+    },
+    {
+      "blocker_id": "B1-PRIZESTATIC",
+      "description": "Provide a qualified PrizeStaticV1 receipt for the exact card/engine package; CardStatic ex/mega_ex flags are not sufficient.",
+      "required_evidence": "Version-bound static metadata manifest and independently checked digest."
+    },
+    {
+      "blocker_id": "B1-RUNTIME-RECEIPTS",
+      "description": "The isolated current-state B1 evaluator and its 26-test independent offline/runtime-boundary review are satisfied by committed milestone b7b53f7. Native integration remains blocked until source-bound runtime receipts, fresh-process R01-R10 qualification, and the one-game-per-cell mechanical canary close.",
+      "implementation": {
+        "status": "IMPLEMENTED_AND_26_TEST_REVIEW_PASS_OFFLINE_ONLY",
+        "commit": "b7b53f733ff888fed2a2afdc65096ff29b92e501",
+        "source_path": "src/ptcg_rl/deterministic/b1_oracle.py",
+        "source_sha256": "33e56711c9526739c3fcf52a5ffb779c9ed4eb27181b781b3fd576fe2445dc8a",
+        "config_path": "configs/deterministic/phase_b1_prize_route_v1.json",
+        "config_sha256": "9fc33521baf0554685e89e5ab59a43c7125b0c3501c60748211e2cf3973efe7c",
+        "independent_review": {
+          "test_path": "tests/deterministic/test_phase_b1_oracle.py",
+          "test_sha256": "34b442c504adc377b764ac6599d4e40da8ccf8fa94946d841cfe3852f811e21f",
+          "command": "rtk uv --cache-dir data/cache/uv run pytest -q tests/deterministic/test_phase_b1_oracle.py",
+          "tests_passed": 26,
+          "tests_failed": 0
+        }
+      },
+      "native_integration_remaining": [
+        "Qualified current-engine source/config/runtime receipts for the native path",
+        "Fresh-process R01-R10 current-state boundary qualification",
+        "One-game-per-cell mechanical canary",
+        "No native B1 A/B screen before the capsule and runtime gates close"
+      ],
+      "required_evidence": "Qualified runtime source/config receipts, fresh-process R01-R10 fixtures, and the one-game-per-cell mechanical canary; no native A/B screen before the capsule gate."
+    },
+    {
+      "blocker_id": "B1-UNEVIDENCED-GENERALIZATION",
+      "description": "Do not activate any route edge that depends on 1042, 1043, 1046, 1047, 1262, an unqualified effect, a future response, hidden identity, or incomplete legal options beyond its exact sealed contract.",
+      "required_evidence": "A separately qualified capsule for each added capability; otherwise delegate to B0."
+    }
+  ],
+  "remaining_b2_blockers": [
+    {
+      "blocker_id": "B2-EVOLUTION-722-723",
+      "description": "Qualify the exact 722-to-723 evolution/status/local-delta contract required by B2; no successor snapshot may be used as a PolicyV1 feature.",
+      "required_evidence": "Sealed public transition capsule with exact source/target/status/energy legality and current local delta."
+    },
+    {
+      "blocker_id": "B2-PRIZESTATIC-RUNTIME",
+      "description": "Reuse only independently qualified PrizeStaticV1 and runtime attack/context receipts; every B2 capability record must be version-bound and complete.",
+      "required_evidence": "Capability manifest, transitive source/config hashes, and independent fixture review."
+    },
+    {
+      "blocker_id": "B2-IMPLEMENTATION-FIXTURES",
+      "description": "Implement isolated B2-A and B2-B fixture evaluators and tests without modifying the frozen B0 control.",
+      "required_evidence": "F01-F06 fixture gate, hidden-state/permutation/lifecycle/STOP/compound/delegation checks, and clean dependency scan."
+    },
+    {
+      "blocker_id": "B2-UNEVIDENCED-GENERALIZATION",
+      "description": "Route-bounded Phase A PASS evidence does not automatically qualify B2 attack capability, evolution, status, target, or local-delta fields.",
+      "required_evidence": "A complete B2 capability capsule for each active feature; otherwise B0 delegation."
+    }
+  ],
+  "next_exact_work": "First close the B1 Snover 1044/1045 and PrizeStatic/runtime receipt gates. In parallel only where independent, qualify the exact 722-to-723 evolution/local-delta capsule and implement the B2 fixture-only gate. Do not start B1/B2 native or Kaggle experiments until the relevant capsule, fixture, source-boundary, and independent-review gates pass.",
+  "provenance": {
+    "knowledge_base": {
+      "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "validation": "PASS",
+      "requeried_before_report": true,
+      "requeried_after_report": true,
+      "counts": {
+        "sources": 56,
+        "claims": 62,
+        "strategies": 20,
+        "decision_rules": 36,
+        "anti_patterns": 14,
+        "search_features": 16,
+        "archetypes": 17,
+        "cards": 49,
+        "matchups": 12,
+        "matchup_plans": 20,
+        "observed_replay_patterns": 10,
+        "contradictions": 6,
+        "research_questions": 15
+      },
+      "queried_ids": ["DR-004", "DR-005", "DR-007", "DR-008", "DR-016", "DR-025", "DR-030", "DR-033", "AP-014", "RQ-004", "RQ-006", "RQ-007", "CON-001", "CON-004"]
+    },
+    "shared_native_assets": {
+      "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+      "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+      "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+      "randomness": "official engine entropy only; no manual coin, deck-order, HP, status, or native-state mutation"
+    },
+    "source_commits": {
+      "foundation_closeout": "fda9de6",
+      "four_route_capsule": "e1f1197",
+      "frost_v1_rejected": "492701f",
+      "frost_v2_qualified": "baaeb55",
+      "phase_b_semantics_audit": "53f1c3a",
+      "phase_b1_runtime_implementation": "b7b53f7",
+      "phase_b1_runtime_implementation_full": "b7b53f733ff888fed2a2afdc65096ff29b92e501",
+      "phase_b2_design": "6153f4e"
+    },
+    "report_sha256": {
+      "reports/deterministic/phase-a-foundation-closeout-v1.json": "a91a7ebb45e5fd5c7249bf05589abf2141c31861e31697a5d58b7e77be34fd8d",
+      "reports/deterministic/phase-a-native-semantics-v1.json": "834b9b7f4c8322d1d971da167d5ffca76b39e910bac5ab87cd2fceccc10f07f6",
+      "reports/deterministic/phase-a-native-semantics-v2.json": "0ea3213e6b879bace25b7962d698717c27c57e66594e4bded8ea721249cbfb05",
+      "reports/deterministic/phase-a-route-capsules-v1.json": "af5dcf779295ad9db465ea947e202ad96870c5d05f35aed3fb93133de57c77d7",
+      "reports/deterministic/phase-a-frost-barrier-capsule-v1.json": "51a0d13db1880dde02476940f54d0c101891924b5c611bdb7955e7239d478888",
+      "reports/deterministic/phase-a-frost-barrier-capsule-v2.json": "0d87bed448859bff4d226f1f78c07dd10aff14eec72258a4c2ac62d124fae2cd",
+      "reports/deterministic/phase-a-frost-barrier-capsule-v2-review.json": "d652422733a8f2530c08045f3cb73577923aac6ec8c99288fc28993ed6870fca",
+      "reports/deterministic/phase-b-semantics-audit-v1.json": "40293c28e87f1f99ce935725f426073b0308318f1490a881807a0820e9c7efed",
+      "reports/deterministic/phase-b1-prize-route-design-v1.json": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7",
+      "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json": "4eb6f523185e9156827aad1a8ba1956ecd0428a2ab503c82ef5282b584c4cb43",
+      "reports/deterministic/phase-b2-continuity-design-v1.json": "f6bb73529fbb1e39e1b4555711c9f912372c3cb4729c7836c31763e362706c83"
+    },
+    "source_file_sha256": {
+      "phase_a_route_capsules_runner": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+      "phase_a_route_capsules_config": "73e63aab39a509a51120d8587fcc44cfd8c1d9868405bd7a65321ecd60c30b2f",
+      "frost_v1_runner": "71e51f2aa3881633acc3295043f3d8aaa0052ed9689f05cc55d1439e6a1db5be",
+      "frost_v1_config": "094db9da3e0280149eb6482c81e22d200ca6847800108463ef8eba888a3e6c9b",
+      "frost_v2_runner": "e5de0a482f05122a8e0561fd9314bd82941b26334552d4eaebc7a21f5c8b0f6c",
+      "frost_v2_config": "69a1e17e7ca5131d8c1e01cc49ffc69f8e27a6ddf215b4c3c6cb429c91fe784e"
+    },
+    "source_file_paths": {
+      "phase_a_route_capsules_runner": "scripts/deterministic/phase_a_route_capsules_v1.py",
+      "phase_a_route_capsules_config": "configs/deterministic/phase_a_route_capsules_v1.json",
+      "frost_v1_runner": "scripts/deterministic/phase_a_frost_barrier_capsule_v1.py",
+      "frost_v1_config": "configs/deterministic/phase_a_frost_barrier_capsule_v1.json",
+      "frost_v2_runner": "scripts/deterministic/phase_a_frost_barrier_capsule_v2.py",
+      "frost_v2_config": "configs/deterministic/phase_a_frost_barrier_capsule_v2.json"
+    },
+    "b1_runtime_source_sha256": {
+      "src/ptcg_rl/deterministic/b1_oracle.py": "33e56711c9526739c3fcf52a5ffb779c9ed4eb27181b781b3fd576fe2445dc8a",
+      "configs/deterministic/phase_b1_prize_route_v1.json": "9fc33521baf0554685e89e5ab59a43c7125b0c3501c60748211e2cf3973efe7c",
+      "tests/deterministic/test_phase_b1_oracle.py": "34b442c504adc377b764ac6599d4e40da8ccf8fa94946d841cfe3852f811e21f"
+    },
+    "raw_evidence_sha256": {
+      "phase_a_route_capsules_v1": {
+        "sha256": "a07e4c5e984752ef9f4d0db5839782084057ecf22e909e601a4faf05f1cd9cb2",
+        "bytes": 10948371,
+        "sealed_read_only": true,
+        "storage_scope": "ignored private evidence; location intentionally omitted"
+      },
+      "frost_v1": {
+        "sha256": "ddc1aaf5c3f1063854d6c34a58fcc95d41d5759c751b8b84c6d23b1a5a9a8712",
+        "bytes": 86845,
+        "sealed_read_only": true,
+        "storage_scope": "ignored private evidence; location intentionally omitted"
+      },
+      "frost_v2": {
+        "sha256": "557a2774aafbd757d3fad602da192bc53c0d9837f38cfda71e27b2eec7dd0d7d",
+        "bytes": 82928,
+        "sealed_read_only": true,
+        "independent_sidecar_match": true,
+        "storage_scope": "ignored private evidence; location intentionally omitted"
+      }
+    }
+  },
+  "verification": {
+    "json_parse": "PASS",
+    "knowledge_base_validation_before_report": "PASS",
+    "knowledge_base_validation_after_report": "PASS",
+    "absolute_paths_or_private_locations": "OMITTED",
+    "production_code_changed": false,
+    "native_or_kaggle_run": false,
+    "historical_reports_rewritten": false,
+    "policy_or_deck_policy_changed": false,
+    "uncommitted_capability_work": {
+      "status": "NON_AUTHORITATIVE",
+      "paths": [
+        "configs/deterministic/phase_a_b1_capability_capsules_v1.json",
+        "scripts/deterministic/phase_a_b1_capability_capsules_v1.py",
+        "tests/deterministic/test_phase_a_b1_capability_capsules_v1.py",
+        "reports/deterministic/phase-a-b1-capability-capsules-v1.json"
+      ],
+      "rule": "These uncommitted capability artifacts are not used to assign any PASS, close B1/B2 blockers, grant production authority, or authorize native/Kaggle experiments."
+    },
+    "report_digest": "Compute externally after write; digest is intentionally not embedded in this self-referential artifact."
+  }
+}
