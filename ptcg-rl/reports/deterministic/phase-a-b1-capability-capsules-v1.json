@@ -1,0 +1,386 @@
+{
+  "capability_results": {
+    "prize_route_targets": {
+      "ambiguous_prize_pairings": 0,
+      "causal_ko_proofs": 140,
+      "counters": {
+        "ambiguous_prize_pairings": 0,
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "duplicate_proof_count": 0,
+      "observed_prize_units": {
+        "721": [
+          1
+        ],
+        "722": [
+          1
+        ],
+        "723": [
+          3
+        ],
+        "754": [
+          3
+        ]
+      },
+      "proof_count_by_target_card": {
+        "721": 48,
+        "722": 58,
+        "723": 10,
+        "754": 24
+      },
+      "proof_count_by_target_card_and_candidate_seat": {
+        "721": {
+          "0": 22,
+          "1": 26
+        },
+        "722": {
+          "0": 31,
+          "1": 27
+        },
+        "723": {
+          "0": 3,
+          "1": 7
+        },
+        "754": {
+          "0": 12,
+          "1": 12
+        }
+      },
+      "rejected_ko_count": 0,
+      "status": "PASS",
+      "status_by_target_card": {
+        "721": "PASS",
+        "722": "PASS",
+        "723": "PASS",
+        "754": "PASS"
+      }
+    },
+    "snover_1044_first": {
+      "active_target_preserved_proofs": 260,
+      "attempt_count": 289,
+      "counters": {
+        "ambiguous_prize_pairings": 0,
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "duplicate_proof_count": 0,
+      "energy_legal_proofs": 260,
+      "non_allowed_event_records": 0,
+      "observed_event_hp_deltas_by_attack": {
+        "1044": [
+          10
+        ],
+        "1045": []
+      },
+      "observed_hp_deltas_by_attack": {
+        "1044": [
+          10
+        ],
+        "1045": []
+      },
+      "proof_count_by_attack": {
+        "1044": 260,
+        "1045": 0
+      },
+      "proof_count_by_candidate_seat": {
+        "0": {
+          "1044": 178,
+          "1045": 0
+        },
+        "1": {
+          "1044": 82,
+          "1045": 0
+        }
+      },
+      "rejected_attempt_count": 29,
+      "required_attack_ids": [
+        1044
+      ],
+      "status": "PASS"
+    },
+    "snover_1045_first": {
+      "active_target_preserved_proofs": 97,
+      "attempt_count": 151,
+      "counters": {
+        "ambiguous_prize_pairings": 0,
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "duplicate_proof_count": 0,
+      "energy_legal_proofs": 97,
+      "non_allowed_event_records": 0,
+      "observed_event_hp_deltas_by_attack": {
+        "1044": [
+          10
+        ],
+        "1045": [
+          30
+        ]
+      },
+      "observed_hp_deltas_by_attack": {
+        "1044": [
+          10
+        ],
+        "1045": [
+          30
+        ]
+      },
+      "proof_count_by_attack": {
+        "1044": 23,
+        "1045": 74
+      },
+      "proof_count_by_candidate_seat": {
+        "0": {
+          "1044": 11,
+          "1045": 33
+        },
+        "1": {
+          "1044": 12,
+          "1045": 41
+        }
+      },
+      "rejected_attempt_count": 54,
+      "required_attack_ids": [
+        1045
+      ],
+      "status": "PASS"
+    },
+    "snover_attack_capability_combined": {
+      "active_target_preserved_proofs": 357,
+      "attempt_count": 440,
+      "counters": {
+        "ambiguous_prize_pairings": 0,
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "duplicate_proof_count": 0,
+      "energy_legal_proofs": 357,
+      "non_allowed_event_records": 0,
+      "observed_event_hp_deltas_by_attack": {
+        "1044": [
+          10
+        ],
+        "1045": [
+          30
+        ]
+      },
+      "observed_hp_deltas_by_attack": {
+        "1044": [
+          10
+        ],
+        "1045": [
+          30
+        ]
+      },
+      "proof_count_by_attack": {
+        "1044": 283,
+        "1045": 74
+      },
+      "proof_count_by_candidate_seat": {
+        "0": {
+          "1044": 189,
+          "1045": 33
+        },
+        "1": {
+          "1044": 94,
+          "1045": 41
+        }
+      },
+      "rejected_attempt_count": 83,
+      "required_attack_ids": [
+        1044,
+        1045
+      ],
+      "status": "PASS"
+    },
+    "snover_to_mega_evolution": {
+      "counters": {
+        "ambiguous_prize_pairings": 0,
+        "fallbacks": 0,
+        "incomplete_games": 0,
+        "invalid_actions": 0,
+        "native_errors": 0,
+        "other_failures": 0,
+        "post_terminal_actions": 0,
+        "request_cap_failures": 0,
+        "semantic_contract_failures": 0,
+        "timeouts": 0,
+        "unclassified_terminal": 0
+      },
+      "duplicate_proof_count": 0,
+      "evolution_option_count": 97,
+      "illegal_evolution_options": 0,
+      "local_delta_preserved_proofs": 52,
+      "proof_count": 52,
+      "proof_count_by_candidate_seat": {
+        "0": 24,
+        "1": 28
+      },
+      "serial_linked_proofs": 52,
+      "serial_preserved_proofs": 0,
+      "serial_replaced_proofs": 52,
+      "source_target_zone_pairs": [
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "status": "PASS"
+    }
+  },
+  "aggregate_reliability_counters": {
+    "ambiguous_prize_pairings": 0,
+    "fallbacks": 0,
+    "incomplete_games": 0,
+    "invalid_actions": 0,
+    "native_errors": 0,
+    "other_failures": 0,
+    "post_terminal_actions": 0,
+    "request_cap_failures": 0,
+    "semantic_contract_failures": 0,
+    "timeouts": 0,
+    "unclassified_terminal": 0
+  },
+  "conclusion": "All configured native capability capsules passed with zero reliability failures; no capability is production authority and no PolicyV1 integration occurred.",
+  "created_at_utc": "2026-08-08T01:08:20.886857+00:00",
+  "decision": "B1_CAPABILITY_CAPSULE_MATRIX",
+  "knowledge_base": {
+    "ids": [
+      "DR-004",
+      "DR-005",
+      "DR-006",
+      "DR-025",
+      "DR-030",
+      "DR-033",
+      "AP-014",
+      "RQ-004",
+      "RQ-005",
+      "RQ-007"
+    ],
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "validation": "PASS"
+  },
+  "provenance": {
+    "assets": {
+      "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+      "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "config_sha256": "1f0cc5c3d9e22bfe54ef695b7bb7e2a2d51f2ccf77688375f7b321dfabcf58b1",
+      "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2"
+    },
+    "candidate_deck_sha256": "7d5f90c8c53f22fcdba99acce88a9e76c8a91f7e9e5a5b41315dd9dbcd2a0aa2",
+    "config": "configs/deterministic/phase_a_b1_capability_capsules_v1.json",
+    "native_randomness": "official engine entropy only; no seed/order/state mutation",
+    "repo_root": "repo",
+    "sources": {
+      "configs/deterministic/phase_a_b1_capability_capsules_v1.json": "1f0cc5c3d9e22bfe54ef695b7bb7e2a2d51f2ccf77688375f7b321dfabcf58b1",
+      "scripts/deterministic/phase_a_b1_capability_capsules_v1.py": "cbcc97dd526665e3fca0d84e327eb8f48e4da72b87c1301accf017514b14504c",
+      "scripts/deterministic/phase_a_route_capsules_v1.py": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/native.py": "0e8daa0c46569f5bb1ba33c30ecff78347a39f35fe5c85b36de3b3ad5c2ce6fa",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"
+    },
+    "target_deck_sha256": {
+      "target_721": "5d754e645b1351c4fc7a0f89640c086586f31d59c56288b3018a7a54eff1ef2d",
+      "target_722": "37c49d71653bc0a9611818c421dd47de97b36e7b10509c6b5ada08a6852caae7",
+      "target_723": "0222ce28545a1e63c481d49fdc38164ff83baccf7664850702065161798fadb9",
+      "target_754": "9b9b76a22d5c4b6982de546684d786d4d3cae6734f99c32f43de2b36c1b70e07"
+    }
+  },
+  "raw_evidence": {
+    "bytes": 6256908,
+    "mode": "0444",
+    "path": "runs/phase-a-b1-capability-capsules-20260808T010820Z-285206f53634/raw-evidence.json",
+    "sha256": "3ba2dc3160fc3df3a180c03683a9ce61aee7362a0fa2a40404cc3dbf422fe722",
+    "sidecar": "runs/phase-a-b1-capability-capsules-20260808T010820Z-285206f53634/raw-evidence.json.sha256"
+  },
+  "record_id": "phase-a-b1-capability-capsules-v1",
+  "schema_version": 1,
+  "scope": {
+    "label": "NATIVE_QUALIFIED_CANDIDATE",
+    "requested_games": 264,
+    "recorded_games": 264,
+    "completed_games": 264,
+    "games_by_formulation": {
+      "prize_route_targets": {
+        "requested": 192,
+        "recorded": 192,
+        "completed": 192,
+        "candidate_seat_counts": {"0": 96, "1": 96},
+        "games_by_target": {
+          "target_721": {"requested": 48, "recorded": 48, "completed": 48, "candidate_seat_counts": {"0": 24, "1": 24}},
+          "target_722": {"requested": 48, "recorded": 48, "completed": 48, "candidate_seat_counts": {"0": 24, "1": 24}},
+          "target_723": {"requested": 48, "recorded": 48, "completed": 48, "candidate_seat_counts": {"0": 24, "1": 24}},
+          "target_754": {"requested": 48, "recorded": 48, "completed": 48, "candidate_seat_counts": {"0": 24, "1": 24}}
+        }
+      },
+      "snover_1044_first": {"requested": 24, "recorded": 24, "completed": 24, "candidate_seat_counts": {"0": 12, "1": 12}},
+      "snover_1045_first": {"requested": 24, "recorded": 24, "completed": 24, "candidate_seat_counts": {"0": 12, "1": 12}},
+      "snover_to_mega_evolution": {"requested": 24, "recorded": 24, "completed": 24, "candidate_seat_counts": {"0": 12, "1": 12}}
+    },
+    "policy_strength_authority": false,
+    "native_integration_authority": false,
+    "production_authority": false,
+    "policy_v1_integration": false
+  },
+  "independent_review": {
+    "verdict": "PASS",
+    "reviewer_role": "independent raw-evidence red-team",
+    "reviewed_at_utc": "2026-08-08T01:11:48.180116+00:00",
+    "method": "Fresh recomputation from sealed raw evidence, including game counts, terminal completion, exact attack/evolution/Prize identity and delta contracts, seat coverage, duplicate prevention, aggregate reliability counters, asset/source receipts, seal sidecar, and knowledge-base integrity.",
+    "raw_run": "runs/phase-a-b1-capability-capsules-20260808T010820Z-285206f53634",
+    "raw_evidence_sha256": "3ba2dc3160fc3df3a180c03683a9ce61aee7362a0fa2a40404cc3dbf422fe722",
+    "hardened_source_sha256": "cbcc97dd526665e3fca0d84e327eb8f48e4da72b87c1301accf017514b14504c",
+    "config_sha256": "1f0cc5c3d9e22bfe54ef695b7bb7e2a2d51f2ccf77688375f7b321dfabcf58b1",
+    "checks": {
+      "raw_seal_and_sidecar": "PASS",
+      "requested_recorded_completed_264": "PASS",
+      "terminal_completion_264": "PASS",
+      "aggregate_reliability_zero": "PASS",
+      "exact_capability_contracts": "PASS",
+      "seat_balance_and_duplicate_prevention": "PASS",
+      "asset_and_source_receipts": "PASS",
+      "knowledge_base_integrity": "PASS"
+    }
+  },
+  "status": "PASS"
+}

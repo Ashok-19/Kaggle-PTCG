@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-a-b1-capability-capsules-v1",
+  "scope": "NATIVE_QUALIFIED_CANDIDATE",
+  "knowledge_base_ids": ["DR-004", "DR-005", "DR-006", "DR-025", "DR-030", "DR-033", "AP-014", "RQ-004", "RQ-005", "RQ-007"],
+  "candidate_deck": "mega-abomasnow-ex-exact-local-v1",
+  "engine_root": "private/assets/official/sample_submission/sample_submission",
+  "assets": {
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced"
+  },
+  "formulations": [
+    {
+      "id": "snover_1044_first",
+      "purpose": "Qualify Snover 1044 with one Water and prefer the lower attack when both are legal.",
+      "probe": "snover_attacks",
+      "attack_preference": [1044, 1045]
+    },
+    {
+      "id": "snover_1045_first",
+      "purpose": "Qualify Snover 1045 with two Water and prefer it when legal, otherwise use 1044.",
+      "probe": "snover_attacks",
+      "attack_preference": [1045, 1044]
+    },
+    {
+      "id": "snover_to_mega_evolution",
+      "purpose": "Qualify the public 722-to-723 evolution local delta and its legality boundary.",
+      "probe": "evolution",
+      "attack_preference": []
+    },
+    {
+      "id": "prize_route_targets",
+      "purpose": "Qualify PrizeStaticV1 only from native public KO and Prize-count deltas.",
+      "probe": "prize_units",
+      "attack_preference": []
+    }
+  ],
+  "attack_contract": {
+    "card_id": 722,
+    "attack_ids": [1044, 1045],
+    "energy_type": 3,
+    "energy_counts": {"1044": 1, "1045": 2},
+    "damage": {"1044": 10, "1045": 30},
+    "target_zone": "ACTIVE",
+    "allowed_event_names": ["ATTACK", "HP_CHANGE"]
+  },
+  "evolution_contract": {
+    "source_card_id": 722,
+    "target_card_id": 723,
+    "option_type": 9,
+    "source_zones": [4, 5],
+    "preserve": ["serial", "zone", "position", "attached_energy_count", "energy_types", "damage", "statuses"]
+  },
+  "prize_contract": {
+    "target_card_ids": [721, 722, 723, 754],
+    "require_attack_caused_ko": true,
+    "require_public_prize_count_delta": true,
+    "unknown_if_unobserved": true,
+    "minimum_ko_proofs_per_target": 2,
+    "minimum_ko_proofs_per_target_seat": 1
+  },
+  "deck_specs": {
+    "candidate": {"265": 4, "721": 4, "722": 4, "723": 4, "1086": 4, "1097": 4, "1118": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 4, "3": 15},
+    "target_721": {"721": 4, "3": 56},
+    "target_722": {"722": 4, "3": 56},
+    "target_723": {"722": 4, "723": 4, "3": 52},
+    "target_754": {"754": 4, "3": 56}
+  },
+  "limits": {
+    "games_per_attack_formulation": 12,
+    "games_per_evolution_seat": 12,
+    "games_per_prize_target": 48,
+    "request_cap_per_game": 900,
+    "wall_seconds": 600,
+    "evidence_bytes_cap": 67108864,
+    "max_capsules": 384
+  },
+  "raw_evidence": {
+    "directory": "runs/phase-a-b1-capability-capsules-*",
+    "sealed_mode": "0444-json-plus-sha256-sidecar",
+    "tracked_report_excludes_raw": true
+  }
+}
