@@ -1,0 +1,123 @@
+{
+  "record_id": "phase-b3-resource-ledger-design-v1-review",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:52:19Z",
+  "review_kind": "INDEPENDENT_RED_TEAM",
+  "status": "REVIEW_COMPLETE_WITH_REPORT_ONLY_CORRECTIONS",
+  "verdict": "DESIGN_READY_FIXTURE_AND_NATIVE_BLOCKED",
+  "scope": {
+    "reviewed_report": "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+    "ownership": {
+      "design_agent": "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+      "independent_reviewer": "reports/deterministic/phase-b3-resource-ledger-design-v1-review.json",
+      "other_paths_touched": false
+    },
+    "audited_head": "2f3e773dbd930da0f7c2e0ae6757b81286ee1415",
+    "production_code_changed": false,
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission": false,
+    "commit_created": false,
+    "review_boundary": "Report/configuration review only. No B3 evaluator, native capsule, private Kaggle job, submission, or production policy authority was created."
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation_before_review": "PASS",
+    "validation_after_review": "PASS",
+    "queried_ids": {
+      "decision_rules": ["DR-012", "DR-017", "DR-021", "DR-023", "DR-024", "DR-025"],
+      "strategies": ["STR-004", "STR-010", "STR-013"],
+      "search_features": ["SF-008", "SF-009"],
+      "anti_patterns": ["AP-003", "AP-009"],
+      "contradictions": ["CON-001", "CON-002"],
+      "research_questions": ["RQ-004", "RQ-005", "RQ-007"]
+    },
+    "binding_result": "Known revealed/inaccessible copies are removed from live outs; unknown zones remain probabilistic; finite counts are without replacement; low deck count is not deck-out proof; CABT current legal semantics outrank tabletop assumptions; RQ-004/RQ-005/RQ-007 and CON-001/CON-002 remain unresolved."
+  },
+  "contract_audit": {
+    "public_state_and_request": {
+      "verdict": "PASS_AFTER_CORRECTION",
+      "checks": [
+        "Actual PublicStateV1/EngineObservationV1/SelectionRequestV1 fields were compared; parent_entity_key is the exact entity field, terminal observations discard the request, and ongoing requests must match battle_id/transition_id/acting_player.",
+        "ResourceLedgerSeedV1 hidden_slot_counts are treated as zone capacities only; visible card/zone rows are public counts and do not identify hidden cards.",
+        "Complete LegalOptionV1 semantic fields, canonical fingerprints, availability, and request ordering are required; original_index/transport order are integrity-only.",
+        "STOP is a compound-action builder token governed by request bounds, not a LegalOptionV1 row."
+      ]
+    },
+    "deck_and_card_receipts": {
+      "verdict": "PASS",
+      "candidate_deck_multiset_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+      "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+      "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "finding": "The exact Mega Abomasnow profile and numeric CardTable metadata are static capacities/identity only. No ex/mega_ex flag or static attack row is accepted as PrizeStatic or effect proof."
+    },
+    "formulations": {
+      "verdict": "PASS_AFTER_CORRECTION",
+      "A": "Hard known-copy reserve floor and lexicographic preservation; unknown copies never increase reserve and no probability ordering is used.",
+      "B": "Finite without-replacement public count-state probability after the same hard floor; it can diverge only with exact rational math and an explicit local-delta/route receipt.",
+      "divergence_requirement": "B3-F01 must materialize exact reserve vectors, N/K/h or finite count states, route predicate, opportunity costs, and Fraction numerator/denominator values that make A and B select different non-equivalent options. Missing values are an implementation blocker, not a passing fixture."
+    },
+    "known_unknown_ledger": {
+      "verdict": "PASS_AFTER_CORRECTION",
+      "required_categories": ["PUBLIC_USABLE", "PUBLIC_DISCARD_OR_RECOVERABLE", "PUBLIC_INACCESSIBLE", "UNKNOWN_OWN_DECK_OR_PRIZE", "UNKNOWN_OPPONENT"],
+      "required_invariants": [
+        "Each public physical copy is counted once and identified by a source observation/event digest.",
+        "Hidden deck/hand/Prize lengths are capacities, not identities.",
+        "Unknown copies cannot satisfy a hard reserve floor.",
+        "A revealed/inaccessible copy is removed once and never double-counted across event and entity snapshots."
+      ]
+    },
+    "probability_model": {
+      "verdict": "PASS_AFTER_CORRECTION",
+      "math": "Simple hits use 1 - C(N-K,h)/C(N,h); multiple roles use exact multivariate-hypergeometric count-state enumeration with rational arithmetic.",
+      "provenance": "DeckProfileV1, current PublicStateV1/request, exact route requirement and exact local-delta receipt; no engine RNG or successor observation.",
+      "hidden_allocation_rule": "If ordering changes across legal hidden allocations, B3-B returns UNKNOWN/B0_DELEGATE. A uniform hidden-allocation prior or guessed Prize map is not implicit; a future prior requires a separately approved belief experiment."
+    },
+    "fail_closed_and_fixtures": {
+      "verdict": "PASS_AFTER_CORRECTION",
+      "delegation": "Unknown/missing/partial capability, missing PrizeStatic, incomplete options, unsupported compound/ordering, unresolved STOP, stale lifecycle, hidden identity requirement, non-equivalent tie, or nonfinite probability delegates to B0 with a separate counter; it is not final-adapter fallback.",
+      "fixtures": "F01-F06 now require complete public option sets, semantic permutations, player mirror, fresh-process lifecycle/error/worker replacement, explicit STOP/compound traces, exact count/probability evidence, and independent recalculation."
+    },
+    "capability_and_prize_blockers": {
+      "verdict": "PASS_EXACT_BLOCKERS",
+      "prize_static": "Missing. CardStatic ex/mega_ex flags are insufficient; a version-bound PrizeStaticV1 receipt is required before native use.",
+      "route_receipts": "1042/1043/1046/1262 remain PASS only within sealed route bounds; primary Frost Barrier 754:1089 is narrow; 1044/1045, 722-to-723 evolution/status/local delta, and generalization remain unqualified.",
+      "runtime": "B3 evaluator source/config/import/transitive receipt and fresh-process native boundary qualification are absent. Uncommitted B1/B2 capability artifacts are explicitly excluded from authority."
+    }
+  },
+  "statistics_and_runtime_audit": {
+    "verdict": "PASS_AFTER_CORRECTION",
+    "arm_execution": "Two independent two-arm B0-compatible runs, B3-A versus a fresh B0 control and B3-B versus a fresh B0 control; no control reuse across formulations.",
+    "estimand": "Equal fixed-weight mean of the eight anchor x candidate-seat cell candidate-minus-control deltas; pooled all-game WDL is descriptive only.",
+    "sampling": "Independent native games, candidate-perspective terminal WDL, natural deployment with balanced candidate seats, no paired-seed or trajectory claim, forced first/second diagnostics separate.",
+    "promotion_floor": "Experimental challenger only after zero hard counters, activation >=32 decisions and >=5 percent at confirmation, no catastrophic cell regression, and equal-cell confirmation lower 95 percent interval > +0.02 with point estimate at least B0. No deck freeze/champion/submission authority.",
+    "runtime": "Candidate-only callback CPU/wall/RSS and cardinality must be measured; 600 cumulative CPU seconds/game and 8 GiB RSS are hard safety caps; no delegation may hide candidate latency."
+  },
+  "report_only_corrections": [
+    "Excluded seven observed uncommitted B1/B2 capability and fixture paths from semantic/native authority.",
+    "Corrected the entity field list to the actual parent_entity_key and made the public ledger row categories/invariants explicit.",
+    "Added exact B3-B probability provenance/math, rational arithmetic, and the no-unapproved-hidden-prior rule.",
+    "Made F01-F06 materialization requirements falsifiable rather than prose-only.",
+    "Replaced ambiguous three-arm budgeting with two independent formulation-vs-fresh-control runs and an explicit eight-cell estimand.",
+    "Aligned challenger activation and +0.02 confirmation floors with the existing B1/B2 comparison discipline."
+  ],
+  "readiness": {
+    "design": "READY",
+    "fixture": "BLOCKED_IMPLEMENTATION_NOT_PRESENT",
+    "native": "BLOCKED_MISSING_PRIZESTATIC_CAPABILITIES_RUNTIME_RECEIPTS",
+    "production": "NOT_AUTHORIZED",
+    "next_exact_task": "Implement only an isolated B3-A/B fixture evaluator and tests, materialize F01-F06 with exact public count states and rational probability evidence, run fresh-process permutation/lifecycle/player-mirror review, and stop before native work unless every prerequisite passes."
+  },
+  "verification": {
+    "design_report_sha256": "b89738c8e1a5e0a1417f7d78a103b94177f49755dc5fbf5c1fbdb9b378f5ff61",
+    "json_validation": "PASS",
+    "knowledge_base_validation": "PASS",
+    "production_code_changed": false,
+    "native_or_kaggle_run": false,
+    "commit_created": false,
+    "private_assets_modified": false
+  }
+}

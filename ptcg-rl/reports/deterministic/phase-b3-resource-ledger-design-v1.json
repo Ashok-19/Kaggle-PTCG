@@ -1,0 +1,669 @@
+{
+  "record_id": "phase-b3-resource-ledger-design-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:39:04Z",
+  "status": "DESIGN_ONLY_NATIVE_BLOCKED",
+  "decision": "PREREGISTER_TWO_PUBLIC_LEDGER_FORMULATIONS",
+  "scope": {
+    "phase": "B3",
+    "component": "resource_and_prize_ledger",
+    "mode": "read_only_experiment_design",
+    "candidate_deck": "mega-abomasnow-ex",
+    "production_source_changed": false,
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission": false,
+    "deck_freeze": false,
+    "promotion": false,
+    "only_owned_file_created": "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+    "private_assets_modified": false,
+    "reason_native_blocked": "B3 needs independently reviewed PrizeStaticV1, runtime capability receipts, an implemented fixture evaluator, and a B0-compatible harness arm. This design intentionally provides none of those implementation or execution artifacts."
+  },
+  "repository_assimilation": {
+    "audited_head": "2f3e773dbd930da0f7c2e0ae6757b81286ee1415",
+    "authoritative_prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "public_stack_inputs": [
+      {
+        "path": "src/ptcg_rl/g1/models.py",
+        "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "use": "EngineObservationV1, PlayerViewV1, VisibleEntityV1, PublicEventV1, LegalOptionV1, SelectionRequestV1 and compound action contract"
+      },
+      {
+        "path": "src/ptcg_rl/g1/actions.py",
+        "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "use": "complete legal action and ordered/STOP validation"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/state.py",
+        "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709",
+        "use": "public snapshot, entity lifetime, current-request and semantic boundary"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/control.py",
+        "sha256": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+        "use": "frozen public Mega Abomasnow control reproduction and fail-closed request handling"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/policy.py",
+        "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6",
+        "use": "exact-deck strategic policy adapter boundary"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/deck_profile.py",
+        "sha256": "b84d07adae1ec557f4dacc95e8e0ff52978b81839bcec108bd1258bb66c827af",
+        "use": "version-bound 60-card profile, roles, attack/evolution requirements and hashes"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/b1_oracle.py",
+        "sha256": "33e56711c9526739c3fcf52a5ffb779c9ed4eb27181b781b3fd576fe2445dc8a",
+        "use": "restricted current-only route oracle boundary; native B1 remains blocked"
+      }
+    ],
+    "uncommitted_capability_artifacts_excluded": {
+      "paths": [
+        "configs/deterministic/phase_a_b1_capability_capsules_v1.json",
+        "scripts/deterministic/phase_a_b1_capability_capsules_v1.py",
+        "src/ptcg_rl/deterministic/b2_continuity.py",
+        "tests/deterministic/test_phase_a_b1_capability_capsules_v1.py",
+        "tests/deterministic/test_phase_b2_continuity.py",
+        "reports/deterministic/phase-a-b1-capability-capsules-v1.json",
+        "configs/deterministic/phase_b2_continuity_fixture_v1.json"
+      ],
+      "rule": "These uncommitted capability/fixture artifacts were observed in the dirty checkout but are not semantic authority, receipts, runtime inputs, qualification evidence, or permission to launch B3. Only committed, independently reviewed evidence named elsewhere in this report may bind a native gate."
+    },
+    "reports_read": [
+      {
+        "path": "reports/deterministic/deterministic-gold-architecture-v1.md",
+        "sha256": "not_recomputed_in_this_design",
+        "finding": "deterministic exact-deck specialist is the active path; search and BC remain evidence-gated"
+      },
+      {
+        "path": "reports/deterministic/prior-experiment-evidence-v1.json",
+        "sha256": "1f530f06872fc486d94b324e2b5e31e0e77b19fe0a89a693265ff0e403c82601",
+        "finding": "naive/static/PUCT/terminal/replay-value search branches did not establish a reliable gain; manual randomness result is invalid"
+      },
+      {
+        "path": "reports/deterministic/phase-a-semantic-status-v2.json",
+        "sha256": "7304df33f71bf42347613b60ebf17adc7fb2589c03a99359005c409e1acfc43e",
+        "finding": "native semantic authority is route- and context-bounded; no generalization from a named capsule"
+      },
+      {
+        "path": "reports/deterministic/phase-a-route-capsules-v1.json",
+        "sha256": "af5dcf779295ad9db465ea947e202ad96870c5d05f35aed3fb93133de57c77d7",
+        "finding": "1042, 1043, 1046 and 1262 pass only within sealed route strata; that report alone does not qualify 1044/1045 or evolution"
+      },
+      {
+        "path": "reports/deterministic/phase-a-frost-barrier-capsule-v2.json",
+        "sha256": "0d87bed448859bff4d226f1f78c07dd10aff14eec72258a4c2ac62d124fae2cd",
+        "finding": "1047 primary response contract is narrow; the secondary 1043 response remains partial"
+      },
+      {
+        "path": "reports/deterministic/phase-a-frost-barrier-capsule-v2-review.json",
+        "sha256": "d652422733a8f2530c08045f3cb73577923aac6ec8c99288fc28993ed6870fca",
+        "finding": "independent review passed the exact 754:1089 immediate-next-turn contract only"
+      },
+      {
+        "path": "reports/deterministic/phase-b1-prize-route-design-v1.json",
+        "sha256": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7",
+        "finding": "current-only inputs, complete-option coverage, B0 delegation, PrizeStaticV1 blocker and native activation gate"
+      },
+      {
+        "path": "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json",
+        "sha256": "4eb6f523185e9156827aad1a8ba1956ecd0428a2ab503c82ef5282b584c4cb43",
+        "finding": "runtime oracle is feasible in principle but requires exact receipts and fresh-process qualification"
+      },
+      {
+        "path": "reports/deterministic/phase-b2-continuity-design-v1.json",
+        "sha256": "f6bb73529fbb1e39e1b4555711c9f912372c3cb4729c7836c31763e362706c83",
+        "finding": "B2 fixture/native lifecycle, complete-option, permutation and equal-budget contracts are the template; no B2 strength claim exists"
+      },
+      {
+        "path": "reports/deterministic/b0-ma-control-canary-review-v1.json",
+        "sha256": "b46c6c2a9c3b7e5fc2c15017a9e9eb506d61e58a26abb541a122daabd5f82bf6",
+        "finding": "B0 mechanical canary independently reviewed PASS with scale blocker; this is the frozen comparison control, not B3 evidence"
+      }
+    ],
+    "prior_branches_not_repeated": [
+      {
+        "branch": "recurrent_BC",
+        "result": "rule 11/16, pure BC 2/16, BC-at-MAIN/rule-subselection 4/16; advisor only"
+      },
+      {
+        "branch": "static_or_naive_search",
+        "result": "one-ply, beam, static macro and broad terminal search did not produce a reliable improvement; terminal macro confirmation was 28/64 versus rule 42/64"
+      },
+      {
+        "branch": "PUCT_or_replay_value",
+        "result": "small screens did not survive larger Dragapult/value confirmation; leaf ranking, not raw throughput, was the bottleneck"
+      },
+      {
+        "branch": "manual_randomness",
+        "result": "direct-terminal-search result with manual coin handling is invalid and excluded from strength evidence"
+      }
+    ]
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation_before_design": "PASS",
+    "validation_after_design": "REQUIRED",
+    "requeried_during_design": true,
+    "queried_ids": {
+      "decision_rules": ["DR-012", "DR-017", "DR-021", "DR-023", "DR-024", "DR-025"],
+      "strategies": ["STR-004", "STR-010", "STR-013"],
+      "search_features": ["SF-008", "SF-009"],
+      "anti_patterns": ["AP-003", "AP-009"],
+      "contradictions": ["CON-001", "CON-002"],
+      "research_questions": ["RQ-004", "RQ-005", "RQ-007"]
+    },
+    "exact_queries": [
+      "validate_db.py",
+      "SELECT * FROM decision_rules WHERE id IN ('DR-012','DR-017','DR-021','DR-023','DR-024','DR-025')",
+      "SELECT * FROM strategies WHERE id IN ('STR-004','STR-010','STR-013')",
+      "SELECT * FROM search_features WHERE id IN ('SF-008','SF-009')",
+      "SELECT * FROM anti_patterns WHERE id IN ('AP-003','AP-009')",
+      "SELECT * FROM contradictions WHERE id IN ('CON-001','CON-002')",
+      "SELECT * FROM research_questions WHERE id IN ('RQ-004','RQ-005','RQ-007')",
+      "FTS search for resource, prize, deck-out, without-replacement and hidden information"
+    ],
+    "binding_interpretation": {
+      "DR-012": "Move revealed/constrained cards into known zones and recompute route feasibility; revealed Prizes and inaccessible copies are not live outs; unknown cards remain probabilistic.",
+      "DR-017": "Protect low-count or irreplaceable Energy, attacker, evolution, gust, recovery and search resources unless a forced terminal line or no alternative exists.",
+      "DR-021": "Low opponent deck count is not a deck-out proof; draw obligation, recursion/recovery, horizon, self-deck and alternate Prize route must be checked.",
+      "DR-023": "Unseen hand/deck/Prize identities stay probabilistic and never become a hard fact from absence or an action guess.",
+      "DR-024": "Any probability formulation must allocate finite cards without replacement and must not manually control engine randomness.",
+      "DR-025": "Current CABT legal options and version-bound native transition receipts outrank tabletop memory or static effect prose.",
+      "CON-001": "Immediate Prize and robust route are not universally ordered; the ledger must expose the trade, not hide it in a blended score.",
+      "CON-002": "Thinning is conditional on opportunity cost; B3 must not auto-thin.",
+      "RQ-004": "Mega Abomasnow routes and first attacks remain unproven against held-out anchors.",
+      "RQ-005": "Ledger/prize features still need an isolated held-out CABT ablation.",
+      "RQ-007": "Every route-critical interaction needs an exact local capsule before runtime authority."
+    }
+  },
+  "candidate_deck_and_semantics": {
+    "deck_profile": "mega-abomasnow-ex",
+    "deck_size": 60,
+    "ordered_deck_sha256": "not separately used; exact profile is bound by the ordered and multiset receipts below",
+    "deck_multiset_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "card_counts": {
+      "3": 34,
+      "721": 2,
+      "722": 4,
+      "723": 4,
+      "1121": 4,
+      "1126": 1,
+      "1192": 4,
+      "1227": 4,
+      "1262": 3
+    },
+    "card_table": {
+      "file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+      "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "wrapper_api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced"
+    },
+    "numeric_rows_used_as_static_metadata_only": {
+      "3": {"card_type": 5, "energy_type": 3, "basic_energy": true},
+      "721": {"card_type": 0, "energy_type": 3, "hp": 150, "attack_ids": [1042, 1043]},
+      "722": {"card_type": 0, "energy_type": 3, "hp": 90, "attack_ids": [1044, 1045]},
+      "723": {"card_type": 0, "energy_type": 3, "hp": 350, "attack_ids": [1046, 1047]}
+    },
+    "semantic_receipt_status": {
+      "1042_riptide": "PASS_WITHIN_SEALED_NATIVE_ROUTE_BOUNDS",
+      "1043_swirling_waves": "PASS_WITHIN_SEALED_NATIVE_ROUTE_BOUNDS",
+      "1046_hammer_lanche": "PASS_WITHIN_SEALED_NATIVE_ROUTE_BOUNDS",
+      "1262_surfing_beach": "PASS_WITHIN_SEALED_NATIVE_ROUTE_BOUNDS",
+      "1047_frost_barrier_primary_754_1089": "PASS_WITHIN_SEALED_NATIVE_RESPONSE_BOUNDS",
+      "1047_frost_barrier_secondary_1043": "PARTIAL_DIAGNOSTIC_ONLY",
+      "1044_snover": "UNQUALIFIED_B1_BLOCKER",
+      "1045_snover": "UNQUALIFIED_B1_BLOCKER",
+      "722_to_723_evolution": "UNQUALIFIED_B2_BLOCKER",
+      "prize_units_for_card_ids": "MISSING_PRIZESTATIC_V1"
+    },
+    "hard_semantic_rule": "Static card IDs, ex/mega_ex flags, damage, attack costs, and deck counts never upgrade a route/effect or Prize-unit rule without a version-bound native or exact metadata receipt. B3 may use static profile counts to describe capacities, but not to claim a card is in a hidden zone or that an attack is terminal."
+  },
+  "public_observable_inputs": {
+    "runtime_contract": "EngineObservationV1 plus the current SelectionRequestV1, after terminal-first adapter validation",
+    "observation_fields_allowed": [
+      "schema_version, battle_id, transition_id, acting_player, terminal_result",
+      "turn, turn_action_count, first_player, supporter_played, stadium_played, energy_attached, retreated",
+      "public PlayerViewV1 rows: player_index, bench_max, deck_count, hand_count, prize_count, visible_prize_count, hand_visible, facedown_active_count",
+      "public VisibleEntityV1 rows: entity_key, visible, card_id, serial, metadata_ref, owner, zone, position, parent_entity_key, hp, max_hp, damage, appear_this_turn, energy_types, attached_energy_count, attached_tool_count, evolution_depth, statuses",
+      "public event fields from the versioned EVENT_FEATURE_NAMES schema, with event semantics treated as public observations rather than inferred private state",
+      "current legal option semantic fields: selection/option types and contexts, public source/target references, attack/card/energy identifiers, choice role, availability and canonical semantic fingerprint",
+      "request scalars: min_count, max_count, remain_damage_counter, remain_energy_cost, context_card_id, effect_card_id and ORDERED/UNORDERED contract",
+      "the exact candidate deck profile and versioned numeric card metadata as static configuration, never as current hidden-zone contents"
+    ],
+    "derived_ledger_inputs": [
+      "known own visible/hand/discard/board card copies by card_id and public serial where present",
+      "revealed or explicitly constrained Prize/inaccessible copies only when the current public event/semantic receipt identifies them",
+      "public deck, hand, Prize and bench counts as capacities and bounds, never as identities",
+      "route requirements from independently qualified capability receipts",
+      "resource classes and exact card counts from the candidate deck profile",
+      "current local action cost/delta only when a qualified receipt says what the current option consumes or changes"
+    ],
+    "not_a_runtime_input": [
+      "successor observation or post-action state",
+      "counterfactual terminal result, future opponent response or response likelihood",
+      "opponent hidden hand/deck/Prize identities or an inferred exact archetype/list",
+      "own hidden deck/Prize identities, deck order, or face-down card identity",
+      "raw native objects, private baseline module state, option original_index or transport list order",
+      "static prose or ex/mega_ex flag as an effect or Prize-unit implementation",
+      "a manually chosen coin/random outcome or a deterministic seed claim"
+    ]
+  },
+  "unknown_and_fail_closed_semantics": {
+    "unknown_is_not_zero_or_favorable": true,
+    "ledger_row_contract": {
+      "known_states": [
+        "PUBLIC_USABLE: a visible card/entity whose current zone and serial/card_id are public and whose use is covered by a qualified receipt",
+        "PUBLIC_DISCARD_OR_RECOVERABLE: a visible discarded copy whose recovery path is itself qualified; it is not silently treated as usable",
+        "PUBLIC_INACCESSIBLE: a publicly identified Prize/deck/zone copy that the current route cannot use, with the identifying event or semantic receipt retained"
+      ],
+      "unknown_states": [
+        "UNKNOWN_OWN_DECK_OR_PRIZE: hidden candidate copies represented only as legal count intervals/compositions; never a named live/dead copy",
+        "UNKNOWN_OPPONENT: hidden opponent identities and response classes; no B3 formulation may turn them into facts"
+      ],
+      "invariants": [
+        "Each publicly identified physical copy is counted once, with a source observation/event digest and optional serial; known inaccessible copies are removed from live outs exactly once.",
+        "PlayerViewV1 deck/hand/Prize counts and ResourceLedgerSeedV1 hidden_slot_counts are capacities, not card identities or live-out counts.",
+        "A known reserve is computed only from PUBLIC_USABLE copies plus explicitly qualified recovery from PUBLIC_DISCARD_OR_RECOVERABLE; UNKNOWN states never increase a hard reserve.",
+        "A public reveal must be monotonic for the affected copy and must not be double-counted when it also appears in the current entity snapshot."
+      ]
+    },
+    "unknown_cases": [
+      "a route-critical card or attack capability is not covered by an exact receipt",
+      "Prize units are needed but PrizeStaticV1 is absent or does not cover the current target card",
+      "a current option's discard/search/recovery/effect local delta is not explicitly qualified",
+      "a key copy could be in an unrevealed own Prize/deck slot and the formulation would need it as a fact",
+      "opponent threat/response requires hidden cards, hidden archetype certainty or successor state",
+      "legal option semantics are missing, forged, duplicate, stale, mixed-context or incomplete",
+      "multi-select or STOP meaning is not fully represented by the current request contract",
+      "the required resource is generated or changed by a PARTIAL effect, unknown evolution, or unqualified status rule"
+    ],
+    "fail_closed_action": "Return B0_DELEGATE to the frozen public control, with a distinct reason and counter. Do not call this final-adapter fallback, do not score a safe option prefix, and do not award B3 credit for a delegated decision.",
+    "no_hidden_identity_policy": "The exact candidate deck list supplies total copy capacity only. A hidden own or opponent card remains an unknown/probability mass; no ledger row may name or count it as live, dead, prized, or held unless the current public contract explicitly reveals it."
+  },
+  "formulations": [
+    {
+      "id": "B3-A-KNOWN-COPY-RESERVE",
+      "name": "Conservative known-copy reserve ledger",
+      "status": "FIXTURE_ONLY_UNTIL_CAPABILITY_AND_PRIZE_RECEIPTS",
+      "hypothesis": "A lexicographic ledger that preserves hard-known route resources and refuses to spend an irreplaceable known copy will avoid losing-resource errors without relying on hidden card identities or uncertain opponent responses.",
+      "material_difference_from_B": "A uses hard known-copy feasibility and a reserve floor; it does not use a draw probability or a hidden allocation probability to prefer an action.",
+      "observable_features": [
+        "known own card copies by public zone and exact serial where available",
+        "known inaccessible/revealed copy count, separated from unknown cards",
+        "qualified current route requirements and visible attacker readiness",
+        "current action-local cost and exact qualified local delta",
+        "public bench capacity, public active/bench HP/status and qualified current threat only"
+      ],
+      "decision_key": [
+        "current terminal outcome is adapter/evaluator gate only and never a fabricated current action",
+        "preserve hard route feasibility after current local cost descending",
+        "preserve minimum known reserve for each still-required route resource descending",
+        "avoid spending a known unique/low-count resource needed by the shortest robust visible route",
+        "prefer already-qualified ready follow-up and lower known route deficit",
+        "prefer lower public deck-out/self-deck risk only when a complete receipt exists",
+        "canonical semantic action key only after the strategic key; non-equivalent ties are AMBIGUOUS"
+      ],
+      "reserve_definition": "For each route-critical class, reserve is the number of publicly known, legally usable copies/resources remaining after the current local cost minus the minimum number explicitly required by the qualified route. Unknown hidden copies are not added to reserve. A route fails the hard floor when a known required reserve becomes negative or a needed capability is unknown.",
+      "allowed_card_classes_for_this_deck": ["3 Basic Water Energy", "721 Kyogre", "722 Snover", "723 Mega Abomasnow ex", "1121 Ultra Ball", "1126 Precious Trolley", "1192 Carmine", "1227 Lillie's Determination", "1262 Surfing Beach"],
+      "expected_behavior": "Choose a current local attach/discard/search choice that leaves the required known Energy/attacker/search/recovery reserve intact; reject auto-thinning and any action whose only justification is an unseen card.",
+      "fail_closed": ["missing PrizeStaticV1 when Prize units enter the key", "unqualified attack/evolution/effect", "unknown current local cost", "unsupported selection context", "incomplete legal option coverage", "compound action outside the activation contract", "non-equivalent key tie"]
+    },
+    {
+      "id": "B3-B-CONDITIONAL-FINITE-ODDS",
+      "name": "Conditional draw-probability and resource-preservation ordering",
+      "status": "FIXTURE_ONLY_UNTIL_PROBABILITY_AND_RUNTIME_REVIEW",
+      "hypothesis": "When hard known reserves do not distinguish choices, an exact finite-deck without-replacement calculation over public counts can prefer the action that gives the route a higher conditional probability of obtaining the required own-deck outs, while explicitly pricing consumed search/attach/recovery resources.",
+      "material_difference_from_A": "B may choose a replaceable resource-spend or lower hard reserve when its public finite-deck conditional route probability is higher; A never treats a hidden card as a live copy and never uses probability as a hard reserve substitute.",
+      "observable_features": [
+        "candidate profile total counts and public known copies by zone",
+        "public deck/Prize/hand counts and revealed/inaccessible copies as constraints",
+        "without-replacement finite-deck probability for named own-deck outs over a predeclared draw horizon",
+        "conditional probability after a named current resource cost/search effect only if its local receipt is exact",
+        "opportunity cost: consumed search, gust, recovery, Energy, bench slot or evolution resource"
+      ],
+      "probability_rule": "Enumerate count states, not card identities or deck order. Condition only on public observations and exact candidate multiset counts; use hypergeometric or exact finite-state counting without independent-draw shortcuts. If an unknown Prize/deck allocation is relevant, marginalize legal allocations or return UNKNOWN; never select one hidden allocation as fact.",
+      "probability_model_provenance_and_math": {
+        "inputs": [
+          "candidate DeckProfileV1 multiset and its version-bound card-table/deck hashes",
+          "current PublicStateV1 visible_card_counts, visible_zone_counts, hidden_slot_counts, PlayerViewV1 counts and current request",
+          "a named route requirement and exact current local delta from an independently reviewed receipt"
+        ],
+        "simple_hit_formula": "For a fixed publicly determined deck composition of N unknown draw slots containing K eligible outs, a h-step without-replacement hit probability is 1 - C(N-K,h)/C(N,h), with h bounded by the predeclared horizon and 0 <= h <= N.",
+        "multi_role_formula": "For multiple role/count requirements, enumerate nonnegative draw-count vectors over the candidate multiset and sum exact multivariate-hypergeometric weights for vectors satisfying the predeclared route predicate; use integer/rational arithmetic (for example Fraction), not independent Bernoulli products or floating-point ranking keys.",
+        "hidden_allocation_rule": "If an unknown own deck/Prize allocation changes K, the route predicate, or the ordering between actions, return UNKNOWN unless a separately approved, versioned allocation measure is supplied. Do not silently assume uniform allocations, a guessed Prize map, or an engine RNG law.",
+        "action_conditioning_rule": "A current action may alter the count model only through an exact receipt for its local cost/search/recovery transition. A future draw or route horizon is a count calculation, not a successor observation; no native successor call or counterfactual terminal result is permitted.",
+        "validation": "Reject negative/nonintegral counts, h>N, empty denominators, NaN/Inf, probabilities outside [0,1], and any result whose ordering changes under legal hidden allocations. Retain numerator/denominator or exact count-state digest for independent recomputation."
+      },
+      "decision_key": [
+        "current terminal/effect legality gate first",
+        "hard known route-feasibility floor: any action below an explicit nonnegative reserve floor delegates",
+        "higher conditional probability of satisfying the predeclared route requirement within the predeclared horizon",
+        "lower consumed resource opportunity cost under the same public route",
+        "lower deck-out risk only with complete deck-out receipt; no low-count shortcut",
+        "canonical semantic action key only after the strategic key; non-equivalent ties are AMBIGUOUS"
+      ],
+      "expected_behavior": "On a divergence fixture, prefer the action with greater exact public finite-deck route probability when both choices retain the hard feasibility floor, even if B3-A prefers the larger known reserve. It must not become a generic 'draw more' or automatic thinning rule.",
+      "probability_limits": ["own candidate public-count model only", "no hidden opponent list or response prior", "no successor simulation in runtime", "no manual random outcome", "no effect probability unless a CABT receipt supplies the effect transition", "no probability claim if conditioning fields are incomplete"],
+      "fail_closed": ["ambiguous hidden allocation that changes ordering", "unqualified draw/search/recovery transition", "missing route horizon or requirement", "unsupported compound action", "nonfinite or independent-draw calculation", "incomplete legal option coverage"]
+    }
+  ],
+  "deterministic_fixture_contract": {
+    "purpose": "Falsify the two ledger formulations before native integration. Fixtures are sealed public records and local-delta descriptions only; they are not native game evidence or successor inputs to PolicyV1.",
+    "fixture_requirements": [
+      "Use actual EngineObservationV1/SelectionRequestV1-compatible public fields and canonical semantic fingerprints, or an explicitly separate ledger fixture schema that cannot be imported by runtime PolicyV1.",
+      "Bind every resource/Prize unit field to a named receipt status; FIXTURE_ONLY never activates native authority.",
+      "Represent unknown own/opponent hidden allocations as intervals/count states, never as chosen card identities.",
+      "Use exact integer counts, rational probabilities or decimal values with declared precision; reject NaN/Inf/negative counts.",
+      "Present the complete option set, including all available alternatives; do not create a safe prefix or omit a control option.",
+      "Run each fixture through both formulations with semantic option permutations and both player perspectives."
+    ],
+    "fixture_materialization_requirements": {
+      "B3-F01-RESERVE-ODDS-DIVERGENCE": [
+        "Two and only two non-equivalent legal singleton options with distinct canonical semantic fingerprints and a complete option-set digest.",
+        "Public count-state tables before each option and declared exact local deltas after each option; no successor observation.",
+        "For A: explicit reserve vectors and floor values that make the selected option unique. For B: integer N/K/h or a finite count-state table plus exact Fraction numerator/denominator for each option, with a declared route predicate and opportunity-cost vector.",
+        "The fixture must show A and B selecting different options while both satisfy the hard reserve floor; if the values do not diverge, the fixture is INCONCLUSIVE rather than a formulation proof."
+      ],
+      "B3-F02-REVEALED-PRIZE-REMOVAL": [
+        "A public reveal/event receipt identifying exactly one physical copy, its before/after ledger category, and a digest proving no double count."
+      ],
+      "B3-F03-IRREPLACEABLE-DISCARD": [
+        "Exact card-role counts, recoverability receipt status, complete discard option set, and a declared forced-terminal/no-alternative flag."
+      ],
+      "B3-F04-DECKOUT-NOT-LOW-COUNT": [
+        "Public deck count plus explicit missing draw obligation, recursion/recovery, horizon, self-deck, or alternate-Prize proof fields; omitted proof must produce B0_DELEGATE."
+      ],
+      "B3-F05-COMPLETE-OPTIONS-AND-STOP": [
+        "Separate request records for mandatory singleton, optional singleton with a legal STOP token, ORDERED multi-select, and UNORDERED multi-select; each records min/max, complete available mask, and expected delegation/STOP trace."
+      ],
+      "B3-F06-LIFECYCLE-PLAYER-MIRROR": [
+        "Fresh-process records for start, terminal, error, worker replacement, duplicate/stale request, and mirrored player histories keyed by (episode_uuid, player_index, policy_id)."
+      ]
+    },
+    "named_fixtures": [
+      {
+        "id": "B3-F01-RESERVE-ODDS-DIVERGENCE",
+        "purpose": "A and B must disagree for a real reason rather than being aliases.",
+        "public_state": "Visible own route resources and exact public counts expose two legal singleton options: one preserves the larger hard known reserve; the other consumes a replaceable search resource but has the higher exact finite-deck probability of meeting a predeclared own-deck route requirement within a fixed horizon. Opponent hidden cards are absent.",
+        "expected": "A selects the higher hard-reserve option. B selects the higher conditional-probability option only when the hard reserve floor remains nonnegative. If the allocation or effect receipt is incomplete, both delegate.",
+        "anti_shortcut": "No raw option order, giant weighted score, hidden card identity or auto-thinning rationale can reproduce the expected label."
+      },
+      {
+        "id": "B3-F02-REVEALED-PRIZE-REMOVAL",
+        "purpose": "Verify that a publicly revealed/prized route-critical copy is removed from live outs.",
+        "public_state": "The same public board is shown twice; the second fixture adds a semantically identified inaccessible/revealed copy and keeps all other counts equal.",
+        "expected": "Both formulations reduce live known-out/reserve or probability as required by the receipt. Neither treats an unrevealed Prize slot as a named copy."
+      },
+      {
+        "id": "B3-F03-IRREPLACEABLE-DISCARD",
+        "purpose": "Guard DR-017 and reject generic hand-size optimization.",
+        "public_state": "Complete current discard options contain a known unique route resource and a known replaceable/dead card, with no forced terminal line.",
+        "expected": "A preserves the unique resource. B may differ only if its declared conditional route probability and hard reserve contract prove the difference; otherwise it preserves the resource."
+      },
+      {
+        "id": "B3-F04-DECKOUT-NOT-LOW-COUNT",
+        "purpose": "Guard DR-021/SF-009.",
+        "public_state": "Opponent public deck count is low, but draw obligation, recursion/recovery or faster Prize route is unknown.",
+        "expected": "Neither formulation selects deck-out as an objective or assigns a favorable terminal value; both delegate if a decision requires an unqualified alternate-win effect."
+      },
+      {
+        "id": "B3-F05-COMPLETE-OPTIONS-AND-STOP",
+        "purpose": "Verify that optional singleton and compound semantics are not silently bypassed.",
+        "public_state": "Include optional min_count=0/max_count=1, mandatory singleton, unordered multi-select, ordered multi-select and legal STOP cases with semantically permuted option transport order.",
+        "expected": "Only covered singleton/explicit STOP requests may activate. Unsupported count/order or unresolved STOP delegates B0; no fixture may produce a final action with an invalid count or duplicate index."
+      },
+      {
+        "id": "B3-F06-LIFECYCLE-PLAYER-MIRROR",
+        "purpose": "Verify public state reset and player symmetry.",
+        "public_state": "Replay identical public records across new episode/player/policy tuples, including terminal/error/worker replacement boundaries and player-1 mirror.",
+        "expected": "Identical public histories yield identical ledger digests; no prior episode/seat state leaks; all counters are isolated by (episode_uuid, player, policy_id)."
+      }
+    ],
+    "fixture_verdict": "A positive fixture result is a qualification of the evaluator boundary only. It cannot establish route strength, native effect semantics, or production authority."
+  },
+  "capability_receipts_required_before_native": {
+    "must_exist_and_be_independently_reviewed": [
+      {
+        "receipt": "PrizeStaticV1",
+        "scope": "exact current card/engine package, at least candidate and every public target used by ledger",
+        "why": "CardStatic ex/mega_ex flags do not prove CABT Prize units."
+      },
+      {
+        "receipt": "current ledger local-delta contexts",
+        "scope": "every PLAY/CARD/ATTACH/DISCARD/RECOVERY/SEARCH/ENERGY/effect request that can alter a ledger field",
+        "why": "No successor observation or tabletop effect prose may be substituted for the consumed resource."
+      },
+      {
+        "receipt": "attack and evolution capability records",
+        "scope": "only exact attack/status/energy/evolution contracts that a formulation actually scores",
+        "why": "1044/1045 and 722-to-723 remain explicit blockers; route-bounded 1042/1043/1046/1047/1262 cannot be generalized."
+      },
+    {
+      "receipt": "B3 runtime source/config/import receipt",
+      "scope": "the eventual B3-A or B3-B implementation, transitive sources, exact config, candidate import/class identity, exact deck/card/engine/wrapper hashes, and a clean dependency scan; B1 oracle or uncommitted capability code is not a substitute",
+      "why": "The B0-compatible harness requires source-local identity and reproducible provenance for the actual B3 arm."
+      },
+      {
+        "receipt": "fresh-process boundary qualification",
+        "scope": "terminal-first, complete options, semantic permutation, STOP/compound, reset, player mirror, unsupported/missing/forged fields",
+        "why": "Offline fixture success cannot hide lifecycle or adapter regressions."
+      }
+    ],
+    "current_receipts_available_but_insufficient": [
+      "Phase A exact route capsules for 1042, 1043, 1046 and 1262 within sealed strata",
+      "Phase A narrow primary Frost Barrier 1047 to 754:1089 response capsule",
+      "CardTableV1 numeric identity and exact Mega Abomasnow profile",
+      "B1 current-state oracle design and B2 continuity design"
+    ]
+  },
+  "activation_and_b0_delegation": {
+    "activation_scope": "A B3 formulation may score only a current request whose every available option is represented by a qualified public ledger feature and exact local-cost receipt.",
+    "active_request_contract": [
+      "terminal_result is checked before any selection-local field; terminal observations never reach a scorer",
+      "min_count=max_count=1, or min_count=0/max_count=1 with an explicit legal semantic STOP represented by the compound-action builder",
+      "ORDERED multi-select, max_count>1, and unresolved STOP are B0_DELEGATE unless a separately reviewed evaluator enumerates the complete action space under a fixed cap",
+      "every available option and every semantic field is validated; missing/unknown/partial options make the complete request delegate",
+      "canonical semantic fingerprint determines identity; original_index and transport order are forbidden score inputs",
+      "no unsupported MAIN, CARD, ATTACHED_CARD, ENERGY, SKILL, ATTACK, EVOLVE or follow-up effect may be ignored"
+    ],
+    "delegation_reasons": [
+      "TERMINAL_OR_STALE_REQUEST",
+      "UNKNOWN_PUBLIC_FIELD",
+      "MISSING_PRIZESTATIC",
+      "UNQUALIFIED_CAPABILITY",
+      "PARTIAL_EFFECT_OR_LOCAL_DELTA",
+      "HIDDEN_IDENTITY_REQUIRED",
+      "INCOMPLETE_LEGAL_OPTIONS",
+      "UNSUPPORTED_COUNT_OR_ORDERING",
+      "UNRESOLVED_STOP",
+      "AMBIGUOUS_NON_EQUIVALENT_TIE",
+      "STALE_OR_OUT_OF_ORDER_REQUEST",
+      "PLAYER_OR_EPISODE_LIFECYCLE_MISMATCH"
+    ],
+    "delegation_accounting": "B0_DELEGATE is a measured experimental abstention and is not final-adapter fallback. Count B3 evaluated requests, B0 delegations, unsupported reasons, and final fallback separately; delegated transitions receive no B3 selection credit."
+  },
+  "diagnostics": {
+    "per_decision_fields": [
+      "formulation_id, decision_status, delegation_reason, episode_uuid_digest, player_index, selection_seq, request_id_digest",
+      "public_observation_digest, request_digest, complete_option_count, available_option_count, ordering, min_count, max_count, stop_available",
+      "known_copy_counts_by_role, known_inaccessible_counts, unknown_count_by_role, route_requirement_digest",
+      "reserve_before, reserve_after, conditional_probability_before, conditional_probability_after, consumed_resource_classes, opportunity_cost",
+      "capability_receipt_ids, capability_scope, prize_static_receipt_id, semantic_fingerprint_of_selected_option",
+      "candidate_callback_wall_ms, candidate_cpu_ms, peak_rss_bytes, B0_delegate_count and final_fallback_count"
+    ],
+    "diagnostic_rules": [
+      "Never emit card names, hidden identities, raw native objects, private opponent data or unbounded event text.",
+      "Never log a probability without its public conditioning counts, finite-deck method, route horizon and receipt IDs.",
+      "Never call a delegated action a fallback or include it in B3 strength metrics.",
+      "Retain enough data to independently recompute every decision from the sealed public observation/request digest and versioned config."
+    ],
+    "required_counters": [
+      "b3_decisions",
+      "b3_selected_decisions",
+      "b3_delegations",
+      "unknown_resource_decisions",
+      "missing_prizestatic_decisions",
+      "partial_capability_decisions",
+      "incomplete_option_decisions",
+      "unsupported_compound_decisions",
+      "ambiguous_tie_decisions",
+      "invalid_selections",
+      "fallback_actions",
+      "post_terminal_actions",
+      "timeouts",
+      "failures",
+      "incomplete_games"
+    ]
+  },
+  "runtime_guard": {
+    "public_only": true,
+    "current_observation_only": true,
+    "no_successor_or_counterfactual": true,
+    "no_manual_randomness": true,
+    "no_hidden_deck_identity": true,
+    "no_auto_thinning": true,
+    "no_giant_weighted_score": true,
+    "probability_authority": "B3-B may rank by an exact public count-state probability only when the conditioning counts, route predicate, horizon, local-delta receipt and allocation measure are version-bound and the ordering is invariant over any unmeasured legal allocation; otherwise it delegates B0. No uniform hidden-allocation prior or engine-randomness assumption is implicit.",
+    "state_key": "(episode_uuid, player_index, policy_id)",
+    "reset_boundaries": ["deck/start", "terminal", "error", "worker_replacement"],
+    "request_identity": "monotonic selection_seq plus request_id and content digests; duplicate identical requests may be idempotent, changed/stale/out-of-order requests reject",
+    "semantic_order": "canonical semantic fingerprint only; raw option order and original_index are never strategy features",
+    "runtime_complexity": "bounded current-state count arithmetic; no search, particles, network, GPU or successor engine calls",
+    "safety_limits": {
+      "cumulative_cpu_seconds_per_game_max": 600.0,
+      "peak_rss_bytes_max": 8589934592,
+      "latency_metrics": "candidate-only p50/p95/p99 and max with request-cardinality equality",
+      "budget_source": "configs/deterministic/b0_ma_control_v1.json"
+    },
+    "promotion_blockers": [
+      "any invalid action, fallback, timeout, failure, post-terminal action, stale request, missing output, NaN/Inf or incomplete game",
+      "any source/deck/card/engine/config hash mismatch",
+      "any use of hidden identity, successor state, manual randomness, raw option order, partial effect or unqualified Prize unit",
+      "any RSS/CPU/latency limit breach or candidate callback cardinality mismatch"
+    ]
+  },
+  "comparison_and_promotion_contract": {
+    "control": "frozen public deterministic B0 Mega Abomasnow control using the exact same deck, engine, card data, wrapper, public observation contract and native anchors",
+    "arms": ["B0_CONTROL", "B3_A_KNOWN_COPY_RESERVE", "B3_B_CONDITIONAL_FINITE_ODDS"],
+    "equal_budget_definition": [
+      "same per-arm game count, four native anchors, natural deployment and candidate seat balance",
+      "same request cap, game timeout, wall timeout, worker topology, evidence cap and conservative CPU/RSS limits",
+      "same 32 semantic option permutations per candidate game and reset policy per permutation",
+      "same exact deck/card/engine/wrapper/source receipt requirements and fresh-process resume checks",
+      "no paired-seed or exact-trajectory claim; independent native randomness is analyzed as distributions",
+      "B0 delegation is recorded separately and cannot make B3 appear stronger than the control it invokes"
+    ],
+    "arm_execution": {
+      "mode": "two independent B0-compatible two-arm runs, one for B3-A versus a fresh B0 control and one for B3-B versus a fresh B0 control",
+      "control_reuse": "Do not reuse one B0 game sample across formulations or treat the two candidate arms as paired. Each run has its own sealed control manifest and independent native randomness.",
+      "per_run_arms": ["B0_CONTROL", "one_B3_FORMULATION"],
+      "all_runs_if_both_formulations": {
+        "mechanical_canary": 32,
+        "local_screen": 128,
+        "local_upper_screen": 256,
+        "private_kaggle_cpu_screen": 512,
+        "confirmation": 2048
+      },
+      "reason": "The current B0 harness is a two-arm candidate/control contract; a future three-arm harness would require a separately reviewed execution and dependence plan rather than silently reusing controls."
+    },
+    "budgets_inherited_from_b0": {
+      "mechanical_canary": {"games_per_arm": 8, "all_arms_per_formulation_run": 16, "games_per_anchor_per_candidate_seat": 1},
+      "local_screen": {"games_per_arm": 32, "all_arms_per_formulation_run": 64, "games_per_anchor_per_candidate_seat": 4},
+      "local_upper_screen": {"games_per_arm": 64, "all_arms_per_formulation_run": 128, "games_per_anchor_per_candidate_seat": 8},
+      "private_kaggle_cpu_screen": {"games_per_arm": 128, "all_arms_per_formulation_run": 256, "games_per_anchor_per_candidate_seat": 16},
+      "confirmation": {"games_per_arm": 512, "all_arms_per_formulation_run": 1024, "games_per_anchor_per_candidate_seat": 64}
+    },
+    "analysis": {
+      "primary_metric": "candidate-perspective (wins + 0.5 * draws) / completed_games",
+      "outcome": "terminal WDL only; Prize margin and route diagnostics are secondary",
+      "uncertainty": "independent anchor/seat-stratified bootstrap with 10,000 resamples and 95 percent intervals, plus Wilson intervals per arm",
+      "estimand": "Report every one of the eight anchor x candidate-seat cells. The primary candidate-minus-control comparison is the equal fixed-weight mean of the eight independently resampled cell deltas; pooled all-game WDL is descriptive only and cannot replace the cell estimand.",
+      "report": "all-anchor equal-cell aggregate, pooled descriptive aggregate, and every anchor/seat cell; forced actual-first/second diagnostics are separate",
+      "strength_credit": "Report all games and the nondelegated subset, but the primary effectiveness estimand uses all completed games and treats delegation as behavior, not a hidden oracle. Activation/delegation is never blended into WDL.",
+      "activation_gate": "A confirmation arm is INCONCLUSIVE/no-op unless it has at least 32 nondelegated B3 decisions and at least 5 percent of eligible current requests active; the local screen uses the same preregistered denominator rule with an 8-decision minimum."
+    },
+    "verdicts": {
+      "PROMOTE": "Only qualifies an experimental B3 challenger after independent raw-manifest review, zero reliability counters, no budget/provenance/semantic violations, at least the activation gate, no anchor/seat catastrophic regression, a confirmation equal-cell lower 95 percent interval for B3 minus B0 strictly above +0.02, and an observed equal-cell point estimate at least B0. It is not a deck freeze, champion, gold/medal, or submission authorization.",
+      "REJECT_FOR_RELIABILITY": "Any hard reliability, legality, provenance, hidden-information, manual-randomness or runtime-budget defect; strength result is invalid regardless of WDL.",
+      "REJECT_FORMULATION": "After the confirmation budget and clean reliability review, the upper 95 percent interval for B3 minus B0 is at or below zero, or a predeclared target-cell criterion fails without a justified new hypothesis, or any anchor/seat cell is more than 0.10 below B0 or has a hard catastrophic failure.",
+      "NO_PROMOTION_INCONCLUSIVE": "A clean result whose equal-cell lower interval is above zero but at or below +0.02, whose interval crosses zero, or whose active denominator is below the activation gate remains an unresolved challenger; do not tune after seeing outcomes.",
+      "NO_OPPORTUNITY": "If B3 has fewer than 32 active decisions or less than 5 percent activation at confirmation, report zero effective activation and no strength claim; this is not evidence that the ledger concept is false."
+    },
+    "promotion_scope": "A promoted B3 arm would still be bound to the exact Mega Abomasnow deck and receipt versions. It would not authorize a different deck, route, opponent belief, search branch or submission."
+  },
+  "staged_experiment": {
+    "stage_0_design_review": {
+      "required": ["independent JSON/schema review", "fresh KB validation and query", "fixture schema review", "no production source changes"],
+      "status": "PASS_REVIEWED_WITH_REPORT_ONLY_FIXES"
+    },
+    "stage_1_offline_fixture_gate": {
+      "required": ["implement isolated A/B evaluator", "run B3-F01 through B3-F06", "all semantic permutations", "fresh-process lifecycle and player mirror", "independent recalculation"],
+      "native_games": 0,
+      "status": "BLOCKED_IMPLEMENTATION_NOT_PRESENT"
+    },
+    "stage_2_native_mechanical_canary": {
+      "required": ["PrizeStaticV1", "runtime capability receipts", "B3-A/B-compatible candidate import/source manifest", "all options/STOP/compound/lifecycle gates", "independent review of raw sealed manifest"],
+      "games_per_arm": 8,
+      "execution": "Two separate two-arm runs, one per formulation, with a fresh B0 control arm; do not reuse the B0 mechanical sample across formulations.",
+      "status": "BLOCKED_TECHNICAL_RECEIPTS_AND_IMPLEMENTATION"
+    },
+    "stage_3_local_and_private_cpu_screens": {
+      "required": ["Stage 2 PASS", "equal-budget B0 comparison", "zero hard reliability counters", "per-anchor/seat report", "no submission"],
+      "private_kaggle_authorization": "user-authorized in principle for bounded experiments, but technical readiness is false and this design does not launch it",
+      "status": "BLOCKED"
+    },
+    "stage_4_confirmation": {
+      "required": ["clean screen", "predeclared divergence/activation", "independent review", "confirmation interval and catastrophic-cell checks"],
+      "status": "BLOCKED"
+    }
+  },
+  "readiness": {
+    "design_ready": true,
+    "fixture_ready": false,
+    "native_ready": false,
+    "production_ready": false,
+    "open_blockers": [
+      "No B3 evaluator or tests exist; this report is design-only.",
+      "PrizeStaticV1 is absent; ex/mega_ex metadata is insufficient for Prize-unit accounting.",
+      "1044/1045 and 722-to-723 evolution/status/local-delta capabilities remain unqualified.",
+      "1042/1043/1046/1047/1262 receipts are narrow and cannot be generalized outside their sealed strata.",
+      "B3 runtime source/config/import receipt and fresh-process native boundary qualification remain incomplete; B1 oracle or uncommitted capability artifacts cannot substitute.",
+      "B3-B has no approved allocation measure for hidden own deck/Prize compositions; it must use allocation-invariant ordering or delegate rather than assume a uniform prior.",
+      "The native arm execution must be two independent formulation-vs-fresh-control runs unless a separately reviewed three-arm harness and dependence analysis is introduced.",
+      "No native B3 game or Kaggle run has been executed or independently reviewed.",
+      "RQ-004, RQ-005 and RQ-007 remain open; this design establishes no route strength or deck-freeze authority."
+    ],
+    "next_exact_task": "After independent review, implement only the isolated B3-A/B fixture evaluator and tests under a new owned change, materialize B3-F01 through B3-F06 with public count states and rational finite-deck calculations, then run fresh-process fixture/permutation/lifecycle review before any native canary.",
+    "not_authorized": ["production authority", "native B3 canary", "private Kaggle B3 run", "deck freeze", "submission", "belief particles", "search", "BC or PPO training"]
+  },
+  "verification": {
+    "knowledge_base_validation_before_report": "PASS",
+    "knowledge_base_requery_after_report": "PASS",
+    "json_validation": "PASS_AFTER_REVIEW_WRITE",
+    "production_code_written": false,
+    "native_or_kaggle_run": false,
+    "commit_created": false,
+    "only_named_file_owned": {
+      "design_agent_main_report_only": true,
+      "design_agent_paths": ["reports/deterministic/phase-b3-resource-ledger-design-v1.json"],
+      "independent_reviewer_paths": ["reports/deterministic/phase-b3-resource-ledger-design-v1-review.json"],
+      "other_paths_touched": false
+    },
+    "absolute_paths_in_report": false,
+    "final_sha256": {
+      "status": "RECORDED_IN_SEPARATE_REVIEW_ARTIFACT",
+      "artifact": "reports/deterministic/phase-b3-resource-ledger-design-v1-review.json",
+      "field": "verification.design_report_sha256"
+    },
+    "independent_review": "PASS_WITH_REPORT_ONLY_FIXES; fixture implementation and native execution remain blocked"
+  }
+}
