@@ -37,6 +37,7 @@ class PublicGameMemory:
     last_turn: int = -1
     last_action_count: int = -1
     known_opponent_hand: dict[int, KnownCard] = field(default_factory=dict)
+    opponent_cards_by_serial: dict[int, int] = field(default_factory=dict)
     opponent_seen_cards: Counter[int] = field(default_factory=Counter)
     opponent_played_cards: Counter[int] = field(default_factory=Counter)
     opponent_discarded_cards: Counter[int] = field(default_factory=Counter)
@@ -50,6 +51,7 @@ class PublicGameMemory:
         self.last_turn = -1
         self.last_action_count = -1
         self.known_opponent_hand.clear()
+        self.opponent_cards_by_serial.clear()
         self.opponent_seen_cards.clear()
         self.opponent_played_cards.clear()
         self.opponent_discarded_cards.clear()
@@ -77,6 +79,7 @@ class PublicGameMemory:
         self.your_index = your_index
         self.last_turn = turn
         self.last_action_count = action_count
+        self._ingest_visible_state(current)
 
         logs = observation.get("logs")
         if not isinstance(logs, list) or not logs:
@@ -104,6 +107,13 @@ class PublicGameMemory:
         serial = log.get("serial")
         if opponent and isinstance(card_id, int):
             self.opponent_seen_cards[int(card_id)] += 1
+        if opponent:
+            self._remember_public_card(card_id, serial)
+            self._remember_public_card(log.get("cardIdTarget"), log.get("serialTarget"))
+            self._remember_public_card(log.get("cardIdActive"), log.get("serialActive"))
+            self._remember_public_card(log.get("cardIdBench"), log.get("serialBench"))
+            self._remember_public_card(log.get("cardIdBefore"), log.get("serialBefore"))
+            self._remember_public_card(log.get("cardIdAfter"), log.get("serialAfter"))
 
         if log_type == _LOG_MOVE_CARD:
             from_area = log.get("fromArea")
@@ -166,6 +176,58 @@ class PublicGameMemory:
         if log_type == _LOG_SHUFFLE:
             return
 
+    def _remember_public_card(self, card_id: object, serial: object) -> None:
+        if isinstance(card_id, int) and isinstance(serial, int):
+            self.opponent_cards_by_serial[int(serial)] = int(card_id)
+
+    def _ingest_visible_state(self, current: Mapping[str, object]) -> None:
+        if self.your_index is None:
+            return
+        players = current.get("players")
+        if not isinstance(players, list):
+            return
+        opponent_index = 1 - self.your_index
+        if not (0 <= opponent_index < len(players)):
+            return
+        opponent = players[opponent_index]
+        if not isinstance(opponent, Mapping):
+            return
+
+        def remember_card(value: object) -> None:
+            if isinstance(value, Mapping):
+                self._remember_public_card(value.get("id"), value.get("serial"))
+
+        def remember_pokemon(value: object) -> None:
+            if not isinstance(value, Mapping):
+                return
+            remember_card(value)
+            for key in ("energyCards", "tools", "preEvolution"):
+                cards = value.get(key)
+                if isinstance(cards, list):
+                    for card in cards:
+                        remember_card(card)
+
+        for key in ("active", "bench"):
+            pokemon = opponent.get(key)
+            if isinstance(pokemon, list):
+                for card in pokemon:
+                    remember_pokemon(card)
+        discard = opponent.get("discard")
+        if isinstance(discard, list):
+            for card in discard:
+                remember_card(card)
+
+        stadium = current.get("stadium")
+        if isinstance(stadium, list):
+            for card in stadium:
+                if isinstance(card, Mapping) and card.get("playerIndex") == opponent_index:
+                    remember_card(card)
+
+    def opponent_observed_card_counts(self) -> Counter[int]:
+        """Count unique physical opponent cards whose identities became public."""
+
+        return Counter(self.opponent_cards_by_serial.values())
+
     @staticmethod
     def _freeze_log(log: object) -> tuple[tuple[str, object], ...] | object:
         if not isinstance(log, Mapping):
@@ -181,3 +243,6 @@ class PublicGameMemory:
 
     def known_opponent_hand_ids(self) -> tuple[int, ...]:
         return tuple(sorted(card.card_id for card in self.known_opponent_hand.values()))
+
+    def opponent_observed_card_ids(self) -> tuple[int, ...]:
+        return tuple(sorted(self.opponent_cards_by_serial.values()))
