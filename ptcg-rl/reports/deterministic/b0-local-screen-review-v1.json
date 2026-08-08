@@ -1,0 +1,256 @@
+{
+  "record_id": "B0-MA-CONTROL-001-b0-ma-control-20260807T234227.364853Z-dd0536b23914-independent-screen-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-07T23:51:27Z",
+  "status": "AUDIT_COMPLETE_PASS_LOCAL_SCREEN_ONLY",
+  "verdict": "PASS_FOR_64_GAME_LOCAL_SCREEN_EXECUTION_ONLY",
+  "scope": {
+    "mode": "independent_read_only_raw_run_audit",
+    "run_id": "b0-ma-control-20260807T234227.364853Z-dd0536b23914",
+    "raw_run_dir": "runs/b0-ma-control-20260807T234227.364853Z-dd0536b23914",
+    "experiment_id": "B0-MA-CONTROL-001",
+    "candidate": "deterministic-strategic-mega-abomasnow-v1",
+    "candidate_deck_profile": "mega-abomasnow-ex",
+    "candidate_perspective": true,
+    "natural_deployment": true,
+    "paired_seed_claim": false,
+    "strength_claim": false,
+    "promotion_claim": false,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission_created": false
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "integrity_check": "PASS",
+    "counts": {
+      "sources": 56,
+      "claims": 62,
+      "strategies": 20,
+      "decision_rules": 36,
+      "anti_patterns": 14,
+      "search_features": 16,
+      "archetypes": 17,
+      "cards": 49,
+      "matchups": 12,
+      "matchup_plans": 20,
+      "observed_replay_patterns": 10,
+      "contradictions": 6,
+      "research_questions": 15
+    },
+    "requeried_before_review": true,
+    "open_p0_p1_questions": ["RQ-001", "RQ-002", "RQ-003", "RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-008", "RQ-009", "RQ-010", "RQ-014", "RQ-015"],
+    "unresolved_contradictions": ["CON-001", "CON-002", "CON-004"],
+    "receipt_wording_audit": "The launch receipt wording of 12 open P0/P1 questions and 3 unresolved contradictions is current and matches direct SQLite queries; it is not stale. This run does not close any item."
+  },
+  "run_provenance": {
+    "run_manifest_sha256": "d6eae798f7257cb0dfdf1aff92ae2436e54adca0b0e7210c26a6de821f11ff0a",
+    "run_plan_sha256": "a8ca3677c7ee46a154840f3cf3b6a33eaca4782ed4f1365c180c16346555f384",
+    "run_manifest_sidecar_verified": true,
+    "run_plan_sidecar_verified": true,
+    "recorded_status": "SUCCEEDED",
+    "recorded_decision": "NOT_REVIEWED",
+    "recorded_source_sha256": "005761c92d95a308872ded290c28d8224f1d1eed1f1669a65459a5748c447a58",
+    "recorded_candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+    "recorded_repository": {
+      "commit": "c2de2795a85dfb54bb2cb6a18b9710a7e2619b51",
+      "dirty": true,
+      "dirty_digest_sha256": "d900da031a525206bbdedb27cf474e8fda65980a693c594e6bafa54098f7f2c3",
+      "status_entry_count": 182
+    },
+    "current_checkout": {
+      "commit": "492701fb6125cacb1b808edb9cbb44a34eb3e7f1",
+      "dirty": true,
+      "source_tree_sha256_now": "120a864a39ec490658cc52b778b9b8b58292f3173310e10770b4f1a530a2080c",
+      "whole_tree_reconstruction": "NOT_RECOMPUTABLE"
+    },
+    "source_limitation": "The run was executed on a dirty checkout and the historical dirty tree is not retained. The recorded whole-tree source hash cannot be reconstructed from the current checkout. The immutable run plan, dirty digest, candidate source digest, and current 32 loaded-artifact receipt checks remain available; this is a provenance limitation, not a claim of clean-tree execution.",
+    "command": ["scripts/deterministic/b0_control_qualification.py", "--repo", ".", "--engine-root", "private/assets/official/sample_submission/sample_submission", "--private-baselines", "private/baselines", "--budget", "local_screen", "--independent-review-receipt", "reports/deterministic/b0-local-screen-launch-review-v1.json"],
+    "platform": {
+      "machine": "x86_64",
+      "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.35",
+      "python": "3.11.14"
+    }
+  },
+  "asset_receipts": {
+    "loaded_artifacts_recorded": 32,
+    "loaded_artifact_receipts_currently_verified": 32,
+    "candidate_source_receipt_entries_currently_verified": 11,
+    "anchor_receipt_deck_main_triplets_verified": 12,
+    "candidate_import_spec": "ptcg_rl.deterministic.policy:DeterministicStrategicPolicy",
+    "candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_deck_binding_verified": true,
+    "config_sha256": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "game_wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "sim_wrapper_sha256": "1555f57f5d22bf4c09d70e0e667a916e575e68c9dd1de9ead34ba5e7e4968655",
+    "receipt_verdict": "PASS_CURRENT_FILES_MATCH_RECORDED_BYTES_AND_SHA256"
+  },
+  "evidence_sealing": {
+    "match_json_count": 64,
+    "match_sidecar_count": 64,
+    "match_sidecars_verified": 64,
+    "manifest_match_digest_entries": 64,
+    "manifest_match_digests_verified": 64,
+    "all_retained_json_and_sidecar_files_read_only": true,
+    "verified_file_mode": "0440",
+    "sealed_file_count_checked": 132,
+    "recorded_evidence_bytes_before_manifest": 408878,
+    "retained_directory_bytes_at_review": 471895,
+    "evidence_cap_bytes": 67108864,
+    "evidence_cap_verdict": "PASS"
+  },
+  "criteria": {
+    "exact_game_counts": {
+      "verdict": "PASS",
+      "requested": 64,
+      "recorded": 64,
+      "completed": 64,
+      "candidate_arm": {"requested": 32, "recorded": 32, "completed": 32},
+      "control_arm": {"requested": 32, "recorded": 32, "completed": 32},
+      "per_anchor_per_candidate_seat": 4
+    },
+    "candidate_perspective_wdl": {
+      "verdict": "PASS",
+      "mapping": "candidate win iff terminal_result == candidate_player; terminal result codes were only 0 or 1; player-1 inversion was independently applied",
+      "candidate_arm": {
+        "wins": 15,
+        "draws": 0,
+        "losses": 17,
+        "score": 0.46875,
+        "wilson_95": [0.30869387108068835, 0.6355048288102536],
+        "per_anchor": {
+          "rule:dragapult-ex": {"wins": 6, "draws": 0, "losses": 2, "score": 0.75},
+          "rule:iono": {"wins": 2, "draws": 0, "losses": 6, "score": 0.25},
+          "rule:mega-abomasnow-ex": {"wins": 3, "draws": 0, "losses": 5, "score": 0.375},
+          "rule:mega-lucario-ex": {"wins": 4, "draws": 0, "losses": 4, "score": 0.5}
+        },
+        "per_anchor_seat_wdl": {
+          "rule:dragapult-ex": {"candidate_player_0": [3, 0, 1], "candidate_player_1": [3, 0, 1]},
+          "rule:iono": {"candidate_player_0": [0, 0, 4], "candidate_player_1": [2, 0, 2]},
+          "rule:mega-abomasnow-ex": {"candidate_player_0": [1, 0, 3], "candidate_player_1": [2, 0, 2]},
+          "rule:mega-lucario-ex": {"candidate_player_0": [2, 0, 2], "candidate_player_1": [2, 0, 2]}
+        }
+      },
+      "control_arm": {
+        "wins": 13,
+        "draws": 0,
+        "losses": 19,
+        "score": 0.40625,
+        "wilson_95": [0.2551963484266544, 0.5773997512461713],
+        "per_anchor": {
+          "rule:dragapult-ex": {"wins": 4, "draws": 0, "losses": 4, "score": 0.5},
+          "rule:iono": {"wins": 1, "draws": 0, "losses": 7, "score": 0.125},
+          "rule:mega-abomasnow-ex": {"wins": 3, "draws": 0, "losses": 5, "score": 0.375},
+          "rule:mega-lucario-ex": {"wins": 5, "draws": 0, "losses": 3, "score": 0.625}
+        },
+        "per_anchor_seat_wdl": {
+          "rule:dragapult-ex": {"candidate_player_0": [2, 0, 2], "candidate_player_1": [2, 0, 2]},
+          "rule:iono": {"candidate_player_0": [1, 0, 3], "candidate_player_1": [0, 0, 4]},
+          "rule:mega-abomasnow-ex": {"candidate_player_0": [1, 0, 3], "candidate_player_1": [2, 0, 2]},
+          "rule:mega-lucario-ex": {"candidate_player_0": [3, 0, 1], "candidate_player_1": [2, 0, 2]}
+        }
+      }
+    },
+    "candidate_control_bootstrap": {
+      "verdict": "PASS_DESCRIPTIVE_ONLY",
+      "method": "independent two-sample bootstrap of per-game scores; not paired",
+      "resamples": 10000,
+      "seed": 17,
+      "candidate_minus_control_score_delta": 0.0625,
+      "percentile_2_5": -0.1875,
+      "percentile_50": 0.0625,
+      "percentile_97_5": 0.3125
+    },
+    "seat_balance": {
+      "verdict": "PASS",
+      "candidate_arm": {"candidate_player_0": 16, "candidate_player_1": 16},
+      "control_arm": {"candidate_player_0": 16, "candidate_player_1": 16},
+      "natural_first_player_retained_separately": true
+    },
+    "reliability": {
+      "verdict": "PASS",
+      "invalid_selections": 0,
+      "fallback_actions": 0,
+      "post_terminal_actions": 0,
+      "timeouts": 0,
+      "failures": 0,
+      "incomplete_games": 0,
+      "missing_outputs": 0,
+      "all_records_status_pass": true,
+      "stop_reason": null
+    },
+    "permutation_control": {
+      "verdict": "PASS_SELECTED_TRANSITIONS_ONLY",
+      "candidate_games_checked": 32,
+      "permutations_requested_per_game": 32,
+      "permutations_executed": 1024,
+      "ordering": "UNORDERED",
+      "equivalence": "set",
+      "equivalent": 1024,
+      "non_equivalent": 0,
+      "policy_reset_before_each_permutation": true,
+      "paired_seed_claim": false,
+      "coverage": "one selected candidate transition with at least five options per candidate game, not every transition"
+    },
+    "evaluated_policy_latency": {
+      "verdict": "PASS",
+      "all_action_latency_arrays_finite_nonnegative": true,
+      "all_action_latency_array_lengths_equal_engine_requests": true,
+      "evaluated_policy_latency_lengths_equal_recorded_counts": true,
+      "candidate_arm_policy": {"count": 994, "p50_ms": 3.2043829996837303, "p95_ms": 5.57833600032609, "p99_ms": 7.12569999450352, "max_ms": 9.515297999314498},
+      "control_arm_policy": {"count": 958, "p50_ms": 0.43227588822581514, "p95_ms": 0.7143510010791942, "p99_ms": 0.9830359995248728, "max_ms": 2.079636004054919}
+    },
+    "per_game_runtime_safety": {
+      "verdict": "PASS_BOUNDED_RUN_GUARD",
+      "caps": {"cpu_seconds_per_game": 600.0, "rss_bytes": 8589934592, "wall_seconds_per_game": 180, "request_cap": 20000, "session_wall_seconds": 1800},
+      "candidate_arm": {"cpu_seconds_min": 0.154644716, "cpu_seconds_max": 0.687106133, "wall_seconds_max": 0.6871062909995089, "peak_rss_bytes_max": 47542272, "engine_requests_min": 19, "engine_requests_max": 232},
+      "control_arm": {"cpu_seconds_min": 0.071239501, "cpu_seconds_max": 0.4021108, "wall_seconds_max": 0.4021099950041389, "peak_rss_bytes_max": 46292992, "engine_requests_min": 20, "engine_requests_max": 217},
+      "session_wall_seconds": 25.115240268998605,
+      "cumulative_wall_seconds": 25.11729645729065,
+      "aggregate_cpu_seconds": 18.530862705999994,
+      "aggregate_peak_rss_bytes": 47542272
+    },
+    "budget_and_evidence": {
+      "verdict": "PASS",
+      "budget_name": "local_screen",
+      "games_total_scope": "per_arm",
+      "games_total_per_arm": 32,
+      "games_total_all_arms": 64,
+      "game_timeout_seconds": 180,
+      "wall_seconds": 1800,
+      "request_cap": 20000,
+      "recorded_evidence_bytes_before_manifest": 408878,
+      "retained_directory_bytes_at_review": 471895,
+      "evidence_cap_bytes": 67108864
+    },
+    "external_action_firewall": {
+      "verdict": "PASS",
+      "training_performed": false,
+      "kaggle_runs": 0,
+      "submission_created": false,
+      "external_mutation": false
+    },
+    "false_success_audit": {
+      "verdict": "PASS_OBSERVED_RECORDS_WITH_RESIDUAL_LIMITATION",
+      "observed_guards": ["status pass", "terminal result present", "all required hard counters zero", "all 64 task identities and manifest digests verified", "latency and metric cardinality/caps verified", "stop-on-first reliability condition was not triggered"],
+      "observed_non_degenerate_records": {"terminal_results": [0, 1], "engine_requests_min": 19, "evaluated_policy_requests_min": 3, "first_player_values": [0, 1]},
+      "residual_limitation": "The harness validates nonnegative request counts but does not separately require engine_requests > 0. No zero-request record occurred in this run, and this raw execution review does not silently convert that code-level limitation into a promotion claim."
+    }
+  },
+  "limitations_and_nonclaims": [
+    "This is mechanical/reliability evidence for the exact 64-game local screen only, not competence, matchup strength, medal probability, or promotion evidence.",
+    "The candidate-minus-control point delta is +0.0625, but the descriptive bootstrap interval includes zero and n=32 per arm is not a deployment estimate.",
+    "The permutation check covers one selected transition per candidate game, not every transition.",
+    "The raw run used a dirty checkout; current receipt checks do not reconstruct the historical whole-tree source hash.",
+    "No Phase A PARTIAL route is upgraded by this B0 result.",
+    "No deck freeze, Kaggle launch, submission, training launch, or external action is authorized by this review."
+  ],
+  "next_task": "Do not launch the upper screen automatically. First preserve this review, re-query the knowledge base, and require a separately frozen/preregistered scale execution path plus a fresh independent launch review. Only then may the parent decide whether the upper screen is justified; this review itself grants no scale or promotion authorization."
+}
