@@ -217,9 +217,20 @@ class PublicGameMemory:
             for card in discard:
                 remember_card(card)
 
+        prize = opponent.get("prize")
+        if isinstance(prize, list):
+            for card in prize:
+                remember_card(card)
+
         stadium = current.get("stadium")
         if isinstance(stadium, list):
             for card in stadium:
+                if isinstance(card, Mapping) and card.get("playerIndex") == opponent_index:
+                    remember_card(card)
+
+        looking = current.get("looking")
+        if isinstance(looking, list):
+            for card in looking:
                 if isinstance(card, Mapping) and card.get("playerIndex") == opponent_index:
                     remember_card(card)
 

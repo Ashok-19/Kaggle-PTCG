@@ -82,6 +82,25 @@ def test_copy_count_contradiction_eliminates_template():
     assert by_name["beta"].normalized_weight == 1.0
 
 
+def test_weighted_templates_preserve_ambiguity_and_renormalize():
+    alpha = DeckTemplate("alpha", _deck(100, 102), frozenset({100}))
+    beta = DeckTemplate("beta", _deck(200, 102), frozenset({200}))
+    registry = ArchetypeRegistry([alpha, beta])
+    weighted = registry.weighted_templates({102: 1})
+    assert weighted == ((beta, 0.5), (alpha, 0.5)) or weighted == ((alpha, 0.5), (beta, 0.5))
+
+    weighted = registry.weighted_templates({100: 1, 102: 1})
+    assert weighted == ((alpha, 1.0),)
+
+
+def test_weighted_templates_reject_strategy_fusion_inputs_only_by_compatibility():
+    alpha = DeckTemplate("alpha", _deck(100, 100), frozenset({100}))
+    beta = DeckTemplate("beta", _deck(100, 100, 100), frozenset({100}))
+    registry = ArchetypeRegistry([alpha, beta])
+    weighted = registry.weighted_templates({100: 3})
+    assert weighted == ((beta, 1.0),)
+
+
 def test_known_hand_reveal_is_also_unique_archetype_evidence():
     memory = PublicGameMemory()
     memory.ingest(

@@ -140,6 +140,50 @@ class ArchetypeRegistry:
             )
         )
 
+    def weighted_templates(
+        self,
+        memory: PublicGameMemory | Mapping[int, int],
+        *,
+        max_templates: int = 4,
+        cumulative_weight: float = 0.95,
+        min_weight: float = 0.01,
+    ) -> tuple[tuple[DeckTemplate, float], ...]:
+        """Return a renormalized plausible set for information-set search.
+
+        Sparse evidence deliberately leaves several templates alive. The caller
+        must aggregate a single root decision across these worlds rather than
+        choosing a template-specific action (strategy fusion).
+        """
+
+        if max_templates <= 0:
+            raise ValueError("max_templates must be positive")
+        if not 0.0 < cumulative_weight <= 1.0:
+            raise ValueError("cumulative_weight must be in (0, 1]")
+        if not 0.0 <= min_weight <= 1.0:
+            raise ValueError("min_weight must be in [0, 1]")
+
+        ranked = [row for row in self.rank(memory) if row.compatible]
+        if not ranked:
+            return ()
+        by_name = {template.name: template for template in self.templates}
+        selected: list[tuple[DeckTemplate, float]] = []
+        cumulative = 0.0
+        for row in ranked:
+            if selected and row.normalized_weight < min_weight:
+                continue
+            selected.append((by_name[row.name], row.normalized_weight))
+            cumulative += row.normalized_weight
+            if len(selected) >= max_templates or cumulative >= cumulative_weight:
+                break
+
+        total = sum(weight for _, weight in selected)
+        if total <= 0.0:
+            # This can only happen when every compatible row has zero support;
+            # rank() normally assigns a uniform prior, but stay defensive.
+            uniform = 1.0 / len(selected)
+            return tuple((template, uniform) for template, _ in selected)
+        return tuple((template, weight / total) for template, weight in selected)
+
     def qualified_template(
         self,
         memory: PublicGameMemory | Mapping[int, int],
