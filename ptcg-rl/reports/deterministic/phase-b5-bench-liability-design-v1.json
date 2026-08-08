@@ -1,0 +1,1044 @@
+{
+  "record_id": "phase-b5-bench-liability-design-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T03:02:01Z",
+  "status": "DESIGN_ONLY_NATIVE_BLOCKED",
+  "decision": "PREREGISTER_TWO_PUBLIC_BENCH_FORMULATIONS",
+  "scope": {
+    "phase": "B5",
+    "component": "bench-role-and-liability-planner",
+    "mode": "read_only_isolated_falsifiable_experiment_design",
+    "candidate_deck": "mega-abomasnow-ex",
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission": false,
+    "deck_freeze": false,
+    "production_authority": false,
+    "promotion": false,
+    "private_assets_modified": false,
+    "only_owned_file_created": "reports/deterministic/phase-b5-bench-liability-design-v1.json",
+    "negative_claims": [],
+    "strength_claim": false,
+    "native_block_reason": "No B5 evaluator, complete role/liability receipts, exact Prize/gust/spread receipts, or independently reviewed B0-compatible import exists. This report defines fixture and later experiment contracts only; it authorizes no native or Kaggle execution."
+  },
+  "provenance": {
+    "audited_head": "a108353ade9ac57cc293a551fa90572fe0e29f07",
+    "worktree": {
+      "pre_existing_dirty": true,
+      "owned_path_isolation": "Only the named B5 report is owned by this task. Existing dirty and untracked paths were not edited, reverted, staged, or treated as B5 authority.",
+      "commit_created": false,
+      "external_services_used": false,
+      "absolute_paths_in_report": false
+    },
+    "authoritative_specification": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "source_hashes": {
+      "AGENTS.md": "ab2b5b4ceea5569122ea9e60dcb7d165e8b45df8e548910537e154647bfa17ae",
+      "PROJECT_STATUS.md": "c533dfb407aa23c863c9e27e46982b9b7d4017694b1c9f3c5f8da432104c1d30",
+      "PROGRESS_REPORT.md": "8c3a2f88da88c92722fa5582433230e02949537aaeaff3e398842c88de939a6c",
+      "G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md": "8c5204a955b3db7b5f48c68b5156735bb179ef759fa969190b912d799c43b64f",
+      "reports/deterministic/deterministic-gold-architecture-v1.md": "dc06157ec125e18aecac9c9e49ff030f16d76a43905c201705e3b713fb287afd",
+      "reports/deterministic/phase-b1-prize-route-design-v1.json": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7",
+      "reports/deterministic/phase-b2-continuity-design-v1.json": "f6bb73529fbb1e39e1b4555711c9f912372c3cb4729c7836c31763e362706c83",
+      "reports/deterministic/phase-b3-resource-ledger-design-v1.json": "b89738c8e1a5e0a1417f7d78a103b94177f49755dc5fbf5c1fbdb9b378f5ff61",
+      "reports/deterministic/phase-b3-resource-ledger-design-v1-review.json": "fb91a4611736ac448513524c2168f1c9a23b496730721a2f6fe46b4e024536a9",
+      "reports/deterministic/phase-b3-resource-ledger-fixture-review-v1.json": "0d06c42a8449eb3407c275d3fbe054d72484cc336915976451f909ebe8c579d3",
+      "reports/deterministic/phase-b4-opponent-threat-design-v1.json": "3acbad5bd73fd421f1aa8a0af983ab99cfecaa4380997f1425e5e6283a1ce2e1",
+      "reports/deterministic/phase-b4-opponent-threat-design-v1-review.json": "67c3ceabbae8f3b61ab255297c3ff1462167f9f59fcb9e6ce413700eb889c836",
+      "reports/deterministic/phase-b4-opponent-threat-fixture-review-v1.json": "d0d5a7c768a98b521162523fec33384feecde089d2937038aad9423277fc4d14",
+      "configs/deterministic/b0_ma_control_v1.json": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+      "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709",
+      "src/ptcg_rl/deterministic/control.py": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+      "src/ptcg_rl/deterministic/policy.py": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6",
+      "src/ptcg_rl/deterministic/harness.py": "93ec0c10c73acba80066a8388f9df53308adcee409071726bf649b651cec7e90",
+      "src/ptcg_rl/deterministic/diagnostics.py": "2f8450939018a2563088a4df67a5b3676fb420e48b6fc4886328189712198d0b"
+    }
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "schema_sha256": "ad32ab34928414639881a911e3b79485838c087b83b078f900a00dc9b6908ab8",
+    "validation_before_design": "PASS",
+    "validation_after_design": "PASS",
+    "query_log": [
+      "validate_db.py",
+      "query_db.py stats",
+      "query_db.py unresolved",
+      "query_db.py rules --context bench",
+      "query_db.py search bench liability",
+      "query_db.py search reserve bench capacity",
+      "query_db.py search bench role",
+      "query_db.py search gust spread prize",
+      "SELECT * FROM decision_rules WHERE id='DR-015'",
+      "SELECT * FROM strategies WHERE id='STR-005'",
+      "SELECT * FROM search_features WHERE id='SF-006'",
+      "SELECT * FROM contradictions WHERE id IN ('CON-001','CON-002','CON-004')"
+    ],
+    "queried_ids": {
+      "decision_rules": [
+        "DR-015",
+        "DR-007",
+        "DR-008",
+        "DR-012",
+        "DR-014",
+        "DR-018",
+        "DR-023",
+        "DR-024",
+        "DR-025",
+        "DR-030",
+        "DR-031",
+        "DR-032",
+        "DR-033"
+      ],
+      "strategies": [
+        "STR-005",
+        "STR-003",
+        "STR-004",
+        "STR-007"
+      ],
+      "search_features": [
+        "SF-006",
+        "SF-004",
+        "SF-005",
+        "SF-007",
+        "SF-002",
+        "SF-003"
+      ],
+      "anti_patterns": [
+        "AP-001",
+        "AP-002",
+        "AP-008",
+        "AP-009",
+        "AP-011",
+        "AP-014"
+      ],
+      "contradictions": [
+        "CON-001",
+        "CON-002",
+        "CON-004"
+      ],
+      "research_questions": [
+        "RQ-003",
+        "RQ-004",
+        "RQ-005",
+        "RQ-006",
+        "RQ-007",
+        "RQ-013"
+      ]
+    },
+    "binding_rows": {
+      "DR-015": "Reserve bench capacity for route-critical roles; do not bench a support/liability unless its immediate value exceeds its future slot and Prize liability. This is a HIGH-confidence research-only heuristic with exact-deck exceptions, not runtime authority.",
+      "STR-005": "Value each slot by future attacker, draw engine, pivot, liability and target-denial roles; reserve the minimum board needed by the route and avoid liabilities unless immediate value exceeds exposure. Full-bench engine requirements are explicit exceptions.",
+      "SF-006": "bench_liability is minimized and combines public Prize value, gust access, spread thresholds and role necessity. It is a feature hypothesis, not permission to infer effects.",
+      "CON-001": "Immediate Prize and full-route robustness are state-dependent. B5-A therefore guards route-role feasibility before capacity preference; B5-B cannot trade away a hard role floor merely for lower liability.",
+      "CON-002": "Bench filling is not auto-thinning. A current placement is evaluated only with exact local delta and explicit opportunity/role evidence; no fixed fill order or generic consistency bonus is allowed.",
+      "CON-004": "Semantic action identity is authoritative. All fixture and native comparisons require option permutation controls; original_index and generation order are never a strategic feature."
+    },
+    "evidence_links": {
+      "B1-F12": "reports/deterministic/phase-b1-prize-route-design-v1.json: fixture F12-bench-liability requires equal terminal distance, a high-Prize liability versus preserved capacity/live backup, and bench_liability only as a later key.",
+      "B2": "reports/deterministic/phase-b2-continuity-design-v1.json: next-attacker/backup role readiness is public, route-qualified, current-local-delta only, and unknown capability delegates.",
+      "B3": "reports/deterministic/phase-b3-resource-ledger-design-v1.json and its fixture review: public known copies and exact local costs may be used, but hidden allocations, unqualified effects and unknown Prize units remain unknown; fixture pass is not native authority.",
+      "B4": "reports/deterministic/phase-b4-opponent-threat-design-v1.json and fixture review: every capability/local-delta graph must be receipt-bound; current threat, target, status and energy fields cannot be supplied by prose or a forged whole receipt. B5 adopts these as hard design constraints.",
+      "G1": "G1_ENVIRONMENT_ACTION_CONTRACT_REPORT.md: terminal-first processing, complete legal options, semantic option fields, ordered compound selection, legal STOP and lifecycle reset are binding."
+    },
+    "interpretation": "The KB supports two isolated, falsifiable bench hypotheses. It does not prove that any card role, Prize unit, gust access, spread threshold or route necessity is known at runtime. Native activation requires exact current CABT receipts and an independently reviewed source/config/import boundary."
+  },
+  "hypothesis_and_non_goals": {
+    "question": "When a current legal action would place a visible card onto a limited bench, does a public route-role/capacity reserve or an exact receipt-bounded liability rule improve held-out terminal WDL over the frozen public B0 control?",
+    "hypotheses": [
+      "B5-A will favor a route-critical role or preserve required future capacity when the role reserve is the only public differentiator, even if a lower-liability support option exists.",
+      "B5-B will select a lower-liability option only when exact public Prize/gust/spread vectors strictly dominate and the hard route-role floor remains satisfied; incomparable or unknown vectors delegate.",
+      "The formulations will diverge on a sealed public fixture and agree on a control fixture. Native WDL benefit is unproven until the staged equal-budget experiment is completed."
+    ],
+    "non_goals": [
+      "No universal bench cap or automatic filling policy.",
+      "No hidden opponent archetype, hand, deck or Prize prior.",
+      "No successor observation, counterfactual terminal outcome or future response simulation at PolicyV1 runtime.",
+      "No card prose, card name, ex/mega flag, static damage or tabletop memory as executable semantics.",
+      "No blended role/liability/gold score; each formulation has a named lexicographic or strict-dominance key.",
+      "No native, Kaggle, production, deck-freeze or submission authority from fixtures or this report."
+    ]
+  },
+  "overlap_and_double_counting_contract": {
+    "purpose": "Keep B5's two formulations and its B1-B4 lineage separate, so the experiment does not count one public fact twice or silently import an earlier fixture as runtime authority.",
+    "lineage_only": {
+      "B1_F12": "B1-F12 is a lineage and fixture target for equal terminal distance, capacity/live-backup contrast and a later bench-liability diagnostic. It is not an active B5 runtime oracle, and B5 must not reuse a B1 route-completion, successor or bench-liability proxy as a receipt.",
+      "B2": "B2 continuity evidence may supply a qualified role/local-delta receipt only once per exact receipt_id and current observation digest. B5 must not re-score a B2 readiness or backup feature as a second independent role count; shared receipt IDs are unioned and deduplicated before formulation scoring.",
+      "B3": "B3 resource/Prize evidence may establish a public identified-card ledger only within its exact scope. B5 must not count the same visible card, PrizeStatic record, known-copy fact or capacity change twice, and hidden/facedown counts remain unknown. B3 fixture evidence cannot authorize native B5 semantics.",
+      "B4": "B4 threat evidence may be referenced through exact current gust/spread receipt IDs and source/target graph fields only. B5-B must not add a B4 threat score, response likelihood, static attack/prose feature or successor value on top of the receipt-owned gust/spread ordinals. B4-RED-008/009 content and graph checks remain binding, but B4 is not B5 authority."
+    },
+    "formulation_isolation": [
+      "B5-A consumes route-role/local-delta terms and may use the exact liability vector only as its named deterministic tie term; it never adds a B5-B liability score or blends role and liability into one scalar.",
+      "B5-B consumes the hard role floor plus a strict component-wise liability-dominance relation; optional role surplus, B1 route score, B2 readiness score and B4 threat score are not extra terms.",
+      "A card may carry separate qualified role and liability receipts, but the card is one entity in one local-delta graph. Receipt IDs, entity keys, observation digests and option fingerprints are deduplicated before either formulation is evaluated.",
+      "The shared B0 control is a comparison arm only. Its output, private state or trajectory is never a B5 feature or receipt input."
+    ],
+    "required_overlap_tests": [
+      "A fixture with the same B2 role receipt referenced twice must produce one coverage count, not two.",
+      "A fixture with one visible card carrying ROLE and LIABILITY labels must retain separate receipt provenance but must not double its occupancy, Prize unit or local-delta contribution.",
+      "A B4 gust/spread receipt with a changed source, target, option fingerprint, observation digest or asset scope must delegate; no stale B4 threat value may survive.",
+      "Running A and B on the same public fixture must show the declared divergence or control result without feeding A's result, B's result or B0 output into the other arm."
+    ]
+  },
+  "public_current_state_contract": {
+    "runtime_observation": "Current EngineObservationV1 and current SelectionRequestV1 after terminal-first validation; only prior public transitions delivered to this policy instance may be retained.",
+    "allowed_inputs": [
+      "schema_version, battle_id, transition_id, episode identity, acting_player, terminal_result, turn and turn_action_count",
+      "public first-player marker and public supporter/stadium/energy/retreat flags",
+      "both PlayerViewV1 rows: player_index, bench_max, deck_count, hand_count, prize_count, visible_prize_count, hand_visible and facedown_active_count",
+      "all visible own and opponent entities: entity_key, card_id, serial where public, owner, zone, position, parent_entity_key, hp, max_hp, damage, appear_this_turn, energy_types, attached_energy_count, attached_tool_count, evolution_depth, public statuses and visible",
+      "public event fields from the versioned G1 event schema, only as observations; event text is never executable semantics",
+      "the complete current legal option set and request fields: selection/option type and context, source/target references, card/attack/energy identifiers, choice_role, availability, min/max count, ordering and canonical semantic fingerprint",
+      "exact candidate DeckProfileV1 and versioned numeric CardStaticV1/AttackStaticV1 metadata as static identity only",
+      "receipt-bound public role, local-delta, Prize, gust and spread fields defined below"
+    ],
+    "derived_current_features": [
+      "bench_occupancy and bench_capacity_slack from the current public board",
+      "route_role_requirements and visible role coverage from qualified current route/continuity receipts only",
+      "required_role_slots and role_surplus after an exact current local delta, never after a successor call",
+      "public Prize units only for a visible identified card under PrizeStaticV1; unknown facedown slots are intervals/counts, never named copies",
+      "receipt-defined gust exposure and spread exposure for visible entities only; absence of a receipt is UNKNOWN, not zero",
+      "canonical semantic option keys and request content digests"
+    ],
+    "forbidden_inputs": [
+      "opponent hidden hand, deck, facedown Prize identity, hidden archetype or inferred exact list",
+      "own hidden deck or Prize identity, deck order, or an unseen copy treated as live/dead",
+      "successor observation, future response class, counterfactual outcome, response likelihood or search rollout",
+      "raw native objects, private baselines, option original_index, transport list order or option generation order",
+      "card-effect prose, card names, ex/mega flags or static damage used as role, Prize, gust or spread semantics",
+      "manual coin/random outcome or a Python seed claim",
+      "a role, local delta, Prize unit, gust capability or spread threshold not covered by the exact receipt graph"
+    ]
+  },
+  "receipt_and_boundary_contract": {
+    "authority_rule": "No B5 score is computed unless every field in the selected formulation is bound to the canonical fixture/native receipt manifest for the exact current public snapshot and semantic option. Fixture-only receipts can qualify arithmetic and boundary behavior only; they cannot qualify native semantics or policy strength.",
+    "required_receipts": [
+      {
+        "receipt": "BenchRoleReceiptV1",
+        "required_fields": [
+          "receipt_id",
+          "entity_key",
+          "card_id",
+          "owner",
+          "zone",
+          "role_id",
+          "role_status",
+          "qualification_id",
+          "qualification_status",
+          "route_id",
+          "necessity",
+          "required_count",
+          "source_observation_digest",
+          "metadata_ref",
+          "candidate_deck_profile",
+          "candidate_deck_sha256",
+          "card_data_sha256",
+          "card_table_file_sha256",
+          "card_table_semantic_sha256",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "scope_version"
+        ],
+        "rules": [
+          "A role is an exact public annotation for a visible entity under a qualified route/continuity capsule; it is not inferred from card name, prose, rarity, HP or common deck knowledge.",
+          "Allowed role IDs are NEXT_ATTACKER, BACKUP_ATTACKER, DRAW_ENGINE, PIVOT, ROUTE_SUPPORT, GUST_TARGET, SPREAD_TARGET, LIABILITY and UNCLASSIFIED. Role overlap is legal only when each role has a separate receipt and the role graph is internally consistent.",
+          "role_status is an allowlisted public state: COVERED, REQUIRED_UNCOVERED, EXPOSED, CONFLICT or UNKNOWN; only COVERED rows can increase role coverage, and CONFLICT/UNKNOWN cannot be scored.",
+          "qualification_status is an allowlisted authority state: QUALIFIED_CABT_CAPSULE, FIXTURE_ONLY, PARTIAL, CONFLICT or UNKNOWN. Native execution accepts only QUALIFIED_CABT_CAPSULE; FIXTURE_ONLY is restricted to fixture arithmetic and boundary tests.",
+          "Role necessity is an allowlisted public enum REQUIRED, USEFUL, OPTIONAL, EXPOSED, FORBIDDEN or UNKNOWN. UNKNOWN never improves a key.",
+          "The qualification_id, metadata_ref, fixture/config digests and receipt_manifest_sha256 are content-bound to the exact role tuple, source observation and scoped card/deck assets; labels alone do not qualify a role.",
+          "Conflicting role receipts for the same entity/route/count or mismatched owner/zone/card identity delegate before scoring."
+        ]
+      },
+      {
+        "receipt": "BenchLocalDeltaV1",
+        "required_fields": [
+          "receipt_id",
+          "option_semantic_fingerprint",
+          "option_semantic_payload_digest",
+          "selection_type",
+          "selection_context",
+          "option_type",
+          "current_public_observation_digest",
+          "source_entity_key",
+          "target_entity_key",
+          "source_card_id",
+          "target_card_id",
+          "source_owner",
+          "target_owner",
+          "source_zone",
+          "target_zone",
+          "source_metadata_ref",
+          "target_metadata_ref",
+          "choice_role",
+          "before_bench_occupancy",
+          "after_bench_occupancy",
+          "before_role_coverage",
+          "after_role_coverage",
+          "after_role_surplus",
+          "affected_role_receipt_ids",
+          "no_successor_fields",
+          "qualification_id",
+          "qualification_status",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "scope_version"
+        ],
+        "rules": [
+          "The receipt may describe only the deterministic current action-local placement/capacity/role delta that the current option semantically represents.",
+          "A post-action engine snapshot, terminal result, changed HP/status, future attack, future draw, or response is forbidden and causes SUCCESSOR_VALUE_FORBIDDEN.",
+          "The canonical option semantic payload digest is recomputed from the current LegalOptionV1 selection/option type and context, source/target card/entity/owner/zone/metadata references and choice_role; every corresponding field must match exactly. Raw index cannot bind a delta. A semantically absent source or target is represented by the contract's explicit null sentinel and is still hashed.",
+          "The qualification_id, observation digest, affected role receipt IDs and manifest digests must bind this delta to the same current public graph; one local delta is counted once even when multiple lineage reports reference it.",
+          "Missing, duplicate, unregistered or content-mismatched local deltas delegate; no safe option prefix is submitted."
+        ]
+      },
+      {
+        "receipt": "PrizeStaticV1",
+        "required_fields": [
+          "receipt_id",
+          "engine_hash",
+          "card_data_sha256",
+          "card_table_file_sha256",
+          "card_table_semantic_sha256",
+          "native_library_sha256",
+          "wrapper_hashes",
+          "card_id",
+          "metadata_ref",
+          "prize_units",
+          "source_observation_digest",
+          "candidate_deck_profile",
+          "candidate_deck_sha256",
+          "anchor_deck_profile",
+          "anchor_deck_sha256",
+          "qualification_id",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "scope_version",
+          "qualification_status"
+        ],
+        "rules": [
+          "prize_units must be a finite nonnegative integer defined by exact current CABT semantics for the identified public card.",
+          "CardStatic ex/mega flags, card type, HP, prose and tabletop convention are not PrizeStaticV1.",
+          "A facedown or hidden card has no named Prize unit; it remains UNKNOWN and cannot be used as a favorable or unfavorable liability fact.",
+          "The card identity, metadata reference, current observation, candidate/anchor deck scope and engine/library/wrapper/card-table hashes are one canonical receipt scope; a PrizeStatic value cannot be copied to another entity, anchor or deck.",
+          "Any missing, conflicting or out-of-scope PrizeStaticV1 record delegates B5-B and any B5-A key that uses Prize liability."
+        ]
+      },
+      {
+        "receipt": "GustExposureV1",
+        "required_fields": [
+          "receipt_id",
+          "qualification_id",
+          "option_semantic_fingerprint",
+          "current_public_observation_digest",
+          "source_entity_key",
+          "target_entity_key",
+          "source_card_id",
+          "target_card_id",
+          "source_owner",
+          "target_owner",
+          "source_zone",
+          "target_zone",
+          "source_metadata_ref",
+          "target_metadata_ref",
+          "target_role",
+          "current_targetable",
+          "route_conversion_class",
+          "qualification_status",
+          "engine_hash",
+          "native_library_sha256",
+          "wrapper_hashes",
+          "card_data_sha256",
+          "card_table_file_sha256",
+          "card_table_semantic_sha256",
+          "anchor_deck_sha256",
+          "candidate_deck_sha256",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "scope_version"
+        ],
+        "rules": [
+          "Exposure is a public capability/targetability class for a visible bench entity, not the probability that an unseen gust card exists or will be chosen.",
+          "No hidden gust identity, opponent hand count shortcut or inferred archetype branch is allowed.",
+          "A card/attack/effect may supply gust exposure only through an exact native receipt; card prose and static attack metadata are insufficient.",
+          "Source/target identity, option fingerprint, current observation and asset/deck scope must match the public option/entity graph and canonical manifest; a B4 threat receipt is referenced, not rescored as an additional feature.",
+          "If current targetability, source, target role or route-conversion class is unknown, exposure is UNKNOWN rather than zero."
+        ]
+      },
+      {
+        "receipt": "SpreadExposureV1",
+        "required_fields": [
+          "receipt_id",
+          "qualification_id",
+          "option_semantic_fingerprint",
+          "current_public_observation_digest",
+          "source_entity_key",
+          "target_entity_key",
+          "source_card_id",
+          "target_card_id",
+          "source_owner",
+          "target_owner",
+          "source_zone",
+          "target_zone",
+          "source_metadata_ref",
+          "target_metadata_ref",
+          "target_role",
+          "current_spread_threshold",
+          "current_damage_counter_state",
+          "response_class",
+          "qualification_status",
+          "engine_hash",
+          "native_library_sha256",
+          "wrapper_hashes",
+          "card_data_sha256",
+          "card_table_file_sha256",
+          "card_table_semantic_sha256",
+          "anchor_deck_sha256",
+          "candidate_deck_sha256",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "scope_version"
+        ],
+        "rules": [
+          "Spread exposure is an exact public threshold/response class for the current visible state; it is not a guessed damage number or tabletop effect.",
+          "Static damage, weakness/resistance, card prose, an attack ID without a native effect receipt or a future damage counter is not sufficient.",
+          "Source/target identity, option fingerprint, current observation and asset/deck scope must match the public option/entity graph and canonical manifest; future response fields are never accepted.",
+          "Unknown thresholds, status windows, target ownership or response class delegate; they never become a safe zero."
+        ]
+      },
+      {
+        "receipt": "BenchLiabilityScaleV1",
+        "required_fields": [
+          "scale_id",
+          "prize_levels",
+          "gust_levels",
+          "spread_levels",
+          "lower_is_safer",
+          "exact_integer_type",
+          "scale_content_sha256",
+          "qualification_status",
+          "review_id",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "scope_version"
+        ],
+        "rules": [
+          "Each dimension is a strict finite nonnegative integer ordinal with unique labels and one shared reviewed scale per formulation.",
+          "NaN, Inf, bools, float ordinals, duplicate labels, negative levels and coercible malformed values reject before scoring.",
+          "The scale content digest, review_id, authority/fixture digests and qualification_status are checked before any coordinate is read; native use requires QUALIFIED_CABT_CAPSULE.",
+          "The dimensions are not summed or weighted. B5-B uses strict component-wise dominance; incomparable vectors delegate."
+        ]
+      },
+      {
+        "receipt": "RuntimeImportAndSourceV1",
+        "required_fields": [
+          "policy_id",
+          "implementation_sha256",
+          "transitive_source_hashes",
+          "config_sha256",
+          "schema_hashes",
+          "candidate_deck_sha256",
+          "engine_hash",
+          "wrapper_hashes",
+          "fixture_content_sha256",
+          "fixture_config_sha256",
+          "receipt_manifest_sha256",
+          "dependency_scan_digest"
+        ],
+        "rules": [
+          "The eventually loaded B5 arm must be bound to the exact source/config/import manifest; a B1 oracle, uncommitted helper or caller-supplied receipt is not a substitute.",
+          "A whole receipt with internally consistent labels but forged capability content must be rejected by canonical content digest before evaluation, carrying forward B4-RED-008.",
+          "Every role, local-delta, Prize, gust and spread tuple is checked against the exact public option/entity graph and canonical receipt manifest, carrying forward B4-RED-009.",
+          "The implementation, transitive sources, config/schema hashes, receipt manifest, fixture content and imported dependency scan are recorded in one immutable provenance record; no caller-supplied or mutable in-memory receipt can override it."
+        ]
+      }
+    ],
+    "qualification_status_contract": {
+      "allowlist": [
+        "QUALIFIED_CABT_CAPSULE",
+        "FIXTURE_ONLY",
+        "PARTIAL",
+        "CONFLICT",
+        "UNKNOWN"
+      ],
+      "native_rule": "Only QUALIFIED_CABT_CAPSULE receipts with matching current option/entity graph and exact asset/deck scope may affect a native B5 decision. FIXTURE_ONLY may affect only fixture arithmetic and boundary assertions; PARTIAL, CONFLICT and UNKNOWN delegate.",
+      "content_rule": "The status is part of the canonical receipt content digest and cannot be upgraded by changing a label in memory."
+    },
+    "unknown_policy": {
+      "unknown_is_not_zero_or_favorable": true,
+      "unknown_fields": [
+        "role or route necessity",
+        "bench local delta",
+        "Prize unit",
+        "gust access/targetability/route conversion",
+        "spread threshold/response class",
+        "entity owner/zone/target role",
+        "compound/STOP semantics",
+        "source/config/receipt provenance"
+      ],
+      "action": "Return B0_DELEGATE with a distinct reason and bounded public reproduction capsule. Do not call a B0 delegation a final-adapter fallback, and do not award B5 selection credit for a delegated transition."
+    }
+  },
+  "formulations": [
+    {
+      "id": "B5-A-CAPACITY-ROUTE-ROLE-RESERVE",
+      "name": "Capacity and route-role reserve",
+      "status": "FIXTURE_ONLY_UNTIL_ROLE_AND_LOCAL_DELTA_RECEIPTS",
+      "material_difference": "A treats bench slots and route-role redundancy as the primary lexicographic objective. Exact liability is only a later diagnostic/tie term; A may choose a higher-liability card when it uniquely preserves a qualified role reserve.",
+      "falsifiable_hypothesis": "On a public fixture where two legal bench options both preserve the hard minimum role floor but one creates more route-critical backup surplus and the other has lower liability, A selects the greater role reserve independent of option order. On a full-bench or unknown-role state it delegates rather than filling automatically.",
+      "activation_guard": [
+        "Current request is a receipt-qualified singleton bench-placement/PLAY-to-bench semantic action with complete options.",
+        "Candidate and every alternative option have one exact BenchLocalDeltaV1 and all referenced BenchRoleReceiptV1 rows.",
+        "Route role minimums and current role coverage are complete and public; no hidden card is counted as role coverage.",
+        "The resulting role reserve is finite, integer and nonnegative for every scored option.",
+        "Because this preregistration declares the exact liability vector as A's deterministic later tie term, every option must also carry the complete scoped Prize/gust/spread vector and scale. A separate role-only diagnostic may disable that tie term explicitly; it may not silently treat missing liability as a tie.",
+        "Terminal, unsupported, compound, stale, unknown and non-equivalent tie cases delegate."
+      ],
+      "decision_key_order": [
+        "terminal override evaluator gate only; never a current action",
+        "hard route-role feasibility after local delta descending",
+        "required route-role slots remaining ascending",
+        "route-critical backup/next-attacker surplus descending",
+        "capacity slack after local delta descending",
+        "qualified pivot/draw-engine coverage descending only when the role is required by the current route",
+        "exact liability vector lexicographically ascending only as the named later tie term after all role terms are equal and every liability receipt is complete",
+        "canonical semantic action key only after all strategic terms; non-equivalent equal keys are AMBIGUOUS"
+      ],
+      "feature_definitions": {
+        "hard_route_role_feasibility": "All REQUIRED role counts from the qualified current route remain satisfied after the option-local delta; unknown role or requirement is not feasible.",
+        "required_route_role_slots_remaining": "Sum of publicly qualified required role counts not covered by visible current entities after the local delta. It is a count, not a probability or successor value.",
+        "route_critical_backup_surplus": "Lexicographic tuple of visible qualified NEXT_ATTACKER and BACKUP_ATTACKER coverage beyond the minimum required by the current route. A visible hand/deck/Prize card cannot increase it.",
+        "capacity_slack": "bench_max minus public bench occupancy after the exact current local placement delta. A full bench is not a reason to invent a replacement slot.",
+        "liability_tie": "Only the exact B5-B vector dimensions with all required receipts may be used; missing liability is a tie-term UNKNOWN and delegates rather than becoming favorable."
+      },
+      "expected_behavior": {
+        "divergence": "In B5-F01, A selects the role-surplus option even though the other option has a lower exact liability vector, because both pass the hard role floor and A's declared primary key is route-role reserve.",
+        "control": "In B5-F02, both options have equal role reserve and the exact liability tie term uniquely selects X; A never uses option order.",
+        "full_bench": "In B5-F03, no placement is scored when capacity is exhausted; an optional legal STOP is represented only by the CompoundActionBuilder."
+      },
+      "fail_closed": [
+        "missing or conflicting role receipt",
+        "missing exact current local delta",
+        "unknown route minimum or hidden-only role candidate",
+        "bench capacity overflow or invalid integer",
+        "unknown Prize/gust/spread field when it is needed by an enabled tie term",
+        "incomplete legal option set",
+        "unsupported count/order/STOP",
+        "duplicate semantic fingerprint",
+        "non-equivalent strategic tie",
+        "stale request or lifecycle mismatch"
+      ]
+    },
+    {
+      "id": "B5-B-RECEIPT-BOUNDED-LIABILITY-DOMINANCE",
+      "name": "Exact receipt-bounded liability dominance",
+      "status": "FIXTURE_ONLY_UNTIL_PRIZE_GUST_SPREAD_RECEIPTS",
+      "material_difference": "B treats exact public liability as the primary discriminator after a hard role-feasibility floor. It uses no role-surplus bonus and no weighted sum; only strict component-wise dominance of the receipt-bound liability vector selects an option.",
+      "falsifiable_hypothesis": "On a public fixture where all options preserve the hard current route-role floor, an option with a strictly dominating lower liability vector (Prize, gust, spread) is selected even if another option creates more optional route-role surplus. If vectors overlap, are incomparable or contain UNKNOWN, B delegates.",
+      "activation_guard": [
+        "Current request is a receipt-qualified singleton bench-placement/PLAY-to-bench semantic action with complete options.",
+        "Every option passes the same hard REQUIRED role-coverage floor; B never uses liability to excuse an infeasible route.",
+        "PrizeStaticV1, GustExposureV1, SpreadExposureV1 and BenchLiabilityScaleV1 are exact, current, content-bound and scope-matched for every option.",
+        "The resulting liability vector is finite and has no unknown endpoint.",
+        "Strict dominance is unique; incomparable, equal and overlapping vectors delegate."
+      ],
+      "decision_key_order": [
+        "terminal override evaluator gate only; never a current action",
+        "hard route-role feasibility after local delta descending",
+        "strict liability dominance relation only: select an option only when it is <= every other eligible option in all three dimensions and < in at least one; this is not a lexicographic order",
+        "capacity slack descending only as a separate feasibility/guard term, never a weighted or tie-breaking liability term",
+        "canonical semantic action key only after dominance; non-dominating ties are AMBIGUOUS/B0_DELEGATE"
+      ],
+      "feature_definitions": {
+        "liability_vector": "(prize_units, gust_exposure_level, spread_exposure_level), each from its own exact receipt and common lower-is-safer ordinal contract.",
+        "strict_dominance": "Option X dominates Y iff every liability coordinate for X is <= Y and at least one is <; no coordinate is weighted or summed.",
+        "hard_role_floor": "Every REQUIRED current route role remains covered after the option-local delta. Optional extra role surplus cannot compensate for a floor failure.",
+        "gust_exposure_level": "Receipt-defined public targetability/route-conversion ordinal for a visible bench entity; it is not a probability of an unseen gust card.",
+        "spread_exposure_level": "Receipt-defined public threshold/response ordinal for the current visible board; static damage or prose cannot supply it.",
+        "prize_units": "Exact current CABT Prize units for a publicly identified card; facedown and hidden identities remain unknown."
+      },
+      "expected_behavior": {
+        "divergence": "In B5-F01, B selects the low-liability option because its exact vector strictly dominates the role-surplus option while both preserve the hard role floor.",
+        "control": "In B5-F02, one option strictly dominates on all exposed dimensions and both formulations select its semantic action, providing a shared control.",
+        "unknown": "In B5-F07, missing or prose-derived liability fields delegate; B never treats missing exposure as zero.",
+        "non_dominating": "Equal or incomparable liability vectors remain AMBIGUOUS/B0_DELEGATE; no reviewed dimension order may select among them."
+      },
+      "fail_closed": [
+        "missing/forged/mismatched PrizeStaticV1",
+        "missing/forged/mismatched gust or spread receipt",
+        "unknown route-role floor",
+        "NaN/Inf/noninteger/negative liability or scale value",
+        "overlapping or incomparable liability vectors",
+        "incomplete legal option set",
+        "unsupported count/order/STOP",
+        "duplicate semantic fingerprint",
+        "stale request or lifecycle mismatch"
+      ]
+    }
+  ],
+  "liability_and_role_schema": {
+    "role_tuple": {
+      "required_fields": [
+        "role_id",
+        "necessity",
+        "route_id",
+        "required_count",
+        "covered_count_before",
+        "covered_count_after",
+        "receipt_ids"
+      ],
+      "invariants": [
+        "All counts are exact nonnegative integers and refer only to visible entities and current local deltas.",
+        "A role cannot be marked REQUIRED and FORBIDDEN for the same entity/route/count without an explicit conflict receipt; conflict delegates.",
+        "A card may have multiple roles only when each role receipt is independently qualified and the combined graph is consistent.",
+        "A role not covered by a receipt is UNKNOWN, never a zero-count or favorable optional role."
+      ]
+    },
+    "liability_tuple": {
+      "fields": [
+        "prize_units",
+        "gust_exposure_level",
+        "spread_exposure_level"
+      ],
+      "invariants": [
+        "All three coordinates must be from current exact receipts and one reviewed scale manifest.",
+        "Coordinates are reported separately and are never blended into a scalar.",
+        "Unknown, NaN, Inf, negative or noninteger coordinates reject/delegate before comparison.",
+        "A visible card's liability is not transferable to a hidden copy or another anchor/deck without a new scoped receipt."
+      ]
+    }
+  },
+  "decision_output_contract": {
+    "record": "BenchDecisionV1",
+    "fields": [
+      "schema_version",
+      "request_id",
+      "selection_seq",
+      "episode_uuid",
+      "acting_player",
+      "policy_id",
+      "formulation_id",
+      "status",
+      "authority",
+      "chosen_semantic_action_key",
+      "chosen_option_fingerprints",
+      "role_key",
+      "liability_vector",
+      "candidate_count",
+      "complete_option_digest",
+      "active_receipt_ids",
+      "fail_closed_reason",
+      "route_activation_id"
+    ],
+    "statuses": [
+      "SELECTED",
+      "B0_DELEGATE",
+      "AMBIGUOUS",
+      "UNSUPPORTED",
+      "NO_SAFE_BENCH",
+      "STOP_SELECTED",
+      "TERMINAL_OVERRIDE"
+    ],
+    "status_rules": {
+      "SELECTED": "Only a unique receipt-complete semantic action under the formulation key; final adapter validation still runs.",
+      "B0_DELEGATE": "The formulation abstains and invokes the frozen public B0 control. Delegation is measured experimental behavior, not fallback.",
+      "AMBIGUOUS": "Non-equivalent semantic actions tie or liability vectors are incomparable; no option-order tie break is allowed, so authority is B0.",
+      "UNSUPPORTED": "Request, role, receipt, action semantics or public field is outside the activation contract; authority is B0.",
+      "NO_SAFE_BENCH": "No candidate satisfies the hard capacity/role/liability guard; authority is B0.",
+      "STOP_SELECTED": "Only the legal CompoundActionBuilder STOP token for min_count=0/max_count>0 and a covered optional singleton request; STOP has its own action record and trace.",
+      "TERMINAL_OVERRIDE": "Evaluator/harness-only after terminal-first handling; the policy is never called to select a current action on a terminal observation."
+    }
+  },
+  "option_stop_compound_and_lifecycle_contract": {
+    "activation_request": {
+      "semantic_role": "A current public bench-placement or PLAY-to-bench request whose exact selection/option enums, context, source, target and choice_role are receipt-qualified.",
+      "allowed_shape": "Singleton only: min_count=1 and max_count=1, UNORDERED, complete available options, or optional min_count=0/max_count=1 with a legal builder STOP mask.",
+      "required_fields": [
+        "request_id",
+        "episode_uuid",
+        "selection_seq",
+        "acting_player",
+        "selection_type",
+        "selection_context",
+        "min_count",
+        "max_count",
+        "ordering",
+        "complete options",
+        "canonical semantic fingerprints"
+      ]
+    },
+    "always_delegate": [
+      "CARD, ATTACHED_CARD, CARD_OR_ATTACHED_CARD, ENERGY, SKILL, ABILITY, RETREAT, ATTACK, COUNT, YES_NO, SPECIAL_CONDITION, setup or unresolved requests",
+      "max_count>1, min_count/max_count outside singleton bounds, ORDERED requests, or any compound request whose full sequence semantics are not explicitly qualified",
+      "an option set with a missing/unsupported/duplicate semantic option, unavailable source/target, stale entity or mixed context",
+      "a request needing successor state, future response, hidden card identity, response probability, card prose or manual randomness",
+      "terminal result, missing current observation, invalid lifecycle identity, unknown receipt, NaN/Inf or role conflict"
+    ],
+    "complete_option_rule": "Every current legal option is materialized and scored or causes B0_DELEGATE. No first-N prefix, original index, list-order tie break or synthesized action is allowed.",
+    "stop_rule": "STOP is not a LegalOptionV1 row. It is a first-class CompoundActionBuilder token only when the request permits min_count=0/max_count>0 and the legality mask permits STOP. The trace records STOP choice_role, decoder/action state and action digest. Empty output is never implicit STOP.",
+    "terminal_first": "Check terminal_result before reading selection-local fields, entities or role/liability receipts. Any post-terminal action is a hard reliability failure.",
+    "lifecycle_state_key": "(episode_uuid, player_index, policy_id)",
+    "reset_boundaries": [
+      "new deck/start request",
+      "terminal result",
+      "error",
+      "worker replacement"
+    ],
+    "request_identity": "After terminal-first/public validation, bind every accepted request outcome including B0_DELEGATE to request_id, monotonic selection_seq and a canonical content digest. Identical duplicate payloads replay the same decision; changed same-identity, stale or lower-sequence payloads reject/delegate with a bounded reason.",
+    "final_adapter": "The existing G1 action builder and final validator re-check request identity, count, uniqueness, range, semantic availability and legal STOP. B5 never bypasses the adapter."
+  },
+  "activation_and_b0_delegation": {
+    "authority_mapping": {
+      "B5_SELECTED": "Build the action from canonical semantic fingerprints through the existing G1 action builder and final boundary validator; record authority=EXPERIMENTAL_BENCH.",
+      "B5_STOP_SELECTED": "Build the legal STOP token through the G1 CompoundActionBuilder; record the STOP contribution separately.",
+      "B5_DELEGATE": "Invoke frozen public B0 control and record authority=B0_CONTROL, delegation reason and no B5 selection credit.",
+      "FINAL_ADAPTER_FALLBACK": "Only a failure inside B0 or the final adapter may increment fallback. B5 abstention/delegation is never relabelled fallback. Any promotable arm requires fallback_count=0."
+    },
+    "activation_counters": [
+      "eligible_current_requests",
+      "b5_evaluated_requests",
+      "b5_selected_requests",
+      "b5_stop_requests",
+      "b0_delegation_requests",
+      "unsupported_requests",
+      "ambiguous_requests",
+      "unknown_receipt_requests",
+      "role_conflict_requests",
+      "fallback_actions",
+      "invalid_actions",
+      "post_terminal_actions",
+      "stale_requests",
+      "request_digest_mismatches"
+    ],
+    "eligible_request_denominator": "The denominator is the count of current natural-deployment requests that pass terminal-first validation, complete-option validation, singleton bench activation shape, lifecycle identity and all formulation-independent public graph checks. Unsupported, malformed, hidden, successor, stale, unknown-receipt and role-conflict requests are reported separately and are not silently counted as eligible opportunities.",
+    "no_op_rule": "If the confirmation arm has fewer than 32 nondelegated B5 decisions overall, fewer than 8 in any preregistered anchor x candidate-seat cell, or less than 5 percent activation among eligible current requests in any such cell, report NO_OPPORTUNITY/INCONCLUSIVE; do not claim a negative strength result or tune after seeing outcomes. Stage 1's one-game cells cannot satisfy this rule and are mechanical-only."
+  },
+  "fixture_contract": {
+    "fixture_schema": "Every public fixture must materialize as valid EngineObservationV1 plus SelectionRequestV1 and pass PublicStateV1 validation. Fixture metadata is stripped before LegalOptionV1 construction and all required source/target/choice-role/metadata_ref fields are present.",
+    "fixture_authority": "One canonical fixture artifact/config and its content digest must own public records, role receipts, local deltas, Prize/gust/spread receipts, expected statuses and formulation labels. A runtime evaluator must reject an in-memory whole-receipt substitution whose content digest is not the canonical authority, carrying forward B4-RED-008.",
+    "fixture_requirements": [
+      "Complete option sets, canonical semantic fingerprints and exact option permutation coverage.",
+      "No successor observation, counterfactual outcome, hidden identity or card prose.",
+      "Every role/liability/local-delta field has an explicit FIXTURE_ONLY receipt status and scope.",
+      "Both acting-player perspectives and hidden-state-invariance mutations are evaluated.",
+      "NaN/Inf, malformed enum, negative count and conflicting receipt mutations fail before scoring.",
+      "A fixture pass qualifies only arithmetic/public-boundary behavior and never native semantics or WDL strength."
+    ],
+    "named_fixtures": [
+      {
+        "id": "B5-F01-FORMULATION-DIVERGENCE",
+        "purpose": "Make A and B materially disagree without hidden state or successor values.",
+        "public_state": "One free bench slot, two complete legal singleton bench options, both satisfy the hard REQUIRED role floor. Option X adds a qualified BACKUP_ATTACKER surplus and has liability vector [2,2,2]. Option Y adds no optional route-role surplus and has exact vector [1,0,0].",
+        "expected": {
+          "B5-A-CAPACITY-ROUTE-ROLE-RESERVE": "SELECTED X",
+          "B5-B-RECEIPT-BOUNDED-LIABILITY-DOMINANCE": "SELECTED Y",
+          "control": "B0 is evaluated separately; no private baseline output is fixture input"
+        },
+        "anti_shortcut": "The fixture has no raw order authority; swapping option rows must preserve the semantic selections. B's Y is legal only because X and Y both pass the hard role floor."
+      },
+      {
+        "id": "B5-F02-CONTROL-STRICT-DOMINANCE",
+        "purpose": "Provide a no-divergence control with a unique liability winner.",
+        "public_state": "Two complete singleton options preserve identical required role coverage and role surplus; option X has vector [1,0,0] and option Y has [2,1,1], with all receipts exact.",
+        "expected": "Both A and B select X by their declared keys; permutations and mirror preserve the semantic key. This is a control, not a strength result."
+      },
+      {
+        "id": "B5-F03-BENCH-FULL",
+        "purpose": "Prevent automatic overbench and synthetic capacity creation.",
+        "public_state": "bench_occupancy equals bench_max; a current optional singleton placement has no free slot, and a separate legal optional request permits STOP.",
+        "expected": "A and B return NO_SAFE_BENCH/B0_DELEGATE for placement. The optional request may emit real STOP only through the builder mask; no empty list or displaced entity is synthesized."
+      },
+      {
+        "id": "B5-F04-TERMINAL-FIRST",
+        "purpose": "Guard terminal result before stale selection-local data.",
+        "mutation": "Set terminal_result to a terminal WDL value while leaving stale selection, option and receipt fields populated or malformed.",
+        "expected": "Evaluator emits evaluator-only TERMINAL_OVERRIDE/no action; stale options, role rows and liability values are not read. A native post-terminal action is a hard reliability defect."
+      },
+      {
+        "id": "B5-F05-MIRROR",
+        "purpose": "Guard player perspective and ownership role.",
+        "mutation": "Mirror the complete public state, ownership, source/target references, route roles and candidate perspective for acting_player=1.",
+        "expected": "Both formulations select the corresponding self-owned semantic action or corresponding B0 delegation; candidate/opponent roles are not swapped."
+      },
+      {
+        "id": "B5-F06-PERMUTATION",
+        "purpose": "Guard semantic option identity and AP-011.",
+        "mutation": "Apply every permutation of the complete option rows while preserving canonical semantic payloads; also test same semantic payload with changed original_index.",
+        "expected": "A, B and B0 retain the same semantic result. Any non-equivalent equal key is AMBIGUOUS/B0_DELEGATE. Raw option order is never read."
+      },
+      {
+        "id": "B5-F07-UNKNOWN-RECEIPT-BOUNDARY",
+        "purpose": "Guard unknown-as-zero, hidden identity and successor leakage.",
+        "mutations": [
+          "remove role necessity or route minimum",
+          "remove PrizeStaticV1, gust receipt or spread receipt",
+          "replace a hidden own/opp card identity with a named role",
+          "insert a successor bench/HP/status/response value",
+          "replace local delta with card prose"
+        ],
+        "expected": {
+          "B5-A-CAPACITY-ROUTE-ROLE-RESERVE": "When the preregistered A liability tie term is active, missing Prize/gust/spread/scale receipt content returns B0_DELEGATE/UNKNOWN_RECEIPT. A separate explicitly role-only diagnostic may score only complete role/local-delta inputs and may not read the missing liability as a tie.",
+          "B5-B-RECEIPT-BOUNDED-LIABILITY-DOMINANCE": "Missing Prize/gust/spread/scale receipt content returns B0_DELEGATE/UNKNOWN_RECEIPT.",
+          "all_formulations": "Hidden identity, successor value or card prose is rejected or delegated with distinct HIDDEN_INFORMATION_FORBIDDEN, SUCCESSOR_VALUE_FORBIDDEN or CARD_PROSE_FORBIDDEN reason. Unknown is never zero or favorable."
+        }
+      },
+      {
+        "id": "B5-F08-NAN-INF",
+        "purpose": "Guard strict numeric receipt and scale validation.",
+        "mutations": [
+          "NaN or Inf in Prize/gust/spread levels",
+          "negative or fractional role/capacity counts",
+          "bool/float ordinals, duplicate labels or malformed scale fields"
+        ],
+        "expected": "Fixture construction or evaluator validation rejects before any formulation key; no action or B5 selection credit is emitted."
+      },
+      {
+        "id": "B5-F09-ROLE-CONFLICT",
+        "purpose": "Guard receipt graph consistency and role necessity conflicts.",
+        "mutations": [
+          "same entity/route marked REQUIRED and FORBIDDEN",
+          "same role ID has contradictory required_count or route_id",
+          "source/target owner or zone mismatches the current LegalOptionV1",
+          "role receipt card/entity hash mismatch"
+        ],
+        "expected": "B0_DELEGATE/ROLE_RECEIPT_CONFLICT or PUBLIC_ROLE_MISMATCH before scoring; no formulation may choose the favorable receipt."
+      },
+      {
+        "id": "B5-F10-STOP-COMPOUND",
+        "purpose": "Guard exact option count, ordered compound and legal STOP behavior.",
+        "mutations": [
+          "mandatory singleton min_count=1/max_count=1",
+          "optional singleton min_count=0/max_count=1 with legal STOP",
+          "ORDERED multi-select",
+          "UNORDERED max_count>1",
+          "malformed STOP row or duplicate selection"
+        ],
+        "expected": "Only covered singleton requests may activate; compound/ordered/malformed STOP requests delegate with explicit reason. Legal STOP has its own trace and is never implicit empty output."
+      },
+      {
+        "id": "B5-F11-LIFECYCLE-RESET",
+        "purpose": "Guard request identity, duplicate idempotence and state isolation.",
+        "mutations": [
+          "fresh start/deck",
+          "identical duplicate request",
+          "changed same-sequence duplicate",
+          "lower/out-of-order selection sequence",
+          "terminal/error/worker replacement",
+          "new episode/player/policy tuple"
+        ],
+        "expected": "Identical duplicates replay the same selected/delegated result; changed/stale requests reject; every lifecycle boundary resets role/liability state; no state leaks across (episode_uuid, player, policy_id)."
+      },
+      {
+        "id": "B5-F12-CURRENT-DELTA-RECEIPT-GRAPH",
+        "purpose": "Guard exact option-to-receipt binding after B4 red-team findings.",
+        "mutations": [
+          "unregistered local-delta ID",
+          "option fingerprint bound to another delta",
+          "forged whole receipt with changed capability/liability content but original manifest labels",
+          "extra or duplicate role/Prize/gust/spread receipt"
+        ],
+        "expected": "B0_DELEGATE/UNREGISTERED_LOCAL_DELTA, RECEIPT_CONTENT_MISMATCH or RECEIPT_GRAPH_MISMATCH. No internally consistent forged content may score."
+      }
+    ]
+  },
+  "comparison_contract": {
+    "control": "Frozen public deterministic B0 Mega Abomasnow control using the same exact candidate deck, official engine, wrapper, card data, public observation contract, native anchors and final action validator.",
+    "arms": [
+      "B0_CONTROL",
+      "B5-A-CAPACITY-ROUTE-ROLE-RESERVE",
+      "B5-B-RECEIPT-BOUNDED-LIABILITY-DOMINANCE"
+    ],
+    "sampling": "For every strength stage, candidate and B0 games are independent native samples. Do not pair games, claim paired seeds, reuse a trajectory or count option permutations as games. Natural deployment is primary; forced actual-first/second diagnostics are separate. Stage 1 may share one fresh B0 mechanical canary across B5-A and B5-B solely for one-per-cell reliability and never reuses it in a WDL strength estimand.",
+    "equal_budget_definition": [
+      "same exact deck, engine, native wrapper, card data, source/config/import receipts and clean dependency scan",
+      "same natural-seat deployment, candidate-perspective WDL accounting and candidate seat balance",
+      "same request cap, game timeout, wall cap, evidence cap, worker topology, lifecycle/reset checks and stop-on-first-reliability-defect rule",
+      "same 32 semantic option permutations per eligible candidate game, policy reset per permutation and no raw option-order feature",
+      "same candidate/control game count per formulation comparison from Stage 2 onward; each formulation gets an independently fresh B0 strength arm. Stage 1's shared B0 canary is explicitly mechanical-only and is not copied into any later arm.",
+      "delegation, activation, runtime and diagnostics are reported separately and never folded into WDL"
+    ],
+    "primary_metric": "Candidate-perspective terminal WDL score = (wins + 0.5 * draws) / completed_games.",
+    "secondary_metrics": [
+      "per-anchor and candidate-seat activation/delegation counts",
+      "bench-role coverage and liability-vector diagnostics",
+      "candidate-only p50/p95/p99 callback latency and cumulative CPU",
+      "permutation, mirror, lifecycle and receipt-graph error counts"
+    ],
+    "no_blended_score": "Reliability and runtime are eligibility gates. Activation is an opportunity criterion. Bench diagnostics are explanatory. Only terminal WDL is the primary effectiveness metric; no blended gold score is permitted.",
+    "uncertainty": {
+      "per_cell": "For stages with enough games for estimation, report wins, draws, losses, requested, recorded and completed games plus candidate WDL and a 95 percent game-level independent bootstrap interval for every anchor x candidate-seat cell. Stage 1's one-game cells are mechanical-only and receive no WDL interval or strength interpretation. A Wilson interval may be reported separately for binary win rate, not as the WDL interval.",
+      "candidate_control_delta": "Within each anchor x candidate-seat cell, independently resample candidate and fresh B0 game-level terminal scores for 10000 bootstrap replicates with a recorded seed; report the equal-cell mean delta and every cell delta.",
+      "equal_cell_summary": "The descriptive aggregate is the fixed equal-weight mean of the eight anchor x candidate-seat cell deltas. Pooled all-game WDL is descriptive only and cannot replace the cell estimand."
+    },
+    "criteria": {
+      "hard_reliability": [
+        "all requested games complete",
+        "zero invalid selections",
+        "zero final-adapter fallbacks",
+        "zero post-terminal actions",
+        "zero native failures, crashes, swallowed exceptions and timeouts",
+        "zero stale/out-of-order requests and request-digest mismatches",
+        "zero permutation or mirror mismatches",
+        "zero hidden-information, successor, prose or manual-randomness violations",
+        "zero NaN/Inf/nonfinite metrics",
+        "zero source/config/card/engine/wrapper/deck hash mismatches"
+      ],
+      "runtime": {
+        "candidate_callback_p99_wall_ms_max": 100,
+        "candidate_cpu_seconds_per_game_max": 1,
+        "peak_rss_mib_max": 512,
+        "competition_cumulative_overage_seconds_max": 600,
+        "measurement": "Measure candidate-only and delegated B0 callback latency separately, plus total game CPU/RSS. Delegation may not hide an expensive B5 calculation."
+      },
+      "activation": {
+        "confirmation_min_non_delegated_overall": 32,
+        "confirmation_min_non_delegated_per_anchor_seat_cell": 8,
+        "confirmation_min_eligible_activation_fraction_per_cell": 0.05,
+        "lower_activation_result": "NO_OPPORTUNITY/INCONCLUSIVE, not a negative strength claim"
+      },
+      "per_anchor_seat": {
+        "catastrophic_point_delta_floor": -0.10,
+        "hard_catastrophic_failure": "Any reliability defect invalidates the arm regardless of WDL.",
+        "missing_cell": "Invalid for confirmation; no aggregate may hide an absent anchor/seat cell."
+      },
+      "promotion_rule": "A clean confirmation may qualify an experimental B5 challenger only when all hard reliability/runtime gates pass, activation thresholds pass, the equal-cell independent-bootstrap 95 percent lower bound for candidate minus fresh B0 is strictly above +0.02, the observed equal-cell point estimate is at least B0, and no anchor/seat point estimate is below B0 by more than 0.10. This remains experimental and does not authorize production, deck freeze, champion selection or submission.",
+      "rejection_rule": "After a complete clean confirmation, an upper 95 percent interval at or below zero rejects the formulation; a lower interval crossing zero, lower bound at or below +0.02, inadequate activation or missing cells is unresolved/inconclusive rather than evidence that bench reasoning is false. Any reliability/runtime/provenance violation rejects the arm regardless of WDL."
+    }
+  },
+  "staged_equal_budget_native_experiment": {
+    "status": "DESIGNED_NOT_AUTHORIZED",
+    "shared_provenance": {
+      "candidate_deck": "mega-abomasnow-ex",
+      "opponents": [
+        "rule:dragapult-ex",
+        "rule:iono",
+        "rule:mega-abomasnow-ex",
+        "rule:mega-lucario-ex"
+      ],
+      "natural_deployment": true,
+      "candidate_seat_balance": true,
+      "candidate_perspective_wdl": true,
+      "forced_seat_diagnostic_separate": true,
+      "paired_seed_claim": false,
+      "permutation_count_per_candidate_game": 32,
+      "terminal_outcome_primary": true,
+      "submission": false,
+      "training": false
+    },
+    "stage_0_fixture_gate": {
+      "games": 0,
+      "required": [
+        "Implement B5-A and B5-B in an isolated owned change without editing B0 or any Phase A/B1-B4 source.",
+        "Materialize B5-F01 through B5-F12 as valid G1 records and run fresh-process arithmetic, boundary, permutation, mirror, lifecycle, STOP/compound, receipt-content and NaN/Inf tests.",
+        "Bind canonical fixture content, role/local-delta/Prize/gust/spread receipts, expected outcomes and implementation/schema/config hashes; reject forged whole-receipt substitutions.",
+        "Prove every unknown, hidden-only, successor-only, prose, role conflict and incomplete-option case delegates before scoring.",
+        "Static/runtime import scan proves no private baseline or raw native object dependency in B5-A/B.",
+        "Independent review recalculates formulation divergence/control and confirms fixture-only status."
+      ],
+      "stop_condition": "Any fixture, boundary, lifecycle, provenance, semantic or numeric failure blocks every native arm."
+    },
+    "stage_1_mechanical_canary": {
+      "purpose": "One-game-per-cell mechanical canary before any local screen or private Kaggle screen.",
+      "runs": "One exact 24-game mechanical canary with three arms: B0_CONTROL, B5-A and B5-B. The eight B0 games are one fresh shared mechanical control arm for this canary only; they are not a strength sample and are not reused by later stages.",
+      "arms": [
+        "B0_CONTROL",
+        "B5-A-CAPACITY-ROUTE-ROLE-RESERVE",
+        "B5-B-RECEIPT-BOUNDED-LIABILITY-DOMINANCE"
+      ],
+      "games_per_cell": 1,
+      "cells": "Four anchors x two candidate seats x three arms = 24 cells, exactly one game per cell",
+      "games_per_arm": 8,
+      "games_total": 24,
+      "games_for_each_formulation_comparison": 16,
+      "game_accounting": "Each formulation comparison has its eight candidate games plus the same eight fresh B0 mechanical-canary games. The 24-game total is a staging gate only; no WDL delta or interval is carried forward.",
+      "workers": 1,
+      "request_cap": 20000,
+      "game_timeout_seconds": 180,
+      "wall_seconds": 1800,
+      "max_evidence_bytes": 67108864,
+      "stop_on": [
+        "any invalid selection",
+        "fallback",
+        "post-terminal action",
+        "timeout, crash, native failure or incomplete game",
+        "stale request, permutation mismatch or mirror mismatch",
+        "unknown/successor/prose input used as fact",
+        "receipt graph/content mismatch",
+        "NaN/Inf/nonfinite diagnostic",
+        "provenance mismatch or missing output"
+      ],
+      "control_policy": "Frozen deterministic-strategic-mega-abomasnow-v1 public B0 control, freshly sampled once for the eight B0 canary cells; it is not a formulation feature and is not reused as a later strength arm.",
+      "interpretation": "A pass establishes mechanical reliability and diagnostic integrity only. The one-per-cell canary has no statistical strength claim, WDL interval or promotion meaning and does not unlock production authority."
+    },
+    "stage_2_local_screen": {
+      "prerequisite": "Stage 1 independently reviewed PASS for the relevant formulation and all receipt/import gates remain closed to mutation.",
+      "games_per_cell_per_arm": 4,
+      "games_per_arm": 32,
+      "games_per_formulation_run": 64,
+      "matrix": "Four anchors x two candidate seats x four natural-deployment games per arm.",
+      "analysis": "Report every cell, activation/delegation and candidate-perspective WDL against an independently sampled B0. No blended component score."
+    },
+    "stage_3_private_kaggle_cpu_screen": {
+      "prerequisite": "Stage 2 zero-reliability review, exact receipt closure, runtime/import receipt and technical review of the bounded notebook/config.",
+      "games_per_cell_per_arm": 16,
+      "games_per_arm": 128,
+      "games_per_formulation_run": 256,
+      "launch": "Private bounded Kaggle CPU only; no GPU/TPU, training or submission.",
+      "review": "Independent sealed raw-manifest, provenance, receipt-graph and candidate-perspective WDL recalculation required before confirmation."
+    },
+    "stage_4_confirmation": {
+      "prerequisite": "A preregistered formulation has fixture-consistent divergence/control behavior, zero reliability defects, exact active receipts and no unexplained target-cell regression.",
+      "games_per_cell_per_arm": 64,
+      "games_per_arm": 512,
+      "games_per_formulation_run": 1024,
+      "metric": "Candidate-perspective terminal WDL with independent game-level bootstrap uncertainty per anchor and seat; diagnostics and activation are secondary gates.",
+      "promotion": "Apply comparison_contract.criteria exactly. This report does not promote either formulation."
+    },
+    "native_and_kaggle_gate": "Native and Kaggle execution remain BLOCKED until Stage 0 is implemented and independently reviewed, then Stage 1 is run and independently reviewed PASS. No later stage may be launched from this design artifact alone."
+  },
+  "readiness": {
+    "design_ready": true,
+    "fixture_ready": false,
+    "native_ready": false,
+    "production_ready": false,
+    "open_blockers": [
+      "No B5 evaluator, fixture config or tests exist; this task intentionally created no code/config/test.",
+      "No independently reviewed BenchRoleReceiptV1 or exact route-role/local-delta receipt set exists.",
+      "PrizeStaticV1, GustExposureV1 and SpreadExposureV1 are not assembled for the candidate and four anchor scopes.",
+      "B4-RED-008 and B4-RED-009 show that receipt content and source/target semantic fields must be bound, not merely shape-checked; B5 has no implementation yet.",
+      "No B0-compatible B5 import/source/config/dependency receipt or fresh-process boundary qualification exists.",
+      "Current hidden opponent distribution, route benefit, role annotations and exact card interactions remain open KB questions; this design does not infer them.",
+      "No native or Kaggle B5 game has been executed or independently reviewed."
+    ],
+    "next_exact_task": "After independent review, implement only the isolated B5-A/B fixture evaluator and tests; materialize B5-F01 through B5-F12 with canonical public records and content-bound role/local-delta/Prize/gust/spread receipts, run fresh-process permutation/mirror/lifecycle/STOP/numeric/forgery review, and stop before native work unless every Stage 0 gate passes.",
+    "not_authorized": [
+      "native games",
+      "Kaggle runs",
+      "production authority",
+      "deck freeze",
+      "submission",
+      "training",
+      "hidden-state inference",
+      "response-probability modeling",
+      "search"
+    ]
+  },
+  "verification": {
+    "knowledge_base_validation_before_design": "PASS",
+    "knowledge_base_requery_after_design": "PASS",
+    "json_validation": "PASS",
+    "production_code_written": false,
+    "config_or_tests_written": false,
+    "native_or_kaggle_execution": false,
+    "commit_created": false,
+    "report_digest_policy": "The final report SHA-256 is returned to the coordinating agent from an external sha256sum of this exact file. No self-hash placeholder or recursive digest is stored in this report."
+  }
+}
