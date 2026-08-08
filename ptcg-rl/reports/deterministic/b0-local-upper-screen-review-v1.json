@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "record_id": "B0-MA-CONTROL-001-b0-ma-control-20260808T001832.741228Z-776704d147fd-independent-upper-screen-review-v1",
+  "created_at_utc": "2026-08-08T00:31:10Z",
+  "status": "AUDIT_COMPLETE_PASS",
+  "verdict": "PASS_FOR_128_GAME_LOCAL_UPPER_STAGE_EXECUTION_ONLY",
+  "stage_closed": true,
+  "scope": {
+    "mode": "independent_read_only_raw_run_audit",
+    "run_id": "b0-ma-control-20260808T001832.741228Z-776704d147fd",
+    "raw_run_dir": "runs/b0-ma-control-20260808T001832.741228Z-776704d147fd",
+    "experiment_id": "B0-MA-CONTROL-001",
+    "candidate": "deterministic-strategic-mega-abomasnow-v1",
+    "candidate_deck_profile": "mega-abomasnow-ex",
+    "candidate_perspective": true,
+    "natural_deployment": true,
+    "paired_seed_claim": false,
+    "training_performed": false,
+    "kaggle_runs": 0,
+    "submission_created": false,
+    "anchors": [
+      "rule:dragapult-ex",
+      "rule:iono",
+      "rule:mega-abomasnow-ex",
+      "rule:mega-lucario-ex"
+    ],
+    "games_per_anchor_per_candidate_seat": 8,
+    "games_total_per_arm": 64,
+    "games_total_all_arms": 128
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "integrity_check": "PASS",
+    "counts": {
+      "sources": 56,
+      "claims": 62,
+      "strategies": 20,
+      "decision_rules": 36,
+      "anti_patterns": 14,
+      "search_features": 16,
+      "archetypes": 17,
+      "cards": 49,
+      "matchups": 12,
+      "matchup_plans": 20,
+      "observed_replay_patterns": 10,
+      "contradictions": 6,
+      "research_questions": 15
+    },
+    "open_p0_p1_questions_at_review": [
+      "RQ-001",
+      "RQ-002",
+      "RQ-003",
+      "RQ-004",
+      "RQ-015",
+      "RQ-005",
+      "RQ-006",
+      "RQ-007",
+      "RQ-008",
+      "RQ-009"
+    ],
+    "active_p0_p1_questions_at_review": {
+      "total": 12,
+      "open": [
+        "RQ-001",
+        "RQ-002",
+        "RQ-003",
+        "RQ-004",
+        "RQ-005",
+        "RQ-006",
+        "RQ-007",
+        "RQ-008",
+        "RQ-009",
+        "RQ-015"
+      ],
+      "blocked": ["RQ-010"],
+      "in_review": ["RQ-014"],
+      "status_semantics": "The ten OPEN questions are the open_p0_p1_questions_at_review field; BLOCKED and IN_REVIEW remain active P0/P1 items and are included in the total."
+    },
+    "unresolved_contradictions_at_review": [
+      "CON-001",
+      "CON-002",
+      "CON-004"
+    ],
+    "requeried_before_review": true,
+    "interpretation": "Open questions and contradictions remain binding; this execution review closes none of them."
+  },
+  "provenance": {
+    "run_plan_sha256": "c510e0c70d09760be6ba5b381afdebc3e23b4fbebdc609052e22bca422354074",
+    "run_manifest_sha256": "869f526b11799b4b24a47cc9e15e269bb3a3aed315f77d5680d602983552330e",
+    "run_plan_sidecar_verified": true,
+    "run_manifest_sidecar_verified": true,
+    "recorded_source_sha256": "7d2d3e3d207938e08912e53ce2a9b089e7a7bd2d171f98069f933314b13f4b6b",
+    "current_source_sha256": "c37218e9ec5509e43bcdc6b0bc5e33dce30a9275d4886f37d90e9ff1d578d455",
+    "recorded_candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+    "current_candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+    "candidate_source_receipt_current_match": true,
+    "recorded_repository": {
+      "commit": "31d22b70a15bf5183baa386332c23a92ab0347d7",
+      "dirty": true,
+      "dirty_digest_sha256": "6d125bcb07977e5f7c1beb779c0b253bb344a2177d2b36662b91ca32f1fe6e8d",
+      "status_entry_count": 176
+    },
+    "review_checkout_commit": "83467f53fd735b19401781b6385ddbf5a8110dfc",
+    "historical_dirty_tree_limitation": "The run was executed on a dirty checkout and its historical dirty tree is not retained. The recorded whole-tree source hash cannot be reconstructed; current source and exact candidate receipts are reported separately."
+  },
+  "sealing": {
+    "match_json_count": 128,
+    "expected_match_json_count": 128,
+    "match_sidecar_count": 128,
+    "match_sidecars_verified": true,
+    "manifest_match_digest_entries": 128,
+    "manifest_match_digests_verified": true,
+    "all_retained_run_files_read_only": true,
+    "raw_directory_bytes_at_review": 844257,
+    "manifest_recorded_evidence_bytes": 764941,
+    "evidence_cap_bytes": 67108864,
+    "evidence_cap_pass": true,
+    "modes": {
+      "raw_run_json_and_sidecars": "0440",
+      "loaded_assets_not_evidence": "31 at 0664; independent launch receipt at 0440"
+    }
+  },
+  "task_identity": {
+    "expected_tasks": 128,
+    "recorded_tasks": 128,
+    "unique_game_ids": 128,
+    "candidate_arm_records": 64,
+    "control_arm_records": 64,
+    "candidate_arm_policy": "candidate",
+    "control_arm_policy": "rule:mega-abomasnow-ex",
+    "identity_errors": [],
+    "verdict": "PASS"
+  },
+  "criteria": {
+    "candidate_perspective_wdl": {
+      "verdict": "PASS",
+      "mapping": "candidate win iff terminal_result == candidate_player; player-1 inversion independently applied",
+      "candidate_arm": {
+        "wins": 27,
+        "draws": 0,
+        "losses": 37,
+        "score": 0.421875,
+        "wilson_95": [0.30869782474345486, 0.5438996845991709]
+      },
+      "control_arm": {
+        "wins": 21,
+        "draws": 0,
+        "losses": 43,
+        "score": 0.328125,
+        "wilson_95": [0.22570557904469185, 0.45000894150908505]
+      },
+      "candidate_minus_control": {
+        "observed_delta": 0.09375,
+        "resamples": 10000,
+        "seed": 17,
+        "method": "independent two-sample bootstrap of game scores; not paired",
+        "percentile_2_5": -0.078125,
+        "percentile_50": 0.09375,
+        "percentile_97_5": 0.265625,
+        "interval_crosses_zero": true
+      },
+      "recorded_aggregate_reconciles": true
+    },
+    "anchor_seat_cells": {
+      "verdict": "PASS_RETAINED_WITH_WEAKNESSES_VISIBLE",
+      "cells": {
+        "candidate|rule:dragapult-ex|seat0": [2, 0, 6, 0.25],
+        "candidate|rule:dragapult-ex|seat1": [5, 0, 3, 0.625],
+        "candidate|rule:iono|seat0": [2, 0, 6, 0.25],
+        "candidate|rule:iono|seat1": [3, 0, 5, 0.375],
+        "candidate|rule:mega-abomasnow-ex|seat0": [5, 0, 3, 0.625],
+        "candidate|rule:mega-abomasnow-ex|seat1": [2, 0, 6, 0.25],
+        "candidate|rule:mega-lucario-ex|seat0": [6, 0, 2, 0.75],
+        "candidate|rule:mega-lucario-ex|seat1": [2, 0, 6, 0.25],
+        "control|rule:dragapult-ex|seat0": [3, 0, 5, 0.375],
+        "control|rule:dragapult-ex|seat1": [4, 0, 4, 0.5],
+        "control|rule:iono|seat0": [0, 0, 8, 0.0],
+        "control|rule:iono|seat1": [1, 0, 7, 0.125],
+        "control|rule:mega-abomasnow-ex|seat0": [6, 0, 2, 0.75],
+        "control|rule:mega-abomasnow-ex|seat1": [2, 0, 6, 0.25],
+        "control|rule:mega-lucario-ex|seat0": [3, 0, 5, 0.375],
+        "control|rule:mega-lucario-ex|seat1": [2, 0, 6, 0.25]
+      },
+      "tuple_order": "wins, draws, losses, candidate-perspective score"
+    },
+    "seat_balance": {
+      "verdict": "PASS",
+      "candidate_arm": {"candidate_player_0": 32, "candidate_player_1": 32},
+      "control_arm": {"candidate_player_0": 32, "candidate_player_1": 32},
+      "natural_first_player_values": [0, 1]
+    },
+    "reliability": {
+      "verdict": "PASS",
+      "invalid_selections": 0,
+      "fallback_actions": 0,
+      "post_terminal_actions": 0,
+      "timeouts": 0,
+      "failures": 0,
+      "incomplete_games": 0,
+      "missing_outputs": 0,
+      "all_records_status_pass": true,
+      "failure_kind_counts": {"None": 128},
+      "stop_reason": null
+    },
+    "permutation_control": {
+      "verdict": "PASS_SELECTED_TRANSITIONS_ONLY",
+      "candidate_games_checked": 64,
+      "permutations_requested_per_game": 32,
+      "permutations_executed": 2048,
+      "equivalent": 2048,
+      "non_equivalent": 0,
+      "ordering": "UNORDERED",
+      "equivalence": "set",
+      "policy_reset_before_each_permutation": true,
+      "paired_seed_claim": false,
+      "manifest_aggregate_reconciles": true,
+      "coverage": "one selected candidate transition per candidate game, not every transition"
+    },
+    "evaluated_policy_latency": {
+      "verdict": "PASS_CARDINALITY_AND_FINITE_VALUES",
+      "candidate_arm_evaluated_policy": {
+        "count": 1741,
+        "p50_ms": 3.060158996959217,
+        "p95_ms": 5.762442997365724,
+        "p99_ms": 7.372947002295405,
+        "max_ms": 11.520767002366483
+      },
+      "control_arm_evaluated_policy": {
+        "count": 1836,
+        "p50_ms": 0.39447200106224045,
+        "p95_ms": 0.7163070040405728,
+        "p99_ms": 0.9439950008527376,
+        "max_ms": 2.3786329984432086
+      },
+      "per_record_latency_array_equals_evaluated_policy_request_count": true,
+      "all_action_latency_array_equals_engine_request_count": true,
+      "all_values_finite_nonnegative": true
+    },
+    "runtime_safety": {
+      "verdict": "PASS_BOUNDED_RUN_GUARD",
+      "caps": {
+        "request_cap": 20000,
+        "game_timeout_seconds": 180,
+        "session_wall_seconds": 1800,
+        "cpu_seconds_per_game": 600,
+        "peak_rss_bytes": 8589934592,
+        "latency_guard_ms": {"p50_max": 1000, "p95_max": 5000, "p99_max": 10000, "max_max": 60000}
+      },
+      "candidate_arm": {
+        "games": 64,
+        "cpu_seconds": {"min": 0.136582437, "max": 0.596869442, "total": 21.401378365999996},
+        "wall_seconds": {"max": 0.5968911329982802, "total": 21.406357274012407},
+        "peak_rss_bytes_max": 46612480,
+        "engine_requests": {"min": 16, "max": 224},
+        "evaluated_policy_requests": {"min": 3, "max": 53}
+      },
+      "control_arm": {
+        "games": 64,
+        "cpu_seconds": {"min": 0.069173256, "max": 0.410237121, "total": 13.275067416000002},
+        "wall_seconds": {"max": 0.4102486800038605, "total": 13.280417863970797},
+        "peak_rss_bytes_max": 46944256,
+        "engine_requests": {"min": 18, "max": 224},
+        "evaluated_policy_requests": {"min": 3, "max": 46}
+      },
+      "session_wall_seconds": 48.0958015300057,
+      "zero_request_records": 0
+    },
+    "budget_and_evidence": {
+      "verdict": "PASS",
+      "budget_name": "local_upper_screen",
+      "games_total_scope": "per_arm",
+      "games_total_per_arm": 64,
+      "games_total_all_arms": 128,
+      "recorded_evidence_bytes": 764941,
+      "retained_directory_bytes": 844257,
+      "evidence_cap_bytes": 67108864
+    },
+    "external_action_firewall": {
+      "verdict": "PASS",
+      "training_performed": false,
+      "kaggle_runs": 0,
+      "submission_created": false,
+      "external_mutation": false
+    }
+  },
+  "asset_receipts": {
+    "verdict": "PASS_CURRENT_FILES_MATCH_RECORDED_BYTES_AND_SHA256",
+    "loaded_artifact_count": 32,
+    "loaded_artifact_current_match_count": 32,
+    "config_sha256": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_source_sha256": "383b63ce41ad7651e02fdcd298915e388dd62ad4c0c5c1d2a976b8a7c8adab25",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "card_table_verification": {"cards": 1267, "attacks": 1556, "csv_rows": 2022},
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "game_wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "sim_wrapper_sha256": "1555f57f5d22bf4c09d70e0e667a916e575e68c9dd1de9ead34ba5e7e4968655",
+    "independent_launch_receipt_sha256": "d34b3a205f3d68ab0186a05f6cde1bad75ea5b9428e06ed5411d7c5066163eb7",
+    "receipt_mode": "0440",
+    "all_other_loaded_asset_modes": "0664",
+    "all_loaded_asset_current_matches": true,
+    "loaded_artifact_sha256_by_label": {
+      "anchor_rule_dragapult-ex_deck.csv": "30c8c7365c75f38fd6e7e1d8543c42ce7055ed6fd1c6e9eb244e44484b78e724",
+      "anchor_rule_dragapult-ex_main.py": "ef8936859fd215e6c704071042e5438d55e2e972b8f1806fb6eddbd03027e0b9",
+      "anchor_rule_dragapult-ex_receipt.json": "abc733a20c9a1f9be0877b35ce69d1ae98ec308f9d44b8322ed9a5f3df6abd40",
+      "anchor_rule_iono_deck.csv": "e36d46c5bcafdef8a5d0e6caeb34dd8db09119c62d8fb67c99e89e7eed39f974",
+      "anchor_rule_iono_main.py": "9fa360307e0b9ccd4cd8469aad50c93872468c8dfa8ff8ebb6718cacf9faa8fa",
+      "anchor_rule_iono_receipt.json": "436b1ea6a55d744f7307e1505091050bfd2199f4edc70014dd9172673502023f",
+      "anchor_rule_mega-abomasnow-ex_deck.csv": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+      "anchor_rule_mega-abomasnow-ex_main.py": "d1ef4a86413b7f548270657385c6d5c3cb114b473082cd04e2a0f1733158482b",
+      "anchor_rule_mega-abomasnow-ex_receipt.json": "d64f79fdf534977a3c417a5526fa406fbac288907fb59ecbe8e1bd057741b9ae",
+      "anchor_rule_mega-lucario-ex_deck.csv": "406e2e9bd6ae82b8008b16ee64ffcbb58e4a50cd6bc36e33ae655456c6b9afee",
+      "anchor_rule_mega-lucario-ex_main.py": "ab8563b67b88b3666c2ff9c308505085a84fdac676c194c5b484d8544478c3b2",
+      "anchor_rule_mega-lucario-ex_receipt.json": "dc94ec50448e7a0dd40423d62cd33c480d6021870d2726c9849ba0429045713e",
+      "api_wrapper": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+      "candidate_config": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+      "candidate_deck": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+      "candidate_imported_module": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6",
+      "candidate_transitive_00": "e1a3f2dbae34f7bac77d990edd0068bae179e2b2e068c30723da74f7f7959042",
+      "candidate_transitive_01": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+      "candidate_transitive_02": "b84d07adae1ec557f4dacc95e8e0ff52978b81839bcec108bd1258bb66c827af",
+      "candidate_transitive_03": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6",
+      "candidate_transitive_04": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709",
+      "candidate_transitive_05": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "candidate_transitive_06": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "candidate_transitive_07": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+      "candidate_transitive_08": "816f6d8c879299c40cc8ec350f9cab182cc72c374da5d2bc779ea81afdd8bdd1",
+      "card_data": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "config": "89435ed2c2d13660fe0027d4b8f6a69d61e0de4ddf6f4751c4aef74dbbc5abd6",
+      "game_wrapper": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+      "independent_scale_review": "d34b3a205f3d68ab0186a05f6cde1bad75ea5b9428e06ed5411d7c5066163eb7",
+      "native_library": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "sim_wrapper": "1555f57f5d22bf4c09d70e0e667a916e575e68c9dd1de9ead34ba5e7e4968655"
+    }
+  },
+  "false_success_audit": {
+    "verdict": "PASS_OBSERVED_RECORDS_WITH_DIRTY_TREE_LIMITATION",
+    "non_degenerate_observations": {
+      "terminal_results": [0, 1],
+      "first_player_values": [0, 1],
+      "engine_requests_min": 16,
+      "evaluated_policy_requests_min": 3,
+      "zero_request_records": 0
+    },
+    "guards_recomputed": [
+      "task identity and exact counts",
+      "candidate-perspective terminal inversion",
+      "all required reliability counters",
+      "all 128 manifest match digests and sidecars",
+      "latency/request cardinalities and quantiles",
+      "finite nonnegative per-game CPU/RSS/wall metrics and caps",
+      "64 x 32 selected-transition semantic permutations",
+      "seat balance",
+      "asset/config/deck/card/engine/wrapper/source receipts",
+      "no external action"
+    ],
+    "limitations": [
+      "The harness permits engine_requests >= 0; no zero-request record occurred.",
+      "Permutation control covers one selected transition per candidate game, not every transition.",
+      "The dirty historical source tree is not reconstructable.",
+      "Small local evidence does not establish competence, deployment strength, medal probability, or promotion."
+    ]
+  },
+  "interpretation": {
+    "observed_strength": "Candidate 27-37 (0.421875) versus control 21-43 (0.328125), delta +0.09375.",
+    "uncertainty": "Independent bootstrap 95% percentile interval [-0.078125, +0.265625] crosses zero.",
+    "anchor_seat_weaknesses": "Candidate loses 6/8 in Dragapult seat0, Iono seat0, Mega Abomasnow seat1, and Mega Lucario seat1; all sixteen cells remain visible above.",
+    "claims_not_granted": ["competence", "medal", "promotion", "deck freeze", "private Kaggle launch", "confirmation", "submission"],
+    "next_evidence_task": "Independently close the B1 route capsules and runtime-compatible public-oracle gate. Do not launch private Kaggle or confirmation until those prerequisites pass and a fresh launch receipt explicitly authorizes it."
+  },
+  "limitations_and_nonclaims": [
+    "This PASS is limited to execution/reliability closure of the preregistered 128-game local_upper_screen.",
+    "Candidate 27-37 versus control 21-43 has a +0.09375 point delta, but the independent bootstrap interval [-0.078125, +0.265625] crosses zero.",
+    "All anchor/seat cells are descriptive at n=8 and do not establish matchup competence or a deployment estimate.",
+    "The permutation check covers one selected candidate transition per game, not every transition.",
+    "The run was executed on a dirty checkout; the historical dirty source tree cannot be reconstructed.",
+    "No competence, medal probability, promotion, deck freeze, private Kaggle launch, confirmation, training, submission, or external mutation is authorized by this review."
+  ],
+  "next_task": "Independently review and close the B1 route capsules and runtime-compatible public-oracle gate. Only after those gates pass may the parent prepare a fresh, separately reviewed private_kaggle_arm launch receipt; do not infer Kaggle or confirmation authorization from this report."
+}
