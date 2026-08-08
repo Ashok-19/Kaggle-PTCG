@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-b1-prize-route-v1",
+  "status": "OFFLINE_FIXTURE_ONLY_NATIVE_BLOCKED",
+  "scope": "FIXTURE_ONLY",
+  "policy_id": "b1-current-public-route-oracle-v1",
+  "candidate_deck": "mega-abomasnow-ex",
+  "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "card_table_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+  "receipt_boundary": {
+    "fixture_scope_is_not_native": true,
+    "runtime_requires_scope": "NATIVE_QUALIFIED",
+    "effect_prose_executable": false,
+    "ex_flags_are_prize_units": false,
+    "successor_snapshots_allowed": false,
+    "offline_fixture_successor_snapshots_allowed": true,
+    "runtime_oracle_successor_snapshots_allowed": false,
+    "hidden_priors_allowed": false
+  },
+  "formulations": [
+    "B1-R-A-CURRENT-ROBUST-LOWER-BOUND",
+    "B1-R-B-CURRENT-PUBLIC-THREAT-MARGIN"
+  ],
+  "offline_fixture_formulations": [
+    "B1-A-LEXICOGRAPHIC-ROBUST-ROUTE",
+    "B1-B-FINITE-PUBLIC-ENVELOPE"
+  ],
+  "qualified_attack_ids": [1044, 1045],
+  "partial_attack_ids": [1042, 1043, 1046, 1047],
+  "partial_effect_card_ids": [1262],
+  "native_integration_gate": {
+    "status": "BLOCKED",
+    "runtime_policy_input": false,
+    "fixture_evaluator_remains_allowed": true,
+    "older_route_statuses_do_not_authorize_native_integration": true,
+    "blocking_requirements": [
+      "independent review of the runtime-qualified receipt and route-critical public semantics",
+      "fresh-process R01-R10 current-state boundary fixtures",
+      "sealed engine/card/deck/source/config receipts"
+    ]
+  },
+  "active_request_contract": {
+    "singleton": "min_count=max_count=1",
+    "optional": "min_count=0,max_count=1 with explicit END/STOP semantic candidate",
+    "compound": "B0_DELEGATE",
+    "ordered_multiselect": "B0_DELEGATE",
+    "complete_option_coverage_required": true,
+    "non_equivalent_tie": "AMBIGUOUS",
+    "option_order_authority": false
+  },
+  "diagnostics": [
+    "route_requests",
+    "route_active_requests",
+    "route_abstention_count",
+    "b0_delegation_count",
+    "unsupported_requests",
+    "ambiguous_requests",
+    "unknown_resource_count",
+    "unsupported_partial_semantic_count",
+    "hidden_leak_rejections",
+    "tie_count"
+  ],
+  "offline_fixture_gate": {
+    "fixtures": ["F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10", "F11", "F12"],
+    "evaluator": "OfflineFixtureEvaluatorV1",
+    "successor_snapshots_allowed": true,
+    "runtime_policy_input": false,
+    "bounded_route_contract": {
+      "max_horizon": 4,
+      "complete_option_set_required": true,
+      "branch_pruning_status": "NO_SAFE_ROUTE",
+      "max_horizon_pruned_required": true,
+      "incomplete_route_strength_score": null
+    },
+    "restricted_runtime_fixtures": {
+      "fixtures": ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10"],
+      "evaluator": "CurrentStateRouteOracleV1",
+      "successor_snapshots_allowed": false,
+      "runtime_policy_input": true,
+      "singleton_only": true,
+      "optional_stop": "min_count=0,max_count=1 with an available END option",
+      "compound_action": "B0_DELEGATE"
+    },
+    "fresh_process_required": true,
+    "native_games": 0,
+    "kaggle_runs": 0,
+    "strength_claim": false,
+    "promotion": false
+  }
+}
