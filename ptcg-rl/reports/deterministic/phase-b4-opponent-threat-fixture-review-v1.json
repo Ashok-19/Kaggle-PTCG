@@ -1,0 +1,971 @@
+{
+  "record_id": "phase-b4-opponent-threat-fixture-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T01:42:01Z",
+  "updated_at_utc": "2026-08-08T04:08:03Z",
+  "status": "REVIEW_COMPLETE_PASS",
+  "verdict": "PASS_FIXTURE_ONLY_NATIVE_NOT_AUTHORIZED",
+  "scope": {
+    "review_kind": "FINAL_INDEPENDENT_RED_TEAM_RECHECK_AFTER_CORRECTIONS",
+    "component": "isolated Phase B4 opponent-threat fixture evaluator",
+    "review_boundary": "Fixture arithmetic, public boundary, receipt/provenance, lifecycle, action construction, and fail-closed behavior only. No native engine, Kaggle, training, submission, deck freeze, or external service was used.",
+    "owned_artifact": "reports/deterministic/phase-b4-opponent-threat-fixture-review-v1.json",
+    "implementation_config_tests_edited": false,
+    "commit_created": false,
+    "private_assets_modified": false,
+    "audited_head": "1e66693b4f3d2d495a374dc67e848b2421f79622",
+    "worktree_note": "The checkout remains concurrently dirty. B1/B3/B5 and unrelated G3/E01 paths were not modified, reverted, or treated as B4 authority. The B4 implementation/config/tests were reviewed as current uncommitted artifacts; the worktree count changed concurrently and is recorded in final_recheck_final.",
+    "native_games": 0,
+    "kaggle_runs": 0,
+    "training_runs": 0
+  },
+  "authoritative_inputs": {
+    "master_prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dc85b18208839af6b811b26045edd6"
+    },
+    "design": {
+      "path": "reports/deterministic/phase-b4-opponent-threat-design-v1.json",
+      "sha256": "3acbad5bd73fd421f1aa8a0af983ab99cfecaa4380997f1425e5e6283a1ce2e1"
+    },
+    "design_review": {
+      "path": "reports/deterministic/phase-b4-opponent-threat-design-v1-review.json",
+      "sha256": "67c3ceabbae8f3b61ab255297c3ff1462167f9f59fcb9e6ce413700eb889c836"
+    },
+    "implementation": {
+      "path": "src/ptcg_rl/deterministic/b4_opponent_threat.py",
+      "sha256": "44436f5a929af02dce67e53a9910ddf0d5b4b94439bce9d4394dc5634ed640e0"
+    },
+    "fixture_config": {
+      "path": "configs/deterministic/phase_b4_opponent_threat_fixture_v1.json",
+      "sha256": "32cd1a07d8fd73ec1568e099716071a8ba552ff9332684aaabe4106b361b3f70"
+    },
+    "fixture_tests": {
+      "path": "tests/deterministic/test_phase_b4_opponent_threat.py",
+      "sha256": "8c7ca80b0ec918835238ad96c472ac25bc077514d783faf1dd17975d2beb9a7a"
+    },
+    "public_contracts": [
+      {
+        "path": "src/ptcg_rl/g1/models.py",
+        "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f"
+      },
+      {
+        "path": "src/ptcg_rl/g1/actions.py",
+        "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/state.py",
+        "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      },
+      {
+        "path": "src/ptcg_rl/g1/semantic.py",
+        "sha256": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"
+      }
+    ]
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS",
+    "validation_summary": "The read-only validator passed. It reports 12 open P0/P1 questions and three unresolved contradictions; these remain uncertainty constraints, not runtime facts.",
+    "requeried_ids": {
+      "decision_rules": ["DR-014", "DR-018", "DR-023"],
+      "strategies": ["STR-007"],
+      "search_features": ["SF-002", "SF-003", "SF-010"],
+      "research_questions": ["RQ-003", "RQ-013"]
+    },
+    "binding_interpretation": "DR-014 and STR-007 support a strongest public response stress test only after exact receipts; DR-018/DR-023 prohibit hidden certainty and response probabilities; SF-002/SF-003/SF-010 remain hypotheses requiring exact public/native evidence; RQ-003 and RQ-013 remain open. The implementation is correctly fixture-only and makes no KB-derived runtime prior claim."
+  },
+  "tests": {
+    "historical_pre_correction_commands": [
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "8 passed in 0.07s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic",
+        "result": "PASS",
+        "summary": "199 passed in 1.55s; concurrent B1/B3 tests and all other deterministic tests collected successfully. No unrelated G3 test or artifact was used."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run ruff check src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "All checks passed"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python -m compileall -q src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "Both reviewed files compiled"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python knowledge_base/validate_db.py",
+        "result": "PASS",
+        "summary": "PTCG KNOWLEDGE DB VALIDATION result PASS"
+      }
+    ],
+    "static_dependency_check": {
+      "result": "PASS",
+      "summary": "The B4 module imports only the G1 models/actions/semantic contracts and deterministic public state. No native, private baseline, database, network, or random dependency was found."
+    },
+    "historical_pre_correction_adversarial_probe_commands": [
+      {
+        "id": "B4-RED-001",
+        "result": "REPRODUCED",
+        "summary": "Replacing a local delta receipt_id with 'forged' and the corresponding capability local_delta_receipt_id with an unrelated value still returned SELECTED for F01 A."
+      },
+      {
+        "id": "B4-RED-002",
+        "result": "REPRODUCED",
+        "summary": "Replacing damage_or_effect_semantics with 'deal 999 damage from card prose', ready_now with None, or guaranteed_level with None while retaining possible_level=3 still returned SELECTED for F01 A."
+      },
+      {
+        "id": "B4-RED-003",
+        "result": "REPRODUCED",
+        "summary": "An unsupported-context request at a sequence delegated, then the changed same-sequence valid request selected. A delegated sequence 10 request did not prevent a later valid sequence 9 request from selecting."
+      },
+      {
+        "id": "B4-RED-004",
+        "result": "REPRODUCED",
+        "summary": "Changing fixture_metadata_sha256 from all-f to all-0 still materialized all 11 hardcoded cases. The metadata digest is syntax-checked but not recomputed over fixture/config content."
+      },
+      {
+        "id": "B4-RED-005",
+        "result": "REPRODUCED",
+        "summary": "An optional F03 delta with remaining_capability_ids=(), census_complete=True, and arbitrary current_public_fields selected a zero-level action; no independent census receipt was required."
+      },
+      {
+        "id": "B4-RED-006",
+        "result": "REPRODUCED",
+        "summary": "ThreatLevelScaleV1 accepted levels ((0.0,'a'),(1.0,'b')) and duplicate labels, because numeric equality is checked without integer/label uniqueness validation. NaN/Inf capability levels were rejected by _nonnegative_int."
+      }
+    ],
+    "commands": [
+      {
+        "command": "UV_CACHE_DIR=.uv-cache uv run pytest -q --basetemp=.pytest-tmp-b4 tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "18 passed in 0.30s. All corrected B4 fixture tests, including closure regressions, passed."
+      },
+      {
+        "command": "UV_CACHE_DIR=.uv-cache uv run pytest -q --tb=no --basetemp=.pytest-tmp-b4 tests/deterministic",
+        "result": "PASS",
+        "summary": "228 passed in 1.90s on the latest rerun. No B4 regression or deterministic-suite failure remained after the concurrent B1/B3 worktree state was reconciled."
+      },
+      {
+        "command": "UV_CACHE_DIR=.uv-cache uv run pytest -q tests/deterministic --ignore=tests/deterministic/test_phase_b1_component_harness.py --ignore=tests/deterministic/test_phase_b1_policy.py",
+        "result": "FAIL_UNRELATED_CONCURRENT_B3",
+        "summary": "1 failed, 178 passed, 28 errors in 2.52s; the B3 setup/errors were caused by the concurrent B3 dependency-manifest mismatch. No B4 test failed."
+      },
+      {
+        "command": "UV_CACHE_DIR=.uv-cache uv run ruff check src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py && UV_CACHE_DIR=.uv-cache uv run python -m compileall -q src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "Ruff and compileall passed for the corrected implementation and tests."
+      },
+      {
+        "command": "UV_CACHE_DIR=.uv-cache uv run python knowledge_base/validate_db.py",
+        "result": "PASS",
+        "summary": "Read-only knowledge-base validation passed with 12 open P0/P1 questions and 3 unresolved contradictions."
+      }
+    ],
+    "adversarial_probe_commands": [
+      {
+        "id": "B4-RED-001",
+        "result": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+        "summary": "Unregistered local-delta mutation returned B0_DELEGATE/UNREGISTERED_LOCAL_DELTA and a direct forged capabilities override returned B0_DELEGATE/UNREGISTERED_CAPABILITIES. A forged but internally consistent whole receipt with cap-x levels changed to [0,0] still returned SELECTED/B4-F01-X; see B4-RED-008."
+      },
+      {
+        "id": "B4-RED-002",
+        "result": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+        "summary": "Missing ready_now returned B0_DELEGATE/UNKNOWN_THREAT_FIELD and card prose returned B0_DELEGATE/CARD_PROSE_FORBIDDEN. Hidden target/status requirements, energy requirement (99), and a wrong source/target ownership role still selected B4-F01-Y; see B4-RED-009."
+      },
+      {
+        "id": "B4-RED-003",
+        "result": "CLOSED",
+        "summary": "Unknown-formulation duplicate replayed the exact delegated result; changed same-sequence input returned STALE_OR_REUSED_REQUEST_IDENTITY; a later sequence-99 delegation made a lower sequence stale. Early delegated requests now enter the lifecycle ledger."
+      },
+      {
+        "id": "B4-RED-004",
+        "result": "CLOSED_FOR_CONFIG_AND_SOURCE_MUTATIONS",
+        "summary": "In-memory fixture metadata, dependency-manifest, and expected-outcome mutations were all rejected with ValueError. Direct whole-receipt content forgery remains the separate B4-RED-008 blocker."
+      },
+      {
+        "id": "B4-RED-005",
+        "result": "CLOSED_FOR_UNREGISTERED_CENSUS",
+        "summary": "An empty-capability delta with an unregistered census returned B0_DELEGATE/UNREGISTERED_CENSUS_RECEIPT. A registered census matching the public hash, option scopes, checks, and local-delta receipt selected the intended [0,0] sentinel."
+      },
+      {
+        "id": "B4-RED-006",
+        "result": "CLOSED",
+        "summary": "Float ordinals, duplicate labels, bool schema, and NaN/Inf capability levels were rejected with ValueError; strict scale labels and integer types are now enforced."
+      },
+      {
+        "id": "B4-RED-007",
+        "result": "CLOSED_WITH_INDEPENDENT_MATRIX",
+        "summary": "The corrected 18-test file passed, and a fresh subprocess asserted all 11 cases, original/mirror, both formulations and every option permutation against declared expected statuses: base_evals=44, permutation_evals=72, hidden_enum_checks=144. Residual hidden capability semantic-field coverage is tracked as B4-RED-009, not treated as a matrix pass."
+      }
+    ]
+  },
+  "re_review": {
+    "purpose": "Independent re-review of the corrected uncommitted B4 implementation against every original B4-RED-001..007. Original findings and pre-correction evidence remain above under historical_* keys; closure status is recorded here and on each finding.",
+    "updated_at_utc": "2026-08-08T02:21:21Z",
+    "previous_review_sha256": "a6f432f81a009100b972d88f0f666aecbc1d48039e6a706c329604569f2575df",
+    "corrected_artifact_sha256": {
+      "implementation": "e4592d687140dccb58c02de70e1672a50e45654610a575262c975bb9579c9665",
+      "fixture_config": "890cadd469dc0dc3eb64832c6d03ffa0eb0a7023e40bda5b181436c39b2a8b6c",
+      "fixture_tests": "8bc2766066b393af272c4376b50ce6d13e8e5e95fd4b14ba79b542250ce0eb20",
+      "knowledge_base": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f"
+    },
+    "closure_matrix": [
+      {
+        "id": "B4-RED-001",
+        "status": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+        "closed_scope": "Unregistered local-delta IDs, unregistered capability local-delta IDs, and direct capabilities= overrides are rejected before scoring.",
+        "residual": "A whole B4CapabilityReceiptV1 can be replaced with a receipt whose graph and provenance manifest are internally valid but whose capability numeric content is forged; the evaluator then scores it. B4-RED-008 remains HIGH_BLOCKER."
+      },
+      {
+        "id": "B4-RED-002",
+        "status": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+        "closed_scope": "Missing ranked fields, non-FIXTURE_ONLY qualification, and card/effect prose now delegate; constructor enum/type checks remain strict.",
+        "residual": "Target/status/energy requirement strings and source/target ownership/role are not exact-qualified against the public option/entity semantics. Hidden-like values and a wrong ownership role still score. B4-RED-009 remains HIGH_BLOCKER."
+      },
+      {
+        "id": "B4-RED-003",
+        "status": "CLOSED",
+        "closed_scope": "Early delegated requests are content-digested, idempotent for equal payloads, and stale for changed/lower sequence payloads; reset behavior remains covered by the focused suite."
+      },
+      {
+        "id": "B4-RED-004",
+        "status": "CLOSED_FOR_DECLARED_CONFIG_PATH",
+        "closed_scope": "Canonical fixture content, expected statuses, dependency manifest, and normalized implementation source hash are recomputed and mutation probes reject. Direct runtime receipt substitution is tracked independently as B4-RED-008."
+      },
+      {
+        "id": "B4-RED-005",
+        "status": "CLOSED_FOR_CENSUS_RECEIPT_BINDING",
+        "closed_scope": "Zero-threat/no-response requires a registered census receipt bound to public observation hash, source/target option scope, required checks, and local-delta receipt; forged/unregistered census delegates."
+      },
+      {
+        "id": "B4-RED-006",
+        "status": "CLOSED",
+        "closed_scope": "ThreatLevelScaleV1 now rejects malformed schema/type/label inputs and capability endpoints reject nonnegative-integer violations including NaN/Inf."
+      },
+      {
+        "id": "B4-RED-007",
+        "status": "CLOSED_WITH_INDEPENDENT_MATRIX",
+        "closed_scope": "Fresh subprocess full materialized-case matrix and corrected closure regressions passed; expected statuses are asserted for 44 base and 72 permutation evaluations across original/mirror cases and both formulations."
+      }
+    ],
+    "fresh_process_full_matrix": {
+      "result": "PASS",
+      "cases": 11,
+      "base_evals": 44,
+      "permutation_evals": 72,
+      "hidden_enum_checks": 144,
+      "assertions": [
+        "all declared A/B expected statuses",
+        "original and player-mirrored cases",
+        "every option permutation",
+        "provenance-manifest mutation delegates",
+        "hidden current-delta field rejects at constructor",
+        "successor-delta mutation delegates",
+        "unsupported response enum rejects"
+      ],
+      "coverage_note": "The matrix does not make unqualified capability target/status/energy/source-role mutations safe; those probes remain explicitly failing under B4-RED-009."
+    },
+    "knowledge_base_requery": {
+      "result": "PASS",
+      "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "ids_verified": {
+        "decision_rules": ["DR-014", "DR-018", "DR-023"],
+        "strategies": ["STR-007"],
+        "search_features": ["SF-002", "SF-003", "SF-010"],
+        "research_questions": ["RQ-003", "RQ-013"]
+      },
+      "interpretation": "The queried records continue to require exact public receipts, prohibit hidden certainty and response probabilities, and leave prevalence/route questions open; no KB row was promoted to runtime authority."
+    },
+    "concurrent_state_accounting": {
+      "current_deterministic_suite": "Latest command passed 228 tests in 1.90s; no B4 regression. The earlier 16 B1 failures/212 passes and B1-excluding B3 errors were transient concurrent dirty-state snapshots, not B4 defects.",
+      "earlier_dirty_snapshots": [
+        "16 B1 policy failures and 212 passes before concurrent B1 receipt/source reconciliation.",
+        "1 B3 failure, 28 B3 setup errors, and 178 passes under the B1-excluding command while the B3 dependency manifest was concurrently stale."
+      ],
+      "unrelated_g3": "No G3 test was used as B4 evidence. Existing unrelated G3/E01 dirty-state failures remain outside this fixture review."
+    },
+    "blocking_findings": ["B4-RED-008", "B4-RED-009"],
+    "final_verdict": "BLOCKED: corrected implementation closes the original unbound-graph, prose/missing-field, lifecycle, declared-config mutation, census, scale-type, and fresh-matrix probes, but it still permits forged whole-receipt capability content and semantically unbound hidden-like target/status/energy/source-role fields. No native or production activation is authorized."
+  },
+  "final_recheck": {
+    "review_kind": "FINAL_INDEPENDENT_RED_TEAM_RECHECK",
+    "updated_at_utc": "2026-08-08T03:28:06Z",
+    "supersedes": "re_review",
+    "independence": {
+      "fresh_reviewer": true,
+      "implementation_or_test_author": false,
+      "historical_findings_preserved": true,
+      "implementation_config_tests_edited": false,
+      "only_owned_report_edited": true
+    },
+    "current_artifact_hashes": {
+      "design": "3acbad5bd73fd421f1aa8a0af983ab99cfecaa4380997f1425e5e6283a1ce2e1",
+      "design_review": "67c3ceabbae8f3b61ab255297c3ff1462167f9f59fcb9e6ce413700eb889c836",
+      "implementation": "47a0b112561b9e647684216c5bb9e657e485f39db4f108781cc5378f2b6a7c00",
+      "fixture_config": "4ef60728c159eb30002de4f076a470cc7b257155d8ba6093467d690f0e6ac254",
+      "fixture_tests": "af33d4f2c965e09ce36f90e9032b82d3d3bf40030e1be7ac5fd9152adf6dbdc3",
+      "public_contracts": {
+        "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+        "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      },
+      "knowledge_base": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "implementation_source_normalized_sha256": "cbcbfe63078046a5cd130427b38d7f316280434edd0293e5d4079520fd74558f",
+      "config_metadata_sha256": "b9f4ca590aaf47c8c0782a2f25dd08405207f7bfea6490b987a90b267fafbb88",
+      "config_declared_normalized_source_sha256": "cbcbfe63078046a5cd130427b38d7f316280434edd0293e5d4079520fd74558f"
+    },
+    "head_and_worktree": {
+      "head": "1e66693b4f3d2d495a374dc67e848b2421f79622",
+      "status_entries": 465,
+      "status_digest_sha256": "2107c8de7d4bc34c741107f02698db5f291fce511932862799579d1b23c8ea00",
+      "worktree_note": "The checkout remains concurrently dirty. B1/B3/B5 and unrelated G3/E01 paths were not edited, reverted, or used as B4 authority. The B4 source/config/tests are uncommitted inputs and their hashes above were re-read for this final review."
+    },
+    "all_findings_status": {
+      "B4-RED-001": "OPEN_RESIDUAL_BLOCKER",
+      "B4-RED-002": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+      "B4-RED-003": "OPEN_RESIDUAL_BLOCKER",
+      "B4-RED-004": "CLOSED_FOR_DECLARED_CONFIG_AND_DEPENDENCY_MANIFEST",
+      "B4-RED-005": "CLOSED_FOR_REGISTERED_CENSUS_BOUNDARY",
+      "B4-RED-006": "CLOSED",
+      "B4-RED-007": "CLOSED_WITH_FRESH_PROCESS_MATRIX",
+      "B4-RED-008": "OPEN_RESIDUAL_BLOCKER",
+      "B4-RED-009": "OPEN_RESIDUAL_BLOCKER"
+    },
+    "closure_matrix": [
+      {
+        "id": "B4-RED-001",
+        "status": "OPEN_RESIDUAL_BLOCKER",
+        "closed_scope": "Unregistered local-delta IDs, unregistered capability IDs, and direct capabilities overrides are rejected; graph membership and provenance-manifest checks pass.",
+        "residual": "Registered local-delta content is not canonical-content bound. Replacing the chosen F01 Y delta action_key, current_public_fields, or action_eligible field still scores rather than delegates."
+      },
+      {
+        "id": "B4-RED-002",
+        "status": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+        "closed_scope": "Missing ranked fields, card/effect prose, unsupported response values, and malformed hidden-like entity references fail closed.",
+        "residual": "Target/status/energy requirement values and source/target semantic roles are not exact-qualified against the current public option/entity receipt; the remaining boundary is tracked under B4-RED-009."
+      },
+      {
+        "id": "B4-RED-003",
+        "status": "OPEN_RESIDUAL_BLOCKER",
+        "closed_scope": "Changed same-sequence payloads, ordinary lower sequences, and duplicate requests in the covered path are rejected or replayed idempotently.",
+        "residual": "After a higher-sequence request has been observed, an exact old request can hit the duplicate cache before the lower-sequence guard and replay SELECTED."
+      },
+      {
+        "id": "B4-RED-004",
+        "status": "CLOSED_FOR_DECLARED_CONFIG_AND_DEPENDENCY_MANIFEST",
+        "closed_scope": "Declared metadata, expected outcomes, dependency paths, and normalized source binding mutations fail closed; the current normalized source hash equals the config declaration.",
+        "residual": "Runtime whole-receipt substitution remains a separate B4-RED-008 authority-boundary defect."
+      },
+      {
+        "id": "B4-RED-005",
+        "status": "CLOSED_FOR_REGISTERED_CENSUS_BOUNDARY",
+        "closed_scope": "An unregistered no-response census delegates; only a registered census matching public hash, option scopes, checks, and local-delta receipt can select the [0,0] sentinel.",
+        "residual": "This closure is for the registered fixture census contract, not native qualification."
+      },
+      {
+        "id": "B4-RED-006",
+        "status": "CLOSED",
+        "closed_scope": "Float/bool ordinals, duplicate labels, malformed schema, and NaN/Inf endpoints fail with ValueError; the finite integer scale boundary is strict."
+      },
+      {
+        "id": "B4-RED-007",
+        "status": "CLOSED_WITH_FRESH_PROCESS_MATRIX",
+        "closed_scope": "All 11 materialized cases, original/mirror perspectives, both formulations, every option permutation, lifecycle, STOP, compound/order, provenance, and unsupported-enum checks passed the independent fresh-process matrix."
+      },
+      {
+        "id": "B4-RED-008",
+        "status": "OPEN_RESIDUAL_BLOCKER",
+        "closed_scope": "Per-capability resealed content mutations are rejected by the canonical catalog and graph/provenance mutations fail closed.",
+        "residual": "A complete canonical receipt from another materialized case can be supplied to a fresh evaluator and scored against the current state. The mutable evaluator.receipt field can likewise be replaced after construction."
+      },
+      {
+        "id": "B4-RED-009",
+        "status": "OPEN_RESIDUAL_BLOCKER",
+        "closed_scope": "Malformed enum values, owner/zone/card/serial mismatches caught by the existing option/public-reference checks, status mismatch, and unsupported effect/context mutations delegate.",
+        "residual": "The option target is not required to equal the capability target, and selected target card, source energy, target HP, and source HP public changes can still score."
+      }
+    ],
+    "residual_probes": {
+      "B4-RED-001_local_delta_content": {
+        "method": "Fresh evaluator from the canonical F01 receipt; replace one registered local delta with an otherwise typed, same-ID record.",
+        "observations": [
+          "chosen Y action_key='FORGED_ACTION' -> SELECTED, chosen_action_keys=['FORGED_ACTION']",
+          "chosen Y current_public_fields=('forged_current_field',) -> SELECTED, chosen_action_keys=['B4-F01-Y']",
+          "chosen Y action_eligible=False -> SELECTED, chosen_action_keys=['B4-F01-X']"
+        ],
+        "finding": "The graph is ID-bound but not content-bound; direct local-delta receipt forgery remains selectable."
+      },
+      "B4-RED-003_exact_old_replay_after_newer_sequence": {
+        "method": "Evaluate valid F01 A at selection_seq=7; evaluate coherent unsupported-context request at seq=99; replay the exact original seq=7 request.",
+        "observed": "OLD_EXACT_AFTER_HIGH SELECTED B0_DELEGATE UNSUPPORTED_REQUEST_CONTEXT SELECTED None ('B4-F01-Y',) True",
+        "finding": "The exact old request replays SELECTED after a newer sequence, because duplicate-cache lookup precedes the lower-sequence guard."
+      },
+      "B4-RED-008_whole_receipt_and_post_construction": {
+        "cross_case_observations": [
+          "F01 state + F04-COMPOUND receipt/local deltas -> SELECTED, chosen_action_keys=['B4-F04-Y'], formulation=EXPERIMENTAL_THREAT_STRESS",
+          "F01 state + F07 receipt/local deltas -> SELECTED, chosen_action_keys=['B4-F07-Y'], formulation=EXPERIMENTAL_THREAT_STRESS",
+          "same-option-fingerprint pair matrix: 6 of 12 cross-case pairs selected"
+        ],
+        "post_construction_observation": "Construct F01 evaluator, replace evaluator.receipt with F04-COMPOUND receipt, evaluate F04 local deltas -> SELECTED, chosen_action_keys=['B4-F04-Y'].",
+        "finding": "A canonical receipt from a different materialized case is not bound to the current state/request/case identity; graph and manifest shape alone are insufficient."
+      },
+      "B4-RED-009_public_semantic_and_entity_mutations": {
+        "option_mutations": {
+          "source_other_owner": "B0_DELEGATE/OPTION_OWNER_MISMATCH",
+          "target_other_owner": "B0_DELEGATE/OPTION_OWNER_MISMATCH",
+          "source_own_bench": "B0_DELEGATE/OPTION_SOURCE_ZONE_MISMATCH",
+          "source_card": "B0_DELEGATE/OPTION_SOURCE_CARD_MISMATCH",
+          "source_serial": "B0_DELEGATE/OPTION_SOURCE_SERIAL_MISMATCH",
+          "target_position": "B0_DELEGATE/OPTION_TARGET_POSITION_MISMATCH",
+          "choice_role": "construction PublicStateError: option choice role is inconsistent with option type",
+          "attack_id": "B0_DELEGATE/OPTION_EFFECT_MISMATCH",
+          "special_condition": "B0_DELEGATE/OPTION_EFFECT_MISMATCH",
+          "request_context": "B0_DELEGATE/OPTION_CONTEXT_MISMATCH",
+          "target_own_bench": "SELECTED, chosen_action_keys=['B4-F01-Y']",
+          "option_type_9_valid_enum": "SELECTED, chosen_action_keys=['B4-F01-Y']"
+        },
+        "entity_mutations": {
+          "source_owner": "B0_DELEGATE/UNRESOLVED_PUBLIC_REFERENCE",
+          "source_zone": "construction PublicStateError: opponent hand entity is outside the public boundary",
+          "source_card": "B0_DELEGATE/CAPABILITY_SOURCE_MISMATCH",
+          "source_serial": "B0_DELEGATE/UNRESOLVED_PUBLIC_REFERENCE",
+          "target_owner": "construction PublicStateError: legal option target entity reference is outside the snapshot",
+          "target_zone_bench": "B0_DELEGATE/OPTION_TARGET_POSITION_MISMATCH",
+          "target_card": "SELECTED, chosen_action_keys=['B4-F01-Y']",
+          "target_serial": "construction PublicStateError: legal option target entity reference is outside the snapshot"
+        },
+        "public_field_mutations": {
+          "source_energy_types_and_attached_count": "SELECTED, chosen_action_keys=['B4-F01-Y']",
+          "target_status": "B0_DELEGATE/CAPABILITY_STATUS_MISMATCH",
+          "target_hp_and_damage": "SELECTED, chosen_action_keys=['B4-F01-Y']",
+          "source_hp_and_damage": "SELECTED, chosen_action_keys=['B4-F01-Y']"
+        },
+        "finding": "The option semantic checks are not a complete capability-to-option/entity binding. In particular, capability.target_entity_key is not compared to option.target_entity_key and several public fields used by threat semantics are not receipt-bound."
+      }
+    },
+    "closure_probes": {
+      "B4-RED-004": {
+        "dependency_manifest_mutations": "5/5 rejected with ValueError: B4 dependency manifest does not match the loaded source/schema files.",
+        "metadata_expected_scale_mutations": "fixture metadata, expected outcome, and scale-label mutations rejected with ValueError: B4 canonical fixture content digest does not match its sealed authority or ThreatLevelScaleV1 labels do not match the sealed fixture semantics.",
+        "normalized_source_binding": "PASS; source normalized SHA cbcbfe63078046a5cd130427b38d7f316280434edd0293e5d4079520fd74558f equals config declaration."
+      },
+      "B4-RED-005": "Unregistered empty-capability census -> B0_DELEGATE/UNREGISTERED_CENSUS_RECEIPT; registered matching census -> intended SELECTED [0,0].",
+      "B4-RED-006": "Float ordinals, duplicate labels, bool schema, and NaN/Inf capability endpoints all rejected with ValueError.",
+      "B4-RED-007": "Fresh matrix returned RETURN_CODE 0 and FRESH_PROCESS_B4_MATRIX_OK 11 44 72; every original/mirror case, formulation, and option permutation matched expected outcomes.",
+      "per_capability_resealed_content": "32/32 original/mirror capability mutations failed closed (14 RECEIPT_CONTENT_MISMATCH, 8 COMPOUND_UNSUPPORTED, 4 ORDERED_UNSUPPORTED, 2 STOP_UNRESOLVED, 4 DUPLICATE_SEMANTICS).",
+      "lifecycle_stop_compound": "Exact duplicate idempotence, changed same-request rejection, reset isolation, terminal-first override, optional STOP selection, compound/ordered delegation, and STOP-row unresolved delegation all passed their focused probes."
+    },
+    "fresh_process_matrix": {
+      "result": "PASS",
+      "materialized_cases": 11,
+      "base_evals": 44,
+      "permutation_evals": 72,
+      "perspectives": ["original", "player_mirrored"],
+      "formulations": ["A_FORMULATION", "EXPERIMENTAL_THREAT_STRESS"],
+      "asserted": [
+        "F01-F07 declared expected statuses",
+        "every legal option permutation",
+        "STOP and optional STOP behavior",
+        "compound and ordered fail-closed behavior",
+        "NaN/Inf and unsupported enum construction boundaries",
+        "provenance/config mutations",
+        "lifecycle and terminal-first behavior"
+      ],
+      "result_line": "RETURN_CODE 0; FRESH_PROCESS_B4_MATRIX_OK 11 44 72"
+    },
+    "exact_tests": [
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "20 passed in 0.45s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final tests/deterministic/test_phase_b4_opponent_threat.py tests/deterministic/test_state.py tests/deterministic/test_control.py tests/deterministic/test_policy.py",
+        "result": "PASS",
+        "summary": "56 passed in 0.47s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final tests/deterministic --ignore=tests/deterministic/test_phase_b4_opponent_threat.py --ignore=tests/deterministic/test_phase_b5_bench_liability.py",
+        "result": "PASS",
+        "summary": "221 passed in 3.99s; concurrent B1/B3 worktree paths were collected but not treated as B4 authority, and incomplete concurrent B5 was excluded."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final tests/deterministic",
+        "result": "FAIL_UNRELATED_CONCURRENT_B5_COLLECTION",
+        "summary": "Collection stopped at tests/deterministic/test_phase_b5_bench_liability.py: ModuleNotFoundError for ptcg_rl.deterministic.b5_bench. B4 focused/public tests passed; this incomplete concurrent B5 failure is outside B4 authority."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run ruff check src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "All checks passed!"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python -m compileall -q src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "Reviewed implementation and tests compiled."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python knowledge_base/validate_db.py",
+        "result": "PASS_WITH_WARNINGS",
+        "summary": "Read-only KB validation passed; 12 P0/P1 questions remain open/in-review/blocked and 3 contradictions remain unresolved."
+      },
+      {
+        "command": "independent fresh-process B4 matrix harness",
+        "result": "PASS",
+        "summary": "RETURN_CODE 0; FRESH_PROCESS_B4_MATRIX_OK 11 44 72"
+      }
+    ],
+    "knowledge_base_requery": {
+      "result": "PASS",
+      "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "all_requested_ids_present": true,
+      "decision_rules": ["DR-005", "DR-006", "DR-014", "DR-018", "DR-023", "DR-024", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033"],
+      "strategies": ["STR-007", "STR-017", "STR-018"],
+      "search_features": ["SF-002", "SF-003", "SF-010"],
+      "anti_patterns": ["AP-001", "AP-008", "AP-009"],
+      "contradictions": ["CON-001", "CON-002", "CON-004"],
+      "research_questions": ["RQ-003", "RQ-004", "RQ-005", "RQ-007", "RQ-013"],
+      "interpretation": "The KB remains context/provenance guidance only. No row supplies hidden opponent state, response probability, native route certainty, or authority for this fixture."
+    },
+    "scope_controls": {
+      "commands_and_artifacts_root": "/home/nnmax/Desktop/kaggle/PTCG",
+      "native_games": 0,
+      "kaggle_runs": 0,
+      "training_runs": 0,
+      "submission_or_deck_freeze": false,
+      "commit_created": false,
+      "implementation_config_tests_changed": false,
+      "only_report_edit": true,
+      "concurrent_changes": "B1/B3/B5 and unrelated G3/E01 changes were excluded or labeled; no unrelated path was reverted."
+    },
+    "final_assurance": {
+      "arithmetic_and_interval_math": "PASS for exact finite integer fixture intervals, maximin ranking, and strict interval dominance in both exercised formulations.",
+      "known_inaccessible_unknown_separation": "PARTIAL_BLOCKED; missing/prose/hidden entity cases reject, but unbound target/status/energy/source-role and public-field mutations remain selectable.",
+      "lifecycle_mirror_stop_compound": "PASS for covered ordinary duplicate/reset/terminal, original/mirror, optional STOP, compound, ordered, and STOP-row fixtures; exact-old-after-newer sequence remains blocked under B4-RED-003.",
+      "fixture_authority_and_provenance": "BLOCKED; declared config/dependency and per-capability mutation checks pass, but whole canonical receipt/case identity and local-delta content are not sealed.",
+      "b0_delegation": "PASS as the isolated decision return contract only; no native adapter or final fallback was invoked.",
+      "production_readiness": "NOT_AUTHORIZED"
+    },
+    "final_verdict": "BLOCKED: B4-RED-001, B4-RED-003, B4-RED-008, and B4-RED-009 remain open residual blockers. The corrected fixture is not authority-safe for native or production use despite passing its arithmetic, lifecycle subset, config-mutation, census, scale, and fresh-process matrix checks.",
+    "next_exact_task": "Bind the full canonical case receipt, ordered local-delta content, capabilities, census, public snapshot, and expected outcome to an immutable case/request digest; require capability and option source/target/card/serial/owner/zone/choice-role/attack/effect/context/energy/status/HP semantics to match that exact public receipt; check lower sequence before replay-cache lookup after any newer request; add fresh regressions for all four residuals and rerun this report before native work."
+  },
+  "final_recheck_final": {
+    "review_kind": "FINAL_INDEPENDENT_RED_TEAM_RECHECK_AFTER_CORRECTIONS",
+    "updated_at_utc": "2026-08-08T04:08:03Z",
+    "supersedes": "final_recheck",
+    "historical_preservation": {
+      "prior_review_and_findings_preserved": true,
+      "prior_blocked_verdict_preserved_under_re_review_and_final_recheck": true,
+      "implementation_config_tests_edited": false,
+      "only_owned_report_edited": true
+    },
+    "current_artifact_hashes": {
+      "design": "3acbad5bd73fd421f1aa8a0af983ab99cfecaa4380997f1425e5e6283a1ce2e1",
+      "design_review": "67c3ceabbae8f3b61ab255297c3ff1462167f9f59fcb9e6ce413700eb889c836",
+      "implementation": "44436f5a929af02dce67e53a9910ddf0d5b4b94439bce9d4394dc5634ed640e0",
+      "fixture_config": "32cd1a07d8fd73ec1568e099716071a8ba552ff9332684aaabe4106b361b3f70",
+      "fixture_tests": "8c7ca80b0ec918835238ad96c472ac25bc077514d783faf1dd17975d2beb9a7a",
+      "public_contracts": {
+        "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+        "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      },
+      "knowledge_base": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "implementation_source_normalized_sha256": "70c917b3aa737bfe2f97fa367a1647a78204ac1a417ee9134218180a0558fb35",
+      "config_metadata_sha256": "a1b25ecde14b5871302fd7a82b03359b55d1f6e17b12fe5c83ffc2c830c53ac6",
+      "config_declared_normalized_source_sha256": "70c917b3aa737bfe2f97fa367a1647a78204ac1a417ee9134218180a0558fb35"
+    },
+    "head_and_worktree": {
+      "head": "1e66693b4f3d2d495a374dc67e848b2421f79622",
+      "status_entries": 206,
+      "status_digest_sha256": "ba4f09ca9f4c689516389a5bbd2215b9fa362113049553206cd7e95e77c62c38",
+      "worktree_note": "Concurrent worktree contents changed since the previous review. B1/B3/B5 and unrelated G3/E01 paths were not edited or reverted; only this B4 review report was edited by this reviewer."
+    },
+    "all_findings_status": {
+      "B4-RED-001": "CLOSED",
+      "B4-RED-002": "CLOSED",
+      "B4-RED-003": "CLOSED",
+      "B4-RED-004": "CLOSED",
+      "B4-RED-005": "CLOSED_FOR_REGISTERED_CENSUS_BOUNDARY",
+      "B4-RED-006": "CLOSED",
+      "B4-RED-007": "CLOSED_WITH_FRESH_PROCESS_MATRIX",
+      "B4-RED-008": "CLOSED_WITH_CANONICAL_CASE_AUTHORITY",
+      "B4-RED-009": "CLOSED_WITH_PUBLIC_SEMANTIC_BINDING"
+    },
+    "closure_matrix": [
+      {
+        "id": "B4-RED-001",
+        "status": "CLOSED",
+        "evidence": "96 registered local-delta content tamper probes across original/mirror materialized cases and action_key/current_public_fields/action_eligible fields all delegated. Fully re-sealed whole-delta canonical receipts also delegated RECEIPT_CONTENT_MISMATCH.",
+        "remaining_risk": "No fixture-authority blocker remains inside this isolated boundary; native receipts remain out of scope."
+      },
+      {
+        "id": "B4-RED-002",
+        "status": "CLOSED",
+        "evidence": "Missing fields, card prose, hidden-like target/status/energy values, invalid capability roles/effects and unqualified requirements were rejected or delegated; all resealed capability mutations delegated before ranking.",
+        "remaining_risk": "No fixture-only semantic-field blocker remains."
+      },
+      {
+        "id": "B4-RED-003",
+        "status": "CLOSED",
+        "evidence": "22 original/mirror lifecycle probes replayed ordinary duplicates idempotently and returned STALE_SELECTION_SEQUENCE for exact old requests after a newer sequence, including newer delegated receipt-content requests.",
+        "remaining_risk": "Lifecycle reset and terminal behavior remain fixture-only tests."
+      },
+      {
+        "id": "B4-RED-004",
+        "status": "CLOSED_FOR_DECLARED_CONFIG_AND_DEPENDENCY_MANIFEST",
+        "evidence": "Metadata, expected-outcome, scale-label, and all five dependency-manifest mutations failed; actual normalized source/config dependency hashes matched."
+      },
+      {
+        "id": "B4-RED-005",
+        "status": "CLOSED_FOR_REGISTERED_CENSUS_BOUNDARY",
+        "evidence": "Unregistered no-response census delegated; registered census matching public hash, scopes, checks, and local-delta receipt selected only the intended zero interval."
+      },
+      {
+        "id": "B4-RED-006",
+        "status": "CLOSED",
+        "evidence": "Strict ThreatLevelScaleV1 rejected malformed ordinals/schema/labels and capability NaN/Inf endpoints."
+      },
+      {
+        "id": "B4-RED-007",
+        "status": "CLOSED_WITH_FRESH_PROCESS_MATRIX",
+        "evidence": "Fresh process asserted 22 original/mirror cases, both formulations, every option permutation, expected outcomes, lifecycle, STOP, compound/order, provenance and unsupported boundaries."
+      },
+      {
+        "id": "B4-RED-008",
+        "status": "CLOSED_WITH_CANONICAL_CASE_AUTHORITY",
+        "evidence": "462 cross-case receipt injections and 462 post-construction evaluator.receipt substitutions selected zero times. Resealed altered whole capability receipts and direct canonical-case mutations delegated RECEIPT_CONTENT_MISMATCH."
+      },
+      {
+        "id": "B4-RED-009",
+        "status": "CLOSED_WITH_PUBLIC_SEMANTIC_BINDING",
+        "evidence": "Source/target/card/serial/owner/zone/choice-role/attack/effect/context/energy/status/HP mutations across original/mirror cases selected zero times; option/capability target equality and full public binding checks now fail closed."
+      }
+    ],
+    "fresh_process_matrix": {
+      "result": "PASS",
+      "output": "FRESH_B4_FINAL_MATRIX_OK 22 44 72",
+      "variants": 22,
+      "base_evals": 44,
+      "permutation_evals": 72,
+      "coverage": ["F01-F07 materialized subcases", "original and player-mirrored cases", "A_FORMULATION and B_FORMULATION", "every option permutation", "declared expected statuses"]
+    },
+    "receipt_and_lifecycle_probes": {
+      "cross_case_whole_receipt_injection": {
+        "pairs": 462,
+        "selected": 0,
+        "reason_counts": {
+          "RECEIPT_CONTENT_MISMATCH": 12,
+          "UNREGISTERED_LOCAL_DELTA": 240,
+          "COMPOUND_UNSUPPORTED": 84,
+          "ORDERED_UNSUPPORTED": 42,
+          "STOP_UNRESOLVED": 42,
+          "DUPLICATE_SEMANTICS": 42
+        }
+      },
+      "post_construction_receipt_substitution": {
+        "pairs": 462,
+        "selected": 0,
+        "reason_counts_match_cross_case": true
+      },
+      "registered_local_delta_tamper": {
+        "probes": 96,
+        "selected": 0,
+        "reason_counts": {
+          "RECEIPT_CONTENT_MISMATCH": 54,
+          "COMPOUND_UNSUPPORTED": 24,
+          "ORDERED_UNSUPPORTED": 6,
+          "STOP_UNRESOLVED": 6,
+          "DUPLICATE_SEMANTICS": 6
+        }
+      },
+      "resealed_whole_receipts": {
+        "whole_capability_mutations": 2,
+        "whole_delta_mutations": 2,
+        "selected": 0,
+        "all_reason": "RECEIPT_CONTENT_MISMATCH"
+      },
+      "old_exact_request_after_newer": {
+        "variants": 22,
+        "old_request_status": "B0_DELEGATE",
+        "old_request_reason": "STALE_SELECTION_SEQUENCE",
+        "newer_request_can_delegate": true
+      },
+      "ordinary_lifecycle": {
+        "duplicate": "SELECTED/SELECTED, equality=true",
+        "changed_same_identity": "B0_DELEGATE/STALE_OR_REUSED_REQUEST_IDENTITY",
+        "reset_worker_replacement": "SELECTED",
+        "terminal_first": "TERMINAL_OVERRIDE/terminal checked first/successor_reads=0",
+        "optional_stop": "SELECTED/stopped_early=true",
+        "compound": "B0_DELEGATE/COMPOUND_UNSUPPORTED",
+        "ordered": "B0_DELEGATE/ORDERED_UNSUPPORTED",
+        "STOP_row": "B0_DELEGATE/STOP_UNRESOLVED",
+        "duplicate_semantics": "B0_DELEGATE/DUPLICATE_SEMANTICS"
+      }
+    },
+    "public_semantic_probes": {
+      "non_resealed_option_entity_matrix": {
+        "categories": 45,
+        "probes": 90,
+        "original_and_mirror": true,
+        "selected": 0,
+        "representative_results": {
+          "source_or_target_owner": "B0_DELEGATE/OPTION_OWNER_MISMATCH",
+          "source_card": "B0_DELEGATE/OPTION_SOURCE_CARD_MISMATCH",
+          "source_serial": "B0_DELEGATE/OPTION_SOURCE_SERIAL_MISMATCH",
+          "target_position_or_zone": "B0_DELEGATE/OPTION_TARGET_POSITION_MISMATCH",
+          "choice_role": "construction PublicStateError",
+          "attack_or_effect": "B0_DELEGATE/OPTION_EFFECT_MISMATCH",
+          "context": "B0_DELEGATE/OPTION_CONTEXT_MISMATCH",
+          "capability_fields": "B0_DELEGATE/RECEIPT_CONTENT_MISMATCH",
+          "public_energy_status_hp": "B0_DELEGATE/RECEIPT_CONTENT_MISMATCH"
+        }
+      },
+      "resealed_public_case_matrix": {
+        "probes": 42,
+        "selected": 0,
+        "categories": ["source/target card", "source/target zone/position", "source/target HP", "source energy", "target status", "option owner/card/serial/target/role/attack/effect/context/type"],
+        "status_counts": {
+          "B0_DELEGATE": 36,
+          "CONSTRUCTION": 6
+        }
+      },
+      "resealed_capability_matrix": {
+        "probes": 38,
+        "selected": 0,
+        "categories": ["source/target entity", "card", "serial", "owner", "zone", "position", "HP", "choice role", "attack", "effect", "response class", "energy", "target requirement"],
+        "reason": "RECEIPT_CONTENT_MISMATCH"
+      },
+      "valid_option_enum_and_effect": {
+        "option_type_9": "B0_DELEGATE/RECEIPT_CONTENT_MISMATCH",
+        "integer_special_condition": "B0_DELEGATE/OPTION_EFFECT_MISMATCH"
+      }
+    },
+    "config_and_provenance_probes": {
+      "config_mutations": 8,
+      "config_mutations_selected": 0,
+      "mutations": ["fixture_metadata_sha256", "expected outcome", "scale label", "all five dependency paths"],
+      "dependency_manifest_match": true,
+      "provenance_manifest_mutation": "B0_DELEGATE/PROVENANCE_GRAPH_INVALID",
+      "canonical_case_sha_mutation": "B0_DELEGATE/RECEIPT_CONTENT_MISMATCH",
+      "extra_delta_id_mutation": "B0_DELEGATE/RECEIPT_CONTENT_MISMATCH",
+      "capabilities_override": "B0_DELEGATE/UNREGISTERED_CAPABILITIES"
+    },
+    "exact_tests": [
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final-2 tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "22 passed in 0.81s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final-2 tests/deterministic/test_phase_b4_opponent_threat.py tests/deterministic/test_state.py tests/deterministic/test_control.py tests/deterministic/test_policy.py",
+        "result": "PASS",
+        "summary": "58 passed in 0.84s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final-2 tests/deterministic --ignore=tests/deterministic/test_phase_b4_opponent_threat.py --ignore=tests/deterministic/test_phase_b5_bench_liability.py",
+        "result": "PASS",
+        "summary": "226 passed in 5.05s; incomplete concurrent B5 excluded and B1/B3 paths labeled as unrelated."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q --basetemp=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.pytest-tmp-b4-final-2 tests/deterministic",
+        "result": "FAIL_UNRELATED_CONCURRENT_B5_DEPENDENCY",
+        "summary": "248 passed, 1 failed, 15 errors in 6.41s; every failure/error was in incomplete concurrent B5 dependency-manifest setup, not B4."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run ruff check src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "All checks passed!"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python -m compileall -q src/ptcg_rl/deterministic/b4_opponent_threat.py tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "Reviewed implementation and tests compiled."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python knowledge_base/validate_db.py",
+        "result": "PASS_WITH_WARNINGS",
+        "summary": "Read-only KB validation passed; 12 P0/P1 questions remain open/in-review/blocked and 3 contradictions remain unresolved."
+      },
+      {
+        "command": "independent fresh-process B4 final matrix and red-team harnesses",
+        "result": "PASS",
+        "summary": "FRESH_B4_FINAL_MATRIX_OK 22 44 72; cross-case/post-construction selected=0; local-delta selected=0; public semantic selected=0."
+      }
+    ],
+    "knowledge_base_requery": {
+      "result": "PASS",
+      "database_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "all_requested_ids_present": true,
+      "decision_rules": ["DR-005", "DR-006", "DR-014", "DR-018", "DR-023", "DR-024", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033"],
+      "strategies": ["STR-007", "STR-017", "STR-018"],
+      "search_features": ["SF-002", "SF-003", "SF-010"],
+      "anti_patterns": ["AP-001", "AP-008", "AP-009"],
+      "contradictions": ["CON-001", "CON-002", "CON-004"],
+      "research_questions": ["RQ-003", "RQ-004", "RQ-005", "RQ-007", "RQ-013"],
+      "interpretation": "The KB remains guidance and provenance context only; no row supplies native hidden state, response probabilities, or production authority."
+    },
+    "scope_controls": {
+      "commands_and_artifacts_root": "/home/nnmax/Desktop/kaggle/PTCG",
+      "native_games": 0,
+      "kaggle_runs": 0,
+      "training_runs": 0,
+      "submission_or_deck_freeze": false,
+      "commit_created": false,
+      "implementation_config_tests_changed": false,
+      "only_report_edit": true,
+      "native_authority": "NOT_REVIEWED",
+      "production_authority": "NOT_AUTHORIZED"
+    },
+    "final_assurance": {
+      "arithmetic_and_interval_math": "PASS for exact finite integer fixture intervals, Fraction interval widths, maximin ranking and strict interval dominance.",
+      "known_inaccessible_unknown_separation": "PASS for the reviewed fixture boundary; missing/prose/hidden-like/unsupported semantic values delegate and full public binding rejects resealed mutations.",
+      "lifecycle_mirror_stop_compound": "PASS across 22 fresh-process original/mirror variants, duplicate/reset/terminal, optional STOP, compound/order, STOP-row and duplicate semantics.",
+      "fixture_authority_and_provenance": "PASS for the sealed fixture-only authority, canonical case digest, local-delta content, whole receipt, dependency manifest and public semantic binding probes.",
+      "b0_delegation": "PASS as an isolated decision return contract; no native adapter or final fallback was invoked.",
+      "native_and_production": "NOT_AUTHORIZED; this report does not qualify native engine integration or production policy strength."
+    },
+    "final_verdict": "PASS for the isolated fixture-only B4 boundary after corrections. All B4-RED-001..009 probes closed with zero selected forged/tampered outcomes. Native/Kaggle/training/submission and production activation remain outside this review and unauthorized.",
+    "next_exact_task": "Retain this fixture report as the closed B4 artifact; perform a separately authorized native integration review with actual engine receipts and its own provenance, lifecycle, fallback, and resource evidence before any production use."
+  },
+  "findings": [
+    {
+      "id": "B4-RED-001",
+      "severity": "HIGH_BLOCKER",
+      "finding": "Capability and local-delta receipt provenance is not an enforced graph.",
+      "evidence": "The receipt checks only that local_delta_receipt_ids are nonempty and unique. Evaluation never requires ThreatLocalDeltaV1.receipt_id to be in that set or to equal the referenced VisibleThreatCapabilityV1.local_delta_receipt_id. The capabilities= override is accepted without binding hashes, deck profiles, scope_version, or receipt membership to the evaluator receipt. A forged local receipt/capability pair still selected F01 A.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:297-318, 872-899, 944-975",
+      "contract": "The B4 design requires an exact local-delta receipt for every candidate and exact engine/library/wrapper/card/deck provenance for every capability. A receipt for one target/deck cannot be generalized or replaced by caller-supplied metadata.",
+      "required_follow_up": "Bind each option fingerprint to one registered local-delta receipt, bind each capability's local_delta_receipt_id to that receipt, reject duplicate/extra/unregistered records, and compare every provenance field against an immutable fixture/config dependency manifest before scoring. Do not allow an unbound capabilities override.",
+      "closure_status": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+      "closure_probe": "Unregistered delta -> B0_DELEGATE/UNREGISTERED_LOCAL_DELTA; direct forged capabilities override -> B0_DELEGATE/UNREGISTERED_CAPABILITIES; forged whole receipt with cap-x [0,0] -> SELECTED/B4-F01-X.",
+      "residual_finding": "See B4-RED-008: the evaluator validates the receipt graph and manifest shape but not a canonical content digest for the capability tuple itself."
+    },
+    {
+      "id": "B4-RED-002",
+      "severity": "HIGH_BLOCKER",
+      "finding": "B4-A treats incomplete or unqualified capability fields as facts, including arbitrary card/effect prose.",
+      "evidence": "VisibleThreatCapabilityV1 accepts FIXTURE_ONLY records with ready_now=None, energy_deficit=None, threat_level=None, or one missing interval endpoint unless unknown_fields happens to name the omission. damage_or_effect_semantics is only required to be a nonempty string; static prose is not rejected or bound to a qualified response receipt. B4-A checks unknown_fields but not these required-field/semantic conditions, then uses possible_level and selects. Missing ready_now, missing guaranteed_level, and 'deal 999 damage from card prose' each selected F01 A in independent probes.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:184-225, 963-986",
+      "contract": "B4-A requires every threat field needed to rank to be known and receipt-qualified. Static damage/effect prose, unqualified target/status/energy semantics, and partial capabilities must produce UNKNOWN/PARTIAL delegation, never a score.",
+      "required_follow_up": "Require a qualified semantic receipt and explicit known/unknown state for every field used by A; reject or delegate any missing ready/energy/threat/interval/target/status field and any non-receipt prose. Keep FIXTURE_ONLY arithmetic fixtures separate from native-qualified runtime records.",
+      "closure_status": "PARTIALLY_CLOSED_RESIDUAL_BLOCKER",
+      "closure_probe": "Missing ready_now -> B0_DELEGATE/UNKNOWN_THREAT_FIELD; card prose -> B0_DELEGATE/CARD_PROSE_FORBIDDEN; hidden-like target/status/energy strings and wrong source/target ownership role -> SELECTED/B4-F01-Y.",
+      "residual_finding": "See B4-RED-009: semantic requirement values and source/target role are not bound to exact public option/entity contracts."
+    },
+    {
+      "id": "B4-RED-003",
+      "severity": "HIGH_BLOCKER",
+      "finding": "Lifecycle monotonicity and idempotency do not record early delegated requests.",
+      "evidence": "Requests are inserted into _last/_request_ids only after candidate processing selects or emits optional STOP. Delegation paths for unknown formulation, unsupported context, count/order, STOP row, duplicate semantics, incomplete coverage, and missing local deltas return before recording identity. Consequently, a supported payload changed at the same selection_seq after an unsupported request selected, and a valid lower sequence selected after a higher sequence delegated. The implementation also increments diagnostics on repeated early delegates rather than replaying a bound decision.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:851-893, 900-911, 1006-1016, 1041-1050",
+      "contract": "F06 requires changed/stale/out-of-order requests to reject and identical duplicates to be idempotent. State is owned by episode/player/policy and the monotonic selection identity must cover every request outcome, including B0 delegation.",
+      "required_follow_up": "Compute a strict request/content digest immediately after terminal-first/public validation, record every accepted request outcome before returning, reject same-identity payload changes and lower sequences after any observed request, and make duplicate delegates idempotent. Reset that identity ledger at every lifecycle boundary.",
+      "closure_status": "CLOSED",
+      "closure_probe": "Unknown-formulation duplicate replayed exactly; changed same-sequence payload returned STALE_OR_REUSED_REQUEST_IDENTITY; lower sequence after a higher delegated request returned STALE_OR_REUSED_REQUEST_IDENTITY; focused lifecycle/reset tests passed."
+    },
+    {
+      "id": "B4-RED-004",
+      "severity": "HIGH_BLOCKER",
+      "finding": "Fixture metadata provenance is asserted by shape, not content, and source code is the real fixture authority.",
+      "evidence": "materialize_b4_fixture_data only checks that fixture_metadata_sha256 is a 64-character lowercase digest; replacing the all-f value with any other digest still passes. The config declares only case IDs and the ThreatLevelScale; all public observations, capabilities, deltas, and expected behavior are hardcoded in _build_cases. There is no content hash of the canonical fixture records, source/config dependency manifest, or schema/import receipt. A caller can alter the metadata label without changing the materialized data, and source edits can change cases without a corresponding config digest failure.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:626-667, 721-735; configs/deterministic/phase_b4_opponent_threat_fixture_v1.json:1-24",
+      "contract": "Fixture authority and dependency/provenance integrity must be version-bound. The fixture digest must cover canonical public records, receipts, config, implementation/schema dependencies, and declared expected outcomes; a label or directory is not immutable evidence.",
+      "required_follow_up": "Make one declared artifact authoritative, recompute its canonical digest, bind source/config/schema/import hashes, and fail closed on any content mutation. Do not keep the case semantics solely in an un-hashed helper while treating the JSON as authority.",
+      "closure_status": "CLOSED_FOR_DECLARED_CONFIG_PATH",
+      "closure_probe": "In-memory metadata, dependency-manifest, and expected-outcome mutations all raised ValueError; normalized source digest independently matched the config dependency manifest.",
+      "residual_finding": "Direct evaluator construction with a forged whole receipt is tracked as B4-RED-008; declared config-load authority does not yet bind every runtime receipt instance."
+    },
+    {
+      "id": "B4-RED-005",
+      "severity": "HIGH_BLOCKER",
+      "finding": "NO_QUALIFIED_RESPONSE can be asserted by an unverified census flag and scores as a safe zero.",
+      "evidence": "When a positive option has no remaining_capability_ids and census_complete=True, the evaluator sets lower=upper=0 and selects it. current_public_fields are only nonempty strings and are not tied to a public census receipt. The independent F03 probe with arbitrary current field names and no capabilities returned SELECTED with interval (0,0).",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:247-270, 976-1005",
+      "contract": "The no-response sentinel is legal only after a complete qualified visible-source/capability census and target/energy/status checks. Empty or unknown capability coverage is UNKNOWN, never silently zero.",
+      "required_follow_up": "Require a separately registered census receipt covering the exact public snapshot, source/target scope, and all required checks; otherwise delegate with UNKNOWN_THREAT_FIELD or INCOMPLETE_THREAT_COVERAGE.",
+      "closure_status": "CLOSED_FOR_UNREGISTERED_CENSUS",
+      "closure_probe": "Unregistered empty-capability census returned B0_DELEGATE/UNREGISTERED_CENSUS_RECEIPT; a registered census with matching public hash/scopes/checks/local delta selected the intended [0,0] sentinel."
+    },
+    {
+      "id": "B4-RED-006",
+      "severity": "MEDIUM_BLOCKER",
+      "finding": "ThreatLevelScaleV1 validation is permissive for malformed scale labels and numeric types.",
+      "evidence": "The constructor compares level numbers to range() using equality, so float ordinals 0.0/1.0 and bool False/1 pass. Duplicate labels also pass. from_dict coerces schema, IDs, levels, and labels with int()/str(), allowing malformed input to be normalized instead of rejected. Proper integer fixture levels and NaN/Inf capability levels are handled, and matching scale IDs are checked, but the scale schema is not strict enough for an authority shared by interval arithmetic.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:80-139",
+      "contract": "All interval endpoints and ordinals must be finite nonnegative integers on one independently reviewed shared scale; unsupported enums and malformed provenance must fail closed rather than coerce.",
+      "required_follow_up": "Validate exact bool/int/string types, unique labels, immutable level mapping, and strict from_dict input without coercion; retain explicit NaN/Inf rejection tests at both scale and capability boundaries.",
+      "closure_status": "CLOSED",
+      "closure_probe": "Float ordinal, duplicate label, bool schema, and NaN/Inf endpoint probes all raised ValueError; corrected strict-scale tests passed."
+    },
+    {
+      "id": "B4-RED-007",
+      "severity": "HIGH_BLOCKER",
+      "finding": "The passing tests do not establish the required fresh-process and full F01-F07 qualification boundary.",
+      "evidence": "All eight committed B4 tests run in one pytest process. F05 permutes and mirrors only the two-option F01 case; F02-F04 and F07 receive no semantic permutation/mirror pass. There is no fresh-process test, no hidden-only mutation proof, no same-request local-delta/capability digest mutation regression, no fixture provenance mutation regression, no NaN/Inf/unsupported-enum matrix, and no separate test of each target anchor/receipt scope. The public arithmetic and basic STOP/compound cases pass, but the stage-0 design explicitly requires fresh-process boundary, complete option, provenance, permutation, mirror, lifecycle, and fail-closed review before native work.",
+      "location": "tests/deterministic/test_phase_b4_opponent_threat.py:1-173",
+      "contract": "B4-F01 through B4-F07 must be materialized as valid public records and independently qualified under fresh processes, semantic permutations, player mirror, hidden invariance, lifecycle/idempotency, complete options, STOP/compound, and receipt/provenance rejection.",
+      "required_follow_up": "Add focused regressions for every red-team finding and execute them in fresh processes across all fixture cases and both formulations. Keep the fixture verdict blocked until the complete boundary matrix is independently green.",
+      "closure_status": "CLOSED_WITH_INDEPENDENT_MATRIX",
+      "closure_probe": "Fresh subprocess asserted all 11 materialized cases, original/mirror cases, both formulations and every option permutation against declared expected statuses (44 base, 72 permutation, 144 hidden/enum checks); corrected focused suite passed 18 tests.",
+      "residual_finding": "Capability semantic-field mutation coverage is intentionally not claimed; B4-RED-009 remains a separate blocker."
+    },
+    {
+      "id": "B4-RED-008",
+      "severity": "HIGH_BLOCKER",
+      "finding": "A forged whole B4 capability receipt with internally consistent graph and manifest is accepted without canonical capability-content binding.",
+      "evidence": "The corrected evaluator rejects a direct capabilities= override that differs from self.receipt, and it validates local-delta membership plus every provenance-manifest field. However, an independent probe replaced cap-x in the entire B4CapabilityReceiptV1 with the same typed capability except guaranteed_level=0 and possible_level=0. A fresh evaluator accepted that forged receipt and returned SELECTED with chosen semantic action B4-F01-X. No canonical receipt/content digest or exact capability tuple comparison is performed at evaluator construction; _validate_provenance_graph checks graph references and the fixture-shaped f... manifest, not capability semantics or levels.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:410-455, 1165-1199, 1293-1296",
+      "contract": "B4 requires exact version-bound capability receipts and fixture authority. A caller cannot replace an exact visible capability's response class, source/target, requirements, or threat interval while retaining the same graph and provenance labels. Runtime scoring must consume only a canonical, content-bound receipt.",
+      "required_follow_up": "Bind B4CapabilityReceiptV1 to the sealed canonical fixture content/case digest, including ordered capabilities, local deltas, census receipts and expected semantics; reject any receipt whose full content is not exactly the loaded authority. Keep capabilities= overrides rejected even when a forged receipt is supplied.",
+      "closure_status": "OPEN_RESIDUAL_BLOCKER"
+    },
+    {
+      "id": "B4-RED-009",
+      "severity": "HIGH_BLOCKER",
+      "finding": "Capability target/status/energy semantics and source/target ownership roles are not exact-qualified against the public option and visible entities.",
+      "evidence": "The corrected boundary catches card-prose tokens, missing ranked fields, and unresolved entity keys, but VisibleThreatCapabilityV1 accepts arbitrary nonempty target_requirements/status_constraints and any nonnegative energy tuple. The evaluator checks only that capability source/target keys exist and source_card_id matches the source entity card; it does not bind capability source/target to the current LegalOptionV1, enforce owner/zone/choice-role semantics, validate target/status/energy requirement enums, or reject hidden-like values. Independent probes changed cap-y to target_requirements=('HIDDEN_OPPONENT_HAND',), status_constraints=('opponent_deck_identity',), energy_requirements=(99,), and source=p0:s10/card=901,target=p1:s50; each still produced SELECTED/B4-F01-Y rather than B0_DELEGATE.",
+      "location": "src/ptcg_rl/deterministic/b4_opponent_threat.py:218-309, 1201-1229, 1337-1348",
+      "contract": "A capability is usable only when its public source entity, target entity/role, energy requirement, status constraint and legality are all known and receipt-qualified. Hidden hand/deck/Prize identity and unqualified target/status/energy semantics are UNKNOWN, not selectable facts.",
+      "required_follow_up": "Define strict typed/allowlisted public requirement enums; bind each capability source/target/card/attack/effect/choice role to the exact current option and visible entity owner/zone; reject hidden/private/prose-like or mismatched requirement values before interval arithmetic. Add fresh-process mutations for every semantic field and mirrored ownership case.",
+      "closure_status": "OPEN_RESIDUAL_BLOCKER"
+    }
+  ],
+  "assurance": {
+    "formulation_divergence": "PASS for the narrow F01 arithmetic: A selects Y on [0,3] versus [1,1], B delegates on overlap; a dominance control mutation [0,1] versus [1,2] selects X for both. This does not pass receipt/unknown integrity.",
+    "threat_level_scale_consistency": "PASS for corrected fixture scope: strict bool/int/schema/label validation and finite nonnegative endpoint checks reject the B4-RED-006 mutations.",
+    "known_field_maximin_and_interval_dominance": "PASS for exercised finite integer intervals. A uses max possible level then declared deterministic diagnostic terms; B implements strict componentwise interval dominance and delegates overlap/incomparability. No probability or successor read was observed.",
+    "complete_options_and_stop": "PASS for the covered committed fixtures: unavailable rows are not scored, mixed available coverage delegates, singleton optional STOP uses CompoundActionBuilder, and max-count/order/STOP-row cases delegate. The independent census and provenance findings still block activation.",
+    "compound_and_ordering": "PASS for tested max_count>1 and ORDERED/UNORDERED cases; both delegate before action construction.",
+    "semantic_permutation_and_mirror": "PASS for the independent fresh-process matrix: all 11 materialized cases, both player perspectives, both formulations and every option permutation matched declared expected statuses. Capability semantic-field coverage remains blocked by B4-RED-009.",
+    "lifecycle_and_idempotency": "PASS for corrected evaluator: selected and early delegated duplicate requests replay exactly, changed identities and lower sequences delegate stale, and reset/worker isolation tests passed.",
+    "hidden_successor_card_prose": "PASS for the corrected fixture boundary: hidden entity/successor fields, missing fields, unsupported response enums, card prose, and hidden-like target/status/energy requirements reject or delegate.",
+    "nan_inf_and_unknown_enums": "PASS: NaN/Inf, malformed scale types/labels, unsupported response enums, and public semantic role/effect mutations reject or delegate.",
+    "b0_delegation_vs_final_fallback": "PASS in the isolated return contract: B0_DELEGATE is a distinct decision authority and no final-adapter fallback is emitted. This is not a native B0 invocation or production qualification.",
+    "fixture_authority_and_provenance": "PASS for the isolated fixture-only boundary: declared config canonical content, dependency/source hashes, local-delta content, census registration, whole-receipt canonical case, and public semantic mutations fail closed."
+  },
+  "readiness": {
+    "fixture": "PASS_FIXTURE_ONLY",
+    "native": "BLOCKED",
+    "production": "NOT_AUTHORIZED",
+    "next_exact_task": "Retain the closed fixture artifact and obtain a separate authorization/evidence review for native integration; do not infer production authority from this fixture pass.",
+    "not_authorized": ["native games", "Kaggle runs", "production authority", "deck freeze", "submission", "training", "hidden-state inference", "response-probability modeling"]
+  },
+  "verification": {
+    "implementation_config_tests_changed": false,
+    "review_report_only_change": true,
+    "commit_created": false,
+    "native_or_kaggle_execution": false,
+    "worktree_status_entries_at_review": 206,
+    "worktree_status_digest_sha256": "ba4f09ca9f4c689516389a5bbd2215b9fa362113049553206cd7e95e77c62c38",
+    "self_digest": "NOT_EMBEDDED_TO_AVOID_RECURSIVE_SELF_HASH"
+  }
+}

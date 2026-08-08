@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-b4-opponent-threat-fixture-v1",
+  "scope": "FIXTURE_ONLY",
+  "fixture_metadata_sha256": "a1b25ecde14b5871302fd7a82b03359b55d1f6e17b12fe5c83ffc2c830c53ac6",
+  "threat_level_scale": {
+    "schema_version": 1,
+    "scale_id": "fixture-threat-level-scale-v1",
+    "lower_is_safer": true,
+    "scope": "FIXTURE_ONLY",
+    "levels": [
+      [0, "NO_QUALIFIED_RESPONSE"],
+      [1, "LOW"],
+      [2, "MEDIUM"],
+      [3, "HIGH"]
+    ]
+  },
+  "fixture_cases": [
+    {"id": "B4-F01-FORMULATION-DIVERGENCE", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "SELECTED", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F02-UNKNOWN-AND-PARTIAL", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F03-MIXED-COVERAGE", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F03-OPTIONAL-ACTION", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "SELECTED", "B4-B-PUBLIC-THREAT-INTERVAL": "SELECTED"}},
+    {"id": "B4-F03-STOP", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "SELECTED", "B4-B-PUBLIC-THREAT-INTERVAL": "SELECTED"}},
+    {"id": "B4-F04-COMPOUND", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F04-ORDERED", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F04-UNORDERED", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F04-STOP-ROW", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F04-DUPLICATE", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "B0_DELEGATE", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}},
+    {"id": "B4-F07-CURRENT-DELTA-ONLY", "expected": {"B4-A-VISIBLE-THREAT-WORST-CASE": "SELECTED", "B4-B-PUBLIC-THREAT-INTERVAL": "B0_DELEGATE"}}
+  ],
+  "dependency_manifest": {
+    "src/ptcg_rl/deterministic/b4_opponent_threat.py": "70c917b3aa737bfe2f97fa367a1647a78204ac1a417ee9134218180a0558fb35",
+    "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+    "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+    "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+    "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+  }
+}
