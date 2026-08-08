@@ -1,0 +1,553 @@
+{
+  "record_id": "phase-b3-resource-ledger-fixture-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T01:32:22Z",
+  "status": "REVIEW_COMPLETE_FIXTURE_ONLY_PASS_NATIVE_BLOCKED",
+  "verdict": "FIXTURE_IMPLEMENTATION_PASS_NATIVE_BLOCKED",
+  "scope": {
+    "review_kind": "INDEPENDENT_RED_TEAM",
+    "component": "isolated Phase B3 resource-ledger fixture evaluator",
+    "review_boundary": "Fixture arithmetic, public-boundary, provenance, lifecycle, and fail-closed review only. No native engine, Kaggle, training, submission, or external service was used.",
+    "owned_artifact": "reports/deterministic/phase-b3-resource-ledger-fixture-review-v1.json",
+    "implementation_config_tests_edited": false,
+    "commit_created": false,
+    "private_assets_modified": false,
+    "audited_head": "4bd2c59a0de6cdc03a55d75ee8c9fb3c1b4eb137",
+    "worktree_note": "The checkout is concurrently dirty. Unrelated G3/E01 and incomplete B4 paths were not modified or treated as B3 authority."
+  },
+  "authoritative_inputs": {
+    "prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "design": {
+      "path": "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+      "sha256": "b89738c8e1a5e0a1417f7d78a103b94177f49755dc5fbf5c1fbdb9b378f5ff61"
+    },
+    "design_review": {
+      "path": "reports/deterministic/phase-b3-resource-ledger-design-v1-review.json",
+      "sha256": "fb91a4611736ac448513524c2168f1c9a23b496730721a2f6fe46b4e024536a9"
+    },
+    "implementation": {
+      "path": "src/ptcg_rl/deterministic/b3_ledger.py",
+      "sha256": "094deb8ce66d1599a3bb420be01eba1f2445623d9d629946ee55264b27c557d9"
+    },
+    "fixture_config": {
+      "path": "configs/deterministic/phase_b3_resource_ledger_fixture_v1.json",
+      "sha256": "27968e8a153be10598ff8785b4eb8d62168088e5f19822b6f2a36a6a064ad1f3"
+    },
+    "fixture_tests": {
+      "path": "tests/deterministic/test_phase_b3_ledger.py",
+      "sha256": "ed372ecb73f94d93626ca520c258562441247444e120b419543be3c23aaf328d"
+    },
+    "public_contracts": [
+      {
+        "path": "src/ptcg_rl/g1/models.py",
+        "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f"
+      },
+      {
+        "path": "src/ptcg_rl/g1/actions.py",
+        "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/state.py",
+        "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      }
+    ]
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS",
+    "requeried_ids": {
+      "decision_rules": ["DR-002", "DR-012", "DR-017", "DR-022", "DR-023", "DR-024", "DR-025"],
+      "strategies": ["STR-004"],
+      "search_features": ["SF-009"],
+      "anti_patterns": ["AP-011"],
+      "contradictions": ["CON-001", "CON-002", "CON-004"],
+      "research_questions": ["RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-008", "RQ-009"]
+    },
+    "binding_interpretation": "Known public copies are counted once; inaccessible copies are removed from live outs; unknown zones remain count/probability mass; finite draws are without replacement; complete semantic options and current CABT legality outrank raw order; low deck count is not deck-out proof."
+  },
+  "tests": {
+    "commands": [
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b3_ledger.py",
+        "result": "PASS",
+        "summary": "17 passed in 0.13s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b3_ledger.py tests/deterministic/test_state.py tests/deterministic/test_control.py tests/deterministic/test_policy.py",
+        "result": "PASS",
+        "summary": "53 passed in 0.20s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic --ignore=tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PARTIAL_WITH_UNRELATED_FAILURES",
+        "summary": "185 passed, 4 failed. All failures are concurrent B1 policy fixture failures; no B3 test failed."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic --ignore=tests/deterministic/test_phase_b4_opponent_threat.py --ignore=tests/deterministic/test_phase_b1_policy.py",
+        "result": "PASS",
+        "summary": "179 passed in 0.95s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run ruff check src/ptcg_rl/deterministic/b3_ledger.py tests/deterministic/test_phase_b3_ledger.py",
+        "result": "PASS",
+        "summary": "All checks passed"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic",
+        "result": "BLOCKED_COLLECTION",
+        "summary": "B4 collection fails before tests because ptcg_rl.deterministic.b4_opponent_threat is absent."
+      }
+    ],
+    "adversarial_checks": [
+      {
+        "id": "B3-RED-001",
+        "severity": "HIGH_BLOCKER",
+        "finding": "Changed local deltas are not part of the duplicate-request payload digest.",
+        "evidence": "After a first F01 A evaluation, replacing the first delta action_label with TAMPERED and consume_by_role route_resource=2 returned the identical SELECTED KEEP_ROUTE decision (same object equality), rather than rejecting stale/reused content.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:867-893",
+        "contract": "The B3 runtime contract requires request_id/content digests and changed or stale requests to reject. Local delta receipt changes are decision inputs and must be bound to the idempotency digest.",
+        "required_follow_up": "Digest every local delta and all decision-relevant receipt/ledger fields before idempotent replay; reject changed content under the same request identity."
+      },
+      {
+        "id": "B3-RED-002",
+        "severity": "HIGH_BLOCKER",
+        "finding": "Optional STOP bypasses complete-option semantic coverage.",
+        "evidence": "Replacing the F05 optional singleton option with a valid selection-0 EVOLVE option (type 9, deliberately outside the evaluator singleton allowlist) returned SELECTED with STOP and no delegation. The activation contract explicitly forbids ignoring unsupported EVOLVE options.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:907-934",
+        "contract": "Every available option must be covered before activation; optional STOP is legal only after the complete current option set is validated.",
+        "required_follow_up": "Validate every available option's supported type, local delta, and semantic coverage before taking the min_count=0 STOP branch."
+      },
+      {
+        "id": "B3-RED-003",
+        "severity": "HIGH_BLOCKER",
+        "finding": "Local deltas may consume more known resource than exists when that role is not in reserve_requirements.",
+        "evidence": "Replacing F01 SPEND_REPLACEABLE with consume_by_role replaceable_search=99 still returned SELECTED KEEP_ROUTE; no capacity or recovery check rejected the impossible local delta.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:1036-1046",
+        "contract": "A current local delta must preserve known route feasibility and cannot spend unavailable public resources. Public discard/recovery is separate from usable copies.",
+        "required_follow_up": "For every consumed role, enforce usable plus explicitly qualified recoverable capacity, or delegate with a distinct impossible-local-delta reason."
+      },
+      {
+        "id": "B3-RED-004",
+        "severity": "HIGH_BLOCKER",
+        "finding": "Route proof uncertainty flags are ignored for ROUTE objectives.",
+        "evidence": "For each of draw_obligation_known, recovery_known, and alternate_prize_route_known set false individually on an ordinary ROUTE F01 case, the evaluator still returned SELECTED KEEP_ROUTE.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:900-906, 1029-1036",
+        "contract": "Unknown route requirements, recovery, or alternate Prize routes must not become favorable/usable facts; unknown must delegate B0.",
+        "required_follow_up": "Gate both formulations on all required route-proof fields, not only DECKOUT."
+      },
+      {
+        "id": "B3-RED-005",
+        "severity": "HIGH_BLOCKER",
+        "finding": "DECKOUT objective can select from a low deck count without a deck-out proof receipt.",
+        "evidence": "F01 changed to objective_kind=DECKOUT, opponent_deck_count=1, and all three proof booleans true; it returned SELECTED KEEP_ROUTE. There is no deck-out predicate/receipt or draw-obligation calculation in the evaluator.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:900-906, 964-1016",
+        "contract": "B3-F04 guards that low opponent deck count does not prove deck-out. The current implementation only checks missing booleans and then scores the ordinary route.",
+        "required_follow_up": "Require a version-bound exact deck-out proof/local receipt, otherwise always delegate DECKOUT decisions; do not treat the count or booleans as proof."
+      },
+      {
+        "id": "B3-RED-006",
+        "severity": "HIGH_BLOCKER",
+        "finding": "Physical-copy source digests and reveal transitions are not integrity checked.",
+        "evidence": "Two distinct physical receipts with the same source_digest were accepted. A reveal event with before_category=PUBLIC_INACCESSIBLE and after_category=PUBLIC_INACCESSIBLE was also accepted.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:145-170, 205-249",
+        "contract": "Each public physical copy needs a unique source observation/event digest, and reveals must be monotonic and counted once without double counting.",
+        "required_follow_up": "Require unique source digests, validate before against the recorded prior category, reject no-op/backward transitions, and bind event/source digests to the affected receipt."
+      },
+      {
+        "id": "B3-RED-007",
+        "severity": "HIGH_BLOCKER",
+        "finding": "fixture_metadata_sha256 is only an asserted label, not a digest of fixture metadata.",
+        "evidence": "Changing a common public entity card_id from 3 to 999 and changing its metadata_ref accordingly while retaining the all-f metadata digest was accepted by materialize_b3_fixture_data.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:589-612",
+        "contract": "Fixture authority and provenance must be version-bound; metadata tampering must fail closed rather than pass because a caller supplied the same 64-character label.",
+        "required_follow_up": "Recompute the canonical metadata digest over the sealed receipt/public records/config dependency set and compare it, with explicit source/config/schema hashes."
+      },
+      {
+        "id": "B3-RED-008",
+        "severity": "HIGH",
+        "finding": "Allocation states are not validated against public capacities or a version-bound allocation measure.",
+        "evidence": "Replacing both F01 candidate probability allocations with two identical three-card populations (route_out=2, blank=1) was accepted and B3-B selected SPEND_REPLACEABLE, despite the public state reporting a ten-card own deck and no allocation receipt.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:307-330, 1047-1054",
+        "contract": "B3-B may use exact public count-state probability only when count states, conditioning fields, and allocation measure are version-bound and legal hidden allocations cannot change the ordering.",
+        "required_follow_up": "Bind every population/allocation state to public hidden-slot capacities and a sealed allocation receipt; reject malformed totals, missing worlds, and unmeasured allocations."
+      },
+      {
+        "id": "B3-RED-009",
+        "severity": "HIGH",
+        "finding": "Known discard/recoverable copies are ignored when computing reserves.",
+        "evidence": "The reserve computation subtracts only known_usable_by_role; known_discard_by_role is never consulted despite the contract allowing explicitly qualified recovery from PUBLIC_DISCARD_OR_RECOVERABLE.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:1041-1046",
+        "contract": "The B3 ledger row contract requires usable plus explicitly qualified recoverable copies in hard reserves, while unknown/discard states must not be silently treated as usable.",
+        "required_follow_up": "Represent recoverability in the receipt and include only qualified recoverable counts in reserve feasibility; otherwise fail closed."
+      },
+      {
+        "id": "B3-RED-010",
+        "severity": "MEDIUM_BLOCKER",
+        "finding": "Evaluator accepts a ledger that is inconsistent with the current public state capacities and has no dependency/provenance binding.",
+        "evidence": "F01 state ResourceLedgerSeedV1 derives hidden own deck slots of 10, while its supplied ResourceLedgerV1 declares hidden_own_deck_slots=8; evaluation still selects. B3CapabilityReceiptV1 binds only a self-consistent synthetic role-count hash and receipt strings, not the fixture/config/public schema or knowledge-base dependencies.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:107-139, 205-249, 839-866",
+        "contract": "Public capacities are constraints, and fixture-only evidence must be provenance-pure and dependency/version bound.",
+        "required_follow_up": "Cross-validate ledger capacities/visible copies with PublicStateV1 and add explicit immutable dependency hashes to the receipt/config."
+      }
+    ]
+  },
+  "assurance": {
+    "exact_probability_math": "PASS: exact_multivariate_probability uses integer combinations and Fraction; focused tests cover simple and multi-role cases, and the final red-team found no arithmetic defect.",
+    "option_permutation": "PASS for the 32 F01 semantic permutations exercised by the committed tests and current focused suite.",
+    "known_unknown_separation": "PASS_BY_FINAL_RECHECK: public capacities, physical-copy/reveal integrity, recoverability, and route uncertainty fail closed.",
+    "hidden_allocation_invariance": "PASS_BY_FINAL_RECHECK: allocation worlds are capacity-bound, sealed by an explicit measure, and ordering changes delegate.",
+    "stop_compound": "PASS_BY_FINAL_RECHECK: complete option validation precedes optional STOP; ordered/unordered multi-select remains delegated.",
+    "lifecycle_and_mirror": "PASS_BY_FINAL_RECHECK: changed local-delta content under a reused request identity is rejected; F06 lifecycle/mirror checks pass.",
+    "b0_delegation_vs_fallback": "PASS_BY_FINAL_RECHECK: the original invalid, uncertain, unsupported, and forged-input probes delegate or reject without fallback selection.",
+    "fixture_only_authority": "PASS_FIXTURE_ONLY: selected decisions remain explicitly experimental and canonical fixture provenance is required; native authority is not established."
+  },
+  "readiness": {
+    "fixture": "PASS_FIXTURE_ONLY",
+    "native": "BLOCKED_NO_NATIVE_AUTHORITY",
+    "production": "NOT_AUTHORIZED",
+    "next_exact_task": "No remaining B3 fixture correction is identified. Preserve this sealed fixture-only evidence; any native capability or production use requires a separate authorized native review."
+  },
+  "verification": {
+    "implementation_or_config_changed": false,
+    "native_games": 0,
+    "kaggle_runs": 0,
+    "training_runs": 0,
+    "submission_created": false,
+    "worktree_status_entries_at_review": 188,
+    "worktree_status_digest_sha256": "87a5a48d91f04bed4654405beb3d63eb1dba1409b5d28789fc7d037db0454392"
+  },
+  "correction_review": {
+    "historical": true,
+    "superseded_by": "final_recheck",
+    "review_kind": "INDEPENDENT_RECHECK_AFTER_IMPLEMENTER_CORRECTIONS",
+    "created_at_utc": "2026-08-08T01:42:00Z",
+    "scope": "Historical recheck retained verbatim to preserve the two residual findings. The final_recheck below is the current authoritative closure review.",
+    "current_hashes": {
+      "implementation": {
+        "path": "src/ptcg_rl/deterministic/b3_ledger.py",
+        "sha256": "5699db1df204a0c6da26a0f9cb74f445e884ba47a5e9556b5069d60faf45fdea"
+      },
+      "fixture_config": {
+        "path": "configs/deterministic/phase_b3_resource_ledger_fixture_v1.json",
+        "sha256": "b370ade4642d56979ff9fcba06aa36c2fc2c22fe249edbb7c2f4284c3d5039a4"
+      },
+      "fixture_tests": {
+        "path": "tests/deterministic/test_phase_b3_ledger.py",
+        "sha256": "839667c97efe210da17e945be094577e29e88bf5a3eb233873bc084af2de9be3"
+      },
+      "knowledge_base": {
+        "path": "knowledge_base/ptcg_gold.sqlite",
+        "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f"
+      },
+      "worktree_status": {
+        "entries": 440,
+        "sha256": "d52eeb8dd670f6f3d1e24d42c8caa5d4c67d8fdda2492268c08834832a810efa",
+        "interpretation": "Concurrent unrelated G3/E01 and B4 changes are present; this review touched only the owned report."
+      },
+      "audited_head": "4bd2c59a0de6cdc03a55d75ee8c9fb3c1b4eb137"
+    },
+    "closure_probes": [
+      {
+        "id": "B3-RED-001",
+        "status": "CLOSED",
+        "probe": "Mutated an already-used local delta action_label under the same request identity.",
+        "observed": "B0_DELEGATE / STALE_OR_REUSED_REQUEST_IDENTITY"
+      },
+      {
+        "id": "B3-RED-002",
+        "status": "CLOSED",
+        "probe": "Replaced the optional singleton option with a valid selection-0 EVOLVE option and attempted STOP.",
+        "observed": "B0_DELEGATE / COMPLETE_OPTION_SET_UNSUPPORTED"
+      },
+      {
+        "id": "B3-RED-003",
+        "status": "CLOSED",
+        "probe": "Requested replaceable_search consumption of 99 from a one-copy public ledger.",
+        "observed": "B0_DELEGATE / IMPOSSIBLE_LOCAL_DELTA_OVERCONSUMPTION"
+      },
+      {
+        "id": "B3-RED-004",
+        "status": "CLOSED",
+        "probe": "Set each of draw_obligation_known, recovery_known, and alternate_prize_route_known false on a ROUTE case.",
+        "observed": "B0_DELEGATE / ROUTE_PROOF_MISSING for all three mutations"
+      },
+      {
+        "id": "B3-RED-005",
+        "status": "OPEN_BLOCKER",
+        "probe": "Constructed a syntactically valid direct DeckoutReceiptV1 with a predicate digest for route count 1, while the current public opponent deck count is 4, then evaluated DECKOUT with all proof booleans true.",
+        "observed": "SELECTED / LOW_DECK_COUNT",
+        "finding": "The evaluator accepts a forged direct receipt and does not bind route.opponent_deck_count to the current PublicState opponent deck count or to materialized fixture provenance. The existing unsealed-ID probe passes, but direct receipt injection remains an authority bypass.",
+        "required_follow_up": "Require evaluator receipt/config identity binding and current public opponent-count equality before any DECKOUT selection; otherwise delegate."
+      },
+      {
+        "id": "B3-RED-006",
+        "status": "CLOSED",
+        "probe": "Retried duplicate source digest, no-op reveal, backward reveal, source-digest mismatch, and missing reveal-event mutations.",
+        "observed": "All rejected with duplicate-source, no-op, non-monotonic/does-not-resolve, or missing-event errors."
+      },
+      {
+        "id": "B3-RED-007",
+        "status": "CLOSED",
+        "probe": "Changed a public entity card ID and matching metadata_ref without changing fixture_metadata_sha256.",
+        "observed": "Rejected with FIXTURE_METADATA_DIGEST_MISMATCH"
+      },
+      {
+        "id": "B3-RED-008",
+        "status": "CLOSED",
+        "probe": "Retried undersized allocation worlds, unsealed population digest, and duplicate allocation world.",
+        "observed": "B0_DELEGATE / ALLOCATION_CAPACITY_MISMATCH, UNSEALED_ALLOCATION_MEASURE, and DUPLICATE_ALLOCATION_WORLD respectively"
+      },
+      {
+        "id": "B3-RED-009",
+        "status": "CLOSED",
+        "probe": "Retried unqualified discard recovery, then supplied an exact one-copy recoverability receipt and an overlarge orphan receipt.",
+        "observed": "Unqualified case delegates UNQUALIFIED_RECOVERABILITY; exact qualified case selects; orphan/overlarge receipt delegates RECOVERABILITY_RECEIPT_MISMATCH"
+      },
+      {
+        "id": "B3-RED-010",
+        "status": "PARTIAL_OPEN_BLOCKER",
+        "probe": "Retried ledger/public capacity mismatch, unknown physical copy, KB hash mutation, source hash mutation, schema mutation, and provenance metadata mutation.",
+        "observed": "All materialized-config and public-ledger mutations rejected. However, replacing a loaded receipt's dependency_provenance config_payload_sha256 or fixture_metadata_sha256 with a different valid digest, constructing CurrentResourceLedgerEvaluatorV1 directly, and evaluating the unchanged case returned SELECTED / KEEP_ROUTE.",
+        "finding": "B3CapabilityReceiptV1 validates source/KB file hashes but does not validate config_payload_sha256 or fixture_metadata_sha256 against the actual loaded fixture. The evaluator constructor accepts a forged receipt without requiring materialize_b3_fixture_data provenance.",
+        "required_follow_up": "Bind receipt construction/evaluator initialization to the canonical current fixture provenance, including config payload and metadata digests; reject direct forged receipts."
+      }
+    ],
+    "residual_blockers": [
+      {
+        "id": "B3-RED-005-RESIDUAL",
+        "severity": "HIGH_BLOCKER",
+        "summary": "Direct exact-looking deck-out receipts can activate despite a public opponent deck-count mismatch.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:255-273, 1328-1343"
+      },
+      {
+        "id": "B3-RED-010-RESIDUAL",
+        "severity": "HIGH_BLOCKER",
+        "summary": "Direct evaluator construction accepts forged config/metadata provenance labels.",
+        "location": "src/ptcg_rl/deterministic/b3_ledger.py:276-344, 885-909, 1233-1238"
+      }
+    ],
+    "exact_tests": [
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b3_ledger.py",
+        "result": "PASS",
+        "summary": "30 passed in 0.21s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b3_ledger.py tests/deterministic/test_state.py tests/deterministic/test_control.py tests/deterministic/test_policy.py",
+        "result": "PASS",
+        "summary": "66 passed in 0.26s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run ruff check src/ptcg_rl/deterministic/b3_ledger.py tests/deterministic/test_phase_b3_ledger.py",
+        "result": "PASS",
+        "summary": "All checks passed"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python knowledge_base/validate_db.py",
+        "result": "PASS",
+        "summary": "Knowledge DB validation PASS; 12 open P0/P1 questions and 3 unresolved contradictions remain warnings."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic --ignore=tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "210 passed in 1.65s. B1 tests were included and passed in this rerun; the concurrent untracked B4 path was explicitly excluded."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic",
+        "result": "PASS_WITH_CONCURRENT_UNTRACKED_B4",
+        "summary": "228 passed in 1.92s. The newly present B4 implementation/tests are concurrent untracked work and are not B3 authority or a promotion claim."
+      }
+    ],
+    "final_assurance": {
+      "exact_fraction_math": "PASS",
+      "original_red001_red004_and_red006_red009": "CLOSED_BY_ADVERSARIAL_RECHECK",
+      "red005": "OPEN_BLOCKER",
+      "red010": "PARTIAL_OPEN_BLOCKER",
+      "fixture_only_authority": "FAIL_FOR_DIRECT_RECEIPT_INJECTION",
+      "native_readiness": "BLOCKED",
+      "production_authority": "NOT_AUTHORIZED"
+    },
+    "final_verdict": "BLOCKED_TWO_RESIDUAL_AUTHORITY_AND_PROVENANCE_DEFECTS",
+    "next_exact_task": "Bind CurrentResourceLedgerEvaluatorV1 to canonical materialized fixture provenance/config identity, validate DECKOUT route count against current public state and sealed receipt, add regressions for direct forged receipt injection, then rerun this independent review. No native work is authorized."
+  },
+  "final_recheck": {
+    "review_kind": "FINAL_INDEPENDENT_RED_TEAM_RECHECK",
+    "created_at_utc": "2026-08-08T02:39:35Z",
+    "supersedes": "correction_review",
+    "scope": "Final fixture-only re-review of the two residual B3 defects. Original RED-001..010 findings remain preserved above; this object records current closure probes, hashes, tests, and the current verdict. No implementation, configuration, or test file was edited by this review.",
+    "current_hashes": {
+      "implementation": {
+        "path": "src/ptcg_rl/deterministic/b3_ledger.py",
+        "sha256": "2ea29facdeae23ae3b10452f32376056f15c18928e277ff3effbb81d5fa7a6ac"
+      },
+      "fixture_config": {
+        "path": "configs/deterministic/phase_b3_resource_ledger_fixture_v1.json",
+        "sha256": "3f315797b25bd017ced8e61978ee62a144831acd3f515d9c55c8ab985cd22004"
+      },
+      "fixture_tests": {
+        "path": "tests/deterministic/test_phase_b3_ledger.py",
+        "sha256": "7a04053f7f0daf34c545e9836b481d01d5979bf6ffb35741c58fccfff1dd21ba"
+      },
+      "public_contracts": {
+        "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      },
+      "knowledge_base": {
+        "path": "knowledge_base/ptcg_gold.sqlite",
+        "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f"
+      },
+      "audited_head": "4bd2c59a0de6cdc03a55d75ee8c9fb3c1b4eb137"
+    },
+    "residual_probes": [
+      {
+        "id": "B3-RED-005",
+        "status": "CLOSED",
+        "probe": "Retried the F04 count mismatch with all three proof booleans true and a syntactically exact-looking direct DeckoutReceiptV1 whose route count and predicate digest matched each other but not the current public opponent deck count.",
+        "observed": {
+          "public_opponent_deck_count": 4,
+          "route_opponent_deck_count": 1,
+          "predicate_digest_matches_route": true,
+          "direct_receipt_object": "constructed",
+          "direct_receipt_evaluator_construction": "REJECTED / B3 evaluator receipt field is not canonical: deckout_receipt_ids",
+          "count_mismatch_evaluation": "B0_DELEGATE / DECKOUT_PROOF_MISSING / chosen=()"
+        },
+        "closure_basis": "Both direct receipt injection at evaluator construction and a route-count mismatch at the public evaluation boundary fail closed; low count and an exact-looking unsealed receipt cannot select DECKOUT."
+      },
+      {
+        "id": "B3-RED-010",
+        "status": "CLOSED",
+        "probe": "Retried forged fixture_metadata_sha256 and config_payload_sha256 values at receipt construction, then attempted normal mapping mutation and forced post-construction field tampering before evaluation.",
+        "observed": {
+          "forged_metadata_receipt_construction": "B3CapabilityReceiptV1 replacement constructed with frozen mapping; CurrentResourceLedgerEvaluatorV1 construction rejected / B3 evaluator requires canonical fixture provenance",
+          "forged_config_receipt_construction": "B3CapabilityReceiptV1 replacement constructed with frozen mapping; CurrentResourceLedgerEvaluatorV1 construction rejected / B3 evaluator requires canonical fixture provenance",
+          "normal_post_construction_mapping_tamper": "REJECTED / TypeError mappingproxy does not support item assignment",
+          "forced_post_construction_field_tamper": "B0_DELEGATE / FIXTURE_PROVENANCE_MISMATCH / chosen=()"
+        },
+        "closure_basis": "Syntactically valid forged labels do not cross the evaluator authority boundary; canonical provenance is required at construction and rechecked before evaluation, while immutable receipt mappings block ordinary mutation."
+      }
+    ],
+    "all_findings_status": [
+      {
+        "id": "B3-RED-001",
+        "status": "CLOSED",
+        "observed": "STALE_OR_REUSED_REQUEST_IDENTITY for changed local-delta content"
+      },
+      {
+        "id": "B3-RED-002",
+        "status": "CLOSED",
+        "observed": "COMPLETE_OPTION_SET_UNSUPPORTED before optional STOP"
+      },
+      {
+        "id": "B3-RED-003",
+        "status": "CLOSED",
+        "observed": "IMPOSSIBLE_LOCAL_DELTA_OVERCONSUMPTION"
+      },
+      {
+        "id": "B3-RED-004",
+        "status": "CLOSED",
+        "observed": "ROUTE_PROOF_MISSING for each uncertain proof field"
+      },
+      {
+        "id": "B3-RED-005",
+        "status": "CLOSED",
+        "observed": "DECKOUT_PROOF_MISSING plus canonical receipt rejection; see residual_probes"
+      },
+      {
+        "id": "B3-RED-006",
+        "status": "CLOSED",
+        "observed": "Duplicate-source, no-op/backward, source-mismatch, and missing-event mutations rejected"
+      },
+      {
+        "id": "B3-RED-007",
+        "status": "CLOSED",
+        "observed": "FIXTURE_METADATA_DIGEST_MISMATCH"
+      },
+      {
+        "id": "B3-RED-008",
+        "status": "CLOSED",
+        "observed": "ALLOCATION_CAPACITY_MISMATCH, UNSEALED_ALLOCATION_MEASURE, and DUPLICATE_ALLOCATION_WORLD"
+      },
+      {
+        "id": "B3-RED-009",
+        "status": "CLOSED",
+        "observed": "UNQUALIFIED_RECOVERABILITY and RECOVERABILITY_RECEIPT_MISMATCH; exact qualified recovery alone may select"
+      },
+      {
+        "id": "B3-RED-010",
+        "status": "CLOSED",
+        "observed": "Canonical evaluator construction rejection, immutable mapping rejection, and FIXTURE_PROVENANCE_MISMATCH after forced tamper"
+      }
+    ],
+    "knowledge_base_requery": {
+      "validation_command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python knowledge_base/validate_db.py",
+      "validation_result": "PASS",
+      "warnings_preserved": "12 P0/P1 research questions remain open/in review/blocked; 3 contradictions remain explicitly unresolved.",
+      "queried_ids": {
+        "decision_rules": ["DR-002", "DR-012", "DR-017", "DR-022", "DR-023", "DR-024", "DR-025"],
+        "strategies": ["STR-004"],
+        "search_features": ["SF-009"],
+        "anti_patterns": ["AP-011"],
+        "contradictions": ["CON-001", "CON-002", "CON-004"],
+        "research_questions": ["RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-008", "RQ-009"]
+      },
+      "queried_ids_present": true
+    },
+    "exact_tests": [
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b3_ledger.py",
+        "result": "PASS",
+        "summary": "30 passed in 2.39s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic/test_phase_b3_ledger.py tests/deterministic/test_state.py tests/deterministic/test_control.py tests/deterministic/test_policy.py",
+        "result": "PASS",
+        "summary": "66 passed in 2.38s"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic --ignore=tests/deterministic/test_phase_b4_opponent_threat.py",
+        "result": "PASS",
+        "summary": "210 passed in 3.90s; concurrent B4 path explicitly excluded, B1 tests included."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run pytest -q tests/deterministic",
+        "result": "PASS_WITH_CONCURRENT_UNTRACKED_B4",
+        "summary": "228 passed in 4.05s; the untracked concurrent B4 implementation/tests were included for collection only and do not establish B3/native authority."
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run ruff check src/ptcg_rl/deterministic/b3_ledger.py tests/deterministic/test_phase_b3_ledger.py",
+        "result": "PASS",
+        "summary": "All checks passed!"
+      },
+      {
+        "command": "UV_CACHE_DIR=/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/.uv-cache uv run python knowledge_base/validate_db.py",
+        "result": "PASS_WITH_DECLARED_WARNINGS",
+        "summary": "Knowledge DB validation PASS; 12 open P0/P1 questions and 3 unresolved contradictions remain warnings."
+      }
+    ],
+    "scope_controls": {
+      "implementation_config_tests_edited": false,
+      "owned_artifact": "reports/deterministic/phase-b3-resource-ledger-fixture-review-v1.json",
+      "native_games": 0,
+      "kaggle_runs": 0,
+      "training_runs": 0,
+      "submission_created": false,
+      "commit_created": false,
+      "external_services_used": false,
+      "concurrent_work": "B1/B4 changes were not modified; B4 was excluded from the relevant suite and labeled when included in the full deterministic run."
+    },
+    "final_assurance": {
+      "exact_fraction_math": "PASS",
+      "red001_red010": "ALL_CLOSED_BY_FINAL_RECHECK",
+      "fixture_only_authority": "PASS_WITH_CANONICAL_PROVENANCE_AND_PUBLIC_BOUNDARY",
+      "native_readiness": "BLOCKED_NO_NATIVE_RECEIPTS_OR_REVIEW",
+      "production_authority": "NOT_AUTHORIZED"
+    },
+    "final_verdict": "FIXTURE_IMPLEMENTATION_PASS_NATIVE_BLOCKED",
+    "next_exact_task": "No native or production use follows from this fixture-only pass. Any next B3 work must be separately authorized and must retain this report as the immutable historical baseline."
+  }
+}

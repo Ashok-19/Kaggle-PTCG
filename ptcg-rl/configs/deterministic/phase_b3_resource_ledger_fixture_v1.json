@@ -1,0 +1,2045 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-b3-resource-ledger-fixture-v1",
+  "scope": "FIXTURE_ONLY",
+  "fixture_metadata_sha256": "f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+  "receipt": {
+    "receipt_id": "phase-b3-resource-ledger-fixture-v1",
+    "scope": "FIXTURE_ONLY",
+    "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_deck_counts": {
+      "3": 34,
+      "721": 2,
+      "722": 4,
+      "723": 4,
+      "1121": 4,
+      "1126": 1,
+      "1192": 4,
+      "1227": 4,
+      "1262": 3
+    },
+    "prize_static": [
+      {
+        "card_id": 723,
+        "prize_units": 2,
+        "receipt_id": "fixture-prizestatic-v1"
+      }
+    ],
+    "local_delta_receipts": [
+      "fixture-local-delta-v1"
+    ],
+    "allocation_receipts": [
+      {
+        "receipt_id": "fixture-allocation-v1",
+        "measure_id": "EXPLICIT_FINITE_WORLD_SET",
+        "capacity_source": "PUBLIC_STATE_HIDDEN_DECK_SLOTS",
+        "allowed_population_sha256": [
+          "99337ab34abfd0eba868511310c5f91e4bb73a700087f00faa850b7b338e0bbb",
+          "ee530be2cc4aea8df7f05f32e41bcbba5956df1047aaf4f74e5ee5b00a0c3c0c",
+          "e2ac6ebef6a53b951d2b16844ca4f6f6bbc23b543b9bd6c8af5f8a36803c915b"
+        ]
+      }
+    ],
+    "recoverability_receipts": [],
+    "deckout_receipt_ids": [],
+    "deckout_receipts": [],
+    "dependency_provenance": {
+      "schema_id": "phase-b3-resource-ledger-fixture-v1",
+      "schema_version": 1,
+      "fixture_metadata_sha256": "f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+      "config_payload_sha256": "6ef47afbf681a65b087026e4d780ff92ce1a33ec23ef44654267014604db9983",
+      "knowledge_base_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "source_hashes": {
+        "src/ptcg_rl/deterministic/b3_ledger.py": "2ea29facdeae23ae3b10452f32376056f15c18928e277ff3effbb81d5fa7a6ac",
+        "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+      }
+    }
+  },
+  "common_public_state": {
+    "schema_version": 2,
+    "battle_id": "b3-fixture-common",
+    "transition_id": 7,
+    "acting_player": 0,
+    "terminal_result": null,
+    "turn": 4,
+    "turn_action_count": 1,
+    "first_player": 0,
+    "supporter_played": false,
+    "stadium_played": false,
+    "energy_attached": false,
+    "retreated": false,
+    "players": [
+      {
+        "player_index": 0,
+        "bench_max": 5,
+        "deck_count": 10,
+        "hand_count": 6,
+        "prize_count": 6,
+        "visible_prize_count": 0,
+        "hand_visible": true,
+        "facedown_active_count": 0
+      },
+      {
+        "player_index": 1,
+        "bench_max": 5,
+        "deck_count": 4,
+        "hand_count": 6,
+        "prize_count": 6,
+        "visible_prize_count": 0,
+        "hand_visible": false,
+        "facedown_active_count": 0
+      }
+    ],
+    "entities": [
+      {
+        "entity_key": "p0:s1",
+        "card_id": 3,
+        "serial": 1,
+        "metadata_ref": "card:3@f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+        "owner": 0,
+        "zone": 2,
+        "position": 0,
+        "hp": null,
+        "max_hp": null,
+        "damage": null,
+        "appear_this_turn": false,
+        "energy_types": [],
+        "attached_energy_count": 0,
+        "attached_tool_count": 0,
+        "evolution_depth": 0,
+        "statuses": [],
+        "visible": true
+      },
+      {
+        "entity_key": "p0:s2",
+        "card_id": 999,
+        "serial": 2,
+        "metadata_ref": "card:999@f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+        "owner": 0,
+        "zone": 2,
+        "position": 1,
+        "hp": null,
+        "max_hp": null,
+        "damage": null,
+        "appear_this_turn": false,
+        "energy_types": [],
+        "attached_energy_count": 0,
+        "attached_tool_count": 0,
+        "evolution_depth": 0,
+        "statuses": [],
+        "visible": true
+      },
+      {
+        "entity_key": "p0:s3",
+        "card_id": 1192,
+        "serial": 3,
+        "metadata_ref": "card:1192@f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+        "owner": 0,
+        "zone": 2,
+        "position": 2,
+        "hp": null,
+        "max_hp": null,
+        "damage": null,
+        "appear_this_turn": false,
+        "energy_types": [],
+        "attached_energy_count": 0,
+        "attached_tool_count": 0,
+        "evolution_depth": 0,
+        "statuses": [],
+        "visible": true
+      },
+      {
+        "entity_key": "p0:s10",
+        "card_id": 723,
+        "serial": 10,
+        "metadata_ref": "card:723@f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+        "owner": 0,
+        "zone": 4,
+        "position": 0,
+        "hp": 350,
+        "max_hp": 350,
+        "damage": 0,
+        "appear_this_turn": false,
+        "energy_types": [
+          3,
+          3
+        ],
+        "attached_energy_count": 2,
+        "attached_tool_count": 0,
+        "evolution_depth": 1,
+        "statuses": [],
+        "visible": true
+      },
+      {
+        "entity_key": "p0:s11",
+        "card_id": 723,
+        "serial": 11,
+        "metadata_ref": "card:723@f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+        "owner": 0,
+        "zone": 5,
+        "position": 0,
+        "hp": 350,
+        "max_hp": 350,
+        "damage": 0,
+        "appear_this_turn": false,
+        "energy_types": [
+          3
+        ],
+        "attached_energy_count": 1,
+        "attached_tool_count": 0,
+        "evolution_depth": 1,
+        "statuses": [],
+        "visible": true
+      },
+      {
+        "entity_key": "p1:s50",
+        "card_id": 100,
+        "serial": 50,
+        "metadata_ref": "card:100@f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+        "owner": 1,
+        "zone": 4,
+        "position": 0,
+        "hp": 200,
+        "max_hp": 200,
+        "damage": 0,
+        "appear_this_turn": false,
+        "energy_types": [],
+        "attached_energy_count": 0,
+        "attached_tool_count": 0,
+        "evolution_depth": 0,
+        "statuses": [],
+        "visible": true
+      }
+    ],
+    "public_events": [],
+    "previous_request_ref": null,
+    "previous_action_ref": null
+  },
+  "fixture_cases": [
+    {
+      "id": "B3-F01-RESERVE-ODDS-DIVERGENCE",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f01",
+        "selection_seq": 7,
+        "request_id": "b3-f01-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 5,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s11",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s11",
+            "available": true,
+            "semantic_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f01",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "KEEP_ROUTE",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7": {
+          "option_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7",
+          "action_label": "SPEND_REPLACEABLE",
+          "consume_by_role": {
+            "route_resource": 1
+          },
+          "opportunity_cost": 1,
+          "opportunity_cost_by_role": {
+            "replaceable_search": 1
+          },
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 3,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "KEEP_ROUTE",
+        "B": "SPEND_REPLACEABLE"
+      }
+    },
+    {
+      "id": "B3-F02-OPEN",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f02-open",
+        "selection_seq": 7,
+        "request_id": "b3-f02-open-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 5,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s11",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s11",
+            "available": true,
+            "semantic_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f02",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "KEEP_ROUTE",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7": {
+          "option_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7",
+          "action_label": "SPEND_REPLACEABLE",
+          "consume_by_role": {
+            "route_resource": 1
+          },
+          "opportunity_cost": 1,
+          "opportunity_cost_by_role": {
+            "replaceable_search": 1
+          },
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 3,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "KEEP_ROUTE",
+        "B": "SPEND_REPLACEABLE"
+      }
+    },
+    {
+      "id": "B3-F02-REVEALED-PRIZE-REMOVAL",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f02-revealed",
+        "selection_seq": 7,
+        "request_id": "b3-f02-revealed-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 5,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s11",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s11",
+            "available": true,
+            "semantic_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {
+          "route_out": 1
+        },
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 1
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          },
+          {
+            "physical_id": "prize:route-out:1",
+            "role": "route_out",
+            "category": "PUBLIC_INACCESSIBLE",
+            "source_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "previous_category": "PUBLIC_USABLE"
+          }
+        ],
+        "reveal_events": [
+          {
+            "event_digest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "physical_id": "prize:route-out:1",
+            "before_category": "PUBLIC_USABLE",
+            "after_category": "PUBLIC_INACCESSIBLE",
+            "source_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          }
+        ]
+      },
+      "route": {
+        "route_id": "fixture-route-f02-revealed",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "KEEP_ROUTE",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 1,
+            "blank": 9
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 1,
+              "blank": 9
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7": {
+          "option_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7",
+          "action_label": "SPEND_REPLACEABLE",
+          "consume_by_role": {
+            "route_resource": 1
+          },
+          "opportunity_cost": 1,
+          "opportunity_cost_by_role": {
+            "replaceable_search": 1
+          },
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 1,
+            "blank": 9
+          },
+          "probability_horizon": 3,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 1,
+              "blank": 9
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "KEEP_ROUTE",
+        "B": "SPEND_REPLACEABLE"
+      }
+    },
+    {
+      "id": "B3-F03-IRREPLACEABLE-DISCARD",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f03",
+        "selection_seq": 7,
+        "request_id": "b3-f03-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 11,
+            "option_name": "DISCARD",
+            "number": null,
+            "area": 2,
+            "index": 2,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": null,
+            "in_play_index": null,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s3",
+            "target_kind": "NONE",
+            "target_ref": null,
+            "choice_role": "DISCARD",
+            "source_entity_key": "p0:s3",
+            "target_entity_key": null,
+            "available": true,
+            "semantic_fingerprint": "752892fff308cee2573f40139066caa11162080e2f5408be6cd7c8775ded6133"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 11,
+            "option_name": "DISCARD",
+            "number": null,
+            "area": 2,
+            "index": 1,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": null,
+            "in_play_index": null,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s2",
+            "target_kind": "NONE",
+            "target_ref": null,
+            "choice_role": "DISCARD",
+            "source_entity_key": "p0:s2",
+            "target_entity_key": null,
+            "available": true,
+            "semantic_fingerprint": "67816f26095ce2bd6e79fd2ea2e1a9edc17f57f84b5b3a83adc9fc0f62da386b"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "unique_resource": 1,
+          "replaceable_card": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "unique_resource": 1,
+          "replaceable_card": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "unique_resource": 0,
+          "replaceable_card": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s3",
+            "role": "unique_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_card",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f03",
+        "reserve_requirements": {
+          "unique_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 2,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "752892fff308cee2573f40139066caa11162080e2f5408be6cd7c8775ded6133": {
+          "option_fingerprint": "752892fff308cee2573f40139066caa11162080e2f5408be6cd7c8775ded6133",
+          "action_label": "DISCARD_UNIQUE",
+          "consume_by_role": {
+            "unique_resource": 1
+          },
+          "opportunity_cost": 1,
+          "opportunity_cost_by_role": {
+            "unique_resource": 1
+          },
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 2,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "67816f26095ce2bd6e79fd2ea2e1a9edc17f57f84b5b3a83adc9fc0f62da386b": {
+          "option_fingerprint": "67816f26095ce2bd6e79fd2ea2e1a9edc17f57f84b5b3a83adc9fc0f62da386b",
+          "action_label": "DISCARD_REPLACEABLE",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {
+            "replaceable_card": 1
+          },
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 2,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "DISCARD_REPLACEABLE",
+        "B": "DISCARD_REPLACEABLE"
+      }
+    },
+    {
+      "id": "B3-F04-DECKOUT-NOT-LOW-COUNT",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f04",
+        "selection_seq": 7,
+        "request_id": "b3-f04-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f04",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "DECKOUT",
+        "opponent_deck_count": 1,
+        "draw_obligation_known": false,
+        "recovery_known": false,
+        "alternate_prize_route_known": false,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "LOW_DECK_COUNT",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "B0_DELEGATE",
+        "B": "B0_DELEGATE"
+      }
+    },
+    {
+      "id": "B3-F05-MANDATORY-SINGLETON",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f05-mandatory",
+        "selection_seq": 7,
+        "request_id": "b3-f05-mandatory-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f05",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "MANDATORY_ATTACH",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "MANDATORY_ATTACH"
+      }
+    },
+    {
+      "id": "B3-F05-OPTIONAL-STOP",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f05-optional",
+        "selection_seq": 7,
+        "request_id": "b3-f05-optional-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 0,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f05-optional",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "OPTIONAL_ATTACH",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "STOP"
+      }
+    },
+    {
+      "id": "B3-F05-ORDERED-MULTI",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f05-ordered",
+        "selection_seq": 7,
+        "request_id": "b3-f05-ordered-r7",
+        "acting_player": 0,
+        "selection_type": 5,
+        "selection_context": 34,
+        "min_count": 1,
+        "max_count": 2,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "ORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 5,
+            "selection_context": 34,
+            "option_type": 15,
+            "option_name": "SKILL",
+            "number": null,
+            "area": null,
+            "index": null,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": null,
+            "in_play_index": null,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "NONE",
+            "source_ref": null,
+            "target_kind": "NONE",
+            "target_ref": null,
+            "choice_role": "SKILL",
+            "source_entity_key": null,
+            "target_entity_key": null,
+            "available": true,
+            "semantic_fingerprint": "65dc538a4293047b31d9bbe0e15264710243a3a0f2867122873a9c32356b9ff7"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 5,
+            "selection_context": 34,
+            "option_type": 15,
+            "option_name": "SKILL",
+            "number": 1,
+            "area": null,
+            "index": null,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": null,
+            "in_play_index": null,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "NONE",
+            "source_ref": null,
+            "target_kind": "NONE",
+            "target_ref": null,
+            "choice_role": "SKILL",
+            "source_entity_key": null,
+            "target_entity_key": null,
+            "available": true,
+            "semantic_fingerprint": "4e9cf282f1cd1b4bd39c6568fade75ddf8307efd243113528a2516a98b71ac66"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f05-ordered",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "65dc538a4293047b31d9bbe0e15264710243a3a0f2867122873a9c32356b9ff7": {
+          "option_fingerprint": "65dc538a4293047b31d9bbe0e15264710243a3a0f2867122873a9c32356b9ff7",
+          "action_label": "ORDERED_UNSUPPORTED",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "4e9cf282f1cd1b4bd39c6568fade75ddf8307efd243113528a2516a98b71ac66": {
+          "option_fingerprint": "4e9cf282f1cd1b4bd39c6568fade75ddf8307efd243113528a2516a98b71ac66",
+          "action_label": "ORDERED_UNSUPPORTED_2",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "B0_DELEGATE"
+      }
+    },
+    {
+      "id": "B3-F05-UNORDERED-MULTI",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f05-unordered",
+        "selection_seq": 7,
+        "request_id": "b3-f05-unordered-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 2,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "effect_card_id": null,
+        "context_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 5,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s11",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s11",
+            "available": true,
+            "semantic_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f05-unordered",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "UNORDERED_A",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7": {
+          "option_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7",
+          "action_label": "UNORDERED_B",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "B0_DELEGATE"
+      }
+    },
+    {
+      "id": "B3-F06-LIFECYCLE-PLAYER-MIRROR",
+      "request": {
+        "schema_version": 2,
+        "episode_uuid": "b3-f06",
+        "selection_seq": 7,
+        "request_id": "b3-f06-r7",
+        "acting_player": 0,
+        "selection_type": 0,
+        "selection_context": 0,
+        "min_count": 1,
+        "max_count": 1,
+        "remain_damage_counter": null,
+        "remain_energy_cost": null,
+        "context_card_id": null,
+        "effect_card_id": null,
+        "ordering": "UNORDERED",
+        "options": [
+          {
+            "schema_version": 2,
+            "original_index": 0,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 4,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s10",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s10",
+            "available": true,
+            "semantic_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578"
+          },
+          {
+            "schema_version": 2,
+            "original_index": 1,
+            "selection_type": 0,
+            "selection_context": 0,
+            "option_type": 8,
+            "option_name": "ATTACH",
+            "number": null,
+            "area": 2,
+            "index": 0,
+            "player_index": null,
+            "tool_index": null,
+            "energy_index": null,
+            "count": null,
+            "in_play_area": 5,
+            "in_play_index": 0,
+            "attack_id": null,
+            "card_id": null,
+            "serial": null,
+            "special_condition_type": null,
+            "source_kind": "ENTITY",
+            "source_ref": "p0:s1",
+            "target_kind": "ENTITY",
+            "target_ref": "p0:s11",
+            "choice_role": "ATTACH",
+            "source_entity_key": "p0:s1",
+            "target_entity_key": "p0:s11",
+            "available": true,
+            "semantic_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7"
+          }
+        ]
+      },
+      "ledger": {
+        "total_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 2
+        },
+        "known_usable_by_role": {
+          "route_resource": 2,
+          "replaceable_search": 1,
+          "route_out": 0
+        },
+        "known_inaccessible_by_role": {},
+        "known_discard_by_role": {},
+        "unknown_by_role": {
+          "route_resource": 0,
+          "replaceable_search": 0,
+          "route_out": 2
+        },
+        "hidden_own_deck_slots": 10,
+        "hidden_own_prize_slots": 6,
+        "hidden_opponent_slots": 16,
+        "prize_static_receipt_id": "fixture-prizestatic-v1",
+        "physical_copy_receipts": [
+          {
+            "physical_id": "p0:s10",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          {
+            "physical_id": "p0:s11",
+            "role": "route_resource",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          {
+            "physical_id": "p0:s2",
+            "role": "replaceable_search",
+            "category": "PUBLIC_USABLE",
+            "source_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "reveal_events": []
+      },
+      "route": {
+        "route_id": "fixture-route-f06",
+        "reserve_requirements": {
+          "route_resource": 0
+        },
+        "draw_requirements": {
+          "route_out": 1
+        },
+        "horizon": 3,
+        "objective_kind": "ROUTE",
+        "opponent_deck_count": null,
+        "draw_obligation_known": true,
+        "recovery_known": true,
+        "alternate_prize_route_known": true,
+        "allocation_receipt_id": "fixture-allocation-v1",
+        "allocation_measure_id": "EXPLICIT_FINITE_WORLD_SET"
+      },
+      "local_deltas": {
+        "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578": {
+          "option_fingerprint": "8b5aa006511b969b7da348d42ac1b55adf5806e99882322754f7314bb8532578",
+          "action_label": "KEEP_ROUTE",
+          "consume_by_role": {},
+          "opportunity_cost": 0,
+          "opportunity_cost_by_role": {},
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 1,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        },
+        "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7": {
+          "option_fingerprint": "0a1cefca0b0032d5e74d47e9436572e514c13957d0a492aa65d290672ea558a7",
+          "action_label": "SPEND_REPLACEABLE",
+          "consume_by_role": {
+            "route_resource": 1
+          },
+          "opportunity_cost": 1,
+          "opportunity_cost_by_role": {
+            "replaceable_search": 1
+          },
+          "exact_receipt_id": "fixture-local-delta-v1",
+          "probability_counts": {
+            "route_out": 2,
+            "blank": 8
+          },
+          "probability_horizon": 3,
+          "probability_requirements": {
+            "route_out": 1
+          },
+          "allocation_states": [
+            {
+              "route_out": 2,
+              "blank": 8
+            }
+          ],
+          "allocation_receipt_id": "fixture-allocation-v1"
+        }
+      },
+      "expected": {
+        "A": "KEEP_ROUTE",
+        "B": "SPEND_REPLACEABLE"
+      }
+    }
+  ],
+  "provenance": {
+    "schema_id": "phase-b3-resource-ledger-fixture-v1",
+    "schema_version": 1,
+    "fixture_metadata_sha256": "f413b6aea69d173adaa0c13d6a4be42aff7eea4cd898e9bf611a0634ec89da47",
+    "source_hashes": {
+      "src/ptcg_rl/deterministic/b3_ledger.py": "2ea29facdeae23ae3b10452f32376056f15c18928e277ff3effbb81d5fa7a6ac",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/deterministic/state.py": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709"
+    },
+    "knowledge_base_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "config_payload_sha256": "6ef47afbf681a65b087026e4d780ff92ce1a33ec23ef44654267014604db9983"
+  }
+}
