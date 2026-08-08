@@ -1,0 +1,1089 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-b6-gust-route-design-v1",
+  "created_at_utc": "2026-08-08T04:14:45Z",
+  "scope": "FIXTURE_ONLY_PUBLIC_CURRENT_EXPERIMENT_DESIGN",
+  "status": "DESIGN_READY_FIXTURE_IMPLEMENTATION_NOT_AUTHORIZED",
+  "decision": "PREREGISTER_TWO_MATERIALLY_DISTINCT_GUST_ROUTE_FORMULATIONS",
+  "hypothesis_and_non_goals": {
+    "hypothesis": "A current legal gust or Boss-like target choice can be falsibly separated into a route-distance conversion arm and an exact public threat-coverage dominance arm. The arms must disagree on a sealed public fixture where the shortest route leaves an exact public threat and a farther target removes a strict superset of public threats, while agreeing on controls.",
+    "scope": "B6 owns only the conversion of one current legal gust-target option into a qualified route-delta or threat-coverage receipt. It does not own card semantics, future search, hidden-state inference, opponent priors, damage arithmetic, bench liability, or resource-ledger accounting.",
+    "non_goals": [
+      "No native engine games, Kaggle runs, production policy, deck freeze, submission, training, or search are authorized by this design.",
+      "No hidden opponent hand, deck, Prize identity, archetype label, response probability, draw assumption, or deck-out inference.",
+      "No successor observation, post-action HP/status/zone read, counterfactual terminal result, manually controlled random outcome, or static card/prose/damage inference.",
+      "No claim that a fixture result establishes native card, attack, effect, target, or matchup authority.",
+      "No blended score across route distance, threat coverage, resource reserve, bench liability, or WDL. Each formulation has an exact lexicographic or partial-order contract and a separate B0 comparison arm."
+    ],
+    "falsification": "The design is falsified for implementation if the two arms cannot produce the preregistered B6-F02 divergence using complete public current receipts, if either arm selects an unknown or forged receipt, if option permutation or mirror changes the semantic decision, if any lifecycle or final action boundary is violated, or if any later screen has a reliability, runtime, activation, or per-cell floor failure."
+  },
+  "authoritative_inputs": {
+    "repository": {
+      "path": "/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl",
+      "git_head": "94d5b38613a557800ebac4749603b5e18e3605c9",
+      "working_tree_is_dirty": true,
+      "dirty_state_rule": "Concurrent B1, B3, B4, B5, G3 and project-status changes were inspected but not edited by this work item. This report does not claim that HEAD is a clean implementation baseline."
+    },
+    "master_prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "repository_instructions": [
+      {
+        "path": "/home/nnmax/Desktop/kaggle/PTCG/AGENTS.md",
+        "sha256": "1cc7370a7bc72fd656ff2828c884ac91fb1d3a8578e1ffafdd7eac52d6f6a0b0"
+      },
+      {
+        "path": "/home/nnmax/Desktop/kaggle/PTCG/ptcg-rl/AGENTS.md",
+        "sha256": "ab2b5b4ceea5569122ea9e60dcb7d165e8b45df8e548910537e154647bfa17ae"
+      }
+    ],
+    "phase_designs_and_reviews": [
+      {
+        "phase": "B1",
+        "path": "reports/deterministic/phase-b1-prize-route-design-v1.json",
+        "sha256": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7"
+      },
+      {
+        "phase": "B1",
+        "path": "reports/deterministic/phase-b1-native-integration-review-v1.json",
+        "sha256": "1ada47ff4ea2922d7b66cc7e5ead4470678afafc3561b109347e17b9fd095360"
+      },
+      {
+        "phase": "B2",
+        "path": "reports/deterministic/phase-b2-continuity-design-v1.json",
+        "sha256": "f6bb73529fbb1e39e1b4555711c9f912372c3cb4729c7836c31763e362706c83"
+      },
+      {
+        "phase": "B3",
+        "path": "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+        "sha256": "b89738c8e1a5e0a1417f7d78a103b94177f49755dc5fbf5c1fbdb9b378f5ff61"
+      },
+      {
+        "phase": "B3",
+        "path": "reports/deterministic/phase-b3-resource-ledger-fixture-review-v1.json",
+        "sha256": "0d06c42a8449eb3407c275d3fbe054d72484cc336915976451f909ebe8c579d3"
+      },
+      {
+        "phase": "B4",
+        "path": "reports/deterministic/phase-b4-opponent-threat-design-v1.json",
+        "sha256": "3acbad5bd73fd421f1aa8a0af983ab99cfecaa4380997f1425e5e6283a1ce2e1"
+      },
+      {
+        "phase": "B4",
+        "path": "reports/deterministic/phase-b4-opponent-threat-design-v1-review.json",
+        "sha256": "67c3ceabbae8f3b61ab255297c3ff1462167f9f59fcb9e6ce413700eb889c836"
+      },
+      {
+        "phase": "B4",
+        "path": "reports/deterministic/phase-b4-opponent-threat-fixture-review-v1.json",
+        "sha256": "0d7dea5043f61db5a321cf45f9a96d34b450cdddfe8a903dff07ea4bd197f7dc"
+      },
+      {
+        "phase": "B5",
+        "path": "reports/deterministic/phase-b5-bench-liability-design-v1.json",
+        "sha256": "6cd3239b57181290ac2729829e444352e7578496211d56457bdd04b6eed8b899"
+      },
+      {
+        "phase": "B5",
+        "path": "reports/deterministic/phase-b5-bench-liability-design-v1-review.json",
+        "sha256": "abea09194d9e43bedf34ebc00b4a163edeb0a06793e020c48428260b1295b8e7"
+      },
+      {
+        "phase": "B5",
+        "path": "reports/deterministic/phase-b5-bench-liability-fixture-review-v1.json",
+        "sha256": "df62485dac4dc88892f04f173bf7edbf17cee56c008a22ce4b32b6f5b28d68da"
+      }
+    ],
+    "public_action_contracts": [
+      {
+        "path": "src/ptcg_rl/g1/models.py",
+        "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "used_for": "EngineObservationV1, LegalOptionV1, SelectionRequestV1, SubSelectionV1 and CompoundActionV1 field contract"
+      },
+      {
+        "path": "src/ptcg_rl/g1/actions.py",
+        "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "used_for": "final action validation and ordered compound/STOP construction contract"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/state.py",
+        "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709",
+        "used_for": "PublicStateV1 terminal-first normalization, public entity boundary, complete request validation and lifecycle tracker"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/control.py",
+        "sha256": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+        "used_for": "frozen public B0 control boundary and separate delegation path"
+      }
+    ]
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": {
+      "command": "./.venv/bin/python knowledge_base/validate_db.py",
+      "result": "PASS",
+      "warnings": [
+        "12 P0/P1 research questions remain open/in review/blocked",
+        "3 contradictions remain explicitly unresolved"
+      ],
+      "counts": {
+        "decision_rules": 36,
+        "strategies": 20,
+        "search_features": 16,
+        "anti_patterns": 14,
+        "contradictions": 6,
+        "research_questions": 15
+      }
+    },
+    "requery": {
+      "method": "Read-only sqlite URI file:knowledge_base/ptcg_gold.sqlite?mode=ro; selected IDs were queried from their authoritative tables after validation.",
+      "ids": [
+        "DR-004",
+        "DR-005",
+        "DR-006",
+        "DR-013",
+        "DR-014",
+        "DR-018",
+        "DR-024",
+        "STR-001",
+        "STR-006",
+        "STR-007",
+        "STR-016",
+        "SF-001",
+        "SF-002",
+        "SF-006",
+        "SF-007",
+        "SF-009",
+        "SF-016",
+        "AP-001",
+        "AP-008",
+        "AP-009",
+        "AP-011",
+        "AP-013",
+        "AP-014",
+        "CON-001",
+        "CON-002",
+        "CON-004",
+        "RQ-004",
+        "RQ-005",
+        "RQ-009",
+        "RQ-013"
+      ],
+      "decision_rules": [
+        {
+          "id": "DR-004",
+          "name": "Map the route before a non-terminal KO",
+          "action": "Compare immediate prizes, remaining required KOs, attacker sequence, gust needs, resources and opponent retaliation before choosing target or attack.",
+          "boundary": "Forced KO or terminal attack is an exception; exact engine values are required."
+        },
+        {
+          "id": "DR-005",
+          "name": "Prefer the robust route over nominal immediate value",
+          "action": "Choose shorter or more robust route when it uses fewer uncertain pieces and survives more responses; do not select highest immediate Prize alone.",
+          "boundary": "A high-variance line can be correct behind, but this fixture design does not model hidden probabilities."
+        },
+        {
+          "id": "DR-006",
+          "name": "Do not initiate a losing Prize trade",
+          "action": "Do not start a chain when next attacker is not ready and opponent has a faster credible route, except terminal or forced cases.",
+          "boundary": "Readiness and retaliation are public receipt inputs only."
+        },
+        {
+          "id": "DR-013",
+          "name": "Spend gust for route conversion",
+          "action": "Prefer the target that shortens the robust Prize route or removes the imminent attacker after scoring target identity.",
+          "boundary": "Do not gust for highest HP or damage alone; the design tests route conversion versus exact threat removal."
+        },
+        {
+          "id": "DR-014",
+          "name": "Prefer threat denial when it changes the route",
+          "action": "Target an enabling threat when its exact removal changes the route more than taking a larger target.",
+          "boundary": "No future probability or prose can establish removal."
+        },
+        {
+          "id": "DR-018",
+          "name": "Price opponent outs instead of assuming them",
+          "action": "Use revealed public board, discard, hand size and draw evidence; do not treat unseen Boss, Energy, switch or evolution as certain.",
+          "boundary": "B6 does not create a belief model; hidden uncertainty delegates."
+        },
+        {
+          "id": "DR-024",
+          "name": "Allocate hidden cards without replacement",
+          "action": "Only future belief worlds consistent with public counts and reveals may be generated.",
+          "boundary": "B6 generates no hidden worlds and never uses hidden allocation as a target feature."
+        }
+      ],
+      "strategies": [
+        {
+          "id": "STR-001",
+          "name": "Prize-route planning",
+          "action": "Enumerate target and attacker sequences and prefer shortest robust completion with acceptable retaliation.",
+          "boundary": "B6 consumes a qualified current route delta and does not read a successor route."
+        },
+        {
+          "id": "STR-006",
+          "name": "Convert gust into route progress",
+          "action": "Score target identity by route distance, KO certainty, opponent threat removal and post-gust board rather than damage alone.",
+          "boundary": "B6 splits the route and threat clauses into independent falsifiable formulations; post-gust board is forbidden unless represented by a current local-delta receipt."
+        },
+        {
+          "id": "STR-007",
+          "name": "Opponent-response stress test",
+          "action": "Enumerate strongest public-resource response and prefer a line whose worst credible response remains viable.",
+          "boundary": "B6 uses only a sealed public capability census; unknown response remains unknown."
+        },
+        {
+          "id": "STR-016",
+          "name": "Semantic legal-option scoring",
+          "action": "Score every current legal option by source, target and role, then validate final indexes and sequence.",
+          "boundary": "Raw option order is never an authority; unsupported complete requests delegate."
+        }
+      ],
+      "search_features": [
+        {
+          "id": "SF-001",
+          "name": "prize_map_distance",
+          "direction": "minimize",
+          "terminal_override": true,
+          "use": "B6-A may consume only a receipt-bound current route-distance reduction."
+        },
+        {
+          "id": "SF-002",
+          "name": "immediate_ko_threat",
+          "direction": "minimize",
+          "terminal_override": true,
+          "use": "Only exact public capability receipt; no static HP/damage shortcut."
+        },
+        {
+          "id": "SF-006",
+          "name": "bench_liability",
+          "direction": "minimize",
+          "terminal_override": false,
+          "use": "B5-owned and excluded from B6 scoring; referenced only for overlap checks."
+        },
+        {
+          "id": "SF-007",
+          "name": "gust_coverage",
+          "direction": "maximize",
+          "terminal_override": false,
+          "use": "B6-B uses exact public coverage IDs, not a weighted coverage scalar."
+        },
+        {
+          "id": "SF-009",
+          "name": "deckout_risk",
+          "direction": "minimize",
+          "terminal_override": true,
+          "use": "Not used by B6; no deck-out inference from counts."
+        },
+        {
+          "id": "SF-016",
+          "name": "terminal_outcome",
+          "direction": "maximize",
+          "terminal_override": true,
+          "use": "Terminal-first harness gate before any selection fields."
+        }
+      ],
+      "anti_patterns": [
+        "AP-001: do not start a losing Prize trade",
+        "AP-008: do not optimize damage instead of route",
+        "AP-009: do not assume a hidden card is present or absent",
+        "AP-011: do not use raw option prefix",
+        "AP-013: do not declare deck-out from low deck count",
+        "AP-014: do not control randomness manually"
+      ],
+      "conflicts_and_open_questions": [
+        {
+          "id": "CON-001",
+          "topic": "Prize trade versus immediate Prize",
+          "resolution": "Evaluate complete route and public response; neither immediate value nor lower variance is universal. B6-A is a route diagnostic, not a universal rule."
+        },
+        {
+          "id": "CON-002",
+          "topic": "Deck thinning",
+          "resolution": "Not used by B6; resource ledger and hidden counts remain B3-owned."
+        },
+        {
+          "id": "CON-004",
+          "topic": "Option order versus semantic legality",
+          "resolution": "Semantic scoring remains default and fresh-process permutations are mandatory."
+        },
+        {
+          "id": "RQ-004",
+          "status": "OPEN",
+          "impact": "No native matchup strength claim or route prior."
+        },
+        {
+          "id": "RQ-005",
+          "status": "OPEN",
+          "impact": "B6 is a bounded ablation design only; route, readiness and gust conversion need approved exact-deck experiments."
+        },
+        {
+          "id": "RQ-009",
+          "status": "OPEN",
+          "impact": "No hidden-information particle or response probability."
+        },
+        {
+          "id": "RQ-013",
+          "status": "OPEN",
+          "impact": "No archetype classifier or anchor label at runtime."
+        }
+      ]
+    }
+  },
+  "public_current_input_contract": {
+    "observation": {
+      "record": "EngineObservationV1 wrapped by PublicStateV1 after terminal-first normalization",
+      "allowed_fields": [
+        "schema_version",
+        "battle_id",
+        "transition_id",
+        "acting_player",
+        "terminal_result",
+        "turn",
+        "turn_action_count",
+        "first_player",
+        "supporter_played",
+        "stadium_played",
+        "energy_attached",
+        "retreated",
+        "both public PlayerViewV1 rows: player_index, bench_max, deck_count, hand_count, prize_count, visible_prize_count, hand_visible and facedown_active_count",
+        "visible entities only: entity_key, card_id, serial when public, owner, zone, position, parent_entity_key, hp, max_hp, damage, appear_this_turn, energy_types, attached_energy_count, attached_tool_count, evolution_depth and public statuses",
+        "public event structure and typed fields only; event prose/name is not executable semantics",
+        "public_state_hash computed from the complete current snapshot"
+      ],
+      "forbidden_fields": [
+        "opponent hidden hand/deck/Prize identities",
+        "own hidden deck or Prize identities and deck order",
+        "successor observation or post-action values",
+        "counterfactual terminal result or manually controlled random outcome",
+        "raw native object, private baseline state or transport option order",
+        "card prose, static attack damage, weakness/resistance or ex/mega label as executable effect"
+      ]
+    },
+    "request": {
+      "record": "SelectionRequestV1",
+      "required_fields": [
+        "schema_version",
+        "episode_uuid",
+        "selection_seq",
+        "request_id",
+        "acting_player",
+        "selection_type",
+        "selection_context",
+        "min_count",
+        "max_count",
+        "remain_damage_counter",
+        "remain_energy_cost",
+        "context_card_id",
+        "effect_card_id",
+        "ordering",
+        "complete options tuple"
+      ],
+      "option_record": "Every LegalOptionV1 must retain canonical option type/name, source/target kind and refs, source/target entity keys, card/serial/attack/effect/context identifiers, choice_role, availability and semantic_fingerprint. original_index may transport an action but never score it.",
+      "completeness": "The full current legal option set is required. One unsupported, unavailable-but-missing, duplicate, or ambiguous semantic option causes B0_DELEGATE for the whole request; no safe prefix is scored.",
+      "activation": "Only a preregistered current gust-target semantic signature may activate. Exact numeric enum values and choice-role labels must be allowlisted from the versioned public contract; labels guessed from card prose or context names are rejected."
+    },
+    "route_and_threat_observables": [
+      "public remaining Prize units and exact visible target Prize units only when bound by a B3 Prize/ledger receipt",
+      "current target KO-guarantee boolean only when bound by an exact current capability receipt; otherwise UNKNOWN",
+      "current legal gust availability, exact public cost and reserve only from a B3 resource receipt",
+      "current route-distance reduction only from a B1-owned route receipt referenced by B6 local delta",
+      "exact public opponent capability IDs and coverage status only from a B4-owned sealed capability census/delta",
+      "source and target public entity identity, card ID, serial, owner, zone, position, attack/effect/context IDs, choice role, energy/status/HP fields and the snapshot digest binding them"
+    ],
+    "unknown_rule": "UNKNOWN is not zero, safe, absent, or favorable. Missing, partial, conflicting, stale, unqualified, hidden-only or successor-only fields delegate before either formulation key is read."
+  },
+  "receipt_and_provenance_contract": {
+    "canonical_case_receipt": {
+      "record": "B6PublicCaseReceiptV1",
+      "purpose": "Seal the entire ordered per-case input and expected result so an internally consistent but forged subset cannot score.",
+      "ordered_payload": [
+        "schema_version",
+        "fixture_case_id",
+        "public_snapshot in canonical entity and player order",
+        "public_snapshot_hash",
+        "selection_request in canonical semantic option order",
+        "all option semantic payloads and option fingerprints",
+        "ordered local_delta receipt payloads",
+        "ordered capability receipt payloads",
+        "complete visible capability census and census completeness marker",
+        "B1/B3/B4/B5 upstream receipt IDs and their content digests",
+        "expected formulation outcomes and expected B0 reasons",
+        "fixture/config/schema/implementation provenance"
+      ],
+      "seal_rule": "case_content_sha256 is recomputed from the exact canonical payload. A changed order, field, expected outcome, capability, census row, local delta, public snapshot, upstream receipt ID or digest rejects the case. The evaluator must not accept a caller-supplied digest as proof."
+    },
+    "gust_route_capability": {
+      "record": "GustRouteCapabilityReceiptV1",
+      "required_fields": [
+        "receipt_id",
+        "fixture_case_id",
+        "scope",
+        "qualification_status",
+        "option_semantic_fingerprint",
+        "selection_type",
+        "selection_context",
+        "option_type",
+        "action_key",
+        "source_entity_key",
+        "target_entity_key",
+        "source_card_id",
+        "target_card_id",
+        "source_serial",
+        "target_serial",
+        "source_owner",
+        "target_owner",
+        "source_zone",
+        "target_zone",
+        "source_position",
+        "target_position",
+        "source_metadata_ref",
+        "target_metadata_ref",
+        "choice_role",
+        "attack_id",
+        "effect_id",
+        "context_card_id",
+        "energy_requirements",
+        "status_constraints",
+        "source_energy_types",
+        "target_energy_types",
+        "source_attached_energy_count",
+        "target_attached_energy_count",
+        "source_hp",
+        "source_max_hp",
+        "source_damage",
+        "target_hp",
+        "target_max_hp",
+        "target_damage",
+        "prize_units",
+        "ko_guaranteed",
+        "gust_available",
+        "gust_cost",
+        "gust_reserve_after",
+        "route_distance_before",
+        "route_distance_reduction",
+        "coverage_capability_ids",
+        "removed_capability_ids",
+        "remaining_capability_ids",
+        "current_public_fields",
+        "successor_fields",
+        "source_observation_digest",
+        "upstream_receipt_ids",
+        "content_sha256"
+      ],
+      "field_rules": [
+        "scope must be FIXTURE_ONLY for this design; native qualification is a later independently reviewed state and cannot be implied by this report.",
+        "attack_id is a positive exact ID for an attack capability or explicit null for non-attack; effect_id is exact for an effect capability or explicit null for a pure attack. Neither may be inferred from prose.",
+        "source and target identity, card, serial, owner, zone, position, choice role, attack/effect/context, energy, status and HP fields must match the exact current LegalOptionV1 and visible snapshot. Null is an explicit sealed sentinel, not a missing field.",
+        "prize_units is a finite nonnegative integer from a qualified visible-card receipt. ko_guaranteed is true only when all public target, energy, status and effect requirements are qualified; unresolved values are UNKNOWN.",
+        "route_distance_reduction is a finite nonnegative integer/ordinal owned by the B1 route receipt. It is a current arithmetic conversion from public Prize/route ledger plus the exact option local delta, not a read of an after-state or successor.",
+        "coverage_capability_ids and remaining/removed sets are exact B4 capability IDs. Numeric threat levels may be carried only with the same sealed ThreatLevelScaleV1 ID; B6-B does not compare unrelated numeric levels.",
+        "current_public_fields is an allowlisted tuple of fields from the current snapshot and local delta. successor_fields must be exactly empty. Any post-action HP, zone, status, terminal, future attack or response is forbidden.",
+        "content_sha256 is over the full receipt content, not labels or receipt IDs alone."
+      ]
+    },
+    "gust_route_local_delta": {
+      "record": "GustRouteLocalDeltaV1",
+      "required_fields": [
+        "receipt_id",
+        "fixture_case_id",
+        "option_semantic_fingerprint",
+        "option_semantic_payload_digest",
+        "selection_type",
+        "selection_context",
+        "option_type",
+        "action_key",
+        "source_entity_key",
+        "target_entity_key",
+        "source_card_id",
+        "target_card_id",
+        "source_serial",
+        "target_serial",
+        "source_owner",
+        "target_owner",
+        "source_zone",
+        "target_zone",
+        "choice_role",
+        "current_public_observation_digest",
+        "action_eligible",
+        "gust_available_before",
+        "gust_cost",
+        "gust_reserve_after",
+        "route_distance_reduction",
+        "target_prize_units",
+        "target_ko_guaranteed",
+        "removed_capability_ids",
+        "remaining_capability_ids",
+        "current_public_fields",
+        "successor_fields",
+        "upstream_receipt_ids",
+        "content_sha256"
+      ],
+      "rules": [
+        "The digest binds all source/target/card/serial/owner/zone/choice-role/action-key/current-field content and the exact option payload. Raw index never binds a delta.",
+        "The delta describes only current legal eligibility and a receipt-qualified arithmetic conversion; it never claims that an action occurred or that a successor state exists.",
+        "action_eligible must be a strict boolean and must match the current option availability and public targetability. Changed action_key, current_public_fields or action_eligible is a content mismatch, not a harmless diagnostic mutation.",
+        "An unregistered, duplicate, cross-case, stale, conflicting, or content-mismatched delta causes B0_DELEGATE before any formulation score."
+      ]
+    },
+    "capability_census": {
+      "record": "VisibleThreatCapabilityCensusV1",
+      "required_fields": [
+        "census_id",
+        "fixture_case_id",
+        "public_snapshot_digest",
+        "visible_source_entity_keys",
+        "visible_target_entity_keys",
+        "capability_receipt_ids",
+        "census_complete",
+        "zero_threat_justification",
+        "content_sha256"
+      ],
+      "zero_threat_rule": "An empty capability list is valid only when census_complete is true, every visible source/target and relevant capability class was enumerated, exact target/energy/status checks are qualified, zero_threat_justification is a sealed allowlisted receipt, and the full census content digest matches the canonical case. An empty or missing list without that proof is UNKNOWN and delegates."
+    },
+    "provenance": {
+      "every_receipt": [
+        "fixture_case_id",
+        "fixture_content_sha256",
+        "fixture_config_sha256",
+        "receipt_manifest_sha256",
+        "implementation_sha256",
+        "schema_hashes",
+        "engine_hash",
+        "native_library_sha256",
+        "game_wrapper_sha256",
+        "api_wrapper_sha256",
+        "sim_wrapper_sha256",
+        "card_data_sha256",
+        "card_table_file_sha256",
+        "card_table_semantic_sha256",
+        "candidate_deck_profile",
+        "candidate_deck_sha256",
+        "anchor_deck_profile",
+        "anchor_deck_sha256",
+        "scope_version"
+      ],
+      "binding": "Asset and deck scope is exact. A receipt for another case, target, anchor, player perspective, implementation, card table or wrapper is not generalized. Fixture-only receipts cannot become native authority by copying asset labels."
+    }
+  },
+  "formulations": [
+    {
+      "id": "B6-A-ROUTE-DISTANCE-CONVERSION",
+      "name": "Exact public gust route-distance conversion",
+      "status": "FIXTURE_ONLY_UNTIL_IMPLEMENTATION_AND_RECEIPTS",
+      "material_difference": "A ranks the exact public route conversion produced by a gust target. It never examines threat-coverage sets, B4 threat levels, response likelihood or a future board. B can choose a farther route when it has a strict public threat-coverage dominance relation.",
+      "falsifiable_hypothesis": "When every current legal gust-target option has a complete B1-owned route-distance reduction, B3-owned gust/resource receipt and target KO/Prize receipt, A selects the unique option with the greatest exact route-distance reduction and does not select by static damage or raw option order.",
+      "inputs": [
+        "complete current public state and request",
+        "one canonical GustRouteLocalDeltaV1 per legal option",
+        "B1-owned route_distance_before and route_distance_reduction",
+        "B3-owned gust_available_before, gust_cost and gust_reserve_after",
+        "exact visible target prize_units and ko_guaranteed",
+        "current semantic source/target/card/serial/owner/zone/choice-role binding"
+      ],
+      "decision_key": [
+        "terminal-first override outside the policy action",
+        "route_distance_reduction descending",
+        "ko_guaranteed true before false, only when qualified",
+        "target_prize_units descending as an exact public tie term",
+        "gust_cost ascending",
+        "gust_reserve_after descending",
+        "canonical semantic fingerprint only after all strategic fields; non-equivalent equal keys are AMBIGUOUS/B0_DELEGATE"
+      ],
+      "mathematics": "For each candidate x, R(x) is the sealed finite public route-distance reduction in its current local-delta receipt. A chooses argmax R(x), then applies only the declared exact tie terms. No route value is computed from static damage, HP, prose, successor state, hidden Prize identity or response probability.",
+      "fail_closed": [
+        "missing or conflicting B1 route receipt",
+        "missing or conflicting B3 gust/resource receipt",
+        "unknown Prize units or KO guarantee needed by the key",
+        "unqualified source/target/card/serial/owner/zone/choice-role/attack/effect/context/energy/status/HP binding",
+        "incomplete or duplicate legal option semantics",
+        "nonfinite, negative, fractional or bool numeric route/resource fields",
+        "successor, hidden, prose, static damage or counterfactual field",
+        "compound/STOP outside the explicit activation contract",
+        "stale sequence, cross-case receipt or content digest mismatch",
+        "non-equivalent strategic tie"
+      ],
+      "not_used": [
+        "B4 threat scalar or threat-level arithmetic",
+        "B5 bench liability or spread/gust exposure scalar",
+        "B3 resource counts recomputed by B6",
+        "any B0 output as a feature"
+      ]
+    },
+    {
+      "id": "B6-B-THREAT-REMOVAL-COVERAGE-DOMINANCE",
+      "name": "Exact public threat-removal coverage dominance",
+      "status": "FIXTURE_ONLY_UNTIL_IMPLEMENTATION_AND_RECEIPTS",
+      "material_difference": "B ignores route-distance magnitude when a strict public threat-coverage relation exists. It selects only under strict set dominance and otherwise delegates; it never converts coverage to a weighted score or assumes a hidden response.",
+      "falsifiable_hypothesis": "When complete B4-owned capability census and local-delta receipts show that one current gust target removes a strict superset of another target's exact visible imminent-threat IDs at no greater qualified gust cost and no worse public reserve, B selects that target even if A's route-distance conversion prefers the other target.",
+      "inputs": [
+        "complete current public state and request",
+        "one canonical current local delta per legal option",
+        "complete sealed visible capability census",
+        "B4-owned capability IDs and removed/remaining sets for every option",
+        "B3-owned gust cost and reserve for the cost guard",
+        "source/target/card/serial/owner/zone/choice-role/attack/effect/context/energy/status/HP binding"
+      ],
+      "dominance_relation": "Candidate x strictly dominates y when removed_capability_ids(x) is a strict superset of removed_capability_ids(y), remaining_capability_ids(x) is a strict subset of remaining_capability_ids(y), gust_cost(x) is no greater, gust_reserve_after(x) is no lower, and every comparison field is exact and receipt-qualified. A unique maximal option is selected; incomparable maxima, equal non-equivalent maxima or missing census delegates.",
+      "decision_key": [
+        "terminal-first override outside the policy action",
+        "unique strict public coverage dominance",
+        "lower remaining capability cardinality only after the dominance relation",
+        "lower gust cost and higher reserve only as exact relation guards",
+        "canonical semantic fingerprint only after strategic relation; no raw order"
+      ],
+      "threat_scale_rule": "B6-B does not compare numeric ThreatLevelScaleV1 values. If a referenced B4 capability includes a numeric threat level, its scale ID, finite integer type and lower-is-safer labels must still match one sealed B4 scale; a mismatch delegates. Coverage uses exact stable capability IDs and receipt-defined removed/remaining status only.",
+      "fail_closed": [
+        "incomplete or forged capability census, including an unsupported empty zero-threat census",
+        "missing B4 local-delta or capability content",
+        "coverage IDs not registered in the same sealed case or current snapshot",
+        "mismatched ThreatLevelScaleV1 when numeric fields are present",
+        "unknown source/target/card/serial/owner/zone/choice-role/attack/effect/context/energy/status/HP field",
+        "incomplete or duplicate legal option semantics",
+        "nonfinite, bool, fractional, negative or malformed labels/types",
+        "successor, hidden, prose, static damage or response-probability field",
+        "no unique strict maximal option",
+        "stale sequence, cross-case receipt or content digest mismatch"
+      ],
+      "not_used": [
+        "route-distance magnitude except as a separately reported A result",
+        "B1 route score as a tie term",
+        "B5 bench liability or spread scalar",
+        "B0 output as a feature"
+      ]
+    }
+  ],
+  "overlap_and_double_counting_contract": {
+    "ownership": {
+      "B1": "Owns Prize-route distance, target sequence and route-completion semantics. B6-A consumes one exact B1 route-distance reduction reference and does not recompute it.",
+      "B2": "Owns continuity/readiness receipts. B6 may not count next-attacker or backup readiness unless an explicitly referenced B1/B2 receipt is part of an approved tie contract; the first fixture version does not score it.",
+      "B3": "Owns public resource ledger, gust availability/cost/reserve, known-card Prize units and capacity deltas. B6 consumes exact receipts and never decrements or recomputes the ledger.",
+      "B4": "Owns visible opponent capability census, threat local deltas and ThreatLevelScaleV1. B6-B consumes exact capability IDs and coverage status, never a second threat score.",
+      "B5": "Owns bench role/liability, spread and gust exposure. B6 does not score bench liability or use B5 exposure as a route or threat proxy.",
+      "B0": "Owns the frozen public baseline and is a separate comparison/delegation arm. B0 actions, scores, private state and trajectories are never B6 inputs."
+    },
+    "deduplication": [
+      "Receipt IDs are namespaced by owner phase and are unioned once per exact current observation digest, option fingerprint and semantic entity graph.",
+      "A B4 capability referenced by B6-B remains one capability; B6 does not count the same ID as both a threat level and a coverage unit.",
+      "A B1 route-distance field referenced by B6-A remains one route metric; B6 does not add a Prize value, KO value or B3 ledger value as another route-distance scalar.",
+      "A B3 gust cost/reserve is a guard, not a second B6 objective. B5 liability and B2 readiness are not silently appended to either formulation.",
+      "A receipt graph with duplicate, contradictory, mixed-case or mixed-anchor references delegates before deduplication can hide the defect."
+    ],
+    "overlap_fixtures": [
+      "One B1 route receipt referenced twice must produce one route reduction count.",
+      "One B4 capability referenced by two B6 options must retain distinct local-delta status but never double-count the capability census.",
+      "A B3 gust reserve mutation must invalidate the B6 local delta rather than letting a stale B6 route result survive.",
+      "A B5 bench-liability or spread receipt inserted into a B6 case without an allowlisted field must delegate, not improve a target key.",
+      "A B0 result must not change either formulation result when run before or after the same fixture."
+    ]
+  },
+  "option_target_entity_and_lifecycle_contract": {
+    "terminal_first": "If terminal_result is present, return evaluator-only TERMINAL_OVERRIDE and no action. Do not read stale selection, options, receipts, or malformed target data. PublicStateV1 must reject a terminal state retaining a request; the harness must assert zero successor/selection reads.",
+    "semantic_binding": [
+      "Every legal option is checked against SelectionRequestV1 and PublicStateV1, including schema, episode, sequence, actor, selection type/context, min/max, ordering, availability, required fields, canonical semantic fingerprint, source/target entity resolution and unique semantics.",
+      "The target is not an index. The exact source/target entity key, card ID, serial, owner, zone, position, metadata reference, choice_role, attack/effect/context and current energy/status/HP fields must match the sealed receipt and current snapshot.",
+      "Unsupported enums, missing fields, ambiguous duplicate semantics, stale entity references, incomplete options and raw-order dependence are B0_DELEGATE reasons for the entire request.",
+      "All options, including unavailable rows required by the complete engine request and all legal alternatives, are included in the canonical case digest."
+    ],
+    "singleton_and_compound": {
+      "singleton": "The first implementation may activate only a registered singleton current gust-target request with exact min_count/max_count and ordering. Any request outside the allowlist delegates.",
+      "optional": "An optional request may activate only when the engine exposes a canonical legal STOP sub-action and every positive option is covered. STOP is a real autoregressive step with its own mask, chosen token, sequence record and log-probability contribution; an empty list is never an implicit STOP.",
+      "ordered": "ORDERED multi-select, max_count greater than one, and compound follow-up actions are test cases. They activate only if the exact CompoundActionBuilder contract and per-step receipt graph are explicitly implemented. Otherwise they delegate with ORDERED_UNSUPPORTED or COMPOUND_UNSUPPORTED.",
+      "unordered": "UNORDERED multi-select must satisfy exact min/max, uniqueness, range and legality. A partial option score or duplicate selected semantic fingerprint delegates.",
+      "final_boundary": "Every selected sequence is passed through the existing final adapter/action validator; B6 never returns an index sequence directly as production authority."
+    },
+    "lifecycle": {
+      "state_key": "(episode_uuid, acting_player, policy_id)",
+      "request_identity": "(episode_uuid, acting_player, selection_seq, request_id, public_snapshot_hash, complete request content hash)",
+      "global_sequence_rule": "Check the global latest selection sequence for (episode_uuid, policy_id) before duplicate-cache replay. An exact old request must not replay after any newer sequence. A same-sequence replay is idempotent only when the full canonical request and public snapshot digest are identical.",
+      "stale_rules": [
+        "lower selection_seq than global latest is STALE_SELECTION_SEQUENCE even if request_id and content equal an old request",
+        "same selection_seq with changed request, option, target, receipt, public field or digest is DUPLICATE_CONTENT_MISMATCH",
+        "newer sequence with an old request_id or stale entity is REQUEST_IDENTITY_MISMATCH",
+        "a request from another episode, player or policy is CROSS_LIFECYCLE_REJECTED"
+      ],
+      "reset_boundaries": [
+        "new deck/start marker",
+        "terminal observation",
+        "adapter error",
+        "worker replacement"
+      ],
+      "fresh_process": "The same case must be evaluated in a fresh process and after reset; no receipt, sequence, B0 result, target identity or decision may leak across lifecycle keys."
+    },
+    "mirror_and_permutation": "Every selected semantic action and every B0 reason must be invariant under all legal option-row permutations and under a complete acting-player/source-target/owner/zone/serial mirror. Mirror maps the expected semantic target, not the raw index."
+  },
+  "deterministic_fixtures": [
+    {
+      "id": "B6-F01-TERMINAL-FIRST",
+      "purpose": "Terminal override before stale selection or receipt data.",
+      "mutation": "Set terminal_result while retaining stale, malformed, successor and forged selection-local fields.",
+      "expected": "TERMINAL_OVERRIDE; no action, no formulation key, zero selection-local or successor reads."
+    },
+    {
+      "id": "B6-F02-REAL-FORMULATION-DIVERGENCE",
+      "purpose": "Materially separate route conversion from threat-coverage dominance with only current public receipts.",
+      "public_case": {
+        "options": [
+          {
+            "semantic_label": "X",
+            "route_distance_reduction": 2,
+            "target_prize_units": 2,
+            "target_ko_guaranteed": true,
+            "gust_cost": 1,
+            "gust_reserve_after": 1,
+            "removed_capability_ids": ["threat-1"],
+            "remaining_capability_ids": ["threat-2"]
+          },
+          {
+            "semantic_label": "Y",
+            "route_distance_reduction": 1,
+            "target_prize_units": 1,
+            "target_ko_guaranteed": true,
+            "gust_cost": 1,
+            "gust_reserve_after": 1,
+            "removed_capability_ids": ["threat-1", "threat-2"],
+            "remaining_capability_ids": []
+          }
+        ],
+        "capability_census": ["threat-1", "threat-2"],
+        "all_fields": "Every row is a complete sealed current public capability/local-delta graph; no after-state, hidden card or damage prose is present."
+      },
+      "expected": {
+        "B6-A-ROUTE-DISTANCE-CONVERSION": "SELECT X",
+        "B6-B-THREAT-REMOVAL-COVERAGE-DOMINANCE": "SELECT Y",
+        "B0": "Evaluated separately and never used as an input"
+      },
+      "acceptance": "This is the required real divergence. A fixture suite with only agreement or delegation is insufficient."
+    },
+    {
+      "id": "B6-F03-CONTROL-SAME-ROUTE-WINNER",
+      "purpose": "A and B agree on a unique current public route winner.",
+      "public_case": "Option X has route reduction 2, exact coverage {threat-1}, cost 1, reserve 1. Option Y has route reduction 1, exact coverage {}, cost 1, reserve 1. The complete census proves no other removable threat.",
+      "expected": "Both formulations select X. Permutation and mirror retain the semantic selection. This is a control, not a strength claim."
+    },
+    {
+      "id": "B6-F04-NO-THREAT-CENSUS-CONTROL",
+      "purpose": "Prevent an empty capability list from becoming a favorable zero-threat value.",
+      "mutation": "Delete census rows or mark census_complete false while leaving an empty coverage set.",
+      "expected": "UNKNOWN_CENSUS/B0_DELEGATE; neither formulation scores zero threat. A separate sealed complete zero-threat case is accepted only with the explicit census rule."
+    },
+    {
+      "id": "B6-F05-UNKNOWN-PARTIAL-PROSE-HIDDEN",
+      "purpose": "Reject unsupported semantics before arithmetic.",
+      "mutations": [
+        "remove target card/serial/owner/zone or choice_role",
+        "mark attack, effect, energy, status, target or KO receipt PARTIAL",
+        "replace a capability with hidden opponent hand/deck/Prize identity",
+        "insert card prose or static damage as the reason for KO or threat removal",
+        "insert successor HP, zone, status, future attack, response or terminal value"
+      ],
+      "expected": "HIDDEN_INFORMATION_FORBIDDEN, CARD_PROSE_FORBIDDEN, SUCCESSOR_VALUE_FORBIDDEN or UNKNOWN_RECEIPT; B0_DELEGATE before score."
+    },
+    {
+      "id": "B6-F06-OPTION-TARGET-ENTITY-MATRIX",
+      "purpose": "Bind every legal option and target to exact public semantics.",
+      "mutations": [
+        "change source/target entity key, card ID, serial, owner, zone, position or metadata ref",
+        "change attack_id, effect_id, context_card_id, choice_role, energy requirement, status constraint or HP/damage current field",
+        "change action_key, option semantic payload, option fingerprint, availability or current_public_fields",
+        "inject a receipt from another case, target, anchor, player or option"
+      ],
+      "expected": "PUBLIC_GRAPH_MISMATCH, RECEIPT_CONTENT_MISMATCH or CROSS_CASE_RECEIPT; B0_DELEGATE."
+    },
+    {
+      "id": "B6-F07-PERMUTATION-AND-MIRROR",
+      "purpose": "Prevent raw option order and perspective leakage.",
+      "mutations": [
+        "apply every permutation of the complete LegalOptionV1 rows while preserving semantic payload",
+        "change original_index while preserving semantic option",
+        "mirror acting player, source/target owners, zones, serials, entities, receipt graph and expected semantic target"
+      ],
+      "expected": "A and B retain their semantic result or corresponding B0 reason. Any raw-index change is a failure."
+    },
+    {
+      "id": "B6-F08-STOP-COMPOUND",
+      "purpose": "Exercise full legal option, optional STOP and compound behavior.",
+      "cases": [
+        "mandatory singleton gust target",
+        "optional singleton with canonical legal STOP",
+        "ORDERED multi-select with one receipt per step",
+        "UNORDERED multi-select with exact uniqueness and count",
+        "malformed STOP, duplicate selection, missing step receipt and out-of-range index"
+      ],
+      "expected": "Only explicitly implemented current contracts activate. Unsupported compound/ordered/STOP cases B0_DELEGATE with a typed reason; legal STOP is a real action step."
+    },
+    {
+      "id": "B6-F09-LIFECYCLE-AND-EARLY-DELEGATION",
+      "purpose": "Guard global sequence ordering before duplicate replay and reset behavior.",
+      "cases": [
+        "fresh start and current sequence",
+        "identical duplicate at the same sequence and digest",
+        "changed same-sequence duplicate",
+        "newer sequence followed by an exact old request",
+        "lower sequence with a new request ID",
+        "terminal, error and worker replacement reset",
+        "new episode, acting player and policy tuple"
+      ],
+      "expected": "Only exact same-sequence content replays. The old exact request after a newer sequence is STALE_SELECTION_SEQUENCE and cannot use an early duplicate-cache path. All resets clear B6 receipt and decision state."
+    },
+    {
+      "id": "B6-F10-NUMERIC-ENUM-SCALE",
+      "purpose": "Reject malformed numeric and public semantic enums.",
+      "mutations": [
+        "NaN or Inf route reduction, Prize units, KO fields, gust costs, reserves or scale values",
+        "bool or float where strict integer is required",
+        "negative or fractional counts",
+        "unknown selection type/context/option type/choice_role/source_kind/target_kind/qualification status",
+        "duplicate ThreatLevelScale labels, missing lower-is-safer ordering or mismatched scale ID"
+      ],
+      "expected": "Reject or B0_DELEGATE before any key; no coercion, clamping, fallback or favorable zero."
+    },
+    {
+      "id": "B6-F11-CROSS-PHASE-OVERLAP",
+      "purpose": "Prevent B1/B3/B4/B5 double counting and stale lineage injection.",
+      "mutations": [
+        "duplicate B1 route receipt",
+        "duplicate B4 capability ID or use a changed B4 source/target/scale",
+        "alter B3 gust reserve/cost without changing B6 delta",
+        "inject B5 liability/spread scalar as an undeclared B6 field",
+        "replace an upstream receipt with same label but different content"
+      ],
+      "expected": "Exact valid references are deduplicated once; any changed, duplicate, undeclared or conflicting graph delegates. No extra score is added."
+    },
+    {
+      "id": "B6-F12-FRESH-PROCESS-MATRIX",
+      "purpose": "Ensure closure survives process boundaries and a full F01-F11 matrix.",
+      "cases": [
+        "fresh-process baseline for every formulation and B0",
+        "fresh-process permutation and mirror for every formulation",
+        "fresh-process hidden/prose/successor/enum/numeric mutations",
+        "fresh-process cross-case receipt and content digest mutations",
+        "fresh-process lifecycle sequence and reset matrix"
+      ],
+      "expected": "Identical sealed inputs produce identical typed outcomes; all forbidden or forged inputs delegate/reject; no process-local cache changes the result."
+    }
+  ],
+  "fail_closed_and_delegation": {
+    "statuses": [
+      "SELECTED",
+      "B0_DELEGATE",
+      "AMBIGUOUS",
+      "UNSUPPORTED",
+      "TERMINAL_OVERRIDE"
+    ],
+    "b0_boundary": "B0_DELEGATE is an experimental abstention that invokes the frozen public B0 control through a separate, auditable path. It is not production fallback and it does not authorize a final adapter fallback. No fallback count is hidden inside B0. Production mode remains blocked until a later approved adapter proves zero fallback use.",
+    "always_delegate": [
+      "terminal request, invalid PublicStateV1 or any incomplete current snapshot",
+      "unknown or unsupported public enum, source, target, entity, target role, attack, effect, context, energy, status or HP semantics",
+      "missing, stale, forged, cross-case, duplicate or content-mismatched case/option/local-delta/capability/census receipt",
+      "hidden, successor, prose, static damage, response-probability, archetype or manually controlled random input",
+      "nonfinite or malformed numeric scale/route/resource value",
+      "incomplete full legal options, duplicate semantic options, raw-order dependence or ambiguous strategic tie",
+      "unsupported singleton/optional/ordered/unordered/compound/STOP request",
+      "global stale sequence or changed same-sequence duplicate",
+      "missing B1/B3/B4 owner receipt required by the selected formulation"
+    ],
+    "final_adapter": "The B6 design emits no submission output. A future implementation must pass any selected CompoundActionV1 through the existing final legal boundary; a boundary error must be a hard fixture failure and a separate production fallback event, never a successful B6 selection."
+  },
+  "staged_experiment": {
+    "status": "DESIGNED_NOT_AUTHORIZED",
+    "shared_provenance": {
+      "candidate_deck": "mega-abomasnow-ex",
+      "anchors": [
+        "rule:dragapult-ex",
+        "rule:iono",
+        "rule:mega-abomasnow-ex",
+        "rule:mega-lucario-ex"
+      ],
+      "natural_deployment_primary": true,
+      "forced_seat_canary_is_diagnostic": true,
+      "candidate_perspective_wdl": true,
+      "paired_seed_claim": false,
+      "raw_option_order_authority": false,
+      "terminal_outcome_primary": true,
+      "native_games_executed_in_this_design": 0,
+      "kaggle_runs": 0,
+      "training": false,
+      "submission": false
+    },
+    "stage_0_fixture_gate": {
+      "games": 0,
+      "required": [
+        "Implement B6-A and B6-B in isolated B6 source/config/tests without editing B0 or B1-B5 implementation, config, tests or review reports.",
+        "Materialize B6-F01 through B6-F12 as valid EngineObservationV1, PublicStateV1 and SelectionRequestV1 records with canonical full case seals.",
+        "Prove the B6-F02 A/B divergence and B6-F03 agreement control, including exact route/Prize/KO/gust/local-delta/capability/census receipts.",
+        "Run fresh-process full permutation, mirror, hidden/prose/successor, malformed enum/scale, NaN/Inf, cross-case/content mutation, zero-threat census and global lifecycle sequence tests.",
+        "Prove terminal-first, complete-option, legal STOP, ordered compound and final action-boundary behavior.",
+        "Static/runtime import scan proves no private baseline or raw native object dependency in B6-A/B.",
+        "Independent review recalculates the divergence/control, provenance graph and fixture-only verdict."
+      ],
+      "stop_condition": "Any arithmetic, receipt graph, semantic, lifecycle, permutation, mirror, forbidden-input, numeric or provenance failure blocks every later arm."
+    },
+    "stage_1_exact_24_game_canary": {
+      "purpose": "Mechanical B0-compatible canary only; no strength or promotion claim.",
+      "game_accounting": "Three arms (B0_CONTROL, B6-A, B6-B) x four exact rule anchors x two candidate seat strata = 24 cells, exactly one game per arm-anchor-seat cell and exactly 24 games total.",
+      "arms": [
+        "B0_CONTROL",
+        "B6-A-ROUTE-DISTANCE-CONVERSION",
+        "B6-B-THREAT-REMOVAL-COVERAGE-DOMINANCE"
+      ],
+      "games_per_arm": 8,
+      "games_total": 24,
+      "games_per_cell": 1,
+      "seat_strata": [
+        "candidate actual-first diagnostic",
+        "candidate actual-second diagnostic"
+      ],
+      "anchor_strata": [
+        "rule:dragapult-ex",
+        "rule:iono",
+        "rule:mega-abomasnow-ex",
+        "rule:mega-lucario-ex"
+      ],
+      "interpretation": "The forced-seat cells are separately labeled diagnostics and do not replace natural deployment. The canary establishes only mechanical reliability and receipt/activation telemetry. It carries no WDL interval, formulation strength, or promotion meaning.",
+      "per_cell_gates": [
+        "one complete game and manifest for every cell",
+        "zero invalid actions, post-terminal actions, fallback, stale request, crash, timeout, nonfinite diagnostic, missing output or provenance mismatch",
+        "zero use of hidden, successor, prose or static damage facts",
+        "fresh-process and semantic permutation/mirror checks pass for every formulation arm",
+        "at least one eligible complete current gust request per B6 formulation cell; a zero-eligible cell is NOT_QUALIFIED rather than silently counted as activation"
+      ],
+      "runtime_gates": [
+        "request p50/p95/p99 and max RSS retained per cell",
+        "p99 request latency must be within the frozen conservative G1/DEC-010 runtime limit used by the eventual authorized config",
+        "max RSS must remain within the frozen conservative inference envelope",
+        "any threshold not yet present in a versioned config blocks launch rather than being invented after the run"
+      ],
+      "activation_gates": [
+        "eligible means every complete public option and all required B1/B3/B4 receipts are present and exact",
+        "selected-or-legal-STOP divided by eligible requests must be at least 0.95 per formulation overall and at least 0.90 in every anchor-seat cell with eligible requests",
+        "B0 delegation for ineligible or unsupported requests is reported separately and is not activation",
+        "any activation on an incomplete, unsupported, forged or stale request is a hard failure"
+      ],
+      "stop_on": [
+        "any invalid selection, fallback, post-terminal action, timeout, crash or incomplete game",
+        "stale/early duplicate replay, permutation or mirror mismatch",
+        "hidden/successor/prose/static damage input used as fact",
+        "receipt content/graph/census/scale mismatch",
+        "NaN/Inf, malformed enum, missing output or provenance mismatch",
+        "any per-cell reliability/runtime/activation gate failure"
+      ],
+      "control_policy": "Frozen deterministic public B0 control, sampled independently for the canary. B0 outcomes are not formulation features and are not reused as a later strength sample."
+    },
+    "stage_2_equal_budget_screen_1": {
+      "status": "FUTURE_AUTHORIZATION_REQUIRED",
+      "budget": "32 games per arm: four anchors x four games in each candidate seat stratum x two seat strata. B0, B6-A and B6-B each receive the identical 32-game budget and matrix; total 96 games.",
+      "deployment": "Natural deployment is primary with explicit candidate seat balance; forced-seat diagnostics remain separately labeled. No paired-seed or deterministic trajectory claim.",
+      "required_before_start": [
+        "Stage 0 independent fixture PASS",
+        "exact B0-compatible import/source/config/dependency and deck receipts",
+        "approved native execution authorization and bounded run manifest if native is chosen",
+        "frozen runtime threshold, activation denominator and per-cell stopping rules"
+      ],
+      "reliability_floor": "All invalid, fallback, post-terminal, stale, nonfinite, timeout, crash and provenance counters are zero. Any nonzero counter blocks the arm regardless of WDL.",
+      "runtime_floor": "Every arm meets the frozen p99 latency and max RSS limits; report p50/p95/p99 and max, never an average-only pass.",
+      "activation_floor": "The Stage 1 floors remain required, measured per arm, anchor and seat. Unsupported/incomplete requests delegate and are counted separately; activation cannot be inflated by deleting them from the full request census.",
+      "per_cell_floor": "Every anchor-seat cell is complete, has zero reliability defects, has eligible-request telemetry, and is reported separately with candidate-perspective WDL and an uncertainty interval. Any cell failing a frozen DEC-010 catastrophic-matchup/reliability floor blocks the arm; no aggregate score can mask a cell failure.",
+      "comparison": "Compare each formulation independently with its equal-budget fresh B0 control by anchor and seat. Report W/D/L, activation and B0 delegation; do not blend formulations, cells, reliability and WDL into one score."
+    },
+    "stage_3_equal_budget_screen_2": {
+      "status": "OPTIONAL_FUTURE_AUTHORIZATION_REQUIRED",
+      "budget": "128 games per arm: 16 games per anchor-seat cell across the same four anchors and two candidate seat strata; total 384 games for B0, B6-A and B6-B.",
+      "prerequisite": "Stage 2 zero-reliability review, receipt closure, runtime review and no unexplained target-cell regression.",
+      "per_cell": "Apply the frozen DEC-010 reliability and catastrophic-matchup floors independently to every anchor-seat cell; a failed floor rejects the arm. Candidate-perspective terminal WDL and Wilson/bootstrap intervals are reported per cell and per arm, but no blended promotion score is permitted.",
+      "native_and_kaggle": "No execution is authorized by this report. A later approved native or bounded private Kaggle plan must retain exact raw traces, loaded-source/deck/engine/card-data hashes and independent manifest verification."
+    }
+  },
+  "promotion_and_rejection": {
+    "promotion_status": "NOT_AUTHORIZED",
+    "ordered_gates": [
+      "fixture arithmetic and public-boundary PASS",
+      "fresh-process provenance, lifecycle, permutation, mirror, STOP and compound PASS",
+      "exact 24-game mechanical canary PASS with zero reliability defects and per-cell telemetry",
+      "equal-budget screen PASS with zero reliability defects and runtime/activation floors",
+      "per-anchor and per-seat catastrophic floors PASS under the frozen evaluation contract",
+      "independent evidence recalculation and explicit user authorization"
+    ],
+    "rejection": [
+      "Any failure of a single reliability, provenance, semantic, lifecycle, runtime, activation or per-cell floor rejects the affected arm and blocks later stages.",
+      "A/B agreement without the B6-F02 real divergence does not validate material distinction.",
+      "A WDL gain cannot repair a reliability, hidden-information, receipt, runtime or catastrophic-cell failure.",
+      "A formulation remains fixture-only unless exact native semantics and the complete B0-compatible boundary are separately qualified."
+    ],
+    "no_blended_score": "There is no blended B6 score. Route conversion and threat coverage are separate hypotheses; B0 is a separate control. Each arm is judged by ordered hard floors and per-cell evidence before any terminal WDL comparison."
+  },
+  "readiness": {
+    "design": "READY",
+    "fixture_implementation": "NOT_IMPLEMENTED",
+    "fixture_review": "NOT_STARTED",
+    "native_canary": "BLOCKED",
+    "kaggle": "BLOCKED",
+    "production": "NOT_AUTHORIZED",
+    "blocking_reasons": [
+      "No B6 source, config or tests exist in this design-only work item.",
+      "B1 route, B3 resource/Prize and B4 capability/ThreatLevelScale receipts needed by B6 are not assembled for B6.",
+      "B6 fixture authority, full-case sealing and cross-phase provenance graph have not yet been independently implemented or reviewed.",
+      "Native engine assets, exact target/effect semantics, import manifests and bounded canary authorization are unavailable for this design.",
+      "Open KB questions and unresolved contradictions forbid hidden priors, static card inference and native strength claims."
+    ],
+    "scope_controls": {
+      "files_created_by_this_work_item": [
+        "reports/deterministic/phase-b6-gust-route-design-v1.json"
+      ],
+      "implementation_files_edited": [],
+      "config_files_edited": [],
+      "test_files_edited": [],
+      "native_games": 0,
+      "kaggle_runs": 0,
+      "training_runs": 0,
+      "submissions": 0,
+      "commits": 0,
+      "external_services": 0,
+      "self_hash_placeholder": false
+    }
+  },
+  "continuation_reconciliation": {
+    "updated_at_utc": "2026-08-08T08:35:00Z",
+    "current_head": "94d5b38613a557800ebac4749603b5e18e3605c9",
+    "b5_fixture_status": "PASS_FIXTURE_ONLY_NATIVE_NOT_AUTHORIZED",
+    "note": "Provenance references were refreshed after the B5 fixture milestone. The B6 A/B hypotheses, fixture definitions, fail-closed rules, and staging criteria are unchanged."
+  },
+  "verification": {
+    "read_commands": [
+      "Read repository AGENTS.md and the authoritative local master prompt.",
+      "Read B1, B2, B3, B4 and B5 design/review reports and their overlap, receipt, fixture and staging contracts.",
+      "Read EngineObservationV1, LegalOptionV1, SelectionRequestV1, CompoundActionV1, PublicStateV1 and public B0 control contracts.",
+      "Queried the validated knowledge_base SQLite database in read-only mode for DR-013, STR-006, SF-007 and route/threat/resource conflicts."
+    ],
+    "validation_commands": [
+      {
+        "command": "./.venv/bin/python knowledge_base/validate_db.py",
+        "result": "PASS with the recorded open-question and contradiction warnings"
+      },
+      {
+        "command": "./.venv/bin/python -m json.tool reports/deterministic/phase-b6-gust-route-design-v1.json",
+        "result": "MUST PASS after this report is written; no implementation tests are claimed"
+      }
+    ],
+    "evidence_limits": "No B6 implementation or focused test was run because the user explicitly limited this work item to one design report. The next fixture implementation and independent review must provide executable evidence; this report does not claim fixture or native PASS.",
+    "report_hash_policy": "The report deliberately contains no recursive self-hash field or placeholder. Its SHA-256 is computed externally after validation and returned in the handoff."
+  },
+  "next_falsifiable_work_order": {
+    "task": "After independent review, implement only the isolated B6 fixture evaluator and its fixture/config/tests at the named B6 paths, then run the complete fresh-process F01-F12 matrix.",
+    "future_paths": [
+      "src/ptcg_rl/deterministic/b6_gust_route.py",
+      "configs/deterministic/phase_b6_gust_route_fixture_v1.json",
+      "tests/deterministic/test_phase_b6_gust_route.py",
+      "reports/deterministic/phase-b6-gust-route-fixture-review-v1.json"
+    ],
+    "implementation_constraints": [
+      "Do not edit B0, B1, B2, B3, B4 or B5 implementation/config/tests/reports.",
+      "Add failing tests for B6-F02 divergence, B6-F03 control, receipt content/graph/census forgery, stale-before-replay ordering, semantic enum/scale/numeric rejection, full option/STOP/compound, permutation, mirror and lifecycle before the evaluator fix.",
+      "Seal complete per-case content including ordered public snapshot, complete options, local deltas, capability census, capabilities, upstream receipts and expected outcomes.",
+      "Run only local fixture tests first; stop before native/Kaggle until independent fixture review closes every gate."
+    ],
+    "stop_condition": "If B6-F02 does not select X/A and Y/B exactly, if any forbidden mutation selects, if zero-threat census can be forged, if an old exact request replays after a newer sequence, or if any fresh-process/permutation/mirror/lifecycle test fails, mark the B6 fixture work blocked and do not prepare a canary."
+  }
+}
