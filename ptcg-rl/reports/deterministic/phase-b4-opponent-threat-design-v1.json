@@ -1,0 +1,584 @@
+{
+  "record_id": "phase-b4-opponent-threat-design-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "DESIGN_ONLY_NATIVE_BLOCKED",
+  "decision": "PREREGISTER_TWO_PUBLIC_THREAT_FORMULATIONS",
+  "scope": {
+    "phase": "B4",
+    "component": "opponent-threat-stress-test",
+    "mode": "read_only_experiment_design",
+    "candidate_deck": "mega-abomasnow-ex",
+    "production_source_changed": false,
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission": false,
+    "deck_freeze": false,
+    "promotion": false,
+    "only_owned_file_created": "reports/deterministic/phase-b4-opponent-threat-design-v1.json",
+    "strength_claim": false,
+    "reason_native_blocked": "B4 requires an isolated fixture evaluator, exact version-bound visible-threat capability receipts for each targeted anchor, current-action local-delta receipts, independent boundary review, and a B0-compatible candidate import. Existing route capsules and static CardTable damage do not qualify opponent threat effects. This report defines a public-only experiment and does not authorize implementation or execution."
+  },
+  "repository_assimilation": {
+    "audited_head": "8cac3727c7d7f2a9e691a7402b8c64e165b6641b",
+    "authoritative_prompt": {
+      "path": ".chatgpt/codex-runs/2026-08-07T193809Z-build-gold-deterministic-cabt-agent/PROMPT.md",
+      "sha256": "c7a081e3669077bd1205d06b8bf31d3e3dcf85b18208839af6b811b26045edd6"
+    },
+    "design_inputs": [
+      {
+        "path": "src/ptcg_rl/g1/models.py",
+        "sha256": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+        "use": "public EngineObservationV1, PlayerViewV1, VisibleEntityV1, PublicEventV1, LegalOptionV1 and SelectionRequestV1 fields"
+      },
+      {
+        "path": "src/ptcg_rl/g1/actions.py",
+        "sha256": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+        "use": "complete legal option, ordered compound-action and first-class STOP validation"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/state.py",
+        "sha256": "207d549de90fa5270c9e88b34a726b63b2712a156fa91c19ab827573618c9709",
+        "use": "public snapshot, stable/transient entity lifetime, request identity and semantic boundary"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/control.py",
+        "sha256": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+        "use": "frozen public B0 Mega Abomasnow control and fail-closed comparison path"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/policy.py",
+        "sha256": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6",
+        "use": "exact-deck policy adapter and final public boundary"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/harness.py",
+        "sha256": "93ec0c10c73acba80066a8388f9df53308adcee409071726bf649b651cec7e90",
+        "use": "B0 provenance, natural-seat, candidate-perspective WDL, permutation, lifecycle and reliability contract"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/b1_oracle.py",
+        "sha256": "33e56711c9526739c3fcf52a5ffb779c9ed4eb27181b781b3fd576fe2445dc8a",
+        "use": "current-only route-oracle boundary and restricted local-delta policy"
+      },
+      {
+        "path": "src/ptcg_rl/deterministic/b2_continuity.py",
+        "sha256": "7c478da246eac63aa8221b80025616bdc923fcad8a17783d87b61b4d5c3c46e8",
+        "use": "fixture-only capability receipt shape, unknown handling and isolated formulation pattern"
+      },
+      {
+        "path": "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json",
+        "sha256": "4eb6f523185e9156827aad1a8ba1956ecd0428a2ab503c82ef5282b584c4cb43",
+        "use": "current-state threat inputs cannot use successor snapshots or unqualified Prize/damage semantics"
+      },
+      {
+        "path": "reports/deterministic/phase-b2-continuity-design-v1.json",
+        "sha256": "f6bb73529fbb1e39e1b4555711c9f912372c3cb4729c7836c31763e362706c83",
+        "use": "fixture, complete-option, STOP, permutation, mirror, lifecycle, B0 and equal-budget design template"
+      },
+      {
+        "path": "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+        "sha256": "b89738c8e1a5e0a1417f7d78a103b94177f49755dc5fbf5c1fbdb9b378f5ff61",
+        "use": "public-only unknown semantics, exact receipts, native readiness and rejection thresholds"
+      },
+      {
+        "path": "reports/deterministic/b0-ma-control-canary-review-v1.json",
+        "sha256": "b46c6c2a9c3b7e5fc2c15017a9e9eb506d61e58a26abb541a122daabd5f82bf6",
+        "use": "independently reviewed 16-game mechanical B0 control; no policy-strength claim"
+      }
+    ],
+    "prior_experiment_disposition": [
+      {
+        "branch": "static_or_naive_search",
+        "disposition": "not repeated",
+        "reason": "Prior one-ply, beam, static macro and broad terminal branches did not establish reliable gain; B4 is a bounded current-state threat hypothesis, not a search resurrection."
+      },
+      {
+        "branch": "replay_or_teacher_inference",
+        "disposition": "excluded",
+        "reason": "Public replay patterns and rank do not prove hidden opponent capability or causal threat value."
+      },
+      {
+        "branch": "manual_randomness_or_hidden_determinization",
+        "disposition": "forbidden",
+        "reason": "B4 uses no manually controlled random outcomes, hidden hand reconstruction, hidden archetype certainty or response probability."
+      }
+    ]
+  },
+  "knowledge_base": {
+    "database": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation_before_design": "PASS",
+    "validation_after_design": "PASS",
+    "requeried_during_design": true,
+    "counts_at_query": {
+      "sources": 56,
+      "claims": 62,
+      "strategies": 20,
+      "decision_rules": 36,
+      "anti_patterns": 14,
+      "search_features": 16,
+      "archetypes": 17,
+      "cards": 49,
+      "matchups": 12,
+      "matchup_plans": 20,
+      "observed_replay_patterns": 10,
+      "contradictions": 6,
+      "research_questions": 15
+    },
+    "queried_ids": {
+      "decision_rules": ["DR-005", "DR-006", "DR-014", "DR-018", "DR-023", "DR-024", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033"],
+      "strategies": ["STR-007", "STR-017", "STR-018"],
+      "search_features": ["SF-002", "SF-003", "SF-010"],
+      "anti_patterns": ["AP-001", "AP-008", "AP-009"],
+      "contradictions": ["CON-001"],
+      "research_questions": ["RQ-003", "RQ-004", "RQ-005", "RQ-007", "RQ-013"]
+    },
+    "query_log": [
+      "validate_db.py",
+      "query_db.py stats",
+      "query_db.py unresolved",
+      "query_db.py rules --context threat",
+      "query_db.py rules --context route",
+      "query_db.py rules --context semantics",
+      "query_db.py search threat",
+      "query_db.py search opponent outs",
+      "query_db.py search without replacement",
+      "query_db.py search public",
+      "query_db.py search damage"
+    ],
+    "binding_interpretation": {
+      "DR-014": "Threat denial is useful only when a visible enabling threat changes the route; damage to a support card without a qualified route consequence is not a threat claim.",
+      "DR-018": "Price opponent outs from revealed board, discard, counts and draw engine, but preserve multiple worlds; an unseen Boss, Energy, switch, evolution or attacker is never certain or impossible.",
+      "DR-023": "Hidden opponent hand, deck, Prize identities and archetype stay probabilistic/unknown; B4 uses public capability intervals, never a guessed hidden world.",
+      "DR-024": "If a later B4 extension uses hidden worlds, it must allocate finite cards without replacement. This design does not authorize particles, determinization or independent draw shortcuts.",
+      "DR-025": "Current CABT legal options and version-bound native receipts outrank tabletop memory, static effect prose and generic type assumptions.",
+      "DR-005": "A threat stress test must prefer a robust public route only after threat fields are exact; it may not turn an unknown response into an optimistic score.",
+      "DR-006": "A candidate action must not enter a known losing trade merely because it takes a nominal Prize; B4 reports threat diagnostics separately from WDL.",
+      "STR-007": "Enumerate the strongest public-resource response as an existence/worst-case test, not as a response probability or successor simulation.",
+      "SF-002/SF-003/SF-010": "Threat features are candidate hypotheses only and require exact public capability, target and local-delta receipts before runtime use.",
+      "CON-001": "Immediate Prize and robust route can conflict; B4 never hides that conflict in an arbitrary weighted score.",
+      "RQ-003": "Current hidden opponent prevalence is unknown; anchor cells are controlled stress strata, not a prevalence estimate.",
+      "RQ-004/RQ-005": "Mega Abomasnow route and component WDL benefit remain unproven; B4 can only qualify a bounded threat challenger after equal-budget evidence.",
+      "RQ-007": "Every route-critical attack/effect/status and target interaction needs an exact local capsule.",
+      "RQ-013": "Public action/board data may support a measured signature, never hidden archetype certainty or an uncalibrated matchup branch."
+    },
+    "open_items_relevant_to_design": ["RQ-003", "RQ-004", "RQ-005", "RQ-007", "RQ-013"],
+    "contradictions_remain_unresolved": ["CON-001", "CON-002", "CON-004"]
+  },
+  "candidate_deck_and_asset_receipts": {
+    "deck_profile": "mega-abomasnow-ex",
+    "deck_size": 60,
+    "deck_multiset_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "official_card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "native_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_wrapper_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "sim_wrapper_sha256": "1555f57f5d22bf4c09d70e0e667a916e575e68c9dd1de9ead34ba5e7e4968655",
+    "card_counts": {
+      "3": 34,
+      "721": 2,
+      "722": 4,
+      "723": 4,
+      "1121": 4,
+      "1126": 1,
+      "1192": 4,
+      "1227": 4,
+      "1262": 3
+    },
+    "semantic_authority": {
+      "qualified_within_sealed_bounds": ["1042 Riptide", "1043 Swirling Waves", "1046 Hammer-lanche", "1262 Surfing Beach", "1047 Frost Barrier primary 754:1089 response"],
+      "partial_or_unqualified": ["1047 secondary 1043 response", "1044 Kyogre/Snover attack", "1045 Kyogre/Snover attack", "722-to-723 evolution outside the named capsule bounds", "generic opponent attack/ability/status/threat effects", "PrizeStaticV1 card-to-prize mapping"],
+      "rule": "A route-bounded Phase A capsule never qualifies a different target, response, status, turn window, attack, effect, or local delta. Static card-table damage, HP, ex flags and energy costs do not qualify an opponent threat."
+    }
+  },
+  "public_runtime_boundary": {
+    "runtime_observation": "Current EngineObservationV1 and current SelectionRequestV1 only, after terminal-first adapter validation.",
+    "allowed_inputs": [
+      "Current public observation scalars: schema, battle/transition identity, acting player, turn/action flags, first-player marker, public supporter/stadium/attach/retreat flags and terminal result.",
+      "Both players' public PlayerViewV1 counts and capacities: deck_count, hand_count, prize_count, visible_prize_count, bench_max and facedown counts; counts are capacities, never card identities.",
+      "Visible public entities only: owner, zone, position, card_id, serial, public HP/max HP/damage, energy types/count, attached tools, evolution depth and public statuses.",
+      "Public events and current legal option semantics, including source/target references, attack/card/energy IDs, choice role, availability, canonical semantic fingerprint, min/max count and ordering.",
+      "Exact candidate-deck profile and versioned capability receipts whose scope, card IDs, attack IDs, target requirements, energy requirements, statuses, damage/effect meaning and engine/card hashes match the current run.",
+      "An exact current-action local-delta receipt only when it proves a deterministic public delta without reading a successor; the receipt must name affected semantic entities and the observation fields it permits.",
+      "Prior public transitions only for lifecycle identity and diagnostics, never as a hidden-state or successor feature."
+    ],
+    "forbidden_inputs": [
+      "Opponent hidden hand, hidden deck order/list, facedown Prize identities, hidden own deck/Prize identities, or an inferred exact archetype.",
+      "Opponent response probabilities, guessed draw frequencies, hand-quality assumptions, uniform hidden allocation priors, or independent-card sampling.",
+      "Successor observations, post-action HP/zone/energy state, counterfactual terminal result, or a manually controlled engine random outcome.",
+      "Static damage/effect prose, ex/mega_ex flags, tabletop weakness/resistance/type memory or card-table fields treated as executable threat semantics without a named receipt.",
+      "Raw native objects, private baseline modules, option transport order/original_index, hidden opponent deck identity and timing as an algorithmic oracle.",
+      "A route-threat conclusion based on any Phase A PARTIAL effect or any capability outside its sealed response/target/turn bounds."
+    ],
+    "unknown_semantics": {
+      "principle": "UNKNOWN is not absent, safe, zero damage, or a favorable estimate.",
+      "known": "A public entity/capability is KNOWN only when its card/attack/target/status/energy and exact effect meaning are exposed and bound by a receipt matching current engine, wrapper, card-data and deck provenance.",
+      "unknown": [
+        "Unrevealed opponent hand/deck/Prize cards, response cards, archetype or deck list.",
+        "Missing/partial attack effect, damage modifier, weakness/resistance, status, target legality or energy matching.",
+        "Any candidate option whose threat-denial consequence needs a successor or an unqualified effect.",
+        "Any stale, forged, duplicate, mixed-context, missing or incomplete semantic option field.",
+        "Any selection count/order/STOP meaning not represented by the current compound-action contract."
+      ],
+      "formulation_a": "Any UNKNOWN threat field required to rank a current option causes B0_DELEGATE with an explicit reason. It may not be assigned the worst or best numeric value silently.",
+      "formulation_b": "UNKNOWN may widen a public threat interval to a declared conservative bound only when the bound itself is receipt-defined. The interval is not a probability. If intervals overlap or an unknown prevents strict dominance, B0_DELEGATE."
+    },
+    "terminal_and_current_delta_rules": {
+      "terminal_first": "Check terminal_result before reading selection-local fields. PolicyV1 is never called on a terminal selection; terminal metadata in a fixture is a harness error, not a threat decision.",
+      "current_delta_only": "A candidate option can be marked threat-reducing only through an exact local-delta receipt. No B4 evaluator may call the engine, read a successor or claim a future KO/terminal result.",
+      "complete_options": "Every legal option in the current request must be represented. A safe prefix with an unsupported option is not an active B4 decision.",
+      "no_response_probability": "The stress test asks whether a qualified public response is possible/credible under the defined receipt; it never multiplies by a hidden response probability.",
+      "semantic_ties": "Distinct non-equivalent equal strategic keys return AMBIGUOUS and delegate. Canonical semantic fingerprints are not a substitute for strategic evidence."
+    }
+  },
+  "threat_capability_contract": {
+    "schema_version": 1,
+    "capability_record_required_fields": ["source_kind", "source_card_id", "attack_id", "effect_id", "qualification_id", "qualification_status", "energy_requirements", "status_constraints", "target_requirements", "damage_or_effect_semantics", "response_class", "engine_hash", "native_library_sha256", "game_wrapper_sha256", "api_wrapper_sha256", "sim_wrapper_sha256", "card_data_sha256", "card_table_file_sha256", "card_table_semantic_sha256", "candidate_deck_profile", "candidate_deck_sha256", "anchor_deck_profile", "anchor_deck_sha256", "scope_version", "threat_level_scale_id"],
+    "qualification_status_allowlist": ["QUALIFIED_CABT_CAPSULE", "FIXTURE_ONLY", "PARTIAL", "UNKNOWN"],
+    "runtime_allowlist": ["QUALIFIED_CABT_CAPSULE"],
+    "response_classes": ["KO_VISIBLE_ACTIVE", "KO_VISIBLE_BENCH", "REMOVE_ROUTE_SUPPORT", "DISRUPT_PUBLIC_RESOURCE", "FORCE_RETREAT_OR_SWITCH"],
+    "capability_rules": [
+      "A capability is usable only when the current public source entity, target entity/role, energy requirement, status constraint and legality are all known and receipt-qualified.",
+      "A response class is not inferred from a card name, attack ID, HP, static damage or common tabletop effect. It is a field of the exact native receipt.",
+      "A threat can be listed as publicly possible without being likely. No response frequency or hidden-card prior may be attached.",
+      "A current threat level may be computed only from the receipt's qualified semantics and current public fields. Unqualified effects produce UNKNOWN, not a damage estimate.",
+      "A candidate action's threat-denial delta requires a separate local-delta receipt. A visible target existing before an action does not prove that a later action removes it.",
+      "A capability receipt must identify the exact engine/library, wrapper, API, card-data, candidate/anchor deck and version scope. A receipt for one anchor or target is not generalized to another."
+    ],
+    "provenance_requirements": {
+      "asset_hashes": "The native receipt must populate every explicit library, game-wrapper, API-wrapper, simulator-wrapper, card-data and card-table hash field above; a generic engine_hash or a report-level asset list is not a substitute.",
+      "deck_scope": "candidate_deck_profile/candidate_deck_sha256 and anchor_deck_profile/anchor_deck_sha256 are mandatory even when the same capability is observed in more than one anchor; no receipt is generalized across decks.",
+      "threat_level_comparability": "All numeric threat levels and interval endpoints used by one formulation must reference one independently reviewed, versioned threat_level_scale_id. Ordinal values from unrelated receipts are not comparable."
+    },
+    "field_constraints": {
+      "source_kind": "Required and explicitly public: ENTITY for a visible source card, or a separately qualified non-card source kind. Hidden source identities are UNKNOWN.",
+      "attack_id": "Required as a positive integer for an attack response and explicitly null for a non-attack response; it may never be omitted or inferred from card text.",
+      "effect_id": "Required for a non-attack effect response and explicitly null for a pure attack response; effect semantics must be receipt-qualified.",
+      "damage_or_effect_semantics": "Must state the exact qualified response meaning and target/window scope. Static damage, ex flags, type memory and prose without a causal native receipt are invalid."
+    },
+    "public_threat_vector": {
+      "fields": ["response_class", "source_entity_key", "target_entity_key", "ready_now", "energy_deficit", "threat_level", "threat_level_scale_id", "qualification_id", "local_delta_receipt_id", "unknown_fields"],
+      "ready_now": "TRUE only if all public energy/status/target requirements are qualified and satisfied now; FALSE only if the same complete requirements are qualified and violated; otherwise UNKNOWN.",
+      "energy_deficit": "An exact nonnegative deficit only under a qualified energy-matching receipt; UNKNOWN when matching or required effects are unresolved.",
+      "threat_level": "A receipt-defined ordinal for response consequence, not static damage. It is usable in arithmetic only when its threat_level_scale_id matches the formulation manifest; no numeric HP conversion is assumed.",
+      "threat_level_scale_id": "A required versioned ThreatLevelScaleV1 receipt that defines the lower-is-safer ordering and comparable level meanings. It is missing until independently reviewed.",
+      "no_response_sentinel": "NO_QUALIFIED_RESPONSE may be emitted only after the complete visible source/capability census and target/energy/status checks are qualified and no response is ready or possible. An empty or unknown capability list is UNKNOWN and delegates; it is never silently treated as zero threat.",
+      "interval": "Formulation B stores [guaranteed_level, possible_level] over public capability fields only. Both endpoints must use the same reviewed threat_level_scale_id; the interval is an uncertainty bound, not a probability distribution."
+    },
+    "required_receipts_before_native": [
+      {
+        "receipt": "VisibleThreatCapabilityV1",
+        "scope": "Every targeted anchor threat class used in an active request, including source/target legality, energy/status constraints and exact response meaning.",
+        "why": "Without it, a visible opponent card is not an executable threat."
+      },
+      {
+        "receipt": "ThreatLocalDeltaV1",
+        "scope": "Every candidate option claimed to deny/remove/alter a visible threat, with exact current semantic target and public fields changed; no successor read.",
+        "why": "A legal action is not evidence that its future threat consequence occurred."
+      },
+      {
+        "receipt": "PublicTargetAndSemanticV1",
+        "scope": "Complete canonical option source/target/choice-role semantics for every active request.",
+        "why": "Threat scores must not bind to raw option order or ambiguous references."
+      },
+      {
+        "receipt": "ThreatLevelScaleV1",
+        "scope": "One versioned lower-is-safer ordinal scale shared by every capability and interval used by a formulation; meanings and comparability must be independently reviewed.",
+        "why": "Numeric threat levels from unrelated receipts are not comparable, and a scale cannot be inferred from damage or card class."
+      },
+      {
+        "receipt": "RuntimeImportAndSourceV1",
+        "scope": "Repo-local candidate import, policy identity, transitive source/config hashes, exact deck/card/engine/wrapper provenance and dependency scan.",
+        "why": "Native evidence must bind the implementation actually loaded."
+      },
+      {
+        "receipt": "FreshProcessBoundaryV1",
+        "scope": "Terminal-first, complete options, STOP/compound, permutation, player mirror, reset, duplicate/stale/error/worker replacement and unsupported-field behavior.",
+        "why": "Offline fixtures cannot certify lifecycle or adapter isolation."
+      }
+    ]
+  },
+  "formulations": [
+    {
+      "id": "B4-A-VISIBLE-THREAT-WORST-CASE",
+      "name": "Conservative visible-threat worst case",
+      "status": "FIXTURE_ONLY_UNTIL_RECEIPTS_AND_IMPLEMENTATION",
+      "falsifiable_hypothesis": "When current legal options have complete receipt-defined local threat deltas, choosing the option with the smallest strongest publicly feasible response class will reduce threat-exposure errors relative to the frozen B0 control without using hidden cards or response probabilities.",
+      "material_difference_from_b": "A ranks by the strongest possible qualified public response and requires all threat fields to be known. It is deliberately conservative and may delegate on an unknown rather than treating the unknown as a benign interval.",
+      "observable_features": ["complete current legal options", "visible opponent entities and qualified response capabilities", "visible own active/bench entities and public HP/status/energy", "exact current local-delta receipt for each threat-denial candidate", "public counts only as capacities", "semantic fingerprints and request identity"],
+      "decision_key": [
+        "current terminal outcome is an adapter/harness gate and never a current policy action",
+        "strongest qualified response level after the exact local delta ascending",
+        "number of independently qualified visible response capabilities ascending",
+        "visible route-support removal descending only when its response class is receipt-qualified",
+        "preserve qualified ready backup/active capability descending",
+        "public route/Prize features only as a later diagnostic tie term and only with separate receipts",
+        "canonical semantic fingerprint only after strategic-key comparison; non-equivalent equal keys are AMBIGUOUS"
+      ],
+      "threat_definition": "For each option, enumerate all qualified public response capabilities that remain possible after its exact local delta. The key uses the maximum receipt-defined response class and then the count of response capabilities. It is an existence/worst-case test, not a probability or successor rollout.",
+      "fail_closed": ["any required threat field UNKNOWN", "unqualified/partial effect or damage", "missing local-delta receipt", "unsupported target/status/energy semantics", "incomplete legal option coverage", "compound/STOP outside activation", "duplicate semantic fingerprints", "non-equivalent strategic tie", "stale lifecycle identity"],
+      "expected_fixture_divergence": "On a fixture with option X yielding a possible level-3 response and option Y yielding a certain level-1 response, A selects Y because its strongest public response is lower. A does not claim that either response will occur."
+    },
+    {
+      "id": "B4-B-PUBLIC-THREAT-INTERVAL",
+      "name": "Bounded public-threat interval stress",
+      "status": "FIXTURE_ONLY_UNTIL_RECEIPTS_AND_IMPLEMENTATION",
+      "falsifiable_hypothesis": "When public evidence leaves a threat capability uncertain but supplies receipt-defined lower and upper bounds, strict interval dominance can retain useful threat-denial decisions while abstaining whenever the bounds overlap; this will produce different active/delegated behavior from the hard worst-case arm.",
+      "material_difference_from_a": "B represents only public uncertainty as [guaranteed response level, possible response level]. It selects an option only when its interval strictly dominates alternatives under the declared partial order; overlapping intervals delegate. It never converts interval width into a probability.",
+      "observable_features": ["same public current-only inputs as B4-A", "receipt-defined guaranteed and possible response levels", "unknown-field set and interval width", "exact local-delta receipt where the option changes public threat exposure", "complete semantic option set and canonical request identity"],
+      "decision_key": [
+        "current terminal outcome is an adapter/harness gate and never a current policy action",
+        "strict interval dominance: lower guaranteed level no greater, upper possible level no greater, one strict",
+        "smaller upper possible level ascending",
+        "smaller interval width ascending only as a deterministic secondary diagnostic term",
+        "fewer unknown fields ascending",
+        "receipt-qualified route-support denial descending",
+        "canonical semantic fingerprint only after strategic-key comparison; non-equivalent equal keys are AMBIGUOUS"
+      ],
+      "interval_definition": "The lower endpoint is the greatest threat level forced by complete public fields. The upper endpoint is the greatest threat level permitted by the declared receipt bounds for unresolved public capability fields. Hidden cards, hidden archetypes and response probabilities never widen or narrow the interval.",
+      "fail_closed": ["no receipt-defined bound", "interval is not finite/nonnegative", "overlapping or incomparable intervals", "missing local delta", "unqualified effect/damage/status/target", "incomplete legal option coverage", "compound/STOP outside activation", "duplicate semantic fingerprints", "stale lifecycle identity"],
+      "expected_fixture_divergence": "On the same X=[0,3], Y=[1,1] fixture, B delegates because neither interval dominates. On a second fixture X=[0,1], Y=[1,2], B selects X; A also selects X, establishing a control case. On X=[0,2], Y=[0,1], B selects Y and A selects Y by upper bound; no formulation claim is made from a no-divergence fixture."
+    }
+  ],
+  "fixture_contract": {
+    "fixture_schema": "Every fixture must materialize a valid EngineObservationV1 plus SelectionRequestV1 and pass PublicStateV1 validation. Shorthand threat rows are test metadata only and must be converted to complete canonical G1 records before evaluation.",
+    "fixture_metadata_rule": "Threat capability rows are FIXTURE_ONLY until replaced by sealed native receipts. Fixture success proves arithmetic, unknown handling and boundary behavior only; it cannot qualify native effects or policy strength.",
+    "common_requirements": [
+      "Use exact visible entity keys, canonical card metadata_ref values, source/target references, request identity, selection and option enums, availability, semantic fingerprints and complete option masks.",
+      "Use fixture-only capability receipts with complete required fields; never a shorthand damage or energy field.",
+      "Reject extra successor fields rather than ignoring them; a fixture containing a successor observation is invalid for the current-only evaluator.",
+      "Run all formulation fixtures in both acting-player perspectives and under semantic option permutations."
+    ],
+    "named_fixtures": [
+      {
+        "id": "B4-F01-FORMULATION-DIVERGENCE",
+        "purpose": "Separate hard worst-case from bounded interval behavior.",
+        "public_state": "Visible own Active/Bench, visible opponent Active/Bench, two legal singleton candidate options, qualified fixture-only threat capabilities and exact local-delta receipts. Option X leaves interval [0,3]; option Y leaves [1,1].",
+        "expected": "B4-A selects Y by strongest possible response. B4-B returns B0_DELEGATE because the intervals are incomparable. No response probability, successor or terminal claim is recorded."
+      },
+      {
+        "id": "B4-F02-UNKNOWN-AND-PARTIAL",
+        "purpose": "Reject hidden certainty, unqualified effects and unsupported threat fields.",
+        "mutations": ["remove visible target identity", "mark attack/effect/status/weakness receipt PARTIAL", "replace a public capability with hidden-only hand/deck/Prize metadata", "supply static CardTable damage with no native receipt"],
+        "expected": "If a mutation inserts hidden opponent hand/deck/Prize metadata or removes a required public entity reference, PublicStateV1 rejects the fixture at the public boundary; it is not silently converted into a B4 fact. If the same uncertainty is represented only by an explicit receipt unknown without hidden values, B4-A delegates with UNKNOWN_THREAT_FIELD or PARTIAL_CAPABILITY and B4-B widens only when a receipt-defined finite bound exists; otherwise it delegates with MISSING_INTERVAL_BOUND. Neither treats unknown as absent or safe."
+      },
+      {
+        "id": "B4-F03-COMPLETE-OPTIONS-AND-STOP",
+        "purpose": "Prove whole-request coverage and first-class STOP semantics.",
+        "public_state": "A request has one covered threat-denial option plus one unsupported option; separate requests cover mandatory singleton and optional 0/1 singleton with legal STOP.",
+        "expected": "The mixed request delegates as INCOMPLETE_THREAT_COVERAGE; no safe prefix is emitted. The optional request emits the covered action when it strictly wins. If no covered positive action exists, the evaluator may emit a real CompoundActionBuilder STOP only when min_count=0/max_count>0 and the legality mask allows it. Empty output is never implicit STOP."
+      },
+      {
+        "id": "B4-F04-COMPOUND-ORDERING",
+        "purpose": "Reject unsupported action-space reductions.",
+        "mutations": ["min_count/max_count=1/2", "ORDERED multi-select", "UNORDERED multi-select with max_count>1", "unresolved STOP builder/token contract (STOP is not a LegalOptionV1 row)", "duplicate semantic fingerprint"],
+        "expected": "B0_DELEGATE with COMPOUND_UNSUPPORTED, ORDERED_UNSUPPORTED, STOP_UNRESOLVED or DUPLICATE_SEMANTICS. The evaluator never scores only the first option or collapses a sequence into a set; malformed STOP encodings are rejected by the CompoundActionV1 boundary."
+      },
+      {
+        "id": "B4-F05-PERMUTATION-AND-MIRROR",
+        "purpose": "Prove semantic invariance, player mirroring and hidden-state non-use.",
+        "mutations": ["apply every permutation of the complete semantic option rows", "use acting_player=1 with remapped self-owned entities", "change only hidden count-consistent allocations not represented in public entities"],
+        "expected": "Selected semantic fingerprints remain invariant under every option permutation. Player 1 selects the mirrored self-owned semantic action. Hidden-only mutations cannot change a B4 result. Option original_index is never read."
+      },
+      {
+        "id": "B4-F06-LIFECYCLE-RESET",
+        "purpose": "Prove request identity and state isolation.",
+        "mutations": ["fresh process/start request", "duplicate identical request", "changed duplicate payload", "stale/out-of-order selection sequence", "terminal boundary", "error boundary", "worker replacement", "new episode/player/policy tuple"],
+        "expected": "Identical duplicates are idempotent only when request and observation content digests match. Changed/stale requests reject. Terminal/error/worker replacement reset threat state. No threat capability or selected action leaks across (episode_uuid, player_index, policy_id)."
+      },
+      {
+        "id": "B4-F07-CURRENT-DELTA-ONLY",
+        "purpose": "Reject successor dependence and unqualified denial claims.",
+        "mutations": ["omit local-delta receipt", "insert post-action HP/zone/energy values", "provide a future response class or terminal result", "claim a PLAY/ATTACK removes a threat from its card text only"],
+        "expected": "A missing local-delta receipt delegates with MISSING_LOCAL_DELTA. A fixture carrying post-action/successor-only fields is rejected at the current-only fixture/public boundary with SUCCESSOR_VALUE_FORBIDDEN, rather than being ignored or scored. A future response class or terminal result is likewise rejected/delegated and never read as a current fact."
+      }
+    ],
+    "fixture_verdict_guard": "A fixture pass qualifies only the isolated evaluator boundary. It cannot establish card semantics, native threat strength, matchup prevalence, route completion, policy WDL or promotion."
+  },
+  "activation_and_b0_delegation": {
+    "active_request_classes_after_all_receipts": [
+      "Current MAIN singleton requests whose every legal option is a receipt-qualified threat comparison and whose candidate threat-denial consequence has an exact current local-delta receipt.",
+      "Optional 0/1 requests with explicit legal STOP semantics when every positive option is covered and the evaluator can prove either a selected action or legitimate STOP.",
+      "A current threat/target request only when source/target entity references resolve against the exact public snapshot and no hidden identity is required."
+    ],
+    "always_delegate": [
+      "Any request containing a PARTIAL/UNKNOWN threat capability, unqualified damage/effect/status/target/energy semantics or missing local-delta receipt.",
+      "Any opponent threat that requires hidden hand/deck/Prize/archetype certainty, response probability, a successor, a counterfactual terminal result or a manually controlled random outcome.",
+      "Any mixed request with one unsupported legal option, incomplete option set, duplicate semantic fingerprint, unsupported enum, stale entity or ambiguous strategic tie.",
+      "Any max_count>1, ORDERED request, unresolved STOP contract, non-MAIN selection type (CARD, ATTACHED_CARD, CARD_OR_ATTACHED_CARD, ENERGY, SKILL, ATTACK, EVOLVE, COUNT, YES_NO or SPECIAL_CONDITION), or MAIN follow-up option (ABILITY, RETREAT or another uncovered option) outside an exact B4 receipt.",
+      "Any option-order or timing-only hypothesis."
+    ],
+    "outcome_mapping": {
+      "SELECTED": "Return a final CompoundActionV1 only after the existing action builder and final boundary validator pass; record authority=EXPERIMENTAL_THREAT_STRESS.",
+      "B0_DELEGATE": "Invoke the frozen public B0 control through a separate delegation path and counter. This is experimental abstention, not final-adapter fallback.",
+      "AMBIGUOUS": "Delegate without using option order; retain tied semantic keys and interval/capability reasons.",
+      "UNSUPPORTED": "Delegate with compact public reason capsule.",
+      "TERMINAL_OVERRIDE": "Harness-only state after terminal-first processing; never a current PolicyV1 action."
+    },
+    "targeted_matchup_activation": {
+      "evaluation_cells": ["rule:dragapult-ex", "rule:iono", "rule:mega-abomasnow-ex-mirror", "rule:mega-lucario-ex"],
+      "iono_evidence_context": "The Iono cell is a controlled evidence stratum only. Any observed Iono weakness or strength is reported as a matchup result and does not create a hardcoded Iono branch, hand-quality assumption, archetype prior or runtime policy exception.",
+      "policy_boundary": "The policy receives no hidden anchor label and no opponent deck list. An anchor name is a harness/evaluation stratum only. Runtime threat activation requires the same public visible capability receipt regardless of anchor.",
+      "activation_trigger": "Use a targeted receipt only when the current public visible source/target/response signature exactly matches a version-bound qualified receipt. If a signature is merely suggestive of an archetype, classify it UNKNOWN and delegate.",
+      "required_anchor_receipts": "Each anchor needs its own exact threat capability and target/status/energy/local-delta receipts. A Dragapult receipt cannot qualify Lucario, Iono, mirror or any unlisted response.",
+      "distribution_guard": "These four anchors are controlled stress cells, not an estimate of hidden matchmaker prevalence. Natural-seat balanced WDL remains the primary comparison."
+    }
+  },
+  "diagnostics": {
+    "required_per_decision": [
+      "schema_version, episode_uuid, request_id, selection_seq, acting_player, policy_id, formulation_id",
+      "status, authority, selected semantic fingerprint/action key, complete option digest, permutation digest, request ordering and min/max",
+      "visible source/target entity keys, card/attack capability IDs, qualification and receipt IDs, public ready/deficit fields",
+      "threat vector per legal option, guaranteed/possible interval when B is active, unknown fields, partial dependencies and local-delta receipt",
+      "fail_closed_reason, whether a successor/hidden input was rejected, and B0 delegation versus final-adapter fallback counters separately"
+    ],
+    "required_run_aggregates": [
+      "selected/delegated/ambiguous/unsupported counts by formulation, selection context, threat class, anchor, candidate seat and natural first-player seat",
+      "threat-level/interval distributions, unknown-field counts, capability receipt usage and local-delta usage",
+      "semantic permutation failures, mirror failures, hidden-state invariance failures, duplicate/stale/lifecycle failures",
+      "invalid selections, post-terminal actions, fallbacks, crashes, timeouts, incomplete games, missing outputs and nonfinite metrics",
+      "candidate-only callback p50/p90/p95/p99/max, delegated callback latency, total CPU seconds/game, peak RSS, cumulative overage and request cardinality",
+      "candidate-perspective wins/draws/losses/WDL score per anchor x candidate-seat cell and natural first-player stratum"
+    ],
+    "interpretation_guard": "Threat diagnostics describe public capability coverage and decision behavior. They do not prove a future response, route completion, terminal win, hidden-card probability or card-effect semantics outside receipts."
+  },
+  "comparison_contract": {
+    "estimand": "For each B4 formulation, anchor, candidate seat and natural-deployment stratum, estimate candidate-perspective terminal WDL score (wins + 0.5*draws) / completed_games against an independently sampled frozen B0 control arm. Report equal-cell aggregate only as a descriptive preregistered summary.",
+    "sampling": "Candidate and B0 games are independent native samples. Do not pair games, claim paired seeds, reuse a trajectory or count option permutations as independent games.",
+    "uncertainty": {
+      "per_cell": "Report wins, draws, losses, requested/recorded/completed games and the WDL mean with an independent game-level bootstrap 95 percent interval in every anchor x candidate-seat cell. A Wilson interval may be reported separately for binary win rate only; it must not be presented as a confidence interval for the half-draw WDL mean.",
+      "candidate_control_delta": "Use game-level terminal scores and a 10,000-resample independent two-sample bootstrap with a fixed recorded seed within each cell; report the equal-cell aggregate and every cell.",
+      "activation": "Report active/delegated/unsupported denominators separately by formulation, anchor, candidate seat and natural-first-player stratum. Activation is not a WDL substitute."
+    },
+    "equal_budget_definition": [
+      "Same exact candidate deck, anchor deck, native engine, wrapper, card data, source/config/import receipts and clean dependency checks.",
+      "Same natural-seat deployment and candidate-perspective WDL accounting, with candidate-player 0 and 1 represented separately.",
+      "Same request cap, game timeout, wall cap, evidence cap, worker topology, reset/lifecycle checks and stop-on-first-reliability-defect behavior.",
+      "Same 32 true semantic option permutations per candidate game where the B0 contract applies, with policy reset for each permutation and no paired-seed claim. The current B0 harness applies this only to the first candidate transition with at least five legal options; retain that request/selection identity and report eligible-game and eligible-request denominators, without claiming permutation coverage for every trajectory decision.",
+      "Same candidate/control game counts at each stage; B0 is rerun as an independent arm rather than copied from the earlier 16-game canary."
+    ],
+    "rejection_and_promotion_contract": {
+      "REJECT_FOR_RELIABILITY": "Any invalid action, fallback, post-terminal action, stale request, timeout, crash, missing output, incomplete game, permutation/mirror failure, nonfinite metric, provenance mismatch, hidden-information violation, manual randomness or budget breach invalidates that arm regardless of WDL.",
+      "REJECT_FORMULATION": "After clean confirmation, reject if the equal-cell upper 95 percent independent-bootstrap interval for formulation minus B0 is at or below zero, or if a predeclared targeted cell fails without a new preregistered hypothesis, or if any anchor/seat cell has a point-estimate WDL delta below -0.10 or a catastrophic reliability failure.",
+      "NO_PROMOTION_INCONCLUSIVE": "If the interval crosses zero, the lower interval is above zero but at or below +0.02, or active denominator is below the gate, retain as unresolved and make no strength claim.",
+      "PROMOTE_EXPERIMENTAL_ONLY": "Only a clean confirmation with lower 95 percent interval strictly above +0.02, observed equal-cell point estimate at least B0, sufficient activation and no catastrophic cell may qualify a B4 challenger. This is not deck freeze, champion selection, submission or gold/medal evidence.",
+      "NO_OPPORTUNITY": "At confirmation, fewer than 32 nondelegated B4 decisions overall, fewer than 8 nondelegated decisions in any predeclared anchor x candidate-seat cell, or less than 5 percent of eligible current requests in any such cell is an opportunity failure/inconclusive result, not evidence that threat reasoning is false. Missing cells cannot be hidden by an aggregate.",
+      "no_blended_score": "Never blend activation, threat diagnostics, latency and WDL into one score. Reliability and runtime are eligibility gates; terminal WDL is the primary effectiveness metric."
+    }
+  },
+  "staged_b0_compatible_experiment": {
+    "status": "DESIGNED_NOT_AUTHORIZED_IN_THIS_SUBTASK",
+    "shared_provenance": {
+      "candidate_deck": "mega-abomasnow-ex",
+      "opponents": ["rule:dragapult-ex", "rule:iono", "rule:mega-abomasnow-ex", "rule:mega-lucario-ex"],
+      "natural_deployment": true,
+      "candidate_seat_balance": true,
+      "candidate_perspective_wdl": true,
+      "paired_seed_claim": false,
+      "permutation_count_per_candidate_game": 32,
+      "raw_option_order_authority": false,
+      "terminal_outcome_only_primary_metric": true,
+      "kaggle_submission": false,
+      "training": false
+    },
+    "stage_0_fixture_gate": {
+      "games": 0,
+      "required": [
+        "Implement B4-A and B4-B as isolated variants without editing the frozen B0 control.",
+        "Materialize B4-F01 through B4-F07 as valid public G1 records and run all semantic/permutation/mirror/lifecycle assertions in fresh processes.",
+        "Prove all UNKNOWN, PARTIAL, hidden-only, successor-only, compound, STOP, duplicate and stale cases delegate before any strategic score.",
+        "Static/runtime import scan proves no private baseline or raw native object dependency in either candidate variant.",
+        "Independent review confirms fixture-only capabilities are not treated as native authority and no strength claim is emitted."
+      ],
+      "stop_condition": "Any fixture, boundary, semantic, lifecycle or provenance failure blocks native execution."
+    },
+    "stage_1_mechanical_canary": {
+      "runs": "Two separate B0-compatible runs, one per formulation; each has 8 candidate games and 8 independently sampled B0 control games, one game per anchor per candidate seat.",
+      "total_games_both_formulations": 32,
+      "workers": 1,
+      "request_cap": 20000,
+      "game_timeout_seconds": 180,
+      "wall_seconds": 1800,
+      "max_evidence_bytes": 67108864,
+      "stop_on": ["invalid selection", "fallback", "post-terminal action", "timeout", "failure", "incomplete game", "missing output", "stale request", "permutation mismatch", "mirror mismatch", "nonfinite diagnostic", "provenance mismatch", "unknown input used as fact"],
+      "control": "Frozen deterministic-strategic-mega-abomasnow-v1 public B0 control; previous B0 16-game canary is mechanical evidence only and is not reused as a strength comparison.",
+      "promotion_from_stage": "None. A pass establishes only mechanical reliability and diagnostic integrity."
+    },
+    "stage_2_local_screen": {
+      "prerequisite": "Stage 1 independent reliability review PASS for the relevant formulation.",
+      "games_per_candidate_arm": 32,
+      "games_per_control_arm": 32,
+      "games_all_arms_if_both_formulations": 128,
+      "matrix": "Four anchors x four natural-deployment games per candidate seat per arm.",
+      "analysis": "Report activation, interval/unknown behavior and candidate-perspective WDL per anchor/seat; compare each formulation separately to its own independently sampled B0."
+    },
+    "stage_3_private_kaggle_cpu_screen": {
+      "prerequisite": "Stage 2 zero-reliability review, exact receipt closure and technical review of the bounded private notebook/config.",
+      "games_per_candidate_arm": 128,
+      "games_per_control_arm": 128,
+      "games_all_arms_if_both_formulations": 512,
+      "launch": "Private bounded Kaggle CPU only, no submission, no GPU/TPU, no training.",
+      "review": "Independent sealed raw-manifest, capability-receipt and candidate-perspective WDL recalculation required before confirmation."
+    },
+    "stage_4_confirmation": {
+      "prerequisite": "A preregistered formulation has fixture-consistent behavior, zero reliability defects, exact target receipts and no unexplained target-cell regression.",
+      "games_per_candidate_arm": 512,
+      "games_per_control_arm": 512,
+      "games_all_arms_if_both_formulations": 2048,
+      "metric": "Candidate-perspective terminal WDL with independent game-level bootstrap uncertainty per anchor and seat; Wilson intervals, if reported, are for binary win rate only. Diagnostics remain secondary.",
+      "promotion_rule": "Apply comparison_contract exactly. No formulation is promoted by this design alone."
+    }
+  },
+  "runtime_budget_prerequisites": {
+    "policy_shape": "Bounded current-state enumeration over public entities, receipt-qualified capabilities and complete legal options; no search, successor simulation, particles, network or GPU.",
+    "pre_registered_limits": {
+      "candidate_request_p99_wall_ms": 100,
+      "candidate_cpu_seconds_per_game": 1.0,
+      "peak_rss_mib": 512,
+      "competition_cumulative_overage_seconds": 600,
+      "conservative_process_envelope": "Approximately 1.6 vCPU and 8 GiB at inference; no GPU."
+    },
+    "measurement_rule": "Measure candidate-only callback latency and CPU/RSS from the actual run. Measure delegated B0 path separately and total callback/game cost; delegation may not hide an expensive B4 calculation.",
+    "guard_requirements": [
+      "Monotonic (episode_uuid, player_index, policy_id, selection_seq) identity with content-bound idempotent duplicate handling.",
+      "Reset at new deck/start, terminal, error and worker replacement; no state leakage across episodes or mirrored players.",
+      "Reject nonfinite, negative, NaN/Inf, malformed or unbounded interval values before selection.",
+      "Fail closed on any unsupported field and preserve compact public reproduction capsule.",
+      "No production authority until source/config/import receipts and clean dependency scan are independently reviewed."
+    ]
+  },
+  "readiness": {
+    "design_ready": true,
+    "fixture_ready": false,
+    "native_ready": false,
+    "native_blockers": [
+      "No B4 implementation or isolated tests exist in this design-only work item.",
+      "Opponent threat capability receipts for Dragapult, Iono, Mega Abomasnow mirror and Mega Lucario are not assembled and independently reviewed for exact current public response semantics.",
+      "Threat-denial local-delta receipts are not available; no candidate option may be credited with removing or changing a visible threat from card prose or a successor.",
+      "No independently reviewed ThreatLevelScaleV1 exists; numeric threat levels and interval endpoints must not be compared across unrelated receipts until one shared lower-is-safer scale is sealed.",
+      "Existing Phase A route capsules are narrow and do not generalize to opponent threats, effects, targets, statuses, windows or damage semantics.",
+      "Native B0-compatible candidate import/source/config receipts, fresh-process boundary qualification and the exact fixture evaluator are not yet reviewed.",
+      "RQ-003 hidden opponent prevalence and RQ-013 public archetype classification remain open; B4 must not turn either into a runtime prior."
+    ],
+    "next_exact_task": "After independent review, implement only isolated B4-A/B fixture evaluators and tests using B4-F01 through B4-F07, then run a fresh-process fixture/permutation/lifecycle review. Do not prepare or launch a native canary until every active threat and local-delta receipt is independently closed.",
+    "not_authorized": ["native games", "Kaggle runs", "production authority", "deck freeze", "submission", "training", "hidden-state inference", "response-probability modeling"]
+  },
+  "verification": {
+    "knowledge_base_validation_before_design": "PASS",
+    "knowledge_base_requery_after_design": "PASS",
+    "database_mutation": false,
+    "production_source_changed": false,
+    "native_or_kaggle_execution": false,
+    "report_scope_audit": "This design artifact contains only the requested B4 report. Its independent review artifact is separate and records the final digest; no code, config, test, private asset, raw run or sidecar was created.",
+    "final_sha256": {
+      "status": "RECORDED_IN_CROSS_FILE_REVIEW_ARTIFACT",
+      "artifact": "reports/deterministic/phase-b4-opponent-threat-design-v1-review.json",
+      "field": "verification.design_report_sha256",
+      "note": "The independent review artifact is the authoritative location for this design digest. The digest is intentionally not embedded in the design report because doing so would create a recursive self-hash."
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "record_id": "phase-b4-opponent-threat-design-v1-review",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T00:00:00Z",
+  "status": "REVIEW_COMPLETE_WITH_REPORT_ONLY_CORRECTIONS",
+  "reviewed_report": "reports/deterministic/phase-b4-opponent-threat-design-v1.json",
+  "scope": {
+    "mode": "independent_read_only_report_red_team",
+    "audited_head": "8cac3727c7d7f2a9e691a7402b8c64e165b6641b",
+    "production_source_changed": false,
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission_created": false,
+    "deck_freeze": false,
+    "commit_created": false,
+    "private_assets_modified": false,
+    "review_boundary": "Only the B4 design report and this independent review artifact were inspected or edited. No evaluator, policy, test, native asset, raw run or external service was created or changed."
+  },
+  "review_basis": {
+    "public_contract": [
+      "src/ptcg_rl/g1/models.py",
+      "src/ptcg_rl/g1/semantic.py",
+      "src/ptcg_rl/g1/actions.py",
+      "src/ptcg_rl/deterministic/state.py",
+      "src/ptcg_rl/deterministic/control.py",
+      "src/ptcg_rl/deterministic/harness.py"
+    ],
+    "committed_semantic_receipts": [
+      "reports/deterministic/phase-a-semantic-status-v2.json",
+      "reports/deterministic/phase-a-native-semantics-v2.json",
+      "reports/deterministic/phase-a-frost-barrier-capsule-v2.json",
+      "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json",
+      "reports/deterministic/phase-b2-continuity-design-v1.json",
+      "reports/deterministic/phase-b3-resource-ledger-design-v1.json",
+      "reports/deterministic/b0-ma-control-canary-review-v1.json"
+    ],
+    "uncommitted_capability_work": "Not treated as authority; no current uncommitted route/capability artifact was used to upgrade a receipt or authorize native execution.",
+    "knowledge_base": {
+      "database": "knowledge_base/ptcg_gold.sqlite",
+      "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "validation": "PASS",
+      "requeried_ids": [
+        "DR-005", "DR-006", "DR-014", "DR-018", "DR-023", "DR-024", "DR-025",
+        "STR-007", "SF-002", "SF-003", "SF-010", "AP-001", "AP-008", "AP-009",
+        "CON-001", "RQ-003", "RQ-004", "RQ-005", "RQ-007", "RQ-013"
+      ],
+      "interpretation": "The open hidden-prevalence, route, interaction and public-classification questions remain open; the report does not turn them into runtime priors or strength claims."
+    }
+  },
+  "report_only_corrections": [
+    {
+      "severity": "HIGH",
+      "finding": "The repository head receipt had an invalid leading character and the B0 review hash was a placeholder.",
+      "correction": "Bound the report to HEAD 8cac3727c7d7f2a9e691a7402b8c64e165b6641b and the actual B0 review SHA-256 b46c6c2a9c3b7e5fc2c15017a9e9eb506d61e58a26abb541a122daabd5f82bf6."
+    },
+    {
+      "severity": "HIGH",
+      "finding": "Capability provenance requirements were stated in prose but did not require explicit wrapper/API/simulator, candidate/anchor deck, scope and threat-level-scale fields.",
+      "correction": "Added explicit required receipt fields and provenance requirements, including source_kind/effect_id constraints, all loaded wrapper hashes, exact candidate/anchor deck hashes, scope_version and shared threat_level_scale_id. Added the simulator-wrapper asset receipt."
+    },
+    {
+      "severity": "HIGH",
+      "finding": "Threat ordinals and interval endpoints could otherwise be compared across unrelated receipts without a shared scale.",
+      "correction": "Added the mandatory, independently reviewed ThreatLevelScaleV1 binding and blocked native readiness while it is absent."
+    },
+    {
+      "severity": "HIGH",
+      "finding": "Fixture mutations involving hidden metadata or successor fields needed to distinguish public-boundary rejection from B0 delegation.",
+      "correction": "F02/F07 now require PublicState/current-only fixture rejection for hidden or successor-only fields and reserve B0_DELEGATE for explicit receipt unknowns or missing local deltas. STOP is explicitly a CompoundAction builder token, not a LegalOptionV1 row."
+    },
+    {
+      "severity": "MEDIUM",
+      "finding": "The design used an abbreviated non-authoritative selection name and did not explicitly constrain the Iono cell.",
+      "correction": "Aligned the delegation language with the actual G1 selection enums and recorded Iono solely as an evidence stratum; no hardcoded weakness, hand-quality, archetype or policy branch is permitted."
+    },
+    {
+      "severity": "HIGH",
+      "finding": "The current B0 permutation implementation covers only the first candidate transition with at least five options, and the design did not preserve that limitation in the comparison contract.",
+      "correction": "The equal-budget contract now requires retaining request/sequence and eligible denominators and forbids claiming whole-trajectory permutation coverage."
+    },
+    {
+      "severity": "HIGH",
+      "finding": "A Wilson interval is not a confidence interval for a WDL mean with half-point draws.",
+      "correction": "Per-cell WDL uncertainty and formulation-minus-control uncertainty now use independent game-level bootstrap intervals; Wilson is explicitly limited to a separately labelled binary win-rate interval."
+    },
+    {
+      "severity": "MEDIUM",
+      "finding": "An aggregate activation floor could conceal a zero-opportunity anchor/seat cell.",
+      "correction": "Confirmation now requires both the aggregate floor and a predeclared per-anchor x candidate-seat floor; missing cells remain inconclusive and cannot be hidden by aggregation."
+    }
+  ],
+  "independent_assurance": {
+    "hidden_information": "PASS: hidden hand/deck/Prize identities, hidden archetype certainty, guessed response priors, independent-card sampling and manual randomness are forbidden; public counts remain capacities and unknowns are not safe/zero.",
+    "successor_and_damage": "PASS: successor observations, counterfactual terminal results, static damage/effect prose, ex flags and unqualified attack/effect semantics are forbidden; native activation requires visible capability and current local-delta receipts.",
+    "formulations": "PASS: B4-A is a known-field strongest-public-response maximin arm; B4-B is a receipt-bounded interval-dominance arm that delegates on overlap. F01 contains a material divergence and a control case.",
+    "fail_closed": "PASS: UNKNOWN/PARTIAL, missing bounds/deltas, incomplete options, duplicate semantics, unsupported enums, compound/STOP gaps, stale lifecycle identity and ambiguous strategic ties delegate or reject before scoring.",
+    "action_contract": "PASS: complete current options, explicit STOP legality through CompoundActionBuilder, singleton-only activation, ordered/unordered compound rejection, semantic permutation invariance, player mirror and lifecycle fixtures are required.",
+    "activation_and_diagnostics": "PASS: anchor labels are evaluation strata only; exact receipt signatures activate, and per-decision/per-run diagnostics separate active decisions, B0 delegation and final-adapter fallback.",
+    "statistics": "PASS: natural-seat candidate balance, candidate-perspective WDL, independent candidate/control samples, per-cell counts/intervals, fixed-seed independent bootstrap, no paired-seed claim and no blended score are preregistered.",
+    "iono": "PASS: no unverified Iono-specific policy is authorized; any Iono result remains evidence context."
+  },
+  "readiness": {
+    "design": "PASS_AFTER_REPORT_ONLY_CORRECTIONS",
+    "fixture": "BLOCKED_IMPLEMENTATION_NOT_PRESENT",
+    "native": "BLOCKED_MISSING_CAPABILITY_LOCAL_DELTA_THREAT_SCALE_AND_BOUNDARY_RECEIPTS",
+    "production": "NOT_AUTHORIZED",
+    "next_exact_task": "Implement only isolated B4-A/B fixture evaluators and tests for B4-F01 through B4-F07, then run fresh-process public-boundary, permutation, mirror and lifecycle review. Do not prepare a native canary until all targeted anchor capabilities, current local deltas, shared threat scale and import/source receipts are independently closed."
+  },
+  "verification": {
+    "design_json_validation": "PASS",
+    "review_json_validation": "PASS",
+    "knowledge_base_validation": "PASS",
+    "production_code_changed": false,
+    "native_or_kaggle_execution": false,
+    "commit_created": false,
+    "design_report_sha256": "3acbad5bd73fd421f1aa8a0af983ab99cfecaa4380997f1425e5e6283a1ce2e1",
+    "design_report_sha256_authority": "This cross-file field is the authoritative final digest for the reviewed design report.",
+    "self_digest": "NOT_EMBEDDED_TO_AVOID_RECURSIVE_SELF_HASH"
+  }
+}
