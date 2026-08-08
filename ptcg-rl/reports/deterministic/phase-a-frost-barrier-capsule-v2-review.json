@@ -1,0 +1,105 @@
+{
+  "schema_version": 2,
+  "record_id": "phase-a-frost-barrier-capsule-v2-independent-review",
+  "review_kind": "INDEPENDENT_RED_TEAM",
+  "review_scope": "Fresh raw-manifest recalculation after v2 runner hardening; implementer self-review was not used as verdict evidence.",
+  "reviewed_report": {
+    "path": "reports/deterministic/phase-a-frost-barrier-capsule-v2.json",
+    "sha256": "0d87bed448859bff4d226f1f78c07dd10aff14eec72258a4c2ac62d124fae2cd"
+  },
+  "raw_evidence": {
+    "path": "runs/phase-a-frost-barrier-20260808T001254Z-f5bd99662afb/raw-evidence.json",
+    "sha256": "557a2774aafbd757d3fad602da192bc53c0d9837f38cfda71e27b2eec7dd0d7d",
+    "bytes": 82928,
+    "mode": "0444",
+    "sidecar": "runs/phase-a-frost-barrier-20260808T001254Z-f5bd99662afb/raw-evidence.json.sha256",
+    "sidecar_matches": true
+  },
+  "independent_recalculation": {
+    "execution_status": "SUCCEEDED",
+    "games_requested": 48,
+    "games_completed": 48,
+    "terminal_games": 48,
+    "balanced_seats": {
+      "same_game_expiry": {"player_0": 6, "player_1": 6},
+      "no_barrier_baseline": {"player_0": 6, "player_1": 6},
+      "same_game_expiry_1043": {"player_0": 6, "player_1": 6},
+      "no_barrier_baseline_1043": {"player_0": 6, "player_1": 6}
+    },
+    "fail_closed_counters_all_zero": true,
+    "primary_same_game_expiry": {
+      "verdict": "PASS",
+      "barrier_attack": {"card_id": 723, "attack_id": 1047, "damage": 200},
+      "response_attack": {"card_id": 754, "attack_id": 1089, "unprotected_damage": 40},
+      "pairs": [
+        {"game_index": 0, "candidate_player": 0, "barrier_turn": 11, "barrier_source_serial": 32, "barrier_target_serial": 119, "response_source_serial": 119, "response_target_serial": 32, "covered_turn": 12, "covered_damage": 10, "expired_turn": 14, "expired_damage": 40},
+        {"game_index": 1, "candidate_player": 1, "barrier_turn": 9, "barrier_source_serial": 90, "barrier_target_serial": 61, "response_source_serial": 61, "response_target_serial": 90, "covered_turn": 10, "covered_damage": 10, "expired_turn": 12, "expired_damage": 40}
+      ],
+      "proof_pairs": 2,
+      "proof_pairs_per_candidate_seat": {"player_0": 1, "player_1": 1},
+      "threshold": {"minimum_pairs": 2, "minimum_pairs_per_candidate_seat": 1, "met": true},
+      "same_protected_source_serial": true,
+      "same_response_source_serial_through_expiry": true,
+      "exact_next_opponent_turn": true,
+      "all_interval_event_confounds_clear": true,
+      "no_switch_evolution_status_ko_confounds": true,
+      "weakness_resistance_excluded": true,
+      "duplicate_attack_records": 0
+    },
+    "primary_no_barrier_baseline": {
+      "verdict": "PASS",
+      "response_identity": {"card_id": 754, "attack_id": 1089, "damage": 40},
+      "response_count": 15,
+      "same_target_source_groups_with_at_least_two_responses": 2,
+      "group_keys": [
+        {"game_index": 1, "target_serial": 91, "attacker_serial": 61, "acting_player": 0, "responses": 8},
+        {"game_index": 7, "target_serial": 92, "attacker_serial": 60, "acting_player": 0, "responses": 7}
+      ],
+      "damage_distribution": {"40": 15},
+      "all_public_confounds_clear": true,
+      "weakness_resistance_excluded": true,
+      "duplicate_attack_records": 0
+    },
+    "secondary_1043": {
+      "attempted": true,
+      "same_game_expiry_verdict": "PARTIAL",
+      "no_barrier_baseline_verdict": "PARTIAL",
+      "observed_baseline_response_count": 8,
+      "native_barrier_sequence_present": false,
+      "exact_card_table_cost_and_effect_checked": true,
+      "reason_not_promoted": "Native 723:1047 barrier activation was absent in the secondary stratum; 721:1043 remains diagnostic only.",
+      "policy_strength_claimed": false
+    },
+    "integrity": {
+      "all_observed_attack_hp_event_identities_match": true,
+      "all_hp_event_and_public_hp_deltas_match": true,
+      "interval_event_names_within_confound_set": [],
+      "all_games_have_terminal_result": true,
+      "raw_evidence_digest_matches_compact_report": true,
+      "raw_evidence_sealed_read_only": true,
+      "asset_hash_receipts_match_config": true,
+      "deck_multiset_hashes_recorded": true,
+      "config_hash_recorded": true,
+      "source_hashes_recorded": true
+    }
+  },
+  "source_receipts": {
+    "config": "69a1e17e7ca5131d8c1e01cc49ffc69f8e27a6ddf215b4c3c6cb429c91fe784e",
+    "runner": "e5de0a482f05122a8e0561fd9314bd82941b26334552d4eaebc7a21f5c8b0f6c",
+    "tests": "8df333fdbedc42bd5aa5af3f2c139b9689a3f8888fe5bb63c3fc768067c15873",
+    "route_dependency": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+    "knowledge_base": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f"
+  },
+  "verification": {
+    "knowledge_base_validation": "PASS",
+    "tests": "7 passed",
+    "ruff": "PASS",
+    "compile": "PASS",
+    "json_parse": "PASS",
+    "native_randomness": "official engine entropy only; no seed, coin, deck-order, HP, status, or native-state mutation",
+    "private_raw_vs_compact_report": "PASS",
+    "no_kaggle_submission": true,
+    "no_commit": true
+  },
+  "conclusion": "Independent red-team recalculation closes the primary Frost Barrier next-turn response contract PASS for this bounded native capsule. The primary claim is limited to card 723 attack 1047 protecting its source serial from card 754 attack 1089 for the immediate next opponent turn (10 damage), followed by 40 after expiry. The 721:1043 secondary stratum remains PARTIAL and is not generalized or promoted. This is interaction evidence, not policy-strength or submission evidence."
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "record_id": "phase-a-frost-barrier-capsule-v2",
+  "knowledge_base_ids": ["DR-025", "DR-030", "DR-033", "AP-014", "RQ-007"],
+  "candidate": "mega-abomasnow-frost-barrier",
+  "opponent": "fixed-damage-response-strata",
+  "formulations": [
+    {
+      "id": "same_game_expiry",
+      "response_stratum": "latias_strafe_1089",
+      "description": "Native 754:1089 no-barrier baseline, then 723:1047 followed by the same source serial receiving 10 on the immediately next opponent turn and 40 after the window expires.",
+      "required_proof": "baseline_40; barrier_response_10_then_expired_response_40; same source serial; no switch/evolution/status/weakness/resistance/KO confounds"
+    },
+    {
+      "id": "no_barrier_baseline",
+      "response_stratum": "latias_strafe_1089",
+      "description": "Native no-barrier control using only Mega Latias Strafe against the same exact Mega Abomasnow source card.",
+      "required_proof": "two independent same-target 40-damage responses"
+    },
+    {
+      "id": "same_game_expiry_1043",
+      "response_stratum": "kyogre_swirling_waves_1043",
+      "description": "Predeclared secondary native stratum using the already qualified Kyogre 1043 cost/effect, attempted with the identical barrier/expiry sequence.",
+      "required_proof": "baseline_130; protected_100; expiry_130; exact Water attack versus Metal-weak target has no weakness/resistance confound"
+    },
+    {
+      "id": "no_barrier_baseline_1043",
+      "response_stratum": "kyogre_swirling_waves_1043",
+      "description": "Secondary no-barrier control for Kyogre Swirling Waves, retained as diagnostic evidence if the native barrier sequence is sparse.",
+      "required_proof": "two independent same-target 130-damage responses with exact two-energy discard"
+    }
+  ],
+  "response_strata": ["latias_strafe_1089", "kyogre_swirling_waves_1043"],
+  "assets": {
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+    "engine_library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "engine_root": "private/assets/official/sample_submission/sample_submission"
+  },
+  "limits": {
+    "games_per_formulation": 12,
+    "request_cap_per_game": 1200,
+    "wall_seconds": 600,
+    "max_evidence_records": 96,
+    "evidence_bytes_cap": 67108864,
+    "minimum_primary_expiry_pairs": 2,
+    "minimum_primary_expiry_pairs_per_candidate_seat": 1,
+    "minimum_primary_baseline_target_groups": 2
+  },
+  "attack_contract": {
+    "barrier_attack_id": 1047,
+    "barrier_card_id": 723,
+    "fixed_attack_id": 1089,
+    "fixed_card_id": 754,
+    "fixed_base_damage": 40,
+    "barrier_reduction": 30,
+    "barrier_response_damage": 10,
+    "expired_response_damage": 40,
+    "secondary_attack_id": 1043,
+    "secondary_card_id": 721,
+    "secondary_base_damage": 130,
+    "secondary_energy_counts": [1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+    "secondary_effect": "discard_2_energy"
+  },
+  "deck_specs": {
+    "candidate": {"265": 4, "721": 4, "722": 4, "723": 4, "1086": 4, "1097": 4, "1118": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 4, "3": 15},
+    "opponent": {"754": 4, "3": 56},
+    "opponent_1043": {"721": 4, "3": 56}
+  }
+}
