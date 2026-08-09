@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 import time
 from pathlib import Path
+
+import pytest
 
 from ptcg_rl.g1.actions import DeterministicFirstLegalPolicy
 from ptcg_rl.g1.environment import (
@@ -112,13 +115,24 @@ def test_native_failure_writes_bounded_redacted_artifact(tmp_path: Path) -> None
     assert "PRIVATE_REPLAY_BODY" not in artifact.read_text(encoding="utf-8")
 
 
-def _private_rule_policy(tmp_path: Path, returned: str) -> NativeRulePolicy:
+def _private_rule_policy(
+    tmp_path: Path, returned: str, *, sibling_helper: str | None = None
+) -> NativeRulePolicy:
     directory = tmp_path / "rule"
     directory.mkdir()
     deck = directory / "deck.csv"
     deck.write_text(",".join(["1"] * 60) + "\n", encoding="utf-8")
     module = directory / "main.py"
-    module.write_text(f"def agent(observation):\n    return {returned}\n", encoding="utf-8")
+    if sibling_helper is None:
+        module.write_text(f"def agent(observation):\n    return {returned}\n", encoding="utf-8")
+    else:
+        (directory / "helper.py").write_text(sibling_helper, encoding="utf-8")
+        module.write_text(
+            "from helper import RETURNED\n\n"
+            "def agent(observation):\n"
+            "    return RETURNED\n",
+            encoding="utf-8",
+        )
     def digest(path: Path) -> str:
         return hashlib.sha256(path.read_bytes()).hexdigest()
     (directory / "receipt.json").write_text(
@@ -172,3 +186,35 @@ def test_private_native_rule_policy_binds_exact_deck_hash(tmp_path: Path) -> Non
         assert "deck hash mismatch" in str(error)
     else:
         raise AssertionError("modified deck was accepted")
+
+
+def test_private_native_rule_policy_loads_sibling_and_restores_import_context(
+    tmp_path: Path,
+) -> None:
+    previous_cwd = Path.cwd()
+    previous_sys_path = sys.path.copy()
+    try:
+        policy = _private_rule_policy(tmp_path, "[0]", sibling_helper="RETURNED = [0]\n")
+
+        assert policy._module.agent({}) == [0]
+        assert Path.cwd() == previous_cwd
+        assert sys.path == previous_sys_path
+    finally:
+        sys.modules.pop("helper", None)
+
+
+def test_private_native_rule_policy_restores_import_context_on_load_failure(
+    tmp_path: Path,
+) -> None:
+    previous_cwd = Path.cwd()
+    previous_sys_path = sys.path.copy()
+    sys.modules.pop("helper", None)
+    with pytest.raises(RuntimeError, match="sibling import failure"):
+        _private_rule_policy(
+            tmp_path,
+            "[0]",
+            sibling_helper="raise RuntimeError('sibling import failure')\n",
+        )
+
+    assert Path.cwd() == previous_cwd
+    assert sys.path == previous_sys_path

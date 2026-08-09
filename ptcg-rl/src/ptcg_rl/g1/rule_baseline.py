@@ -49,11 +49,14 @@ class NativeRulePolicy:
             raise ContractViolation("cannot load private rule baseline module")
         module = importlib.util.module_from_spec(spec)
         previous = Path.cwd()
+        previous_sys_path = sys.path.copy()
         try:
             os.chdir(self.directory)
+            sys.path.insert(0, str(self.directory))
             sys.modules[name] = module
             spec.loader.exec_module(module)
         finally:
+            sys.path[:] = previous_sys_path
             os.chdir(previous)
         return module
 
