@@ -2,18 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T16:09:54+05:30
+Updated: 2026-08-09T16:29:01+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `814.0`. It has 34 public games, 19 wins and 15 losses, plus one successful validation episode. The score slipped from 817.3 and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: improved Majkel imitation is not transferring into a reliable global native-strength gain. The next branch must return to concrete live loss modes or a structurally different controller, not tune another history threshold on the confirmation cohort.
-- Most recent decisive evidence: independent record-level audit verified exact `480/480` completeness and zero defects, c0.70-minus-pure equal-cell effect `-0.00833`, bootstrap 95% interval `[-0.07917,+0.06250]`, and opponent-floor failures versus Mega Lucario `-0.13333` and Alakazam `-0.16667`. C0.70 is also about 1.73x slower and 1.70x higher peak RSS.
-- Exact next task: commit the negative confirmation result and close the global Majkel-history branch. Then audit exact Grim/live controller states behind the attack-continuity and bench-liability motifs and choose one smallest isolated win-oriented ablation, or pivot to a fundamentally different current controller if evidence offers larger upside.
-- Latest relevant session commit: `01ee1534afc6b88c91a2c230928ef4089acc4b8f` (`exp: retain history-aware Majkel strength screen`). The loader fix is `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`; the Grim loss audit is `5a77ce85d4d9b3e5be0fb9d795f8037aaaf218ef`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`. Actual Git toplevel is `/home/nnmax/Desktop/kaggle/PTCG`; code lives under `ptcg-rl/`.
+- Active hypothesis: in Dragapult promotion states, the Grim mirror expert's fixed role priority can choose a 70-HP Impidimp that loses to the public 70-damage Jet Headbutt line while a higher-current-HP Munkidori or Froslass survives that line. This is a narrow promotion-survivability hypothesis, not proof of a different game outcome because Phantom Dive still KOs every option.
+- Most recent decisive evidence: exact live-package replay re-execution matched all recorded actions. The Archaludon attackless loss had `0/25` MAIN requests with a legal ATTACK and is rejected as a forced-no-attack hypothesis. In the Dragapult loss, ToActive offered five legal promotions; the controller chose 70-HP Impidimp, while 90-HP Froslass and a Munkidori that would be 90 HP after checkup survive the observed 70-damage attack. Evolution preserves damage, so the initially suggested damaged-Impidimp-to-Morgrem bridge was correctly falsified.
+- Exact next task: commit the exact-state audit, then add only a sanitized regression fixture for the Dragapult ToActive state, including post-checkup HP and damage-preserving evolution. Do not add strategic authority until the fixture proves the narrow ranking and false-positive boundary.
+- Latest relevant session commit: `501cde828bc47ecf85e26334960b4047486e498f` (`exp: reject history-aware Majkel c070`). The screen runner/evidence commit is `01ee1534afc6b88c91a2c230928ef4089acc4b8f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`; Grim loss audit `5a77ce85d4d9b3e5be0fb9d795f8037aaaf218ef`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
 - Uncommitted session work: this post-commit journal SHA/next-command update only. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-RESUME HERE: commit the independently audited c0.70 rejection, then select one new structural branch without retuning the closed Majkel-history confirmation cohort.
+RESUME HERE: preserve the Archaludon attack-continuity rejection and build one sanitized fixture for the corrected Dragapult promotion-survivability state from `91269364`; do not modify the qualified tarball.
 
 ## Session Guardrails
 
@@ -681,7 +681,7 @@ Do not inspect partial W/D/L. Wait for the managed run to finish, independently 
 
 **Commit SHA**
 
-Pending the confirmation result milestone; runner source is already committed at `01ee1534afc6b88c91a2c230928ef4089acc4b8f`.
+`501cde828bc47ecf85e26334960b4047486e498f` (confirmation result milestone); runner source is committed at `01ee1534afc6b88c91a2c230928ef4089acc4b8f`.
 
 ## 2026-08-09T15:44:27+05:30 - Step 9: Second Mutable Kaggle Refresh
 
@@ -756,7 +756,7 @@ Finish and independently audit the frozen local confirmation. Do not spend a liv
 
 **Commit SHA**
 
-Pending the confirmation-result progress commit.
+`501cde828bc47ecf85e26334960b4047486e498f` (live refresh and confirmation-result progress commit).
 
 ## 2026-08-09T15:59:10+05:30 - Step 10: Complete C0.70 Larger Confirmation
 
@@ -827,7 +827,7 @@ Independently recompute completeness, hashes, W/D/L, cell deltas, runtime, and t
 
 **Commit SHA**
 
-Pending independent audit and focused rejection/progress commit.
+`501cde828bc47ecf85e26334960b4047486e498f` (`exp: reject history-aware Majkel c070`).
 
 **Independent audit result**
 
@@ -847,3 +847,70 @@ Pending independent audit and focused rejection/progress commit.
 **Final reason**
 
 C0.70 fails three independently fixed strength requirements: its point estimate is below control, its bootstrap lower bound does not exceed `+0.02`, and two opponent floors regress by more than 10 points. Clean mechanics do not rescue failed outcome criteria.
+
+## 2026-08-09T16:29:01+05:30 - Step 11: Exact-State Grim Loss Hypothesis Audit
+
+**Objective/question**
+
+Before changing the live controller, prove or falsify whether the attackless Archaludon loss and exposed-Impidimp Dragapult loss contained a legal, strategically meaningful alternative at the recorded decision point.
+
+**Evidence inspected**
+
+- Restricted replay `91270142` (Archaludon) and `91269364` (Dragapult).
+- Qualified tarball SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657` and its existing exact extraction; all 385 archive files are byte-identical.
+- Exact package re-execution on every recorded NNMax observation with semantic duplicate normalization.
+- Controller scoring/routing in `strategic_policy.py`, `human_controller.py`, `main.py`, `matchup_router.py`, and `experts/mirror/manual_policy.py`.
+
+**Important commands/inspection**
+
+Read-only replay parsing, tar/hash comparison, and isolated package-agent calls were used. No native arena game, network call, source write, package rebuild, or external action occurred.
+
+**Test/inspection size**
+
+- Archaludon: all 25 NNMax MAIN decisions, 7 END selections, every legal semantic option and turn progression.
+- Dragapult: the opening/development sequence, prior public Phantom Dive spread, turn-8 bench fill, turn-9 KO, five-option ToActive request, turn-10 evolution, and terminal attack.
+- Exact package semantic action agreement: all inspected decisions matched replay.
+
+**Results and metrics**
+
+- Archaludon episode `91270142`: ATTACK legally offered `0/25`; END offered `25/25`, selected `7/25`. Every no-attack turn was resource/active-state forced. A turn-9 alternative could set up a later 10-damage Impidimp attack, but it creates no prize route against a 300-HP four-Energy Archaludon and is not a meaningful continuity fix.
+- Dragapult episode `91269364`: after the active Munkidori KO, ToActive offered Froslass 90 HP, Munkidori 100/110, Munkidori 80/110, damaged Impidimp 10/70, and fresh Impidimp 70/70. The mirror expert's role priority selected the fresh Impidimp.
+- Public Froslass checkup would leave the two Munkidori at 90 and 70 HP before the next attack. Froslass stays 90 HP. Therefore Froslass and the 90-HP Munkidori survive the observed 70-damage Jet Headbutt; the 70-HP Munkidori and both Impidimp do not.
+- All five candidates still lose to the available 200-damage Phantom Dive. The counterfactual opponent response is unknown, so this proves only avoidable liability under the observed lower-damage line, not a saved game.
+- The exact controller path is the mirror expert promotion score: Impidimp role priority 80, Munkidori 30, Froslass 10, with same-role HP tie breaking. Downstream guards retained that choice.
+
+**Failures / invalid actions / fallbacks**
+
+- Replay/package execution errors: zero; legality errors: zero.
+- A research-audit error was caught before implementation: the first counterfactual assumed damaged Impidimp would become full-HP Morgrem. CABT correctly preserves 60 damage through evolution, producing Morgrem at 40/100, still KO'd by 70. The invalid evolution-bridge intervention is rejected and explicitly retained as negative evidence.
+
+**Interpretation**
+
+The attack-continuity story is falsified for the inspected Archaludon episode and must not be implemented. The Dragapult promotion choice is a real, narrow survivability ordering issue, but it is not yet native-win evidence. The smallest next step is a sanitized fixture that preserves exact current HP, post-checkup Froslass damage, duplicate physical identities, public opponent energy/attack threat, and damage counters through evolution.
+
+**Decision**
+
+`REJECT ARCHALUDON ATTACK-CONTINUITY ABLATION`; `KEEP DRAGAPULT PROMOTION-SURVIVABILITY ALIVE FOR FIXTURE ONLY`; `NO STRATEGIC AUTHORITY YET`.
+
+**Reason**
+
+Only the Dragapult promotion has a legal option that strictly survives the observed 70-damage line. One retrospective state cannot justify a global promotion rule or establish win impact.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md` only.
+- No replay, source, test, package, deck, model, or live object changed.
+
+**Artifact paths**
+
+- Archaludon replay SHA-256 `c0a6993f3a8f299b8a0242b1fc2524ec6b7a4d1dfc5506f89502952119cfc3ac`.
+- Dragapult replay SHA-256 `e0658d6a180a1e527979dc792ba621bbbc390c73bdf8e43f6ae29168c682abcc` (recorded in the restricted manifest).
+- Qualified tarball path `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`.
+
+**Next action**
+
+Commit this audit. Then delegate a fixture-only change in an experimental copy/test path that proves the corrected state and expected threat-aware ranking without touching the qualified tarball or granting the heuristic live authority.
+
+**Commit SHA**
+
+Pending focused exact-state-audit progress commit.
