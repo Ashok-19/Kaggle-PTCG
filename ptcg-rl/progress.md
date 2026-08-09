@@ -2,18 +2,19 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T16:29:01+05:30
+Updated: 2026-08-09T16:41:34+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `814.0`. It has 34 public games, 19 wins and 15 losses, plus one successful validation episode. The score slipped from 817.3 and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: in Dragapult promotion states, the Grim mirror expert's fixed role priority can choose a 70-HP Impidimp that loses to the public 70-damage Jet Headbutt line while a higher-current-HP Munkidori or Froslass survives that line. This is a narrow promotion-survivability hypothesis, not proof of a different game outcome because Phantom Dive still KOs every option.
-- Most recent decisive evidence: exact live-package replay re-execution matched all recorded actions. The Archaludon attackless loss had `0/25` MAIN requests with a legal ATTACK and is rejected as a forced-no-attack hypothesis. In the Dragapult loss, ToActive offered five legal promotions; the controller chose 70-HP Impidimp, while 90-HP Froslass and a Munkidori that would be 90 HP after checkup survive the observed 70-damage attack. Evolution preserves damage, so the initially suggested damaged-Impidimp-to-Morgrem bridge was correctly falsified.
-- Exact next task: commit the exact-state audit, then add only a sanitized regression fixture for the Dragapult ToActive state, including post-checkup HP and damage-preserving evolution. Do not add strategic authority until the fixture proves the narrow ranking and false-positive boundary.
-- Latest relevant session commit: `501cde828bc47ecf85e26334960b4047486e498f` (`exp: reject history-aware Majkel c070`). The screen runner/evidence commit is `01ee1534afc6b88c91a2c230928ef4089acc4b8f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`; Grim loss audit `5a77ce85d4d9b3e5be0fb9d795f8037aaaf218ef`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Active hypothesis: an experimental Dragapult-only ToActive guard can avoid a public 70-damage Jet Headbutt liability by preferring a Munkidori projected above 70 HP over a lethal Impidimp, while abstaining when Dragapult is uncharged, no Munkidori survives, no Impidimp is offered, or options are ambiguous. Phantom Dive remains lethal to all choices, so win impact is unknown.
+- Most recent decisive evidence: the corrected sanitized fixture passes exact HP/evolution/survivor assertions and binds the replay/package hashes without embedding restricted bodies. All 23 historical promotion guards abstain on the live state; the current qualified top-level path has no ToActive threat override. The smallest authoritative experimental insertion point is before generic scoring in `human_controller._direct_selection`.
+- Exact next task: commit the safe fixture/checker, then implement one tiny guard only in a scratch candidate copied from `grim-punk-floor4`, with positive, Dragapult-uncharged, no-survivor, no-Impidimp, and ambiguous-option tests. Replay-audit it before any native game; never modify/rebuild the qualified tarball.
+- Latest relevant session commit: `9f6315794975bb87ca2bbd251c120a0bdcefbac1` (`docs: audit current Grim loss states`). The Majkel rejection is `501cde828bc47ecf85e26334960b4047486e498f`; screen runner/evidence `01ee1534afc6b88c91a2c230928ef4089acc4b8f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Uncommitted session work: the safe sanitized fixture/checker under `.chatgpt/tmp/grim-promotion-liability-fixture/` and this journal are intended for the next focused commit. Restricted replay bodies and all pre-existing unrelated dirty state remain untouched.
 - Uncommitted session work: this post-commit journal SHA/next-command update only. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-RESUME HERE: preserve the Archaludon attack-continuity rejection and build one sanitized fixture for the corrected Dragapult promotion-survivability state from `91269364`; do not modify the qualified tarball.
+RESUME HERE: commit the corrected sanitized promotion fixture, then add a minimal Dragapult-only ToActive guard in an experimental copy with explicit abstention tests; do not touch the qualified tarball.
 
 ## Session Guardrails
 
@@ -913,4 +914,81 @@ Commit this audit. Then delegate a fixture-only change in an experimental copy/t
 
 **Commit SHA**
 
-Pending focused exact-state-audit progress commit.
+`9f6315794975bb87ca2bbd251c120a0bdcefbac1` (`docs: audit current Grim loss states`).
+
+## 2026-08-09T16:41:34+05:30 - Step 12: Sanitize Promotion Fixture And Audit Reuse Point
+
+**Objective/question**
+
+Prove the corrected Dragapult promotion-state arithmetic in a safe reproducible fixture and determine whether an existing historical guard can be reused before granting any experimental policy authority.
+
+**Evidence inspected**
+
+- Corrected public-state values from replay `91269364` and qualified package behavior.
+- All historical v22 promotion guards plus their `manual_guards` wiring in current-deck-proxies and grim-source-oracle.
+- Qualified top-level mirror, strategic, human-controller, and downstream action chain on the exact ToActive observation.
+
+**Important commands**
+
+```text
+rtk uv run python .chatgpt/tmp/grim-promotion-liability-fixture/check_fixture.py
+rtk uv run ruff check .chatgpt/tmp/grim-promotion-liability-fixture/check_fixture.py
+rtk uv run python -m py_compile .chatgpt/tmp/grim-promotion-liability-fixture/check_fixture.py
+rtk sha256sum .chatgpt/tmp/grim-promotion-liability-fixture/fixture.json .chatgpt/tmp/grim-promotion-liability-fixture/check_fixture.py
+```
+
+Historical guards were invoked read-only on the retained private observation; no arena game or policy edit occurred.
+
+**Test/inspection size**
+
+- One positive sanitized five-option ToActive fixture.
+- Two negative controls: uncharged Dragapult and no option surviving 70.
+- All 23 existing manual guards evaluated on the exact live state.
+- A second Dragapult ToActive replay state at step 123 audited as a false-positive boundary because it contains no Impidimp.
+
+**Results and metrics**
+
+- Fixture checker: PASS; Ruff: PASS; bytecode compilation: PASS.
+- Positive survivor set under Jet Headbutt 70 is exactly `Froslass73` and `Munkidori77`; Phantom Dive 200 survivor set is empty.
+- Evolution assertion preserves 60 damage: Impidimp `10/70` becomes Morgrem `40/100`, not full HP.
+- Current exact package choice is index 4 fresh Impidimp; preferred Munkidori is a declared hypothesis with `win_authority=false`.
+- All 23 historical guards returned `None`; none expresses the five-option, damaged, late-prize state. The nearest energized-Munkidori guard requires exactly three full-HP options and an early prize shape.
+- The mirror expert and human controller both favor fresh Impidimp; later stages preserve it. `manual_guards` is only a coalition voter, so extending it would not reliably change final authority.
+- Smallest future extension point is an early `context==4` branch in `human_controller._direct_selection`, using public Dragapult ID/energy, factual option identities, projected post-checkup HP, and semantic abstention.
+
+**Failures / invalid actions / fallbacks**
+
+- Initial fixture audit found and corrected two evidence defects before commit: replay hash was null/mislabelled and Munkidori current HP had been conflated with max HP. Final fixture binds replay SHA-256 `e0658d6a180a1e527979dc792ba621bbbc390c73bdf8e43f6ae29168c682abcc`, states no replay body is embedded, and uses max HP 110 for both Munkidori.
+- No runtime, legality, native, fallback, or external action occurred.
+
+**Interpretation**
+
+The fixture now supports exactly one implementation hypothesis and its abstention boundaries. It does not claim the opponent would choose Jet Headbutt counterfactually or that survival wins the game. Existing guards should not be broadened blindly; a tiny top-level experimental branch is both simpler and more causally auditable.
+
+**Decision**
+
+`FIXTURE PASS`; `AUTHORIZE ONE EXPERIMENTAL GUARD IMPLEMENTATION`; `NO NATIVE SCREEN UNTIL REPLAY/UNIT QUALIFICATION`; `NO LIVE AUTHORITY`.
+
+**Reason**
+
+The state arithmetic, legal alternatives, and current policy cause are now independently explicit, while negative controls bound the proposed activation.
+
+**Files created/changed**
+
+- `.chatgpt/tmp/grim-promotion-liability-fixture/fixture.json`
+- `.chatgpt/tmp/grim-promotion-liability-fixture/check_fixture.py`
+- `ptcg-rl/progress.md`
+- No qualified package, replay body, strategic source, deck, model, or external object changed.
+
+**Artifact paths**
+
+- Fixture: 2,807 bytes, SHA-256 `c877c089eb506482bb51c63bcf1dbe54174b91e134cf08cafc0355e0be9a1e99`.
+- Checker: 3,653 bytes, SHA-256 `7aa83a0ec22fcd215f79884071ca02c766e14db93d419f4276edba887a2d0baa`.
+
+**Next action**
+
+Stage and commit only the two safe fixture files plus `progress.md`. Then create an experimental candidate copy via the existing scratch builder, add the minimal top-level guard plus focused abstention tests, and replay-audit exact activation before any native strength run.
+
+**Commit SHA**
+
+Pending focused fixture/progress commit.

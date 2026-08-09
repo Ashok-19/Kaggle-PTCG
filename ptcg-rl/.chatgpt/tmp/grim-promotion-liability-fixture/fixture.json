@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "scope": "FIXTURE_ONLY",
+  "source": {
+    "replay_episode_id": 91269364,
+    "replay_sha256": "e0658d6a180a1e527979dc792ba621bbbc390c73bdf8e43f6ae29168c682abcc",
+    "replay_body_embedded": false,
+    "package_name": "kptcg-grim-control-v1.tar.gz",
+    "package_sha256": "e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657"
+  },
+  "observation": {
+    "selection_context": "ToActive",
+    "option_count": 5,
+    "current_package_choice_index": 4,
+    "checkup_damage": 10,
+    "attacks": {
+      "jet_headbutt": {"damage": 70},
+      "phantom_dive": {"damage": 200}
+    },
+    "candidates": [
+      {
+        "index": 0,
+        "physical_id": "Froslass73",
+        "role": "froslass_engine_role",
+        "max_hp": 90,
+        "pre_checkup_hp": 90,
+        "checkup_damage": 0,
+        "post_checkup_hp": 90
+      },
+      {
+        "index": 1,
+        "physical_id": "Munkidori77",
+        "role": "munkidori_engine_role",
+        "max_hp": 110,
+        "pre_checkup_hp": 100,
+        "checkup_damage": 10,
+        "post_checkup_hp": 90
+      },
+      {
+        "index": 2,
+        "physical_id": "Munkidori76",
+        "role": "munkidori_engine_role",
+        "max_hp": 110,
+        "pre_checkup_hp": 80,
+        "checkup_damage": 10,
+        "post_checkup_hp": 70
+      },
+      {
+        "index": 3,
+        "physical_id": "Impidimp81",
+        "role": "impidimp_engine_role",
+        "max_hp": 70,
+        "pre_checkup_hp": 10,
+        "checkup_damage": 0,
+        "post_checkup_hp": 10
+      },
+      {
+        "index": 4,
+        "physical_id": "Impidimp79",
+        "role": "impidimp_engine_role",
+        "max_hp": 70,
+        "pre_checkup_hp": 70,
+        "checkup_damage": 0,
+        "post_checkup_hp": 70
+      }
+    ],
+    "evolution_damage_preservation": {
+      "source_physical_id": "Impidimp81",
+      "evolved_physical_id": "Morgrem85",
+      "source_max_hp": 70,
+      "source_hp": 10,
+      "damage_before_evolution": 60,
+      "evolved_max_hp": 100,
+      "damage_after_evolution": 60,
+      "evolved_hp": 40
+    }
+  },
+  "declared_hypothesis": {
+    "preferred_physical_id": "Munkidori77",
+    "comparison_physical_id": "Froslass73",
+    "reason": "retains_engine_role",
+    "status": "DECLARED_HYPOTHESIS_NOT_PROVEN",
+    "win_authority": false
+  },
+  "controls": [
+    {
+      "id": "public-dragapult-not-charged",
+      "dragapult_charged": false,
+      "jet_headbutt_damage": 70,
+      "post_checkup_hp": [90, 90],
+      "expected_trigger": false,
+      "expected_reason": "DRAGAPULT_NOT_CHARGED"
+    },
+    {
+      "id": "no-option-survives-70",
+      "dragapult_charged": true,
+      "jet_headbutt_damage": 70,
+      "post_checkup_hp": [70, 60],
+      "expected_trigger": false,
+      "expected_reason": "NO_SURVIVOR_AT_70"
+    }
+  ]
+}
