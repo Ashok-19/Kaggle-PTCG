@@ -2,18 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T19:49:05+05:30
+Updated: 2026-08-09T20:20:07+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `800.5`. It has 36 public games, 19 wins and 17 losses, plus one successful validation episode. The score fell from 814.0 after two new losses and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: an experimental Dragapult-only ToActive guard can avoid a public 70-damage Jet Headbutt liability by preferring a Munkidori projected above 70 HP over a lethal Impidimp, while abstaining when Dragapult is uncharged, no Munkidori survives, no Impidimp is offered, or options are ambiguous. Phantom Dive remains lethal to all choices, so win impact is unknown.
-- Most recent decisive evidence: lead artifact audit confirms Stage A completed both native slots, one candidate win and one loss, with zero invalids/fallbacks/post-terminal actions/failures, finite sub-5 ms maximum policy latency, empty stderr, and byte-identical before/after candidate/control hashes. Mechanics PASS grants no strength authority.
-- Exact next task: commit the Stage A result journal, then create/audit the smallest resumable Stage B runner for the fixed 240-game targeted Dragapult screen. Predeclare reliability and kill rules before launch; do not promote from the screen.
-- Latest relevant session commit: `2a08d53c38ace873f12b07b138852e687444a45b` (`exp: qualify Dragapult promotion guard integration`). Fixture commit is `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; exact-state audit `9f6315794975bb87ca2bbd251c120a0bdcefbac1`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
-- Uncommitted session work: this post-commit journal SHA update plus the generated/private scratch candidate tree, which remains intentionally untracked and must not be staged. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Active hypothesis: replace incremental rule patches with an outcome-trained public-state semantic action-value engine. Generate native counterfactual continuation labels for the complete legal set, learn terminal-win action ranking on public features, model likely opponent continuations as a distribution, and retain the deterministic controller only as a legal/reliability fallback.
+- Most recent decisive evidence: the user correctly rejected further investment in a one-state promotion guard as incapable of closing a roughly 200-point live Elo gap. The fixed Stage B runner was interrupted before launch; zero Stage B games exist. The narrow guard is mechanically valid but strategically parked.
+- Exact next task: audit existing search/fork plumbing, evaluator failures, rollout datasets, recurrent/semantic model infrastructure, and exact-deck state features in parallel; prove the smallest native counterfactual action-ranking data path on one bounded state, then select one major architecture by outcome evidence and today-feasible implementation cost.
+- Latest relevant session commit: `d4b0767a653842b9e310fb416888c5a12640d362` (`exp: pass Dragapult promotion native mechanics`). Guard integration is `2a08d53c38ace873f12b07b138852e687444a45b`; fixture `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; exact-state audit `9f6315794975bb87ca2bbd251c120a0bdcefbac1`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Uncommitted session work: this post-commit journal SHA/retrieval-plan update plus generated/private Stage A and candidate artifacts, which remain intentionally untracked and must not be staged. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-RESUME HERE: commit the audited Stage A mechanics PASS, then prepare and predeclare the fixed 240-game Dragapult-only Stage B screen (control/candidate x two opponent proxies x both slots x 30 games); do not promote from this screen.
+RESUME HERE: do not resume the narrow Dragapult screen. Prove a one-state native counterfactual outcome-label pipeline for complete legal actions, audit reusable public semantic features/evaluator code, and choose the shortest outcome-trained architecture capable of a material broad gain.
 
 ## Session Guardrails
 
@@ -1407,4 +1407,267 @@ Commit this audited result. Then prepare and audit a resumable Stage B runner fo
 
 **Commit SHA**
 
-Pending completed Stage A result milestone.
+`d4b0767a653842b9e310fb416888c5a12640d362` (`exp: pass Dragapult promotion native mechanics`).
+
+## 2026-08-09T19:56:44+05:30 - Step 19: Audit Fail-Closed Plan For Two New Live Losses
+
+**Objective/question**
+
+Design a new two-replay acquisition batch for live losses `91299777` and `91304959` that cannot repeat the prior streaming-byte overrun, without downloading a body yet.
+
+**Evidence inspected**
+
+- Prior restricted manifest `.chatgpt/tmp/grim-live-55372188/manifest.json`, SHA-256 `ac36e5d40867f5d79e779c180d044ed34f117348ee9edc2bdbf828244be03809`.
+- Prior batch counters/chunk behavior and the exact 861,248-byte overrun.
+- Fresh read-only episode metadata for the two target losses and available Kaggle replay endpoint schemas.
+
+**Important inspection**
+
+Read-only local manifest analysis plus authenticated episode-metadata inspection. No replay body, agent log, upload, session, benchmark task, or external mutation occurred.
+
+**Test/inspection size**
+
+- Prior batch: 5 retained files / 24,978,496 bytes under a 9-file / 26,214,400-byte cap.
+- New proposed batch: exactly 2 named episode IDs, serial retrieval only.
+
+**Results and metrics**
+
+- The old downloader read fixed 1,048,576-byte chunks. Before episode `91271961`, 1,235,904 bytes remained; the first chunk left 187,328 bytes, but a second full chunk was read, causing exactly `1,048,576 - 187,328 = 861,248` excess bytes. The partial was deleted and no later ID contacted.
+- Kaggle episode metadata exposes no replay byte size, `Content-Length`, or hash. The high-level replay-body connector exposes no client byte/time cap, so it cannot guarantee this acquisition boundary.
+- Predeclared safe batch caps: `MAX_FILES=2`, `MAX_NEW_BYTES=16,777,216` (16 MiB), `CHUNK_BYTES=1,048,576`, `MIN_FREE_BYTES=100,663,296` (96 MiB), total time 300 seconds, per-episode time 120 seconds, targets exactly `[91299777, 91304959]`.
+- Required downloader invariant: compute remaining bytes before every raw read and never request more than the remaining cap; abort/delete `.part` before contacting the second target on any cap, time, free-space, identity, JSON, or hash failure.
+- New output must use a separate empty directory and leave the old capped manifest immutable.
+
+**Failures / invalid actions / fallbacks**
+
+- Historical acquisition cap overrun remains recorded; this step does not erase or reinterpret it.
+- No new download or external failure occurred.
+
+**Interpretation**
+
+The high-level replay connector is convenient but cannot enforce a hard byte cap. A tiny authenticated streaming helper with a pre-read remaining-byte bound is necessary before this batch can be authorized.
+
+**Decision**
+
+`PLAN PASS / DOWNLOAD NOT YET AUTHORIZED`; `KEEP EXACT TWO LOSS IDS QUEUED`.
+
+**Reason**
+
+The proposed limits cover the largest observed replay pair while failing closed before a second-chunk overread. Implementation and dry-run audit are still required before contacting either replay endpoint.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md` only.
+- No downloader, replay, manifest, package, source, or external object changed.
+
+**Artifact paths**
+
+- Immutable prior batch `.chatgpt/tmp/grim-live-55372188/`.
+- Proposed new batch `.chatgpt/tmp/grim-live-55372188-followup/` (not created yet).
+
+**Next action**
+
+Finish and audit the Stage B native runner first. Separately, implement a minimal capped two-ID downloader with a no-network dry-run that proves the pre-read byte invariant before authorizing replay retrieval.
+
+**Commit SHA**
+
+Pending next focused progress/runner milestone commit.
+
+## 2026-08-09T20:04:31+05:30 - Step 20: Prepare No-Game Targeted Stage B Runner
+
+**Objective/question**
+
+Create a resumable, fail-closed runner for the already fixed 240-game Dragapult-only screen without launching a game or adding policy instrumentation.
+
+**Evidence inspected**
+
+- New runner `.chatgpt/tmp/grim-promotion-liability/run_targeted_screen.py`.
+- Existing repository-native floor4/Majkel arena-runner patterns and the four fixed policy/opponent packages.
+- Agent-reported schedule/config self-check, Ruff, `py_compile`, and asset hashes.
+
+**Important command/design**
+
+- Fixed design: 2 variants (`grim-punk-floor4`, `grim-promotion-dragapult`) x 2 opponents (`dragapult-ex`, `dipam-current-dragapult`) x 2 candidate policy slots x 30 games = 240.
+- Fixed policy seeds `2026082000` through `2026082239`; native trajectories remain nondeterministic and unpaired.
+- Maximum 8 workers, request cap 20,000, native game timeout 180 seconds, outer process timeout 190 seconds.
+- Append/fsync JSONL, prewritten immutable schedule/config hash, collision-resistant run directory, safe resume, per-game captures, and fail-stop reliability validation are reported.
+
+**Test/experiment size**
+
+- Self-check only: 240 unique scheduled game IDs/seeds; zero games launched.
+- Runner source: 530 LOC / 27,160 bytes, SHA-256 `d4a605c590ee0f44aded240c68ebd50229b872cf65af27c8b3f8ee469ab9ac85`.
+
+**Results and metrics**
+
+- Agent-reported self-check PASS; Ruff PASS; `py_compile` PASS.
+- Reported schedule has exact 240 rows, both policy slots, first/last seeds `2026082000/2026082239`.
+- Proxy label explicitly says exact current deck proxy and does not claim Dipam policy identity.
+- Asset bindings include engine `feafd404...`, card data `a0ea63cf...`, shared control/candidate main module `2c45168e...`, candidate controller `77801996...`, and candidate receipt `17139708...`.
+- No native Stage B game has launched.
+
+**Failures / invalid actions / fallbacks**
+
+- None reported in no-game checks. The 530-line size is being independently reviewed for copied necessity versus avoidable machinery before acceptance.
+- No native reliability or outcome counters exist yet.
+
+**Interpretation**
+
+A resumable journal is warranted for 240 native processes, but runner complexity must still earn its keep. Schedule correctness and self-check PASS do not authorize execution until an independent audit verifies paths, resume semantics, fail-stop behavior, and no destructive side effects.
+
+**Decision**
+
+`RUNNER PROVISIONAL / INDEPENDENT NO-GAME AUDIT PENDING`; `STAGE B NOT LAUNCHED`.
+
+**Reason**
+
+The fixed design is correct on its face, but this project has repeatedly caught integration and evidence-boundary errors only at independent audit.
+
+**Files created/changed**
+
+- Created `.chatgpt/tmp/grim-promotion-liability/run_targeted_screen.py`.
+- Updated `ptcg-rl/progress.md`.
+- No game output, policy/package source, qualified tarball, live submission, replay, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/grim-promotion-liability/run_targeted_screen.py`.
+
+**Next action**
+
+Read and independently execute the runner's no-game self-check, audit exact schedule/path/hash/resume/fail-stop behavior, and remove only demonstrably unnecessary complexity before committing.
+
+**Commit SHA**
+
+Pending independent runner audit and focused commit.
+
+## 2026-08-09T20:16:31+05:30 - Step 21: Hold Stage B Runner On Integrity Audit
+
+**Objective/question**
+
+Independently prove that the no-game runner can resume the exact frozen experiment, binds the assets actually loaded, and cannot score a modified task before authorizing 240 native games.
+
+**Evidence inspected**
+
+- Full 530-line runner source, existing runner patterns, policy receipts/runtime imports, schedule/config generation, resume path, parser, concurrency/fail-stop path, capture writes, aggregation, and self-check behavior.
+- Independent no-game `--self-check`, `--self-check --run`, Ruff, `py_compile`, synthetic outcome parser, process scan, and artifact scan.
+
+**Important checks**
+
+- Exact schedule independently recomputed as 240 unique rows/seeds across `2 x 2 x 2 x 30`, with seeds `2026082000..2026082239` and correct seat reversal.
+- Zero Stage B run directories, results, captures, failure artifacts, or native arena processes exist after self-check.
+- Synthetic reward orientation and inconsistent outcome rejection pass.
+
+**Test/experiment size**
+
+- No-game schedule: 240 rows; zero native games.
+- Runner source before fixes: 530 LOC / 27,160 bytes, SHA-256 `d4a605c590ee0f44aded240c68ebd50229b872cf65af27c8b3f8ee469ab9ac85`.
+
+**Results and metrics**
+
+- Schedule, policy paths, seed uniqueness, seat orientation, proxy labelling, and unpaired-trajectory wording pass.
+- Lead found a deterministic resume blocker not caught by the first self-check: tuples in `plan_config()` serialize to JSON lists, so `verify_config()` compares lists to tuples and rejects every resumed run.
+- Independent audit found resumed schedule rows are not compared with canonical `schedule_rows(run_id)`, and existing result task fields are not checked against their canonical schedule row.
+- Asset provenance hashes receipt/module/deck and declared experiment sources, but omits actual imported policy trees/models/bundled card data, runner/CLI/wrapper sources, Git state, and platform.
+- `stop_on_first_error` stops new dispatch but can allow up to seven already-running processes to finish; wording overstates behavior.
+- Timeout stdout/stderr can be bytes before text capture; orphan capture directories can make resume retry fail unclearly; request count is not bounded/equal to latency count.
+- Aggregation reports player-index first-player counts rather than candidate actual-first/second, lacks pooled variant/opponent rows, and lacks a final results hash. Confidence intervals remain intentionally suitable for independent post-run analysis rather than runner complexity.
+
+**Failures / invalid actions / fallbacks**
+
+- No native/game reliability defect occurred because execution remained blocked.
+- Runner decision: preflight schedule/parser PASS, evidence-grade launch HOLD.
+
+**Interpretation**
+
+The experimental design is sound, but a runner that cannot resume its own JSON config and does not bind the actual loaded model/source tree cannot support a durable strength conclusion. These are narrow integrity fixes, not a reason to rewrite the runner or change the screen.
+
+**Decision**
+
+`HOLD STAGE B`; `AUTHORIZE MINIMAL RUNNER INTEGRITY FIXES`; `NO GAMES LAUNCHED`.
+
+**Reason**
+
+Fixing the evidence boundary before a 240-game run is cheaper than discovering after completion that the results are unresumable or incompletely bound.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md` only during audit.
+- Runner remains uncommitted and is being corrected in place; no policy, package, result, replay, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/grim-promotion-liability/run_targeted_screen.py`.
+
+**Next action**
+
+Make JSON config stable, validate canonical resume schedule/results/symlinks, bind package/runtime/runner/Git/platform assets, normalize timeout output, tighten request/latency bounds, report candidate actual-first and pooled opponent rows, hash final results, and add no-game tamper self-checks.
+
+**Commit SHA**
+
+Pending corrected runner and focused commit.
+
+## 2026-08-09T20:20:07+05:30 - Step 22: Strategic Redirect From Narrow Guard To Outcome-Trained Engine
+
+**Objective/question**
+
+Stop optimizing a mechanically correct one-state heuristic that cannot plausibly close the live strength gap, and redirect engineering toward a learned decision architecture with material upside.
+
+**Evidence inspected**
+
+- Live Grim score `800.5` after 36 public games (`19/0/17`) versus the 1000+ target and approximately 1094 current top-20 floor.
+- Narrow guard scope: exactly one semantic replay change, two-game mechanics PASS, zero outcome-strength evidence.
+- Historical failures of imitation-only improvements and weak state evaluators/search, including the rejected 480-game Majkel-history confirmation.
+- Existing project direction: complete semantic legal-option scoring, public-only information, terminal W/D/L objective, native counterfactual/search plumbing, recurrent/public feature infrastructure, and exact-deck specialization.
+
+**Important action**
+
+- Interrupted the Stage B runner-fix agent immediately.
+- Confirmed no Stage B run directory/results/captures/native games exist.
+- Closed all non-root agents before opening new architecture work.
+
+**Test/experiment size**
+
+- Stage B Dragapult outcome games launched: `0/240`.
+- No new training, native rollout batch, compute job, package, or live submission launched in this step.
+
+**Results and metrics**
+
+- The live gap is about 200 rating points to 1000 and roughly 294 points to the latest top-20 floor; ratings are mutable and not a guaranteed linear strength scale.
+- A one-position Dragapult override has no credible mechanism for that scale of gain. Further runner work is opportunity cost.
+- New architecture target: public-state semantic action-value learning from native counterfactual terminal continuations, with complete legal-action ranking and an explicit probabilistic opponent-response model. This directly attacks the previously identified evaluator/action-ranking bottleneck instead of adding another rule branch.
+
+**Failures / invalid actions / fallbacks**
+
+- Strategic allocation failure caught: excessive engineering attention was being spent on evidence infrastructure for a low-ceiling heuristic.
+- No game/runtime/legal failure and no external mutation occurred.
+
+**Interpretation**
+
+The previous search branches failed because their evaluator did not rank counterfactual actions, not because complete-action search plumbing was inherently useless. Direct counterfactual terminal supervision is a materially different premise: labels come from branched native outcomes, while inference remains public-only and scores every legal semantic action. It may still fail, but it has breakthrough-scale upside and a decisive falsification path.
+
+**Decision**
+
+`PARK DRAGAPULT GUARD OUTCOME SCREEN`; `DO NOT COMMIT/LAUNCH ITS UNFINISHED STAGE B RUNNER`; `AUTHORIZE BOUNDED COUNTERFACTUAL ACTION-VALUE ARCHITECTURE PROOF`.
+
+**Reason**
+
+The objective is 1000+ live strength, not perfect evidence machinery for tiny expected gains. The next branch must be capable of changing broad action quality across matchups.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md`.
+- The uncommitted scratch `run_targeted_screen.py` remains parked and must not be mistaken for an active plan.
+- No strategic policy/model/package/replay/live object changed.
+
+**Artifact paths**
+
+- Parked runner `.chatgpt/tmp/grim-promotion-liability/run_targeted_screen.py`.
+- Existing search/evaluator/model assets to be enumerated by the next architecture audit.
+
+**Next action**
+
+Run three bounded parallel audits: native state-fork/counterfactual-label feasibility, reusable public semantic feature/ranker infrastructure, and a red-team comparison of breakthrough architectures. Require one small executable counterfactual proof rather than another long design memo.
+
+**Commit SHA**
+
+Pending architecture-selection milestone commit.
