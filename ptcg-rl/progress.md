@@ -2,18 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T15:16:37+05:30
+Updated: 2026-08-09T15:32:53+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `817.3`. It has 21 public games, 12 wins and 9 losses, plus one successful self-play validation episode. This is stronger than the two-game snapshot but remains far below the 1000+ target and too small for a settled strength claim.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
-- Best local candidate: no derivative is promoted above the unchanged Grim control. The active candidate family is the exact-current-Majkel-deck 201-game history-aware MAIN controller (`direct`, `gain>=0.20`, `c0.70`, optionally `c0.90`). Its native loader integration is now fixed and mechanically clean in one game per seat, but actual strength remains unknown.
-- Active hypothesis: improved chronological semantic imitation may transfer into native wins once the now-proven sibling-import defect is removed. This remains a strength hypothesis, not a promotion claim.
-- Most recent decisive evidence: the minimal loader change is committed and mechanically clean in both seats. Separately, five capped live Grim loss replays expose one attackless Archaludon loss plus repeated public signs of bench liability, attack-continuity failure, and unfinished prize routes; these are observational hypotheses only and do not justify a global heuristic.
-- Exact next task: let the managed 320-game diverse native screen finish, audit its per-game journal and aggregate, and reject the branch or authorize an independent larger confirmation from outcome evidence.
-- Latest relevant session commit: `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0` (`fix: load sibling modules in native rule policies`). Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34` (`Add weighted public deck belief`). Actual Git toplevel is `/home/nnmax/Desktop/kaggle/PTCG`; code lives under `ptcg-rl/`.
-- Uncommitted session work: this post-commit journal update only. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule now protects that entire directory and none of it may be staged. The strength screen is writing private scratch evidence in its own timestamped directory. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Best local candidate: no derivative is promoted above the unchanged Grim control. The small-screen leader is current-Majkel-deck `grim-majkel-h-c070`, which scored `46-0-34` (`0.575`) over 80 diverse-panel games versus the old pure fallback's `33-0-47` (`0.4125`). This is a confirmation candidate, not a promoted agent.
+- Active hypothesis: the confidence-gated `c0.70` history override may improve native outcomes while the direct and gain0.20 policies over-override the mature fallback. The 80-game cohort is too small and stochastic for promotion, and its `1/10` Crustle cell is a critical floor risk.
+- Most recent decisive evidence: independent JSONL recomputation verified all `320/320` games, zero reliability defects, and c0.70 minus pure `+0.1625`. The independent normal 95% interval is `[+0.0096,+0.3154]` and a fixed-seed 100,000-resample bootstrap interval is `[+0.0125,+0.3125]`. C0.70 improved six of eight 10-game cells but regressed versus Lopunny and Crustle.
+- Exact next task: commit the audited confirmation-capable runner plus this summary, then run the unchanged c0.70 versus pure 480-game confirmation in the foreground. Do not package or submit unless confirmation survives reliability and matchup-floor review.
+- Latest relevant session commit: `5a77ce85d4d9b3e5be0fb9d795f8037aaaf218ef` (`docs: record current Grim loss audit`). The loader fix is `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34` (`Add weighted public deck belief`). Actual Git toplevel is `/home/nnmax/Desktop/kaggle/PTCG`; code lives under `ptcg-rl/`.
+- Uncommitted session work: the safe experimental runner `.chatgpt/tmp/majkel-history/run_strength_screen.py` and this journal are the only session files intended for the next commit. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-`RESUME HERE: audit the in-progress timestamped 320-game history-Majkel strength screen when it completes; do not promote from the small screen.`
+`RESUME HERE: commit the audited screen runner/progress, then execute a fresh 480-game c0.70-versus-pure confirmation with the same panel and 15 games per seat/opponent cell.`
 
 ## Session Guardrails
 
@@ -434,4 +434,184 @@ Finish and audit the already-running history-Majkel native screen. Do not implem
 
 **Commit SHA**
 
-Pending the next focused evidence/progress commit; restricted replay artifacts will not be staged.
+`5a77ce85d4d9b3e5be0fb9d795f8037aaaf218ef` (`docs: record current Grim loss audit`); restricted replay artifacts were not staged.
+
+## 2026-08-09T15:21:30+05:30 - Step 6: History-Majkel Diverse Native Strength Screen
+
+**Objective/question**
+
+Determine whether the replay-fidelity gains from direct history control, tune-selected gain0.20 residual control, or confidence-0.70 residual control transfer into native game outcomes against the intended diverse panel after fixing the loader.
+
+**Evidence inspected**
+
+- A hardened one-off runner that journals every attempted game before final aggregation, uses unique output directories, catches process/timeout/JSON errors, never divides by zero, and stops on the first reliability anomaly.
+- One complete fresh-process native cohort: 4 variants x 8 opponents x 2 candidate seats x 5 games per cell.
+- Append-only JSONL records, final aggregate, and managed run journal.
+
+**Important commands**
+
+```text
+rtk uv run python .chatgpt/tmp/majkel-history/run_strength_screen.py --self-check
+rtk uv run python .chatgpt/tmp/majkel-history/run_strength_screen.py
+```
+
+The screen was foreground-managed, bounded to 30 seconds per subprocess and 1,200 seconds overall. The engine's internal game timeout remained 180 seconds and request cap 20,000. Native engine trajectories remain nondeterministic; integer seeds control policy-side randomness only and do not create paired games.
+
+**Test/experiment size**
+
+- `320/320` attempted and completed native games.
+- Per variant: 80 games, 10 per opponent, balanced 5 in each candidate seat.
+- Opponents: `dragapult-ex`, `mega-lucario-ex`, `lopunny-v9`, `roman-v10`, `crustle-v1`, `nithin-1084`, `alakazam-v9`, and `grim-floor4`.
+- Variants: `mk-lgb-0p9-pure`, `grim-majkel-h-direct`, `grim-majkel-h-g020`, and `grim-majkel-h-c070`.
+
+**Results and metrics**
+
+- Total managed runtime: `675.431452s`.
+- Pure fallback: W/D/L `33/0/47`, expected match score `0.4125`, mean/p95/max process wall `1.185/3.869/5.148s`, peak RSS `102,555,648` bytes.
+- Direct history: `27/1/52`, score `0.34375`, mean/p95/max `2.005/4.639/5.639s`, peak RSS `178,380,800` bytes.
+- Gain0.20: `37/0/43`, score `0.4625`, mean/p95/max `2.217/5.706/6.623s`, peak RSS `180,219,904` bytes.
+- Confidence0.70: `46/0/34`, score `0.5750`, mean/p95/max `2.169/5.235/8.034s`, peak RSS `180,867,072` bytes.
+- Pooled opponent scores, not variant-specific causal effects: Dragapult `0.600`, Mega Lucario `0.725`, Lopunny `0.900`, Roman `0.250`, Crustle `0.150`, Nithin `0.4625`, Alakazam `0.225`, Grim `0.275`.
+- Pooled seat scores: candidate seat 0 `0.4719` over `160`; candidate seat 1 `0.4250` over `160`. Variant-specific seat/matchup splits and confidence intervals await independent recalculation.
+
+**Failures / invalid actions / fallbacks**
+
+- Process/native/timeout/malformed-result errors: `0/320`.
+- Invalid selections: `0`; fallback actions: `0`; post-terminal actions: `0`; reliability stop condition: not triggered.
+- No candidate package/model/deck changed during the screen.
+
+**Interpretation**
+
+Direct history control regressed despite the highest imitation fidelity, reinforcing that imitation is diagnostic rather than the objective. Gain0.20's +5 percentage-point screen difference over pure fallback is not clear evidence. Confidence0.70's +16.25-point difference is large enough to earn independent audit and, if the matchup distribution is not catastrophic, a fresh larger confirmation. It is not sufficient to promote, package, or spend a live slot.
+
+The pure fallback's fresh `0.4125` differs from the lost earlier cohort's approximate `0.45`, another reminder that unpaired stochastic small screens move materially.
+
+**Decision**
+
+Provisional pending independent recomputation: `REJECT DIRECT`; `DO NOT PROMOTE GAIN0.20`; `KEEP C0.70 ALIVE FOR LARGER CONFIRMATION`.
+
+**Reason**
+
+Only c0.70 produced a screen-scale advantage large enough to justify more games, and all mechanics remained clean. Eighty games per variant cannot establish promotion and the project has repeatedly seen larger confirmations erase smaller apparent gains.
+
+**Files created/changed**
+
+- Hardened experimental runner: `.chatgpt/tmp/majkel-history/run_strength_screen.py` (safe source, staging decision pending audit).
+- Private scratch results directory: `.chatgpt/tmp/majkel-history/strength-screen-20260809T093708793392Z-dc9f9afe/`.
+- Updated `ptcg-rl/progress.md`; no model, package, deck, production policy, or live object changed.
+
+**Artifact paths**
+
+- `aggregate.json`: 9,274 bytes, SHA-256 `0e2cca11ee0b8f6d137ef42233de16a2ed7d4968ba1aed822934b305ccdc52fd`.
+- `results.jsonl`: 1,333,727 bytes, SHA-256 `e22c998b3e23fcced2fb746ae963620d324fc5268bc8d8bd06628849cac685a2`.
+- `run-journal.md`: 2,769 bytes, SHA-256 `1b2f97a02153c4907a143f053f88b2a273852ad7a4c6e4afea921427c9ef77bd`.
+- Hardened runner: 17,129 bytes, SHA-256 `913e17c524c329de2b7b4d8cadb87695e3635b27c7d6ea3fe282ec8cbc5902f8`.
+
+**Next action**
+
+Independently recalculate completeness, W/D/L, reliability, latency/RSS, per-opponent/seat splits, and uncertainty from JSONL. Inspect the runner for evidence corruption. If the result survives, freeze c0.70 unchanged and run a substantially larger independent confirmation against the same panel before any package qualification or live decision.
+
+**Independent audit additions**
+
+- Integrity: exact complete `4 x 8 x 2 x 5` design; 320 unique game IDs and 320 unique policy seeds; all records returned code 0/status `pass`; all failure kinds null; all engine/card/action/observation/trajectory hashes identical.
+- Pure Wilson 95% interval `[0.3111,0.5220]`; direct `[0.2435,0.4464]`; gain0.20 `[0.3575,0.5710]`; c0.70 `[0.4657,0.6774]`.
+- C0.70 versus pure is an unpaired difference `+0.1625`, approximate 95% interval `[+0.0096,+0.3154]`; a 100,000-resample independent bootstrap with seed `20260809` gives `[+0.0125,+0.3125]`.
+- C0.70 candidate-seat splits: seat 0 `25/0/15` (`0.625`), seat 1 `21/0/19` (`0.525`). Actual first-player assignment was player 0 in 240 games and player 1 in 80; this is policy-chosen natural deployment, not a forced first/second diagnostic.
+- C0.70 opponent cells: Dragapult `0.90`, Mega Lucario `0.90`, Lopunny `0.90`, Roman `0.40`, Crustle `0.10`, Nithin `0.60`, Alakazam `0.40`, Grim `0.40`, each `n=10`. Relative to pure it improved six cells, regressed Lopunny `1.00 -> 0.90`, and regressed Crustle `0.30 -> 0.10`.
+- Overall engine requests were 44,799, range `18..246`; overall max wall/CPU was `8.034/8.031s`; peak RSS was 180,867,072 bytes.
+- Runner audit found sound record fsync, collision-safe run directories, exact aggregate recomputation, and stop-on-error/reliability handling for this completed run. Residual harness risk: a timed-out `start_new_session=True` subprocess is not explicitly killed by process group. No timeout occurred, so this does not affect this evidence; fix it before future bounded runs.
+
+**Decision after independent audit**
+
+`REJECT DIRECT`; `DO NOT ADVANCE GAIN0.20`; `KEEP C0.70 ALIVE FOR ONE FRESH 480-GAME CONFIRMATION`; `NO PROMOTION / PACKAGE / LIVE SLOT YET`.
+
+**Reason after independent audit**
+
+The c0.70 advantage survived independent arithmetic and is just large enough to merit confirmation, but multiple comparisons, unpaired native entropy, only 80 games per variant, and a `1/10` Crustle cell prevent promotion. The next experiment must preserve the policy unchanged and increase each opponent/seat cell from 5 to 15 fresh games.
+
+**Commit SHA**
+
+Pending focused experiment/progress commit; only the safe runner and `progress.md` will be staged, never private result bodies.
+
+## 2026-08-09T15:32:53+05:30 - Step 7: Freeze Fresh C0.70 Confirmation Design
+
+**Objective/question**
+
+Prepare the smallest reproducible larger confirmation that preserves the screen-winning c0.70 policy unchanged, uses fresh unpaired native games, retains every attempt, and cannot leak or orphan timed-out native processes.
+
+**Evidence inspected**
+
+- Independent screen audit recommendation and the historical project requirement that apparent 80-game gains receive roughly 480-game confirmation.
+- Exact runner control flow, seed arithmetic, timeout cleanup, record journal, aggregate, and CLI mode separation.
+- No-native self-check output, Ruff, bytecode compilation, and CLI help.
+
+**Important commands**
+
+```text
+rtk uv run ruff check .chatgpt/tmp/majkel-history/run_strength_screen.py
+rtk uv run python -m py_compile .chatgpt/tmp/majkel-history/run_strength_screen.py
+rtk uv run python .chatgpt/tmp/majkel-history/run_strength_screen.py --self-check
+rtk uv run python .chatgpt/tmp/majkel-history/run_strength_screen.py --help
+```
+
+No arena game was launched while preparing or checking the confirmation mode.
+
+**Test/experiment size**
+
+- Default-mode arithmetic remains exactly `4 x 8 x 2 x 5 = 320` and retains seed base `202615000`.
+- Confirmation mode is exactly `2 x 8 x 2 x 15 = 480`: `mk-lgb-0p9-pure` versus unchanged `grim-majkel-h-c070`, the same eight opponents, both candidate seats.
+- Confirmation seed base `202640000` is disjoint from the default screen's policy seeds. Seeds still do not control native engine entropy.
+
+**Results and metrics**
+
+- Ruff: all checks passed.
+- Bytecode compilation: passed.
+- Self-check: `PASS (no arena games launched)`; it verifies default/confirmation arithmetic, exact variants, seed disjointness, record interpretation, zero-completion aggregation, and termination/reaping of a no-native sleeping process group.
+- Confirmation CLI is explicit: `--confirmation`; output directories are collision-safe and labeled `strength-confirmation-*`.
+- Outer game cap remains 30 seconds; confirmation overall cap is 2,400 seconds; engine timeout 180 seconds and request cap 20,000 remain explicit.
+- The first correct draft was 594 lines and was rejected as over-engineered for a one-off runner. The audited version is 311 lines while preserving the required evidence, timeout, and fail-closed behavior.
+- Final validation also rejects missing/negative/non-integer reliability counters, invalid terminal/request counts, and missing/negative/nonfinite wall, CPU, or RSS metrics; self-checks cover a negative fallback count and infinite CPU metric.
+- Updated runner: 16,841 bytes, SHA-256 `39eb7db55daf44da077c8c166f97581b9c0994ea1cf6841c67f6a44f95ca93cc`.
+
+**Failures / invalid actions / fallbacks**
+
+- No native game or policy request occurred in this preparation step.
+- Previous timeout residual is fixed for future runs: on subprocess timeout, the runner sends SIGTERM to the new process group, waits two seconds, escalates to SIGKILL if required, reaps the process, and retains the timeout record/output before stopping.
+- Residual risk: timeout cleanup is tested with a no-native process group rather than an actual hung CABT child. The confirmation remains stop-on-first timeout/error/reliability counter.
+
+**Interpretation**
+
+This is a bounded confirmation of one frozen candidate, not another tuning screen. Default screen reproduction remains available and distinctly labeled; confirmation cannot silently reuse its policy seeds or overwrite its evidence. No model, threshold, deck, package, or opponent schedule changed.
+
+**Decision**
+
+`AUTHORIZE LOCAL 480-GAME CONFIRMATION AFTER FOCUSED COMMIT`; no external compute or live action is authorized.
+
+**Reason**
+
+C0.70 is the only screen variant with an independently verified improvement large enough to justify more local games. The confirmation is the smallest historical-strength check likely to expose another 80-game false positive while keeping compute bounded and evidence auditable.
+
+**Files created/changed**
+
+- Safe reproducible source: `.chatgpt/tmp/majkel-history/run_strength_screen.py`.
+- Updated `ptcg-rl/progress.md`.
+- No private results, generated package, model, deck, replay, production policy, or live object changed.
+
+**Artifact paths**
+
+- Runner path and SHA-256 as above.
+- Planned confirmation outputs will be created only under a new `.chatgpt/tmp/majkel-history/strength-confirmation-*/` directory.
+
+**Next action**
+
+Stage only the safe runner and `progress.md`, inspect and commit them, then execute exactly:
+
+```text
+rtk uv run python .chatgpt/tmp/majkel-history/run_strength_screen.py --confirmation
+```
+
+Remain foreground-managed until completion or the first stop condition.
+
+**Commit SHA**
+
+Pending the focused screen-evidence/confirmation-runner commit.
