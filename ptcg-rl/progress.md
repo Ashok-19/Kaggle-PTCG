@@ -2,18 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T19:42:45+05:30
+Updated: 2026-08-09T19:49:05+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `800.5`. It has 36 public games, 19 wins and 17 losses, plus one successful validation episode. The score fell from 814.0 after two new losses and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
 - Active hypothesis: an experimental Dragapult-only ToActive guard can avoid a public 70-damage Jet Headbutt liability by preferring a Munkidori projected above 70 HP over a lethal Impidimp, while abstaining when Dragapult is uncharged, no Munkidori survives, no Impidimp is offered, or options are ambiguous. Phantom Dive remains lethal to all choices, so win impact is unknown.
-- Most recent decisive evidence: final independent audit reproduced the fixture, 17-case matrix, 146 isolated top-level calls, and two genuinely persistent chronological package processes. Both replay audits have zero exceptions and exactly one semantic delta at step 158; memory update order and all receipt/control hashes pass.
-- Exact next task: stage and commit only the safe builder, checker, sanitized failed-iteration record, and `progress.md`. Then run exactly two Stage A native games versus `dragapult-ex`, with the candidate in each policy slot and fail-closed reliability checks.
-- Latest relevant session commit: `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c` (`exp: add Dragapult promotion liability fixture`). Exact-state audit is `9f6315794975bb87ca2bbd251c120a0bdcefbac1`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
-- Uncommitted session work: the scratch builder/checker and generated experimental candidate under `.chatgpt/tmp/grim-promotion-liability/`, plus this journal update. The first candidate draft has a proven dead integration point and is being corrected before commit. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Most recent decisive evidence: lead artifact audit confirms Stage A completed both native slots, one candidate win and one loss, with zero invalids/fallbacks/post-terminal actions/failures, finite sub-5 ms maximum policy latency, empty stderr, and byte-identical before/after candidate/control hashes. Mechanics PASS grants no strength authority.
+- Exact next task: commit the Stage A result journal, then create/audit the smallest resumable Stage B runner for the fixed 240-game targeted Dragapult screen. Predeclare reliability and kill rules before launch; do not promote from the screen.
+- Latest relevant session commit: `2a08d53c38ace873f12b07b138852e687444a45b` (`exp: qualify Dragapult promotion guard integration`). Fixture commit is `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; exact-state audit `9f6315794975bb87ca2bbd251c120a0bdcefbac1`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Uncommitted session work: this post-commit journal SHA update plus the generated/private scratch candidate tree, which remains intentionally untracked and must not be staged. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-RESUME HERE: commit the independently qualified scratch guard scripts/journal, then run exactly two Stage A native games versus `dragapult-ex` (candidate once per slot); do not touch the qualified tarball.
+RESUME HERE: commit the audited Stage A mechanics PASS, then prepare and predeclare the fixed 240-game Dragapult-only Stage B screen (control/candidate x two opponent proxies x both slots x 30 games); do not promote from this screen.
 
 ## Session Guardrails
 
@@ -1338,4 +1338,73 @@ Commit only `build_candidate.py`, `check_guard.py`, `failed_iteration_dead_integ
 
 **Commit SHA**
 
-Pending final independent audit and focused commit.
+`2a08d53c38ace873f12b07b138852e687444a45b` (`exp: qualify Dragapult promotion guard integration`).
+
+## 2026-08-09T19:44:32+05:30 - Step 18: Launch Fixed Stage A Native Mechanics Smoke
+
+**Objective/question**
+
+Verify that the exact experimental candidate loads, completes a native CABT game in each policy slot, and retains zero reliability defects before any outcome screen.
+
+**Evidence inspected**
+
+- Independently qualified scratch candidate and unchanged `dragapult-ex` native rule opponent.
+- Existing repository-native `ptcg g1 arena-one` command contract.
+
+**Important command/design**
+
+Two fresh bounded `arena-one` processes are authorized, sequentially:
+
+- Candidate slot 0, opponent slot 1, policy seed `2026080910`, game ID `grim-promotion-stagea-slot0-20260809`.
+- Opponent slot 0, candidate slot 1, policy seed `2026080911`, game ID `grim-promotion-stagea-slot1-20260809`.
+
+Both use the official sample engine root, official private card data, request cap 20,000, game timeout 180 seconds, and a bounded outer timeout. Native trajectories remain system-entropy draws and are not paired by these policy seeds.
+
+**Test/experiment size**
+
+- Planned maximum: exactly 2 games, one per candidate policy slot.
+- Stop after game 1 on any nonzero exit, timeout, malformed/missing terminal output, invalid selection, fallback, post-terminal action, or unexplained failure.
+
+**Results and metrics**
+
+- Agent-reported completion: candidate W/D/L `1/0/1`; slot 0 won at reward `+1`, slot 1 lost at reward `-1`.
+- Slot 0: actual first player 0, 178 requests / 179 transitions, wall/CPU `0.528/0.521s`, peak RSS 58,368,000 bytes, mean/max policy latency `1.195/4.135ms`.
+- Slot 1: actual first player 1, 164 requests / 165 transitions, wall/CPU `0.464/0.464s`, peak RSS 57,356,288 bytes, mean/max policy latency `1.000/4.133ms`.
+- Lead JSON recomputation confirms both processes exited 0 with status `pass`; latency-array lengths exactly equal engine-request counts and every latency is finite/nonnegative.
+
+**Failures / invalid actions / fallbacks**
+
+- Lead-confirmed invalid selections `0`, fallbacks `0`, post-terminal actions `0`, failure kind null, and both stderr files exactly 0 bytes. Failure directories were absent rather than empty because no failure capsule was emitted; the agent's wording was corrected during audit.
+- Before/after hash files are byte-identical, SHA-256 `6924bbb210d1c4880fc283b179df551bf956e30eddf8fabcfe9a31e82feee8e7`; qualified tar remains `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`.
+- Slot stdout SHA-256: slot 0 `6dd40fba13369911589ea878a3f5b758675dec0de977f88594578c4bb043e7fa`; slot 1 `aa31bf77664393d66f287ea515c077681a658254f365dc74205d018bb61652a0`.
+
+**Interpretation**
+
+This is mechanics evidence only. Two native outcomes cannot support a win-rate, matchup, promotion, or live-submission claim.
+
+**Decision**
+
+`STAGE A MECHANICS PASS`; `AUTHORIZE FIXED TARGETED STAGE B SCREEN`; `NO STRENGTH VERDICT`; `NO LIVE AUTHORITY`.
+
+**Reason**
+
+Replay callbacks cover the rare branch, while one native process per policy slot is the smallest check for loader, lifecycle, seat, and terminal integration.
+
+**Files created/changed**
+
+- Expected private scratch outputs only under `.chatgpt/tmp/grim-promotion-liability/stage-a-*`.
+- Updated `ptcg-rl/progress.md`.
+- No policy source, qualified tarball, live submission, deck, model, or external object changed.
+
+**Artifact paths**
+
+- Candidate `.chatgpt/tmp/grim-promotion-liability/arena-agents/grim-promotion-dragapult/`.
+- Stage A outputs/failures `.chatgpt/tmp/grim-promotion-liability/stage-a-*`.
+
+**Next action**
+
+Commit this audited result. Then prepare and audit a resumable Stage B runner for the already fixed 240-game Dragapult-only screen; predeclare the exact run ID/seed design and kill rules before launch.
+
+**Commit SHA**
+
+Pending completed Stage A result milestone.
