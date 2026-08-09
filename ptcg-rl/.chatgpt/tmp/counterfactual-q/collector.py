@@ -1,11 +1,12 @@
 """Bounded native counterfactual label collector.
 
-The normal entry point is still a read-only schedule check.  The only native
-execution mode previously authorized in this milestone is
-``--preflight-complete-root``: one fresh worker finds one live root and evaluates
-every legal single-select root action with two shared particles.  The scaled
-64-root schedule is declaration-only and remains unauthorized.  Compound and
-optional-STOP roots remain an explicit later mechanics gate.
+The normal entry point is still a read-only schedule check.  The scaled 64-root
+opponent-transition schedule accepts either its exact dry-run pair
+(``authorized=false``, ``DRY_RUN_ONLY``) or its exact full-run pair
+(``authorized=true``, ``NATIVE_FULL_AUTHORIZED``); validation itself never
+launches native work.  Full execution remains behind ``--execute-native`` and
+the coordinator authorization checks.  Compound and optional-STOP roots remain
+an explicit later mechanics gate.
 """
 
 from __future__ import annotations
@@ -23,8 +24,10 @@ import sys
 import time
 import importlib.util
 import uuid
+from contextlib import redirect_stdout
 from datetime import datetime, timezone
 from dataclasses import fields, is_dataclass
+from io import StringIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -552,10 +555,10 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
             raise ScheduleError(f"{profile_name} wall cap must be exactly {expected_wall} seconds")
         if profile in {SCALE256_PROFILE, OPPONENT_TRANSITION_PROFILE} and max_root_attempts != 8:
             raise ScheduleError("this profile root acquisition retry cap must be exactly 8")
-        if profile == OPPONENT_TRANSITION_PROFILE and (
-            authorized is not False or mode != "DRY_RUN_ONLY"
+        if profile == OPPONENT_TRANSITION_PROFILE and (authorized, mode) not in (
+            (False, "DRY_RUN_ONLY"), (True, "NATIVE_FULL_AUTHORIZED")
         ):
-            raise ScheduleError("opponent-transition ceiling is declaration-only; native full mode is refused")
+            raise ScheduleError("opponent-transition profile requires an exact authorization/mode pair")
         if state_schedule.get("root_game_seed_policy") != (
             "INDEPENDENT_ROOT_LABELS_NATIVE_START_SYSTEM_ENTROPY_UNSEEDED"
         ):
@@ -2910,8 +2913,18 @@ def _self_check() -> int:
     authorized_config["authorized"] = True
     authorized_config["mode"] = "NATIVE_FULL_AUTHORIZED"
     authorized_validation = validate_schedule(authorized_config, DEFAULT_FIXTURE)
-    if authorized_validation.get("authorized") is not True or authorized_validation.get("native_launches") != 0:
-        raise ScheduleError("authorized-mode reachability self-check failed")
+    if (
+        authorized_validation.get("authorized") is not True
+        or authorized_validation.get("mode") != "NATIVE_FULL_AUTHORIZED"
+        or authorized_validation.get("native_launches") != 0
+    ):
+        raise ScheduleError("authorized schedule copy did not validate without native launches")
+
+    refusal_output = StringIO()
+    with redirect_stdout(refusal_output):
+        refusal = _execute_full(schedule_copy(), DEFAULT_FIXTURE)
+    if refusal != 2:
+        raise ScheduleError("unauthorized dry config execution attempt was not refused")
 
     scale_path = Path(__file__).resolve().parent / "gate1_schedule_scale64_v1.json"
     scale_config = load_json(scale_path)
@@ -2981,8 +2994,12 @@ def _self_check() -> int:
         raise ScheduleError(f"opponent-transition self-check did not reject {label}")
 
     expect_transition_schedule_error(
-        "opponent-transition authorization",
-        lambda candidate: (candidate.__setitem__("authorized", True), candidate.__setitem__("mode", "NATIVE_FULL_AUTHORIZED")),
+        "opponent-transition true/dry mismatch",
+        lambda candidate: (candidate.__setitem__("authorized", True), candidate.__setitem__("mode", "DRY_RUN_ONLY")),
+    )
+    expect_transition_schedule_error(
+        "opponent-transition false/full mismatch",
+        lambda candidate: (candidate.__setitem__("authorized", False), candidate.__setitem__("mode", "NATIVE_FULL_AUTHORIZED")),
     )
     expect_transition_schedule_error(
         "opponent-transition retry cap",
@@ -3388,7 +3405,9 @@ def _self_check() -> int:
         "manifest_seal": True,
         "schema_valid_projection_shape": True,
         "opponent_transition_ceiling_validated_without_native": True,
-        "opponent_transition_authorization_refused": True,
+        "opponent_transition_authorized_copy_validated_without_native": True,
+        "opponent_transition_bad_mode_pairs_refused": True,
+        "unauthorized_full_execution_refused": True,
         "opponent_transition_sidecar_schema_valid": True,
         "opponent_transition_model_firewall_refused": True,
         "opponent_transition_incomplete_label_refused": True,

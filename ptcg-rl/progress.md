@@ -2,18 +2,84 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-10T04:45:42+05:30
+Updated: 2026-08-10T05:06:41+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, deadline-refresh verified `COMPLETE` at public score `811.4`. It has 45 public games, 24 wins and 21 losses, plus one successful validation episode. It remains 188.6 Elo below 1000 and is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: the Public Route Transducer remains a ceiling-gate hypothesis only. Collector and config-bound analyzer mechanics now have independent static `PASS`; no native evidence exists under the final hashes yet. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
+- Active hypothesis: the Public Route Transducer remains a ceiling-gate hypothesis only. Dual-mode authorization is now portable and root-tested; commit/rebind/frozen full execution remain. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
 - Most recent decisive evidence: the independent Scale256 test killed the architecture. Despite `0.648` pairwise concordance, the selected head chose actions `-0.15104` worse than Grim fallback with 95% CI `[-0.28125,-0.02604]`, and catastrophically regressed Dragapult, Grim mirror, and Alakazam. No checkpoint was emitted.
-- Exact next task: inspect the scoped diff, stage only collector/schema/analyzer/tests/progress, commit the mechanics, update the untracked dry config source commit to new HEAD, refreeze all writers, and run exactly one complete-root native preflight.
-- Latest session/code commit: `0b66c158d80909cd73df0706cebd0e504c95065a` (`feat: add public opponent-response ceiling gate`), containing the independently passed collector, restricted sidecar schema, config-bound analyzer, ten tests, and journal through static qualification. Prior handoff is `bff8de8`; rejected Scale256 milestone `04a2247`; Gate-1/Scale64 source `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`.
-- Uncommitted session work: this post-commit `progress.md` update; the intentionally untracked dry config still bound to old HEAD `bff8de8`; obsolete rejected parallel-schema scratch files; and stale private preflight artifacts. Nothing is staged. Generated/private runs and all unrelated dirty state remain unstaged and preserved.
+- Exact next task: stage only collector/progress, inspect and commit the authorization gate; rebind dry and authorized configs to the new HEAD; rerun zero-launch validation; freeze all writers; execute one full Scale64 run.
+- Latest session commit: `e4a62b7aa54911d1744f7b5ae30682ca45a59285` (`docs: record opponent-response mechanics milestone`). Code milestone: `0b66c158d80909cd73df0706cebd0e504c95065a` (`feat: add public opponent-response ceiling gate`), containing the independently passed collector, restricted sidecar schema, config-bound analyzer, and ten tests. Prior handoff is `bff8de8`; rejected Scale256 milestone `04a2247`; Gate-1/Scale64 source `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`.
+- Uncommitted session work: `progress.md`; current untracked dry config; new private preflight run `counterfactual-q-20260809T231733.339016Z-cf124f27d888`; obsolete rejected parallel-schema scratch files; and stale earlier preflight artifacts. Nothing is staged. Generated/private runs and all unrelated dirty state remain unstaged and preserved.
 
-RESUME HERE: update the private dry config source commit to latest HEAD, freeze writers, and run one fresh complete-root preflight. Mechanics commit is `0b66c158d80909cd73df0706cebd0e504c95065a`; no new candidate or live submission exists. Do not call this RL.
+RESUME HERE: commit the root-passing authorization gate, rebind configs, and execute one Scale64 collection. Latest HEAD is `e4a62b7aa54911d1744f7b5ae30682ca45a59285`; no new candidate or live submission exists. Do not call this RL.
+
+## 2026-08-10T05:06:41+05:30 - Authorization Gate Root Review Passed
+
+- Objective: verify the final runtime/refusal diff and eliminate dependency on private execution artifacts.
+- Final collector: 3,565 lines, SHA-256 `5d51e93f2e40fed74f3a6fe4c6a557d2bd97c8b974f4520cd28d1bedc49891f0`; diff from milestone `33` insertions/`14` deletions.
+- Root verification: exact diff inspected; Ruff and `py_compile` passed; self-check returned `PASS` including in-memory authorized reachability, both bad mode-pair refusals, and unauthorized full-execution refusal. Authorized config dry-run returned `PASS`, `authorized=true`, `NATIVE_FULL_AUTHORIZED`, `native_launches=0`. No native execution occurred.
+- Portability: self-check now derives the authorized schedule in memory from the tracked dry fixture and no longer loads the untracked full config.
+- Decision: `PASS / COMMIT AUTHORIZATION GATE`.
+- Next action: commit collector plus journal, update both private config source commits to the resulting HEAD, validate, freeze all writers, and launch exactly once.
+
+## 2026-08-10T05:04:49+05:30 - Root Review Found One Self-Check Portability Defect
+
+- Objective: inspect the exact authorization diff rather than trusting passing local checks.
+- Finding: runtime validation change is correctly narrow, but `_self_check` loads the private untracked `gate1_schedule_scale64_opponent_transition_v1_authorized.json`. The committed collector would therefore lose self-check portability if that private execution artifact were absent in a resumed checkout.
+- Decision: `BLOCK COMMIT / FIX FIXTURE ONLY`. Restore the prior in-memory schedule copy, toggle only the two authorization fields, and retain the new zero-launch/refusal assertions. Do not alter runtime validation.
+- Next action: apply that fixture-only correction and rerun root checks.
+
+## 2026-08-10T05:04:11+05:30 - Narrow Dual-Mode Authorization Gate Patched
+
+- Objective: make the already approved full ceiling run reachable without weakening any execution refusal.
+- File changed: `.chatgpt/tmp/counterfactual-q/collector.py`, now 3,566 lines, SHA-256 `50b439f2cc29629cd18d6528d893437b8bf8cf89697f9c1d16f881124b1ba0fa`; delegated diff `37` insertions/`17` deletions.
+- Behavior: opponent-transition profile now accepts exactly the generic valid pairs `false/DRY_RUN_ONLY` and `true/NATIVE_FULL_AUTHORIZED`. Generic mismatched-pair rejection and `_execute_full` authorization checks are unchanged. Header no longer falsely says the profile can never be authorized.
+- Reported tests: Ruff and `py_compile` passed; collector self-check passed with authorized validation/native-launch count `0`, both invalid mode pairs rejected, and unauthorized execution refused; dry and authorized config dry-runs each returned `PASS` with their exact mode and zero native launches. No `--execute-native` call occurred.
+- Decision: `AUTHOR PATCH PASS / REQUIRE ROOT REVIEW AND COMMIT`.
+- Next action: inspect exact diff and rerun root checks; commit the authorization milestone if clean.
+
+## 2026-08-10T05:01:09+05:30 - Authorized Full Config Correctly Exposed a Launch Guard Blocker
+
+- Objective: create the exact private full-run schedule after preflight qualification.
+- Artifact: `.chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_opponent_transition_v1_authorized.json`, SHA-256 `ad06ebb5d6a1acd367d896eab19eb982ed558dea1087e0d0d37e3b89350927ea`; semantic diff from dry config is exactly `authorized false -> true` and `mode DRY_RUN_ONLY -> NATIVE_FULL_AUTHORIZED`.
+- Failure: collector validation returned `ScheduleError: opponent-transition ceiling is declaration-only; native full mode is refused`, exit `1`, with `native_launches=0`. The guard at the opponent-transition profile explicitly requires `authorized=false` despite the generic validator and `_execute_full` already enforcing the exact authorization/mode pair.
+- Interpretation: no native work was accidentally launched. The guard was correct while the experiment was unapproved, but the user-approved post-preflight run now needs the narrow dual-mode transition. Removing only that profile-specific refusal preserves generic mismatch refusal and `_execute_full` authorization checks.
+- Decision: `BLOCK FULL RUN / PATCH EXACT AUTHORIZATION GATE`. Do not bypass validation or mutate execution flags around it.
+- Next action: add positive validation for the exact authorized pair plus negative mismatched/unauthorized execution tests, commit, update both private configs to the new HEAD, and rerun declaration-only validation before launch.
+
+## 2026-08-10T04:59:09+05:30 - Complete-Root Preflight Independently Passed
+
+- Objective: independently recalculate every retained preflight claim before spending the Scale64 collection.
+- Verdict: `PASS_PREFLIGHT` for run `counterfactual-q-20260809T231733.339016Z-cf124f27d888`.
+- Size/reliability: exactly one root, six complete legal actions, two distinct particles, 12/12 unique branches and labels, all `OBSERVED`; zero crash, timeout, invalid, fallback, post-terminal, missing, unsupported, terminal-before-opponent, error, or nonfinite counters. Parent COW/cleanup passed and all 12 child PIDs exited. Full schedule was neither authorized nor launched.
+- Join audit: per-replicate action sets; root/action fingerprints and transports; canonical root and response keys; chosen-option mapping; public projection; history prefix; and exact history-token hashes all passed. Ajv validation passed for dataset and sidecar schemas. The analyzer correctly refuses this two-particle artifact because the ceiling contract requires four.
+- Seal audit: manifest `4,768 B`, SHA `6ef1ceb9053cc54ce0f824c83f68aaf7849197449868544d1550170cc5b9cf4a`; all 13 declared entries/10 unique artifacts matched bytes and SHA. Dataset SHA `cafd19cf...bcfe2`; sidecar `65243234...58b2`; execution `ff3bc9b2...dd57`; worker `56e84802...371c`; collector/schema/projector/current config bindings all matched.
+- Nonblocking note: the immutable execution artifact carries nested manifest status `PENDING` because it is hashed before the authoritative outer manifest is sealed; the outer manifest and seal are coherent.
+- Decision: `PASS PREFLIGHT / AUTHORIZE EXACTLY ONE SCALE64 CEILING RUN`. This is data-ceiling work, not a candidate, strength test, or submission.
+- Next action: produce and validate the private authorized config, then freeze all filesystem writers throughout the full run.
+
+## 2026-08-10T04:47:43+05:30 - Final-Hash Complete-Root Native Preflight Executed
+
+- Objective: validate the reconciled collector on one real current native root before authorizing the 64-root ceiling experiment.
+- Command: `rtk uv run python .chatgpt/tmp/counterfactual-q/collector.py --preflight-complete-root --config .chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_opponent_transition_v1.json`.
+- Size/result: one native launch; first qualifying Dragapult EARLY root; six complete legal singleton MAIN actions; exactly two shared particles per action; 12 continuation rollouts; elapsed approximately `3.76s`. Coordinator returned `PASS_EXECUTION`, worker `PASS_COMPLETE`, dataset schema `PASS`, dataset/sidecar emitted, full schedule not authorized/launched.
+- Preliminary reliability: displayed branch records report zero invalid actions, fallbacks, post-terminal actions, and errors; every displayed first-opponent response is MAIN/context `0` and OBSERVED. This remains unaudited until retained files are independently recalculated.
+- Artifacts: `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T231733.339016Z-cf124f27d888/`; dataset `complete-root-dataset.json`; sidecar `opponent-transition-labels.json`; execution `preflight-execution.json`; worker `worker.json`; sealed manifest `run-manifest.json` plus `run-manifest.sha256`.
+- Bindings: config SHA `4459b8788c08180242201a64ca6aa8fe1c6ad774840130cac3cfdc32246b6e3b`; manifest SHA `6ef1ceb9053cc54ce0f824c83f68aaf7849197449868544d1550170cc5b9cf4a`; source HEAD `e4a62b7aa54911d1744f7b5ae30682ca45a59285`.
+- Failure/fallback: console output was very large and truncated by the tool, so no verdict may rely on that output alone. No full run, analysis, training, package, or submission occurred.
+- Decision: `PREFLIGHT EXECUTION PASS / AWAIT RETAINED AUDIT`. Do not authorize Scale64 yet.
+- Next action: independently recalculate all hashes, joins, status distributions, and reliability counters from retained artifacts.
+
+## 2026-08-10T04:47:06+05:30 - Dry Config Rebound to Mechanics HEAD
+
+- Objective: bind the private preflight schedule to the exact committed source before consuming native state.
+- Change: untracked `.chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_opponent_transition_v1.json` `source_commit` changed from `bff8de8...` to current HEAD `e4a62b7aa54911d1744f7b5ae30682ca45a59285`; it remains `authorized=false` and `DRY_RUN_ONLY`.
+- Config SHA-256: `4459b8788c08180242201a64ca6aa8fe1c6ad774840130cac3cfdc32246b6e3b`.
+- Verification: dry-run returned `PASS`, exact six anchors/64 roots/four particles, maximum 2,560 continuations/600 seconds, current schema/projector hashes, and zero native launches.
+- Decision: `AUTHORIZE ONE COMPLETE-ROOT PREFLIGHT ONLY`. No full collection or analyzer fit yet.
+- Next action: freeze all writers, execute one complete-root native preflight, then independently audit retained artifacts and counters.
 
 ## 2026-08-10T04:45:42+05:30 - PRT Mechanics Milestone Committed
 
