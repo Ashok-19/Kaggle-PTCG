@@ -1,0 +1,15 @@
+{
+  "iteration": "draft-1-dead-direct-selection-hook",
+  "status": "rejected",
+  "reason": "The guard was inserted in human_controller._direct_selection, but human_controller.choose never called that function for context 4; the full main.agent path therefore did not activate the guard.",
+  "replay": "91269364",
+  "selection_observations": 73,
+  "helper_audit": {
+    "guard_activations": [158],
+    "semantic_matches": "72/73",
+    "fix_minus_break": "1-0"
+  },
+  "full_agent_risk": "Unqualified: the helper-only result was not end-to-end package evidence.",
+  "candidate_main_sha256": "2c45168eada3aad6fa7b959df23e74b3f188ff4459a0f8cca6e069a8ef779775",
+  "candidate_human_controller_sha256": "106ba266e3f93c2f58e1703550a9dfb13f5df1d18e1fe46edfbdef97f262ba3b"
+}

@@ -2,19 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T16:41:34+05:30
+Updated: 2026-08-09T19:42:45+05:30
 
-- Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `814.0`. It has 34 public games, 19 wins and 15 losses, plus one successful validation episode. The score slipped from 817.3 and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
+- Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `800.5`. It has 36 public games, 19 wins and 17 losses, plus one successful validation episode. The score fell from 814.0 after two new losses and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
 - Active hypothesis: an experimental Dragapult-only ToActive guard can avoid a public 70-damage Jet Headbutt liability by preferring a Munkidori projected above 70 HP over a lethal Impidimp, while abstaining when Dragapult is uncharged, no Munkidori survives, no Impidimp is offered, or options are ambiguous. Phantom Dive remains lethal to all choices, so win impact is unknown.
-- Most recent decisive evidence: the corrected sanitized fixture passes exact HP/evolution/survivor assertions and binds the replay/package hashes without embedding restricted bodies. All 23 historical promotion guards abstain on the live state; the current qualified top-level path has no ToActive threat override. The smallest authoritative experimental insertion point is before generic scoring in `human_controller._direct_selection`.
-- Exact next task: commit the safe fixture/checker, then implement one tiny guard only in a scratch candidate copied from `grim-punk-floor4`, with positive, Dragapult-uncharged, no-survivor, no-Impidimp, and ambiguous-option tests. Replay-audit it before any native game; never modify/rebuild the qualified tarball.
-- Latest relevant session commit: `9f6315794975bb87ca2bbd251c120a0bdcefbac1` (`docs: audit current Grim loss states`). The Majkel rejection is `501cde828bc47ecf85e26334960b4047486e498f`; screen runner/evidence `01ee1534afc6b88c91a2c230928ef4089acc4b8f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
-- Uncommitted session work: the safe sanitized fixture/checker under `.chatgpt/tmp/grim-promotion-liability-fixture/` and this journal are intended for the next focused commit. Restricted replay bodies and all pre-existing unrelated dirty state remain untouched.
-- Uncommitted session work: this post-commit journal SHA/next-command update only. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Most recent decisive evidence: final independent audit reproduced the fixture, 17-case matrix, 146 isolated top-level calls, and two genuinely persistent chronological package processes. Both replay audits have zero exceptions and exactly one semantic delta at step 158; memory update order and all receipt/control hashes pass.
+- Exact next task: stage and commit only the safe builder, checker, sanitized failed-iteration record, and `progress.md`. Then run exactly two Stage A native games versus `dragapult-ex`, with the candidate in each policy slot and fail-closed reliability checks.
+- Latest relevant session commit: `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c` (`exp: add Dragapult promotion liability fixture`). Exact-state audit is `9f6315794975bb87ca2bbd251c120a0bdcefbac1`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`; loader fix `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Uncommitted session work: the scratch builder/checker and generated experimental candidate under `.chatgpt/tmp/grim-promotion-liability/`, plus this journal update. The first candidate draft has a proven dead integration point and is being corrected before commit. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-RESUME HERE: commit the corrected sanitized promotion fixture, then add a minimal Dragapult-only ToActive guard in an experimental copy with explicit abstention tests; do not touch the qualified tarball.
+RESUME HERE: commit the independently qualified scratch guard scripts/journal, then run exactly two Stage A native games versus `dragapult-ex` (candidate once per slot); do not touch the qualified tarball.
 
 ## Session Guardrails
 
@@ -991,4 +990,352 @@ Stage and commit only the two safe fixture files plus `progress.md`. Then create
 
 **Commit SHA**
 
-Pending focused fixture/progress commit.
+`c71a116290b2f3c5239e2e6acd8bfea127bc1a8c` (`exp: add Dragapult promotion liability fixture`).
+
+## 2026-08-09T17:07:55+05:30 - Step 13: Reject Dead Guard Integration Draft
+
+**Objective/question**
+
+Implement the smallest experimental Dragapult promotion guard and prove that it changes only the intended exact replay state before running any native game.
+
+**Evidence inspected**
+
+- Scratch builder and checker under `.chatgpt/tmp/grim-promotion-liability/`.
+- Generated candidate copied from the unchanged `grim-punk-floor4` source.
+- Guard unit matrix and direct `_direct_selection` replay audit supplied by the implementation agent.
+- Lead read-through of the actual `main.agent -> human_controller.choose` routing path.
+
+**Important commands/inspection**
+
+The implementation agent ran the fixture checker, Ruff, `py_compile`, 17 fresh-process guard cases, 146 fresh isolated direct-selection replay calls, and a construction-only `NativeRulePolicy` load. The lead then inspected `main.py` and `human_controller.choose()` read-only. No native game was run.
+
+**Test/experiment size**
+
+- Direct helper matrix: 17 isolated cases covering the positive state and abstention boundaries.
+- Direct-selection replay audit: 73 selection observations, candidate plus control in fresh processes (`146` calls).
+- Top-level `main.agent` replay audit: not completed by this draft.
+
+**Results and metrics**
+
+- Helper/direct-selection checks reported zero exceptions, semantic agreement at `72/73`, activation only at step `158`, intended candidate action Munkidori serial 77, control action fresh Impidimp, and abstention at step `123`.
+- Receipt correctly binds experimental `main.py`, `human_controller.py`, and deck hashes; qualified tarball SHA-256 remained `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`.
+- Lead integration audit found the decisive defect: the guard was inserted only in `_direct_selection`, but the full `human_controller.choose()` path never calls `_direct_selection` for context 4. The generated candidate therefore has no proven top-level behavior change despite its helper-level PASS.
+
+**Failures / invalid actions / fallbacks**
+
+- Integration qualification failure: helper-level evidence was incorrectly presented as package behavior evidence. This is a test-boundary failure, not a native exception or illegal action.
+- Top-level activation remains unproven; native error/invalid/fallback/post-terminal counts are not claimed because native games were correctly withheld.
+
+**Interpretation**
+
+A test that bypasses the package's authoritative routing path cannot qualify a strategic intervention. The hypothesis remains alive, but this exact integration draft is rejected. The minimal correction is one legal guard call near the start of `human_controller.choose()`, before baseline/coalition routing, with the redundant dead call removed.
+
+**Decision**
+
+`REJECT FIRST INTEGRATION DRAFT`; `KEEP NARROW HYPOTHESIS ALIVE`; `BLOCK NATIVE SCREEN UNTIL TOP-LEVEL REPLAY PARITY PASSES`.
+
+**Reason**
+
+The intended logic is bounded and its helper behavior is correct, but it is not on the actual package execution path. Running native games now would falsely test an unchanged controller.
+
+**Files created/changed**
+
+- `.chatgpt/tmp/grim-promotion-liability/build_candidate.py`
+- `.chatgpt/tmp/grim-promotion-liability/check_guard.py`
+- Generated private scratch candidate under `.chatgpt/tmp/grim-promotion-liability/arena-agents/grim-promotion-dragapult/`
+- Updated `ptcg-rl/progress.md`.
+- No qualified tarball, live submission, deck, replay body, or production policy changed.
+
+**Artifact paths**
+
+- Scratch builder/checker and generated candidate: `.chatgpt/tmp/grim-promotion-liability/`.
+- Qualified control remains `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`.
+
+**Next action**
+
+Move the guard to the single authoritative `human_controller.choose()` path in the scratch build, remove the redundant dead integration, and rerun the actual top-level `main.agent` over all 73 replay selection observations. Require exactly one semantic delta at step 158 and parity everywhere else before any native game.
+
+**Commit SHA**
+
+Pending corrected end-to-end integration and focused commit.
+
+## 2026-08-09T17:13:27+05:30 - Step 14: Correct Guard Entry Point And Top-Level Replay Audit
+
+**Objective/question**
+
+Correct the rejected dead integration without broadening the guard, then test the real package entry point rather than a helper.
+
+**Evidence inspected**
+
+- Implementation-agent report for the rebuilt scratch candidate.
+- Fresh isolated top-level `main.agent` candidate/control replay audit over every NNMax selection observation in Dragapult replay `91269364`.
+- Generated receipt and qualified-control tarball hash check.
+
+**Important commands/inspection**
+
+The implementation agent rebuilt the scratch candidate, ran the fixture checker, Ruff, `py_compile`, `NativeRulePolicy` construction, and the strengthened `check_guard.py` full-package audit. No native game was run. Lead independent rerun and source-diff audit are the immediate next step.
+
+**Test/experiment size**
+
+- 73 replay selection observations.
+- Fresh isolated top-level candidate and control process per observation.
+- Focused guard matrix plus explicit step-123 negative boundary.
+
+**Results and metrics**
+
+- Agent-reported top-level exceptions: `0`.
+- Semantic parity: `72/73`; sole delta step `158`.
+- Step 158 candidate: Munkidori serial 77 at semantic option `[1]`; control: option `[4]` fresh Impidimp.
+- Step 123: guard abstains and candidate matches control.
+- Guard activation list: `[158]`; fix-minus-break `1-0` against the declared replay-state hypothesis.
+- Candidate `human_controller.py`: 24,546 bytes, SHA-256 `566710fecf9e88f22cd3bdd082115323b6f0d8efaa5f9cf371433f08f29b227b`.
+- Candidate `main.py`: 10,469 bytes, SHA-256 `2c45168eada3aad6fa7b959df23e74b3f188ff4459a0f8cca6e069a8ef779775`.
+- Candidate deck: 252 bytes, SHA-256 `92b92bac9f9163ecff933b3dc39294d2cc154c8684f3c8497877661419ebc59d`.
+- Receipt SHA-256 `c6fc4dad6c82ab25adb526042b0ad7cb690bd043e52059c655460f3f7253ff35`.
+- Qualified control tarball reportedly remains SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`.
+
+**Failures / invalid actions / fallbacks**
+
+- The rejected first draft is retained as `failed_iteration_dead_integration.json` rather than erased.
+- Corrected replay audit reports zero exceptions. Native invalid/fallback/post-terminal counts are not yet available because native execution remains intentionally blocked pending independent audit.
+
+**Interpretation**
+
+Moving the one guarded decision to the authoritative `choose()` entry point repairs the test-boundary defect while keeping the intervention narrow. Replay parity establishes mechanical targeting only; it still does not establish that the alternative wins games.
+
+**Decision**
+
+`PROVISIONAL END-TO-END MECHANICS PASS / INDEPENDENT AUDIT PENDING`; `NO NATIVE STRENGTH VERDICT`; `NO LIVE AUTHORITY`.
+
+**Reason**
+
+The reported package behavior now matches the declared intervention exactly, but lead verification is required before committing or spending native evaluation time.
+
+**Files created/changed**
+
+- Updated `.chatgpt/tmp/grim-promotion-liability/build_candidate.py`.
+- Updated `.chatgpt/tmp/grim-promotion-liability/check_guard.py`.
+- Added `.chatgpt/tmp/grim-promotion-liability/failed_iteration_dead_integration.json`.
+- Regenerated private scratch candidate under `.chatgpt/tmp/grim-promotion-liability/arena-agents/grim-promotion-dragapult/`.
+- Updated `ptcg-rl/progress.md`.
+- No qualified package, live submission, production source, deck, model, or replay body changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/grim-promotion-liability/`
+- Qualified control `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`.
+
+**Next action**
+
+Lead-audit the exact builder/checker diff and rerun all focused checks, including top-level replay parity and hashes. Commit only the reproducible scripts, retained failed-iteration receipt, and `progress.md` if the audit passes.
+
+**Commit SHA**
+
+Pending independent audit and focused commit.
+
+## 2026-08-09T17:20:55+05:30 - Step 15: Independent Integration Audit Finds Stateful Boundary Gap
+
+**Objective/question**
+
+Independently verify that the corrected helper is the only runtime delta, that the top-level check is real, and that the builder is minimal and preserves package state semantics.
+
+**Evidence inspected**
+
+- Byte diff between untouched `grim-punk-floor4/human_controller.py` and the generated candidate.
+- Builder/checker source, sanitized failed-iteration receipt, generated receipt, candidate tree, card metadata, replay-state facts, and qualified tarball identity.
+- Independent rerun of the 17-case matrix and 73-observation fresh-isolated top-level audit.
+- `human_memory.update()` and its original call order in `human_controller.choose()`.
+
+**Important commands/inspection**
+
+Read-only source diffs, metadata lookup, file enumeration/hash recomputation, fixture check, and `check_guard.py` rerun. No native game, network call, staging, commit, or artifact mutation occurred.
+
+**Test/experiment size**
+
+- Generated candidate tree: 189 files / approximately 8.3 MiB, inspected only to delimit commit scope.
+- Guard matrix: 17 fresh processes.
+- Fresh-isolated replay comparison: 73 selection observations, candidate and control.
+- Stateful chronological replay comparison: not yet present; now required before native execution.
+
+**Results and metrics**
+
+- Independent fresh-isolated audit reproduces zero exceptions, semantic parity `72/73`, sole step-158 activation, and step-123 abstention.
+- Runtime diff contains only the guard helper plus one `choose()` call; `_direct_selection` has no remaining hook.
+- Card facts independently match: Dragapult 121, Jet Headbutt 70 for one Colorless, Phantom Dive 200, Froslass checkup damage to Ability Pokémon on both sides, Munkidori max HP 110, and exact replay energies Psychic 5 plus Fire 2.
+- Generated receipt hashes match; qualified tarball remains SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`.
+- Independent audit found a redundant builder insert-then-remove sequence that has no runtime effect but is not acceptable final reproducible logic.
+- Lead audit found the more important state-boundary defect: the guard runs before `hm.update(obs)` and returns early on activation. The original controller updates public-state memory on every selection. Fresh-process-per-observation testing cannot prove the absence of downstream state effects.
+
+**Failures / invalid actions / fallbacks**
+
+- Builder minimality failure: one redundant no-op sequence.
+- Stateful regression evidence missing: current top-level test resets the process for every observation.
+- Native invalid/fallback/post-terminal counts remain unclaimed because the screen is still correctly blocked.
+
+**Interpretation**
+
+The fresh top-level result is genuine but insufficient for a stateful controller. The smallest correct integration must preserve the original memory update before returning the guarded action. A single-process chronological replay regression is the cheapest check for unintended downstream controller-state changes.
+
+**Decision**
+
+`BLOCK COMMIT AND NATIVE EXECUTION PENDING MEMORY-PRESERVING FIX`; `KEEP HYPOTHESIS ALIVE`.
+
+**Reason**
+
+One skipped state update can broaden a nominally one-decision ablation into later decisions. Removing that confound is both smaller and safer than attempting to diagnose it after outcome games.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md` only during the lead audit.
+- Scratch builder/checker/candidate remain uncommitted and are being corrected by the implementation agent.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/grim-promotion-liability/`
+- Base source `.chatgpt/tmp/grim-punk-tuning/arena-agents/grim-punk-floor4/`.
+
+**Next action**
+
+Move the guard call after the original memory update, remove the builder no-op and unnecessary tie-break helper, add a chronological one-process replay audit alongside the isolated audit, then rerun all checks and hashes.
+
+**Commit SHA**
+
+Pending corrected stateful integration and focused commit.
+
+## 2026-08-09T17:24:39+05:30 - Step 16: Third Mutable Kaggle Refresh
+
+**Objective/question**
+
+Refresh live Grim and current ladder evidence while the local integration correction proceeds, without downloading another replay or mutating Kaggle.
+
+**Evidence inspected**
+
+- Authenticated competition metadata, current top-20 leaderboard, NNMax submission history/active slots, full public episode metadata for `55372188`, and public Majkel episode metadata for `55333348`.
+
+**Important read-only calls**
+
+The NVIDIA Kaggle skill and authenticated read-only competition/leaderboard/submission/episode endpoints were used. No benchmark-task tool, replay-body download, session, upload, submission, or external mutation occurred.
+
+**Test/inspection size**
+
+- Leaderboard top 20.
+- Grim: 36 public episodes plus 1 validation.
+- Majkel scoring submission: 202 public episodes plus 1 validation.
+
+**Results and metrics**
+
+- Snapshot UTC `2026-08-09T11:53:59.100Z`.
+- Competition deadline remains `2026-08-16T23:59:00Z`; new-entrant deadline `2026-08-09T23:59:00Z`; maximum 5 submissions/day; 6,642 teams.
+- Grim `55372188`: `COMPLETE`, public score `800.5`, public W/D/L `19/0/17` over 36 games. This is down from `814.0` at `19/0/15`.
+- New loss `91299777` at `11:00:02Z` versus Remielle submission `55373723`.
+- New loss and latest episode `91304959` at `11:24:02Z` versus Voyager submission `55376362`.
+- The two new episode bodies were not downloaded. These exact IDs are the next candidates for a separately capped retrieval after the current integration milestone.
+- NNMax active agents remain Grim `55372188` at `800.5` and Lucario canary `55356773` at `656.7`; current rank field `925` is mutable.
+- Majkel `55333348` remains `1230.1`, 202 public games, W/D/L `116/0/86`, latest episode `91289085`. No new public game appeared since the prior snapshot.
+- Current leaderboard top five: Majkel1337 `1230.1`, AlphaStarmie `1174.3`, James/Henry `1167.9`, palsystem `1159.4`, MissingNo. `1157.2`.
+
+**Failures / invalid actions / fallbacks**
+
+- Direct private metadata access for the non-owned Majkel submission remained permission-restricted; public leaderboard/episode endpoints supplied the required facts.
+- No local game actions or external mutations occurred.
+
+**Interpretation**
+
+Grim's live evidence continues to weaken and is nowhere near the target. This increases the value of concrete new-loss diagnosis, but score pressure does not justify bypassing the guard's stateful integration checks or spending a live slot on an unqualified branch.
+
+**Decision**
+
+`KEEP GRIM ACTIVE AS ONLY QUALIFIED CONTROL`; `NO LIVE REPLACEMENT`; `QUEUE TWO NEW LOSS IDS FOR LATER CAPPED AUDIT`.
+
+**Reason**
+
+No stronger qualified candidate exists. The two new losses are more actionable than the aggregate rating, but their replay bodies must be acquired under a new explicit cap after the bounded current milestone.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md` only.
+- No replay, source, package, submission, model, or external object changed.
+
+**Artifact paths**
+
+- Live submission `55372188`; queued episode IDs `91299777` and `91304959`.
+
+**Next action**
+
+Finish the memory-preserving guard integration and stateful chronological replay check. Then commit that bounded milestone before any capped new-loss retrieval.
+
+**Commit SHA**
+
+Pending current guard-integration milestone commit.
+
+## 2026-08-09T17:29:33+05:30 - Step 17: Memory-Preserving Guard Build And Stateful Replay Check
+
+**Objective/question**
+
+Remove the remaining builder/state confounds and demonstrate that the one-decision guard does not create later controller differences on the recorded control trajectory.
+
+**Evidence inspected**
+
+- Second corrected scratch builder/candidate/checker report.
+- Fresh-isolated and one-process chronological top-level `main.agent` comparisons.
+- Final candidate receipt and qualified-tar hash check.
+
+**Important commands/inspection**
+
+The implementation agent rebuilt the scratch candidate, ran the fixture checker, Ruff, `py_compile`, `NativeRulePolicy` construction, the existing isolated replay audit, and a new persistent-process replay audit with startup/deck callback. No native game was run. Final independent rerun/source audit is now in progress.
+
+**Test/experiment size**
+
+- Isolated comparison: 73 selection observations, fresh process per observation/package.
+- Stateful comparison: one fresh persistent process per package, startup callback plus all 73 selection observations in chronological order.
+- Focused guard matrix and exact step-123 negative boundary retained.
+
+**Results and metrics**
+
+- Builder no-op removed; `_semantic_value` tie-break abstraction removed.
+- `human_controller.choose()` now executes the existing `hm.update(obs)` before the sole guard early return.
+- Agent-reported isolated audit: zero exceptions, `72/73` semantic matches, sole delta step 158.
+- Agent-reported stateful recorded-control-trajectory audit: zero exceptions, `72/73` semantic matches, changed steps exactly `[158]`; startup/deck callback executed.
+- This is regression evidence only, not a claim about the counterfactual post-step-158 trajectory or game outcome.
+- Final candidate `human_controller.py`: 24,090 bytes, SHA-256 `77801996e2a50b947f5d717d6c4d3af2de3be0c64bfc4dcc729704c00dc2dc1b`.
+- `main.py`: 10,469 bytes, SHA-256 `2c45168eada3aad6fa7b959df23e74b3f188ff4459a0f8cca6e069a8ef779775`.
+- Deck: 252 bytes, SHA-256 `92b92bac9f9163ecff933b3dc39294d2cc154c8684f3c8497877661419ebc59d`.
+- Receipt SHA-256 `17139708d6cbb97e3cce32fe024920d59425e9892520737ba80bf4aa0ef7543a`.
+- Qualified tarball reportedly remains `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`.
+
+**Failures / invalid actions / fallbacks**
+
+- No reported test/replay exceptions after correction.
+- Native invalid/fallback/post-terminal counts remain unclaimed because no native game has run.
+- Final independent audit confirmed the chronological check uses exactly two persistent workers, each with a startup/deck callback and all 73 selection observations; hashes match. No native reliability counters are claimed yet.
+- Lead rerun after the environment handoff independently reproduced both replay PASS lines and the 17-process matrix; Ruff and `py_compile` also pass. The interrupted pre-handoff checker result was not inferred or counted.
+
+**Interpretation**
+
+The implementation now preserves the original state update and removes unnecessary builder logic. If independently reproduced, it is mechanically narrow enough to commit and advance to the two-game Stage A native smoke. Replay parity still grants no outcome authority.
+
+**Decision**
+
+`STATEFUL REPLAY MECHANICS PASS`; `AUTHORIZE TWO-GAME STAGE A NATIVE SMOKE`; `NO NATIVE STRENGTH VERDICT`; `NO LIVE AUTHORITY`.
+
+**Reason**
+
+Both test modes independently reproduce exactly the intended single semantic change, the known state-update confound is removed, and the generated package/qualified-control hashes match.
+
+**Files created/changed**
+
+- Updated scratch builder/checker and regenerated private candidate under `.chatgpt/tmp/grim-promotion-liability/`.
+- Updated `ptcg-rl/progress.md`.
+- No qualified package, live submission, production source, deck, replay body, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/grim-promotion-liability/`.
+
+**Next action**
+
+Commit only `build_candidate.py`, `check_guard.py`, `failed_iteration_dead_integration.json`, and `progress.md`. Then run exactly one native game in each candidate policy slot versus `dragapult-ex`, stopping on any reliability defect.
+
+**Commit SHA**
+
+Pending final independent audit and focused commit.
