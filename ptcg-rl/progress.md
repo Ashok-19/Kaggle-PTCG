@@ -2,7 +2,7 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-10T04:44:18+05:30
+Updated: 2026-08-10T04:45:42+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, deadline-refresh verified `COMPLETE` at public score `811.4`. It has 45 public games, 24 wins and 21 losses, plus one successful validation episode. It remains 188.6 Elo below 1000 and is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
@@ -10,10 +10,20 @@ Updated: 2026-08-10T04:44:18+05:30
 - Active hypothesis: the Public Route Transducer remains a ceiling-gate hypothesis only. Collector and config-bound analyzer mechanics now have independent static `PASS`; no native evidence exists under the final hashes yet. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
 - Most recent decisive evidence: the independent Scale256 test killed the architecture. Despite `0.648` pairwise concordance, the selected head chose actions `-0.15104` worse than Grim fallback with 95% CI `[-0.28125,-0.02604]`, and catastrophically regressed Dragapult, Grim mirror, and Alakazam. No checkpoint was emitted.
 - Exact next task: inspect the scoped diff, stage only collector/schema/analyzer/tests/progress, commit the mechanics, update the untracked dry config source commit to new HEAD, refreeze all writers, and run exactly one complete-root native preflight.
-- Latest session commit: `bff8de8` (`docs: hand off failed qualification sprint`). Latest code milestone is `04a2247` (`exp: reject frozen outcome ranker at scale256`), preserving the larger collector mechanics, fresh trainer/tests, adapter seam, and decisive negative result. Gate-1/Scale64 source is `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`.
-- Uncommitted session work: `progress.md`; a statically passing `+924/-57` collector plus schema and untracked dry config; a 487-line actual-`.labels` analyzer plus 150-line tests reported passing five synthetic tests; obsolete rejected parallel-schema scratch files; and stale private preflight artifacts. Nothing is staged. Generated/private runs and all unrelated dirty state remain unstaged and preserved.
+- Latest session/code commit: `0b66c158d80909cd73df0706cebd0e504c95065a` (`feat: add public opponent-response ceiling gate`), containing the independently passed collector, restricted sidecar schema, config-bound analyzer, ten tests, and journal through static qualification. Prior handoff is `bff8de8`; rejected Scale256 milestone `04a2247`; Gate-1/Scale64 source `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`.
+- Uncommitted session work: this post-commit `progress.md` update; the intentionally untracked dry config still bound to old HEAD `bff8de8`; obsolete rejected parallel-schema scratch files; and stale private preflight artifacts. Nothing is staged. Generated/private runs and all unrelated dirty state remain unstaged and preserved.
 
-RESUME HERE: commit the independently passing mechanics, update dry config source commit, and run one fresh complete-root preflight. Latest commit is `bff8de8`; no new candidate or live submission exists. Do not call this RL.
+RESUME HERE: update the private dry config source commit to latest HEAD, freeze writers, and run one fresh complete-root preflight. Mechanics commit is `0b66c158d80909cd73df0706cebd0e504c95065a`; no new candidate or live submission exists. Do not call this RL.
+
+## 2026-08-10T04:45:42+05:30 - PRT Mechanics Milestone Committed
+
+- Objective: preserve the independently audited collector/analyzer boundary before native execution.
+- Commit: `0b66c158d80909cd73df0706cebd0e504c95065a` (`feat: add public opponent-response ceiling gate`).
+- Explicit committed files: `.chatgpt/tmp/counterfactual-q/collector.py`; `.chatgpt/tmp/outcome-ranker/opponent_transition_label_v1.schema.json`; `.chatgpt/tmp/opponent-route/ceiling_analyzer.py`; `.chatgpt/tmp/opponent-route/test_ceiling_analyzer.py`; `progress.md`.
+- Staged-diff audit: exactly five intended files, `2,208` insertions/`64` deletions; cached whitespace check passed. The private dry config, generated runs, obsolete parallel-schema scratch, restricted artifacts, and all unrelated dirty files were excluded.
+- Verification bound to commit: root Ruff/`py_compile`/ten Pytests, collector self-check, unauthorized Scale64 dry-run, and independent final audit all passed; zero native launches.
+- Decision: `COMMIT MECHANICS / AUTHORIZE ONE PREFLIGHT`. This commit is not a candidate or strength claim.
+- Next action: make this journal SHA update durable, update the untracked dry config to the new HEAD, then freeze all writers and run exactly one complete-root preflight.
 
 ## 2026-08-10T04:44:18+05:30 - PRT Collector and Analyzer Mechanics Independently Passed
 
