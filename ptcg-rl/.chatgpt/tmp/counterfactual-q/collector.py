@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 from dataclasses import fields, is_dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 from typing import Any
 
 
@@ -36,8 +37,10 @@ DEFAULT_FIXTURE = Path(__file__).resolve().parent / "probe.json"
 OUT = Path(__file__).resolve().parent / "gate1-dry-run.json"
 PREFLIGHT_OUT = Path(__file__).resolve().parent / "gate1-preflight-execution.json"
 DATASET_SCHEMA = ROOT / ".chatgpt/tmp/outcome-ranker/counterfactual_action_dataset_v1.schema.json"
+OPPONENT_LABEL_SCHEMA = ROOT / ".chatgpt/tmp/outcome-ranker/opponent_transition_label_v1.schema.json"
 PROJECTOR = ROOT / ".chatgpt/tmp/outcome-ranker/project_public_state.py"
 SAMPLE = ROOT / "private/assets/official/sample_submission/sample_submission"
+SEMANTIC_HAND_ZONE = 2
 MAX_WORKER_STEPS = 20_000
 MAX_WORKER_SECONDS = 180.0
 MAX_CHILD_STEPS = 20_000
@@ -50,6 +53,7 @@ MAX_IPC_BYTES = 256 * 1024
 MAX_DIAGNOSTIC_BYTES = 4_000
 SCALE64_PROFILE = "GATE1_SCALE64_V1"
 SCALE256_PROFILE = "GATE1_SCALE256_V1"
+OPPONENT_TRANSITION_PROFILE = "GATE1_SCALE64_OPPONENT_TRANSITION_V1"
 SCALE64_ANCHOR_ALLOCATION = {
     "dragapult-ex": 11,
     "iono": 11,
@@ -451,7 +455,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
     if not isinstance(state_schedule, dict):
         raise ScheduleError("state_schedule must be an object")
     profile = state_schedule.get("profile", "GATE1_V1")
-    if profile not in {"GATE1_V1", SCALE64_PROFILE, SCALE256_PROFILE}:
+    if profile not in {"GATE1_V1", SCALE64_PROFILE, SCALE256_PROFILE, OPPONENT_TRANSITION_PROFILE}:
         raise ScheduleError(f"unsupported state schedule profile: {profile}")
     if state_schedule.get("selection_type_required") != "MAIN":
         raise ScheduleError("Gate-1 root selection_type_required must be MAIN")
@@ -490,7 +494,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         raise ScheduleError("common hidden particles are required for action comparison")
     anchor_cells = state_schedule.get("anchor_cells")
     expected_anchor_ids = set(anchor_ids)
-    scaled_profile = profile in {SCALE64_PROFILE, SCALE256_PROFILE}
+    scaled_profile = profile in {SCALE64_PROFILE, SCALE256_PROFILE, OPPONENT_TRANSITION_PROFILE}
     expected_cell_count = 6 if scaled_profile else 3
     if not isinstance(anchor_cells, list) or len(anchor_cells) != expected_cell_count:
         raise ScheduleError(f"state_schedule must contain exactly {expected_cell_count} anchor cells")
@@ -527,14 +531,14 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
                 raise ScheduleError(f"candidate windows do not cover {cell['anchor']} state count")
     if set(cell_ids) != expected_anchor_ids or cell_states != states:
         raise ScheduleError("anchor-cell states must positively split root_state_count across all anchors")
-    if profile in {SCALE64_PROFILE, SCALE256_PROFILE}:
-        expected_states = 64 if profile == SCALE64_PROFILE else 256
-        expected_cap = 2560 if profile == SCALE64_PROFILE else 10240
-        expected_wall = 600 if profile == SCALE64_PROFILE else 1800
+    if profile in {SCALE64_PROFILE, SCALE256_PROFILE, OPPONENT_TRANSITION_PROFILE}:
+        expected_states = 256 if profile == SCALE256_PROFILE else 64
+        expected_cap = 10240 if profile == SCALE256_PROFILE else 2560
+        expected_wall = 1800 if profile == SCALE256_PROFILE else 600
         expected_allocation = (
-            SCALE64_ANCHOR_ALLOCATION if profile == SCALE64_PROFILE else SCALE256_ANCHOR_ALLOCATION
+            SCALE256_ANCHOR_ALLOCATION if profile == SCALE256_PROFILE else SCALE64_ANCHOR_ALLOCATION
         )
-        profile_name = "scale64" if profile == SCALE64_PROFILE else "scale256"
+        profile_name = "scale256" if profile == SCALE256_PROFILE else "scale64"
         if states != expected_states or replicas != 4 or particles != 4 or max_actions != 10 or cap != expected_cap:
             raise ScheduleError(
                 f"{profile_name} requires exactly {expected_states} roots, 4 particles, "
@@ -546,8 +550,12 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
             raise ScheduleError(f"{profile_name} learner slots must alternate independently within each anchor family")
         if state_schedule.get("max_wall_seconds") != expected_wall:
             raise ScheduleError(f"{profile_name} wall cap must be exactly {expected_wall} seconds")
-        if profile == SCALE256_PROFILE and max_root_attempts != 8:
-            raise ScheduleError("scale256 root acquisition retry cap must be exactly 8")
+        if profile in {SCALE256_PROFILE, OPPONENT_TRANSITION_PROFILE} and max_root_attempts != 8:
+            raise ScheduleError("this profile root acquisition retry cap must be exactly 8")
+        if profile == OPPONENT_TRANSITION_PROFILE and (
+            authorized is not False or mode != "DRY_RUN_ONLY"
+        ):
+            raise ScheduleError("opponent-transition ceiling is declaration-only; native full mode is refused")
         if state_schedule.get("root_game_seed_policy") != (
             "INDEPENDENT_ROOT_LABELS_NATIVE_START_SYSTEM_ENTROPY_UNSEEDED"
         ):
@@ -566,6 +574,22 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         ):
             raise ScheduleError(f"{profile_name} BC trunk binding differs from the pinned epoch-4 receipt")
         check_hash(bc_binding["path"], bc_binding["checkpoint_sha256"])
+        if profile == OPPONENT_TRANSITION_PROFILE:
+            projector_binding = config.get("assets", {}).get("public_projector")
+            if (
+                not isinstance(projector_binding, dict)
+                or projector_binding.get("path") != str(PROJECTOR.relative_to(ROOT))
+                or not isinstance(projector_binding.get("sha256"), str)
+            ):
+                raise ScheduleError("opponent-transition profile must bind the public G2 projector")
+            check_hash(projector_binding["path"], projector_binding["sha256"])
+            label_schema = config.get("opponent_transition_label_schema")
+            if not isinstance(label_schema, dict):
+                raise ScheduleError("opponent-transition profile must bind its restricted label schema")
+            check_hash(label_schema["path"], label_schema["sha256"])
+            label_schema_value = load_json(resolve_repo_path(label_schema["path"]))
+            if label_schema_value.get("title") != "Restricted first opponent transition labels v1":
+                raise ScheduleError("restricted label schema title is not bound")
     else:
         if states > 8:
             raise ScheduleError("Gate-1 root bound exceeds the <=8 bound")
@@ -605,6 +629,14 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         "assignment_plan": assignments,
         "fixture": validate_probe_fixture(fixture, cap),
         "public_private_boundary": "PASS",
+        "opponent_transition_label_schema": (
+            config.get("opponent_transition_label_schema")
+            if profile == OPPONENT_TRANSITION_PROFILE else None
+        ),
+        "public_projector": (
+            config.get("assets", {}).get("public_projector")
+            if profile == OPPONENT_TRANSITION_PROFILE else None
+        ),
         "no_native_continuations_run": True,
     }
 
@@ -648,6 +680,123 @@ def _request_record(request: Any) -> dict[str, Any]:
         "ordering": request.ordering,
         "options": [_option_record(option) for option in request.options],
     }
+
+
+def _entity_by_key(observation: Any) -> dict[str, Any]:
+    return {
+        entity.entity_key: entity
+        for entity in getattr(observation, "entities", ())
+        if getattr(entity, "entity_key", None)
+    }
+
+
+def _opponent_endpoint_key(
+    entity: Any | None,
+    *,
+    path_role: str,
+    learner_slot: int,
+    entities: dict[str, Any],
+    seen: set[str] | None = None,
+) -> dict[str, Any] | None:
+    if entity is None:
+        return None
+    entity_key = getattr(entity, "entity_key", None)
+    if not isinstance(entity_key, str):
+        raise ScheduleError("opponent semantic endpoint has no entity key")
+    seen = set() if seen is None else seen
+    if entity_key in seen:
+        raise ScheduleError("opponent semantic endpoint parent path contains a cycle")
+    seen.add(entity_key)
+    # Hand copies deliberately pool across transport serials and positions.
+    if int(entity.zone) == SEMANTIC_HAND_ZONE:
+        if entity.card_id is None:
+            raise ScheduleError("visible opponent hand option has no factual card_id")
+        return {
+            "visibility": "HIDDEN_HAND_COPY_POOL",
+            "owner_role": "LEARNER" if int(entity.owner) == learner_slot else "OPPONENT",
+            "zone": int(entity.zone),
+            "card_id": entity.card_id,
+            "path_role": path_role,
+        }
+    parent = entities.get(entity.parent_entity_key) if entity.parent_entity_key else None
+    return {
+        "visibility": "PUBLIC_ENDPOINT",
+        "owner_role": "LEARNER" if int(entity.owner) == learner_slot else "OPPONENT",
+        "zone": int(entity.zone),
+        "position": entity.position,
+        "card_id": entity.card_id,
+        "path_role": path_role,
+        "parent_path": _opponent_endpoint_key(
+            parent,
+            path_role="PARENT",
+            learner_slot=learner_slot,
+            entities=entities,
+            seen=seen,
+        ) if parent is not None else None,
+    }
+
+
+def _opponent_semantic_equivalence_key(
+    request: Any,
+    option: Any,
+    observation: Any,
+    learner_slot: int,
+) -> str:
+    entities = _entity_by_key(observation)
+    source = entities.get(getattr(option, "source_entity_key", None))
+    target = entities.get(getattr(option, "target_entity_key", None))
+    if getattr(option, "source_kind", "NONE") == "ENTITY" and source is None:
+        raise ScheduleError("opponent semantic source endpoint is unresolved")
+    if getattr(option, "target_kind", "NONE") == "ENTITY" and target is None:
+        raise ScheduleError("opponent semantic target endpoint is unresolved")
+    material = {
+        "request": {
+            "selection_type": int(request.selection_type),
+            "selection_context": int(request.selection_context),
+            "min_count": int(request.min_count),
+            "max_count": int(request.max_count),
+            "ordering": request.ordering,
+        },
+        "option": {
+            "option_type": int(option.option_type),
+            "choice_role": option.choice_role,
+            "number": option.number,
+            "count": option.count,
+            "attack_id": option.attack_id,
+            "special_condition_type": option.special_condition_type,
+            "source": _opponent_endpoint_key(
+                source, path_role="SOURCE", learner_slot=learner_slot, entities=entities,
+            ),
+            "target": _opponent_endpoint_key(
+                target, path_role="TARGET", learner_slot=learner_slot, entities=entities,
+            ),
+            "source_kind": option.source_kind,
+            "target_kind": option.target_kind,
+            "is_stop": False,
+        },
+    }
+    return sha256_value(material)
+
+
+def _opponent_option_record(
+    request: Any, option: Any, observation: Any, learner_slot: int,
+) -> dict[str, Any]:
+    value = _option_record(option)
+    value["original_index"] = int(option.original_index)
+    value["semantic_equivalence_key"] = _opponent_semantic_equivalence_key(
+        request, option, observation, learner_slot,
+    )
+    return value
+
+
+def _opponent_request_record(request: Any, observation: Any, learner_slot: int) -> dict[str, Any]:
+    value = _request_record(request)
+    value["option_count"] = len(request.options)
+    value["options"] = [
+        _opponent_option_record(request, option, observation, learner_slot)
+        for option in request.options
+    ]
+    return value
 
 
 def _public_tensor_from_projection(projection: dict[str, Any], model_schema_sha256: str) -> dict[str, Any]:
@@ -700,6 +849,86 @@ def _public_tensor_from_projection(projection: dict[str, Any], model_schema_sha2
         "raw_observation_retained": False,
         "forbidden_actor_features_absent": True,
         "prefix_provenance": prefix_provenance,
+    }
+
+
+def _root_action_equivalence_keys(
+    runtime: dict[str, Any],
+    public_tensor: dict[str, Any],
+    request: Any,
+    actions: list[tuple[int, ...]],
+) -> list[dict[str, str]]:
+    projected = runtime["projected_decision"](public_tensor["projected_decision"])
+    request_record = _request_record(request)
+    options = request_record["options"]
+    keys = []
+    for action in actions:
+        if len(action) != 1:
+            raise ScheduleError("semantic equivalence keys require singleton root actions")
+        index = int(action[0])
+        keys.append({
+            "action_id": _action_id(action, request),
+            "semantic_equivalence_key": runtime["semantic_equivalence_key"](
+                request_record, options, projected.model, index,
+            ),
+        })
+    return keys
+
+
+def _public_projection_binding(
+    dataset: dict[str, Any], projector_binding: dict[str, Any],
+) -> dict[str, Any]:
+    if not isinstance(projector_binding, dict):
+        raise ScheduleError("public projector binding is missing")
+    projector_path = resolve_repo_path(str(projector_binding.get("path", "")))
+    if not projector_path.is_file() or sha256_file(projector_path) != projector_binding.get("sha256"):
+        raise ScheduleError("public projector binding does not match the loaded projector")
+    groups = dataset.get("state_groups")
+    if not isinstance(groups, list) or not groups:
+        raise ScheduleError("dataset has no state groups for projection binding")
+    bindings = []
+    model_schema = None
+    for group in groups:
+        tensor = group.get("public_tensor")
+        if not isinstance(tensor, dict) or not isinstance(tensor.get("projected_decision"), dict):
+            raise ScheduleError("dataset group has no projected public decision")
+        provenance = tensor.get("prefix_provenance")
+        if not isinstance(provenance, dict) or not isinstance(provenance.get("prefix_digest"), str):
+            raise ScheduleError("dataset group has no public history digest")
+        history_tokens = tensor.get("history_tokens")
+        if (
+            not isinstance(history_tokens, list)
+            or len(history_tokens) != 1
+            or not isinstance(history_tokens[0], dict)
+            or history_tokens[0].get("prefix_digest") != provenance["prefix_digest"]
+        ):
+            raise ScheduleError("dataset history token does not match public prefix provenance")
+        current_schema = tensor.get("model_schema_sha256")
+        if not isinstance(current_schema, str):
+            raise ScheduleError("dataset group has no model schema binding")
+        if model_schema is None:
+            model_schema = current_schema
+        elif model_schema != current_schema:
+            raise ScheduleError("dataset groups use different public model schemas")
+        bindings.append({
+            "state_group_id": group.get("state_group_id"),
+            "public_state_sha256": group.get("public_state_sha256"),
+            "public_projection_sha256": sha256_value(tensor["projected_decision"]),
+            "history_prefix_digest": provenance["prefix_digest"],
+            "history_tokens_sha256": sha256_value(history_tokens),
+        })
+    if any(
+        not isinstance(item["state_group_id"], str)
+        or not isinstance(item["public_state_sha256"], str)
+        or len(item["public_state_sha256"]) != 64
+        for item in bindings
+    ):
+        raise ScheduleError("dataset projection binding contains malformed state identity")
+    return {
+        "projector_path": str(projector_path.relative_to(ROOT)),
+        "projector_sha256": projector_binding["sha256"],
+        "model_schema_sha256": model_schema,
+        "groups": bindings,
     }
 
 
@@ -767,6 +996,8 @@ def _runtime_imports() -> dict[str, Any]:
             "ptcg_rl.g2.checkpoint", fromlist=["load_checkpoint_package"]
         ).load_checkpoint_package,
         "load_gate1_trunk": ranker_module.load_gate1_trunk,
+        "projected_decision": ranker_module._projected_decision,
+        "semantic_equivalence_key": ranker_module.semantic_equivalence_key,
         "state_dict_sha256": state_dict_sha256,
     }
 
@@ -867,6 +1098,44 @@ def _public_raw(raw: dict[str, Any]) -> dict[str, Any]:
     return copied
 
 
+def _new_opponent_transition_label(learner_slot: int) -> dict[str, Any]:
+    return {
+        "status": "MISSING_OR_ERROR",
+        "opponent_player": 1 - learner_slot,
+        "first_opponent_request": None,
+        "chosen_action": None,
+        "error": {"type": "NotReached", "message": "first opponent request not reached yet"},
+    }
+
+
+def _semantic_action_record(
+    request: Any, submitted: tuple[int, ...], observation: Any, learner_slot: int,
+) -> dict[str, Any]:
+    options = {int(option.original_index): option for option in request.options}
+    if any(value not in options for value in submitted):
+        raise ScheduleError("opponent action references an unknown semantic option")
+    semantic_path = [
+        _opponent_option_record(request, options[value], observation, learner_slot)
+        for value in submitted
+    ]
+    semantic_keys = [item["semantic_equivalence_key"] for item in semantic_path]
+    action_key = semantic_keys[0] if len(semantic_keys) == 1 else sha256_value({
+        "ordering": request.ordering,
+        "semantic_path": semantic_keys if request.ordering == "ORDERED" else sorted(semantic_keys),
+    })
+    return {
+        "transport_original_indices": list(submitted),
+        "semantic_path": semantic_path,
+        "semantic_equivalence_key": action_key,
+        "semantic_action_fingerprint": sha256_value(semantic_path),
+    }
+
+
+def _set_opponent_transition_error(label: dict[str, Any], error: Exception) -> None:
+    label["status"] = "MISSING_OR_ERROR"
+    label["error"] = {"type": type(error).__name__, "message": str(error)[:500]}
+
+
 def _terminal_record(result: int) -> tuple[dict[str, Any], int]:
     if result not in (0, 1, 2):
         raise ScheduleError(f"continuation ended with nonterminal result {result}")
@@ -898,6 +1167,7 @@ def _child_continuation(
         "post_terminal_actions": 0,
         "continuation_steps": 0,
         "first_opponent_response": None,
+        "opponent_transition": _new_opponent_transition_label(learner_slot),
         "error": None,
     }
     search_end = runtime["search_end"]
@@ -923,6 +1193,10 @@ def _child_continuation(
                 raise ScheduleError("search observation omitted current state")
             result = int(current.result)
             if result in (0, 1, 2):
+                label = record["opponent_transition"]
+                if label["status"] == "MISSING_OR_ERROR":
+                    label["status"] = "TERMINAL_BEFORE_OPPONENT"
+                    label["error"] = None
                 terminal, reward = _terminal_record(result)
                 record.update({
                     "status": "COMPLETE",
@@ -946,7 +1220,12 @@ def _child_continuation(
             if request is None or semantic.terminal_result is not None:
                 raise ScheduleError("search semantic adapter did not return an ongoing request")
             acting_player = int(current.yourIndex)
-            if acting_player != learner_slot and record["first_opponent_response"] is None:
+            label = record["opponent_transition"]
+            first_opponent = acting_player != learner_slot and label["status"] == "MISSING_OR_ERROR"
+            if first_opponent:
+                label["first_opponent_request"] = _opponent_request_record(
+                    request, semantic, learner_slot,
+                )
                 record["first_opponent_response"] = {
                     "acting_player": acting_player,
                     "selection_type": int(request.selection_type),
@@ -954,18 +1233,35 @@ def _child_continuation(
                     "option_count": len(request.options),
                     "request_fingerprint": sha256_value(_request_record(request)),
                 }
+                if (
+                    int(request.selection_type) != 0
+                    or int(request.selection_context) != 0
+                    or int(request.min_count) != 1
+                    or int(request.max_count) != 1
+                ):
+                    label["status"] = "UNSUPPORTED_FIRST_OPPONENT_REQUEST"
+                    label["error"] = None
             policy = policies[acting_player]
             chosen = policy.choose_native(raw, semantic, request)
             submitted = _validate_action(request, chosen)
             search_state = runtime["search_step"](search_state.searchId, list(submitted))
             record["continuation_steps"] += 1
+            if first_opponent:
+                if label["status"] == "MISSING_OR_ERROR":
+                    label["status"] = "OBSERVED"
+                    label["error"] = None
+                    label["chosen_action"] = _semantic_action_record(
+                        request, submitted, semantic, learner_slot,
+                    )
     except (ValueError, IndexError) as error:
+        _set_opponent_transition_error(record["opponent_transition"], error)
         record.update({
             "status": "INVALID",
             "invalid_actions": 1,
             "error": {"type": type(error).__name__, "message": str(error)[:500]},
         })
     except Exception as error:  # child errors must be visible, never a fallback
+        _set_opponent_transition_error(record["opponent_transition"], error)
         record.update({
             "status": "ERROR",
             "error": {"type": type(error).__name__, "message": str(error)[:500]},
@@ -1186,7 +1482,9 @@ def _state_group(
                 "reward_for_actor": item.get("reward_for_actor", 0),
                 "completed": item.get("status") == "COMPLETE",
                 "continuation_steps": int(item.get("continuation_steps", 0)),
-                "first_opponent_response": item.get("first_opponent_response"),
+                # Opponent transition labels are restricted to the sidecar;
+                # the trainable dataset carries no opponent-view response.
+                "first_opponent_response": None,
                 "fallback_used": False,
                 "nonfinite": False,
                 "error": None if item.get("status") == "COMPLETE" else item.get("error"),
@@ -1362,6 +1660,10 @@ def _worker(
             "child_timeouts": 0,
             "continuation_rollouts": 0,
             "parent_valid_steps": 0,
+            "opponent_transition_observed": 0,
+            "opponent_transition_terminal_before_opponent": 0,
+            "opponent_transition_unsupported": 0,
+            "opponent_transition_missing_or_error": 0,
         },
         "limits": {
             "max_worker_steps": MAX_WORKER_STEPS,
@@ -1565,6 +1867,19 @@ def _worker(
         report["counters"]["post_terminal_actions"] = sum(item.get("post_terminal_actions", 0) for item in results)
         report["counters"]["child_crashes"] = sum(item.get("status") == "CRASH" for item in results)
         report["counters"]["child_timeouts"] = sum(item.get("status") == "TIMEOUT" for item in results)
+        transition_status_counts = {
+            "OBSERVED": "opponent_transition_observed",
+            "TERMINAL_BEFORE_OPPONENT": "opponent_transition_terminal_before_opponent",
+            "UNSUPPORTED_FIRST_OPPONENT_REQUEST": "opponent_transition_unsupported",
+            "MISSING_OR_ERROR": "opponent_transition_missing_or_error",
+        }
+        for result in results:
+            counter = transition_status_counts.get(
+                result.get("opponent_transition", {}).get("status")
+            )
+            if counter is None:
+                raise ScheduleError("child emitted unknown opponent transition status")
+            report["counters"][counter] += 1
         report["child_results"] = results
         expected_children = (action_limit or len(root_actions)) * (particle_limit or len(particle_entries))
         if len(results) != expected_children:
@@ -1691,11 +2006,19 @@ def _worker(
                 },
             })
             return 0
+        public_tensor = _public_tensor_from_projection(
+            projection, config["assets"]["model_schema_sha256"],
+        )
+        root_action_equivalence_keys = _root_action_equivalence_keys(
+            runtime, public_tensor, root_request, root_actions,
+        )
         group = _state_group(
             config, root_raw, root_observation, root_request, root_actions,
             baseline_action, results, learner_slot, anchor, episode_id, projection,
             root_id, datetime.now(timezone.utc).isoformat(),
         )
+        for item in root_action_equivalence_keys:
+            item["state_group_id"] = group["state_group_id"]
         if complete_root:
             expected_action_ids = {_action_id(action, root_request) for action in root_actions}
             if len(group["action_aggregates"]) != len(root_actions):
@@ -1763,6 +2086,7 @@ def _worker(
                 "compound_stop_coverage": "PENDING_SEPARATE_MECHANICS_GATE",
                 "coverage_scope": "SINGLE_CHOICE_ONLY; COMPOUND_AND_OPTIONAL_STOP_REQUIRE_SEPARATE_MECHANICS_GATE",
             },
+            "root_action_equivalence_keys": root_action_equivalence_keys,
             "state_group": group,
         })
     except Exception as error:
@@ -1833,7 +2157,245 @@ else {{ process.stdout.write(JSON.stringify(validate.errors)); process.exitCode 
         for replicate in group.get("replicates", []):
             if len(replicate.get("actions", [])) != group.get("legal_action_count"):
                 errors.append("replicate action count mismatch")
+            for action in replicate.get("actions", []):
+                if action.get("first_opponent_response") is not None:
+                    errors.append("opponent response must be emitted only in the restricted sidecar")
     return errors
+
+
+def _validate_opponent_sidecar_shape(value: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    try:
+        import jsonschema
+    except ImportError:
+        script = f"""
+const fs = require('fs');
+const Ajv2020 = require('ajv/dist/2020');
+const schema = JSON.parse(fs.readFileSync({json.dumps(str(OPPONENT_LABEL_SCHEMA))}, 'utf8'));
+const data = JSON.parse(fs.readFileSync(0, 'utf8'));
+const validate = new Ajv2020({{allErrors: true, strict: false}}).compile(schema);
+if (validate(data)) process.stdout.write('[]');
+else {{ process.stdout.write(JSON.stringify(validate.errors)); process.exitCode = 1; }}
+"""
+        try:
+            result = subprocess.run(
+                ["node", "-e", script], cwd=ROOT, input=json.dumps(value),
+                capture_output=True, text=True, timeout=10, check=False,
+            )
+        except (OSError, subprocess.SubprocessError) as error:
+            return [f"restricted label schema validator unavailable: {error}"]
+        if result.returncode:
+            try:
+                node_errors = json.loads(result.stdout)
+                errors.extend(
+                    f"{item.get('instancePath', '$')}: {item.get('message', 'schema error')}"
+                    for item in node_errors
+                )
+            except (TypeError, json.JSONDecodeError):
+                errors.append(f"restricted label Ajv validation failed: {result.stderr[-500:]}")
+    else:
+        schema = load_json(OPPONENT_LABEL_SCHEMA)
+        errors.extend(error.message for error in jsonschema.Draft202012Validator(schema).iter_errors(value))
+
+    forbidden = {
+        "model_input", "public_tensor", "history_tokens", "public_hidden",
+        "opponent_view_observation", "raw_observation", "search_begin_input",
+        "hidden_determinization_output", "determinization", "determinization_seed",
+    }
+
+    def visit(item: Any, path: str = "$") -> None:
+        if isinstance(item, dict):
+            for key, child in item.items():
+                if str(key).lower() in forbidden:
+                    errors.append(f"restricted label firewall forbids {path}.{key}")
+                visit(child, f"{path}.{key}")
+        elif isinstance(item, list):
+            for index, child in enumerate(item):
+                visit(child, f"{path}[{index}]")
+
+    visit(value)
+    labels = value.get("labels", [])
+    projection_binding = value.get("public_projection_binding", {})
+    projection_groups = projection_binding.get("groups", []) if isinstance(projection_binding, dict) else []
+    projection_ids = {item.get("state_group_id") for item in projection_groups}
+    root_keys = value.get("root_action_keys", [])
+    root_key_map = {
+        (item.get("state_group_id"), item.get("action_id")): item.get("semantic_equivalence_key")
+        for item in root_keys
+        if isinstance(item, dict)
+    }
+    if len(root_key_map) != len(root_keys):
+        errors.append("root action equivalence keys contain duplicate joins")
+    for index, label in enumerate(labels):
+        status = label.get("status")
+        request = label.get("first_opponent_request")
+        chosen = label.get("chosen_action")
+        join = (label.get("state_group_id"), label.get("action_id"))
+        if label.get("state_group_id") not in projection_ids:
+            errors.append(f"label {index}: public projection binding misses state group")
+        if root_key_map.get(join) != label.get("root_action_semantic_equivalence_key"):
+            errors.append(f"label {index}: root action equivalence key join mismatch")
+        if status == "OBSERVED":
+            if not request or not chosen:
+                errors.append("label %d: OBSERVED requires request and chosen action" % index)
+            elif (
+                request.get("selection_type") != 0
+                or request.get("selection_context") != 0
+                or request.get("min_count") != 1
+                or request.get("max_count") != 1
+            ):
+                errors.append(f"label {index}: OBSERVED request is not MAIN context0 singleton")
+        elif status == "UNSUPPORTED_FIRST_OPPONENT_REQUEST":
+            if not request or chosen is not None:
+                errors.append(f"label {index}: unsupported request must retain request and no chosen action")
+        elif status == "TERMINAL_BEFORE_OPPONENT":
+            if request is not None or chosen is not None:
+                errors.append(f"label {index}: terminal-before-opponent must have no request/action")
+        elif status == "MISSING_OR_ERROR" and not label.get("error"):
+            errors.append(f"label {index}: missing/error status requires an error record")
+        if request is not None and request.get("option_count") != len(request.get("options", [])):
+            errors.append(f"label {index}: complete opponent legal set count mismatch")
+        if request is not None and any(
+            not isinstance(option.get("semantic_equivalence_key"), str)
+            for option in request.get("options", [])
+        ):
+            errors.append(f"label {index}: opponent legal set lacks canonical equivalence keys")
+        option_by_index = {
+            option.get("original_index"): option
+            for option in request.get("options", [])
+            if isinstance(option, dict) and isinstance(option.get("original_index"), int)
+        } if request is not None else {}
+        if request is not None and len(option_by_index) != len(request.get("options", [])):
+            errors.append(f"label {index}: opponent legal set has duplicate/missing transport indices")
+        if request is not None and chosen is not None:
+            legal_keys = {
+                option.get("semantic_equivalence_key") for option in request.get("options", [])
+            }
+            chosen_keys = {
+                option.get("semantic_equivalence_key") for option in chosen.get("semantic_path", [])
+            }
+            if not chosen_keys <= legal_keys:
+                errors.append(f"label {index}: chosen semantic path is outside retained legal set")
+            if status == "OBSERVED" and (
+                len(chosen_keys) != 1
+                or chosen.get("semantic_equivalence_key") != next(iter(chosen_keys))
+            ):
+                errors.append(f"label {index}: chosen action equivalence key is inconsistent")
+            if status == "OBSERVED":
+                indices = chosen.get("transport_original_indices")
+                if (
+                    not isinstance(indices, list)
+                    or len(indices) != 1
+                    or len(set(indices)) != 1
+                    or not isinstance(indices[0], int)
+                    or indices[0] < 0
+                ):
+                    errors.append(f"label {index}: OBSERVED requires one unique in-range transport index")
+                else:
+                    selected = option_by_index.get(indices[0])
+                    path = chosen.get("semantic_path")
+                    if selected is None:
+                        errors.append(f"label {index}: chosen transport index is outside the retained legal set")
+                    if not isinstance(path, list) or len(path) != 1:
+                        errors.append(f"label {index}: OBSERVED requires exactly one semantic path option")
+                    elif selected is not None:
+                        path_option = path[0]
+                        if path_option.get("semantic_equivalence_key") != selected.get("semantic_equivalence_key"):
+                            errors.append(f"label {index}: chosen canonical key does not match transport option")
+                        if path_option.get("semantic_fingerprint") != selected.get("semantic_fingerprint"):
+                            errors.append(f"label {index}: chosen audit fingerprint does not match transport option")
+                        if chosen.get("semantic_equivalence_key") != selected.get("semantic_equivalence_key"):
+                            errors.append(f"label {index}: chosen action key does not match transport option")
+                        if chosen.get("semantic_action_fingerprint") != sha256_value(path):
+                            errors.append(f"label {index}: chosen action fingerprint was not recomputed from semantic path")
+    return errors
+
+
+def _opponent_labels_for_group(
+    group: dict[str, Any], child_results: list[dict[str, Any]],
+    root_action_keys: list[dict[str, str]],
+) -> list[dict[str, Any]]:
+    action_rows = {
+        (int(replicate["replicate_id"]), action["action_id"]): action
+        for replicate in group.get("replicates", [])
+        for action in replicate.get("actions", [])
+    }
+    root_key_map = {
+        item["action_id"]: item["semantic_equivalence_key"]
+        for item in root_action_keys
+        if item.get("state_group_id") == group["state_group_id"]
+    }
+    labels: list[dict[str, Any]] = []
+    for result in child_results:
+        label = result.get("opponent_transition")
+        if not isinstance(label, dict):
+            label = _new_opponent_transition_label(int(group["root_player"]))
+            label["error"] = {"type": "MissingChildLabel", "message": "worker omitted transition label"}
+        row = action_rows.get((int(result["particle_index"]), result["action_id"]))
+        if row is None:
+            raise ScheduleError("opponent label has no matching dataset branch")
+        root_key = root_key_map.get(result["action_id"])
+        if root_key is None:
+            raise ScheduleError("opponent label has no matching root equivalence key")
+        item = json.loads(json.dumps(label))
+        item.update({
+            "state_group_id": group["state_group_id"],
+            "replicate_id": int(result["particle_index"]),
+            "particle_id": result["particle_id"],
+            "action_id": result["action_id"],
+            "root_player": int(group["root_player"]),
+            "root_action_semantic_fingerprint": row["semantic_action_fingerprint"],
+            "root_action_semantic_equivalence_key": root_key,
+        })
+        labels.append(item)
+    return labels
+
+
+def _build_opponent_sidecar(
+    config: dict[str, Any], dataset: dict[str, Any], dataset_path: Path,
+    config_sha256: str, anchor: dict[str, Any], labels: list[dict[str, Any]],
+    root_action_keys: list[dict[str, str]],
+) -> dict[str, Any]:
+    sidecar = {
+        "schema_version": 1,
+        "sidecar_kind": "RESTRICTED_OPPONENT_TRANSITION_LABELS",
+        "run": {
+            "run_id": dataset["run"]["run_id"],
+            "source_commit": config["source_commit"],
+            "config_sha256": config_sha256,
+            "profile": OPPONENT_TRANSITION_PROFILE,
+        },
+        "dataset_binding": {
+            "dataset_path": str(dataset_path.resolve().relative_to(ROOT)),
+            "dataset_sha256": sha256_file(dataset_path),
+            "state_group_ids": sorted({item["state_group_id"] for item in labels}),
+        },
+        "public_projection_binding": _public_projection_binding(
+            dataset, config["assets"]["public_projector"],
+        ),
+        "root_action_keys": root_action_keys,
+        "provenance": {
+            "anchor_baseline_id": anchor["baseline_id"],
+            "opponent_policy_id": anchor["policy_id"],
+            "opponent_policy_sha256": anchor["receipt_sha256"],
+            "opponent_deck_sha256": anchor["deck_sha256"],
+            "split_role": "LABEL_AUDIT_METADATA_ONLY",
+        },
+        "firewall": {
+            "consumer": "LABEL_AUDIT_ONLY",
+            "model_facing_fields_present": False,
+            "public_root_source": "G2_PROJECTED_PUBLIC_ONLY",
+            "opponent_view_retention": "NONE",
+            "opponent_legal_set_retention": "SEMANTIC_LABEL_AUDIT_ONLY",
+            "post_evidence_source": "NONE_FIRST_OPPONENT_ACTION_ONLY",
+            "ppo_rollout_eligible": False,
+        },
+        "labels": labels,
+    }
+    errors = _validate_opponent_sidecar_shape(sidecar)
+    if errors:
+        raise ScheduleError(f"restricted opponent sidecar validation failed: {errors}")
+    return sidecar
 
 
 def _artifact_entry(path: Path) -> dict[str, Any]:
@@ -1860,6 +2422,7 @@ def _write_run_manifest(
     dataset_outputs: list[Path],
     created_utc: str,
     finished_utc: str,
+    label_sidecar_outputs: list[Path] | None = None,
 ) -> dict[str, Any]:
     if not root_ids:
         raise ScheduleError("manifest requires at least one root_id")
@@ -1867,15 +2430,19 @@ def _write_run_manifest(
     seal_path = run_dir / "run-manifest.sha256"
     worker_entries = [_artifact_entry(path) for path in worker_outputs]
     dataset_entries = [_artifact_entry(path) for path in dataset_outputs]
+    label_entries = [_artifact_entry(path) for path in (label_sidecar_outputs or [])]
     artifacts = {
         "worker_outputs": worker_entries,
         "worker_output": worker_entries[0] if len(worker_entries) == 1 else None,
         "execution_output": _artifact_entry(execution_output),
         "dataset_outputs": dataset_entries,
         "dataset_output": dataset_entries[0] if len(dataset_entries) == 1 else None,
+        "opponent_transition_label_outputs": label_entries,
+        "opponent_transition_label_output": label_entries[0] if len(label_entries) == 1 else None,
         "collector": _artifact_entry(Path(__file__).resolve()),
         "projector": _artifact_entry(PROJECTOR),
         "dataset_schema": _artifact_entry(DATASET_SCHEMA),
+        "opponent_transition_label_schema": _artifact_entry(OPPONENT_LABEL_SCHEMA),
         "bc_trunk_checkpoint": _artifact_entry(BC_TRUNK_PATH),
         "config": _artifact_entry(config_path),
     }
@@ -1897,6 +2464,7 @@ def _write_run_manifest(
             "root_ids": root_ids,
             "config_sha256": config_sha256,
             "dataset_paths": [entry["path"] for entry in dataset_entries],
+            "opponent_transition_label_paths": [entry["path"] for entry in label_entries],
         },
         "artifacts": artifacts,
         "seal_sidecar": str(seal_path.relative_to(ROOT)),
@@ -1986,9 +2554,12 @@ def _execute_full(config: dict[str, Any], fixture: Path) -> int:
     created_utc = datetime.now(timezone.utc).isoformat()
     git_dirty_sha256 = _git_dirty_sha256()
     groups_by_anchor: dict[str, list[dict[str, Any]]] = {}
+    labels_by_anchor: dict[str, list[dict[str, Any]]] = {}
+    root_keys_by_anchor: dict[str, list[dict[str, str]]] = {}
     reports: list[dict[str, Any]] = []
     worker_outputs: list[Path] = []
     dataset_outputs: list[Path] = []
+    label_sidecar_outputs: list[Path] = []
     root_ids: list[str] = []
     status = "RUNNING"
     error_value: dict[str, str] | None = None
@@ -2016,6 +2587,15 @@ def _execute_full(config: dict[str, Any], fixture: Path) -> int:
                 raise ScheduleError(f"full worker {state_index} did not complete: {report.get('status')}")
             _validate_gate1_trunk_binding(report)
             groups_by_anchor.setdefault(anchor_id, []).append(report["state_group"])
+            root_keys_by_anchor.setdefault(anchor_id, []).extend(
+                report.get("root_action_equivalence_keys", [])
+            )
+            labels_by_anchor.setdefault(anchor_id, []).extend(
+                _opponent_labels_for_group(
+                    report["state_group"], report.get("child_results", []),
+                    report.get("root_action_equivalence_keys", []),
+                )
+            )
         for anchor_id, groups in groups_by_anchor.items():
             anchor = next(item for item in config["frozen_anchor_policies"] if item["baseline_id"] == anchor_id)
             dataset = _dataset_from_group(config, groups[0], anchor)
@@ -2028,6 +2608,16 @@ def _execute_full(config: dict[str, Any], fixture: Path) -> int:
             output = dataset_dir / f"counterfactual-action-dataset-{anchor_id}.json"
             output.write_text(json.dumps(dataset, indent=2, sort_keys=True) + "\n", encoding="utf-8")
             dataset_outputs.append(output)
+            if config["state_schedule"]["profile"] == OPPONENT_TRANSITION_PROFILE:
+                label_output = dataset_dir / f"opponent-transition-labels-{anchor_id}.json"
+                label_sidecar = _build_opponent_sidecar(
+                    config, dataset, output, config_sha256, anchor,
+                    labels_by_anchor[anchor_id], root_keys_by_anchor[anchor_id],
+                )
+                label_output.write_text(
+                    json.dumps(label_sidecar, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+                )
+                label_sidecar_outputs.append(label_output)
         status = "PASS_COMPLETE"
     except Exception as error:
         status = "FAIL"
@@ -2046,6 +2636,7 @@ def _execute_full(config: dict[str, Any], fixture: Path) -> int:
         "execution_output": str(execution_output.relative_to(ROOT)),
         "worker_outputs": [str(path.relative_to(ROOT)) for path in worker_outputs],
         "dataset_outputs": [str(path.relative_to(ROOT)) for path in dataset_outputs],
+        "opponent_transition_label_outputs": [str(path.relative_to(ROOT)) for path in label_sidecar_outputs],
         "native_launches": sum(report.get("native_launches", 0) for report in reports),
         "continuation_rollouts": sum(report.get("counters", {}).get("continuation_rollouts", 0) for report in reports),
         "max_wall_seconds": schedule.get("max_wall_seconds"),
@@ -2075,10 +2666,22 @@ def _execute_full(config: dict[str, Any], fixture: Path) -> int:
         dataset_outputs=dataset_outputs,
         created_utc=created_utc,
         finished_utc=finished_utc,
+        label_sidecar_outputs=label_sidecar_outputs,
     )
     execution_report["manifest_seal_sha256"] = manifest["manifest_sha256"]
     print(json.dumps(execution_report, sort_keys=True))
     return 0 if status == "PASS_COMPLETE" else 1
+
+
+def _mark_preflight_blocked(report: dict[str, Any], error: Exception) -> None:
+    report.update({
+        "status": "BLOCKED",
+        "dataset_schema_status": "BLOCKED_EMISSION",
+        "dataset_schema_errors": [{"type": type(error).__name__, "message": str(error)[:1000]}],
+        "dataset_emitted": False,
+        "full_schedule_launched": False,
+        "error": {"type": type(error).__name__, "message": str(error)[:1000]},
+    })
 
 
 def _execute_complete_root_preflight(config: dict[str, Any], config_path: Path) -> int:
@@ -2098,19 +2701,13 @@ def _execute_complete_root_preflight(config: dict[str, Any], config_path: Path) 
     run_dir.mkdir(parents=True)
     git_dirty_sha256 = _git_dirty_sha256()
     worker_output = run_dir / "worker.json"
-    worker = _start_worker(
-        config_path, config, worker_output, 0, anchor_id, 0,
-        run_id, root_id, config_sha256, git_dirty_sha256,
-        preflight=False, complete_root=True,
-    )
-    worker_ok = worker.get("status") == "PASS_COMPLETE"
-    if worker_ok:
-        _validate_gate1_trunk_binding(worker)
     execution_output = run_dir / "preflight-execution.json"
     dataset_output: Path | None = None
+    label_sidecar_output: Path | None = None
     created_utc = datetime.now(timezone.utc).isoformat()
+    worker: dict[str, Any] = {"status": "NOT_STARTED", "native_launches": 0}
     report: dict[str, Any] = {
-        "status": "PASS_EXECUTION" if worker_ok else "BLOCKED",
+        "status": "BLOCKED",
         "mode": "PREFLIGHT_COMPLETE_ROOT",
         "created_utc": created_utc,
         "finished_utc": None,
@@ -2121,57 +2718,106 @@ def _execute_complete_root_preflight(config: dict[str, Any], config_path: Path) 
         "config_path": str(config_path.relative_to(ROOT)),
         "worker_output": str(worker_output.relative_to(ROOT)),
         "execution_output": str(execution_output.relative_to(ROOT)),
-        "native_launches": worker.get("native_launches", 0),
+        "native_launches": 0,
         "required_continuation_rollouts": None,
+        "opponent_transition_label_output": None,
         "preflight_scope": "ALL legal root actions x exactly 2 shared particles; max 20 branches",
         "coverage_scope": (
             "MAIN_SINGLE_CHOICE_ONLY; COMPOUND_AND_OPTIONAL_STOP_REFUSED_PENDING_SEPARATE_MECHANICS_GATE"
         ),
         "worker": worker,
+        "dataset_schema_status": "NOT_STARTED",
+        "dataset_schema_errors": [],
+        "dataset_emitted": False,
         "full_schedule_authorized": False,
         "full_schedule_launched": False,
         "filesystem_immutability": "NOT_CLAIMED_DIGEST_ONLY",
         "manifest": {
             "path": str((run_dir / "run-manifest.json").relative_to(ROOT)),
             "seal_sidecar": str((run_dir / "run-manifest.sha256").relative_to(ROOT)),
-            "status": "SEALED_DIGESTS_ONLY",
+            "status": "PENDING",
         },
     }
-    if worker_ok:
-        anchor = next(item for item in config["frozen_anchor_policies"] if item["baseline_id"] == anchor_id)
-        dataset = _dataset_from_group(config, worker["state_group"], anchor)
-        if dataset["run"]["run_id"] != run_id:
-            raise ScheduleError("dataset run_id is not coordinator-bound")
-        errors = _validate_dataset_shape(dataset)
-        if errors:
-            raise ScheduleError(f"complete-root dataset schema validation failed: {errors}")
-        dataset_output = run_dir / "complete-root-dataset.json"
-        dataset_output.write_text(json.dumps(dataset, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        report["required_continuation_rollouts"] = worker["counters"]["continuation_rollouts"]
-        report["dataset_schema_status"] = "PASS"
-        report["dataset_schema_errors"] = []
-        report["dataset_emitted"] = True
-        report["dataset_output"] = str(dataset_output.relative_to(ROOT))
-    else:
-        report["dataset_schema_status"] = "BLOCKED_WORKER"
-        report["dataset_schema_errors"] = [worker.get("error", worker.get("status", "worker failed"))]
-        report["dataset_emitted"] = False
+    try:
+        worker = _start_worker(
+            config_path, config, worker_output, 0, anchor_id, 0,
+            run_id, root_id, config_sha256, git_dirty_sha256,
+            preflight=False, complete_root=True,
+        )
+        report["worker"] = worker
+        report["native_launches"] = worker.get("native_launches", 0)
+        worker_ok = worker.get("status") == "PASS_COMPLETE"
+        if not worker_ok:
+            report["dataset_schema_status"] = "BLOCKED_WORKER"
+            report["dataset_schema_errors"] = [worker.get("error", worker.get("status", "worker failed"))]
+        else:
+            _validate_gate1_trunk_binding(worker)
+            anchor = next(item for item in config["frozen_anchor_policies"] if item["baseline_id"] == anchor_id)
+            dataset = _dataset_from_group(config, worker["state_group"], anchor)
+            if dataset["run"]["run_id"] != run_id:
+                raise ScheduleError("dataset run_id is not coordinator-bound")
+            errors = _validate_dataset_shape(dataset)
+            if errors:
+                raise ScheduleError(f"complete-root dataset schema validation failed: {errors}")
+            dataset_output = run_dir / "complete-root-dataset.json"
+            dataset_output.write_text(json.dumps(dataset, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            if config["state_schedule"]["profile"] == OPPONENT_TRANSITION_PROFILE:
+                label_sidecar_output = run_dir / "opponent-transition-labels.json"
+                labels = _opponent_labels_for_group(
+                    worker["state_group"], worker.get("child_results", []),
+                    worker.get("root_action_equivalence_keys", []),
+                )
+                label_sidecar = _build_opponent_sidecar(
+                    config, dataset, dataset_output, config_sha256, anchor, labels,
+                    worker.get("root_action_equivalence_keys", []),
+                )
+                label_sidecar_output.write_text(
+                    json.dumps(label_sidecar, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+                )
+                report["opponent_transition_label_output"] = str(label_sidecar_output.relative_to(ROOT))
+            report["required_continuation_rollouts"] = worker["counters"]["continuation_rollouts"]
+            report["dataset_schema_status"] = "PASS"
+            report["dataset_schema_errors"] = []
+            report["dataset_emitted"] = True
+            report["dataset_output"] = str(dataset_output.relative_to(ROOT))
+            report["status"] = "PASS_EXECUTION"
+    except Exception as error:
+        report["worker"] = worker
+        _mark_preflight_blocked(report, error)
+
     report["finished_utc"] = datetime.now(timezone.utc).isoformat()
-    execution_output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    manifest = _write_run_manifest(
-        run_dir,
-        run_id=run_id,
-        root_ids=[root_id],
-        config_path=config_path,
-        config_sha256=config_sha256,
-        git_dirty_sha256=git_dirty_sha256,
-        worker_outputs=[worker_output],
-        execution_output=execution_output,
-        dataset_outputs=[dataset_output] if dataset_output is not None else [],
-        created_utc=created_utc,
-        finished_utc=report["finished_utc"],
-    )
-    report["manifest_seal_sha256"] = manifest["manifest_sha256"]
+    try:
+        execution_output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    except Exception as error:
+        _mark_preflight_blocked(report, error)
+        try:
+            execution_output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        except Exception:
+            pass
+    try:
+        manifest = _write_run_manifest(
+            run_dir,
+            run_id=run_id,
+            root_ids=[root_id],
+            config_path=config_path,
+            config_sha256=config_sha256,
+            git_dirty_sha256=git_dirty_sha256,
+            worker_outputs=[worker_output] if worker_output.is_file() else [],
+            execution_output=execution_output,
+            dataset_outputs=[dataset_output] if dataset_output is not None and dataset_output.is_file() else [],
+            label_sidecar_outputs=[label_sidecar_output] if label_sidecar_output is not None and label_sidecar_output.is_file() else [],
+            created_utc=created_utc,
+            finished_utc=report["finished_utc"],
+        )
+        report["manifest"]["status"] = "SEALED_DIGESTS_ONLY"
+        report["manifest_seal_sha256"] = manifest["manifest_sha256"]
+    except Exception as error:
+        _mark_preflight_blocked(report, error)
+        report["manifest"]["status"] = "BLOCKED_MANIFEST"
+        try:
+            execution_output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        except Exception:
+            pass
     print(json.dumps(report, sort_keys=True))
     return 0 if report["status"] == "PASS_EXECUTION" else 1
 
@@ -2309,6 +2955,44 @@ def _self_check() -> int:
         ),
     )
 
+    transition_path = Path(__file__).resolve().parent / "gate1_schedule_scale64_opponent_transition_v1.json"
+    transition_config = load_json(transition_path)
+    transition_config["_config_path"] = str(transition_path.resolve())
+    transition_config["source_commit"] = _canonical_source_commit()
+    transition_validation = validate_schedule(transition_config, DEFAULT_FIXTURE)
+    if (
+        transition_validation.get("profile") != OPPONENT_TRANSITION_PROFILE
+        or transition_validation.get("root_states") != 64
+        or transition_validation.get("replicates_per_action") != 4
+        or transition_validation.get("max_continuation_rollouts") != 2560
+        or transition_validation.get("max_wall_seconds") != 600
+        or transition_validation.get("max_root_acquisition_attempts") != 8
+        or transition_validation.get("authorized") is not False
+    ):
+        raise ScheduleError("opponent-transition ceiling declaration self-check failed")
+
+    def expect_transition_schedule_error(label: str, mutate: Any) -> None:
+        candidate = json.loads(json.dumps(transition_config))
+        mutate(candidate)
+        try:
+            validate_schedule(candidate, DEFAULT_FIXTURE)
+        except ScheduleError:
+            return
+        raise ScheduleError(f"opponent-transition self-check did not reject {label}")
+
+    expect_transition_schedule_error(
+        "opponent-transition authorization",
+        lambda candidate: (candidate.__setitem__("authorized", True), candidate.__setitem__("mode", "NATIVE_FULL_AUTHORIZED")),
+    )
+    expect_transition_schedule_error(
+        "opponent-transition retry cap",
+        lambda candidate: candidate["state_schedule"].__setitem__("max_root_acquisition_attempts", 7),
+    )
+    expect_transition_schedule_error(
+        "opponent-transition sidecar schema hash",
+        lambda candidate: candidate["opponent_transition_label_schema"].__setitem__("sha256", "0" * 64),
+    )
+
     scale256_path = Path(__file__).resolve().parent / "gate1_schedule_scale256_v1_authorized_compat_sys_v1.json"
     scale256_config = load_json(scale256_path)
     scale256_config["_config_path"] = str(scale256_path.resolve())
@@ -2426,6 +3110,9 @@ def _self_check() -> int:
             raise ScheduleError("manifest sidecar self-check hash mismatch")
 
     zero_hash = "0" * 64
+    from ptcg_rl.g1.semantic import AREA
+    if AREA.get("HAND") != SEMANTIC_HAND_ZONE:
+        raise ScheduleError("collector hand zone is not bound to semantic AREA['HAND']")
     option = {
         "option_type": 0, "source_kind": "NONE", "target_kind": "NONE",
         "choice_role": "CHOICE", "source_ref": None, "target_ref": None,
@@ -2517,6 +3204,172 @@ def _self_check() -> int:
     errors = _validate_dataset_shape(dataset)
     if errors:
         raise ScheduleError(f"schema-valid projection self-check failed: {errors}")
+    sidecar_option = {**option, "original_index": 0, "semantic_equivalence_key": zero_hash}
+    synthetic_sidecar = {
+        "schema_version": 1,
+        "sidecar_kind": "RESTRICTED_OPPONENT_TRANSITION_LABELS",
+        "run": {
+            "run_id": "schema-self-check",
+            "source_commit": _canonical_source_commit(),
+            "config_sha256": zero_hash,
+            "profile": OPPONENT_TRANSITION_PROFILE,
+        },
+        "dataset_binding": {
+            "dataset_path": "scratch/dataset.json",
+            "dataset_sha256": zero_hash,
+            "state_group_ids": ["schema-self-check-group"],
+        },
+        "public_projection_binding": {
+            "projector_path": ".chatgpt/tmp/outcome-ranker/project_public_state.py",
+            "projector_sha256": zero_hash,
+            "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
+            "groups": [{
+                "state_group_id": "schema-self-check-group",
+                "public_state_sha256": zero_hash,
+                "public_projection_sha256": sha256_value(dataset["state_groups"][0]["public_tensor"]["projected_decision"]),
+                "history_prefix_digest": zero_hash,
+                "history_tokens_sha256": sha256_value(dataset["state_groups"][0]["public_tensor"]["history_tokens"]),
+            }],
+        },
+        "root_action_keys": [{
+            "state_group_id": "schema-self-check-group",
+            "action_id": action_id,
+            "semantic_equivalence_key": zero_hash,
+        }],
+        "provenance": {
+            "anchor_baseline_id": "audit-anchor",
+            "opponent_policy_id": "audit-policy",
+            "opponent_policy_sha256": zero_hash,
+            "opponent_deck_sha256": zero_hash,
+            "split_role": "LABEL_AUDIT_METADATA_ONLY",
+        },
+        "firewall": {
+            "consumer": "LABEL_AUDIT_ONLY",
+            "model_facing_fields_present": False,
+            "public_root_source": "G2_PROJECTED_PUBLIC_ONLY",
+            "opponent_view_retention": "NONE",
+            "opponent_legal_set_retention": "SEMANTIC_LABEL_AUDIT_ONLY",
+            "post_evidence_source": "NONE_FIRST_OPPONENT_ACTION_ONLY",
+            "ppo_rollout_eligible": False,
+        },
+        "labels": [{
+            "state_group_id": "schema-self-check-group",
+            "replicate_id": 0,
+            "particle_id": "particle",
+            "action_id": action_id,
+            "root_player": 0,
+            "opponent_player": 1,
+            "root_action_semantic_fingerprint": zero_hash,
+            "root_action_semantic_equivalence_key": zero_hash,
+            "status": "OBSERVED",
+            "first_opponent_request": {
+                "request_id": "opponent-request",
+                "selection_seq": 1,
+                "selection_type": 0,
+                "selection_context": 0,
+                "min_count": 1,
+                "max_count": 1,
+                "ordering": "UNORDERED",
+                "option_count": 1,
+                "options": [sidecar_option],
+            },
+            "chosen_action": {
+                "transport_original_indices": [0],
+                "semantic_path": [sidecar_option],
+                "semantic_equivalence_key": zero_hash,
+                "semantic_action_fingerprint": sha256_value([sidecar_option]),
+            },
+            "error": None,
+        }],
+    }
+    sidecar_errors = _validate_opponent_sidecar_shape(synthetic_sidecar)
+    if sidecar_errors:
+        raise ScheduleError(f"restricted sidecar self-check failed: {sidecar_errors}")
+    sidecar_with_model_field = json.loads(json.dumps(synthetic_sidecar))
+    sidecar_with_model_field["labels"][0]["public_tensor"] = {}
+    if not _validate_opponent_sidecar_shape(sidecar_with_model_field):
+        raise ScheduleError("restricted sidecar model-input firewall did not reject public_tensor")
+    sidecar_bad_status = json.loads(json.dumps(synthetic_sidecar))
+    sidecar_bad_status["labels"][0]["chosen_action"] = None
+    if not _validate_opponent_sidecar_shape(sidecar_bad_status):
+        raise ScheduleError("restricted sidecar parity check did not reject incomplete OBSERVED label")
+    sidecar_bad_transport = json.loads(json.dumps(synthetic_sidecar))
+    sidecar_bad_transport["labels"][0]["chosen_action"]["transport_original_indices"] = [99]
+    if not _validate_opponent_sidecar_shape(sidecar_bad_transport):
+        raise ScheduleError("restricted sidecar parity check did not reject out-of-range transport index")
+    sidecar_bad_fingerprint = json.loads(json.dumps(synthetic_sidecar))
+    sidecar_bad_fingerprint["labels"][0]["chosen_action"]["semantic_action_fingerprint"] = "1" * 64
+    if not _validate_opponent_sidecar_shape(sidecar_bad_fingerprint):
+        raise ScheduleError("restricted sidecar parity check did not reject stale action fingerprint")
+    blocked_report = {"status": "PASS_EXECUTION", "dataset_emitted": True}
+    _mark_preflight_blocked(blocked_report, ScheduleError("synthetic emission failure"))
+    if (
+        blocked_report["status"] != "BLOCKED"
+        or blocked_report["dataset_emitted"]
+        or blocked_report["dataset_schema_status"] != "BLOCKED_EMISSION"
+    ):
+        raise ScheduleError("complete-root preflight failure path did not fail closed")
+
+    fake_request = SimpleNamespace(
+        selection_type=0, selection_context=0, min_count=1, max_count=1,
+        ordering="UNORDERED", acting_player=1,
+    )
+
+    def fake_entity(key: str, owner: int, zone: int, position: int, card_id: int = 42) -> Any:
+        return SimpleNamespace(
+            entity_key=key, card_id=card_id, serial=999, owner=owner, zone=zone,
+            position=position, parent_entity_key=None,
+        )
+
+    def fake_option(source: str, target: str | None = None, *, attack_id: int | None = None) -> Any:
+        return SimpleNamespace(
+            option_type=13 if attack_id is not None else 7,
+            source_kind="ENTITY", target_kind="ENTITY" if target else "NONE",
+            choice_role="ATTACK" if attack_id is not None else "PLAY",
+            source_entity_key=source, target_entity_key=target,
+            source_ref=source, target_ref=target, card_id=42, attack_id=attack_id,
+            number=None, count=None, special_condition_type=None,
+            original_index=0, semantic_fingerprint=zero_hash,
+        )
+
+    hand_a = fake_entity("p1:s1", 1, 2, 0)
+    hand_b = fake_entity("p1:s2", 1, 2, 1)
+    active = fake_entity("p1:s3", 1, 4, 0, 100)
+    bench = fake_entity("p1:s4", 1, 5, 1, 100)
+    public_view = SimpleNamespace(entities=(hand_a, hand_b, active, bench))
+    hand_key_a = _opponent_semantic_equivalence_key(fake_request, fake_option(hand_a.entity_key), public_view, 0)
+    hand_key_b = _opponent_semantic_equivalence_key(fake_request, fake_option(hand_b.entity_key), public_view, 0)
+    if hand_key_a != hand_key_b:
+        raise ScheduleError("hidden-hand duplicate aliases did not pool")
+    serial_mutated = fake_option(hand_a.entity_key)
+    serial_mutated.source_ref = "p1:s999"
+    if _opponent_semantic_equivalence_key(fake_request, serial_mutated, public_view, 0) != hand_key_a:
+        raise ScheduleError("opponent canonical key depends on serial-bearing transport reference")
+    if _opponent_semantic_equivalence_key(fake_request, fake_option(active.entity_key), public_view, 0) == hand_key_a:
+        raise ScheduleError("public endpoint was aliased with hidden-hand copy")
+    if _opponent_semantic_equivalence_key(fake_request, fake_option(active.entity_key, bench.entity_key), public_view, 0) == _opponent_semantic_equivalence_key(fake_request, fake_option(active.entity_key), public_view, 0):
+        raise ScheduleError("source/target endpoint distinction was lost")
+    if _opponent_semantic_equivalence_key(fake_request, fake_option(active.entity_key, attack_id=1), public_view, 0) == _opponent_semantic_equivalence_key(fake_request, fake_option(active.entity_key, attack_id=2), public_view, 0):
+        raise ScheduleError("attack distinction was lost")
+    mirror_request = SimpleNamespace(**{**vars(fake_request), "acting_player": 0})
+    mirror_hand = fake_entity("p0:s1", 0, 2, 0)
+    mirror_view = SimpleNamespace(entities=(mirror_hand,))
+    if _opponent_semantic_equivalence_key(mirror_request, fake_option(mirror_hand.entity_key), mirror_view, 1) != hand_key_a:
+        raise ScheduleError("seat-mirrored opponent key changed owner class")
+    projection_binding = _public_projection_binding(
+        dataset,
+        {"path": str(PROJECTOR.relative_to(ROOT)), "sha256": sha256_file(PROJECTOR)},
+    )
+    if (
+        projection_binding["groups"][0]["public_projection_sha256"] != sha256_value(
+            dataset["state_groups"][0]["public_tensor"]["projected_decision"]
+        )
+        or projection_binding["groups"][0]["history_prefix_digest"] != zero_hash
+        or projection_binding["groups"][0]["history_tokens_sha256"] != sha256_value(
+            dataset["state_groups"][0]["public_tensor"]["history_tokens"]
+        )
+    ):
+        raise ScheduleError("public projection/history join self-check failed")
     print(json.dumps({
         "status": "PASS", "native_imports": 0, "stale_output_refused": True,
         "config_mismatch_refused": True, "worker_binding_refused": True,
@@ -2534,6 +3387,20 @@ def _self_check() -> int:
         "process_group_cleanup": True,
         "manifest_seal": True,
         "schema_valid_projection_shape": True,
+        "opponent_transition_ceiling_validated_without_native": True,
+        "opponent_transition_authorization_refused": True,
+        "opponent_transition_sidecar_schema_valid": True,
+        "opponent_transition_model_firewall_refused": True,
+        "opponent_transition_incomplete_label_refused": True,
+        "opponent_key_aliases_and_permutations": True,
+        "opponent_key_endpoint_and_attack_distinction": True,
+        "opponent_key_serial_rejected": True,
+        "opponent_key_seat_mirror_normalized": True,
+        "public_projection_history_join": True,
+        "history_token_binding": True,
+        "opponent_transport_index_and_fingerprint_refused": True,
+        "complete_root_emission_failure_blocked": True,
+        "semantic_hand_zone_bound": True,
     }, sort_keys=True))
     return 0
 

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Restricted first opponent transition labels v1",
+  "description": "Restricted native label-audit sidecar. It is not a model input, PPO rollout, or public-state projection.",
+  "type": "object",
+  "required": ["schema_version", "sidecar_kind", "run", "dataset_binding", "public_projection_binding", "root_action_keys", "provenance", "firewall", "labels"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "sidecar_kind": {"const": "RESTRICTED_OPPONENT_TRANSITION_LABELS"},
+    "run": {"$ref": "#/$defs/run"},
+    "dataset_binding": {"$ref": "#/$defs/dataset_binding"},
+    "public_projection_binding": {"$ref": "#/$defs/public_projection_binding"},
+    "root_action_keys": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/root_action_key"}},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "firewall": {"$ref": "#/$defs/firewall"},
+    "labels": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/label"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "run": {
+      "type": "object",
+      "required": ["run_id", "source_commit", "config_sha256", "profile"],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"},
+        "config_sha256": {"$ref": "#/$defs/hash"},
+        "profile": {"const": "GATE1_SCALE64_OPPONENT_TRANSITION_V1"}
+      },
+      "additionalProperties": false
+    },
+    "dataset_binding": {
+      "type": "object",
+      "required": ["dataset_path", "dataset_sha256", "state_group_ids"],
+      "properties": {
+        "dataset_path": {"type": "string", "minLength": 1},
+        "dataset_sha256": {"$ref": "#/$defs/hash"},
+        "state_group_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["anchor_baseline_id", "opponent_policy_id", "opponent_policy_sha256", "opponent_deck_sha256", "split_role"],
+      "properties": {
+        "anchor_baseline_id": {"type": "string", "minLength": 1},
+        "opponent_policy_id": {"type": "string", "minLength": 1},
+        "opponent_policy_sha256": {"$ref": "#/$defs/hash"},
+        "opponent_deck_sha256": {"$ref": "#/$defs/hash"},
+        "split_role": {"const": "LABEL_AUDIT_METADATA_ONLY"}
+      },
+      "additionalProperties": false
+    },
+    "firewall": {
+      "type": "object",
+      "required": ["consumer", "model_facing_fields_present", "public_root_source", "opponent_view_retention", "opponent_legal_set_retention", "post_evidence_source", "ppo_rollout_eligible"],
+      "properties": {
+        "consumer": {"const": "LABEL_AUDIT_ONLY"},
+        "model_facing_fields_present": {"const": false},
+        "public_root_source": {"const": "G2_PROJECTED_PUBLIC_ONLY"},
+        "opponent_view_retention": {"const": "NONE"},
+        "opponent_legal_set_retention": {"const": "SEMANTIC_LABEL_AUDIT_ONLY"},
+        "post_evidence_source": {"const": "NONE_FIRST_OPPONENT_ACTION_ONLY"},
+        "ppo_rollout_eligible": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "label": {
+      "type": "object",
+      "required": ["state_group_id", "replicate_id", "particle_id", "action_id", "root_player", "opponent_player", "root_action_semantic_fingerprint", "root_action_semantic_equivalence_key", "status", "first_opponent_request", "chosen_action", "error"],
+      "properties": {
+        "state_group_id": {"type": "string", "minLength": 1},
+        "replicate_id": {"type": "integer", "minimum": 0},
+        "particle_id": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "minLength": 1},
+        "root_player": {"type": "integer", "enum": [0, 1]},
+        "opponent_player": {"type": "integer", "enum": [0, 1]},
+        "root_action_semantic_fingerprint": {"$ref": "#/$defs/hash"},
+        "root_action_semantic_equivalence_key": {"$ref": "#/$defs/hash"},
+        "status": {"enum": ["OBSERVED", "TERMINAL_BEFORE_OPPONENT", "UNSUPPORTED_FIRST_OPPONENT_REQUEST", "MISSING_OR_ERROR"]},
+        "first_opponent_request": {"anyOf": [{"$ref": "#/$defs/request"}, {"type": "null"}]},
+        "chosen_action": {"anyOf": [{"$ref": "#/$defs/chosen_action"}, {"type": "null"}]},
+        "error": {"anyOf": [{"$ref": "#/$defs/error"}, {"type": "null"}]}
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["request_id", "selection_seq", "selection_type", "selection_context", "min_count", "max_count", "ordering", "option_count", "options"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "selection_seq": {"type": "integer", "minimum": 0},
+        "selection_type": {"type": "integer"},
+        "selection_context": {"type": "integer"},
+        "min_count": {"type": "integer", "minimum": 0},
+        "max_count": {"type": "integer", "minimum": 0},
+        "ordering": {"enum": ["ORDERED", "UNORDERED"]},
+        "option_count": {"type": "integer", "minimum": 1},
+        "options": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/semantic_option"}}
+      },
+      "additionalProperties": false
+    },
+    "semantic_option": {
+      "type": "object",
+      "required": ["option_type", "source_kind", "target_kind", "choice_role", "source_ref", "target_ref", "is_stop", "original_index", "semantic_fingerprint", "semantic_equivalence_key"],
+      "properties": {
+        "option_type": {"type": "integer"},
+        "source_kind": {"type": "string"},
+        "target_kind": {"type": "string"},
+        "choice_role": {"type": "string"},
+        "source_ref": {"type": ["string", "null"]},
+        "target_ref": {"type": ["string", "null"]},
+        "is_stop": {"const": false},
+        "source_card_id": {"type": ["integer", "null"]},
+        "target_card_id": {"type": ["integer", "null"]},
+        "attack_id": {"type": ["integer", "null"]},
+        "original_index": {"type": "integer", "minimum": 0, "description": "audit-only transport index"},
+        "semantic_fingerprint": {"$ref": "#/$defs/hash", "description": "audit-only transport integrity"},
+        "semantic_equivalence_key": {"$ref": "#/$defs/hash", "description": "serial-free factual label identity"}
+      },
+      "additionalProperties": false
+    },
+    "chosen_action": {
+      "type": "object",
+      "required": ["transport_original_indices", "semantic_path", "semantic_equivalence_key", "semantic_action_fingerprint"],
+      "properties": {
+        "transport_original_indices": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}},
+        "semantic_path": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/semantic_option"}},
+        "semantic_equivalence_key": {"$ref": "#/$defs/hash", "description": "serial-free factual label identity"},
+        "semantic_action_fingerprint": {"$ref": "#/$defs/hash"}
+      },
+      "additionalProperties": false
+    },
+    "public_projection_binding": {
+      "type": "object",
+      "required": ["projector_path", "projector_sha256", "model_schema_sha256", "groups"],
+      "properties": {
+        "projector_path": {"type": "string", "minLength": 1},
+        "projector_sha256": {"$ref": "#/$defs/hash"},
+        "model_schema_sha256": {"$ref": "#/$defs/hash"},
+        "groups": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/public_projection_group"}}
+      },
+      "additionalProperties": false
+    },
+    "public_projection_group": {
+      "type": "object",
+      "required": ["state_group_id", "public_state_sha256", "public_projection_sha256", "history_prefix_digest", "history_tokens_sha256"],
+      "properties": {
+        "state_group_id": {"type": "string", "minLength": 1},
+        "public_state_sha256": {"$ref": "#/$defs/hash"},
+        "public_projection_sha256": {"$ref": "#/$defs/hash"},
+        "history_prefix_digest": {"$ref": "#/$defs/hash"},
+        "history_tokens_sha256": {"$ref": "#/$defs/hash"}
+      },
+      "additionalProperties": false
+    },
+    "root_action_key": {
+      "type": "object",
+      "required": ["state_group_id", "action_id", "semantic_equivalence_key"],
+      "properties": {
+        "state_group_id": {"type": "string", "minLength": 1},
+        "action_id": {"type": "string", "minLength": 1},
+        "semantic_equivalence_key": {"$ref": "#/$defs/hash"}
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "required": ["type", "message"],
+      "properties": {
+        "type": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

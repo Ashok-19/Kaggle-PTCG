@@ -2,18 +2,236 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-10T02:46:30+05:30
+Updated: 2026-08-10T04:44:18+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, deadline-refresh verified `COMPLETE` at public score `811.4`. It has 45 public games, 24 wins and 21 losses, plus one successful validation episode. It remains 188.6 Elo below 1000 and is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: the fixed frozen-BC supervised outcome head is now closed and rejected. The next breakthrough must change the deterministic decision architecture, not add data or thresholds to this consumed test: explicit structured public-state route/threat representation plus calibrated opponent-next-action prediction or a sharply bounded tactical planner. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
+- Active hypothesis: the Public Route Transducer remains a ceiling-gate hypothesis only. Collector and config-bound analyzer mechanics now have independent static `PASS`; no native evidence exists under the final hashes yet. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
 - Most recent decisive evidence: the independent Scale256 test killed the architecture. Despite `0.648` pairwise concordance, the selected head chose actions `-0.15104` worse than Grim fallback with 95% CI `[-0.28125,-0.02604]`, and catastrophically regressed Dragapult, Grim mirror, and Alakazam. No checkpoint was emitted.
-- Exact next task: implement only the Public Route Transducer one-ply `opponent_transition` label/firewall path and its parity tests, then run the bounded 64-root ceiling dataset. Do not build the full model unless the transition predictability gates pass; do not tune the rejected frozen head.
-- Latest relevant session commit: `04a2247` (`exp: reject frozen outcome ranker at scale256`), preserving the larger collector mechanics, fresh trainer/tests, adapter seam, and decisive negative result. Gate-1/Scale64 source is `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Stage A mechanics `d4b0767a653842b9e310fb416888c5a12640d362`; guard integration `2a08d53c38ace873f12b07b138852e687444a45b`; fixture `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
-- Uncommitted session work: this final timer/no-submit journal handoff only, to be committed immediately. Generated/private Scale256 runs, metrics, configs, candidate directories/tarballs, copied package bodies, checkpoints, and all unrelated dirty state remain unstaged. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none may be staged. Pre-existing unrelated dirty state remains preserved.
+- Exact next task: inspect the scoped diff, stage only collector/schema/analyzer/tests/progress, commit the mechanics, update the untracked dry config source commit to new HEAD, refreeze all writers, and run exactly one complete-root native preflight.
+- Latest session commit: `bff8de8` (`docs: hand off failed qualification sprint`). Latest code milestone is `04a2247` (`exp: reject frozen outcome ranker at scale256`), preserving the larger collector mechanics, fresh trainer/tests, adapter seam, and decisive negative result. Gate-1/Scale64 source is `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`.
+- Uncommitted session work: `progress.md`; a statically passing `+924/-57` collector plus schema and untracked dry config; a 487-line actual-`.labels` analyzer plus 150-line tests reported passing five synthetic tests; obsolete rejected parallel-schema scratch files; and stale private preflight artifacts. Nothing is staged. Generated/private runs and all unrelated dirty state remain unstaged and preserved.
 
-RESUME HERE: timer session `39825` completed successfully at approximately `2026-08-10T02:46:23+05:30`. No submission was made because Scale256 decisively rejected the frozen-BC supervised evaluator and emitted no checkpoint; submitting the mechanics-only placeholder would violate the user's material-superiority and `>90%` conditions. Latest code milestone is `04a2247`. Begin the bounded Public Route Transducer opponent-transition ceiling gate. Do not call this RL.
+RESUME HERE: commit the independently passing mechanics, update dry config source commit, and run one fresh complete-root preflight. Latest commit is `bff8de8`; no new candidate or live submission exists. Do not call this RL.
+
+## 2026-08-10T04:44:18+05:30 - PRT Collector and Analyzer Mechanics Independently Passed
+
+- Objective: close the static gate and stop analyzer iteration before native evidence.
+- Root commands/results: Ruff passed over collector/analyzer/tests; `py_compile` passed; Pytest passed `10` tests in `4.78s`.
+- Independent verdict: `PASS`. Auditor executed the actual schedule join, exact allocation/config SHA/source-HEAD/profile binding, and supplied-trunk rejection. The internally pinned loader returned `PTCGPolicyV1`; arbitrary trunks force `real_frozen_feature_path=false`. Independent Ruff, `py_compile`, and ten tests also passed.
+- Scope: static mechanics only. No native root, real sidecar, response fit, route utility, arena game, package, or submission exists under the final hashes.
+- Decision: `PROMOTE MECHANICS TO COMMIT / AUTHORIZE ONE PREFLIGHT ONLY`. The 64-root collection remains unauthorized pending retained preflight audit.
+- Next action: scoped diff/stage/commit; update private dry config source commit; freeze all writers; run one complete-root preflight.
+
+## 2026-08-10T04:42:20+05:30 - Two Config Wiring Bugs Patched
+
+- Objective: correct the actual schedule field joins and feature-path trust flag without further analyzer changes.
+- Files/hashes: `ceiling_analyzer.py` now 653 lines, SHA-256 `672738929a644f8ee40fcda990ad14615fed6cfc85090580a9be00465caef33f`; tests now 229 lines, SHA-256 `1bbc4cb60170d1f2c741e9184db48bfbb7623e56a2a3b6f9dd2765c8bffb0b47`.
+- Fixes: config cells now join `anchor`/`states` to `frozen_anchor_policies.baseline_id/policy_id`; configured profile is exact-bound to every sidecar; only a trunk loaded internally through the pinned helper is trusted, while caller-supplied trunks remain mechanics-blocking.
+- Reported verification: author Ruff and `py_compile` passed; Pytest expanded to `10 passed` with actual-config-shaped and supplied-trunk regressions.
+- Decision: `AWAIT ONE FINAL INDEPENDENT EXECUTION`; no native work.
+- Next action: independent recheck, then immediate scoped commit if clean.
+
+## 2026-08-10T04:38:59+05:30 - Config Wiring Audit Failed on Two Exact Bugs
+
+- Objective: independently execute the final configured path rather than infer correctness from eight synthetic tests.
+- Root verification before verdict: Ruff, `py_compile`, eight Pytests (`8 passed` in `4.15s`), collector self-check, and unauthorized Scale64 dry-run all passed; dry-run remained zero native launches.
+- Independent verdict: `BLOCK`. The analyzer reads `baseline_id`/`policy_id` and `state_count` from schedule `anchor_cells`, but the actual config cells use `anchor` and `states`; therefore every real configured run would block. It also fails to compare configured profile with sidecars. Separately, any caller-supplied trunk is marked trusted, contradicting the required production-only pinned loader gate.
+- Cleared mutations: duplicate particles, incomplete alias action sets, missing action fingerprints, transport mapping, MAIN/context-0/singleton, Ajv failure, SHA/history joins, and unseen/bootstrap all reject or account correctly.
+- Interpretation: these are two direct line-level wiring errors, not design gaps. Correct the actual config field names, profile equality, and supplied-trunk flag; add exact regressions. No other analyzer work is permitted.
+- Decision: `BLOCK / TWO-LINE-CLASS FIX`; no native work.
+- Next action: patch and root-test those exact behaviors, then accept/reject without another feature round.
+
+## 2026-08-10T04:35:46+05:30 - Config-Bound Analyzer Hardening Completed
+
+- Objective: make a real ceiling verdict impossible unless it uses the exact current schedule, source, families, allocations, particles, action set, fingerprints, and frozen feature path.
+- Files changed: `.chatgpt/tmp/opponent-route/ceiling_analyzer.py` (647 lines, SHA-256 `3a36e39bfa303f85686f106a8c17759b8a004ee2ce59e09b939dc22c6134039f`) and `.chatgpt/tmp/opponent-route/test_ceiling_analyzer.py` (197 lines, SHA-256 `9094bf6becfe832a44fc935c086b495ac3a95964ebb9c431be8f9f88f7614dd3`).
+- Changes: production CLI now requires `--config`; analyzer recomputes config SHA, binds source commit to config/root/sidecar and current HEAD, derives exact anchor/policy allocation from config, and blocks injected trunks/extractors. Each root requires four unique determinizations, identical complete action sets, a complete G2 transport permutation, valid root fingerprints, and exact label equality. OBSERVED singleton semantics remain strict; manifest support remains removed.
+- Reported verification: author Ruff and `py_compile` passed; Pytest now passes `8` mutation/regression tests.
+- Failure/fallback: no native run, real analyzer fit, candidate, or live action. This is still author evidence.
+- Decision: `AWAIT FINAL INDEPENDENT PASS`; no further expansion permitted.
+- Next action: independent auditor reruns prior mutations and configured-path tests; root reruns combined checks, then commits or rejects.
+
+## 2026-08-10T04:33:05+05:30 - Final Audit Still Blocked on Provenance and Completeness
+
+- Objective: decide whether the latest analyzer can safely certify a real Scale64 run.
+- Independent verdict: `BLOCK`; Ruff, `py_compile`, and all seven tests still pass, confirming these are missing mutation cases rather than syntax failures.
+- Findings: six arbitrary distinct anchor/policy tuples and a count multiset can impersonate the configured schedule because config bytes are not supplied/rehashed; an externally supplied arbitrary trunk can pass the production feature gate; action completeness is checked as a union across replicates so a missing alias branch can be masked; determinization IDs need not be four unique particles; and a missing root action fingerprint currently skips the binding comparison.
+- Cleared invariants: explicit six-pair mode, complete G2 transport permutation, MAIN/context-0/singleton responses, fail-closed Ajv, default one-time trunk loading, dataset/run/source/SHA/history joins, and unseen/bootstrap handling.
+- Interpretation: one direct schedule-config binding removes the first provenance gap without hardcoded family logic. The four remaining checks are small mutations against claims the analyzer already makes. No manifest framework or new architecture is needed.
+- Decision: `BLOCK NATIVE / FINAL FAIL-CLOSED PATCH`. This is the last analyzer iteration; if the exact mutation tests pass and independent audit clears it, proceed. If not, reject the PRT collection path rather than continue infrastructure work.
+- Next action: implement config-byte/source/allocation binding plus the four narrow checks, rerun root tests and independent audit.
+
+## 2026-08-10T04:25:28+05:30 - Final Minimal Analyzer Repair Completed
+
+- Objective: close only the remaining promotion-boundary defects and stop iterating on the analyzer.
+- Files changed: `.chatgpt/tmp/opponent-route/ceiling_analyzer.py` (607 lines, SHA-256 `28af02b2b2cde2b69ade9f08c253abf58986c3462a062841419c99ab48672ccc`) and `.chatgpt/tmp/opponent-route/test_ceiling_analyzer.py` (185 lines, SHA-256 `c320066635c10181b84b3a667579641dfd933df3f94f8ed3622804337c3125d1`).
+- Changes: deleted broken manifest support in favor of explicit repeated `--pair`; joint mechanics now require six distinct anchor/policy pairs, exact root allocation multiset `10,10,11,11,11,11`, shared source/run/config/profile, and unique roots; G2 transport must be a complete unique permutation; OBSERVED requires MAIN/context-0/singleton; custom feature extractors force mechanics blocked so only the real frozen 160+128 path can pass; particle IDs bind dataset determinizations; exact four replicates/action-key coverage/aliases are enforced; Ajv fallback fails closed; and production loads the frozen G2 trunk once per joint analysis.
+- Reported verification: author Ruff and `py_compile` passed; Pytest passed `7` tests with current-shaped repeated action IDs across four replicate records and regressions for the new gates.
+- Failure/fallback: no native work, real fit, package, or live action. The patch remains author-tested only.
+- Decision: `AWAIT FINAL INDEPENDENT VERDICT`; no further analyzer expansion is authorized absent a concrete correctness blocker.
+- Next action: final read-only re-audit, root combined checks, scoped commit.
+
+## 2026-08-10T04:20:48+05:30 - Independent Re-Audit Found Five Remaining Analyzer Gaps
+
+- Objective: verify the repaired analyzer against actual full collector output and the promotion firewall.
+- Result: independent auditor returned `BLOCK` despite Ruff, `py_compile`, and all seven tests passing. Confirmed working: current sidecar schema validation; dataset/run/SHA/history joins; chosen action/path/fingerprint checks; four-replicate alias consistency; status counting; root-isolated split; and unseen-label bootstrap handling.
+- Remaining findings: the advertised manifest helper reads the wrong shape for real collector manifests and verifies neither seal nor artifact hashes; global mechanics require only six pairs/64 roots rather than six distinct expected families with allocation `11/11/11/11/10/10`; G2 transport mapping does not require a unique complete permutation; OBSERVED responses do not explicitly require MAIN/context `0`/singleton; and a custom feature-extractor test hook can currently produce the same outward gate report as the production frozen 160+128 path.
+- Additional lead findings from source audit: sidecar `particle_id` is not yet compared with dataset replicate `determinization_id`; root-action-key coverage is not exact over every dataset action; schema validation's Node/Ajv fallback can fail open on subprocess failure; and the production G2 trunk would be reloaded per label when no trunk is supplied.
+- Interpretation: broken unused manifest support should be removed, not expanded. The other fixes are short fail-closed checks preventing invalid/optimistic evidence; no new abstraction or strategy is warranted.
+- Decision: `BLOCK COMMIT/PREFLIGHT / ONE FINAL MINIMAL PATCH`. No native work or model fit occurred.
+- Next action: analyzer author closes exactly these items, adds narrow regressions, and reruns scoped checks; independent auditor then gives the final mechanics verdict.
+
+## 2026-08-10T04:14:05+05:30 - Analyzer Audit Blockers Repaired by Author
+
+- Objective: close the exact interchange, completeness, and optimism defects without changing the PRT strategy.
+- Files changed: `.chatgpt/tmp/opponent-route/ceiling_analyzer.py` (576 lines, SHA-256 `f3a1b2106a3cdf7770f0cacbdb86be538ae676dd769a481d788dcbdc9b81f11d`) and `.chatgpt/tmp/opponent-route/test_ceiling_analyzer.py` (182 lines, SHA-256 `15504e4917bfd5895c6619e8f6d115901bb1fe1675971fce3e261f8dd61a453b`).
+- Implemented: joint global `analyze_pairs` with duplicate-root and run/config/profile consistency checks; repeated-pair CLI plus manifest input; exact history-token hash binding; opponent original-index/canonical/fingerprint validation; learner raw-to-G2 transport mapping; unseen bootstrap misses; current JSON-schema validation; exact four-replicate/particle and declared-action coverage; status validation/counts; and distinct `BLOCKED_MECHANICS`/`KILLED_CEILING`/`PASS_CEILING` outcomes.
+- Reported verification: scoped Ruff and `py_compile` passed; Pytest passed `7` tests, including new global duplicate-root, history, replicate/status, and unseen-bootstrap regressions. Schema validation uses installed `jsonschema` or a local Ajv fallback rather than adding a dependency.
+- Limitations: author verification only; no real current sidecar exists yet, no native run occurred, and no predictability/strength metric exists.
+- Decision: `KEEP ALIVE / REQUIRE INDEPENDENT RE-AUDIT`. Do not commit or preflight until root and independent checks pass.
+- Next action: rerun the entire blocker checklist and combined collector/analyzer checks, then inspect/stage only the bounded milestone.
+
+## 2026-08-10T04:19:24+05:30 - Root Combined Static Verification Passed
+
+- Objective: rerun the collector and analyzer mechanics from the lead checkout before accepting delegated claims.
+- Commands/results: `rtk uv run ruff check` over collector/analyzer/tests passed; `.venv/bin/python -m py_compile` over the same files passed; `rtk uv run pytest -q .chatgpt/tmp/opponent-route/test_ceiling_analyzer.py` passed `7` tests in `3.99s`; collector `--self-check` returned `PASS` with all declared positive and negative invariants true; the Scale64 opponent-transition `--dry-run` returned `PASS`, `authorized=false`, `DRY_RUN_ONLY`, six anchors, 64 roots, four particles, maximum 2,560 continuations/600 seconds, and zero native launches.
+- Exact dry-run config hash remains `e4db1a3c8fa78665e136d1913c76f7a518c9b7742ec3137bcc94a76646243625`; schema hash `6a8339bb8c8ed106cdf331f143dafd46e4762d311f071aeaf27a4b224cedbe6c`; projector hash `d8bd0fd9c4acf8c9c79846910ab42794acd42aa2aab6a9c26bdd324e3a7317b7`.
+- Failure/fallback: one combined whitespace command used `git diff --no-index --check` behind `&&`; that command correctly returned exit `1` merely because an untracked file differs from `/dev/null`, so the chain stopped without indicating whitespace defects. A separate tracked `rtk git diff --check -- collector.py progress.md` passed. No file was changed by either command.
+- Interpretation: root verification confirms current static behavior but not full interchange correctness; independent re-audit is still running. No native state was consumed.
+- Decision: `STATIC CHECKS PASS / AWAIT INDEPENDENT VERDICT`. Do not stage or preflight yet.
+- Next action: resolve only concrete independent blockers, then inspect the scoped diff and commit if clean.
+
+## 2026-08-10T04:07:57+05:30 - Independent Analyzer Audit Confirmed Block
+
+- Objective: independently recalculate whether the direct-sidecar analyzer is gate-ready under the actual collector/schema rather than relying on its author's passing tests.
+- Evidence/commands: read-only cross-audit of `collector.py`, `opponent_transition_label_v1.schema.json`, `ceiling_analyzer.py`, and its tests; scoped Ruff, `py_compile`, and Pytest reran successfully at `5 passed`; no native execution.
+- Confirmed defects: no joint path across the six anchor-specific dataset/sidecar pairs; missing exact `history_tokens_sha256` check; negative/list-position opponent transport handling and missing canonical/fingerprint comparison; raw learner option index not resolved through G2 transport; unseen labels omitted from bootstrap misses; no current JSON-schema validation and stale-shaped fixtures; no exact `{0,1,2,3}` replicate/particle or complete root-action coverage; unknown statuses silently treated as unsupported; and inadequate explicit metadata-firewall regression coverage.
+- Interpretation: syntax/tests passed because the synthetic contract was weaker than the real interchange. All defects are bounded ingestion/evaluation correctness, not strategic architecture. Native collection before closing them would create unusable or optimistic evidence.
+- Decision: `BLOCK / REPAIR MINIMALLY`. Analyzer author is applying only these concrete fixes; collector remains frozen unless a new analyzer regression proves a collector defect.
+- Artifacts: no new artifacts or file edits from the independent auditor.
+- Next action: rerun the exact audit checklist on the repaired analyzer and tests, then combined collector/analyzer static checks.
+
+## 2026-08-10T04:13:40+05:30 - Minimal Breakthrough Integration Seam Identified
+
+- Objective: keep the work aimed at a material engine-intelligence gain rather than letting the PRT ceiling test become analysis for its own sake.
+- Evidence inspected by read-only red-team: qualified Grim integration seams, killed outcome-ranker evidence, current counterfactual artifacts, retained loss/ablation evidence, and route/continuity knowledge-base rules. No edits, native games, network calls, or submissions.
+- Recommended architecture: insert a `Public-Belief Route Scorer V1` only at `.chatgpt/tmp/outcome-integration/candidate-gate1-v2/outcome_main_adapter.py` `OutcomeMainAdapter._rank_main`, after complete legal-option projection and before duplicate pooling/tie-breaking. Leave qualified Grim and every non-MAIN/compound/unsupported/terminal path unchanged. For each semantic root action, combine a frozen public-only opponent-response distribution with fixed route utility over prize-map distance, next-attacker readiness, KO threat, bench liability, gust/reserve coverage, turn compression, response variance, and irreversible commitment. Use conservative expectation with explicit unknown response mass; no action-specific conditionals or private identity.
+- Critical blocker discovered: a predicted response action key alone cannot establish its damage, energy, prize, or continuity effect. Deployment requires an exact sanitized public post-response feature delta/transition receipt or an equally audited deterministic semantic effect computation. The current transition sidecar intentionally contains no post-state evidence, so a passing response ceiling would still be prerequisite evidence, not a deployable scorer.
+- Runtime/reliability target: bounded `N legal actions x K<=5 responses`, under 15 ms p99 CPU; projection/model/nonfinite/coverage failures delegate to qualified Grim, and any fallback blocks promotion. Offline native micro-search remains oracle-only because prior 272 branches took roughly 34 seconds.
+- Decisive future ablation: only after response and public-delta gates pass, compare route scoring off/on over 240 natural-deployment games across six families. Kill on any reliability failure, p99 breach, aggregate gain below +5 points with positive 95% lower bound, or any important family regression above 10 points.
+- Decision: `RECOMMEND PUBLIC-BELIEF ROUTE SCORER CONDITIONALLY`; reject direct engine micro-search and any broad rule soup. Do not implement the scorer before response predictability and public-transition-effect evidence exist.
+- Next action: finish the response-ceiling mechanics. If it passes, design the smallest public-delta receipt; if it fails, kill PRT rather than collecting more infrastructure.
+
+## 2026-08-10T04:04:20+05:30 - Root Audit Blocked First Minimal Probe
+
+- Objective: independently verify that the fresh analyzer can answer the declared 64-root ceiling question without join leakage or optimistic metrics.
+- Evidence inspected: targeted reads of `ceiling_analyzer.py`; current full-run emission path in `collector.py`; G2 `OptionTransportMapV1`, `_projected_decision`, and option-embedding contract.
+- Findings: the full collector emits six anchor-specific dataset/sidecar pairs, while the analyzer accepts only one pair and therefore cannot perform the required joint approximately 40/12/12 root split or global response classification. It does not compare sidecar `history_tokens_sha256` with the exact stored root history-token body. It indexes option embeddings with the raw original request index rather than resolving that index through `transport.original_indices`. Its unseen-class branch increments aggregate misses but omits those misses from per-root bootstrap values, which can inflate the test top-3 lower bound.
+- Test/experiment size: source audit only; no native run, model fit, or real sidecar analysis. The author's five synthetic tests did not cover these defects.
+- Interpretation: these are narrow correctness gaps, not grounds for another schema or architecture. Fixing them is cheaper and more decisive than collecting invalid evidence.
+- Decision: `BLOCK COMMIT/PREFLIGHT PENDING FOUR REGRESSIONS`; keep the PRT hypothesis alive.
+- Next action: obtain independent auditor confirmation, patch only these four issues through the analyzer author, run scoped tests plus combined collector checks, then inspect the diff.
+
+## 2026-08-10T04:01:57+05:30 - Minimal Actual-Sidecar Ceiling Probe Implemented
+
+- Objective: replace the rejected frequency-only analyzer with the smallest deployable-information test of whether public root state plus candidate action predicts the opponent's first semantic response.
+- Evidence/files: `.chatgpt/tmp/opponent-route/ceiling_analyzer.py` (487 lines, SHA-256 `c138d27348417eae0cc8aaa69f1a5db3d42fa0da92adeee622d6c98c813fa76c`) and `.chatgpt/tmp/opponent-route/test_ceiling_analyzer.py` (150 lines, SHA-256 `5b5edf594529987171ec0b64845b0f2dc70799d2ef12d8575c8a80d91c68ade1`).
+- Reported verification: delegated Luna-xhigh implementer ran Ruff, `py_compile`, and `pytest`; all passed, including `5 passed` synthetic tests. Coverage includes dataset SHA/path binding, exact projection/history/root joins, four-particle grouping, duplicate hidden-hand alias pooling, root-isolated approximate 40/12/12 split, feature firewall, unseen-label handling, representation collisions, and a learnable-signal fixture.
+- Failure/fallback: the currently retained native sidecar predates the reconciled schema and lacks `public_projection_binding`; the analyzer correctly blocks it. No real data was analyzed, no native command ran, and this is not strength evidence.
+- Interpretation: implementation is now complete enough for independent root audit, but author tests are not sufficient promotion evidence. A passing predictability ceiling would authorize only the smallest response-conditioned route evaluator, never a submission by itself.
+- Decision: `KEEP ALIVE / AWAIT INDEPENDENT STATIC AUDIT`. Do not run the 64-root collection yet.
+- Next action: audit loader/joins/features/split/metrics and rerun combined checks; commit the mechanics if clean, then run exactly one fresh complete-root preflight.
+
+## 2026-08-10T03:21:40+05:30 - PRT Collector Preflight Mechanically Passed but Firewall Audit Blocked Promotion
+
+- Objective: audit the first one-ply opponent-transition collector/schema/analyzer deliverables before authorizing the 64-root ceiling run.
+- Evidence inspected: collector diff; existing G2 `semantic_equivalence_key`; independent sidecar schema/tests; complete-root dataset and restricted sidecar from preflight run `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T214239.162382Z-9cb8eca264b2/`.
+- Commands: `rtk git status -sb`; scoped `rtk git diff`; `rtk rg` over transition paths; `rtk jq` over preflight/worker/sidecar records; `rtk sha256sum` over collector, schema, and all preflight artifacts.
+- Test/experiment size: one fresh native root, six legal root actions, two particles/action, 12 continuation branches. Worker elapsed `1.573s`; all 12 first-opponent labels were `OBSERVED`; invalid/fallback/post-terminal/crash/timeout/missing/unsupported counters were zero. Preflight status was `PASS_EXECUTION` and emitted a schema-valid dataset/sidecar.
+- Failure: independent red-team correctly found this is not yet model-safe evidence. The draft's option refs include serial-derived values such as `p1:s111`; it emits physical semantic fingerprints instead of the canonical G2 `semantic_equivalence_key`; and its bespoke `_observer_public_evidence` is not the already audited G2 public projection/history contract. The sidecar claims `G2_PROJECTED_PUBLIC_ONLY` without carrying the exact projection/history joins needed to prove that claim.
+- Artifacts/hashes: collector `1d10e0d97543a815a19caa6b4f8be2848272c0a48e452c6ac039a883b6eda049`; preflight dataset `8bce2e8db71888c8e00907e4794c346c8d27e055e1db7767ea92389fa4ef3f16`; restricted sidecar `81fe31dd5ba18cda43d31a96839ab9ce39c5f7d7a5abf0ce6f`; manifest `70be03adcb6a4dda6e0fca7f39ff850ade4adec0b924762c119c78a778be3c5a`.
+- Interpretation: mechanics are promising and cheap, but schema validity is not proof of a correct public-information boundary or permutation-invariant label identity. The preflight cannot qualify the collector and must not seed a model.
+- Decision: `BLOCK / KEEP HYPOTHESIS ALIVE`. No 64-root run, training, package, or submission. Fix only the exact join/key problem; reject any duplicate public-state architecture or heuristic expansion.
+- Next action: obtain the collector/analyzer final audits, assign the minimal reconciliation patch, then rerun static tests and a single preflight under frozen writes.
+
+## 2026-08-10T03:26:26+05:30 - First Ceiling Analyzer Rejected as Non-Predictive
+
+- Objective: determine whether the independent analyzer answers the actual ceiling question: can learner-visible public features predict held-out opponent responses?
+- Evidence inspected: `.chatgpt/tmp/opponent-route/ceiling_analyzer.py`, its five synthetic tests, and the agent's explicit final limitations report.
+- Result: the analyzer correctly hash-joins a proposed per-branch sidecar and measures four-particle repeatability, semantic entropy, legal-uniform NLL, and a global/factual-action frequency baseline. Tests `5 passed`; Ruff and `py_compile` passed.
+- Failure: it does **not** consume or learn from the audited public tensor, so it does not predict held-out labels from public features. Its top-3 "ceiling" is largely a repeatability statistic over four labels, not evidence that a deployable opponent model can anticipate the next move. It also drops source/target refs while forming response keys, which can collapse strategically distinct endpoints. No real collector sidecar was compatible with it.
+- Decision: `REJECT ANALYZER AS PROMOTION EVIDENCE / KEEP REUSABLE AUDIT COUNTERS`. Do not run the 64-root experiment until a small fixed public-feature probe and endpoint-preserving serial-free label contract replace these gaps.
+- Next action: collector agent implements the exact existing-G2 join/canonical root key and stable endpoint-aware response key; analyzer agent replaces the frequency-only gate with a fixed grouped public-feature linear probe. Independent red-team reviews both before native authorization.
+
+## 2026-08-10T03:27:36+05:30 - Live Grim Refresh Unchanged
+
+- Objective: check whether new live evidence arrived while the deterministic PRT mechanics were being repaired.
+- Evidence/commands: authenticated read-only Kaggle submission metadata and full episode list for submission `55372188` through the Kaggle connector.
+- Result: status remains `COMPLETE`, score remains `811.4`, and the public set remains 45 games at W/D/L `24/0/21`. Newest episode is still loss `91436075` at `2026-08-09T21:04:08.353498500Z`; no new episode has arrived since the prior refresh.
+- Decision: `NO LIVE CHANGE / NO ACTION`. The distance to 1000 remains 188.6 Elo; no submission, upload, replay download, active-agent mutation, or benchmark-task call occurred.
+- Next action: continue the local public-response integration gate; refresh again only when new matchmaking or a fully qualified candidate makes mutable facts relevant.
+
+## 2026-08-10T03:30:35+05:30 - PRT Objective Rechecked Against Knowledge Base
+
+- Objective: verify that the proposed opponent-response model serves a high-value decision objective rather than merely improving imitation.
+- Evidence/command: `rtk uv run python knowledge_base/query_db.py search 'next attacker readiness prize route opponent immediate KO threat attack continuity gust route conversion'` after a harmless first invocation failed because `query_db.py search` has no `--limit` option.
+- Result: the strongest matching rules consistently require stress-testing every non-terminal action against credible opponent response, preserving next-attacker readiness, avoiding losing Prize trades, and measuring gust/damage by route conversion. Relevant records include `STR-001/002/003/006/007`, `DR-004/005/006/007/008`, and anti-patterns `AP-001/003/005/008/009`.
+- Interpretation: exact next-action prediction is useful only as an input to route/prize/continuity evaluation. Response imitation by itself is not a promotion objective, and hidden-card certainty remains forbidden.
+- Decision: `KEEP PRT ALIVE WITH ROUTE-UTILITY REQUIREMENT`. A passing predictability probe unlocks the smallest response-conditioned route evaluator; it does not directly unlock submission.
+- Next action: finish the collector/probe mechanics and red-team; no heuristic soup or broad rule rewrite.
+
+## 2026-08-10T03:35:42+05:30 - Independent PRT Reconciliation Red-Team
+
+- Objective: independently specify the minimum trustworthy bridge from collected branch labels to a deployable learner-visible response probe.
+- Evidence inspected by the red-team: current collector and sidecar, `advance_public_recurrent_prefix`, the canonical G2 `semantic_equivalence_key`, and the first frequency-only analyzer.
+- Verdict: `BLOCK PREFLIGHT`. Required fixes are exact hash joins to the stored audited public projection/history/action record; the canonical G2 key only for learner root actions; separate serial/order-invariant response keys; root-group split/bootstrap; and a fixed linear probe using only the 160-wide public hidden state plus 128-wide candidate option embedding.
+- Important lead clarification: an opponent MAIN action chosen from hand may include its card/action identity **as the supervised target** when that identity becomes public through the action. It may not enter features through the private opponent hand/legal set. Collapsing every hidden-hand PLAY/ATTACH/EVOLVE target to a generic hidden-source label would make the prediction target strategically useless; the feature/label boundary, not deletion of the outcome, is the safety rule.
+- Probe contract: keep all particles/actions from a root together, use hashes only as joins, check representation collisions, bootstrap by root, and report unseen-class rate. A passing probe is architecture evidence only, not strength or submission evidence.
+- Decision: `KEEP RECONCILIATION IN PROGRESS`; no native run. Current agents are implementing the minimal collector and genuine public-feature probe under these constraints.
+- Next action: audit their static results against this checklist, then run exactly one new complete-root preflight if and only if all joins/firewalls pass.
+
+## 2026-08-10T03:42:23+05:30 - Reconciled Collector Static Pass; Analyzer Rewrite Interrupted Incomplete
+
+- Objective: close the exact G2 join/key firewall and replace the frequency-only analyzer with a genuine public-feature probe without launching native work.
+- Collector result: `collector.py` now computes learner root keys through the committed G2 `semantic_equivalence_key`; emits exact dataset/projection/history/root-action joins; normalizes opponent endpoint ownership by learner/opponent role; pools duplicate hidden-hand copies while requiring factual non-null chosen-card identity; preserves endpoint/attack distinctions; removes bespoke opponent post-state evidence; and keeps complete opponent legal options/transport data audit-only. Schema/config bind the projector explicitly and remain `authorized=false`, `DRY_RUN_ONLY`.
+- Collector verification: `py_compile`, JSON parse, Ruff, self-check, and Scale64 dry-run all passed; dry-run declared 64 roots, four particles, 2,560 branches, 600-second wall, and zero native launches. Hashes: collector `d8d546dcb5899d803c7c07d42754ebe661666cf8eb88c92473453178a0596913`; label schema `01931c7184cf3f071f24d3ad44eaad68d7b3074b3624fc8ea81e2c7f230d13d6`; config `865a892013c837f38b4e54a1fb4a88e7da25124d5bbb1207250375a9a6aada3f`.
+- Collector limitation: diff is still `+768/-13`, too large to accept unaudited. The prior native preflight is stale under these hashes. No new native preflight/full run occurred.
+- Analyzer result: agent implemented part of an actual fixed linear probe over `[public_hidden(160) || candidate_option_embedding(128)]` and began adapting it to the real `.labels` sidecar, but the hard timebox interrupted it. Current `ceiling_analyzer.py` is 50,657 bytes, tests still target the obsolete parallel `.records` schema, and no post-pivot compile/test was run. It is not usable evidence.
+- Decision: `COLLECTOR KEEP FOR INDEPENDENT AUDIT`; `ANALYZER REJECT CURRENT DRAFT / REWRITE MINIMAL`. No commit, preflight, collection, training, package, or submission.
+- Next action: independently audit the collector's actual schema/key/firewall and simplify only proven redundancy; separately replace the analyzer with a small direct `.labels` loader plus fixed probe/tests. Then run static checks before considering one native preflight.
+
+## 2026-08-10T03:50:44+05:30 - Independent Collector Audit Found Four Preflight Blockers
+
+- Objective: verify the reconciled collector independently rather than trusting its author/self-check.
+- Evidence inspected by independent auditor: current collector/schema/config and all prior Scale256/preflight artifacts; no files changed and no native run.
+- Findings: old artifacts are correctly stale and cannot validate the new contract; the new sidecar copied the public prefix digest without also binding the exact stored history token; chosen transport indices were not independently checked for singleton uniqueness/range/exact retained-option identity; complete-root preflight emission could traceback without retaining a `BLOCKED` report; and hand zone `2` was a magic constant rather than an explicit current semantic-contract binding.
+- Directionally correct evidence: relative owner normalization, hidden-hand duplicate pooling, endpoint resolution, canonical learner root keys, and refusal of unauthorized full execution are present.
+- Decision: `BLOCK NATIVE PREFLIGHT` until those four narrow correctness fixes pass static/failure-path checks. Stale old artifacts are not a code defect and will simply be superseded.
+- Next action: collector author applies only the four audit fixes; fresh minimal-probe agent replaces the incomplete analyzer against the actual `.labels` sidecar. No unrelated expansion.
+
+## 2026-08-10T03:56:26+05:30 - Four Collector Audit Blockers Closed Statically
+
+- Objective: close exact history, transport, failure-reporting, and zone-contract defects before spending another native root.
+- Files changed: `.chatgpt/tmp/counterfactual-q/collector.py`; `.chatgpt/tmp/outcome-ranker/opponent_transition_label_v1.schema.json`; untracked dry config `.chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_opponent_transition_v1.json`.
+- Fixes: sidecar now binds `history_tokens_sha256` and checks token/provenance prefix equality; OBSERVED labels require exactly one in-range unique transport index whose retained legal option matches canonical key and fingerprint, with action fingerprint recomputed; preflight dataset/sidecar failures retain a `BLOCKED` execution report instead of escaping; hand zone is a named constant self-bound to current `AREA['HAND']`.
+- Verification: `py_compile`, schema/config JSON parse, Ruff, collector self-check, and unauthorized dry-run all passed. Dry-run remained 64 roots/four particles/2,560 branches/600 seconds/zero native launches.
+- Hashes: collector `6d62454c7b815a2e9ae3a88166697c57f0cbd22ddf665ea3dfd591330472304b`; schema `6a8339bb8c8ed106cdf331f143dafd46e4762d311f071aeaf27a4b224cedbe6c`; config `e4db1a3c8fa78665e136d1913c76f7a518c9b7742ec3137bcc94a76646243625`.
+- Limitation: collector diff is now `+924/-57`. Most growth is schema/firewall validation and negative self-checks, not strategy code, but it must be reviewed rather than polished further. No native preflight occurred.
+- Decision: `STATIC MECHANICS PASS / AWAIT MINIMAL PROBE AND COMMIT`. Do not expand collector further unless independent tests expose a concrete defect.
+- Next action: finish direct-sidecar probe, run combined tests, inspect/stage only safe source/schema/probe/progress, commit, then update untracked config source commit and run one fresh preflight.
+
+## 2026-08-10T02:57:00+05:30 - PRT Ceiling Gate Resumed
+
+- Objective: implement and validate only the smallest data path needed to test whether the opponent's first semantic MAIN response is predictable from the learner's actual information at its preceding decision.
+- Starting Git: HEAD `bff8de8`; code milestone `04a2247`. Pre-existing unrelated dirty state remains untouched. All prior agents were completed/closed before being reassigned.
+- Critical information-boundary correction: the opponent's legal option set and opponent-view observation expose private hand-dependent information. They may be retained only as label/audit metadata in restricted artifacts and must never enter a model-facing tensor, public belief, or inference feature. The model-facing input is the learner's original public/own-information root representation plus the candidate root action and public history available at that decision.
+- Label target: the first opponent `MAIN`, context-0, singleton semantic action actually chosen after the candidate root action. Terminal-before-opponent and unsupported/compound cases receive explicit statuses and are never silently dropped. True anchor/deck family is split/report metadata only; any inference family belief must be recomputed from revealed public cards rather than supplied identity.
+- Post-action evidence: retain only public event/state hashes or a separately sanitized observer-public projection for parity/route diagnostics. Do not project the opponent's actor observation through an actor projector and call it public.
+- Work order: collector agent implements the bounded sidecar/profile and mechanics tests; red-team agent independently freezes schema/firewall invariants; ceiling agent builds a label-blind predictability/entropy analysis that refuses anchor identity and private opponent option features. No native run until all three agree and the shared worktree is frozen.
+- Decision: `IN PROGRESS / DATA CEILING ONLY`. No PRT model, package, arena screen, or submission is authorized by this step.
+- Next action: audit the three independent deliverables, run self-check/dry-run/preflight, commit the mechanics, then freeze filesystem writes for one 64-root collection.
 
 ## 2026-08-10T01:46:30+05:30 - One-Hour Deterministic Qualification Window Started
 
