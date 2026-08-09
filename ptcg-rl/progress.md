@@ -2,18 +2,172 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T20:20:07+05:30
+Updated: 2026-08-10T01:46:30+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `800.5`. It has 36 public games, 19 wins and 17 losses, plus one successful validation episode. The score fell from 814.0 after two new losses and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: replace incremental rule patches with an outcome-trained public-state semantic action-value engine. Generate native counterfactual continuation labels for the complete legal set, learn terminal-win action ranking on public features, model likely opponent continuations as a distribution, and retain the deterministic controller only as a legal/reliability fallback.
-- Most recent decisive evidence: the user correctly rejected further investment in a one-state promotion guard as incapable of closing a roughly 200-point live Elo gap. The fixed Stage B runner was interrupted before launch; zero Stage B games exist. The narrow guard is mechanically valid but strategically parked.
-- Exact next task: audit existing search/fork plumbing, evaluator failures, rollout datasets, recurrent/semantic model infrastructure, and exact-deck state features in parallel; prove the smallest native counterfactual action-ranking data path on one bounded state, then select one major architecture by outcome evidence and today-feasible implementation cost.
-- Latest relevant session commit: `d4b0767a653842b9e310fb416888c5a12640d362` (`exp: pass Dragapult promotion native mechanics`). Guard integration is `2a08d53c38ace873f12b07b138852e687444a45b`; fixture `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; exact-state audit `9f6315794975bb87ca2bbd251c120a0bdcefbac1`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
-- Uncommitted session work: this post-commit journal SHA/retrieval-plan update plus generated/private Stage A and candidate artifacts, which remain intentionally untracked and must not be staged. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Active hypothesis: a one-hour, deterministic-only qualification sprint is active. Build a substantially larger **supervised counterfactual outcome evaluator**, not RL, while preparing only the minimum package seam needed if it clears hard heldout and native gates. Native engine continuations label every legal MAIN action; an offline supervised ranker scores the complete public legal set deterministically. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
+- Most recent decisive evidence: Scale64 frozen-head heldout result kills promotion. Untouched-test concordance was `0.6038`, but chosen-versus-Grim target delta was only `+0.0208` with 95% CI `[-0.3125,+0.3958]`; Mega Lucario regressed `-0.625` and Lopunny `-0.25`. The checkpoint is mechanically valid but not a candidate.
+- Exact next task: complete the hard qualification window ending approximately `2026-08-10T02:46:30+05:30`. In parallel: collect roughly 4x more independent supervised states, train/evaluate the same deterministic frozen-trunk evaluator on a fresh label-blind split, and prepare the smallest submission seam without promoting the rejected Scale64 checkpoint. Submit only if the exact package is mechanically qualified and materially superior by game-outcome evidence; do not spend a slot on a namesake candidate or claim a fabricated `>90%` probability.
+- Latest relevant session commit: `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31` (`docs: redirect to outcome-trained decision engine`). Stage A mechanics is `d4b0767a653842b9e310fb416888c5a12640d362`; guard integration `2a08d53c38ace873f12b07b138852e687444a45b`; fixture `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Uncommitted session work: this post-commit journal SHA update, the parked uncommitted Stage B runner, and generated/private Stage A/candidate artifacts; none may be staged accidentally. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-RESUME HERE: do not resume the narrow Dragapult screen. Prove a one-state native counterfactual outcome-label pipeline for complete legal actions, audit reusable public semantic features/evaluator code, and choose the shortest outcome-trained architecture capable of a material broad gain.
+RESUME HERE: timer session `39825` was started at about `2026-08-10T01:46:30+05:30` for 3,600 seconds. Finish the deterministic qualification sprint by about `02:46:30`; Scale64 remains rejected and its consumed test split may not be reused for tuning. Do not call this RL. Fail closed rather than submit an unqualified candidate.
+
+## 2026-08-10T01:46:30+05:30 - One-Hour Deterministic Qualification Window Started
+
+- Objective: qualify and, only if materially superior evidence exists, submit the next deterministic agent within one hour. User explicitly authorized one Kaggle submission at the deadline, conditioned on it being a legitimate materially stronger candidate rather than a namesake submission.
+- Timer: persistent command `rtk sleep 3600`, exec session `39825`, started at approximately `2026-08-10T01:46:30+05:30`; target expiry approximately `2026-08-10T02:46:30+05:30`.
+- Starting evidence: live control remains `800.5`; no current package has evidence supporting a `>90%` chance of reaching 1000 Elo. Scale64 is rejected for promotion. The sprint therefore begins with no pre-authorized candidate and will not misstate confidence.
+- Decision: pursue one major path only: a larger independent supervised counterfactual outcome dataset and deterministic complete-legal-action evaluator, with packaging preparation performed in parallel. No RL, heuristic soup, broad refactor, or random live probe.
+- Stop conditions: heldout weakness, catastrophic family regression, native exception/invalid/fallback, package mismatch, inadequate time for exact-package qualification, or lack of material game-outcome evidence. Any stop condition means no submission rather than quota waste.
+- Files changed: `progress.md` only.
+- Next action: assign all three available Luna-xhigh subagents to collection, fresh heldout training/evaluation, and minimal competition-package integration/qualification, then audit each result as it lands.
+
+## 2026-08-10T01:48:00+05:30 - Scale64 Milestone Commit Preflight
+
+- Objective: preserve the completed counterfactual collector and supervised evaluator mechanics plus the decisive negative Scale64 result before the timeboxed larger experiment.
+- Evidence/files checked: `collector.py`, `probe.py`, `outcome_ranker.py`, `train_gate1.py`, `train_scale64.py`, `test_outcome_ranker.py`, and `counterfactual_action_dataset_v1.schema.json`. Generated datasets, checkpoints, metrics with private paths, compatibility policy bodies, and submission artifacts remain excluded.
+- Commands: `rtk uv run ruff check <seven Python files>`; `rtk .venv/bin/python -m py_compile <seven Python files>`; `rtk uv run pytest -q .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`.
+- Result: Ruff PASS, `py_compile` PASS, pytest `6 passed in 5.38s`.
+- Failures/fallbacks: none in this preflight. The Scale64 promotion failure remains recorded and is not reinterpreted.
+- Decision: commit the reproducible source/tests/schema and this journal only; preserve every unrelated dirty path and all restricted/private artifacts outside the commit.
+- Next action: inspect the exact staged diff, commit, then continue the already-running three-agent qualification sprint.
+
+## 2026-08-10T00:25:00+05:30 - Prepared Scale64 Gate1 Schedule (Unauthorized)
+
+**Objective/question**
+
+Prepare, but do not launch, the smallest six-anchor extension after the Gate1 mechanics audit. Keep every root independent, balance learner seats per anchor family, and preserve the exact public/private, BC, receipt, and HEAD bindings.
+
+**Implementation**
+
+- Generalized `.chatgpt/tmp/counterfactual-q/collector.py` only. Existing three-anchor Gate1 validation remains supported; the new `GATE1_SCALE64_V1` profile validates exactly six receipt-sealed anchors, 64 roots, 4 shared particles/action, max 10 legal actions, cap 2,560 branches, and a 600-second wall cap.
+- Root assignment is one fresh worker/native start per root. It selects the first qualifying `MAIN`, context-0, singleton state in a declared `EARLY` turn window `[2,3]` or `MID` window `[4,6]`; it does not request an nth candidate from a shared game.
+- Each anchor alternates learner slots independently: 11-state families use 6/5 and 10-state families use 5/5. Particle seeds are unique labels derived from `(root_id, particle_index)` for determinization; official `battle_start(deck0, deck1)` has no seed parameter, so native root-start randomness remains explicitly `SYSTEM_ENTROPY_UNCONTROLLED` rather than being falsely claimed deterministic.
+- Group split keys now retain an UTC timestamp plus SHA-256 of `episode_uuid|root_id|anchor|learner_slot`; worker reports retain root/window/slot seed provenance. Existing dataset schema remains unchanged.
+
+**Exact artifacts and bindings**
+
+- Unauthorized config: `.chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_v1.json`, SHA-256 `6f896d2cd39f40b56b804a69fa328f6887a4639e712aa6fff9c7c9d1f16c68b9`.
+- Collector SHA-256 after the scratch-only generalization: `58e4539a61a75a8b6e0a3a71138b1a12240b4490990edec69b54dfc51b02db48`.
+- Anchor allocation/order: Dragapult `11`, Iono `11`, Mega Lucario `11`, Alakazam v9 `11`, Mega Lopunny v9 `10`, Grim source mirror `10`; each is receipt/deck/module-verified in dry validation.
+- Pinned BC binding: checkpoint `76478ade...ffafde`, state `b1efa5a1...c6e2e1f`, optimizer steps `840`, mode `FROZEN_BC_EPOCH4_HEAD_ONLY`; source commit remains `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`.
+
+**Verification**
+
+- `rtk .venv/bin/python -m py_compile .chatgpt/tmp/counterfactual-q/collector.py`: PASS.
+- `rtk uv run ruff check .chatgpt/tmp/counterfactual-q/collector.py`: PASS (`All checks passed!`).
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --self-check`: PASS; native imports `0`, scale allocation/window/seed-claim refusals, stale output/config/commit checks, process-group cleanup, BC-state refusal, and schema projection checks all passed.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --config .chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_v1.json --dry-run`: PASS; `authorized=false`, `mode=DRY_RUN_ONLY`, `native_launches=0`, 64 assignments, 2,560 worst-case branches, 600-second wall cap.
+
+**Runtime / blocker**
+
+The sealed six-root run completed 272 branches in `34.476553s` (`7.889 branches/s`); linear extrapolation for 2,560 branches is `324.5s`. The declared expected wall is under `450s`, hard-capped at `600s`, subject to root-walk and anchor inference variance. The sole known root-diversity limitation is official native start entropy: no supported game seed API exists, so independence is fresh-process/native-start based and seed labels are provenance only.
+
+No native continuation, training, authorized config copy, submission, staging, or commit was performed.
+
+## 2026-08-09T18:56:07Z - Scale64 Gate1 Native Run (FAIL CLOSED)
+
+**Exact execution**
+
+- Authorized config was copied from the audited dry config with only `authorized=true` and `mode=NATIVE_FULL_AUTHORIZED`. Dry-config SHA-256: `6f896d2cd39f40b56b804a69fa328f6887a4639e712aa6fff9c7c9d1f16c68b9`; authorized-config SHA-256: `e88be0faf69984e4aa1d74da551d85757b3736af47d3065919ccba8cf012907b`.
+- Exactly one native command was launched, with no retry:
+  `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --config .chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_v1_authorized.json --execute-native`
+- Run: `counterfactual-q-20260809T185324.775834Z-102fb9e7bb51`; manifest created `2026-08-09T18:53:24.776121+00:00`, finished `2026-08-09T18:56:07.320842+00:00` (about `162.545s`). Execution report: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T185324.775834Z-102fb9e7bb51/full-execution.json`.
+
+**Failure and integrity**
+
+- The run fail-closed at worker/state index `33`, anchor `public-alakazam-v9`, after `34` native starts. Workers `0..32` completed; worker `33` returned `FAIL`, so the required 64 roots and all six anchor strata were not reached. The 32 child continuations for that root all returned `ERROR: NameError: name 'sys' is not defined`; the worker error was `ScheduleError: failed continuation cannot enter dataset`.
+- Attempted continuation rollouts: `972` (`940` complete labels from 33 roots plus `32` failed children). Completed-root counters were invalid `0`, fallback `0`, post-terminal `0`, child crash `0`, child timeout `0`, and parent-valid steps `33`; failed children are nevertheless fatal. Dataset outputs: none. The manifest is `SEALED_DIGESTS_ONLY` with filesystem immutability not claimed; sidecar SHA-256 is `3653c3492432454454dac25441125f2e0832b7df17f96ca457c77f4b25bfb487`.
+- Partial raw diagnostics (not a dataset): 33 complete roots, unique root/episode/public-state/group IDs `33/33/33/33`; anchor counts Dragapult/Iono/Mega Lucario `11/11/11`, learner slots `18/15`, windows EARLY/MID `18/15`, turns `{2:6, 3:12, 4:4, 5:11}`. Complete physical action rows `235`, branches `940`, semantic-fingerprint classes `235` with no duplicate rows. W/D/L labels were `570/1/369`, mean reward `0.2138297872`, population variance `0.9532129923`; legal-action counts ranged `2..10` (histogram retained in worker reports).
+- Actual bindings remain recorded in the run manifest: collector SHA-256 `58e4539a61a75a8b6e0a3a71138b1a12240b4490990edec69b54dfc51b02db48`, pinned BC checkpoint SHA-256 `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde`, BC state SHA-256 `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`, source commit `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`.
+
+**Verdict**
+
+`KILL`: the authorized Scale64 collection is not admissible; no training, deduplication, production edit, submission, staging, or commit was performed. The failure is isolated to the Alakazam-v9 continuation path and requires audit/fix before any future authorization; this run is not a retryable dataset source.
+
+## 2026-08-10T00:33:46+05:30 - Scale64 Alakazam Failure Diagnosis (READ-ONLY)
+
+**Root cause**
+
+- The failure is a real missing import in the frozen public Alakazam module, not a collector or loader namespace defect. `.chatgpt/tmp/public-refresh/late-screen-agents/alakazam-v9/main.py` imports `os` and `defaultdict` at lines 1-2 but never imports `sys`; the only three `sys` references are `sys.stderr` at lines 915, 951, and 1031.
+- Official `cg.api.SearchState` documents that every observation returned by `search_step` has `search_begin_input=None` (`private/assets/official/sample_submission/sample_submission/cg/api.py:443-449`). Alakazam's `_search_decide` is enabled for `MAIN`, turn >=2, and at least three options; its first search-derived observation therefore enters line 915 and raises `NameError` while trying to log that search is unavailable. The other two `sys.stderr` sites are the analogous search-begin/error logging paths.
+- Worker 33 retained 32 child `ERROR` records, all exactly `NameError: name 'sys' is not defined`; four failed at `continuation_steps=1` when the first Alakazam response was MAIN, and the remaining 28 failed after 19-21 search steps. This is precisely the fork/search-only path, not a general policy import failure.
+
+**Reproduction and loader audit**
+
+- Import-level reproduction used the same `NativeRulePolicy` loader as the collector, with no native battle: it loaded the module successfully, reported `_SEARCH_IMPORT_OK=True`, `agent_callable=True`, and `sys_in_module=False`; a synthetic turn-2 MAIN observation with three options and `search_begin_input=None` raised the exact `NameError`.
+- The same loader successfully imported the learner and all six configured anchor modules. Dragapult, Iono, and Mega Lucario explicitly import `sys`; no other configured module references bare `sys`. `NativeRulePolicy._load_module` changes into the policy directory, prepends that directory to `sys.path`, registers a unique module name, and executes the module; it does not and should not inject undeclared globals. No loader root-cause fix is indicated.
+- The four retained Alakazam copies (public-refresh late-screen/arena, Grim-punk arena, and Majkel-history arena) are byte-identical at module SHA-256 `7f82cfe51329263d46b34d71405876db881fb840e97258fe6f52d6b37876162f`; the current receipt remains `084d4f11331a5a9b6921c227cd9e5fd15d15c583b77db464be6b5a62b388e5ce`. No source or receipt was changed.
+
+**Why prior arena evidence succeeded**
+
+- Prior ordinary native arena evidence used the same module/deck lineage without this search-derived observation path: the confirmation aggregate contains `60/60` completed Alakazam games with W/D/L `5/0/55`, mean wall `3.695914s`, max RSS `174,227,456`, and zero reliability errors; the earlier screen contains `40/40`, W/D/L `9/0/31`, mean wall `3.527331s`, max wall `6.622913s`, and zero reliability errors. Those runs establish ordinary arena compatibility, not compatibility with `search_step` observations. The Gate1 fork path is the first retained evidence that exercises this latent bug.
+
+**Dataset boundary and recommendation**
+
+- The 33 successful worker reports are audit-only. `_execute_full` appends groups in memory and writes per-anchor datasets only after every declared assignment passes; worker 33 raised before that loop completed, so `dataset_outputs=[]` by design. The partial groups cannot satisfy the six-anchor/64-root schedule binding and must not be extracted or trained.
+- Smallest honest future choice: preserve the frozen source/receipt, create a clearly versioned scratch compatibility copy with exactly `import sys` added, a new module SHA, new receipt, and new `policy_id`/`baseline_id` (for example `public-alakazam-v9-compat-sys`), then dry-validate/import-check it before any separate authorization. Do not patch the original file, reuse its receipt, or silently disable search. Excluding Alakazam and reallocating roots is the fallback if a new receipt-bound compatibility copy is not accepted.
+
+**Verdict**
+
+`ROOT CAUSE CONFIRMED; NO NATIVE RETRY; NO TRAINING.` No files other than this journal entry and the already-retained failed-run artifacts were edited in this diagnosis.
+
+## 2026-08-10T00:39:50+05:30 - Alakazam Compatibility Copy And Complete-Root Preflight
+
+**Bounded fix**
+
+- Preserved the original public artifact and receipt. Created `.chatgpt/tmp/counterfactual-q/anchors/public-alakazam-v9-compat-sys-v1/` with the original deck unchanged and a compatibility `main.py` containing exactly one added line, `import sys`. Unified diff proof reports no removals and the sole addition `+import sys`.
+- Compatibility module SHA-256: `ac997acf5f3e79f7ecf7c7b7a1f68608177e01c2f0cd8c844e40c6ec85804986`; original module SHA-256: `7f82cfe51329263d46b34d71405876db881fb840e97258fe6f52d6b37876162f`; deck SHA-256 remains `a8c9177354b92abe5fb877f46b792b86f8ec9c4bc3551d5d16d4a89128f00976`.
+- New receipt: `.chatgpt/tmp/counterfactual-q/anchors/public-alakazam-v9-compat-sys-v1/receipt.json`, SHA-256 `6b1b28b387dd7b69db314376da5d32398c7bb1207f96c64e667d009da87f5604`, policy ID `public-alakazam-v9-compat-sys-v1`, baseline family `public-alakazam-v9`. Receipt explicitly records the source module/receipt, one-line semantic diff, and `COUNTERFACTUAL_GATE1_ONLY_NOT_PRODUCTION` scope.
+- Updated only the Alakazam anchor binding in unauthorized `.chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_v1.json`: new config SHA-256 `000e345581b1a7f85c0aa8b53d79a4dca373c034f50c432f65624267933984ba`. Compared with the prior authorized-copy contents, the only non-authorization differences are the Alakazam `directory`, `policy_id`, and `receipt_sha256`; `authorized=false`, `mode=DRY_RUN_ONLY`, all six-family allocations, caps, source commit, deck, BC, and engine bindings remain unchanged. No authorized full config was created or changed.
+
+**Static/refusal checks**
+
+- Compatibility `py_compile`: PASS. Same-loader import: PASS (`agent_callable=true`, `sys_in_module=true`, `_SEARCH_IMPORT_OK=true`). The exact synthetic SearchState-shaped turn-2 MAIN callback that previously raised `NameError` now returns `None`, records `search_reported=true`, and disables search cleanly (`search_ok_after=false`). No native battle was started.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --self-check`: PASS, `native_imports=0`. Updated Scale64 dry-run: PASS, 64 assignments, 2,560 worst-case branches, `authorized=false`, `mode=DRY_RUN_ONLY`, native launches `0`. Unauthorized `--execute-native` refusal: PASS, `native_launches=0`.
+- Complete-root preflight config: `.chatgpt/tmp/counterfactual-q/gate1_alakazam_compat_preflight.json`, SHA-256 `d7831179837a6ca3dac322e5f9b072d5c8d6c59a620c777db9746771c153ec2a`; dry-run validation PASS. It puts the compatibility Alakazam family first solely so the one complete-root worker is Alakazam-only; the other declared families were not launched.
+
+**Exactly one native preflight**
+
+- Exact command, run once after static checks:
+  `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --config .chatgpt/tmp/counterfactual-q/gate1_alakazam_compat_preflight.json --preflight-complete-root`
+- Run `counterfactual-q-20260809T190905.567546Z-f38a04029f59`; created `2026-08-09T19:09:10.004022Z`, finished `2026-08-09T19:09:10.156394Z`. Execution report: `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T190905.567546Z-f38a04029f59/preflight-execution.json`; manifest sidecar seal SHA-256 `90f49c97cec8dbb583a4a2af29df12f39c34dc6f42da8809841cce5be1e9dec6`.
+- `PASS_EXECUTION`: one native root, turn `3`, learner slot `0`, `MAIN` type/context `0/0`, `selection_seq=18`, complete legal root set `9/9` including END, optional STOP false. Exactly `18` continuations (`9 actions x 2 shared particles`) completed; child statuses `18 COMPLETE`, errors/crashes/timeouts/invalid/fallback/post-terminal all `0`. Parent COW check passed with one valid parent step, distinct pre/post public hashes, and coherent post request sequence `19`.
+- Terminal labels were W/D/L `17/0/1`; continuation steps ranged `143..206` (sum `3,273`). Pinned BC state/checkpoint bindings passed. Public projection/schema passed: history recorded, 160-wide public projection emitted, `public_only=true`, raw observation/search inputs absent, hidden state marked label-only.
+- Preflight dataset (execution evidence only, not training): `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T190905.567546Z-f38a04029f59/complete-root-dataset.json`, SHA-256 `1707ea5fcd2dded2cb77f830ed4e3695c649bffe51d884dc2f3bb730b10edf81`; schema PASS, 1 group, 9 aggregates, 2 replicates each with 9 actions. Opponent binding is explicitly `public-alakazam-v9-compat-sys-v1` and receipt/module hashes above.
+
+**Verdict**
+
+`COMPATIBILITY SEARCH PATH PASS; FULL SCALE64 STILL UNAUTHORIZED.` Original package remains untouched. No full retry, training, production edit, submission, staging, or commit was performed; compound and optional-STOP coverage remains a separate mechanics gate.
+
+## 2026-08-10T01:00:00+05:30 - Scale64 Compatibility-Bound Raw Collection
+
+**Exact authorization and execution**
+
+- Created `.chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_v1_authorized_compat_sys_v1.json` from the audited dry config with only `/authorized` and `/mode` changed. Dry SHA-256 is `000e345581b1a7f85c0aa8b53d79a4dca373c034f50c432f65624267933984ba`; authorized SHA-256 is `198ad4be9cddbc0e930488eb47439ae80a14d199f18d51df6c55f0d52a16864a`; semantic diff is exactly `['/authorized', '/mode']`, with `true/NATIVE_FULL_AUTHORIZED` in the executed copy.
+- Executed exactly once, without reusing the failed worker: `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --config .chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_v1_authorized_compat_sys_v1.json --execute-native`.
+- Run ID `counterfactual-q-20260809T192122.022340Z-5bb37dd8b2ce`; artifact root `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T192122.022340Z-5bb37dd8b2ce/`; created `2026-08-09T19:21:22.022623+00:00`; finished `2026-08-09T19:26:34.955448+00:00`; wall `312.932825s` under the `600s` cap. Execution status is `PASS_COMPLETE`, with `64` native roots and `1,588` continuation rollouts.
+
+**Integrity and coverage**
+
+- All `64/64` workers are `PASS_COMPLETE`; all `1,588/1,588` child branches are `COMPLETE`. Invalid actions, development fallbacks, post-terminal actions, child crashes, child timeouts, and child errors are all `0`; parent-valid steps and coherent COW checks are `64/64`.
+- Root allocation is exact: Dragapult/Iono/Mega Lucario/Alakazam `11` each, Mega Lopunny/Grim mirror `10` each. Learner slots are balanced `6/5` in every 11-root family and `5/5` in each 10-root family. Candidate windows are `EARLY 34` and `MID 30`; turns are `{2:10, 3:24, 4:10, 5:20}`; legal action counts are in `2..10` with no truncation. Unique root, episode, public-state, state-group, and particle IDs are `64/64/64/64/256`.
+- Raw output contains `397` physical legal options, `256` four-particle replicates, and `1,588` physical action rows. Every state has complete singleton `MAIN`, context-0 coverage (`64/64`), optional STOP false, and compound coverage explicitly pending the separate mechanics gate. No raw physical rows were deduplicated.
+- Raw terminal labels are W/D/L `941/0/647`, mean reward `0.1851385390`, with raw values only `{-1,+1}`. Action-level target means are `{-1,-0.5,0,0.5,1}` and population variance is `0.4348672982`. Per-anchor raw W/D/L are Dragapult `201/0/83`, Iono `115/0/125`, Mega Lucario `132/0/116`, Alakazam `197/0/79`, Lopunny `186/0/50`, and Grim `110/0/194`.
+
+**Public/private and equivalence audit**
+
+- Existing `outcome_ranker.load_counterfactual_dataset` passed schema, frozen-projector, and factual-equivalence validation for all six datasets. Public boundary checks are `64/64`: public-only, raw observation not retained, forbidden actor features absent, and search/determinization inputs absent. The model-input fields `entity_parent_indices`, `entity_energy_offsets`, and `entity_energy_values` are present in `64/64` projected states; five states legitimately have an empty energy-value list because no public energy attachment exists.
+- Factual key inventory from the existing `semantic_equivalence_key` is `361` classes across `397` physical options: `30` collision classes in `20` groups, `66` collision members, `36` extra physical aliases, and maximum class size `3`. This is diagnostic only; the raw dataset remains physical and unpooled.
+- Every worker binds BC checkpoint `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde`, frozen state `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`, optimizer steps `840`, and mode `FROZEN_BC_EPOCH4_HEAD_ONLY`. The Alakazam compatibility receipt is `6b1b28b387dd7b69db314376da5d32398c7bb1207f96c64e667d009da87f5604`; its module SHA is `ac997acf5f3e79f7ecf7c7b7a1f68608177e01c2f0cd8c844e40c6ec85804986`.
+
+**Sealed artifacts and verdict**
+
+- Manifest `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T192122.022340Z-5bb37dd8b2ce/run-manifest.json` and sidecar `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T192122.022340Z-5bb37dd8b2ce/run-manifest.sha256` both bind SHA-256 `b2d07cf24bd71a456d779b94abacc7eb784c2bce348ccd7a924f0f6f577c52e0`; all `70` manifest-listed worker/dataset digests match. Execution report is `full-execution.json`; six dataset SHA-256 values are recorded in its manifest and per-anchor diagnostic above.
+- `PASS` for this bounded raw collection's execution, public/private boundary, schema/projector integrity, and receipt/BC provenance. This is not a competence or promotion result: no training, deduplication, production edit, submission, staging, or commit occurred, and compound/optional-STOP mechanics remain outside this Gate-1 scope.
 
 ## Session Guardrails
 
@@ -1670,4 +1824,2129 @@ Run three bounded parallel audits: native state-fork/counterfactual-label feasib
 
 **Commit SHA**
 
-Pending architecture-selection milestone commit.
+`5c82c44183a92c7e387c2790ebfb71cc7fc3ec31` (`docs: redirect to outcome-trained decision engine`).
+
+## 2026-08-09T20:30:53+05:30 - Step 23: Audit Reusable Outcome-Ranker Infrastructure
+
+**Objective/question**
+
+Determine whether retained data can already train a complete-action terminal ranker and choose the shortest public-only model path without fabricating supervision.
+
+**Evidence inspected**
+
+- G2 semantic projector/model/decoder and parity/runtime evidence.
+- Recurrent PPO core and action contracts.
+- Existing LightGBM semantic-history runtime/package.
+- Replay imitation datasets, old trajectory/value evaluators, search reports, and any retained action-ranking artifacts.
+
+**Important checks**
+
+- Searched retained data for per-state complete legal alternatives with terminal W/D/L, return, or advantage labels.
+- Compared exact reusable model parameter/package/runtime profiles.
+- Validated a scratch dataset schema and audit record; no training label was synthesized.
+
+**Test/inspection size**
+
+- Existing replay dataset: 4,193 rows, 136 episodes, 775 features, 41 observed action labels.
+- Existing G2 recurrent model: 970,022 parameters, 5.43 MiB package, CPU p99 8.80 ms.
+- Existing compiled LightGBM runtime: approximately 6.19 MiB, 2.11 ms native inference; text model approximately 24.5 MiB and pure inference approximately 8.0 ms.
+
+**Results and metrics**
+
+- No retained dataset has the required complete-legal-action counterfactual terminal supervision. Replay data contains only the action actually taken and cannot establish that an alternative wins.
+- Old search artifacts contain heuristic prize/route vectors, not native terminal branch returns; reusing them as Q labels would repeat the failed evaluator premise.
+- Primary reusable architecture: G2 public semantic state/option encoders plus a small option-conditioned terminal-Q head, retaining the existing complete legal/STOP decoder and recurrent history.
+- LightGBM is a useful post-label tabular baseline, but it cannot naturally carry the recurrent plan/next-response state the user explicitly wants; it should be a fast control, not the primary architecture.
+- Proposed hard kill gates: held-out pairwise action concordance below 0.60; fallback-relative reward lower confidence bound at or below +0.02; any matchup regression worse than 10 points; calibration failure; or runtime/package breach.
+
+**Failures / invalid actions / fallbacks**
+
+- Tiny ranking proof intentionally not run because no legitimate labels exist. Fabricating labels from replay choices or heuristic scores would be an evidence failure.
+- No native game/training/runtime action occurred.
+
+**Interpretation**
+
+The model half of an intelligent semantic decision engine is already available and competition-compatible. The true blocker is not architecture size; it is obtaining direct counterfactual outcome supervision without leaking hidden information into inference.
+
+**Decision**
+
+`SELECT G2 RECURRENT PUBLIC SEMANTIC Q HEAD AS PRIMARY LEARNER IF NATIVE BRANCH LABELS ARE VIABLE`; `KEEP LIGHTGBM AS POST-LABEL BASELINE ONLY`; `NO IMITATION FALLBACK`.
+
+**Reason**
+
+This reuses a qualified sub-1M model and directly targets terminal action value while preserving complete legality and public inference. It avoids another large architecture build and the already disproven assumption that higher replay agreement means higher win rate.
+
+**Files created/changed**
+
+- `.chatgpt/tmp/outcome-ranker/README.md`
+- `.chatgpt/tmp/outcome-ranker/counterfactual_action_dataset_v1.schema.json`
+- `.chatgpt/tmp/outcome-ranker/audit.json`
+- Updated `ptcg-rl/progress.md`.
+- No production source, PPO buffer, model, package, replay body, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/outcome-ranker/`.
+
+**Next action**
+
+Wait for the native branch proof. If viable, independently audit the dataset schema against exact emitted records and implement the smallest option-Q head/training smoke; if not, close this path rather than backfilling imitation labels.
+
+**Commit SHA**
+
+Pending architecture selection/proof milestone commit.
+
+## 2026-08-09T20:31:52+05:30 - Step 24: Red-Team Selects Counterfactual Semantic Q Path
+
+**Objective/question**
+
+Adversarially compare every plausible breakthrough-scale direction and select one primary architecture that can reuse current assets without repeating disproven premises.
+
+**Evidence inspected**
+
+- Live Grim/leaderboard evidence; 480-game Majkel rejection; recurrent BC/PPO competence state; rank-1 reconstructions; Lucario deck variants; prior search/evaluator results; G2 recurrent model/runtime; G3 CABT bridge status; knowledge-base rules/anti-patterns.
+- Preliminary scratch counterfactual probe artifact reported by the parallel engine task.
+
+**Test/inspection size**
+
+- Historical quantitative branches compared across 104-480-game tests and retained model/training evidence.
+- Preliminary native probe: 10 root actions, 128 continuations, one hidden determinization.
+
+**Results and metrics**
+
+- Primary selected direction: native counterfactual semantic action-value/ranking using the existing public option encoder and GRU. PPO-first, imitation, rank-1 reconstruction, deck micro-sweeps, and broad heuristic search are rejected for today's primary allocation.
+- Preliminary probe reports all 10 complete legal root actions, 128 native continuation labels, `manual_coin=false`, zero invalid/fallback/continuation/post-terminal defects, 1.15 seconds, and 36.7 MiB peak RSS.
+- The probe is explicitly weak supervision: one hidden world, sample deck mirror, first-legal policies. It establishes neither competent response modelling nor policy strength.
+- Exact next-response prediction is mathematically impossible. Even just assigning a 7-card hidden hand and six face-down Prizes from 60 distinct physical cards gives about `8.87e15` assignments (~53 bits), before residual deck ordering/randomness.
+- Best public-belief design: exact-deck-template priors, without-replacement hidden particles constrained by revealed counts, frozen native response anchors, common particle sets across candidate actions, and uncertainty-aware expected terminal value; no particle/private fields enter inference features.
+- Gating recommendation: first prove nondegenerate reliable labels across independent hidden starts/competent response anchors; then require held-out pairwise/top-action ranking at least 0.60 and positive regret lower bound; finally require closed-loop broad native lower-bound improvement with no worse-than-10-point matchup regression.
+
+**Failures / invalid actions / fallbacks**
+
+- No architecture strength PASS. Preliminary probe labels are not yet suitable for training because first-legal continuations are strategically weak and only one hidden determinization is sampled.
+- No live submission, package, paid compute, or external mutation occurred.
+
+**Interpretation**
+
+The plumbing may be fast enough for direct outcome supervision, which is the first genuinely changed premise since the evaluator failures. The breakthrough will come only if branch labels remain discriminative under independent hidden worlds and competent continuation policies.
+
+**Decision**
+
+`SELECT COUNTERFACTUAL PUBLIC SEMANTIC Q AS PRIMARY`; `REJECT PPO-FIRST / IMITATION / NARROW RULE / BROAD HEURISTIC SEARCH`; `PROBE AUDIT REQUIRED BEFORE LABEL GENERATION`.
+
+**Reason**
+
+This path directly supervises the failed component, counterfactual action ranking, while reusing the already qualified compact public recurrent architecture and exact legality machinery.
+
+**Files created/changed**
+
+- Updated `ptcg-rl/progress.md` only from the red-team result.
+- Parallel scratch probe files exist under `.chatgpt/tmp/counterfactual-q/` and remain unaudited/uncommitted until the engine task finishes.
+
+**Artifact paths**
+
+- Preliminary `.chatgpt/tmp/counterfactual-q/probe.json`.
+
+**Next action**
+
+Finish and independently inspect the counterfactual probe implementation/artifact. Confirm native state isolation and complete legality, then design the smallest competent-anchor/multi-hidden-start label gate without broad framework work.
+
+**Commit SHA**
+
+Pending counterfactual proof audit and architecture milestone commit.
+
+## 2026-08-09T20:32:50+05:30 - Step 25: Prove Native Complete-Action Counterfactual Labels
+
+**Objective/question**
+
+Prove with executable bounded tests that one live/native state can branch every legal action to terminal W/D/L without modifying production or relying on the previously invalid manual-coin premise.
+
+**Evidence inspected**
+
+- New official-search probe and artifact under `.chatgpt/tmp/counterfactual-q/`.
+- Separate live Linux `os.fork()` copy-on-write proof and artifact.
+- Official `cg.api.search_begin/search_step/search_end/search_release` and production native transport boundary.
+
+**Important commands**
+
+```text
+rtk timeout --signal=TERM --kill-after=5s 600s .venv/bin/python .chatgpt/tmp/counterfactual-q/probe.py
+rtk timeout --signal=TERM --kill-after=5s 180s .venv/bin/python .chatgpt/tmp/counterfactual-q/fork_probe.py
+```
+
+Both ran locally under hard time caps; no paid/external compute or live action occurred.
+
+**Test/experiment size**
+
+- Official-search proof: one generated turn-2 MAIN state, 10 root options/actions, exactly 128 terminal continuation rollouts; first 8 actions received 13 samples and last 2 received 12.
+- COW proof: one generated turn-1 MAIN state, 8 complete root actions, two child branches plus one continued parent branch.
+
+**Results and metrics**
+
+- Official search reports `PASS_COMPLETE` in 1.1506 seconds, peak RSS 36,696,064 bytes.
+- All 128 continuations reached terminal W/D/L; invalid actions, fallbacks, post-terminal actions, incomplete/error rollouts all `0`.
+- Full root option semantics and empirical uncertainty are retained; exported public feature snapshot excludes opaque `search_begin_input`.
+- Official-search artifact SHA-256 `fbfa82841a959bb7f609f067675546f046a01f8d0e585d1fed8aefe5668ded8c`.
+- `os.fork()` COW proof reports `PASS_COMPLETE` in 0.0585 seconds, peak RSS 27,492,352 bytes. Two children took different root actions and reached different terminal results with zero crashes/defects; the parent battle remained valid and then continued to terminal.
+- COW artifact SHA-256 `121fc63ecc318c3375da11e6f0a2c29f0ab802718fd707d82cccdbdb750755ae`. No RNG-independence or general fork-safety claim is made.
+- Official `search_begin` requires the exact opaque native search input plus predicted hidden deck/Prize/hand/active arrays. Therefore hidden determinization is an explicit label-generation parameter, not an actor input.
+
+**Failures / invalid actions / fallbacks**
+
+- Mechanical defects reported: zero.
+- Label-quality limitation remains severe: one hidden determinization and first-legal continuation policies. These labels are not authorized training data yet.
+- Old learned-PUCT/terminal search strength results remain rejected; this probe changes label plumbing, not those verdicts.
+
+**Interpretation**
+
+Direct complete-action terminal supervision is technically viable and fast enough to pursue today. The official search API is the preferred reusable primitive because it is intended for branch/replay work; COW is only a bounded systems proof and should not become inference architecture.
+
+**Decision**
+
+`PROVISIONAL LABEL-PLUMBING PASS / INDEPENDENT AUDIT PENDING`; `SELECT OFFICIAL SEARCH API`; `DO NOT TRAIN ON FIRST-LEGAL SINGLE-DETERMINIZATION LABELS`.
+
+**Reason**
+
+This is the first executable evidence that the project can target the actual failed quantity, terminal value of alternative legal actions, rather than imitation or heuristic proxies.
+
+**Files created/changed**
+
+- `.chatgpt/tmp/counterfactual-q/probe.py`
+- `.chatgpt/tmp/counterfactual-q/probe.json`
+- `.chatgpt/tmp/counterfactual-q/fork_probe.py`
+- `.chatgpt/tmp/counterfactual-q/fork-probe.json`
+- Updated `ptcg-rl/progress.md`.
+- No production policy/model, qualified package, replay body, Git state, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/counterfactual-q/`.
+
+**Next action**
+
+Independently audit source, action completeness, counters, native search cleanup, hidden/public boundaries, and artifact hashes. If clean, define the smallest multiple-hidden-start/strong-anchor label gate before any model training.
+
+**Commit SHA**
+
+Pending independent proof audit and architecture milestone commit.
+
+## 2026-08-09T20:41:54+05:30 - Step 26: Prepare Bounded Strong-Anchor Label Gate
+
+**Objective/question**
+
+Translate the one-state plumbing proof into the smallest explicit Gate 1 schedule with stronger frozen continuations and common hidden particles, while launching zero labels before audit.
+
+**Evidence inspected**
+
+- New Gate 1 schedule/config, collector dry-run, frozen policy packages/decks, qualified Grim archive, official search contract, and `NativeRulePolicy` observation/action bridge.
+
+**Important command**
+
+```text
+rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --dry-run
+```
+
+Dry-run only; native engine/search imports and continuations were not launched.
+
+**Test/experiment size**
+
+- Planned maximum: six root states, two candidate policy slots per each of three anchors (`dragapult-ex`, `iono`, `mega-lucario-ex`).
+- Complete ordered legal actions capped at 10 per state; eight common determinization replicates per action; hard maximum 480 continuations, below global cap 512.
+- Native launches this step: `0`.
+
+**Results and metrics**
+
+- Dry-run `PASS`, `native_launches=0`.
+- Exact Grim package/deck bound to qualified archive SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657` and deck SHA-256 `92b92bac9f9163ecff933b3dc39294d2cc154c8684f3c8497877661419ebc59d`.
+- Common without-replacement determinization seeds are shared across all root actions within a state; independent native starts diversify public states; native randomness remains uncontrolled and unpaired.
+- `NativeRulePolicy.choose_native()` can consume search observations after official raw-dict conversion plus `semantic_snapshot()`, preserving compound order, legality, and STOP.
+- Critical lifecycle finding: `NativeRulePolicy.reset()` is a no-op while Grim modules hold globals such as `_HISTORY`. Each branch/replicate/player must load fresh policy instances/modules; no object may be shared across branches.
+- Schedule SHA-256 `d0596322e7c0a33dcb2ad98fb53a4314962a48cebb95b391b8d5fac3a550663f`; collector `ca1013b6dfcb00045b1837d17b573846eb905fc35c059e2fc444cbc11180def6`; dry-run report `7484869cc6d6132e2367cf11304e3eeffc4b7f15a8c490aca3a1f78650eda5b0`.
+
+**Failures / invalid actions / fallbacks**
+
+- Schedule remains `authorized=false`, so the explicit future `--execute-native` command correctly refuses to run.
+- No native counters exist yet. Independent audits and execution-path inspection remain pending.
+
+**Interpretation**
+
+The proposed first label gate is small enough to finish quickly and broad enough to test whether action separation survives competent continuations and hidden-world variation. Fresh module isolation is non-negotiable; otherwise branch history contamination would invalidate labels.
+
+**Decision**
+
+`GATE 1 DESIGN PROVISIONAL / ZERO LABELS LAUNCHED`; `AWAIT INDEPENDENT PROOF AND SCHEMA AUDITS`.
+
+**Reason**
+
+The user authorized a major intelligent architecture, but a dry-run schedule is not evidence that the executable collector is correct. Audit must precede the first multi-state label batch.
+
+**Files created/changed**
+
+- `.chatgpt/tmp/counterfactual-q/gate1_schedule_v1.json`
+- `.chatgpt/tmp/counterfactual-q/collector.py`
+- `.chatgpt/tmp/counterfactual-q/gate1-dry-run.json`
+- Updated `ptcg-rl/progress.md`.
+- No native result, model, production policy, qualified package, replay, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/counterfactual-q/`.
+
+**Next action**
+
+Complete independent probe/schema audits. Then audit the real collector execution path and policy isolation; if complete, commit safe code/config/schema, flip authorization explicitly, and run the fixed <=480 continuation Gate 1 batch.
+
+**Commit SHA**
+
+Pending Gate 1 audit/authorization milestone commit.
+
+## 2026-08-09T20:48:49+05:30 - Step 27: Independently Bound Probe And Dataset Claims
+
+**Objective/question**
+
+Audit the counterfactual proof and proposed dataset contract hard enough to prevent a mechanics canary from being mistaken for independent Q supervision.
+
+**Evidence inspected**
+
+- Full official-search/fork probe sources and artifacts, API lifecycle, legal enumeration, reward orientation, manual-coin flag, public snapshot, hidden determinization construction, cleanup, hashes, and dataset-schema validation.
+
+**Test/inspection size**
+
+- Official search: one 10-option MAIN single-select state, 128 rollouts.
+- Fork: one 8-option state, two child actions and one parent continuation.
+- Dataset schema compiled under Ajv2020 and was evaluated against the raw probe.
+
+**Results and metrics**
+
+- Recomputed probe totals match: 128/128 terminal, 123 root wins / 5 losses / 0 draws, all defect counters zero, 1.150605 seconds, peak RSS 36,696,064 bytes. Hashes/sidecars match.
+- All 128 rollouts use the same determinization arrays. Their uncertainty reflects only native randomness under one first-legal policy, not hidden-world or opponent-policy uncertainty.
+- Root completeness is exact for this request only: MAIN, `minCount=maxCount=1`, 10 options and actions `[0]..[9]`; option 9 is END and was successfully searched. Multi-select ordering/STOP roots were not tested.
+- Reward mapping from native result to root W/D/L is correct. The artifact stores expected match score `1/0.5/0`; training must explicitly convert terminal result to project reward `+1/0/-1`.
+- Public snapshot cleanly nulls `search_begin_input`, retains opponent hand/face-down Prizes as null, and contains no determinization arrays.
+- Successful search lifecycle calls `search_end()` in `finally` with `manual_coin=False`. Minor gap: a `search_begin()` exception occurs before the `finally` is entered.
+- `fork_probe.py` exercises `battle_select` in Linux COW children; it does not prove official `SearchState` COW or production-safe forking. The parent-validity result remains a useful process-isolation hint only.
+- Updated dataset schema correctly rejects the raw probe with 13 errors: it lacks run/state groups, independent particles, policy identities/hashes, semantic fingerprints, baseline/advantage fields, projected G2 tensors/history, and split/group provenance.
+- Corrected schema specifies grouped Huber plus Bradley-Terry ranking loss, `+1/0/-1` orientation, public G2 state/option tensors, uncertainty, split keys, and PPO provenance firewall.
+
+**Failures / invalid actions / fallbacks**
+
+- Evidence overreach corrected: neither independent hidden labels nor search COW is proven.
+- Raw probe is explicitly not authorized as training data.
+- No new game/training/external action occurred during audit.
+
+**Interpretation**
+
+The mechanics premise survives audit, but the next code must generate a proper grouped dataset rather than wrap `probe.json`. The Q head should initially cover complete MAIN single-select decisions; existing validated compound decoder remains authoritative for sub-selections until separately labelled.
+
+**Decision**
+
+`MECHANICAL SEARCH LABEL PATH PASS`; `RAW PROBE REJECTED FOR TRAINING`; `AUTHORIZE REAL GATE 1 COLLECTOR IMPLEMENTATION`.
+
+**Reason**
+
+Official search can label alternatives correctly, but learning requires common independent hidden particles, competent frozen continuations, exact policy/model provenance, and group-safe splits.
+
+**Files created/changed**
+
+- Updated `.chatgpt/tmp/outcome-ranker/README.md`.
+- Updated `.chatgpt/tmp/outcome-ranker/counterfactual_action_dataset_v1.schema.json`.
+- Updated `.chatgpt/tmp/outcome-ranker/audit.json`.
+- Updated `ptcg-rl/progress.md`.
+- Probe/collector artifacts were not altered by the audit.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/counterfactual-q/`.
+- `.chatgpt/tmp/outcome-ranker/`.
+
+**Next action**
+
+Implement the actual six-state/three-anchor collector with branch-isolated policy history and schema-compatible grouped records. First run one bounded official-search-in-child isolation preflight; only then authorize the fixed <=480 label batch.
+
+**Commit SHA**
+
+Pending Gate 1 collector milestone commit.
+
+## 2026-08-09T21:01:56+05:30 - Step 28: Bind Public G2 Projection Requirements
+
+**Objective/question**
+
+Prove that a counterfactual root can be converted into the existing G2 public recurrent/semantic tensors without silently inventing missing history or allowing native hidden search data into inference features.
+
+**Evidence inspected**
+
+- New scratch adapter using production `semantic_snapshot`, `project_decision`, `collate_projected`, and optional frozen `PTCGPolicyV1`.
+- Raw one-state probe, G2 schema/model metadata, hidden/search exclusion rules.
+
+**Test/inspection size**
+
+- One mechanics probe root with 10 actions; no native game or training.
+
+**Results and metrics**
+
+- Adapter status is correctly `BLOCKED`, not a fabricated tensor PASS.
+- Exact missing public inputs: `battle_id` or `episode_uuid`, monotonic `selection_seq`, observation schema version 2, and recorded public GRU/event history.
+- `search_begin_input` and hidden determinization output remain explicitly null/forbidden.
+- No zero recurrent history was fabricated.
+- Existing G2 public hidden width is 160; model schema SHA-256 `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`.
+- Adapter SHA-256 `2b890f8b9d6bc3749e7ee86e83399b2582d6dfdd667866aa7e23b4f18ed64d92`.
+- Ruff, `py_compile`, and JSON blocker assertion pass.
+
+**Failures / invalid actions / fallbacks**
+
+- Projection is blocked only because the earlier mechanics probe did not record lifecycle/history fields. This is a dataset-collection gap, not a model defect.
+- No runtime/game action occurred.
+
+**Interpretation**
+
+The real collector must project/record the public decision stream as it advances to each root, not attempt to reconstruct recurrence after the fact from a single observation. That gives the Q head genuine public plan/history state while preserving the hidden-information firewall.
+
+**Decision**
+
+`G2 ADAPTER FAIL-CLOSED PASS`; `REQUIRE LIVE PUBLIC HISTORY IN GATE 1 RECORDS`; `NO SYNTHETIC ZERO HISTORY`.
+
+**Reason**
+
+Opponent anticipation needs recurrent public evidence. Omitting history would reduce the new engine to another static scorer, while inventing it would invalidate training/inference parity.
+
+**Files created/changed**
+
+- `.chatgpt/tmp/outcome-ranker/project_public_state.py`
+- Updated `ptcg-rl/progress.md`.
+- No production model/projector, native result, training buffer, package, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/outcome-ranker/`.
+
+**Next action**
+
+Make the collector carry episode identity, monotonic selection identity, schema v2, and the exact public event/GRU prefix into each state group. Re-run the adapter on the four-continuation preflight root before full label collection.
+
+**Commit SHA**
+
+Pending Gate 1 collector/projection milestone commit.
+
+## 2026-08-09T21:09:14+05:30 - Step 29: Execute Four-Branch Strong-Policy Preflight
+
+**Objective/question**
+
+Prove that official-search branches can inherit the exact live policy prefix safely across fork-isolated children, complete with stronger continuation policies and a still-valid parent battle, before collecting 480 labels.
+
+**Evidence inspected**
+
+- Rewritten scratch Gate 1 collector/config and retained preflight execution artifact.
+- Exact Grim plus frozen anchor policy loading, live prefix, child official-search lifecycle, determinization hashes, counters, parent continuation, and attempted G2 projection.
+
+**Important command**
+
+```text
+rtk timeout --signal=TERM --kill-after=5s 300s .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --preflight-child
+```
+
+The full schedule command remained unauthorized/refused.
+
+**Test/experiment size**
+
+- One native root at turn 3, learner slot 0, 10 complete legal actions.
+- Exactly 2 root actions x 2 common hidden particles = 4 official-search continuations.
+- Parent live battle advanced one valid step after all children.
+
+**Results and metrics**
+
+- All four branches reached terminal W/D/L.
+- Invalid, fallback, post-terminal, child-crash, and timeout counters all `0`.
+- No child uses `battle_select` for the branch; counterfactual transitions use official `search_begin/search_step/search_end`.
+- Fresh worker process isolates each root; a fork child inherits the correct policy prefix state per branch.
+- Particle IDs/hashes only are retained; opaque search input and determinization arrays are absent from output.
+- Root record includes episode ID, observation schema version 2, monotonic selection sequence 17, and card hash.
+- Parent validity check PASS: one legal live step completed after child mutations.
+- G2 projection remains `BLOCKED` with `MISSING_RECORDED_PUBLIC_GRU_HISTORY`; no schema-compatible trainable dataset was emitted.
+- Full schedule remains `authorized=false`, mode `DRY_RUN_ONLY`, hard cap 480; explicit full command returns `REFUSED`.
+
+**Failures / invalid actions / fallbacks**
+
+- Mechanics/lifecycle defects: zero in four branches.
+- Data gate failure: public recurrent history was not transported through the prefix, so model inputs are incomplete. The collector correctly failed closed instead of substituting zeros.
+
+**Interpretation**
+
+The strong-policy branch mechanism now works on the exact target architecture. The remaining blocker is narrow and public: carry the same recurrent event/history state the G2 policy would have at that decision. This should be fixed before any larger label batch.
+
+**Decision**
+
+`SEARCH-IN-CHILD MECHANICS PROVISIONAL PASS / INDEPENDENT AUDIT PENDING`; `GATE 1 DATASET BLOCKED ON PUBLIC GRU HISTORY`; `FULL 480 RUN STILL REFUSED`.
+
+**Reason**
+
+Terminal labels without the inference-time recurrent state cannot train the intended intelligent engine. Four clean branches justify fixing the transport, not bypassing it.
+
+**Files created/changed**
+
+- Rewritten `.chatgpt/tmp/counterfactual-q/collector.py`.
+- Updated `.chatgpt/tmp/counterfactual-q/gate1_schedule_v1.json`.
+- Created private execution artifact `.chatgpt/tmp/counterfactual-q/gate1-preflight-execution.json`.
+- Updated `ptcg-rl/progress.md`.
+- No production model/policy, qualified package, training, full label batch, or external object changed.
+
+**Artifact paths**
+
+- `.chatgpt/tmp/counterfactual-q/gate1-preflight-execution.json`.
+
+**Next action**
+
+Independently audit the collector/preflight. Then feed the live public prefix through the frozen G2 event/GRU path and retain its exact root history/hidden transport; rerun only the four-branch preflight and require schema validation before full authorization.
+
+**Commit SHA**
+
+Pending independent preflight audit and public-history fix.
+
+## 2026-08-09T21:21:17+05:30 - Step 30: Preflight Audit Blocks Full Collector
+
+**Objective/question**
+
+Independently determine whether the four clean child outcomes are durably bound to the current run/config and whether failure paths can falsely reuse evidence or strand native children.
+
+**Evidence inspected**
+
+- Full collector/config/preflight execution source and artifact, worker launch/output handling, timeouts/process tree, authorization/config flow, legal/action semantics, parent check, hashes, and G2 blocker path.
+
+**Results and metrics**
+
+- Four children are real: two actions x two distinct particle hashes, seeds `20260809/20260810`, same particles shared across actions; all terminal learner rewards `+1`; zero mechanics defects.
+- High-severity stale-output bug: worker coordinator can read a pre-existing PASS JSON after a crashed/timed-out worker because it does not prove output freshness/run identity.
+- High-severity timeout bug: `subprocess.run(timeout=...)` is uncaught and does not kill worker fork children as a process group.
+- High-severity authorization/config bug: full execution bypasses complete schedule validation, and workers always receive the default config rather than the explicitly supplied config.
+- Preflight intentionally executes only 2/10 root actions. It proves child mechanics, not complete-action or END execution. Root option/request semantics are absent from retained output, so END cannot be independently audited there.
+- Parent check confirms one baseline `battle_select` and a non-null state only; it should assert a coherent next request/result and bind pre/post public state.
+- G2 history is the first observed blocker, but projector early-return means downstream schema validity remains untested.
+- No hidden arrays/search input leak; current full path remains refused.
+
+**Failures / invalid actions / fallbacks**
+
+- Full Gate 1 remains blocked. No 480-label run or training occurred.
+
+**Decision**
+
+`FOUR-BRANCH MECHANICS EVIDENCE RETAINED WITH QUALIFICATION`; `COLLECTOR EXECUTION HOLD`; `FIX STALE/TIMEOUT/AUTHORIZATION/HISTORY BOUNDARIES`.
+
+**Next action**
+
+Bind fresh worker output to run/config/root IDs, launch worker process groups with bounded cleanup, validate the exact requested config before any native import, retain root option/END semantics, strengthen parent assertions, and rerun four branches.
+
+**Commit SHA**
+
+Pending corrected collector preflight.
+
+## 2026-08-09T21:21:17+05:30 - Step 31: Implement Production-Compatible Public Recurrent Prefix
+
+**Objective/question**
+
+Provide the missing public history transport using the existing G2 actor path rather than inventing a static or zero-history representation.
+
+**Evidence inspected**
+
+- Updated scratch projection adapter, synthetic public prefix, retained raw probe, frozen G2 schema/model.
+
+**Results and metrics**
+
+- Added `advance_public_recurrent_prefix(...)` using exact `semantic_snapshot -> project_decision -> collate_projected -> PTCGPolicyV1.forward` flow.
+- Emits production-compatible pre-root hidden `float32 [1,160]`, root option tensors/masks, history tensors, model/schema hashes, action fingerprints, and transport sidecar.
+- Retains only a digest chain, never raw prefix, search input, determinization arrays, or hidden cards.
+- Episode-start zero state is created only by the production `model.initial_hidden(...)` path with explicit provenance; missing mid-episode history still fails closed.
+- Synthetic no-native prefix PASS; hidden `[1,160]`, option mask `[2]`, valid root transport.
+- Old mechanics probe correctly remains BLOCKED because it has no prefix.
+- Adapter SHA-256 `b738f6eb925f9c138b1df9c7353532a2135419a71a46590eb1ab0ba13ce4c7ed`; frozen G2 model schema `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`.
+
+**Failures / invalid actions / fallbacks**
+
+- Collector has not yet supplied actor-owned prefix records. No model/game/training action occurred.
+
+**Decision**
+
+`PUBLIC RECURRENT TRANSPORT UNIT PASS`; `COLLECTOR INTEGRATION REQUIRED`; `NO ZERO-HISTORY BYPASS`.
+
+**Next action**
+
+During root generation, retain prior actor-owned public records with null search input, episode ID, increasing selection sequence, schema v2 and acting player; call the adapter at the root and validate the resulting state group before full label collection.
+
+**Commit SHA**
+
+Pending corrected collector/projection milestone.
+
+## 2026-08-09T21:25:17+05:30 - Step 32: Commit To Outcome-Ranker Breakthrough Path
+
+**Objective/question**
+
+Respond to the user's explicit rejection of narrow heuristic gains by converting the active work order into a same-day, executable intelligent-agent build rather than another replay-imitation or `if/else` ablation.
+
+**Evidence inspected**
+
+- Live Grim remains stable near `800.5`, about 200 Elo below the requested 1000 threshold and roughly 294 points below the last refreshed top-20 floor.
+- Historical large confirmations show multiple apparent 40/80-game gains disappearing or reversing at 480 games.
+- Native official-search mechanics can already obtain terminal outcomes for counterfactual root actions.
+- The production G2 recurrent encoder already exposes a public-only 160-dimensional hidden state and complete option representations at submission-safe latency.
+
+**Important commands/actions**
+
+```text
+rtk sed -n '1,240p' /home/nnmax/.codex/plugins/cache/ponytail/ponytail/4.9.0/skills/ponytail/SKILL.md
+collaboration.followup_task counterfactual_probe
+collaboration.followup_task ranker_reuse_audit
+collaboration.followup_task breakthrough_redteam
+```
+
+**Test/experiment size**
+
+- No new native games or live submissions in this step.
+- Three bounded parallel work orders: corrected 4-branch collector preflight; synthetic option-Q ranker; read-only production integration audit.
+
+**Results and metrics**
+
+- Architecture is frozen for this milestone as public recurrent state plus option-conditioned terminal outcome ranking over every legal MAIN action.
+- Opponent anticipation is a public-belief distribution learned through native continuations, not an impossible claim of exact hidden-card prediction.
+- Qualified deterministic handling remains only for non-MAIN selections and fail-safe legality; no new strategy-rule branch is authorized.
+- Full 480-label collection, broad games, packaging, and Kaggle submission remain stopped pending their preceding gates.
+
+**Failures / invalid actions / fallbacks**
+
+- No actions executed and no failures introduced.
+- A 1000+ live rating cannot be guaranteed ex ante; the operational commitment is to withhold submission unless the candidate survives reliability, broad outcome, confirmation, and package gates.
+
+**Interpretation**
+
+The present 800 control is not close enough to justify polishing. The shortest plausible structural gain is to reuse the already-qualified representation and learn action value from actual game outcomes, while keeping the old controller as a legal fallback instead of encoding more hand-written policy.
+
+**Decision**
+
+`COMMIT / PRIMARY BUILD`; `REJECT NARROW HEURISTIC POLISH`; `NO RANDOM SAME-DAY SUBMISSION`.
+
+**Files created/changed**
+
+- Updated `progress.md` only in the lead process; delegated scratch changes are pending.
+
+**Next action**
+
+Audit the corrected collector preflight and minimal ranker. If both are valid, run the capped label collection, train the first outcome ranker, and move immediately to native outcome falsification.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09T23:17:29+05:30 - Step 44: Authorized Gate-1 Six-Root Collection
+
+**Scope and authorization**
+
+- The checked-in/base schedule remains unchanged and unauthorized:
+  `gate1_schedule_v1.json` is `authorized=false`, `DRY_RUN_ONLY`, SHA-256
+  `ba084e11c3bc2aab107804ac5530b2a8ce8ebd6dfc25ee37485a4317e0766e20`.
+- Created the explicitly authorized scratch copy
+  `.chatgpt/tmp/counterfactual-q/gate1_schedule_v1_authorized.json` by changing
+  only `authorized=false` to `true` and `mode=DRY_RUN_ONLY` to
+  `NATIVE_FULL_AUTHORIZED`. The semantic diff self-check passed with exactly
+  those two fields changed; all anchors, slots, particles, action bounds, and
+  caps stayed identical. Authorized config SHA-256:
+  `b576153ef13d112b9dec4638ac1c1e221b20ab6e8290dc5f2c28868e5a40be96`.
+- Static checks passed before native launch: `py_compile`, Ruff, and the
+  authorized dry summary (`native_launches=0`, exact config SHA, authorized
+  mode). The full schedule is six roots, three anchors, two candidate slots,
+  eight shared particles per root action, eight replicates/action, max ten
+  legal actions, and max 480 continuation rollouts.
+
+**Exact native command and result**
+
+- Exactly one authorized command was launched, with no retry after native
+  import/launch:
+  `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --config
+  .chatgpt/tmp/counterfactual-q/gate1_schedule_v1_authorized.json
+  --execute-native`.
+- Run ID:
+  `counterfactual-q-20260809T174041.651492Z-513a20492a53`; source commit
+  `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; run dirty-state SHA-256
+  `d127c25fdd0407188ceae1d610f424a47c84628f1fe54e255def1fbfe89a74a6`.
+- Result `PASS_COMPLETE`: six native roots, six worker outputs, six parent COW
+  checks, 34 complete root options, 272 terminal continuation branches, and
+  34.476553 seconds from `created_utc` to `finished_utc`. The 272 branches are
+  below the hard 480 cap because the roots contained 3, 4, 5, 6, 6, and 10
+  legal options; no legal option was truncated.
+- All branch, worker, and parent counters were zero for invalid actions,
+  fallback actions, post-terminal actions, child crashes, and child timeouts.
+  Every branch had a terminal result and the actor-oriented reward matched its
+  winner/draw result. Parent checks had coherent request/terminal state,
+  distinct pre/post public hashes, and one valid post-child parent step.
+  Prefix records were actor-owned, monotonic, nonempty, schema version 2, and
+  projected with recorded nonzero `RECORDED_PUBLIC_GRU_HIDDEN` history of
+  width 160; no fabricated history or retained `search_begin_input` was used.
+  The pinned BC binding was present in every dataset:
+  checkpoint SHA-256 `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde`,
+  semantic state SHA-256
+  `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`,
+  `FROZEN_BC_EPOCH4_HEAD_ONLY`.
+
+**Label diagnostics**
+
+All six state groups used eight shared without-replacement particles/action;
+the numbers below are terminal target counts from the 272 raw branch rows
+(`W/D/L` is from the learner perspective):
+
+- `dragapult-ex` state 0: 10 options, 80 branches, `W/D/L=34/0/46`.
+- `dragapult-ex` state 1: 3 options, 24 branches, `W/D/L=19/0/5`.
+- `iono` state 2: 4 options, 32 branches, `W/D/L=9/0/23`.
+- `iono` state 3: 6 options, 48 branches, `W/D/L=43/0/5`.
+- `mega-lucario-ex` state 4: 5 options, 40 branches, `W/D/L=13/0/27`.
+- `mega-lucario-ex` state 5: 6 options, 48 branches, `W/D/L=16/0/32`.
+
+Anchor totals are `dragapult-ex W/D/L=53/0/51` (104 branches), `iono
+52/0/28` (80), and `mega-lucario-ex 29/0/59` (88). Global targets are
+`W/D/L=134/0/138`; unique target values are exactly `[-1, 1]` (no draws in
+this small sample). Per-action population reward variance over its eight
+particles had mean `0.694853`, minimum `0.000000`, maximum `1.000000` across
+34 actions. Duplicate counts were zero for root semantic option fingerprints,
+aggregate action IDs, and `(particle, action)` branch keys.
+
+**Retained artifacts and integrity**
+
+- Run directory:
+  `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T174041.651492Z-513a20492a53/`.
+- Execution report:
+  `full-execution.json`, SHA-256
+  `61adfa3821fc77ffb44f6f10f0279623b0bf2cae10e89b12f1c2bd4f093c7231`.
+- Datasets: `datasets/counterfactual-action-dataset-dragapult-ex.json` SHA-256
+  `1e8e9fbf32dd7308564d31f0a769ec2bf8e25f39aa7251210b53f75f5629eda2`,
+  `...-iono.json` SHA-256
+  `581ebe13656e5e93404e5a0d82bdf440aa3173ada3cdbad462323913d0684bf6`, and
+  `...-mega-lucario-ex.json` SHA-256
+  `63d114cfa7aa8c470cf2c16ae4c82817440a5842b19e16d7413b9b7f1494ebd3`.
+- Machine-readable manifest:
+  `run-manifest.json`, SHA-256
+  `12c36417921df3f8e61c8cdee5621b888a43506761d4418bf3846f4b3474405f`,
+  sealed by `run-manifest.sha256` (file SHA-256
+  `c500c6ffc7d761c1773185a2dc2beca277a00039b4070f03eba7985dc83c24f5`);
+  independent verification found all 15 listed artifact paths present with
+  matching bytes/digests and the sidecar matched the manifest.
+- Actual collector SHA-256 `161b2a9903cff3f176fafcaeaa2be87d689e3cff78c807e09d16c8e86c81cf38`,
+  projector SHA-256 `d8bd0fd9c4acf8c9c79846910ab42794acd42aa2aab6a9c26bdd324e3a7317b7`,
+  and dataset-schema SHA-256
+  `54943890424ccac103accbd498cc7a4b86c77ede1069d133ad7342bf87946f74`.
+  Filesystem immutability was not claimed; evidence is digest-only.
+
+**Decision**
+
+`GATE-1 COLLECTOR: GO` for this bounded evidence: complete singleton MAIN
+coverage, schema/provenance/prefix/BC binding, zero failure counters, and
+manifest integrity all passed. `RANKER TRAINING: KILL/BLOCKED` because the
+Step 41 real collector-to-ranker interchange audit still has the five exact
+loader-contract defects; this run does not authorize training or broaden
+compound/optional-STOP coverage. No training, production edit, qualified
+artifact mutation, submission, staging, or commit was performed.
+
+## 2026-08-09T23:18:00+05:30 - Step 43: Gate-1 Red-Team Closure
+
+**Objective/question**
+
+Close the final five red-team issues without touching production: finite loss
+scalar/component handling, the corrected `172507` interchange fixture,
+replicate determinization uniqueness, and the standalone projector's semantic
+fingerprint alias.
+
+**Changes**
+
+- `grouped_ranker_loss` now rejects nonfinite/non-scalar temperature and
+  pairwise-weight values, checks Huber/Bradley-Terry components and the final
+  loss for finiteness, and uses validated scalar values throughout.
+- The regression loads only
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T172507.610589Z-76d4dfd075e8/complete-root-dataset.json`
+  for real interchange. It asserts no real tensor requires gradients, no real
+  tensor aliases synthetic training tensors, and no real tensor enters the
+  optimizer. The only 350-step optimization remains on the synthetic batch.
+- Loader now requires a nonempty unique `determinization_id` for every
+  replicate. Duplicate-ID tampering is covered by pytest.
+- `project_public_state._action_records` now emits collector-compatible
+  full-semantic-path hashes, with the same option record card-id rules. A
+  no-native regression compares the standalone record to the collector helper.
+
+**Verification**
+
+- `rtk .venv/bin/pytest -q .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`:
+  `3 passed in 4.56s`.
+- Ruff passed for ranker, tests, and standalone projector; py_compile passed.
+- Direct new-dataset load passed with one group, nine options, hidden
+  `[1,160]`, options `[9,128]`, finite tensors, `requires_grad=false`, and
+  `optimizer_used=false`; the BC trunk binding is
+  `FROZEN_BC_EPOCH4_HEAD_ONLY`.
+- Synthetic overfit remains `0.5 -> 1.0` concordance with finite gradients,
+  and measured combined CPU p95 `9.335089001979213 ms`.
+- No native games, real-label optimization, production edits, staging, or
+  commit occurred.
+
+**Hashes**
+
+- Ranker: `44e386ae4707b03fcbc65a1a1a8b460e35d278afa7236490fd99fbb4d0c2dc34`.
+- Tests: `bdf420b2714df089483f87d71297af0db6ee2f87c065d342b4d8ee387043d476`.
+- Standalone projector: `d8bd0fd9c4acf8c9c79846910ab42794acd42aa2aab6a9c26bdd324e3a7317b7`.
+- Audit: `2b4ad24b7a4acd5543a7c9aba1bd8d475d7c7bd87588b9c58773e0675b49030f`.
+- Schema unchanged: `54943890424ccac103accbd498cc7a4b86c77ede1069d133ad7342bf87946f74`.
+- New real dataset: `c4538cf21b7d36755a4444100ce37fde552fae581532c84ac6b078c27b7def04`.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09T22:45:18+05:30 - Step 42: BC-Trunk-Bound Collector Replacement
+
+**Objective/question**
+
+Replace the prior complete-root artifact after the P0 audit found that its
+projector used the base zero-update G2 state (`531b...`) while its dataset
+claimed BC epoch 4. Also bind MAIN context/type and the exact current source
+commit before any native launch.
+
+**Implementation**
+
+- The collector now imports the scratch outcome-ranker loader by file path,
+  strictly loads the exact G2 package plus
+  `.chatgpt/tmp/e01-bc-candidates-dataset/epoch-4.pt`, and refuses unless
+  checkpoint SHA is `76478ade...`, semantic state SHA is
+  `b1efa5a...`, `optimizer_steps=840`, and every parameter is frozen.
+  Worker reports and the run manifest retain the actual BC binding and
+  checkpoint artifact.
+- Schedule validation now requires `source_commit == current HEAD`,
+  `selection_type_required=MAIN`, and `selection_context_required=0`.
+  Candidate/root requests enforce type 0, context 0, and min/max `1/1`.
+  Pure self-checks reject the stale base state, stale source commit, and
+  type/context mutations.
+
+**Static/refusal attempts**
+
+- `py_compile`, Ruff, collector self-check, dry-run, ranker test, and
+  `--execute-native` refusal all PASS; refusal reports `native_launches=0`.
+- Two pre-native preflight attempts failed closed with zero native launches:
+  first the hyphenated ranker path was not importable, then the dynamically
+  loaded dataclass module was not registered in `sys.modules`. Both failures
+  were fixed without creating native state. No additional native debugging
+  was performed after launch.
+
+**Final replacement proof**
+
+Exactly one actual native preflight completed:
+`rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --preflight-complete-root`.
+Status is `PASS_EXECUTION`: one root, nine complete MAIN/context-0
+single-select actions including `END`, two shared particles per action, and
+18 terminal branches. Invalid actions, fallbacks, post-terminal actions,
+child crashes, and child timeouts are all zero. Parent COW is valid with
+request sequence `31 -> 32` and distinct public hashes.
+
+The G2 projection is `OK` with 10 recorded public-prefix steps and hidden
+shape `[1,160]`. Actual worker binding is:
+
+- G2 package SHA-256 `4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827`.
+- BC checkpoint SHA-256 `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde`.
+- BC semantic state SHA-256 `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`.
+- `optimizer_steps=840`, `trunk_mode=FROZEN_BC_EPOCH4_HEAD_ONLY`, frozen=true.
+
+**Final artifacts and hashes**
+
+- Run ID `counterfactual-q-20260809T172507.610589Z-76d4dfd075e8`; root ID
+  `99f9db679c4f73564118c99a2a255d5b02f2a4e16254113b1f4d7f09dbb20614`.
+- Dataset:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T172507.610589Z-76d4dfd075e8/complete-root-dataset.json`, SHA-256
+  `c4538cf21b7d36755a4444100ce37fde552fae581532c84ac6b078c27b7def04`.
+- Execution report SHA-256
+  `740454a29ee74d2dd01227f5405510ff554a0b59c3ef1f17667c6349f0157f52`.
+- Manifest SHA-256 `84e4e419462f0fe125262b2179726be881956158367d4f2facdc2cf1f52aa0ea`;
+  sidecar file SHA-256 `967f5a6d1f1734346ed62c3b3c9554fc2bc7f43b6a21991207e6a215d8d9c6f2`.
+- Collector SHA-256 `161b2a9903cff3f176fafcaeaa2be87d689e3cff78c807e09d16c8e86c81cf38`;
+  config SHA-256 `ba084e11c3bc2aab107804ac5530b2a8ce8ebd6dfc25ee37485a4317e0766e20`.
+- Source commit `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; run Git-dirty
+  digest `a602bfdda16e9504d22949c6973df8e461dade3b1a93ff5a8f495cca87661f0e`.
+
+The earlier `165402` dataset is explicitly invalidated for training because
+its projector/trunk binding was false. No full `<=480` collection, training,
+production edit, qualified artifact mutation, submission, staging, or commit
+was performed. Compound and optional-STOP coverage remain a separate gate.
+
+## 2026-08-09T22:49:35+05:30 - Step 42: Collector Trunk-Binding Audit
+
+**Objective/question**
+
+Verify that the collector's retained recurrent prefix is produced by the same exact frozen BC trunk the ranker will use, rather than trusting declared metadata.
+
+**Evidence inspected**
+
+- Collector model load/projection path, emitted provenance, base G2 package state, pinned BC epoch-4 checkpoint/state, candidate root filters, schedule validator, current HEAD, and final `165402` dataset.
+- Independent state-hash, malformed context/type/config, source-commit, artifact, aggregate, prefix, and zero-defect checks.
+
+**Results and metrics**
+
+- P0 blocker: collector loads the base zero-update G2 package state (`531b799b...`) and never overlays BC epoch 4 (`b1efa5a1...`), while dataset metadata declares `FROZEN_BC_EPOCH4_HEAD_ONLY`. Its hidden prefix is therefore the wrong representation for the pinned ranker.
+- P1 blocker: candidate selection checks type/singleton but not `selection_context == 0`; a synthetic context-41 request passed. Required type/config mutations were also insufficiently bound.
+- P1 blocker: configured source commit is not checked against current HEAD before launch.
+- All other audited mechanics remain valid: complete END-inclusive action set, shared particles, actor reward math, public prefix/no leakage, parent COW, hashes/timestamps/manifests, and zero action/runtime defects.
+- Compound/optional STOP is not a blocker for the explicitly scoped context-0 singleton Q branch; deterministic non-MAIN handling remains separate.
+
+**Failures / invalid actions / fallbacks**
+
+- No native execution in the audit.
+- The existing complete-root dataset is invalidated for training despite passing its declared schema; no training used it.
+
+**Interpretation**
+
+The network mismatch would train the head on one recurrent coordinate system and infer on another. This is a competence-killing bug, not ceremonial provenance.
+
+**Decision**
+
+`MECHANICS PASS`; `BC REPRESENTATION BINDING FAIL`; `RERUN ONE COMPLETE ROOT AFTER FIX`.
+
+**Files created/changed**
+
+- Updated `progress.md` in the lead process.
+
+**Next action**
+
+Strict-load/freeze BC epoch 4 in collector projection, enforce context-0 singleton MAIN, bind source commit to HEAD, and generate one new complete-root dataset. The old dataset remains mechanics-only.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09T23:02:00+05:30 - Step 42: Gate-1 Interchange Defects Closed
+
+**Objective/question**
+
+Close the five real-collector interchange blockers from Step 41 in the
+scratch-only Gate-1 loader, then prove that the retained complete-root dataset
+loads through the exact frozen BC trunk without optimizing on real labels.
+
+**Changes**
+
+- Accepted only the observed production prefix pairs: recorded public GRU
+  history with production episode-start initial hidden, or the explicit
+  episode-start/episode-start pair. Equality between the two source fields is
+  no longer required; unsupported pairs still fail closed.
+- Matched collector identity semantics: `action_id` is independently derived
+  from ordering plus the semantic fingerprint path, while
+  `semantic_action_fingerprint` is recomputed from the complete semantic path
+  object and checked against the request option.
+- Bound the loader to the exact BC epoch-4 trunk state hash and frozen finite
+  parameters. Base, perturbed/random, and unfrozen G2 instances are rejected;
+  `load_gate1_trunk` now carries its strict binding on the returned model.
+- Strictly enforced Gate-1 ranker dimensions `160/128/96`, finite checkpoint
+  weights, and a finite output probe on save/load.
+- Grouped loss now requires one-dimensional finite floating score/target/weight
+  tensors, nonnegative weights, and nonnegative nondecreasing int64 offsets
+  beginning at zero and ending at the flattened action count. Unavailable
+  targets are finite masked zeros rather than NaNs.
+- Updated the collector-shaped synthetic fixture/tests, README, and audit
+  record. Duplicate semantic options still pool raw W/D/L outcomes and
+  broadcast the pooled target to every original legal index.
+
+**Verification**
+
+- `rtk .venv/bin/pytest -q .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`:
+  `2 passed in 4.26s`.
+- `rtk .venv/bin/ruff check .chatgpt/tmp/outcome-ranker/outcome_ranker.py .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`:
+  `All checks passed`.
+- `rtk .venv/bin/python -m py_compile` passed for both owned Python files; audit
+  JSON parses with `json.tool`.
+- Direct no-training interchange load of
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T165402.977401Z-25d5595a89d3/complete-root-dataset.json`
+  passed: one state group, six options, hidden `[1,160]`, option tensor
+  `[6,128]`, finite targets, and `FROZEN_BC_EPOCH4_HEAD_ONLY`. The command
+  only loaded the trunk, projected the retained public decision, and ran
+  inference; it did not use an optimizer or update parameters.
+- Synthetic overfit remained `before_concordance=0.5` to
+  `after_concordance=1.0`, finite gradients, legal-mask/tie behavior, exact
+  checkpoint roundtrip, malformed-loss/checkpoint rejection, and combined
+  CPU p95 `6.859733999590389 ms` for the measured 40-sample probe.
+
+**Hashes**
+
+- Ranker: `6f3e799fc2af4a4e88780157bec624ded0865794285fe9c72352eb7bbdb23a78`.
+- Tests: `779d653bbac75efa796671b592c181ea5ff0481ea9429fefffa239742003ff35`.
+- README: `a1b9c7a00b39589d4987f3cb1a53bcc7df2bfb67ab8bfef3de0a821562406aec`.
+- Audit: `bad62500ab0e706eba7d4152793c8ae0ab4528331023a64af4b1c3511bcab96a`.
+- Schema unchanged: `54943890424ccac103accbd498cc7a4b86c77ede1069d133ad7342bf87946f74`.
+- Synthetic fixture: `63a3793ebe8632a73f0848c0e8c33cac0cead6447d34ec4ac7c60cacf2cbe5a2`.
+- Real complete-root dataset unchanged:
+  `53ee74a74537b6c33dad33ec74b2b881a3d2d90a3525f86febf2fd2e7f71749b`.
+
+No native games, real-label training/optimization, production/package edits,
+qualified-artifact mutation, staging, or commit occurred. The Gate-1 result
+is an interchange and synthetic-head proof only; compound action paths,
+public-prefix retention for end-to-end fine-tuning, and production adapter
+integration remain blocked.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09T21:52:13+05:30 - Step 36: Independent Corrected-Collector Audit
+
+**Objective/question**
+
+Decide whether the corrected four-branch mechanics proof is sufficient to authorize the capped label run, treating scratch artifacts and provenance claims as untrusted.
+
+**Evidence inspected**
+
+- Current collector, checked-in dry-run schedule, both cited preflight run directories, worker/output records, public projector, dataset schema, model/schema assets, policy receipts, timeout cleanup, and CLI authorization flow.
+- Re-ran static compilation/lint, self-check, dry-run, full-command refusal, projector blocked fixtures, and synthetic ranker test; no native run.
+
+**Results and metrics**
+
+- Latest `161316` run matches current collector SHA `82478bb...`; the initially cited `160738` run is stale and cannot evidence current source.
+- Latest four children are genuinely complete with zero invalid/fallback/post-terminal/crash/timeout counters; public prefix, root semantics including one END option, search cleanup hard-fail, parent COW, and no hidden leakage verify.
+- Blocker: `--execute-native` still enters `_execute_full` without complete `validate_schedule`, so an edited authorized config could bypass asset/policy/schema validation.
+- Process-group cleanup works in a descendant self-test, but the termination helper returns false after successful cleanup while the record claims `process_group_killed=true`; evidence semantics are wrong.
+- Run output lacks `finished_utc`, output digest sidecars/manifest, and projector/dataset-schema source hashes; it is useful scratch evidence, not sealed gate evidence.
+- Learner receipt deck/hash is checked, but configured learner `policy_id` is not bound to receipt identity.
+- Partial 2-action execution cannot establish complete-action aggregates or END execution. The next preflight must execute every action at one eligible root with exactly two common particles/action.
+
+**Failures / invalid actions / fallbacks**
+
+- No new native actions in the audit.
+- Full collection remains unauthorized and unlaunched.
+
+**Interpretation**
+
+Counterfactual mechanics and recurrent public transport are viable, but one complete root is the shortest trustworthy bridge from mechanics to actual training data. The residual fixes prevent false PASS evidence rather than adding strategy infrastructure.
+
+**Decision**
+
+`PARTIAL PREFLIGHT RETAINED`; `FULL COLLECTION BLOCKED`; `REQUIRE ONE COMPLETE-ROOT PREFLIGHT`.
+
+**Files created/changed**
+
+- Updated `progress.md` only in the lead process.
+
+**Next action**
+
+Fix the five audited defects and execute one all-actions x2-particle root under a <=20-branch cap, including END. Stop on its first native failure.
+
+**Commit SHA**
+
+Pending corrected complete-root collector/ranker milestone.
+
+## 2026-08-09T21:32:53+05:30 - Step 33: Audit Production Integration Before Building A Package
+
+**Objective/question**
+
+Determine whether the outcome-ranker can replace MAIN decisions without destabilizing the qualified controller, and identify any reason a package or same-day submission must remain blocked.
+
+**Evidence inspected**
+
+- Qualified Grim package `main.py` decision and fallback flow.
+- G2 model/projection schemas and zero-update checkpoint provenance.
+- Native collector root/continuation policy flow, official search lifecycle, reward orientation, and current preflight coverage.
+- Existing native arena versus archive-level qualification surfaces.
+
+**Results and metrics**
+
+- Minimal eventual integration seam is `_model_action()` for `context == 0`; `agent()` legality validation, non-MAIN routing, residual guards, and deterministic fallback can remain unchanged.
+- `NativeRulePolicy` is evaluation-only and must not become a submission adapter.
+- G2 public tensors contain visible opponent board, discard, counts, damage, energy, statuses, public events, turn/action counters, and legal semantics. Hidden hand/deck/Prize identities remain correctly unavailable.
+- Exact opponent moves cannot be known from public state. The implementable target is a recurrent public-belief response distribution conditioned on archetype priors and public history.
+- Current G2 weights have `optimizer_steps=0`; they are a qualified representation/runtime substrate, not a trained value policy.
+- Collector labels are conditional on current Grim learner continuation and each frozen opponent anchor. This can train root-action value for that population but is not automatically a universal response model.
+- `search_end` cleanup errors must hard-fail a child/root. Single-select roots are only Gate 1; compound/optional STOP mechanics remain required before production.
+- Existing arena does not constitute archive-level package qualification; a submission package later needs fresh-process import, root layout, hashes, reset ownership, latency/RSS, and native zero-defect checks.
+
+**Failures / invalid actions / fallbacks**
+
+- No new commands or games ran in this read-only audit.
+- Current option-Q package verdict is `BLOCKED`: no trained Q weights, no submission recurrent adapter, and no schema-valid native label batch yet.
+
+**Interpretation**
+
+The architecture remains the highest-ceiling active path, but the old G2 checkpoint must not be mislabeled as intelligence. The immediate engineering sequence is collector -> labels -> trained ranker -> native outcomes -> adapter/package, with no extra router layer.
+
+**Decision**
+
+`GO ON ARCHITECTURE`; `BLOCK PACKAGE/SUBMISSION`; `PRESERVE QUALIFIED GRIM CONTROL`.
+
+**Files created/changed**
+
+- Updated `progress.md`; no strategic code or package changed in the lead process.
+
+**Next action**
+
+Finish and audit the corrected four-branch schema-valid preflight and synthetic ranker. Only then authorize the capped label collection.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09 - Step 33: Corrected Gate-1 collector preflight (in progress)
+
+**Objective/question**
+
+Close the audited collector-boundary defects before the single authorized 4-branch
+native preflight: bind every worker to fresh run/root/config/dirty-state digests,
+kill process groups on timeout, retain the exact actor-owned public prefix for the
+G2 recurrent adapter, and fail closed on partial/schema-invalid records.
+
+**Scope and authorization**
+
+- Work is confined to `.chatgpt/tmp/counterfactual-q/` plus this progress entry.
+- The checked-in Gate-1 schedule remains `authorized=false`, `DRY_RUN_ONLY`.
+- The only native execution authorized here is `2` root actions x `2` shared
+  determinization particles; the full `<=480` continuation schedule is not run.
+- Preflight execution and verification are pending this entry's final result.
+
+**Implementation in progress**
+
+- Fresh unique UTC run directories and run/root/config/dirty-state binding.
+- Exact config validation before native imports; no default worker config.
+- Process-group timeout cleanup, bounded stdout/stderr and child IPC.
+- Actor-owned public prefix records routed through
+  `advance_public_recurrent_prefix` with the frozen G2 checkpoint; no fabricated
+  recurrent history.
+- Parent COW public-hash and request/terminal coherence checks.
+
+**Commands/results/artifacts**
+
+- `rtk .venv/bin/python -m py_compile .chatgpt/tmp/counterfactual-q/collector.py`
+  PASS.
+- `rtk .venv/bin/ruff check .chatgpt/tmp/counterfactual-q/collector.py` PASS.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --self-check`
+  PASS: stale output refusal, config mismatch refusal, process-group cleanup,
+  and Ajv-backed schema-valid projection shape; zero native imports.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --dry-run`
+  PASS: `authorized=false`, `DRY_RUN_ONLY`, no native launches; resolved config
+  SHA-256 `1bc7a2e60b32d4a7f9d3dc771231c713aa8e9c3945be95a5b540c6628874caa7`.
+- The single final bounded preflight completed at
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T161316.329036Z-7ed0c4dbcb09/preflight-execution.json`.
+  It is `PASS_EXECUTION` only: one fresh native root, 4 official-search
+  continuations (2 actions x 2 shared particles), all terminal, with zero
+  invalid/fallback/post-terminal/crash/timeout and one valid parent step.
+  The root had 7 complete legal single-select actions; only 2 were executed,
+  so the dataset is deliberately not emitted and schema status is
+  `BLOCKED_PREFLIGHT_IS_PARTIAL` with explicit aggregate/action-count errors.
+- Root prefix records were projected by the frozen G2 checkpoint: status `OK`,
+  9 actor-owned public history steps, finite hidden shape `[1,160]`, END option
+  count `1`, `stop_legal=false`, `stop_tested=false`. Compound and optional STOP
+  coverage remain a separate mechanics gate.
+- Fresh binding: run ID
+  `counterfactual-q-20260809T161316.329036Z-7ed0c4dbcb09`, root ID
+  `771586bd310f3a2df7736dc93c8d31926d85aa0c98e991ef1bbf2fb6334ef7b1`, config
+  SHA-256 `1bc7a2e60b32d4a7f9d3dc771231c713aa8e9c3945be95a5b540c6628874caa7`,
+  Git dirty-state SHA-256
+  `2579f6f9d2d77a7a410ab95802de0f1601b27bff434b2ae696f82d0429bc984c`.
+- Final collector source SHA-256 is
+  `82478bb61af5c40847b19fec00cd8009c23fadae9135d8ddb03fa79c59de2c2a`; the
+  retained state-group ID is
+  `56f37f3a2c139a529229d0929ddc328f06d1164635ca9e1bf4cb8cb9f562e149`.
+- The parent COW proof retained distinct pre/post public hashes, advanced from
+  request sequence 27 to 28, and passed request/terminal coherence.
+- During implementation, five earlier bounded 4-branch attempts were retained
+  in their unique run directories: two failed closed after children completed
+  because of collector-to-projector keyword wiring, and three completed before
+  the final binding/IPC-only edits. None emitted a dataset; the final artifact
+  above is the only result used for this milestone. This is disclosed rather
+  than treating those bounded debug attempts as absent.
+
+No training, submission, production policy, qualified artifact, progress gate
+verdict, or live Kaggle state was changed. The full <=480 schedule remains
+unauthorized and was not launched.
+
+## 2026-08-09 - Step 34: Scratch option-Q ranker prototype
+
+**Objective/question**
+
+Build the smallest falsifiable terminal-outcome ranker while the native
+counterfactual collector remains blocked, using the frozen G2 public
+representation without changing production policy or PPO.
+
+**Implementation**
+
+- Added `.chatgpt/tmp/outcome-ranker/outcome_ranker.py` with a 27,841-parameter
+  option-conditioned MLP head over frozen G2 post-root hidden `[B,160]` and
+  existing option embeddings `[sum_options,128]`.
+- Preserved ragged complete-option offsets/masks, deterministic legal fallback,
+  nonfinite rejection, semantic-fingerprint joining, and grouped terminal
+  `{-1,0,+1}` targets. The loss is uncertainty-weighted Huber plus the already
+  specified bounded Bradley-Terry term.
+- Added `load_counterfactual_dataset(...)`, which reconstructs
+  `ProjectedDecisionV1`, executes frozen G2 once per state, and rejects
+  compound paths until a path-conditioned Q contract exists.
+- Added `.chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`; it does not create
+  or retain outcome labels.
+
+**Commands/results**
+
+- `rtk uv --cache-dir /tmp/codex-uv-cache run --no-project ruff check ...`:
+  `PASS`.
+- `rtk python3 -m py_compile ...`: `PASS`.
+- No-native synthetic overfit: `PASS`; concordance `0.0 -> 1.0`, finite
+  gradients, legal mask respected, duplicate semantic options equal,
+  checkpoint roundtrip exact, selected option `0`, CPU p95 `0.168946 ms` for
+  batch `16 x 4`.
+- Strict loader mechanics: ephemeral public fixture `PASS` with hidden
+  `[1,160]`, options `[2,128]`, targets `+1/-1`; retained probe rejected for
+  missing required `run`/`state_groups`. No dataset artifact was retained.
+
+**Interpretation / blockers**
+
+This is a trained-head prototype only. The qualified G2 checkpoint is a
+zero-update public representation, not a competent Q policy. Production still
+lacks a package context-0 `_model_action()` adapter, per-request recurrent
+advance/reset transport, and complete public event history; Grim's selected
+semantics `_HISTORY` is not a substitute. Compound action paths remain
+explicitly blocked by the minimal option-Q loader.
+
+**Decision**
+
+`SCRATCH_RANKER_PROTOTYPE_PASS`; `NO_PRODUCTION_PROMOTION`; `COLLECTOR_AND_PACKAGE_INTEGRATION_REQUIRED`.
+
+**Files / hashes**
+
+- Adapter/ranker files are scratch-only under `.chatgpt/tmp/outcome-ranker/`.
+- Frozen G2 model schema hash remains
+  `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`.
+- No commit, staging, native games, or training run was performed.
+
+**Next action**
+
+Finish the corrected collector preflight and separately specify the package
+inference adapter/recurrent lifecycle before any native label collection or
+ranker training on real outcomes.
+
+## 2026-08-09T21:50:38+05:30 - Step 35: Independent Option-Q Training-Contract Audit
+
+**Objective/question**
+
+Verify that the synthetic option-Q head cannot silently learn from misaligned or incorrectly oriented counterfactual labels before any real-label training is authorized.
+
+**Evidence inspected**
+
+- Every line of the scratch ranker, loader, loss, checkpoint code, test, schema, projector, README/audit, and frozen G2 reliability binding reference.
+- Direct synthetic ranker checks plus independent ragged two-group behavior.
+
+**Results and metrics**
+
+- The 27,841-parameter head itself is mechanically viable: synthetic concordance `0.0 -> 1.0`, finite gradients, legal masking, ragged offsets, duplicate-feature equality, and exact head checkpoint roundtrip pass; independent CPU p95 was `0.163429 ms` for `16 x 4`.
+- Blocker: loader recomputes option fingerprints but does not bind request identity, ordering, and fingerprints to `ProjectedDecisionV1.transport`; an action label can be attached to the wrong embedding.
+- Blocker: loader trusts aggregates rather than recomputing `W/D/L`, replicate count, mean reward, membership, and learner reward orientation from branch outcomes.
+- Blocker: checkpoint pins the schema but not the exact frozen G2 state hash; a head can be paired with a different trunk.
+- Loss documentation and implementation diverge: uncertainty weights affect Huber but not pairwise terms, and global pair averaging lets large option groups dominate.
+- Prefix source/digest binding, option-embedding/logit finiteness, empty groups, and duplicate semantic aggregation need explicit contracts.
+- Claimed retained schema fixture does not exist, and the script is not pytest-discoverable; direct script testing passes but `pytest` exits 5 with no tests.
+
+**Failures / invalid actions / fallbacks**
+
+- No native games, training, package, or submission ran.
+- Real-label training is blocked on trust-boundary correctness, not head capacity.
+
+**Interpretation**
+
+The model computation is small and fast enough, but training it before binding labels to exact public option transport would create polished nonsense. These are narrow root-cause repairs, not new infrastructure.
+
+**Decision**
+
+`HEAD PROTOTYPE PASS`; `REAL-LABEL TRAINING BLOCKED`; `FIX LOADER/AGGREGATE/TRUNK CONTRACT`.
+
+**Files created/changed**
+
+- Updated `progress.md` only in the lead process.
+
+**Next action**
+
+Repair the loader and loss with the smallest tests, then feed it one complete-action schema-valid native state group. Keep the 480-label run stopped until both sides agree exactly.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09 - Step 35: Trained-encoder initialization audit (in progress)
+
+**Objective/question**
+
+Audit retained checkpoints, manifests, reports, and trainer code for a trained
+recurrent public semantic encoder compatible with the G2/option-Q contract.
+This is read-only evidence work; no replay bodies, training, native games, or
+production changes are allowed.
+
+**Current guardrail**
+
+The frozen qualified G2 checkpoint has `optimizer_steps=0` and must not be
+treated as a useful learned encoder. The next recommendation will be based on
+actual optimizer/provenance/held-out evidence, not parameter compatibility
+alone. Findings and the initialization decision will be appended here when
+the audit closes.
+
+**Audit result (closed for this evidence pass)**
+
+An actually trained, shape-compatible recurrent public encoder is retained,
+so initializing the outcome head from the zero-update G2 package is not the
+recommended path. The best candidate is the evaluation-only production BC
+checkpoint at `.chatgpt/tmp/e01-bc-candidates-dataset/epoch-4.pt`:
+
+- raw checkpoint: 11,645,159 bytes, SHA-256
+  `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde`;
+  `KPTCG_G3_TRAINING_CHECKPOINT`, `schema_version=1`, epoch 4,
+  `optimizer_steps=840`;
+- model state: 141 tensors / 1,077,837 parameters, semantic state SHA-256
+  `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`;
+  strict `PTCGPolicyV1` load against the frozen G2 architecture passed with no
+  missing or unexpected keys;
+- G2 binding: package SHA-256
+  `4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827`,
+  model schema SHA-256
+  `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`,
+  public hidden 160, option width 128, 970,022 frozen-package parameters;
+- retained validation NLL improved from `1.8327710452` at step 0 to
+  `1.3746534599` over 32 held-out episodes / 2,318 targets; the report records
+  284 train episodes, 32 validation episodes, 46 sealed test episodes,
+  `training_labels_materialized=0`, and `model_promoted=false`;
+- provenance is a mixed teacher corpus (Majkel 80%, legacy flg/dries 20%),
+  not terminal counterfactual labels and not an established exact-Grim-deck
+  competence result. It is a warm-start initializer only, not qualified or
+  promotable. The completed CPU-only private run took about 9,501.7 seconds;
+  no package/runtime qualification exists for this `.pt` candidate.
+
+Other candidates and disposition:
+
+- `private/g3/e01/bc-engineering-canary-v1/step-32.pt`, SHA-256
+  `c8df3666c87a895639092d6898b3ab8254ca6f0785c44980f1fba96d0000ec5d`,
+  32 checkpoint steps (64 cumulative canary steps), 1,077,837 parameters,
+  strict-compatible; engineering-only, 8 episodes / 609 meaningful teacher
+  decisions, no native competence evidence. Fallback initializer only.
+- `.chatgpt/tmp/e01-recurrent-bc-smoke-v6-output/kptcg-e01-recurrent-bc-smoke-v1/outputs/e01-recurrent-bc-smoke-v1/epoch-1.pt`, SHA-256
+  `9d811a420867e9635ad4888266518c9764d95f5299916402f8ecde355a88e9da`,
+  9 optimizer steps, 1,077,837 parameters, strict-compatible; smoke-only
+  (6 train / 8 validation episodes), no competence evidence.
+- `.chatgpt/tmp/gold-decision-engine-v2/bc-epoch4-model-state.pt`, SHA-256
+  `5eba76df62ad6ccc7e0558af9f4f6079466a2ca92ff4bb690186874874374c22`, is
+  an extracted copy of the epoch-4 state, not an independent checkpoint.
+- G3a PPO/toy checkpoints are incompatible: observation width 8, option
+  width 8, hidden 32, toy-only correctness, and no PTCG native outcome.
+- Majkel history and LightGBM artifacts are public behavior/action controls
+  (775- and 1047-feature variants), not recurrent G2 encoders or terminal
+  W/D/L Q labels. Their small native screens are wrapper/control evidence,
+  not standalone encoder competence.
+- The qualified G2 package remains zero-update: `optimizer_steps=0`,
+  `training_loop_ran=false`; do not pair a randomly initialized Q head with it
+  as the main competence experiment.
+
+**Decisive initialization/training recommendation**
+
+Pin and strict-load the epoch-4 BC `model_state` into the existing G2 model,
+then fine-tune the full recurrent trunk plus the scratch option-Q head on
+native terminal counterfactual groups. Pin both the G2 package/schema hashes
+and BC state semantic hash in the head checkpoint. A short numerical warmup
+may freeze the trunk, but a frozen random/zero-update encoder is not a valid
+competence experiment. Keep BC actions out of PPO and keep this outcome-label
+experiment outside the replay/PPO firewall. Use the existing grouped terminal
+`+1/0/-1` contract; LightGBM is only the fast engineered-feature control and
+packaging fallback because it cannot represent recurrent plan/next-response
+effects.
+
+The smallest first falsification is the existing capped complete-option
+schedule after contract repair: 6 root state groups, at most 10 legal options,
+8 common-particle replicates (480 maximum branch labels). The corrected
+preflight measured 4 complete continuation rollouts in `0.969892` seconds
+(about 4.1 rollouts/second, one native launch, 618 continuation steps); this
+is a planning measurement, not a full-schedule guarantee. At that measured
+rate, 64 held-out groups x 8 options x 4 replicates is approximately 8.3
+minutes of continuation-worker time, and x8 replicates approximately 16.6
+minutes, before root/setup overhead. Do not treat the old 128-label probe's
+approximately 1.15-second result as comparable throughput.
+
+**Required repair scope before any real-label training**
+
+- Bind `request_id`, exact option ordering, stable semantic fingerprints, and
+  option embeddings to `ProjectedDecisionV1.transport`; reject recomputed-only
+  joins and any mismatch.
+- Recompute W/D/L, replicate count, mean reward/orientation, membership, and
+  uncertainty from raw branch/replicate outcomes. Verify terminal winner/draw
+  mapping from the actor/root-player perspective; do not trust aggregate
+  fields supplied by the collector.
+- Pin the exact G2 package SHA, model-schema SHA, and trunk state semantic SHA
+  in the Q-head checkpoint; strict-load and reject drift.
+- Validate public-prefix source/digest and complete-history transport, deck,
+  card-table, model, and schema provenance; reject hidden/private or
+  determinization fields.
+- Finite-check recurrent hidden, every option embedding, legal mask, and all
+  pre/post ranker logits/scores; hard-fail nonfinite values, masked legal
+  mismatches, incomplete branches, empty groups, or incomplete legal sets.
+- Define duplicate-semantic aggregation by stable fingerprint: aggregate
+  duplicate labels by the documented mean/uncertainty-weighted mean while
+  preserving each original option index and mask; never silently select the
+  first duplicate.
+- Make the test pytest-discoverable and retain one complete schema-valid real
+  group fixture before enabling training. Uncertainty weighting must apply to
+  both grouped Huber and Bradley-Terry terms, with within-state normalization
+  so larger legal sets cannot dominate; pairwise loss must match the documented
+  contract exactly.
+
+**Evidence boundary**
+
+No training, native game, package qualification, submission, staging, or
+production edit was performed for this audit. An earlier metadata-hash command
+in this session accidentally walked through `.chatgpt/tmp/majkel-history/replays/`
+and read file bytes while hashing; it did not parse, copy, or transfer replay
+content. This is disclosed as a boundary violation, and no further replay-body
+access was made. The in-progress audit is now closed with real-label training
+still blocked on the repairs above.
+
+## 2026-08-09 - Step 35: Complete-root Gate-1 preflight repair
+
+**Objective/question**
+
+Close the five independent audit defects without authorizing the full
+`<=480` schedule: validate the exact config on `--execute-native`, make process
+group cleanup verification truthful, seal run artifacts by digest, bind the
+learner receipt identity, and execute one complete legal-root preflight.
+
+**Implementation**
+
+- `.chatgpt/tmp/counterfactual-q/collector.py` now validates `validate_schedule`
+  before `_execute_full` can launch anything; learner receipt `policy_id` must
+  equal the configured learner identity.
+- Process cleanup returns `term_sent`, `kill_sent`, `group_gone`, verification
+  basis, and elapsed verification time. `/proc` live-member inspection treats
+  terminated zombies as non-live; the self-check forks a TERM-ignoring
+  descendant and requires truthful group disappearance.
+- Worker and coordinator reports retain `started_utc`/`finished_utc`. Each run
+  writes `run-manifest.json` and `run-manifest.sha256`, covering worker output,
+  execution output, emitted dataset, collector, projector, dataset schema, and
+  exact config hashes. The manifest explicitly says
+  `NOT_CLAIMED_DIGEST_ONLY`; no filesystem immutability is claimed.
+- Added `--preflight-complete-root`: every legal root action, including native
+  `END`, exactly two shared particles/action, hard maximum 20 branches. Roots
+  requiring compound selection or optional STOP are refused and marked pending
+  a separate mechanics gate. Dataset emission requires complete action sets,
+  schema, public prefix, parent COW, terminal, and cleanup checks.
+
+**Commands/results**
+
+- `rtk .venv/bin/python -m py_compile .chatgpt/tmp/counterfactual-q/collector.py` PASS.
+- `rtk .venv/bin/ruff check .chatgpt/tmp/counterfactual-q/collector.py` PASS.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --self-check` PASS:
+  stale output, binding/config mismatch, descendant cleanup, manifest sidecar,
+  and schema checks; zero native imports.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --dry-run` PASS;
+  `authorized=false`, `DRY_RUN_ONLY`, no native launch.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --execute-native`
+  PASS refusal after exact schedule validation: `native_launches=0`.
+- The first complete-root command attempt failed before worker launch because
+  the new coordinator keyword was not yet threaded through `_start_worker`; it
+  launched zero native work. After fixing that pre-launch defect, exactly one
+  native complete-root preflight was run, with no repeat after launch.
+
+**Final proof**
+
+- Artifact:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T163036.271597Z-00317226a46a/preflight-execution.json`
+- Status `PASS_EXECUTION`; worker `PASS_COMPLETE`; one native root, 5 legal
+  single-select actions including `END`, 10 terminal branches (`5 x 2`),
+  zero invalid/fallback/post-terminal/crash/timeout, one valid parent step.
+- G2 projection `OK`: 14 recorded public-prefix steps and finite hidden shape
+  `[1,160]`; parent COW hashes differ and request sequence advances `30 -> 31`.
+- Dataset schema `PASS`, emitted only after complete aggregate/action coverage:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T163036.271597Z-00317226a46a/complete-root-dataset.json`
+- Run ID `counterfactual-q-20260809T163036.271597Z-00317226a46a`; root ID
+  `5411cd1421f36ad283bf6550dd9e4e01e2060f7646018094ffb78091c99ffd09`;
+  config SHA-256
+  `1bc7a2e60b32d4a7f9d3dc771231c713aa8e9c3945be95a5b540c6628874caa7`;
+  Git-dirty SHA-256
+  `2579f6f9d2d77a7a410ab95802de0f1601b27bff434b2ae696f82d0429bc984c`.
+- Manifest:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T163036.271597Z-00317226a46a/run-manifest.json`
+  digest `c1364958226f94988d340792fffb72d451549b0d67595a284dfa5233ad9a474c`
+  and sidecar file SHA-256
+  `4667c0087f5cad8b0d7af10f809b372e02fcf2927b7945de401306e7654d0f9e`.
+
+No full collection, training, production edit, qualified artifact mutation,
+submission, staging, or commit was performed. Compound and optional-STOP
+coverage remains blocked behind its separate mechanics gate.
+
+## 2026-08-09T22:13:30+05:30 - Step 38: Complete-Root Dataset Provenance Audit
+
+**Objective/question**
+
+Recompute the complete-root labels and provenance independently and decide whether the capped six-root collection is now reachable and trustworthy.
+
+**Evidence inspected**
+
+- Current collector/config/projector/schema and the final `163036` run's worker, execution, dataset, manifest, and sidecar.
+- Full authorization branch and schedule-validation boundary.
+- Static/self-check/dry-run/full-refusal plus independent schema, aggregate, reward, prefix, and digest recomputation; no native run.
+
+**Results and metrics**
+
+- Native mechanics verify: 5 complete MAIN single-select actions including END, exactly 2 common particles/action, 10 terminal branches, correct actor-oriented `W/D/L`/means/stderr/CIs, zero invalid/fallback/post-terminal/crash/timeout, finite 14-step public prefix, and valid parent COW.
+- Manifest/source/config hashes and timestamp ordering recompute.
+- Blocker: emitted dataset says `run_id=counterfactual-q-unbound` rather than the coordinator/worker/manifest run ID.
+- Blocker: validator requires the dry-run authorization pair, so an otherwise valid `authorized=true`/`NATIVE_FULL_AUTHORIZED` config can never reach the full path.
+- Blocker: the full branch does not emit execution timestamps, run manifest, or sidecar.
+- Validator accepted malformed zero-state/zero-replicate/zero-action and incorrect anchor/slot schedules because it checked only upper caps.
+
+**Failures / invalid actions / fallbacks**
+
+- No game defect in the 10 retained branches.
+- Evidence/training authorization remains blocked; no 480-label run or training occurred.
+
+**Interpretation**
+
+The game-engine primitive now works; remaining defects are narrow coordinator correctness bugs that could mix or mislabel training evidence. Fixing them once is cheaper than debugging a falsely trained policy.
+
+**Decision**
+
+`NATIVE COMPLETE-ROOT MECHANICS PASS`; `DATASET PROVENANCE BLOCK`; `FULL RUN STILL REFUSED`.
+
+**Files created/changed**
+
+- Updated `progress.md` in the lead process.
+
+**Next action**
+
+Bind run IDs end to end, make both authorization modes strictly valid, validate exact positive schedule structure, seal full-run evidence, and execute one final all-action x2 preflight.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09 - Step 39: Gate-1 Frozen-BC Outcome-Ranker Contract
+
+**Objective/question**
+
+Implement the smallest trustworthy scratch-only option-Q contract before any
+real-label training: bind all transport identities, derive labels only from
+raw terminal branches, freeze a strictly loaded trained public trunk, and make
+the synthetic proof pytest-discoverable.
+
+**Implementation**
+
+- `.chatgpt/tmp/outcome-ranker/outcome_ranker.py` now loads the exact G2 package
+  and strictly replaces its state with BC epoch 4, then freezes every trunk
+  parameter. Gate-1 head checkpoints pin package SHA-256
+  `4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827`, model
+  schema SHA-256
+  `61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68`, BC
+  checkpoint SHA-256
+  `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde`, and
+  BC semantic state SHA-256
+  `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f` at
+  `optimizer_steps=840`.
+- The loader requires request identity, exact transport option order and
+  fingerprints, public-prefix source/digest/schema provenance, complete legal
+  singleton action coverage, and finite hidden/option/logit/score tensors. It
+  rejects empty groups, missing/failed/fallback branches, hidden/private
+  fields, aggregate tampering, orientation mismatch, and trunk drift.
+- W/D/L, mean reward, empirical stderr/CI, and actor orientation are derived
+  from `terminal_engine_result` for every raw branch. Duplicate semantic
+  options are pooled per replicate, require consistent terminal outcomes, and
+  broadcast the derived target to every original legal index. Equal-score
+  inference is deterministic at the lowest legal index.
+- Loss is state-normalized uncertainty-weighted Huber plus Bradley-Terry;
+  both terms use the same within-state uncertainty weights and identical
+  semantic pairs are skipped. Large legal sets cannot dominate a batch.
+- Gate-1 is frozen-BC-head-only. End-to-end trunk fine-tuning remains blocked
+  because the retained collector prefix is digest-only; public prefix tensors
+  or replay are required for recurrent parity.
+
+**Proof and verification**
+
+- Retained synthetic schema-valid fixture:
+  `.chatgpt/tmp/outcome-ranker/synthetic_gate1_fixture.json`, 22,224 bytes,
+  SHA-256 `d4ff173e8535324e707fece8ffd7e10642f02b6a72db9c49f56e1200f7d121a2`.
+  It is synthetic mechanics evidence only, not native training data.
+- `rtk .venv/bin/python -m pytest .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py -q`:
+  PASS, `1 passed`.
+- `rtk .venv/bin/python .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`:
+  PASS; synthetic concordance `0.5 -> 1.0`, finite gradients, frozen trunk,
+  transport-alignment tamper rejection, aggregate-tamper rejection, duplicate
+  target broadcast, empty-group rejection, exact checkpoint roundtrip, 27,841
+  head parameters, and combined BC-trunk plus head CPU p95 `7.750801 ms`.
+- Ruff and `py_compile` both PASS. The JSON schema parses and the retained
+  fixture is accepted by the loader's schema validator.
+
+**Files / hashes**
+
+- `outcome_ranker.py`: SHA-256
+  `46bd9484171a633d20b749ffdcff9d27084d8777ddabd627916c2645b69a3aa0`.
+- `test_outcome_ranker.py`: SHA-256
+  `337564618b30096d27597a87dca3a7bcb1f83c42b84f1483554c8242d1bd47a7`.
+- `counterfactual_action_dataset_v1.schema.json`: SHA-256
+  `54943890424ccac103accbd498cc7a4b86c77ede1069d133ad7342bf87946f74`.
+- `README.md`: SHA-256
+  `6501367aea5928bdbc50fb804052cbb762da319ceedc0550d6912c7ed05d8ee6`.
+- `audit.json`: SHA-256
+  `0e44ea583a5b5e06df9a7e431c3c78eb800c0ba4e8a969b8c913ef5a9d77dda3`.
+
+No real-label training, native games, production/package edits, qualified
+artifact mutation, staging, or commit occurred. Remaining blockers are
+collector emission of this stricter schema, a complete public-prefix transport
+for any future end-to-end fine-tune, and the separate production package
+adapter/inference lifecycle. Keep real-label collection stopped until the
+collector and this loader exchange the same transport/provenance contract.
+
+## 2026-08-09T22:24:06+05:30 - Step 40: Final Gate-1 Complete-Root Provenance Repair
+
+**Objective/question**
+
+Repair only the four re-audit blockers in the scratch collector, retain the
+checked-in schedule as unauthorized, and execute exactly one complete-root
+single-choice preflight with two shared particles per legal action.
+
+**Implementation**
+
+- `validate_schedule` now accepts only the coherent pairs
+  `authorized=false/DRY_RUN_ONLY` and `authorized=true/NATIVE_FULL_AUTHORIZED`.
+  It rejects non-positive root/anchor/particle/replicate/action/cap fields,
+  mismatched candidate slots or particle counts, incomplete three-anchor
+  splits, and cap overflow. The authorized pair is self-checked without a
+  native import or launch.
+- Coordinator `run_id` is bound into every emitted dataset; the old
+  `counterfactual-q-unbound` fallback is gone. The manifest binds run, root,
+  config, and every worker/dataset path. The future full branch now writes
+  started/finished execution output plus the same digest-only manifest and
+  sidecar helper as preflight. The current schedule remains
+  `authorized=false`, `DRY_RUN_ONLY`.
+- The public projection adapter now retains the actual projector-provided
+  recurrent history/provenance and validates the 160-wide hidden shape. No
+  runtime history is fabricated; synthetic nonzero history is used only by
+  the pure schema self-check.
+
+**Static/refusal commands**
+
+- `rtk .venv/bin/python -m py_compile .chatgpt/tmp/counterfactual-q/collector.py` PASS.
+- `rtk .venv/bin/ruff check .chatgpt/tmp/counterfactual-q/collector.py` PASS.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --self-check` PASS:
+  stale output, binding/config mismatch, truthful process-group cleanup,
+  positive-bound/mode-pair refusal, authorized-mode reachability, manifest
+  sidecar, schema shape, and zero native imports.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --dry-run`
+  PASS: `authorized=false`, `DRY_RUN_ONLY`, `native_launches=0`; config SHA-256
+  `e0717045caea4e55d3f2bdcc515e2e1134ac842052d0a37ec67d27bf3bafd4d7`.
+- `rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --execute-native`
+  correctly refused after exact validation with exit code 2 and
+  `native_launches=0`.
+- An earlier repair-cycle `--preflight-complete-root` attempt failed before
+  worker/native launch because `_start_worker` had not yet received the
+  `complete_root` keyword; native launches were zero. It was not treated as a
+  native failure and was not rerun as a debugging loop.
+
+**Final native proof**
+
+Exactly one command was run after the static/refusal checks:
+`rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --preflight-complete-root`.
+It returned `PASS_EXECUTION` with one native root, six complete MAIN
+single-select actions including one `END`, and exactly 12 terminal branches
+(`6 x 2` shared particles), under the hard 20-branch cap. All 12 branches
+completed; invalid actions, fallbacks, post-terminal actions, child crashes,
+and child timeouts were all zero. The parent continued for one valid step with
+distinct pre/post public hashes and request sequence `19 -> 20`.
+
+The G2 projection was `OK` with recorded actor-owned prefix history of seven
+steps and hidden shape `[1,160]`. Dataset schema validation passed and the
+dataset run ID equals the coordinator run ID. Compound and optional-STOP
+coverage remains explicitly pending its separate mechanics gate.
+
+**Final artifacts and hashes**
+
+- Run ID `counterfactual-q-20260809T165402.977401Z-25d5595a89d3`; root ID
+  `039ac9bde5fca0fed6903026de879de26fe387142e89e5d525005b5a5fa6f3d8`.
+- Execution report:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T165402.977401Z-25d5595a89d3/preflight-execution.json`, SHA-256
+  `4fb4b2013496f45eb5f61520486964be0acbb3ee8f8828127e511ab412166e32`.
+- Dataset:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T165402.977401Z-25d5595a89d3/complete-root-dataset.json`, SHA-256
+  `53ee74a74537b6c33dad33ec74b2b881a3d2d90a3525f86febf2fd2e7f71749b`.
+- Worker output SHA-256 `54d88e8992bf5449691cb0ebcff6db91fce1fa8cc7d876ce3562bb900b354f94`.
+- Manifest:
+  `.chatgpt/tmp/counterfactual-q/runs/counterfactual-q-20260809T165402.977401Z-25d5595a89d3/run-manifest.json`, manifest SHA-256
+  `34e276b7a8fd59a39fc48e110b7940bbaa09d88e1929385a2b78ec78f5f671fd`;
+  sidecar file SHA-256
+  `0ee706ef6632c93c79299d8233e554539206dfb1a218fb465f51e0015705a2a4`.
+- Collector SHA-256 `0fb7f64e4df5f58542f1c2b172f85abfbe53664510be8fd601977664ba0eecc5`;
+  projector SHA-256 `b738f6eb925f9c138b1df9c7353532a2135419a71a46590eb1ab0ba13ce4c7ed`;
+  dataset-schema SHA-256 `54943890424ccac103accbd498cc7a4b86c77ede1069d133ad7342bf87946f74`.
+- Source commit `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; run Git-dirty
+  digest `a602bfdda16e9504d22949c6973df8e461dade3b1a93ff5a8f495cca87661f0e`.
+
+No full `<=480` collection, training, production edit, qualified artifact
+mutation, submission, staging, or commit was performed. The complete-root
+proof is execution/schema/provenance evidence only, not authorization to train
+or to broaden coverage.
+
+## 2026-08-09T22:39:28+05:30 - Step 41: Real Collector-To-Ranker Interchange Audit
+
+**Objective/question**
+
+Test the corrected ranker against the actual final complete-root dataset rather than trusting a synthetic fixture with self-consistent identities.
+
+**Evidence inspected**
+
+- Current loader/ranker/checkpoint/loss implementation, synthetic fixture, BC trunk pins, and final `165402` collector dataset.
+- Independent raw branch/action identity, semantic-path hash, prefix provenance, reward orientation, aggregate, leakage, frozen-state, malformed-checkpoint, and loss-offset probes.
+
+**Results and metrics**
+
+- Real collector dataset is internally strong: run bound, 6 complete singleton actions including END, 2 common replicates, 12 branches, correct actor-oriented aggregate math, no hidden leakage.
+- Blocker: loader incorrectly requires `initial_hidden_source == history_source`. The real and valid production pairing is `PRODUCTION_INITIAL_HIDDEN_EPISODE_START` followed by `RECORDED_PUBLIC_GRU_HIDDEN`.
+- Blocker: collector correctly stores distinct `action_id` (ordering plus fingerprint path) and `semantic_action_fingerprint` (full semantic path hash); synthetic fixture made them equal and loader rejects the real pair.
+- Blocker: loader accepts an unbound/unfrozen base `PTCGPolicyV1`; it must require or recompute the exact pinned BC state and frozen parameters.
+- Strict checkpoint load accepted wrong `(1,1,1)` dimensions and NaN weights.
+- Grouped loss accepted negative offsets `[0,-1,3]`.
+- Normal computation remains viable: independent combined BC-trunk/head p95 `6.91 ms`, 27,841 parameters, synthetic pytest/Ruff/compile pass.
+
+**Failures / invalid actions / fallbacks**
+
+- No native game or training ran in this audit.
+- Real-label loader execution failed closed on the first provenance mismatch; the capped collection remains stopped.
+
+**Interpretation**
+
+This is exactly why a real one-state interchange gate precedes 480 labels. The defects are small contract mismatches and malformed-input gaps, not evidence against outcome ranking itself.
+
+**Decision**
+
+`COLLECTOR DATA INTERNALLY VALID`; `RANKER INTERCHANGE BLOCKED`; `FIX FIVE EXACT LOADER DEFECTS`.
+
+**Files created/changed**
+
+- Updated `progress.md` in the lead process.
+
+**Next action**
+
+Implement allowed production prefix provenance, separate real identity validation, exact frozen-trunk enforcement, strict finite/dimension checkpoint loading, and nonnegative loss offsets; then load the real dataset without optimization.
+
+**Commit SHA**
+
+Pending corrected collector/ranker milestone.
+
+## 2026-08-09T23:17:29+05:30 - Step 44: Authorized Gate-1 Full Run (Final Record)
+
+The single authorized command was run exactly once after static checks:
+`rtk .venv/bin/python .chatgpt/tmp/counterfactual-q/collector.py --config .chatgpt/tmp/counterfactual-q/gate1_schedule_v1_authorized.json --execute-native`.
+Authorized config SHA-256 is `b576153ef13d112b9dec4638ac1c1e221b20ab6e8290dc5f2c28868e5a40be96`; its only semantic changes from base SHA-256 `ba084e11c3bc2aab107804ac5530b2a8ce8ebd6dfc25ee37485a4317e0766e20` are `authorized=true` and `mode=NATIVE_FULL_AUTHORIZED`. PyCompile, Ruff, and authorized dry-run passed before launch.
+
+Run `counterfactual-q-20260809T174041.651492Z-513a20492a53` finished `PASS_COMPLETE` in `34.476553 s`: 6 roots, 34 legal options, 272 terminal branches (cap 480), 8 shared particles/action, and all legal options retained. Per-state W/D/L targets: `dragapult-ex/0 34/0/46` (10 options, 80 branches), `dragapult-ex/1 19/0/5` (3, 24), `iono/2 9/0/23` (4, 32), `iono/3 43/0/5` (6, 48), `mega-lucario-ex/4 13/0/27` (5, 40), `mega-lucario-ex/5 16/0/32` (6, 48). Anchor totals: dragapult `53/0/51`, iono `52/0/28`, mega-lucario `29/0/59`; global `134/0/138`, unique targets `[-1,1]`. Population action variance over 34 actions: mean `0.694853`, min `0`, max `1`. Root semantic, aggregate action-ID, and particle/action duplicate counts were all zero. All invalid/fallback/post-terminal/crash/timeout counters were zero; parent COW hashes/requests were coherent and each parent continued one valid step. Prefixes were nonempty recorded public history, schema v2, width 160; BC checkpoint/state bindings were `76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde` / `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`, frozen epoch4.
+
+Artifacts: run directory `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T174041.651492Z-513a20492a53/`; execution report SHA-256 `61adfa3821fc77ffb44f6f10f0279623b0bf2cae10e89b12f1c2bd4f093c7231`; datasets SHA-256 `1e8e9fbf32dd7308564d31f0a769ec2bf8e25f39aa7251210b53f75f5629eda2`, `581ebe13656e5e93404e5a0d82bdf440aa3173ada3cdbad462323913d0684bf6`, `63d114cfa7aa8c470cf2c16ae4c82817440a5842b19e16d7413b9b7f1494ebd3`; manifest SHA-256 `12c36417921df3f8e61c8cdee5621b888a43506761d4418bf3846f4b3474405f`, sidecar file SHA-256 `c500c6ffc7d761c1773185a2dc2beca277a00039b4070f03eba7985dc83c24f5`, and all 15 manifest artifacts independently matched bytes/digests. Collector SHA-256 `161b2a9903cff3f176fafcaeaa2be87d689e3cff78c807e09d16c8e86c81cf38`; source commit `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; run dirty SHA-256 `d127c25fdd0407188ceae1d610f424a47c84628f1fe54e255def1fbfe89a74a6`. Filesystem immutability is not claimed; evidence is digest-only.
+
+Decision: `GATE-1 COLLECTOR GO` for the bounded evidence, but `RANKER TRAINING KILL/BLOCKED` because Step 41's five real collector-to-ranker loader defects remain; no training, production edit, submission, staging, or commit occurred. Compound and optional-STOP coverage remain a separate mechanics gate.
+
+## 2026-08-09T23:29:17+05:30 - Step 45: Independent Six-Root Signal Audit
+
+**Objective/question**
+
+Recompute the complete authorized batch through the final frozen-BC loader and decide whether it contains real action-ranking signal or should kill the architecture.
+
+**Evidence inspected**
+
+- All three dataset files/six state groups, 272 raw terminal branches, manifest, exact pinned trunk, current loader/loss/projector, and fallback actions.
+
+**Results and metrics**
+
+- All datasets load: 6 groups, 34 action rows, 48 unique paired determinizations, 8 replicates/group, 134 wins and 138 losses; every loader target and aggregate recomputes from raw branches.
+- All six groups are nondegenerate. Baseline/fallback is strictly below the best observed action in 5/6 groups.
+- Observed fallback-to-best improvements by state are `+0.75, +0.25, +0.00, +0.25, +0.25, +0.75`; mean `+0.375` terminal reward.
+- Exact groups span Dragapult, Iono, and Mega Lucario, two states each. Paired particles reduce within-state variance but are correlated and not IID.
+- Final fixed ranker is finite and strict; combined frozen trunk/head runtime remains about 7 ms.
+- Six states cannot support a credible train/tune/test split: every partition cannot contain all three opponents, and splitting actions would leak shared state/history.
+
+**Failures / invalid actions / fallbacks**
+
+- No optimization/native action in the independent audit.
+- Step 44's `RANKER TRAINING KILL/BLOCKED` wording is superseded for mechanics by the fixed loader; competence training remains blocked on scale.
+
+**Interpretation**
+
+The pipeline found exactly the kind of recurrent decision states the architecture needs: current Grim often chooses an action with materially worse native continuation outcome. The architecture survives its first falsification, but the sample is far too small to estimate generalization.
+
+**Decision**
+
+`GATE-1 SIGNAL PASS`; `GO MECHANICS-ONLY SIX-GROUP OVERFIT`; `BLOCK COMPETENCE/PROMOTION`; `SCALE TO 64-96 GROUPS`.
+
+**Next action**
+
+Prove only head optimizer/checkpoint plumbing on all six groups, then collect diverse state-grouped data with current-meta anchors and preserve a genuine opponent/root holdout.
+
+**Commit SHA**
+
+Pending Gate-1 code/evidence milestone commit.
+
+## 2026-08-10T01:42:00+05:30 - Step 51: Scale64 One-Time Test Evaluation
+
+Fixed only the test transport ordering defect by binding `test_records` to
+the same `_ordered_records` helper used by `_split_batch`. Added a regression
+covering train, tune, and test record/batch order; narrow verification passed:
+`2 passed`, Ruff clean, and py_compile clean. No trainer invocation or
+retraining occurred.
+
+Loaded the exact orphan checkpoint
+`.chatgpt/tmp/outcome-ranker/scale64_gate1_head_experimental.pt` once. Its
+SHA-256 remained
+`b5065008b9eebf314a5a49588b55d737e9b16910ee2fe1a26c6afb67a5cc4f57` before
+and after evaluation; strict tune reload output was bit-exact, head state SHA
+was `cf66a324c9e78d27abe3049795b8fd79f2b2206f6c72af35c74dd891e7e5f5f3`,
+and the frozen BC trunk state stayed pinned. Source-order assertions confirm
+seed selection and checkpoint write precede test scoring, while the optimizer
+helper has no test-side reference. The historical selected seed/step was not
+retained, so this is an execution-order verification, not a reconstruction of
+the missing selection log.
+
+The one final test phase (selected head, untrained head, and frozen BC action
+logit baseline) produced selected-head class concordance `0.6037735849`,
+top-class agreement `0.5833333333`, mean chosen target `0.25`, oracle target
+`0.5208333333`, recorded fallback target `0.2291666667`, and chosen-minus-
+fallback delta `0.0208333333` with state bootstrap 95% CI
+`[-0.3125, 0.3958333333]`. Test promotion is killed: the point delta misses
+`+0.05`, the lower CI misses `+0.02`, and Mega Lucario (`-0.625`) plus Lopunny
+(`-0.25`) have catastrophic family regressions. Status is
+`MECHANICS_PASS_SCALE64_INCONCLUSIVE_PROMOTION_KILLED`, not competence.
+CPU inference p95 was `0.255692 ms`. Metrics artifact:
+`.chatgpt/tmp/outcome-ranker/scale64_gate1.metrics.json`, 158630 bytes,
+SHA-256 `16cc2e183a9cc90d80ac45798201396a85e8d17da315a7cba9aa75588e13e83f`.
+No native games, production edits, submission, staging, or commit occurred.
+
+## 2026-08-10T01:37:53+05:30 - Step 50: Scale64 Frozen-Head Execution Blocked
+
+The first Scale64 trainer was corrected only for its pre-optimization tune
+record lookup: `_evaluate(tune_scores, tune_batch, [])` now receives the
+actual 12 tune `GroupRecord`s. The new pytest regression evaluates the 40
+train and 12 tune groups before optimization and confirms no test state ID is
+present; it passed. The audited split remains exactly
+`40/12/12` groups, `247/78/72` actions, `228/66/67` classes,
+`988/312/288` branches, `36/11/10` nondegenerate groups, and `386/98/106`
+class pairs.
+
+Verification before the one permitted Scale64 execution: the regression
+passed (`1 passed`), Ruff passed, and py_compile passed. The fixed-config
+five-seed run was executed once. It completed head training and strict
+checkpoint sealing, then stopped before writing metrics at the next runtime
+defect: `test_records` are sorted by state-group ID while `test_batch` is
+ordered by the audited family/window/slot/public-state split order, so the
+post-seal order assertion fails at
+`.chatgpt/tmp/outcome-ranker/train_scale64.py:755` with
+`test record/batch order changed before baseline evaluation`.
+
+No final test metrics, promotion decision, competence claim, or valid Scale64
+experiment artifact exists. The orphan scratch checkpoint was written before
+that assertion and must not be treated as a completed result:
+`scale64_gate1_head_experimental.pt`, 114333 bytes,
+SHA-256 `b5065008b9eebf314a5a49588b55d737e9b16910ee2fe1a26c6afb67a5cc4f57`.
+Trainer SHA-256 is
+`f1892dccd086e4a66022dbdf090deddb65abac3776f2dd53594be84dca2233f2` and
+the regression SHA-256 is
+`de16ccccd7d72eef2c2234df9e65be5db825a6a90ce6c32dde1b077f8298f47e`.
+No native games, production changes, submission, staging, or commit occurred.
+
+## 2026-08-10T00:29:18+05:30 - Step 48: Alias-Invariant Gate-1 Loss And Public Topology Key
+
+**Objective/question**
+
+Close the two bounded red-team defects before any Scale64 work: alias
+multiplicity must not change Gate-1 loss/weighting, and factual semantic keys
+must include public parent-path and energy-value semantics without serial,
+order, index, or transport-hash leakage.
+
+**Implementation**
+
+- `grouped_ranker_loss` now selects one lowest-index representative per factual
+  equivalence key before normalizing uncertainty weights. Both the Huber and
+  Bradley-Terry terms consume those same representatives; duplicate physical
+  legal rows are absent from all pair terms and cannot change state loss by
+  being appended with a different alias weight. Inference remains transport
+  index-complete and lowest-index deterministic on equal scores.
+- `semantic_equivalence_key` now resolves each source/target endpoint as a
+  canonical endpoint-to-root public path. Every path node carries only its
+  public feature row and its `entity_energy_values[offsets[i]:offsets[i+1]]`;
+  entity indices are never retained. The helper validates all row/offset
+  lengths, integer types, unknown parents, nondecreasing covering offsets, and
+  cycles, failing closed on malformed topology.
+- Tests cover alias-count invariance for total, Huber, and Bradley-Terry losses
+  with an appended alias carrying a deliberately different weight; parent
+  mutation, cycle, unknown-parent, energy type/value, and energy multiplicity
+  mutations; and the retained six-group class/permutation controls.
+- README now states representative-only loss/metrics/weighting semantics and
+  the public parent/energy key contract. No production or PPO code changed.
+
+**Execution/result**
+
+- Commands: `rtk .venv/bin/python -m pytest -q
+  .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`; `rtk .venv/bin/ruff
+  check .chatgpt/tmp/outcome-ranker/outcome_ranker.py
+  .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py
+  .chatgpt/tmp/outcome-ranker/train_gate1.py`; and `rtk .venv/bin/python -m
+  py_compile` over those three files. Result: `5 passed`, Ruff clean, compile
+  clean.
+- Re-ran the six-group mechanics-only proof over exactly 6 state groups, 34
+  physical options, 272 raw branches, 232 particles, 29 factual classes and
+  64 distinguishable pooled pairs. It stopped at 142 steps (1.7709 s), with
+  class-level concordance `0.40625 -> 0.984375`; post per-group concordance
+  was `[0.975, 1.0, 1.0, 1.0, 1.0, 1.0]`. Huber/weighted-BT/total loss was
+  `0.2489249259/0.2689979672/0.5179228783` before and
+  `0.0129511878/0.0204283148/0.0333795026` after. This remains
+  `PASS_MECHANICS_ONLY_HEAD_OVERFIT_NO_COMPETENCE_CLAIM`, not competence or
+  promotion evidence.
+- The strict head checkpoint reload is exact; the frozen BC trunk has no
+  gradients and its state remains
+  `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`.
+  Combined CPU p95 was `0.214282 ms`.
+
+**Hashes**
+
+- `outcome_ranker.py`: `cd4e36360c77af878f35038dedb5eeddbccaeea79628b1c1c4c82148b78452f2`.
+- `test_outcome_ranker.py`: `05d81feaa317383620d93fe61d5f8b2e5a3f4f0b114c0573d553e554658e2d71`.
+- `train_gate1.py`: `dfa07cbb8ab86a05572cc25902529628ffe103d4ac60c795ec3316e56ebf6e86`.
+- `README.md`: `451732b231faea8146cac99305d4bf57f29d9614937dc05fb1820efa68797e77`.
+- Metrics: `8173ff8a102b150a8a76a681d9290a7b6da44b9f6b0f934ff1d3b20d54c0c657`.
+- Scratch checkpoint: 114333 bytes,
+  `58a00b48fa92e9ce1a42ce5903dcda0b51ed3cff90b3721016da5360b8e4737b`.
+- Dataset hashes remain dragapult `1e8e9fbf32dd7308564d31f0a769ec2bf8e25f39aa7251210b53f75f5629eda2`,
+  Iono `581ebe13656e5e93404e5a0d82bdf440aa3173ada3cdbad462323913d0684bf6`,
+  and Mega Lucario `63d114cfa7aa8c470cf2c16ae4c82817440a5842b19e16d7413b9b7f1494ebd3`.
+
+No Scale64 data, native games, production edits, PPO/replay mixing, staging,
+or commit occurred. The remaining architecture blocker is the known factual
+option-representation collision; no serial/index/hash feature was added.
+
+## 2026-08-10T00:06:24+05:30 - Step 47: Factual Equivalence-Pooled Gate-1 Mechanics Proof
+
+**Objective/question**
+
+Repair the four physical-copy label conflicts without adding serial, index,
+option-order, transport-ID, or action-hash features, then rerun the bounded
+six-group head-only proof.
+
+**Implementation**
+
+- `.chatgpt/tmp/outcome-ranker/outcome_ranker.py` now defines a
+  permutation-invariant `semantic_equivalence_key` from the request's factual
+  selection/order/count fields, G2 option categorical/numeric rows, and the
+  resolved public source/target entity categorical/numeric rows. Endpoint
+  indices and raw refs are used only for lookup; serials, positions, order,
+  transport IDs, and fingerprints are excluded from the key. `option.card_id`
+  is not used; endpoint entity card identity is authoritative.
+- Raw W/D/L branches are retained per physical transport action. For each
+  equivalence class, aliases are pooled inside each of the eight shared
+  determinizations first, then the eight paired-world cluster means produce
+  the target/stderr/weight. The target is broadcast to every original legal
+  index while action IDs/fingerprints remain transport sidecars. Class
+  metadata preserves branch WDL, `branch_count`, `particle_count`,
+  `sample_unit`, and disagreement.
+- Bradley-Terry loss and ranking concordance use one representative per
+  equivalence class, so within-class pairs and alias multiplicity cannot
+  dominate. Huber remains broadcast over the legal rows. The trainer reports
+  pooled class metadata and distinguishable-pair counts.
+- Added pytest regressions for all four real duplicate classes, expected
+  pooled targets `0.625`, `0.75`, `-0.125`, and `-1/6`, option permutation and
+  raw-ref invariance, and distinct endpoint card/target/damage/status/zone
+  and numeric amount fields.
+
+**Execution/result**
+
+- Command: `rtk .venv/bin/python .chatgpt/tmp/outcome-ranker/train_gate1.py`.
+- Result: `PASS_MECHANICS_ONLY_HEAD_OVERFIT_NO_COMPETENCE_CLAIM` after 119 of
+  the hard 1,000 steps. The run contains exactly 6 groups, 34 legal rows, 272
+  raw branches, 29 factual equivalence classes, 232 paired-world particles,
+  and 4 disagreement classes. Pooled comparable pairs are exactly 64.
+- Pre/post class-level concordance: `0.40625 -> 0.984375`; per-group post
+  concordance/pairs are `0.975/40`, `1.0/1`, `1.0/5`, `1.0/8`, `1.0/5`,
+  `1.0/5`; all six pass the `>=0.95` mechanics criterion and all tie-aware
+  top-action checks pass. Huber/weighted-BT/total loss is
+  `0.2242839485/0.2689979672/0.4932819009` before and
+  `0.0130334012/0.0200081058/0.0330415070` after.
+- Only the 27,841-parameter head was optimized. The pinned BC trunk state is
+  unchanged at `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`
+  and trunk gradients remain absent. Strict checkpoint reload is bit-exact;
+  checkpoint size is 114,333 bytes and combined scratch CPU p95 is
+  `0.207640 ms`.
+
+**Verification and hashes**
+
+- `rtk .venv/bin/pytest -q .chatgpt/tmp/outcome-ranker/test_outcome_ranker.py`:
+  `4 passed`; Ruff and py_compile pass.
+- Ranker source SHA-256:
+  `a09d4c8e1d0cea997d3c9b7db80cbe852ae6c60c7f91b2157e2b12c1c27c5480`.
+- Trainer SHA-256:
+  `dfa07cbb8ab86a05572cc25902529628ffe103d4ac60c795ec3316e56ebf6e86`.
+- Test SHA-256:
+  `7531ad2d2549bc15f0b2bac7305e61c7648beb25d1953a0bea2b2b868352eb75`.
+- Metrics SHA-256:
+  `a3c5e120983737e08414b9fc3a988abbd9881dfb1a5ffe1acf8459fb78321140`.
+- Strict scratch checkpoint SHA-256:
+  `0ef3350f8ab86a9a7fc789fc81a5643c120e8a2da379100fe06db72fbe81e0a13`.
+  Dataset hashes remain the audited full-run values from Step 44.
+
+**Decision**
+
+`GATE-1 EQUIVALENCE/HEAD MECHANICS PASS`; this is plumbing/overfit evidence
+only, not competence or promotion evidence. The old unpooled Step 45 kill is
+resolved by factual label pooling, not by relaxing the criterion or adding
+private/index features. No production/native/submission/scale collection,
+PPO replay, or commit work occurred.
+
+**Next action**
+
+Keep the strict Gate-1 checkpoint scratch-only; collect the required diverse
+state-grouped counterfactual scale with the same public key/paired-world
+contract before any held-out or native competence claim.
+
+## 2026-08-10T00:36:00+05:30 - Step 49: Final Gate-1 Diagnostic And Energy-Enum Corrections
+
+**Scope and supersession note**
+
+Closed the final two audit gaps without changing production, PPO, replay, or
+the Scale64 plan. Step 47's `119` optimizer-step value is retained as a
+historical record of that earlier run; it is explicitly superseded by the
+current strict run's `142` steps below and must not be used as the latest
+evidence. Step 48 already recorded `142`; this entry records the final
+diagnostic/schema corrections and their rerun.
+
+**Implementation**
+
+- Public `entity_energy_values` are now required to be integer enum values in
+  the official range `0..11`; negative, `12`, `999`, and noninteger values fail
+  closed, with pytest coverage.
+- Trainer `target_top_indices`, `predicted_top_indices`, `target_order`, and
+  `predicted_order` now use stable factual equivalence-class order (sorted
+  semantic key) and representative rows. Each diagnostic carries an inverse
+  transport map to every physical legal index. Physical top/order arrays and
+  deterministic lowest-index tie selections remain separate fields.
+- Added a permutation/alias diagnostic regression proving class-level outputs
+  remain unchanged while physical inverse transport/tie mappings change.
+
+**Verification/result**
+
+- `6 passed`; Ruff and py_compile clean.
+- Six-group mechanics proof remains
+  `PASS_MECHANICS_ONLY_HEAD_OVERFIT_NO_COMPETENCE_CLAIM`: 6 groups, 34
+  actions, 272 branches, 29 classes, 64 distinguishable pairs, 142 steps;
+  concordance `0.40625 -> 0.984375`; post groups
+  `[0.975, 1.0, 1.0, 1.0, 1.0, 1.0]`; strict checkpoint reload exact;
+  trunk unchanged/frozen; CPU p95 `0.211553 ms`.
+
+**Hashes**
+
+- `outcome_ranker.py`: `eaebdc7f261f65b2d8e6b5ac16b0704b803f8c18b5aed8dff6fe9c176b5788e6`.
+- `train_gate1.py`: `50e8616743dea829f4e8aefef6ed1e9a0581335d131dfb37baedea98f7f7e660`.
+- `test_outcome_ranker.py`: `6e27b33cdae4d49957c95f294570a54192925277df005ce52fdf8972d029a435`.
+- Metrics: `5d79af8a35aa1b1aa345d139a3fc6a2f0163b72eaba3ceb5f73b32b545c8d56f`.
+- Scratch checkpoint: 114333 bytes,
+  `58a00b48fa92e9ce1a42ce5903dcda0b51ed3cff90b3721016da5360b8e4737b`.
+- `progress.md` was updated with this supersession record; its final digest is
+  reported in the handoff rather than self-embedded here.
+
+No Scale64 training, native games, production edits, staging, or commit.
+
+**Commit SHA**
+
+Pending Gate-1 code/evidence milestone commit.
+
+## 2026-08-09T23:54:05+05:30 - Step 46: Resolve Representation Collisions As Duplicate Equivalence
+
+**Objective/question**
+
+Determine whether the four identical-embedding/different-target conflicts expose missing game semantics or merely stochastic labels assigned separately to interchangeable physical copies.
+
+**Evidence inspected**
+
+- Exact raw options, public source/target entity state, card identities, action paths, eight paired outcomes, G2 tensors, semantic/action IDs, and knowledge-base semantic invariance guidance for every collision.
+
+**Results and metrics**
+
+- Dragapult collision: two physical Boss's Orders copies, same PLAY semantics and no target; pooled target `0.625`.
+- Mega Lucario collision: two physical Lillie's Determination copies, same PLAY semantics and no target; pooled target `-0.125`.
+- Mega Lucario collision: three Basic Darkness Energy copies attached to the same Marnie's Impidimp with identical public state; pooled target `-1/6`.
+- Every factual option/selection/amount/source-card/target-card/public-state field is identical within each class. Only entity serial, transport fingerprint, and option identity differ.
+- One-thread G2 option tensors are bitwise identical within each class. Minor default-thread differences around `6e-7` are numerical scheduling noise, not semantics.
+- Therefore separate per-copy outcome means are sampling noise. Adding serial, option index, order, or hash would memorize noise and violate semantic/permutation controls.
+
+**Failures / invalid actions / fallbacks**
+
+- No edits, native actions, or training in the audit.
+
+**Interpretation**
+
+The representation correctly collapses interchangeable card copies; the loader incorrectly treated physical identity as a separate target class. Outcome supervision must live at the action equivalence level while legal transport remains index-specific.
+
+**Decision**
+
+`KEEP ARCHITECTURE`; `FIX LABEL EQUIVALENCE`; `REJECT ACTION-INDEX/SERIAL FEATURES`.
+
+**Next action**
+
+Create a factual permutation-invariant equivalence key, pool raw branch outcomes across class members, broadcast the pooled target to original legal indexes, exclude within-class ranking pairs, and rerun Gate-1 training.
+
+**Commit SHA**
+
+Pending Gate-1 code/evidence milestone commit.
+
+## 2026-08-09T23:41:00+05:30 - Step 45: Six-Group Head-Only Proof KILLED
+
+**Objective/question**
+
+Run the smallest deterministic mechanics-only training proof over all six
+audited state groups from the authorized full run. This is not a competence,
+held-out, or promotion experiment.
+
+**Implementation**
+
+- Added `.chatgpt/tmp/outcome-ranker/train_gate1.py`. It strict-loads exactly
+  the three full-run dataset JSONs, enforces 6 groups/34 actions/272 raw
+  branches and group offsets `[0,10,13,17,23,28,34]`, freezes the pinned BC
+  trunk, and optimizes only the 27,841-parameter head with fixed seed/config.
+- The script records loader hashes, pre/post loss and ranking per group,
+  tie-aware top-action agreement, strict reload checks, trunk state/gradient
+  checks, and CPU p95. It writes a failure metrics record but deliberately no
+  checkpoint when the hard overfit criterion fails.
+
+**Execution/result**
+
+- Command: `rtk .venv/bin/python .chatgpt/tmp/outcome-ranker/train_gate1.py`.
+- The bounded 1,000-step run hard-killed as required:
+  `KILL_HEAD_CANNOT_OVERFIT_ALL_GROUPS`.
+- Pre/post all-pairwise concordance was `0.3831168831 -> 0.9805194805`, but
+  per-group post concordance was `[1.0, 0.75, 1.0, 1.0,
+  0.9285714286, 0.9583333333]`; therefore the required every-group `>=0.95`
+  condition was not met. Tie-aware top-action agreement was true for all six
+  groups.
+- Loss changed from Huber/weighted-BT/total
+  `0.2481648475/0.2495474666/0.4977123141` to
+  `0.0079418505/0.0370078795/0.0449497290`. Training took `14.2583 s`; head
+  CPU p95 was `0.212042 ms`.
+- Trunk gradients remained absent and state SHA stayed
+  `b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f`.
+  No checkpoint was written (`bytes=0`, `sha256=null`). Failure metrics are at
+  `.chatgpt/tmp/outcome-ranker/gate1_head_only_full_run.metrics.json`.
+
+**Decisive blocker**
+
+The existing per-option representation is not action-identifying enough for
+this six-group proof. Four within-state pairs have bitwise-identical 128-wide
+option embeddings but different terminal targets: group
+`8333087292ea8362912bba7891416269d91b812e4d0b97f39fb17f7efab360c4`
+`[0.5,0.75]`; group
+`0bca420890479442221d360b588f49947f1d8fa808747488a107f9d10f13c14b`
+`[0.0,-0.25]`; and two pairs in group
+`d2ff4e01bc31d97d708b2da7f52cb90fa27f98bee3913856acac90094b06cf02`
+`[0.0,-0.25]`. A deterministic head over `(hidden, option_embedding)` cannot
+rank identical inputs differently. This is an architecture/input contract
+blocker, not a reason to fabricate a checkpoint or relax the metric.
+
+**Verification and hashes**
+
+- Narrow loader/projector pytest remains `3 passed`; Ruff and py_compile pass
+  for ranker, projector, tests, and trainer.
+- Trainer SHA-256:
+  `70dd79e272d6b6e02e6a16d0fc75c4c3f9eb56ada2907a705375b8d29519d767`.
+- Failure metrics SHA-256:
+  `9c41c7c095fb78e0b4d188fcc3291a8fde364ff4239e489b9d6fb5996ff1c63b`.
+- Dataset SHA-256 values remain the three manifest-bound full-run files:
+  `1e8e9fbf32dd7308564d31f0a769ec2bf8e25f39aa7251210b53f75f5629eda2`,
+  `581ebe13656e5e93404e5a0d82bdf440aa3173ada3cdbad462323913d0684bf6`, and
+  `63d114cfa7aa8c470cf2c16ae4c82817440a5842b19e16d7413b9b7f1494ebd3`.
+
+No production/native/submission/commit work occurred. Do not promote this
+head or call the result competence evidence. The next engineering decision is
+whether to add a versioned action-identifying public representation, or stop
+this head-only architecture; do not hide the conflict through target pooling
+or a relaxed per-group criterion.
+
+**Commit SHA**
+
+Pending Gate-1 code/evidence milestone commit.

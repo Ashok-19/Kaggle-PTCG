@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CABT public-only counterfactual action labels v1",
+  "description": "Strict schema for native terminal counterfactual labels. The public tensor is the only model input; hidden determinization is label-generation provenance. Producers must reject count mismatches and any incomplete, failed, fallback, nonfinite, stale, or truncated branch before writing a training artifact.",
+  "type": "object",
+  "required": ["schema_version", "run", "state_groups"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run": {
+      "type": "object",
+      "required": [
+        "run_id", "source_commit", "engine_sha256", "card_data_sha256",
+        "action_schema_sha256", "observation_schema_sha256",
+        "model_schema_sha256", "self_deck_sha256", "opponent_deck_sha256",
+        "continuation_policy_id", "continuation_policy_sha256",
+        "opponent_policy_id", "opponent_policy_sha256",
+        "determinization_contract", "label_firewall",
+        "g2_package_sha256", "bc_trunk_checkpoint_sha256",
+        "bc_trunk_state_sha256", "trunk_mode"
+      ],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"},
+        "engine_sha256": {"$ref": "#/$defs/hash"},
+        "card_data_sha256": {"$ref": "#/$defs/hash"},
+        "action_schema_sha256": {"$ref": "#/$defs/hash"},
+        "observation_schema_sha256": {"$ref": "#/$defs/hash"},
+        "model_schema_sha256": {"$ref": "#/$defs/hash"},
+        "g2_package_sha256": {"const": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827"},
+        "bc_trunk_checkpoint_sha256": {"const": "76478ade97742697cc36aab311373b254ff186c787d772ab39d97cfb27ffafde"},
+        "bc_trunk_state_sha256": {"const": "b1efa5a137ce51347694daa41417efe080e19c4d6fad3f9bd48ebe268c6e2e1f"},
+        "trunk_mode": {"const": "FROZEN_BC_EPOCH4_HEAD_ONLY"},
+        "self_deck_sha256": {"$ref": "#/$defs/hash"},
+        "opponent_deck_sha256": {"$ref": "#/$defs/hash"},
+        "continuation_policy_id": {"type": "string", "minLength": 1},
+        "continuation_policy_sha256": {"$ref": "#/$defs/hash"},
+        "opponent_policy_id": {"type": "string", "minLength": 1},
+        "opponent_policy_sha256": {"$ref": "#/$defs/hash"},
+        "determinization_contract": {"$ref": "#/$defs/determinization_contract"},
+        "label_firewall": {"const": "COUNTERFACTUAL_NATIVE_ONLY_NOT_PPO_ROLLOUT"}
+      },
+      "additionalProperties": false
+    },
+    "state_groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/state_group"}
+    }
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "determinization_contract": {
+      "type": "object",
+      "required": ["hidden_state_source", "world_sampling", "engine_rng", "per_replicate_identity"],
+      "properties": {
+        "hidden_state_source": {"const": "LABEL_ONLY_NOT_PUBLIC_INPUT"},
+        "world_sampling": {"enum": ["INDEPENDENT_PER_REPLICATE", "PAIRED_SHARED_WORLD"]},
+        "engine_rng": {"enum": ["SYSTEM_ENTROPY_UNCONTROLLED", "EXPLICIT_SEED"]},
+        "per_replicate_identity": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "state_group": {
+      "type": "object",
+      "required": [
+        "state_group_id", "split_group_key", "public_state_sha256",
+        "acting_player", "root_player", "request", "public_tensor",
+        "legal_action_count", "enumerated_action_count",
+        "action_enumeration_complete", "compound_coverage", "stop_tested",
+        "replicates", "action_aggregates"
+      ],
+      "properties": {
+        "state_group_id": {"type": "string", "minLength": 1},
+        "split_group_key": {"type": "string", "minLength": 1},
+        "source_episode_id": {"type": ["string", "null"]},
+        "public_state_sha256": {"$ref": "#/$defs/hash"},
+        "acting_player": {"type": "integer", "enum": [0, 1]},
+        "root_player": {"type": "integer", "enum": [0, 1]},
+        "request": {"$ref": "#/$defs/request"},
+        "public_tensor": {"$ref": "#/$defs/public_tensor"},
+        "legal_action_count": {"type": "integer", "minimum": 1},
+        "enumerated_action_count": {"type": "integer", "minimum": 1},
+        "action_enumeration_complete": {"const": true},
+        "compound_coverage": {"enum": ["SINGLE_CHOICE", "COMPLETE_COMPOUND"]},
+        "stop_tested": {"type": "boolean"},
+        "replicates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/replicate"}
+        },
+        "action_aggregates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/action_aggregate"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": [
+        "request_id", "selection_seq", "selection_type", "selection_context",
+        "min_count", "max_count", "ordering", "options"
+      ],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "selection_seq": {"type": "integer", "minimum": 0},
+        "selection_type": {"type": "integer"},
+        "selection_context": {"type": "integer"},
+        "min_count": {"type": "integer", "minimum": 0},
+        "max_count": {"type": "integer", "minimum": 0},
+        "ordering": {"enum": ["ORDERED", "UNORDERED"]},
+        "options": {"type": "array", "items": {"$ref": "#/$defs/semantic_option"}}
+      },
+      "additionalProperties": false
+    },
+    "public_tensor": {
+      "type": "object",
+      "required": [
+        "schema_version", "model_schema_sha256", "feature_source",
+        "projected_decision", "history_tokens", "public_only",
+        "raw_observation_retained", "forbidden_actor_features_absent",
+        "prefix_provenance"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "model_schema_sha256": {"const": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68"},
+        "feature_source": {"const": "G2_PROJECTED_PUBLIC_ONLY"},
+        "projected_decision": {
+          "type": "object",
+          "required": ["schema_version", "model_input", "transport_sidecar"],
+          "properties": {
+            "schema_version": {"const": 1},
+            "model_input": {"type": "object"},
+            "transport_sidecar": {"type": "object"}
+          },
+          "additionalProperties": false
+        },
+        "history_tokens": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {"$ref": "#/$defs/history_token"}
+        },
+        "public_only": {"const": true},
+        "raw_observation_retained": {"const": false},
+        "forbidden_actor_features_absent": {"const": true},
+        "prefix_provenance": {"$ref": "#/$defs/prefix_provenance"}
+      },
+      "additionalProperties": false
+    },
+    "replicate": {
+      "type": "object",
+      "required": [
+        "replicate_id", "determinization_id", "determinization_seed",
+        "engine_rng", "world_independence", "actions"
+      ],
+      "properties": {
+        "replicate_id": {"type": "integer", "minimum": 0},
+        "determinization_id": {"type": "string", "minLength": 1},
+        "determinization_seed": {"type": ["integer", "null"]},
+        "engine_rng": {"enum": ["SYSTEM_ENTROPY_UNCONTROLLED", "EXPLICIT_SEED"]},
+        "world_independence": {"enum": ["INDEPENDENT", "PAIRED_SHARED_WORLD"]},
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/action_result"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "action_result": {
+      "type": "object",
+      "required": [
+        "action_id", "semantic_action_fingerprint", "semantic_path",
+        "transport_original_indices", "terminal_engine_result",
+        "reward_for_actor", "completed", "continuation_steps",
+        "first_opponent_response", "fallback_used", "nonfinite", "error"
+      ],
+      "properties": {
+        "action_id": {"type": "string", "minLength": 1},
+        "semantic_action_fingerprint": {"$ref": "#/$defs/hash"},
+        "semantic_path": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/semantic_option"}},
+        "transport_original_indices": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "terminal_engine_result": {"$ref": "#/$defs/terminal_result"},
+        "reward_for_actor": {"type": "number", "enum": [-1, 0, 1]},
+        "completed": {"const": true},
+        "continuation_steps": {"type": "integer", "minimum": 0},
+        "first_opponent_response": {"type": ["object", "null"]},
+        "fallback_used": {"const": false},
+        "nonfinite": {"const": false},
+        "error": {"type": "null"}
+      },
+      "additionalProperties": false
+    },
+    "terminal_result": {
+      "type": "object",
+      "required": ["winner_player", "is_draw"],
+      "properties": {
+        "winner_player": {"type": ["integer", "null"], "enum": [0, 1, null]},
+        "is_draw": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "history_token": {
+      "type": "object",
+      "required": [
+        "history_schema_version", "history_source", "history_steps",
+        "prefix_digest", "model_schema_sha256", "public_hidden"
+      ],
+      "properties": {
+        "history_schema_version": {"const": 1},
+        "history_source": {"enum": ["RECORDED_PUBLIC_GRU_HIDDEN", "PRODUCTION_INITIAL_HIDDEN_EPISODE_START"]},
+        "history_steps": {"type": "integer", "minimum": 0},
+        "prefix_digest": {"$ref": "#/$defs/hash"},
+        "model_schema_sha256": {"const": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68"},
+        "public_hidden": {
+          "type": "object",
+          "required": ["dtype", "shape", "values"],
+          "properties": {
+            "dtype": {"const": "float32"},
+            "shape": {"const": [1, 160]},
+            "values": {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {"type": "array", "minItems": 160, "maxItems": 160, "items": {"type": "number"}}
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "prefix_provenance": {
+      "type": "object",
+      "required": [
+        "source", "prefix_digest", "history_schema_version", "history_source",
+        "history_steps", "initial_hidden_source", "model_schema_sha256",
+        "full_public_prefix_retained"
+      ],
+      "properties": {
+        "source": {"const": "ACTOR_OWNED_PUBLIC_PREFIX"},
+        "prefix_digest": {"$ref": "#/$defs/hash"},
+        "history_schema_version": {"const": 1},
+        "history_source": {"enum": ["RECORDED_PUBLIC_GRU_HIDDEN", "PRODUCTION_INITIAL_HIDDEN_EPISODE_START"]},
+        "history_steps": {"type": "integer", "minimum": 0},
+        "initial_hidden_source": {"enum": ["RECORDED_PUBLIC_GRU_HIDDEN", "PRODUCTION_INITIAL_HIDDEN_EPISODE_START"]},
+        "model_schema_sha256": {"const": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68"},
+        "full_public_prefix_retained": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "action_aggregate": {
+      "type": "object",
+      "required": [
+        "action_id", "replicate_count", "wdl_counts", "mean_reward",
+        "reward_stderr", "ci95_low", "ci95_high", "baseline_action_id",
+        "advantage_vs_fallback"
+      ],
+      "properties": {
+        "action_id": {"type": "string", "minLength": 1},
+        "replicate_count": {"type": "integer", "minimum": 1},
+        "wdl_counts": {
+          "type": "object",
+          "required": ["W", "D", "L"],
+          "properties": {
+            "W": {"type": "integer", "minimum": 0},
+            "D": {"type": "integer", "minimum": 0},
+            "L": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "mean_reward": {"type": "number", "minimum": -1, "maximum": 1},
+        "reward_stderr": {"type": "number", "minimum": 0},
+        "ci95_low": {"type": "number", "minimum": -1, "maximum": 1},
+        "ci95_high": {"type": "number", "minimum": -1, "maximum": 1},
+        "baseline_action_id": {"type": ["string", "null"]},
+        "advantage_vs_fallback": {"type": ["number", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "semantic_option": {
+      "type": "object",
+      "required": [
+        "option_type", "source_kind", "target_kind", "choice_role",
+        "source_ref", "target_ref", "is_stop", "semantic_fingerprint"
+      ],
+      "properties": {
+        "option_type": {"type": "integer"},
+        "source_kind": {"type": "string"},
+        "target_kind": {"type": "string"},
+        "choice_role": {"type": "string"},
+        "source_ref": {"type": ["string", "null"]},
+        "target_ref": {"type": ["string", "null"]},
+        "is_stop": {"type": "boolean"},
+        "source_card_id": {"type": ["integer", "null"]},
+        "target_card_id": {"type": ["integer", "null"]},
+        "attack_id": {"type": ["integer", "null"]},
+        "semantic_fingerprint": {"$ref": "#/$defs/hash"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
