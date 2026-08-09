@@ -2,18 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-09T15:00:34+05:30
+Updated: 2026-08-09T15:16:37+05:30
 
 - Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `817.3`. It has 21 public games, 12 wins and 9 losses, plus one successful self-play validation episode. This is stronger than the two-game snapshot but remains far below the 1000+ target and too small for a settled strength claim.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The active candidate family is the exact-current-Majkel-deck 201-game history-aware MAIN controller (`direct`, `gain>=0.20`, `c0.70`, optionally `c0.90`). Its native loader integration is now fixed and mechanically clean in one game per seat, but actual strength remains unknown.
 - Active hypothesis: improved chronological semantic imitation may transfer into native wins once the now-proven sibling-import defect is removed. This remains a strength hypothesis, not a promotion claim.
-- Most recent decisive evidence: the minimal loader change makes a private policy directory importable only during module execution and restores exact caller CWD/`sys.path` afterward. Two focused regressions pass, the full environment unit file is `8 passed`, Ruff is clean, and `grim-majkel-h-g020` completed one Dragapult game in each seat with W/D/L `1/0/1` and zero failure, invalid, fallback, or post-terminal counters.
-- Exact next task: inspect and commit only `rule_baseline.py`, its focused tests, and this journal; then rerun the bounded diverse native strength screen with durable per-game evidence.
-- Latest relevant session commit: `5002e83` (`docs: checkpoint deterministic takeover orientation`). Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34` (`Add weighted public deck belief`). Actual Git toplevel is `/home/nnmax/Desktop/kaggle/PTCG`; code lives under `ptcg-rl/`.
-- Uncommitted session work: the audited loader fix in `src/ptcg_rl/g1/rule_baseline.py`, two focused tests in `tests/unit/test_g1_environment.py`, and this journal. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Most recent decisive evidence: the minimal loader change is committed and mechanically clean in both seats. Separately, five capped live Grim loss replays expose one attackless Archaludon loss plus repeated public signs of bench liability, attack-continuity failure, and unfinished prize routes; these are observational hypotheses only and do not justify a global heuristic.
+- Exact next task: let the managed 320-game diverse native screen finish, audit its per-game journal and aggregate, and reject the branch or authorize an independent larger confirmation from outcome evidence.
+- Latest relevant session commit: `122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0` (`fix: load sibling modules in native rule policies`). Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34` (`Add weighted public deck belief`). Actual Git toplevel is `/home/nnmax/Desktop/kaggle/PTCG`; code lives under `ptcg-rl/`.
+- Uncommitted session work: this post-commit journal update only. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule now protects that entire directory and none of it may be staged. The strength screen is writing private scratch evidence in its own timestamped directory. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
 
-`RESUME HERE: make the focused integration-fix commit, then run the bounded history-Majkel diverse native strength screen with per-game evidence retention.`
+`RESUME HERE: audit the in-progress timestamped 320-game history-Majkel strength screen when it completes; do not promote from the small screen.`
 
 ## Session Guardrails
 
@@ -194,7 +194,7 @@ Run one bounded native `arena-one` reproduction for `grim-majkel-h-g020` as play
 
 **Commit SHA**
 
-Pending the integration-diagnosis milestone commit.
+`122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0` (integration diagnosis and fix milestone).
 
 ## 2026-08-09T14:55:55+05:30 - Step 3: Exact Majkel Native Failure Reproduction
 
@@ -272,7 +272,7 @@ Add one focused regression that loads a private policy importing a sibling modul
 
 **Commit SHA**
 
-Pending the integration-fix milestone commit.
+`122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0` (integration diagnosis and fix milestone).
 
 ## 2026-08-09T15:00:34+05:30 - Step 4: Minimal Loader Fix And Mechanics Qualification
 
@@ -352,4 +352,86 @@ Stage only the two reviewed source/test paths plus `progress.md`, inspect the st
 
 **Commit SHA**
 
-Pending focused integration-fix commit.
+`122e7d1f654d75f4b94a5b7dcda2c6986f8c6ef0` (`fix: load sibling modules in native rule policies`).
+
+## 2026-08-09T15:16:37+05:30 - Step 5: Bounded Live Grim Loss Audit
+
+**Objective/question**
+
+Use current public ladder losses to identify repeated, concrete Grim failure motifs that could support later isolated native ablations, without treating top-agent behavior or retrospective replay state as causal proof.
+
+**Evidence inspected**
+
+- The nine explicitly named public losses known at the `55372188` Kaggle snapshot.
+- Five replay bodies retrieved before the byte guard aborted: `91262954`, `91267456`, `91269238`, `91269364`, and `91270142`.
+- Semantic decision, action, board, damage, move, prize, and terminal summaries produced from those five bodies.
+- Current knowledge-base rules for prize-route planning, next-attacker continuity, bench liability, and replay non-causality.
+
+**Important calls/commands**
+
+```text
+GET /api/v1/competitions/episodes/{episode_id}/replay  (only explicitly named public losses)
+rtk jq ... ptcg-rl/.chatgpt/tmp/grim-live-55372188/manifest.json
+rtk sha256sum ptcg-rl/.chatgpt/tmp/grim-live-55372188/manifest.json ptcg-rl/.chatgpt/tmp/grim-live-55372188/analysis.json ptcg-rl/.chatgpt/tmp/grim-live-55372188/replays/*.json
+rtk git check-ignore -v ptcg-rl/.chatgpt/tmp/grim-live-55372188/replays/91262954.json
+```
+
+No daily dataset, unrelated episode, upload, submission, benchmark task, training job, or paid compute was touched.
+
+**Test/inspection size**
+
+- Requested: 9 named loss episodes, maximum 9 files / 25 MiB acquisition body bytes.
+- Persisted and semantically parsed: 5 files, 24,978,496 bytes.
+- Unretrieved: `91271961`, `91272874`, `91273793`, and `91275555`.
+- Retrieved archetypes: Grim mirror `2`, Mega Lucario `1`, Dragapult `1`, Archaludon `1`; NNMax seats player 0=`3`, player 1=`2`.
+
+**Results and metrics**
+
+- All 5 were losses. NNMax final prizes remaining were `2, 2, 6, 4, 6`; opponents had `2, 1, 1, 1, 1`.
+- NNMax attack counts by episode were `4, 3, 3, 2, 0`; the Archaludon loss `91270142` was the single attackless loss despite repeated development and `END` decisions.
+- Munkidori and Spikemuth Gym appeared in all `5/5`; Punk Up context appeared in `4/5`. This supports auditing route/bench use but does not support globally removing any of those cards or actions.
+- Terminal opponent attacks were visible in `3/5`; two Grim mirrors ended through board removals without a terminal attack event.
+- Strongest repeated public motifs are role-aware bench liability, attack/next-attacker continuity, and finite prize-route planning.
+- Three deliberately narrow future ablations were retained: archetype-gated low-HP bench liability versus public Dragapult/Archaludon signatures; an attack-continuity guard in one-prize-risk states; and route-preserving target choice in Mega Lucario/Grim-mirror states.
+
+**Failures / invalid actions / fallbacks**
+
+- Semantic parse/legality errors: `0/5`.
+- A required acquisition guard failed: after 24,978,496 persisted bytes, the fetch loop read two 1 MiB chunks from `91271961` before aborting. Acquisition body bytes were 27,075,648, exceeding the 26,214,400-byte cap by `861,248` bytes. The partial was deleted and no sixth body was retained. No further episode was contacted.
+- An unrelated endpoint-discovery probe had read 256 bytes from an already selected episode; it is excluded from the acquisition-batch arithmetic but recorded here for completeness.
+- Because the cap was exceeded, no remaining live loss body may be retrieved under this reviewed acquisition batch.
+
+**Interpretation**
+
+The five replays are valuable failure-state discovery but are retrospective, incomplete, and non-causal. Exact opponent deck fingerprints are audit metadata, not admissible hidden production input. The evidence argues for small archetype/state-gated interventions rather than a broad evaluator or blanket attack/Munkidori rule.
+
+The byte-limit overrun is an evidence-discipline defect. It is explicitly recorded rather than hidden; acquisition is stopped, and the raw directory is locally ignored. Any future replay retrieval needs a content-length preflight or a remaining-budget-aware stream guard that refuses before reading the chunk that would cross the cap.
+
+**Decision**
+
+`INCONCLUSIVE FOR POLICY PROMOTION / RETAIN THREE ISOLATED HYPOTHESES`; `STOP THIS ACQUISITION BATCH`.
+
+**Reason**
+
+The motifs recur in current live losses and align with strong knowledge-base principles, but five selectively observed losses cannot establish that an intervention wins games. The cap overrun blocks expanding this retrieval batch.
+
+**Files created/changed**
+
+- Restricted/untracked: `.chatgpt/tmp/grim-live-55372188/replays/` with five replay bodies.
+- Restricted/untracked: `.chatgpt/tmp/grim-live-55372188/manifest.json` and `analysis.json`.
+- Local-only safety change: `.git/info/exclude` now ignores `/ptcg-rl/.chatgpt/tmp/grim-live-55372188/`.
+- Updated `ptcg-rl/progress.md`; no source or policy file changed.
+
+**Artifact paths**
+
+- Manifest SHA-256 `ac36e5d40867f5d79e779c180d044ed34f117348ee9edc2bdbf828244be03809`.
+- Analysis SHA-256 `92e3e9cf017696d696d3894f360aeb7cada3971140cd077974fe9fdaa1b8b790`.
+- Replay file SHA-256 values are recorded in the manifest; persisted byte total is 24,978,496.
+
+**Next action**
+
+Finish and audit the already-running history-Majkel native screen. Do not implement a Grim heuristic until current outcome evidence closes that branch and one live motif is translated into exact current-engine states plus a smallest isolated native intervention.
+
+**Commit SHA**
+
+Pending the next focused evidence/progress commit; restricted replay artifacts will not be staged.
