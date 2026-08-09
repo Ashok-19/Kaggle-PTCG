@@ -2,18 +2,18 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-10T01:46:30+05:30
+Updated: 2026-08-10T02:34:00+05:30
 
-- Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `800.5`. It has 36 public games, 19 wins and 17 losses, plus one successful validation episode. The score fell from 814.0 after two new losses and remains far below the 1000+ target; it is still the strongest live-safe NNMax control.
+- Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, freshly verified `COMPLETE` at public score `817.1`. It has 44 public games, 24 wins and 20 losses, plus one successful validation episode. It remains far below the 1000+ target and is still the strongest live-safe NNMax control.
 - Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
 - Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: a one-hour, deterministic-only qualification sprint is active. Build a substantially larger **supervised counterfactual outcome evaluator**, not RL, while preparing only the minimum package seam needed if it clears hard heldout and native gates. Native engine continuations label every legal MAIN action; an offline supervised ranker scores the complete public legal set deterministically. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
-- Most recent decisive evidence: Scale64 frozen-head heldout result kills promotion. Untouched-test concordance was `0.6038`, but chosen-versus-Grim target delta was only `+0.0208` with 95% CI `[-0.3125,+0.3958]`; Mega Lucario regressed `-0.625` and Lopunny `-0.25`. The checkpoint is mechanically valid but not a candidate.
-- Exact next task: complete the hard qualification window ending approximately `2026-08-10T02:46:30+05:30`. In parallel: collect roughly 4x more independent supervised states, train/evaluate the same deterministic frozen-trunk evaluator on a fresh label-blind split, and prepare the smallest submission seam without promoting the rejected Scale64 checkpoint. Submit only if the exact package is mechanically qualified and materially superior by game-outcome evidence; do not spend a slot on a namesake candidate or claim a fabricated `>90%` probability.
-- Latest relevant session commit: `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31` (`docs: redirect to outcome-trained decision engine`). Stage A mechanics is `d4b0767a653842b9e310fb416888c5a12640d362`; guard integration `2a08d53c38ace873f12b07b138852e687444a45b`; fixture `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
-- Uncommitted session work: this post-commit journal SHA update, the parked uncommitted Stage B runner, and generated/private Stage A/candidate artifacts; none may be staged accidentally. Private screen bodies remain untracked. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none of it may be staged. Pre-existing worktree state must remain untouched: 17 modified tracked paths and approximately 195 compact untracked entries (85,941 individual untracked files with full expansion) before this file, with tracked diff SHA-256 `dabd0a9451518cfca03c1036e0fb3b0d3e7376fff57e41ba96217a2beb16c1b5`.
+- Active hypothesis: the fixed frozen-BC supervised outcome head is now closed and rejected. The next breakthrough must change the deterministic decision architecture, not add data or thresholds to this consumed test: explicit structured public-state route/threat representation plus calibrated opponent-next-action prediction or a sharply bounded tactical planner. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
+- Most recent decisive evidence: the independent Scale256 test killed the architecture. Despite `0.648` pairwise concordance, the selected head chose actions `-0.15104` worse than Grim fallback with 95% CI `[-0.28125,-0.02604]`, and catastrophically regressed Dragapult, Grim mirror, and Alakazam. No checkpoint was emitted.
+- Exact next task: finish the focused rejection milestone commit and timer handoff. Do not submit at `02:46:30` because no candidate meets the user's own material-superiority/`>90%` condition. Then begin a genuinely different deterministic architecture from the retained 6,896 counterfactual branches rather than tuning the rejected frozen head.
+- Latest relevant session commit: `e53b4d6` (`feat: prove deterministic counterfactual outcome evaluator`), containing the reproducible collector/evaluator source, tests, schema, and Scale64 negative result journal. The strategic redirect is `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Stage A mechanics is `d4b0767a653842b9e310fb416888c5a12640d362`; guard integration `2a08d53c38ace873f12b07b138852e687444a45b`; fixture `c71a116290b2f3c5239e2e6acd8bfea127bc1a8c`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`. Pre-session HEAD was `e572280f1b1f90fc908ee5b814fc3ca87ee5dc34`.
+- Uncommitted session work: Scale256 collector/trainer/tests and safe adapter/builder sources plus this journal are ready for one explicit milestone commit. Generated/private Scale256 runs, metrics, configs, candidate directories/tarballs, copied package bodies, checkpoints, and all unrelated dirty state must remain unstaged. Five restricted live replay bodies plus a manifest/analysis exist under `.chatgpt/tmp/grim-live-55372188/`; a local `.git/info/exclude` rule protects that directory and none may be staged. Pre-existing unrelated dirty state remains preserved.
 
-RESUME HERE: timer session `39825` was started at about `2026-08-10T01:46:30+05:30` for 3,600 seconds. Finish the deterministic qualification sprint by about `02:46:30`; Scale64 remains rejected and its consumed test split may not be reused for tuning. Do not call this RL. Fail closed rather than submit an unqualified candidate.
+RESUME HERE: timer session `39825` expires about `2026-08-10T02:46:30+05:30`. Scale256 decisively rejects the frozen-BC supervised evaluator and no checkpoint/candidate qualifies; do not submit a namesake package. Commit the negative milestone, then pivot to a structurally different deterministic public-state opponent/route model. Do not call this RL.
 
 ## 2026-08-10T01:46:30+05:30 - One-Hour Deterministic Qualification Window Started
 
@@ -33,7 +33,105 @@ RESUME HERE: timer session `39825` was started at about `2026-08-10T01:46:30+05:
 - Result: Ruff PASS, `py_compile` PASS, pytest `6 passed in 5.38s`.
 - Failures/fallbacks: none in this preflight. The Scale64 promotion failure remains recorded and is not reinterpreted.
 - Decision: commit the reproducible source/tests/schema and this journal only; preserve every unrelated dirty path and all restricted/private artifacts outside the commit.
-- Next action: inspect the exact staged diff, commit, then continue the already-running three-agent qualification sprint.
+- Commit: `e53b4d6` (`feat: prove deterministic counterfactual outcome evaluator`), 8 explicitly staged paths, 9,134 insertions and 8 deletions. No unrelated tracked path or private/generated artifact entered the commit.
+- Next action: continue the already-running three-agent qualification sprint; this post-commit SHA update remains intentionally uncommitted until the next milestone.
+
+## 2026-08-10T01:53:00+05:30 - Fresh Scale256 Trainer Prepared
+
+- Objective: eliminate training-code latency while the independent native dataset is collected, without touching the consumed Scale64 test or training before a sealed dataset exists.
+- Files created by the Luna-xhigh ranker agent: `.chatgpt/tmp/outcome-ranker/train_scale256.py` (SHA-256 `59d795d302b62e341f6e2d636ccc655198107d136a8ba45e5f2aadccf1721829`) and `.chatgpt/tmp/outcome-ranker/test_scale256.py` (SHA-256 `e1497341c27f33f9cfe897f9926df834eb585f0a29f30c036394e423869c2a75`).
+- Verification: one targeted test passed; Ruff and `py_compile` passed. No training, checkpoint, package, or submission occurred.
+- Guardrails: runner rejects retained Scale64 run IDs; requires a sealed manifest with exactly 256 workers and 256 unique groups across the six known families; binds frozen BC/G2 provenance; creates deterministic label-blind `160/48/48` group splits; writes a checkpoint only if all declared gates pass.
+- Decision: `KEEP ALIVE / PREP ONLY`. The agent was immediately reassigned to leakage/gate red-team and to execute once, only after a fresh complete collector run appears.
+- Artifact paths: `.chatgpt/tmp/outcome-ranker/train_scale256.py`, `.chatgpt/tmp/outcome-ranker/test_scale256.py`.
+- Next action: await the sealed fresh Scale256 collector result, then inspect the one-shot untouched test verdict.
+
+## 2026-08-10T01:56:30+05:30 - First Scale256 Collection Failed Closed
+
+- Objective: collect 256 fresh independent supervised counterfactual root states across the six fixed anchor families.
+- Exact run: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T202339.147257Z-70719f07b49e/`; created `2026-08-09T20:23:39.147535Z`, finished `20:26:26.811154Z`.
+- Result: `FAIL`. Worker/state index `34`, anchor `dragapult-ex`, ended the parent battle before a qualifying learner MAIN decision. The run stopped after 35 native launches and 916 completed continuation rollouts. The failing worker had zero continuations, invalid actions, fallbacks, post-terminal actions, crashes, or timeouts.
+- Dataset boundary: `dataset_outputs=0`; the 34 prior complete workers and their continuations are audit-only and must not be trained or merged. Manifest is sealed digests only.
+- Interpretation: this is a stochastic root-acquisition failure, not evidence for or against the evaluator, but the exact schedule incorrectly treated an ordinary terminal-before-window root as fatal instead of using a bounded fresh-root replacement.
+- Decision: `REJECT RUN / KEEP HYPOTHESIS ALIVE`. Authorize one corrected local collection with a minimal bounded fresh-root retry/oversample rule for only this acquisition outcome, exact 256 admitted groups, explicit attempt/wall/branch caps, and fail-closed behavior for real runtime/action defects. No partial salvage.
+- Artifact: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T202339.147257Z-70719f07b49e/full-execution.json`.
+- Next action: collector agent adds/tests the narrow acquisition replacement and launches the corrected run; trainer is explicitly barred from this failed run.
+
+## 2026-08-10T01:59:30+05:30 - Scale256 Trainer Leakage/Gate Red-Team
+
+- Objective: verify the prepared trainer cannot consume retired/partial data or manufacture a promotion before a corrected collector run exists.
+- Evidence inspected by the Luna-xhigh ranker agent: dataset path resolution, manifest/sidecar and worker/dataset hash binding, run IDs, exact group/worker counts, G2/BC provenance, root/episode/particle identities, group split, seed selection, strict reload, test timing, promotion gates, CPU latency sampling, and frozen-trunk gradients.
+- Result: retired Scale64 and failed/partial runs have no fallback path; exact 256-group/worker binding is mandatory; split is label-blind, alias-safe and exact `160/48/48`; seed choice sees train/tune only; test occurs after strict tune reload. Fixed CPU p95 to one measurement and added an explicit frozen-trunk gradient check. Regressions `2 passed`; Ruff and compile passed.
+- Files changed: `.chatgpt/tmp/outcome-ranker/train_scale256.py`, `.chatgpt/tmp/outcome-ranker/test_scale256.py`; hashes must be recomputed after these audit fixes before commit.
+- Decision: `KEEP ALIVE / READY`. No training launched because no complete fresh run exists. Agent reassigned to active low-frequency monitoring and one-shot execution on only the corrected exact PASS run.
+- Next action: await corrected collection; do not consume failed run `70719f07b49e`.
+
+## 2026-08-10T02:02:00+05:30 - Corrected Collection Attempt Failed On Concurrent Dirty-State Drift
+
+- Objective: rerun Scale256 with bounded fresh-root replacement after the ordinary terminal-before-window acquisition failure.
+- Exact run: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T202920.967658Z-a4225a25d811/`; created `2026-08-09T20:29:20.967971Z`, finished `20:29:26.190905Z`.
+- Result: `FAIL / SEALED_DIGESTS_ONLY`, zero datasets. One full worker completed 20 continuation rollouts; the next worker exited before native execution because `ScheduleError: worker Git dirty-state SHA-256 differs from coordinator` at `collector.py:1307`. No training occurred.
+- Root cause: the collection intentionally binds every worker to the coordinator's dirty-state digest, while the root journal and parallel trainer/package agents were writing the shared worktree. This made the second worker correctly fail provenance. It is not evaluator strength evidence.
+- Decision: `REJECT RUN / COORDINATION FIX`. Do not weaken provenance. Freeze all filesystem writes across root and subagents for the duration of the corrected collection; only read-only monitoring is permitted. Finish collector/config changes before coordinator start, then make no changes until the run seals. Partial worker remains audit-only.
+- Artifact: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T202920.967658Z-a4225a25d811/full-execution.json`.
+- Current stop: after this journal write, root will not modify any file until the corrected collector run finishes. Package agent was interrupted and instructed to report read-only; trainer is read-only and barred from launching until the freeze is released.
+- Next action: collector sends `READY-FOR-FREEZE`, launches the exact corrected bounded run, and reports its run ID; all other work remains read-only.
+
+## 2026-08-10T02:22:07+05:30 - Scale256 Independent Collection Passed
+
+- Objective: obtain a substantially larger fresh supervised counterfactual corpus under fixed frozen-trunk and six-family provenance, with no concurrent worktree mutation.
+- Exact run: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T203108.731267Z-81715c3549e4/`; created `2026-08-09T20:31:08.731551Z`, finished `20:52:06.879643Z`, wall about `1,258.15s`.
+- Result: `PASS_COMPLETE`; exactly 256 admitted roots/workers, six dataset outputs, 6,896 completed counterfactual continuation rollouts, and 261 native launches. The five excess launches were bounded replacements for terminal-before-qualifying-state acquisition outcomes, not admitted partial groups.
+- Provenance: authorized config SHA-256 `69013104df45ec1dc990249e1cf87094a0735e23c59814171428f38bd51f2af2`; frozen worktree dirty digest `d7a3b24beb11a020dedacb8e7bcc3d899cef1bf330bb94b4b152cc7ee54a00d2`; run manifest SHA-256 `863c470cbe5693c774da220d0438c012079deed05ca5ba0894cc7a14f0bb431d`; full execution SHA-256 `87f306654f2df9a6d09a6b0388f5cf7c94bac7d3338a94c9694dec6dd2d6cd87`.
+- Full audit: 1,724 complete physical actions and 6,896 branches at exactly four particles/action; W/D/L `4100/3/2793`; allocation `43/43/43/43/42/42` with balanced seats/windows. Semantic action counts were PLAY `573`, ATTACH `380`, EVOLVE `195`, ABILITY `131`, ATTACK `97`, RETREAT `92`, END `256`. Invalid, fallback, post-terminal, child crash, and timeout counters were all zero. Parent COW, public-information firewall, and energy retention passed for all 256 roots; all six datasets and raw/aggregate reward bindings recomputed exactly.
+- Provenance extension: 268 manifest artifacts all matched; collector SHA-256 `bfcddd1fbde420c9aa6f26bc6ba27ec3f6c1faa6c36248361e2d2afe6e2577de`; schema `54943890424ccac103accbd498cc7a4b86c77ede1069d133ad7342bf87946f74`; projector `d8bd0fd9c4acf8c9c79846910ab42794acd42aa2aab6a9c26bdd324e3a7317b7`; HEAD `e53b4d617c3d1f7d110c30cd8161381979a29c4f`.
+- Failures/invalids: run-level error `null`; independent audit verdict `PASS / NO DATASET EXCLUSION`. No training occurred during collection, and both failed prior runs remain excluded.
+- Decision: `PROMOTE DATA TO ONE-SHOT SUPERVISED EVALUATION`, not agent promotion. Filesystem freeze released only after the manifest sealed.
+- Next action: the red-teamed `train_scale256.py` independently verifies the manifest and evaluates a deterministic `160/48/48` split once; package agent completes callback mechanics in parallel without using the rejected Scale64 head for promotion.
+
+## 2026-08-10T02:24:30+05:30 - Pre-Decision Kaggle Refresh
+
+- Objective: refresh all mutable facts needed before any possible live action, without mutating Kaggle.
+- Evidence: authenticated competition metadata, NNMax submission history, exact submission `55372188`, its full public episode metadata, and the current top-30 leaderboard via the Kaggle connector. No replay body was downloaded.
+- Competition facts: deadline remains `2026-08-16T23:59:00Z`; daily maximum remains five; authenticated account has entered; current reported user rank `810`.
+- Live Grim: `55372188` remains `COMPLETE`, now public score `817.1` over 44 public games, W/D/L `24/0/20`; newest episode `91420635` at `2026-08-09T19:56:05.726728600Z` was a win. This supersedes the earlier `800.5`/36-game snapshot but remains far below 1000.
+- NNMax history/quota evidence: only one visible submission was made since Aug-9 00:00 UTC (`55372188`), so four of five daily attempts appear unused; authoritative submit-time enforcement remains the final guard. The two newest complete agents are Grim `817.1` and Lucario canary `645.1`.
+- Leaderboard: Majkel remains first at `1218.7`; current rank-20 score is `1082.9`, and scores remain mutable.
+- Decision: refresh passed, but it does not authorize an unqualified candidate. Exact package identity and mechanics/outcome gates still determine submit/no-submit.
+- Failures: none. No benchmark-task tool, session, upload, or external mutation was used.
+- Next action: await Scale256 one-shot evaluation and package smoke; refresh exact quota/submission state again immediately before an actual upload.
+
+## 2026-08-10T02:27:00+05:30 - Scale256 Supervised Evaluator Decisively Rejected
+
+- Objective: determine whether four times more independent states turns the fixed frozen-trunk supervised counterfactual head into a materially stronger deterministic action selector.
+- Exact input: sealed PASS run `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T203108.731267Z-81715c3549e4/`; deterministic label-blind split `160/48/48`; fixed tune-selected seed `20260814`, step `9`; untouched 48-state test evaluated once.
+- Result/status: `SCALE256_PROMOTION_KILLED`. Test class-pair concordance `0.648` over 500 comparable class pairs, but top-class agreement only `0.4375`. Mean chosen/oracle/fallback target was `0.22917 / 0.58681 / 0.38021`; chosen-minus-fallback was **`-0.15104`**, bootstrap 95% CI **`[-0.28125,-0.02604]`**, entirely negative.
+- Catastrophic family deltas: Dragapult `-0.3125`, Grim mirror `-0.25`, Alakazam `-0.125`; all violate the `-0.10` floor. CPU p95 was safe at `0.6214ms`, and concordance narrowly missed the declared `0.65` threshold, but outcome ranking is the decisive blocker.
+- Artifact: `.chatgpt/tmp/outcome-ranker/scale256-results-20260809T203108.731267Z-81715c3549e4/scale256_gate1.metrics.json`, SHA-256 `a92f0f12800f1de0e6d124ef31722b20217d74313dc44f458d0bd38eba4d6672`. Trainer SHA-256 `e13f43ef5a84c8c52f14afd34ffcd990abbec94232a63fed4ca49ba7b2b98ed7`; manifest SHA-256 `863c470cbe5693c774da220d0438c012079deed05ca5ba0894cc7a14f0bb431d`.
+- Interpretation: more data improved pairwise ordering but did not solve top-action calibration/ranking; the exact deterministic frozen representation/head makes substantially worse choices than the Grim fallback on fresh states. This is not a game-engine breakthrough and cannot support a package, native screen, live probe, 1000-Elo claim, or `>90%` confidence.
+- Decision: **`REJECT ARCHITECTURE FOR SUBMISSION`**. No post-test threshold rescue, tuning, integration, or submission. Package agent instructed to stop promotion and preserve only reusable mechanics evidence.
+- Independent confirmation: trainer exited `0`, verified 256 workers/groups, six datasets and 6,896 branches. Split contained `1077/330/317` physical actions and `988/298/286` semantic classes. Test ran once; no checkpoint was emitted. Family `(concordance, delta)` values were Dragapult `(.6667,-.3125)`, Grim `(.7143,-.25)`, Iono `(.6891,-.09375)`, Mega Lucario `(.6389,-.0625)`, Alakazam `(.5932,-.125)`, Lopunny `(.6184,-.0625)`.
+- Next action: finish audit/commit/handoff and make the timer-expiry decision honestly. The only live-safe agent remains Grim `55372188`; there is currently no candidate satisfying the user's material-superiority condition.
+
+## 2026-08-10T02:29:00+05:30 - Outcome Adapter Mechanics Preserved, Promotion Stopped
+
+- Objective: prove the minimum deterministic integration seam mechanically while preventing the rejected evaluator from becoming a namesake package.
+- Scratch artifacts: `.chatgpt/tmp/outcome-integration/outcome_main_adapter.py`, `main.py`, `build_candidate.py`, `candidate-gate1-v2/`, and `candidate-gate1-v2.tar.gz`. The adapter binds the frozen G2/epoch-4 trunk and small head, ranks complete singleton MAIN actions with semantic duplicate pooling, resets/advances recurrent state, rejects nonfinite scores, and delegates non-MAIN contexts to proven Grim behavior.
+- Mechanics result: raw `exec` without `__file__` passed. `[END, ATTACK]` selected index `[0]`; permutation `[ATTACK, END]` selected `[1]`, preserving semantic END (option type `14`). Non-MAIN attack delegated to Grim and selected `[0]`. Diagnostics: six callbacks, two MAIN rankings, one non-MAIN delegation, three trunk steps, and zero fallback/error/nonfinite counters.
+- Hashes: qualified Grim tar remained unchanged `e9d4681a...d52657`; scratch candidate archive `3e23e42a...631bd21`; frozen G2 `4dfba2adb9...fe3827`; epoch-4 BC `76478ade97...afde`; mechanics-only scratch head `58a00b48fa...e4737b`; copied Grim module `c61e540bcb...b09dcd8`.
+- Limit/failure: the scratch candidate uses a mechanics-only rejected head. Native screen was prepared but deliberately not launched; it is not competition-qualified and may not be submitted.
+- Decision: `PRESERVE INTEGRATION MECHANICS / REJECT PACKAGE`. No Scale256 checkpoint exists and no further package build, qualification, or external action occurred.
+- Next action: include only safe reproducible adapter/builder/tests in the milestone commit if audit permits; exclude candidate archive/model/private package bodies.
+
+## 2026-08-10T02:32:00+05:30 - Scale256 Rejection Milestone Commit Preflight
+
+- Objective: durably preserve the successful larger collector mechanics, decisive negative evaluator evidence, and reusable adapter seam without committing private/generated packages or data.
+- Intended safe paths: modified `collector.py`; new `train_scale256.py` and `test_scale256.py`; new integration source `outcome_main_adapter.py`, `main.py`, `build_candidate.py`, and unlaunched `native_screen.py`; `progress.md`.
+- Explicit exclusions: all three candidate directories/tarballs, frozen/model checkpoints, Scale256 datasets/workers/manifests/metrics bodies, authorized configs with private paths, copied Grim/package bodies, and every unrelated dirty file.
+- Commands/results: Ruff across seven source/test files PASS; `py_compile` across seven files PASS; pytest `8 passed in 5.39s`; collector self-check PASS with native imports `0` and authorization/provenance refusal checks intact.
+- Failures: no precommit test failure. Strategic model remains rejected and no native package screen was launched.
+- Decision: stage only the eight intended paths above, inspect cached diff, and commit the failed major experiment as durable negative knowledge.
+- Next action: make focused commit, update SHA, wait for timer expiry, and do not submit because no candidate met the explicit qualification condition.
 
 ## 2026-08-10T00:25:00+05:30 - Prepared Scale64 Gate1 Schedule (Unauthorized)
 

@@ -49,6 +49,7 @@ MAX_COMPLETE_ROOT_BRANCHES = 20
 MAX_IPC_BYTES = 256 * 1024
 MAX_DIAGNOSTIC_BYTES = 4_000
 SCALE64_PROFILE = "GATE1_SCALE64_V1"
+SCALE256_PROFILE = "GATE1_SCALE256_V1"
 SCALE64_ANCHOR_ALLOCATION = {
     "dragapult-ex": 11,
     "iono": 11,
@@ -56,6 +57,14 @@ SCALE64_ANCHOR_ALLOCATION = {
     "public-alakazam-v9": 11,
     "public-lopunny-v9-arena-alias": 10,
     "grim-source-mirror": 10,
+}
+SCALE256_ANCHOR_ALLOCATION = {
+    "dragapult-ex": 43,
+    "iono": 43,
+    "mega-lucario-ex": 43,
+    "public-alakazam-v9": 43,
+    "public-lopunny-v9-arena-alias": 42,
+    "grim-source-mirror": 42,
 }
 SCALE64_CANDIDATE_WINDOWS = {
     "EARLY": (2, 3),
@@ -442,7 +451,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
     if not isinstance(state_schedule, dict):
         raise ScheduleError("state_schedule must be an object")
     profile = state_schedule.get("profile", "GATE1_V1")
-    if profile not in {"GATE1_V1", SCALE64_PROFILE}:
+    if profile not in {"GATE1_V1", SCALE64_PROFILE, SCALE256_PROFILE}:
         raise ScheduleError(f"unsupported state schedule profile: {profile}")
     if state_schedule.get("selection_type_required") != "MAIN":
         raise ScheduleError("Gate-1 root selection_type_required must be MAIN")
@@ -456,6 +465,9 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         state_schedule.get("max_legal_actions_per_state"), "max_legal_actions_per_state"
     )
     cap = _positive_int(state_schedule.get("max_continuation_rollouts"), "max_continuation_rollouts")
+    max_root_attempts = _positive_int(
+        state_schedule.get("max_root_acquisition_attempts", 1), "max_root_acquisition_attempts"
+    )
     slots = state_schedule.get("candidate_player_slots")
     if (
         not isinstance(slots, list)
@@ -478,7 +490,8 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         raise ScheduleError("common hidden particles are required for action comparison")
     anchor_cells = state_schedule.get("anchor_cells")
     expected_anchor_ids = set(anchor_ids)
-    expected_cell_count = 6 if profile == SCALE64_PROFILE else 3
+    scaled_profile = profile in {SCALE64_PROFILE, SCALE256_PROFILE}
+    expected_cell_count = 6 if scaled_profile else 3
     if not isinstance(anchor_cells, list) or len(anchor_cells) != expected_cell_count:
         raise ScheduleError(f"state_schedule must contain exactly {expected_cell_count} anchor cells")
     cell_ids: list[str] = []
@@ -492,7 +505,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         cell_state_count = _positive_int(cell.get("states"), f"states_per_anchor:{cell['anchor']}")
         cell_states += cell_state_count
         windows = cell.get("candidate_windows")
-        if profile == SCALE64_PROFILE:
+        if scaled_profile:
             if state_schedule.get("root_state_source") != "independent_native_start_and_walk_with_fixed_pair":
                 raise ScheduleError("scale64 roots must use independent native starts")
             if state_schedule.get("root_selection_policy") != "FIRST_QUALIFYING_IN_DECLARED_TURN_WINDOW":
@@ -514,24 +527,36 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
                 raise ScheduleError(f"candidate windows do not cover {cell['anchor']} state count")
     if set(cell_ids) != expected_anchor_ids or cell_states != states:
         raise ScheduleError("anchor-cell states must positively split root_state_count across all anchors")
-    if profile == SCALE64_PROFILE:
-        if states != 64 or replicas != 4 or particles != 4 or max_actions != 10 or cap != 2560:
-            raise ScheduleError("scale64 requires exactly 64 roots, 4 particles, max 10 actions, and cap 2560")
-        if [cell["states"] for cell in anchor_cells] != list(SCALE64_ANCHOR_ALLOCATION.values()):
-            raise ScheduleError("scale64 anchor allocation must be 11/11/11/11/10/10 in declared order")
+    if profile in {SCALE64_PROFILE, SCALE256_PROFILE}:
+        expected_states = 64 if profile == SCALE64_PROFILE else 256
+        expected_cap = 2560 if profile == SCALE64_PROFILE else 10240
+        expected_wall = 600 if profile == SCALE64_PROFILE else 1800
+        expected_allocation = (
+            SCALE64_ANCHOR_ALLOCATION if profile == SCALE64_PROFILE else SCALE256_ANCHOR_ALLOCATION
+        )
+        profile_name = "scale64" if profile == SCALE64_PROFILE else "scale256"
+        if states != expected_states or replicas != 4 or particles != 4 or max_actions != 10 or cap != expected_cap:
+            raise ScheduleError(
+                f"{profile_name} requires exactly {expected_states} roots, 4 particles, "
+                f"max 10 actions, and cap {expected_cap}"
+            )
+        if [cell["states"] for cell in anchor_cells] != list(expected_allocation.values()):
+            raise ScheduleError(f"{profile_name} anchor allocation differs from the declared order")
         if state_schedule.get("learner_slot_policy") != "ALTERNATING_PER_ANCHOR":
-            raise ScheduleError("scale64 learner slots must alternate independently within each anchor family")
-        if state_schedule.get("max_wall_seconds") != 600:
-            raise ScheduleError("scale64 wall cap must be exactly 600 seconds")
+            raise ScheduleError(f"{profile_name} learner slots must alternate independently within each anchor family")
+        if state_schedule.get("max_wall_seconds") != expected_wall:
+            raise ScheduleError(f"{profile_name} wall cap must be exactly {expected_wall} seconds")
+        if profile == SCALE256_PROFILE and max_root_attempts != 8:
+            raise ScheduleError("scale256 root acquisition retry cap must be exactly 8")
         if state_schedule.get("root_game_seed_policy") != (
             "INDEPENDENT_ROOT_LABELS_NATIVE_START_SYSTEM_ENTROPY_UNSEEDED"
         ):
-            raise ScheduleError("scale64 root seed policy must disclose native start entropy")
+            raise ScheduleError(f"{profile_name} root seed policy must disclose native start entropy")
         if hidden_worlds.get("seed_policy") != "UNIQUE_ROOT_ID_PARTICLE_SEEDS":
-            raise ScheduleError("scale64 particle seed policy must be unique per root and particle")
+            raise ScheduleError(f"{profile_name} particle seed policy must be unique per root and particle")
         bc_binding = config.get("bc_binding")
         if not isinstance(bc_binding, dict):
-            raise ScheduleError("scale64 must declare the pinned BC trunk binding")
+            raise ScheduleError(f"{profile_name} must declare the pinned BC trunk binding")
         if (
             bc_binding.get("path") != str(BC_TRUNK_PATH.relative_to(ROOT))
             or bc_binding.get("checkpoint_sha256") != BC_TRUNK_CHECKPOINT_SHA256
@@ -539,7 +564,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
             or bc_binding.get("optimizer_steps") != BC_TRUNK_OPTIMIZER_STEPS
             or bc_binding.get("mode") != TRUNK_MODE
         ):
-            raise ScheduleError("scale64 BC trunk binding differs from the pinned epoch-4 receipt")
+            raise ScheduleError(f"{profile_name} BC trunk binding differs from the pinned epoch-4 receipt")
         check_hash(bc_binding["path"], bc_binding["checkpoint_sha256"])
     else:
         if states > 8:
@@ -554,7 +579,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
     assignments = _assignment_plan(config)
     if len(assignments) != states:
         raise ScheduleError("expanded root assignment plan does not match root_state_count")
-    if profile == SCALE64_PROFILE:
+    if scaled_profile:
         for anchor_id in expected_anchor_ids:
             family_slots = [item["learner_slot"] for item in assignments if item["anchor_id"] == anchor_id]
             if set(family_slots) != {0, 1} or abs(family_slots.count(0) - family_slots.count(1)) > 1:
@@ -575,6 +600,7 @@ def validate_schedule(config: dict[str, Any], fixture: Path) -> dict[str, Any]:
         "selection_type_required": "MAIN",
         "selection_context_required": selection_context,
         "max_continuation_rollouts": cap,
+        "max_root_acquisition_attempts": max_root_attempts,
         "max_wall_seconds": state_schedule.get("max_wall_seconds", MAX_WORKER_SECONDS),
         "assignment_plan": assignments,
         "fixture": validate_probe_fixture(fixture, cap),
@@ -1295,8 +1321,8 @@ def _worker(
     opponent = Policy(resolve_repo_path(anchor["directory"]))
     policies[learner_slot] = learner
     policies[1 - learner_slot] = opponent
-    learner.reset(f"gate1-worker-{state_index}", learner_slot, "start")
-    opponent.reset(f"gate1-worker-{state_index}", 1 - learner_slot, "start")
+    learner.reset(f"{run_id}:{root_id}:attempt-1", learner_slot, "start")
+    opponent.reset(f"{run_id}:{root_id}:attempt-1", 1 - learner_slot, "start")
     deck0 = policies[0].deck
     deck1 = policies[1].deck
     expected_engine = config["assets"]["engine"]["sha256"]
@@ -1353,6 +1379,12 @@ def _worker(
             "separate_mechanics_gate_required": True,
         },
         "complete_root_preflight": complete_root,
+        "root_acquisition": {
+            "max_attempts": int(config["state_schedule"].get("max_root_acquisition_attempts", 1)),
+            "attempts": 0,
+            "terminal_before_candidate": 0,
+            "attempt_ids": [],
+        },
         "hashes": {
             "git_dirty_sha256": git_dirty_sha256,
             "source_commit": config.get("source_commit") or _canonical_source_commit(),
@@ -1403,13 +1435,17 @@ def _worker(
             "trunk_mode": trunk_binding.mode,
             "bc_trunk_frozen": True,
         })
+        max_root_attempts = int(config["state_schedule"].get("max_root_acquisition_attempts", 1))
+        root_attempt = 1
+        episode_id = f"{run_id}:{root_id}:attempt-{root_attempt}"
+        report["root_acquisition"]["attempts"] = root_attempt
+        report["root_acquisition"]["attempt_ids"].append(episode_id)
         raw, start_data = runtime["battle_start"](deck0, deck1)
         report["native_launches"] = 1
         if raw is None:
             raise ScheduleError(f"BattleStart failed: {start_data.errorPlayer=} {start_data.errorType=}")
         generation_steps = 0
         transition = 0
-        episode_id = f"{run_id}:{root_id}"
         public_prefix: list[dict[str, Any]] = []
         root_raw = None
         root_observation = None
@@ -1423,7 +1459,27 @@ def _worker(
                 raise ScheduleError("live battle omitted current state")
             result = int(observation.current.result)
             if result in (0, 1, 2):
-                raise ScheduleError("battle ended before a qualifying learner decision")
+                report["root_acquisition"]["terminal_before_candidate"] += 1
+                if root_attempt >= max_root_attempts:
+                    raise ScheduleError(
+                        "battle ended before a qualifying learner decision after "
+                        f"{root_attempt} root-acquisition attempts"
+                    )
+                runtime["battle_finish"]()
+                root_attempt += 1
+                episode_id = f"{run_id}:{root_id}:attempt-{root_attempt}"
+                report["root_acquisition"]["attempts"] = root_attempt
+                report["root_acquisition"]["attempt_ids"].append(episode_id)
+                learner.reset(episode_id, learner_slot, "start")
+                opponent.reset(episode_id, 1 - learner_slot, "start")
+                raw, start_data = runtime["battle_start"](deck0, deck1)
+                report["native_launches"] += 1
+                if raw is None:
+                    raise ScheduleError(f"BattleStart failed: {start_data.errorPlayer=} {start_data.errorType=}")
+                generation_steps = 0
+                transition = 0
+                public_prefix = []
+                continue
             if _candidate(
                 observation,
                 learner_slot,
@@ -2124,6 +2180,9 @@ def _self_check() -> int:
     """Exercise refusal, binding, cleanup, and schema checks without native imports."""
     schedule_config = load_json(DEFAULT_CONFIG)
     schedule_config["_config_path"] = str(DEFAULT_CONFIG.resolve())
+    # Existing declaration fixtures are intentionally reusable across source
+    # commits; the real dry-run still validates the on-disk config binding.
+    schedule_config["source_commit"] = _canonical_source_commit()
 
     def schedule_copy() -> dict[str, Any]:
         return json.loads(json.dumps(schedule_config))
@@ -2211,6 +2270,7 @@ def _self_check() -> int:
     scale_path = Path(__file__).resolve().parent / "gate1_schedule_scale64_v1.json"
     scale_config = load_json(scale_path)
     scale_config["_config_path"] = str(scale_path.resolve())
+    scale_config["source_commit"] = _canonical_source_commit()
     scale_validation = validate_schedule(scale_config, DEFAULT_FIXTURE)
     if (
         scale_validation.get("profile") != SCALE64_PROFILE
@@ -2247,6 +2307,47 @@ def _self_check() -> int:
         lambda candidate: candidate["state_schedule"].__setitem__(
             "root_game_seed_policy", "EXPLICIT_SEED"
         ),
+    )
+
+    scale256_path = Path(__file__).resolve().parent / "gate1_schedule_scale256_v1_authorized_compat_sys_v1.json"
+    scale256_config = load_json(scale256_path)
+    scale256_config["_config_path"] = str(scale256_path.resolve())
+    scale256_config["source_commit"] = _canonical_source_commit()
+    scale256_validation = validate_schedule(scale256_config, DEFAULT_FIXTURE)
+    if (
+        scale256_validation.get("profile") != SCALE256_PROFILE
+        or scale256_validation.get("root_states") != 256
+        or len(scale256_validation.get("assignment_plan", [])) != 256
+        or scale256_validation.get("max_continuation_rollouts") != 10240
+        or scale256_validation.get("max_wall_seconds") != 1800
+        or scale256_validation.get("max_root_acquisition_attempts") != 8
+    ):
+        raise ScheduleError("scale256 declaration self-check did not expand the exact root schedule")
+
+    def expect_scale256_schedule_error(label: str, mutate: Any) -> None:
+        candidate = json.loads(json.dumps(scale256_config))
+        mutate(candidate)
+        try:
+            validate_schedule(candidate, DEFAULT_FIXTURE)
+        except ScheduleError:
+            return
+        raise ScheduleError(f"scale256 self-check did not reject {label}")
+
+    expect_scale256_schedule_error(
+        "wrong scale256 wall cap",
+        lambda candidate: candidate["state_schedule"].__setitem__("max_wall_seconds", 1799),
+    )
+    expect_scale256_schedule_error(
+        "wrong scale256 anchor allocation",
+        lambda candidate: candidate["state_schedule"]["anchor_cells"][0].__setitem__("states", 42),
+    )
+    expect_scale256_schedule_error(
+        "scale256 branch cap below worst case",
+        lambda candidate: candidate["state_schedule"].__setitem__("max_continuation_rollouts", 10239),
+    )
+    expect_scale256_schedule_error(
+        "scale256 root acquisition retry cap changed",
+        lambda candidate: candidate["state_schedule"].__setitem__("max_root_acquisition_attempts", 7),
     )
 
     with TemporaryDirectory(
