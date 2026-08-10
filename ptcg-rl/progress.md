@@ -2,18 +2,116 @@
 
 ## CURRENT STATE / RESUME HERE
 
-Updated: 2026-08-10T05:06:41+05:30
+Updated: 2026-08-10T18:54:35+05:30
 
-- Best live agent: unchanged qualified Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, deadline-refresh verified `COMPLETE` at public score `811.4`. It has 45 public games, 24 wins and 21 losses, plus one successful validation episode. It remains 188.6 Elo below 1000 and is still the strongest live-safe NNMax control.
-- Best validated local control: unchanged package `.chatgpt/tmp/submissions/kptcg-grim-control-v1.tar.gz`, 3,640,195 bytes, SHA-256 `e9d4681a5252f563309befc450dd31d8c66171b81455600c9e783b13c6d52657`. Do not rebuild or modify it.
-- Best local candidate: no derivative is promoted above the unchanged Grim control. The 80-game history-Majkel c0.70 screen winner is independently rejected after its 480-game confirmation: pure `100/0/140` (`0.41667`) versus c0.70 `98/0/142` (`0.40833`).
-- Active hypothesis: the Public Route Transducer remains a ceiling-gate hypothesis only. Dual-mode authorization is now portable and root-tested; commit/rebind/frozen full execution remain. It remains non-RL. PPO, Q-learning, policy gradients, actor-critic, reward shaping, online policy updates, and RL replay remain parked and unauthorized.
-- Most recent decisive evidence: the independent Scale256 test killed the architecture. Despite `0.648` pairwise concordance, the selected head chose actions `-0.15104` worse than Grim fallback with 95% CI `[-0.28125,-0.02604]`, and catastrophically regressed Dragapult, Grim mirror, and Alakazam. No checkpoint was emitted.
-- Exact next task: stage only collector/progress, inspect and commit the authorization gate; rebind dry and authorized configs to the new HEAD; rerun zero-launch validation; freeze all writers; execute one full Scale64 run.
-- Latest session commit: `e4a62b7aa54911d1744f7b5ae30682ca45a59285` (`docs: record opponent-response mechanics milestone`). Code milestone: `0b66c158d80909cd73df0706cebd0e504c95065a` (`feat: add public opponent-response ceiling gate`), containing the independently passed collector, restricted sidecar schema, config-bound analyzer, and ten tests. Prior handoff is `bff8de8`; rejected Scale256 milestone `04a2247`; Gate-1/Scale64 source `e53b4d6`; strategic redirect `5c82c44183a92c7e387c2790ebfb71cc7fc3ec31`; Majkel rejection `501cde828bc47ecf85e26334960b4047486e498f`.
-- Uncommitted session work: `progress.md`; current untracked dry config; new private preflight run `counterfactual-q-20260809T231733.339016Z-cf124f27d888`; obsolete rejected parallel-schema scratch files; and stale earlier preflight artifacts. Nothing is staged. Generated/private runs and all unrelated dirty state remain unstaged and preserved.
+- Best live agent: unchanged own Grimmsnarl/Froslass Damage-Transfer Control, Kaggle submission `55372188`, currently known around the high-700/low-800 band and materially below the 1000+ goal. Do not tune against its live score alone; its loss concentration was mirror + Alakazam/control.
+- Best validated local candidate: **own `lucario-modern-v1`**, package `.chatgpt/tmp/today-lucario-variants/lucario-modern-v1`, using the current modern Mega Lucario 60-card structure with our explicit engine policy for Ultra Ball, Judge/Lillie, Wally's Compassion, and Lunar Cycle. This supersedes `lucario-lunar-dynamic` as the primary local candidate.
+- Frozen competition archive: `.chatgpt/tmp/submissions/kptcg-lucario-modern-v1.tar.gz`, 6,058 bytes, SHA-256 `2e38322282a9f57a86a7af22e7a8b0b6ae971efdb09abc62c8098a083857ec0a`; exact `main.py` SHA `11aaeffded2cdee434764d2aea01adfc3a367f2ab142bac790e8e66432c458d8`; exact `deck.csv` SHA `8b2feb21446109bfaae5316ab35c1f6f7ba2140593ad4048b876441768ca4178`.
+- Strongest causal result: on the identical modern 60-card deck, `lucario-modern-v1` beat the prior generic modern controller **106/160 = 66.25%** in an independent cross-seat confirmation, after an initial 68/80 = 85% screen. Deck was fixed; only controller logic changed. Zero reliability defects.
+- Broad evidence: modern-v1 scored **132/240 = 55.0%** across six mature native opponents in the 480-game targeted confirmation; and **109/200 = 54.5%** on the current-meta-shaped proxy panel versus `lucario-lunar-dynamic` **90/200 = 45.0%**. Modern-v1 improved the Majkel/Lucario proxy 47.5% vs 35%, alpha-Roman/Alakazam-style 42.5% vs 17.5%, and alpha-current-Alakazam 32.5% vs 17.5%.
+- Competition qualification: exact extracted archive raw-executes with no `__file__`; real pre-deck callback returns the exact 60-card deck; 48/48 exact-archive native games completed over six opponent families with 6,142 engine requests / 5,717 meaningful choices / **0 errors / 0 invalid / 0 fallback / 0 post-terminal**. Qualification cohort outcome 31/48 = 64.58%. Artifact: `.chatgpt/tmp/lucario-modern-v1-qualification/native-48.json`.
+- Remaining weakness: Alakazam/control. Current proxies remain noisy and materially stronger/different than old local assumptions. Three evidence-driven control changes were independently rejected: Fezandipiti-ex KO bonus (40.0% vs v1 41.875% over 320 control games), one-Lucario-line bench guard (35.0% vs v1 46.875% over 320), and prior Dragapult/KO/router variants. Do not contaminate frozen v1 with these rejected rules.
+- Rejected resumed branches: PRT ceiling model; Gemini global residual; Gemini c0.80 mirror specialist (75/160 = 46.875%); attack-over-Night-Stretcher guard (17/80); blanket Punk Up; global Lana's Aid swap; clean-room Kangaskhan/Slowking v1-v3 (v3 only 7/24 vs stock Lucario); modern KO+continuity global variant; strict Dragapult router; energy-preserving Ultra Ball discard variant; Alakazam Fez bonus; Alakazam one-line bench guard.
+- Public-agent boundary: **never submit public agents as-is**. Public decks/replays may be used only for structural inspiration, film study, or sparring. The modern-v1 controller is our own engine-native policy. The bad public Nithin live probe is rejected and must not be repeated.
+- Active hypothesis: modern-v1 is strong enough to deserve one carefully controlled live calibration slot; further local micro-tuning is more likely to overfit weak proxies than improve real Elo. If live calibration is authorized/executed, use the exact frozen archive above and analyze only its own public games afterward.
+- Exact next task: checkpoint this journal, refresh current Kaggle submission quota/status, then decide whether to spend one slot on the **exact qualified own modern-v1 archive**. Do not rebuild it before the live decision. If submitted, record submission id, validation status, first real games, and score trajectory before any new policy mutation.
+- Latest code/source HEAD before this journal checkpoint: `a4f89d3ef1ec71110cf815623db8eacd67472105`. No push requested.
+- Uncommitted session work before checkpoint: numerous `.chatgpt/tmp` experiment/package artifacts plus this `progress.md` update. Preserve all unrelated dirty state; stage only `progress.md` for the checkpoint commit.
 
-RESUME HERE: commit the root-passing authorization gate, rebind configs, and execute one Scale64 collection. Latest HEAD is `e4a62b7aa54911d1744f7b5ae30682ca45a59285`; no new candidate or live submission exists. Do not call this RL.
+RESUME HERE: `lucario-modern-v1` is the primary own candidate. Exact frozen tar SHA is `2e38322282a9f57a86a7af22e7a8b0b6ae971efdb09abc62c8098a083857ec0a`. It is competition-qualified. Stop proxy micro-tuning unless a new causal failure is found. Refresh live quota/status before any submission; never submit public agents.
+
+## 2026-08-10T18:54:35+05:30 - Modern Mega Lucario v1 Promoted and Competition-Qualified
+
+- Objective: find a step-change beyond the ~800-Elo Grim line using only our own game-engine policy, while treating public agents strictly as research/sparring references.
+- Structural finding: the old `lucario-lunar-dynamic` used the legacy Lucario list. Current 1150+ Lucario structures use the modern 60-card multiset with Ultra Ball, Judge, and Wally's Compassion. Existing `lucario-majkel-deck-stocklogic` proved that merely swapping the deck under old logic is weaker, so controller support for the modern cards was the actionable gap.
+- Own policy changes in modern-v1: explicit Ultra Ball play/search/discard handling; Lillie early rebuild versus later Judge routing; damaged-Mega Wally reset targeting; retained positive Lunar Cycle timing; setup null safety. No public policy source or learned action table is embedded.
+- Same-deck causal screen: 68/80 = 85.0% for v1 versus the old generic modern controller, both seats positive, zero defects.
+- Independent same-deck confirmation: 106/160 = 66.25%, with v1 72.5% as P0 and 60.0% as P1, zero defects. This is the strongest local causal controller gain in the project to date.
+- Broad native evidence: 588-game arena completed with zero failures. A later fresh 480-game two-candidate confirmation gave modern-v1 132/240 = 55.0%; opponent cells: old modern 62.5%, lunar-dynamic 65.0%, Dragapult 40.0%, Iono 65.0%, Abomasnow 37.5%, stock Lucario 60.0%.
+- Current-meta-shaped comparison: modern-v1 109/200 = 54.5% versus prior lunar-dynamic 90/200 = 45.0%. Modern-v1 cells: current Dipam Dragapult proxy 67.5%, Majkel/Lucario proxy 47.5%, Liam Lopunny 82.5%, alpha-Roman/Alakazam-style 42.5%, alpha-current-Alakazam 32.5%.
+- High-level film study only: across recent M Sato + Majkel modern-Lucario games, Solrock is the dominant opener; Aura Jab is used more often than Mega Brave; Wally is nearly always a damaged-Mega reset; Ultra Ball is primarily early setup; Judge is later disruption. These observations informed explicit rules but were never converted into an imitation model or submitted public policy.
+- Negative ablations after v1: global KO+1500/continuity fell to 125/240 = 52.08%; strict Dragapult router lost both Dragapult confirmations; energy-preserving Ultra Ball discard lost the same-deck comparison; Fezandipiti control bonus and one-line Riolu control guard both lost 320-game control confirmations. Decision: keep v1 unchanged.
+- Qualification archive: `.chatgpt/tmp/submissions/kptcg-lucario-modern-v1.tar.gz`, SHA-256 `2e38322282a9f57a86a7af22e7a8b0b6ae971efdb09abc62c8098a083857ec0a`, containing only `main.py`, `deck.csv`, `receipt.json`.
+- Raw-exec gate: exact archive extracted; `main.py` SHA and deck SHA matched frozen receipt; module executed without `__file__`; actual pre-deck CABT observation returned exact 60-card deck.
+- Native qualification: 48/48 extracted-archive games across stock Lucario, Dragapult, Abomasnow, Iono, alpha-current-Alakazam, and Liam-Lopunny; 6,142 engine requests / 5,717 meaningful choices / 425 forced requests / zero errors / zero invalid / zero fallback / zero post-terminal. Outcome 31/48 = 64.58%. Qualification status `PASS`.
+- Decision: **PROMOTE `lucario-modern-v1` TO LIVE-CALIBRATION CANDIDATE / FREEZE BYTES**. Do not add rejected matchup patches. No live submission was made during this milestone.
+- Next action: commit this journal checkpoint, refresh competition quota and current own submissions, then use a live slot only if current quota safely permits and only for the exact frozen own archive.
+
+## 2026-08-10T05:39:25+05:30 - Immediate-Choice Collector and Schema Patch Passed Narrow Checks
+
+- Objective: capture the opponent's actual first selection across all factual request types without skipping multi-option route decisions.
+- Files changed: `.chatgpt/tmp/counterfactual-q/collector.py` and `.chatgpt/tmp/outcome-ranker/opponent_transition_label_v1.schema.json`; analyzer work remains separately in progress.
+- Runtime change: the first opponent request no longer receives a MAIN-only rejection. The existing qualified policy selects it, native original-index/count/uniqueness/availability validation remains in force, the engine steps it, and the label becomes `OBSERVED` with the complete request and context-preserving semantic action path. Terminal/error paths are unchanged.
+- Schema change: submitted transport indices are now explicitly unique. Existing sidecar validation was generalized to factual singleton/compound min/max counts, complete retained legal options, and ordered versus unordered semantic action keys.
+- Regressions: factual TO_ACTIVE/context4 with three options and exactly one selected target; ordered SKILL_ORDER/context34 pair; duplicate indices; count mismatch; altered order; and raw-observation firewall leakage. The first delegated fixture incorrectly modeled TO_ACTIVE as selecting two cards; root review caught it and the fixture alone was corrected before acceptance.
+- Tests: Ruff passed; `py_compile` passed; collector `--self-check` passed with `native_imports=0`; scoped pytest `12 passed`; JSON schema validation and `git diff --check` passed. No native execution occurred.
+- Current hashes: collector `0ad492813f4f65dddb5ad52a5778313326ef94415386e7e200b6b67c1b569d21`; schema `6993814bf542bdef27f33828692449d4986a86669729d3ddb2c9960f69288093`.
+- Decision: `COLLECTOR HALF PASS / AWAIT COMBINED ANALYZER AUDIT`. The current private configs intentionally remain bound to the prior source/schema and cannot launch this code.
+- Next action: finish and minimize the analyzer patch, run combined tests, then independently audit the complete diff.
+
+## 2026-08-10T05:29:26+05:30 - Immediate-Choice Correction Work Orders Started
+
+- Objective: make the smallest reviewable correction that models the opponent's actual first decision rather than skipping route-critical promotion/skill choices.
+- Delegated collector/schema scope: capture every factual first opponent request after qualified-policy legal selection; retain compound order; preserve all engine, legality, terminal, firewall, timeout, and no-fallback checks; add TO_ACTIVE/SKILL_ORDER and malformed-count regressions. No native run or external action authorized.
+- Delegated analyzer/test scope: validate heterogeneous singleton/compound actions; bind target to type/context/ordering/action semantics; aggregate request-shape probabilities for a separate top-1 metric; require `>=0.95` overall observed coverage and `>=0.90` in every anchor pair; preserve every existing model/firewall/mechanics threshold. No full-data analyzer execution authorized.
+- Scope control: collector/schema and analyzer/tests are disjoint edit sets; neither agent may touch `progress.md`, commit, run native games, use network, or submit. Root will inspect and reconcile the combined diff before any commit.
+- Decision: `IMPLEMENT MINIMAL CONTRACT CORRECTION`.
+- Next action: audit exact patches/tests, reconcile any schema/analyzer mismatch, then commit a source-bound mechanics milestone before one rerun.
+
+## 2026-08-10T05:28:01+05:30 - Full Scale64 Artifact Audit Blocked Only on Target Coverage
+
+- Objective: independently recompute the sealed full run rather than trusting the collector summary.
+- Verdict: `BLOCK_CURRENT_CONTRACT`; no defect exists beyond the already identified 353 unsupported first-opponent choices.
+- Exact retained evidence: 64/64 workers `PASS_COMPLETE`; exact root allocation `11/11/11/11/10/10`; 1,848 branches/labels; four distinct particles per root; complete identical action sets; all 1,848 child PIDs exited; one permitted root-acquisition retry at worker 31 explains 65 native launches.
+- Integrity: all 83 declared manifest artifacts matched bytes/SHA; manifest and sidecar seal recomputed to `a9a20afecd1ac7ba2aa6bd85e461a184f3044a75ff62d6c17a4797c9157d4d5d`; HEAD/source `a4f89d3ef1ec71110cf815623db8eacd67472105` and authorized config `c3494a1ade12abf0630e2f154be27aecaad979e40da7d59c2baabfea61db1b60` matched.
+- Semantics: both schemas and all six pairs validated; canonical/action/transport/public-history joins, projection/history bindings, particle identity, and aggregate consistency passed. All crash/timeout/invalid/fallback/post-terminal/missing/error/terminal-before-opponent counters were zero.
+- Sole blocker: 1,495 `OBSERVED` plus 353 `UNSUPPORTED_FIRST_OPPONENT_REQUEST`, only `80.90%` support. The current contract cannot enter its analyzer because the declared `>=0.90` support floor and complete-group mechanics requirement fail.
+- Nonblocking format note: `full-execution.json` has null top-level `source_commit`, while the authoritative outer manifest and every worker hash record bind the expected HEAD.
+- Decision: `PRESERVE BLOCKED RUN / PATCH IMMEDIATE-CHOICE CONTRACT`. This run is valid negative/mechanics evidence and must not be relabeled in place.
+- Next action: implement and test immediate choice-bearing capture; commit before rerunning so all new evidence binds a distinct source identity.
+
+## 2026-08-10T05:25:46+05:30 - MAIN-Only Response Target Rejected; Immediate Choice Target Selected
+
+- Objective: decide whether to skip the 353 non-MAIN opponent requests and predict a later MAIN action, or model the immediate opponent decision that actually changes the route.
+- Evidence: all 353 unsupported request bodies plus independent technical and strategic read-only reviews. Exact option-semantic distribution: promotion/context4 has 18 singleton, 40 two-choice, 69 three-choice, 73 four-choice, and 102 five-choice records; ordered skill/context34 has 51 two-choice records. Thus 335/353 (`94.9%`) are genuine multi-option decisions. All 353 current labels omit `chosen_action` even though their child continuations completed legally.
+- Technical root cause: `_child_continuation` marks the first non-MAIN opponent request unsupported before the already-qualified opponent policy selects and steps it; the terminal continuation proceeds, but later requests are no longer eligible for capture. Process-local search state is closed, so old branches cannot be spliced or resumed; a corrected bounded run is required.
+- Rejected alternative: silently advance through multi-option promotion/skill choices and label the later MAIN action. That would make the target depend on an unmodeled route-critical intermediate choice; adding the post-choice state to root features would be future leakage. Only semantically singleton forced transitions may be skipped.
+- Selected minimal architecture: first opponent choice-bearing request of any type, target tuple `(selection_type, selection_context, ordering, chosen semantic action path)`, with semantic duplicate pooling and ordered-path preservation. Terminal-before-choice stays explicit; private hand/deck/prize identity, determinization, legal-set tensors, opponent identity, and post-choice state remain excluded from features.
+- Required ceiling gates: observed choice/terminal coverage `>=0.95` overall and `>=0.90` per anchor/window stratum; no multi-option non-MAIN request skipped; request type/context top-1 `>=0.90`; existing test top-3 `>=0.75`, root-bootstrap top-3 LCB `>=0.65`, NLL gain `>=0.20`, unseen `<=0.10`, and zero join/firewall/reliability/collision defects. Passing remains non-strength evidence.
+- Decision: `REJECT MAIN-ONLY / KEEP IMMEDIATE-CHOICE PRT ALIVE FOR ONE BOUNDED GATE`. This is a structural correction, not threshold relaxation.
+- Next action: finish independent artifact audit, delegate the smallest collector/schema/analyzer patch with regressions, root-audit it, commit, rebind one private config, and rerun the exact 64-root ceiling experiment.
+
+## 2026-08-10T05:18:50+05:30 - Root Audit Exposed Non-MAIN Response Coverage Blocker
+
+- Objective: independently inspect compact retained counters and response-label coverage before trusting the collector's top-level `PASS_COMPLETE` status.
+- Evidence inspected: `full-execution.json`, all six `opponent-transition-labels-*.json` files, the analyzer ingest/mechanics gates, manifest plus seal, and worker aggregates.
+- Commands: compact `rtk jq` aggregation over workers/sidecars; `rtk sha256sum run-manifest.json`; `rtk cat run-manifest.sha256`; targeted `rtk rg`/`rtk sed` inspection of analyzer and collector status handling.
+- Confirmed mechanics so far: manifest SHA recomputes exactly to `a9a20afecd1ac7ba2aa6bd85e461a184f3044a75ff62d6c17a4797c9157d4d5d`; 64/64 workers report `PASS_COMPLETE` and return code `0`; exact anchor allocation is `11/10/11/11/11/10` in anchor-name order; 34 EARLY/30 MID roots; learner slots 34/30; 65 native launches; 1,848 branches; zero child crashes, timeouts, invalid actions, fallbacks, post-terminal actions, missing/error labels, or terminal-before-opponent labels.
+- Blocking anomaly: only 1,495/1,848 labels (`80.90%`) are `OBSERVED` MAIN/context0. The remaining 353 are `UNSUPPORTED_FIRST_OPPONENT_REQUEST`: 302 `selection_type=1/context=4/min=max=1` and 51 `selection_type=5/context=34/min=max=2`. Per anchor observed/unsupported counts are Dragapult `248/48`, Grim `294/22`, Iono `308/32`, Mega Lucario `201/95`, Alakazam `189/123`, Lopunny `255/33`.
+- Analyzer impact: the predeclared support floor is `>=0.90`, and incomplete four-particle semantic groups enter the mechanics gate. Running now would be mechanically blocked rather than a valid ceiling verdict. This is not evidence that the response model is weak; it may be a collector stopping at forced promotion/prize sub-selections instead of advancing safely to the requested first MAIN response.
+- Decision: `BLOCK ANALYZER / DIAGNOSE EXACT COLLECTION SEMANTICS`. Do not weaken thresholds or relabel non-MAIN requests. Independent full artifact audit and two read-only technical/strategic diagnoses are active.
+- Next action: decide whether to kill the hypothesis or make the smallest audited continuation repair and rerun only the necessary bounded evidence.
+
+## 2026-08-10T05:15:04+05:30 - Authorized Scale64 Opponent-Response Collection Completed
+
+- Objective: collect the one approved bounded public-only opponent-response dataset needed to test the Public Route Transducer ceiling, without changing strategic code or launching a candidate.
+- Command: `rtk uv run python .chatgpt/tmp/counterfactual-q/collector.py --execute-native --config .chatgpt/tmp/counterfactual-q/gate1_schedule_scale64_opponent_transition_v1_authorized.json`.
+- Size/result: run `counterfactual-q-20260809T233823.861327Z-f00f3ed0b716` completed `PASS_COMPLETE` in approximately 5m33s, from `2026-08-09T23:38:23.861602+00:00` to `2026-08-09T23:43:56.866091+00:00`; 64 independent roots, 1,848 continuation rollouts/branches, 65 reported native launches, six anchor datasets and six matching opponent-transition sidecars.
+- Authorization/bindings: full schedule authorized and launched exactly once; private config SHA-256 `c3494a1ade12abf0630e2f154be27aecaad979e40da7d59c2baabfea61db1b60`; source HEAD remained `a4f89d3ef1ec71110cf815623db8eacd67472105` throughout.
+- Artifacts: `.chatgpt/tmp/counterfactual-q/runs/full-counterfactual-q-20260809T233823.861327Z-f00f3ed0b716/`; authoritative manifest `run-manifest.json`; seal `run-manifest.sha256`; execution record `full-execution.json`; six `datasets/counterfactual-action-dataset-*.json` files; six `datasets/opponent-transition-labels-*.json` files.
+- Preliminary seal: collector printed manifest SHA-256 `a9a20afecd1ac7ba2aa6bd85e461a184f3044a75ff62d6c17a4797c9157d4d5d`. Console output exceeded 5 MiB and was truncated, so no mechanics or ceiling verdict will rely on it.
+- Failures/fallbacks: no top-level execution failure was reported. Per-worker reliability, joins, particle uniqueness, schema validity, artifact bytes/hashes, child cleanup, and exact allocation remain pending independent audit.
+- Interpretation: this is a completed data-collection milestone only. It is not game-outcome evidence, a candidate promotion, or a submission qualification.
+- Decision: `COLLECTION COMPLETE / AUDIT REQUIRED`. Keep the PRT hypothesis alive only until the retained mechanics audit and frozen analyzer produce a verdict.
+- Next action: independently recompute the complete run evidence; if it passes, execute the six-pair ceiling analyzer exactly once before changing HEAD.
+
+## 2026-08-10T05:07:47+05:30 - Authorization Gate Committed and Configs Rebound
+
+- Commit: `a4f89d3ef1ec71110cf815623db8eacd67472105` (`feat: authorize bounded opponent-response collection`), explicitly containing only collector/progress authorization work.
+- Private configs now bind that HEAD: dry SHA `31b9a29318fae2995f8155877f64b1f4aab4864289d0d318c15870b2ed12276f`; authorized SHA `c3494a1ade12abf0630e2f154be27aecaad979e40da7d59c2baabfea61db1b60`.
+- Validation: both dry-runs returned `PASS` with exact false/dry and true/full pairs respectively, identical six-anchor/64-root/four-particle caps, and `native_launches=0`.
+- Decision: `READY / LAUNCH EXACTLY ONCE`. No more config/code/progress writes until the collector seals or fails.
+- Next action: execute `collector.py --execute-native` with the authorized config and monitor the single run to terminal status.
 
 ## 2026-08-10T05:06:41+05:30 - Authorization Gate Root Review Passed
 
