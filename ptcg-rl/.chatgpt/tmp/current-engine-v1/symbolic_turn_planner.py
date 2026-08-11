@@ -810,7 +810,10 @@ def _own_turn_boundary(obs, root_player: int, root_turn: int) -> bool:
 
 def _search_root(root, root_action, root_player: int, root_turn: int, start_prizes: int):
     root_raw = asdict(root.observation)
-    root_semantic = semantic_signature(root_raw, root_action)
+    # Planned paths use functional identity: interchangeable physical copies in
+    # hand/discard/deck should not break consensus, while in-play source/target
+    # serials remain significant through functional_signature().
+    root_semantic = functional_signature(root_raw, root_action)
     first = search_step(root.searchId, list(root_action))
     expansions = 1
     front = [Node(first, [tuple(root_action)], [root_semantic])]
@@ -855,7 +858,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                 v = strategic_vector(child.observation, root_player, root_turn, start_prizes)
                 if v > best_mid:
                     best_mid = v
-                step_semantic = semantic_signature(asdict(obs), action)
+                step_semantic = functional_signature(asdict(obs), action)
                 nxt.append(Node(child, node.path + [tuple(action)], node.semantic_path + [step_semantic]))
             try:
                 search_release(node.state.searchId)
@@ -917,7 +920,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                     child_v = strategic_vector(child_obs, root_player, root_turn, start_prizes)
                     if child_v > best_mid:
                         best_mid = child_v
-                    step_semantic = semantic_signature(asdict(obs), action)
+                    step_semantic = functional_signature(asdict(obs), action)
                     child_path = node.path + [tuple(action)]
                     child_semantic_path = node.semantic_path + [step_semantic]
                     if _own_turn_boundary(child_obs, root_player, root_turn):
