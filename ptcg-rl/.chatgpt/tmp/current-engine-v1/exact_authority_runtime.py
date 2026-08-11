@@ -47,6 +47,10 @@ class AuthorityDiagnostics:
     proof_prefix_candidates: int = 0
     proof_verifications: int = 0
     proof_rejections: int = 0
+    proof_witness_searches: int = 0
+    proof_witness_rescues: int = 0
+    proof_witness_failures: int = 0
+    proof_witness_expansions: int = 0
     tactical_authorizations: int = 0
     adrena_ko_authorizations: int = 0
     shadow_split_authorizations: int = 0
@@ -59,6 +63,7 @@ class AuthorityDiagnostics:
     search_failures: int = 0
     search_seconds: float = 0.0
     verification_seconds: float = 0.0
+    proof_witness_seconds: float = 0.0
     last_reason: str = ""
 
 
@@ -614,8 +619,41 @@ class ExactAuthorityRuntime:
                 continue
             plan = self._proof_plan(exact)
             if not plan:
-                self.diagnostics.proof_rejections += 1
-                continue
+                # Complete hidden-world verification has already proven the
+                # candidate exact outcome. Search only for a shorter executable
+                # witness of those same exact pairs; never for a new value claim.
+                self.diagnostics.proof_witness_searches += 1
+                witness_started = time.perf_counter()
+                try:
+                    witness_verified = PLANNER.verify_shortest_exact_witnesses(
+                        raw,
+                        self.deck,
+                        verified,
+                        candidate,
+                    )
+                except Exception:
+                    witness_verified = {"ok": False, "expansions": 0}
+                finally:
+                    self.diagnostics.proof_witness_seconds += time.perf_counter() - witness_started
+                self.diagnostics.proof_witness_expansions += int(
+                    witness_verified.get("witness_expansions", witness_verified.get("expansions", 0)) or 0
+                )
+                if witness_verified.get("ok"):
+                    witness_exact = self._exact_dominance(witness_verified)
+                    same_pairs = list(witness_exact.get("pairs") or []) == list(exact.get("pairs") or [])
+                    witness_plan = self._proof_plan(witness_exact) if same_pairs else None
+                    if (
+                        witness_exact.get("qualified")
+                        and witness_exact.get("gain")
+                        and witness_plan
+                    ):
+                        exact = witness_exact
+                        plan = witness_plan
+                        self.diagnostics.proof_witness_rescues += 1
+                if not plan:
+                    self.diagnostics.proof_witness_failures += 1
+                    self.diagnostics.proof_rejections += 1
+                    continue
             worst = min(tuple(pair[0]) for pair in exact.get("pairs") or [((0, 0), (0, 0))])
             passed.append((worst, int(bool(exact.get("terminal"))), int(bool(exact.get("prize"))), candidate, plan, exact))
 

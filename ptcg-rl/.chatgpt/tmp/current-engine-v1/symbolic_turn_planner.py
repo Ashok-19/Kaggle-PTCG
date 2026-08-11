@@ -57,6 +57,14 @@ DEPTH = 10
 WIDTH = 6
 PER_ROOT_EXPANSIONS = 260
 
+# Secondary proof-only search. It is invoked only after complete hidden-world
+# verification has already proven an exact candidate outcome but the selected
+# strategic continuation paths do not agree semantically. This search may only
+# find a shorter witness for that same exact outcome; it cannot create authority.
+PROOF_WITNESS_DEPTH = 9
+PROOF_WITNESS_WIDTH = 16
+PROOF_WITNESS_EXPANSIONS = 350
+
 # Separate rescue budget used only when the ordinary beam has not produced any
 # genuine own-turn boundary for a root. This improves qualification coverage
 # without making every ordinary search deeper/more expensive.
@@ -1058,6 +1066,139 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
     }
 
 
+def _semantic_path_key(path):
+    return tuple(
+        tuple(tuple(int(value) for value in signature) for signature in step)
+        for step in path
+    )
+
+
+def _shortest_exact_witness(
+    root,
+    root_action,
+    root_player: int,
+    root_turn: int,
+    start_prizes: int,
+    target_exact,
+):
+    """Find the shortest explored prefix reaching an already-proven exact pair.
+
+    ``target_exact`` comes from a complete verified turn boundary. The witness
+    search is therefore not an evaluator: it must reach exactly that same
+    (terminal, prizes-taken) pair and cannot promote a different outcome.
+    """
+    target_exact = tuple(int(value) for value in target_exact[:2])
+    root_raw = asdict(root.observation)
+    root_semantic = functional_signature(root_raw, root_action)
+    first = search_step(root.searchId, list(root_action))
+    expansions = 1
+    first_vector = strategic_vector(first.observation, root_player, root_turn, start_prizes)
+    first_path = [tuple(root_action)]
+    first_semantic_path = [root_semantic]
+    first_exact_path = [(int(first_vector[0]), int(first_vector[1]))]
+    if tuple(first_exact_path[-1]) == target_exact:
+        try:
+            search_release(first.searchId)
+        except Exception:
+            pass
+        return {
+            "ok": True,
+            "path": first_path,
+            "semantic_path": first_semantic_path,
+            "exact_path": first_exact_path,
+            "expansions": expansions,
+        }
+
+    front = [Node(first, first_path, first_semantic_path, first_exact_path)]
+    for _depth in range(1, PROOF_WITNESS_DEPTH):
+        nxt: list[Node] = []
+        goals = []
+        for node in front:
+            obs = node.state.observation
+            if _own_turn_boundary(obs, root_player, root_turn):
+                try:
+                    search_release(node.state.searchId)
+                except Exception:
+                    pass
+                continue
+            cap = MAIN_CAP if int(obs.select.context) == 0 else EFFECT_CAP
+            for action in legal_actions(obs, cap):
+                if expansions >= PROOF_WITNESS_EXPANSIONS:
+                    break
+                try:
+                    child = search_step(node.state.searchId, list(action))
+                except Exception:
+                    continue
+                expansions += 1
+                child_vector = strategic_vector(child.observation, root_player, root_turn, start_prizes)
+                step_semantic = functional_signature(asdict(obs), action)
+                child_path = node.path + [tuple(action)]
+                child_semantic_path = node.semantic_path + [step_semantic]
+                child_exact_path = node.exact_path + [(int(child_vector[0]), int(child_vector[1]))]
+                if tuple(child_exact_path[-1]) == target_exact:
+                    goals.append(Node(child, child_path, child_semantic_path, child_exact_path))
+                    continue
+                if _own_turn_boundary(child.observation, root_player, root_turn):
+                    try:
+                        search_release(child.searchId)
+                    except Exception:
+                        pass
+                else:
+                    nxt.append(Node(child, child_path, child_semantic_path, child_exact_path))
+            try:
+                search_release(node.state.searchId)
+            except Exception:
+                pass
+
+        if goals:
+            goals.sort(key=lambda node: _semantic_path_key(node.semantic_path))
+            best = goals[0]
+            result = {
+                "ok": True,
+                "path": list(best.path),
+                "semantic_path": list(best.semantic_path),
+                "exact_path": list(best.exact_path),
+                "expansions": expansions,
+            }
+            for node in goals:
+                try:
+                    search_release(node.state.searchId)
+                except Exception:
+                    pass
+            for node in nxt:
+                try:
+                    search_release(node.state.searchId)
+                except Exception:
+                    pass
+            return result
+
+        if not nxt or expansions >= PROOF_WITNESS_EXPANSIONS:
+            front = []
+            for node in nxt:
+                try:
+                    search_release(node.state.searchId)
+                except Exception:
+                    pass
+            break
+        nxt.sort(
+            key=lambda node: strategic_vector(node.state.observation, root_player, root_turn, start_prizes),
+            reverse=True,
+        )
+        front = nxt[:PROOF_WITNESS_WIDTH]
+        for node in nxt[PROOF_WITNESS_WIDTH:]:
+            try:
+                search_release(node.state.searchId)
+            except Exception:
+                pass
+
+    for node in front:
+        try:
+            search_release(node.state.searchId)
+        except Exception:
+            pass
+    return {"ok": False, "expansions": expansions}
+
+
 def solve_particle(raw, own_deck: list[int], seed: int, fallback):
     obs = to_observation_class(raw)
     rp = int(obs.current.yourIndex)
@@ -1323,4 +1464,100 @@ def verify_current_turn_pair(
         "verification_worlds_run": len(parts),
         "early_rejected": bool(early_rejected),
         "seconds": time.perf_counter() - started,
+    }
+
+
+def verify_shortest_exact_witnesses(
+    raw: dict,
+    own_deck: list[int],
+    verified: dict,
+    candidate,
+) -> dict:
+    """Replace candidate continuations with shortest witnesses of the same exact outcomes.
+
+    This helper never changes fallback/candidate exact boundary values. It only
+    replays the already-selected verification seeds and searches for a shorter
+    semantic prefix that reaches each candidate boundary's exact pair.
+    """
+    obs = to_observation_class(raw)
+    root_player = int(obs.current.yourIndex)
+    root_turn = int(obs.current.turn)
+    start_prizes = len(obs.current.players[root_player].prize)
+    fb = tuple(verified.get("fallback") or ())
+    cand = tuple(candidate)
+    particles = list(verified.get("particles") or [])
+    started = time.perf_counter()
+    out_parts = []
+    total_expansions = 0
+
+    for part in particles:
+        seed = int(part.get("seed", 0))
+        original_rows = list(part.get("rows") or [])
+        row_map = {tuple(row.get("root_action") or ()): row for row in original_rows}
+        fallback_row = row_map.get(fb)
+        candidate_row = row_map.get(cand)
+        if (
+            fallback_row is None
+            or candidate_row is None
+            or not fallback_row.get("complete")
+            or not candidate_row.get("complete")
+        ):
+            return {
+                "ok": False,
+                "reason": "unqualified-source-verification",
+                "seconds": time.perf_counter() - started,
+                "expansions": total_expansions,
+            }
+        target_exact = tuple(candidate_row.get("boundary") or ())[:2]
+        fallback_exact = tuple(fallback_row.get("boundary") or ())[:2]
+        if len(target_exact) < 2 or len(fallback_exact) < 2 or target_exact < fallback_exact:
+            return {
+                "ok": False,
+                "reason": "source-exact-outcome-not-nondown",
+                "seconds": time.perf_counter() - started,
+                "expansions": total_expansions,
+            }
+
+        det = determinize_public(obs, own_deck, root_player, seed)
+        root = _canary.begin(obs, det)
+        try:
+            witness = _shortest_exact_witness(
+                root,
+                cand,
+                root_player,
+                root_turn,
+                start_prizes,
+                target_exact,
+            )
+        finally:
+            search_end()
+        total_expansions += int(witness.get("expansions", 0) or 0)
+        if not witness.get("ok"):
+            return {
+                "ok": False,
+                "reason": "exact-witness-not-found",
+                "seconds": time.perf_counter() - started,
+                "expansions": total_expansions,
+            }
+
+        new_rows = []
+        for row in original_rows:
+            if tuple(row.get("root_action") or ()) != cand:
+                new_rows.append(row)
+                continue
+            replaced = dict(row)
+            replaced["path"] = witness["path"]
+            replaced["semantic_path"] = witness["semantic_path"]
+            replaced["exact_path"] = witness["exact_path"]
+            replaced["proof_source"] = "shortest-exact-witness"
+            replaced["proof_expansions"] = int(witness.get("expansions", 0) or 0)
+            new_rows.append(replaced)
+        out_parts.append({**part, "rows": new_rows})
+
+    return {
+        **verified,
+        "ok": True,
+        "particles": out_parts,
+        "witness_seconds": time.perf_counter() - started,
+        "witness_expansions": total_expansions,
     }
