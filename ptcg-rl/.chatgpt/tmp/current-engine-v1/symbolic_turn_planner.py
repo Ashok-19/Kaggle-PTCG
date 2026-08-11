@@ -1281,6 +1281,7 @@ def verify_current_turn_pair(
     )
     parts = []
     started = time.perf_counter()
+    early_rejected = False
     for seed in seeds:
         det = determinize_public(obs, own_deck, root_player, seed)
         root = _canary.begin(obs, det)
@@ -1293,6 +1294,25 @@ def verify_current_turn_pair(
         finally:
             search_end()
         parts.append({"seed": int(seed), "rows": rows})
+        # Live authority requires the challenger to be exact-outcome nondown in
+        # every verification world. One incomplete or worse world can never be
+        # rescued by later worlds, so stop immediately on that decisive failure.
+        row_map = {tuple(row.get("root_action") or ()): row for row in rows}
+        fallback_row = row_map.get(fb)
+        candidate_row = row_map.get(cand)
+        if (
+            fallback_row is None
+            or candidate_row is None
+            or not fallback_row.get("complete")
+            or not candidate_row.get("complete")
+        ):
+            early_rejected = True
+            break
+        fallback_exact = tuple(fallback_row.get("boundary") or ())[:2]
+        candidate_exact = tuple(candidate_row.get("boundary") or ())[:2]
+        if len(fallback_exact) < 2 or len(candidate_exact) < 2 or candidate_exact < fallback_exact:
+            early_rejected = True
+            break
     return {
         "fallback": list(fb),
         "suggested": list(cand),
@@ -1300,5 +1320,7 @@ def verify_current_turn_pair(
         "particles": parts,
         "dependency_ids": list(int(x) for x in dependency_ids),
         "verification_seeds": seeds,
+        "verification_worlds_run": len(parts),
+        "early_rejected": bool(early_rejected),
         "seconds": time.perf_counter() - started,
     }
