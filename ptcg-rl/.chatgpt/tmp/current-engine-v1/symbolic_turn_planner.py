@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import importlib.util
 import math
 import sys
@@ -679,7 +680,21 @@ def _action_rank(obs, action: tuple[int, ...]) -> tuple:
 
 
 def legal_actions(obs, cap: int, fallback=None) -> list[tuple[int, ...]]:
-    raw = _canary.legal_actions(obs, cap=max(cap * 5, 64))
+    # DISCARD is a simultaneous set choice in CABT. The generic helper enumerates
+    # permutations because order can matter in other contexts; here that wastes
+    # almost the entire cap on reordered copies of the same discard set. Native
+    # branch probes show those permutations differ only in discard-list/log order.
+    if obs.select is not None and int(obs.select.context) == 8 and len(obs.select.option) <= 16:
+        n = len(obs.select.option)
+        lo = max(0, int(obs.select.minCount))
+        hi = min(n, int(obs.select.maxCount))
+        raw = [
+            values
+            for count in range(lo, hi + 1)
+            for values in itertools.combinations(range(n), count)
+        ]
+    else:
+        raw = _canary.legal_actions(obs, cap=max(cap * 5, 64))
     raw.sort(key=lambda a: _action_rank(obs, a), reverse=True)
     raw_obs = asdict(obs)
     out: list[tuple[int, ...]] = []
