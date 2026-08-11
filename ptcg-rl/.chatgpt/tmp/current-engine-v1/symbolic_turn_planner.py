@@ -681,14 +681,20 @@ def _action_rank(obs, action: tuple[int, ...]) -> tuple:
 def legal_actions(obs, cap: int, fallback=None) -> list[tuple[int, ...]]:
     raw = _canary.legal_actions(obs, cap=max(cap * 5, 64))
     raw.sort(key=lambda a: _action_rank(obs, a), reverse=True)
+    raw_obs = asdict(obs)
     out: list[tuple[int, ...]] = []
+    seen_functional = set()
     fb = tuple(fallback) if fallback is not None else None
     if fb is not None:
         out.append(fb)
+        seen_functional.add(functional_signature(raw_obs, fb))
     for a in raw:
         a = tuple(a)
-        if a not in out:
-            out.append(a)
+        signature = functional_signature(raw_obs, a)
+        if signature in seen_functional:
+            continue
+        seen_functional.add(signature)
+        out.append(a)
         if len(out) >= cap:
             break
     return out
