@@ -56,6 +56,15 @@ DEPTH = 10
 WIDTH = 6
 PER_ROOT_EXPANSIONS = 260
 
+# Separate rescue budget used only when the ordinary beam has not produced any
+# genuine own-turn boundary for a root. This improves qualification coverage
+# without making every ordinary search deeper/more expensive.
+TAIL_DEPTH = 5
+TAIL_WIDTH = 3
+TAIL_EXPANSION_CAP = 120
+TAIL_MAIN_CAP = 5
+TAIL_EFFECT_CAP = 12
+
 
 def _prize_value(cid: int) -> int:
     d = CARD.get(int(cid))
@@ -727,6 +736,40 @@ def functional_signature(raw: dict, action) -> tuple:
     return tuple(out)
 
 
+def _completion_actions(obs) -> list[tuple[int, ...]]:
+    """Legal actions ordered to finish the current turn quickly and safely."""
+    if obs.select is None:
+        return []
+    context = int(obs.select.context)
+    cap = TAIL_MAIN_CAP if context == 0 else TAIL_EFFECT_CAP
+    raw = _canary.legal_actions(obs, cap=max(64, cap * 8))
+    actions = [tuple(action) for action in raw]
+    if context != 0:
+        actions.sort(key=lambda action: _action_rank(obs, action), reverse=True)
+        return actions[:cap]
+
+    # ATTACK/END are true turn-boundary producers. Preserve all of them before
+    # ordinary development choices so a long setup line is not declared
+    # incomparable merely because the normal beam horizon expired one step early.
+    boundary = []
+    ordinary = []
+    for action in actions:
+        types = [int(obs.select.option[i].type) for i in action]
+        if any(t in (13, 14) for t in types):
+            boundary.append(action)
+        else:
+            ordinary.append(action)
+    boundary.sort(key=lambda action: _action_rank(obs, action), reverse=True)
+    ordinary.sort(key=lambda action: _action_rank(obs, action), reverse=True)
+    out = list(boundary)
+    for action in ordinary:
+        if action not in out:
+            out.append(action)
+        if len(out) >= max(cap, len(boundary)):
+            break
+    return out
+
+
 class Node:
     __slots__ = ("state", "path", "semantic_path")
     def __init__(self, state, path, semantic_path):
@@ -812,22 +855,105 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
         if best_boundary is not None and best_boundary[0] == 6:
             break
 
-    for node in front:
-        obs = node.state.observation
-        v = strategic_vector(obs, root_player, root_turn, start_prizes)
-        if v > best_mid:
-            best_mid = v
-        # Depth exhaustion is not a turn boundary. Only a genuinely completed
-        # own turn may populate best_boundary / executable semantic_path.
-        if _own_turn_boundary(obs, root_player, root_turn):
-            if best_boundary is None or v > best_boundary:
-                best_boundary = v
-                best_path = list(node.path)
-                best_semantic_path = list(node.semantic_path)
-        try:
-            search_release(node.state.searchId)
-        except Exception:
-            pass
+    # If the ordinary beam exhausted its depth/budget without any real boundary,
+    # use a small independent rescue tail. This tail is qualification-oriented:
+    # effect choices are resolved and ATTACK/END actions are preserved first.
+    tail_expansions = 0
+    if best_boundary is None and front:
+        tail_front = front
+        front = []
+        for _tail_depth in range(TAIL_DEPTH):
+            nxt: list[Node] = []
+            for node in tail_front:
+                obs = node.state.observation
+                v = strategic_vector(obs, root_player, root_turn, start_prizes)
+                if v > best_mid:
+                    best_mid = v
+                if _own_turn_boundary(obs, root_player, root_turn):
+                    if best_boundary is None or v > best_boundary:
+                        best_boundary = v
+                        best_path = list(node.path)
+                        best_semantic_path = list(node.semantic_path)
+                    try:
+                        search_release(node.state.searchId)
+                    except Exception:
+                        pass
+                    continue
+                if tail_expansions >= TAIL_EXPANSION_CAP:
+                    try:
+                        search_release(node.state.searchId)
+                    except Exception:
+                        pass
+                    continue
+                for action in _completion_actions(obs):
+                    if tail_expansions >= TAIL_EXPANSION_CAP:
+                        break
+                    try:
+                        child = search_step(node.state.searchId, list(action))
+                    except Exception:
+                        continue
+                    tail_expansions += 1
+                    expansions += 1
+                    child_obs = child.observation
+                    child_v = strategic_vector(child_obs, root_player, root_turn, start_prizes)
+                    if child_v > best_mid:
+                        best_mid = child_v
+                    step_semantic = semantic_signature(asdict(obs), action)
+                    child_path = node.path + [tuple(action)]
+                    child_semantic_path = node.semantic_path + [step_semantic]
+                    if _own_turn_boundary(child_obs, root_player, root_turn):
+                        if best_boundary is None or child_v > best_boundary:
+                            best_boundary = child_v
+                            best_path = list(child_path)
+                            best_semantic_path = list(child_semantic_path)
+                        try:
+                            search_release(child.searchId)
+                        except Exception:
+                            pass
+                    else:
+                        nxt.append(Node(child, child_path, child_semantic_path))
+                try:
+                    search_release(node.state.searchId)
+                except Exception:
+                    pass
+            if best_boundary is not None:
+                for node in nxt:
+                    try:
+                        search_release(node.state.searchId)
+                    except Exception:
+                        pass
+                tail_front = []
+                break
+            if not nxt:
+                tail_front = []
+                break
+            nxt.sort(key=lambda n: strategic_vector(n.state.observation, root_player, root_turn, start_prizes), reverse=True)
+            tail_front = nxt[:TAIL_WIDTH]
+            for node in nxt[TAIL_WIDTH:]:
+                try:
+                    search_release(node.state.searchId)
+                except Exception:
+                    pass
+        for node in tail_front:
+            try:
+                search_release(node.state.searchId)
+            except Exception:
+                pass
+    else:
+        for node in front:
+            obs = node.state.observation
+            v = strategic_vector(obs, root_player, root_turn, start_prizes)
+            if v > best_mid:
+                best_mid = v
+            if _own_turn_boundary(obs, root_player, root_turn):
+                if best_boundary is None or v > best_boundary:
+                    best_boundary = v
+                    best_path = list(node.path)
+                    best_semantic_path = list(node.semantic_path)
+            try:
+                search_release(node.state.searchId)
+            except Exception:
+                pass
 
     complete = best_boundary is not None
     # A root can hit the expansion cap before reaching an explicit end-of-turn
@@ -845,6 +971,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
         "path": best_path,
         "semantic_path": best_semantic_path,
         "complete": bool(complete),
+        "tail_expansions": int(tail_expansions),
         "expansions": expansions,
     }
 
