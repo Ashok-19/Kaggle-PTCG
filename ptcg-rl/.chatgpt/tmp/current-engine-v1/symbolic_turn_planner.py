@@ -870,16 +870,30 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                 except Exception:
                     continue
                 expansions += 1
-                v = strategic_vector(child.observation, root_player, root_turn, start_prizes)
+                child_obs = child.observation
+                v = strategic_vector(child_obs, root_player, root_turn, start_prizes)
                 if v > best_mid:
                     best_mid = v
                 step_semantic = functional_signature(asdict(obs), action)
-                nxt.append(Node(
-                    child,
-                    node.path + [tuple(action)],
-                    node.semantic_path + [step_semantic],
-                    node.exact_path + [(int(v[0]), int(v[1]))],
-                ))
+                child_path = node.path + [tuple(action)]
+                child_semantic_path = node.semantic_path + [step_semantic]
+                child_exact_path = node.exact_path + [(int(v[0]), int(v[1]))]
+                # Turn-ending children are already complete evidence. Harvest them
+                # immediately instead of spending beam width on states that cannot
+                # be developed further; the remaining beam can explore free setup
+                # actions before the eventual ATTACK/END boundary.
+                if _own_turn_boundary(child_obs, root_player, root_turn):
+                    if best_boundary is None or v > best_boundary:
+                        best_boundary = v
+                        best_path = list(child_path)
+                        best_semantic_path = list(child_semantic_path)
+                        best_exact_path = list(child_exact_path)
+                    try:
+                        search_release(child.searchId)
+                    except Exception:
+                        pass
+                else:
+                    nxt.append(Node(child, child_path, child_semantic_path, child_exact_path))
             try:
                 search_release(node.state.searchId)
             except Exception:
