@@ -155,7 +155,16 @@ def next_planned_action(raw: dict, policy_module, plan: dict, step_index: int):
     wanted = tuple(tuple(int(v) for v in sig) for sig in expected)
     if actual != wanted:
         return None, {"ok": False, "reason": "semantic_mismatch", "expected": expected, "actual": actual}
-    sync = sync_policy_action(policy_module, raw, action)
+
+    # Process Dawn exactly once, but preserve its own choice whenever it is
+    # functionally equivalent to the planned step (notably forced prize picks).
+    predicted, probe_state = probe_policy_action(policy_module, raw)
+    if legal(raw, predicted) and _signature(raw, predicted) == wanted:
+        action = list(predicted)
+        actual = wanted
+        sync = {"predicted": list(predicted), "forced": False}
+    else:
+        sync = apply_probe_choice(policy_module, raw, action, probe_state)
     return action, {
         "ok": True,
         "reason": "planned",

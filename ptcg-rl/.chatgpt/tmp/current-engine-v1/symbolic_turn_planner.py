@@ -743,12 +743,18 @@ def functional_signature(raw: dict, action) -> tuple:
         sem = pf.semantic(raw, option)
         source_zone = int(sem.get("source_zone", 0) or 0)
         target_area = int(sem.get("target_area", 0) or 0)
+        area = int(sem.get("area", 0) or 0)
+        action_type = int(sem.get("type", -1))
         source_serial = int(sem.get("source_serial", -1) or -1) if source_zone in (4, 5) else -1
         target_serial = int(sem.get("target_serial", -1) or -1) if target_area in (4, 5) else -1
+        # Prize identities are hidden before the KO and do not affect whether the
+        # forced prize is taken. Canonicalize only that choice; Dawn may still pick
+        # its preferred revealed prize card at execution time.
+        source_id = 0 if action_type == 3 and area == 6 else int(sem.get("source_id", 0))
         out.append((
-            int(sem.get("type", -1)), int(sem.get("source_id", 0)),
+            action_type, source_id,
             int(sem.get("target_id", 0)), int(sem.get("attack_id", 0)),
-            int(sem.get("area", 0)), int(sem.get("inplay_area", 0)),
+            area, int(sem.get("inplay_area", 0)),
             int(sem.get("inplay_index", -1)), source_serial, target_serial,
             int(option.get("number", -1) if option.get("number") is not None else -1),
         ))
@@ -790,11 +796,12 @@ def _completion_actions(obs) -> list[tuple[int, ...]]:
 
 
 class Node:
-    __slots__ = ("state", "path", "semantic_path")
-    def __init__(self, state, path, semantic_path):
+    __slots__ = ("state", "path", "semantic_path", "exact_path")
+    def __init__(self, state, path, semantic_path, exact_path):
         self.state = state
         self.path = path
         self.semantic_path = semantic_path
+        self.exact_path = exact_path
 
 
 def _own_turn_boundary(obs, root_player: int, root_turn: int) -> bool:
@@ -816,11 +823,18 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
     root_semantic = functional_signature(root_raw, root_action)
     first = search_step(root.searchId, list(root_action))
     expansions = 1
-    front = [Node(first, [tuple(root_action)], [root_semantic])]
+    first_vector = strategic_vector(first.observation, root_player, root_turn, start_prizes)
+    front = [Node(
+        first,
+        [tuple(root_action)],
+        [root_semantic],
+        [(int(first_vector[0]), int(first_vector[1]))],
+    )]
     best_boundary = None
     best_path = None
     best_semantic_path = None
-    best_mid = strategic_vector(first.observation, root_player, root_turn, start_prizes)
+    best_exact_path = None
+    best_mid = first_vector
 
     for _depth in range(1, DEPTH):
         nxt: list[Node] = []
@@ -835,6 +849,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                     best_boundary = v
                     best_path = list(node.path)
                     best_semantic_path = list(node.semantic_path)
+                    best_exact_path = list(node.exact_path)
                 try:
                     search_release(node.state.searchId)
                 except Exception:
@@ -859,7 +874,12 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                 if v > best_mid:
                     best_mid = v
                 step_semantic = functional_signature(asdict(obs), action)
-                nxt.append(Node(child, node.path + [tuple(action)], node.semantic_path + [step_semantic]))
+                nxt.append(Node(
+                    child,
+                    node.path + [tuple(action)],
+                    node.semantic_path + [step_semantic],
+                    node.exact_path + [(int(v[0]), int(v[1]))],
+                ))
             try:
                 search_release(node.state.searchId)
             except Exception:
@@ -896,6 +916,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                         best_boundary = v
                         best_path = list(node.path)
                         best_semantic_path = list(node.semantic_path)
+                        best_exact_path = list(node.exact_path)
                     try:
                         search_release(node.state.searchId)
                     except Exception:
@@ -923,17 +944,19 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                     step_semantic = functional_signature(asdict(obs), action)
                     child_path = node.path + [tuple(action)]
                     child_semantic_path = node.semantic_path + [step_semantic]
+                    child_exact_path = node.exact_path + [(int(child_v[0]), int(child_v[1]))]
                     if _own_turn_boundary(child_obs, root_player, root_turn):
                         if best_boundary is None or child_v > best_boundary:
                             best_boundary = child_v
                             best_path = list(child_path)
                             best_semantic_path = list(child_semantic_path)
+                            best_exact_path = list(child_exact_path)
                         try:
                             search_release(child.searchId)
                         except Exception:
                             pass
                     else:
-                        nxt.append(Node(child, child_path, child_semantic_path))
+                        nxt.append(Node(child, child_path, child_semantic_path, child_exact_path))
                 try:
                     search_release(node.state.searchId)
                 except Exception:
@@ -972,6 +995,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
                     best_boundary = v
                     best_path = list(node.path)
                     best_semantic_path = list(node.semantic_path)
+                    best_exact_path = list(node.exact_path)
             try:
                 search_release(node.state.searchId)
             except Exception:
@@ -992,6 +1016,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
         "mid": best_mid,
         "path": best_path,
         "semantic_path": best_semantic_path,
+        "exact_path": best_exact_path,
         "complete": bool(complete),
         "tail_expansions": int(tail_expansions),
         "expansions": expansions,
@@ -1103,4 +1128,142 @@ def solve(raw, own_deck: list[int], seed_base: int, fallback, particles: int = 2
         "particles": parts,
         "seconds": time.perf_counter() - started,
         "expansions": sum(p["expansions"] for p in parts),
+    }
+
+
+# --- Sparse exact authority verification -------------------------------------------------
+# Fast solve() is a proposal generator. Exact live authority gets a second, much
+# narrower search over only fallback vs challenger across deliberately diverse own
+# hidden-deck/prize worlds. This catches lines that depend on a search target being
+# unprized or on one favorable hidden deck order.
+
+def hidden_dependency_ids(result: dict) -> tuple[int, ...]:
+    """Card identities selected from hidden DECK/LOOKING zones by the candidate."""
+    candidate = tuple(result.get("suggested") or [])
+    ids = set()
+    for part in result.get("particles") or []:
+        rows = {tuple(row.get("root_action") or ()): row for row in part.get("rows") or []}
+        row = rows.get(candidate)
+        if not row:
+            continue
+        for step in row.get("semantic_path") or []:
+            for sig in step:
+                if len(sig) < 5:
+                    continue
+                source_id = int(sig[1])
+                area = int(sig[4])
+                if source_id > 0 and area in (1, 12):  # DECK / LOOKING
+                    ids.add(source_id)
+    return tuple(sorted(ids))
+
+
+def _stratified_verification_seeds(
+    raw: dict,
+    own_deck: list[int],
+    seed_base: int,
+    dependency_ids=(),
+    *,
+    max_worlds: int = 4,
+    pool_size: int = 24,
+) -> list[int]:
+    """Choose diverse own-hidden worlds, emphasizing scarce candidate dependencies."""
+    obs = to_observation_class(raw)
+    root_player = int(obs.current.yourIndex)
+    rows = []
+    for index in range(max(int(pool_size), int(max_worlds))):
+        seed = int(seed_base) + 104729 * index
+        det = determinize_public(obs, own_deck, root_player, seed)
+        deck = tuple(int(x) for x in det.get("your_deck") or [])
+        prize = tuple(int(x) for x in det.get("your_prize") or [])
+        counts = {int(cid): deck.count(int(cid)) for cid in dependency_ids}
+        rows.append({
+            "seed": seed,
+            "counts": counts,
+            "top": deck[:7],
+            "prize": prize,
+        })
+
+    selected = []
+    used = set()
+
+    def add(row):
+        if row["seed"] in used or len(selected) >= int(max_worlds):
+            return
+        used.add(row["seed"])
+        selected.append(int(row["seed"]))
+
+    # For every hidden card the proof wants, force coverage of the world where
+    # the fewest copies remain searchable in deck.
+    for cid in dependency_ids:
+        if len(selected) >= int(max_worlds):
+            break
+        add(min(rows, key=lambda row: (row["counts"].get(int(cid), 0), row["seed"])))
+
+    # Add distinct top-deck signatures because LOOKING/top-N effects can diverge
+    # even when aggregate card counts match.
+    seen_top = set()
+    for row in rows:
+        if len(selected) >= int(max_worlds):
+            break
+        key = row["top"]
+        if key in seen_top:
+            continue
+        seen_top.add(key)
+        add(row)
+
+    for row in rows:
+        if len(selected) >= int(max_worlds):
+            break
+        add(row)
+    return selected
+
+
+def verify_current_turn_pair(
+    raw: dict,
+    own_deck: list[int],
+    seed_base: int,
+    fallback,
+    candidate,
+    *,
+    dependency_ids=(),
+    worlds: int = 4,
+    pool_size: int = 24,
+) -> dict:
+    """Re-search only fallback/challenger across stratified own-hidden worlds."""
+    obs = to_observation_class(raw)
+    root_player = int(obs.current.yourIndex)
+    root_turn = int(obs.current.turn)
+    start_prizes = len(obs.current.players[root_player].prize)
+    fb = tuple(fallback)
+    cand = tuple(candidate)
+    seeds = _stratified_verification_seeds(
+        raw,
+        own_deck,
+        seed_base,
+        dependency_ids,
+        max_worlds=max(2, int(worlds)),
+        pool_size=max(int(pool_size), int(worlds)),
+    )
+    parts = []
+    started = time.perf_counter()
+    for seed in seeds:
+        det = determinize_public(obs, own_deck, root_player, seed)
+        root = _canary.begin(obs, det)
+        try:
+            rows = [
+                _search_root(root, fb, root_player, root_turn, start_prizes),
+            ]
+            if cand != fb:
+                rows.append(_search_root(root, cand, root_player, root_turn, start_prizes))
+        finally:
+            search_end()
+        parts.append({"seed": int(seed), "rows": rows})
+    return {
+        "fallback": list(fb),
+        "suggested": list(cand),
+        "disagrees": cand != fb,
+        "particles": parts,
+        "dependency_ids": list(int(x) for x in dependency_ids),
+        "verification_seeds": seeds,
+        "seconds": time.perf_counter() - started,
     }

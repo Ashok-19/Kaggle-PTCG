@@ -44,6 +44,9 @@ class AuthorityDiagnostics:
     searches: int = 0
     disagreements: int = 0
     exact_candidates: int = 0
+    proof_prefix_candidates: int = 0
+    proof_verifications: int = 0
+    proof_rejections: int = 0
     authorizations: int = 0
     terminal_authorizations: int = 0
     prize_authorizations: int = 0
@@ -52,6 +55,7 @@ class AuthorityDiagnostics:
     fallback_unqualified: int = 0
     search_failures: int = 0
     search_seconds: float = 0.0
+    verification_seconds: float = 0.0
     last_reason: str = ""
 
 
@@ -62,9 +66,11 @@ class ExactAuthorityRuntime:
       * Dawn and challenger reach genuine current-turn boundaries in every particle;
       * challenger is no worse in (terminal result, prizes taken) in every particle;
       * challenger is strictly better on one of those exact components somewhere;
-      * the entire searched semantic path is identical across hidden particles.
+      * every particle shares one functional path through the step where that
+        exact terminal/prize gain is already realized in the native state.
 
-    Everything else returns the already-probed Dawn action. This runtime therefore
+    Only that proof-producing prefix is executed. Everything else returns the
+    already-probed Dawn action. This runtime therefore
     does not use scalar/race/model scores as live authority.
     """
 
@@ -77,6 +83,8 @@ class ExactAuthorityRuntime:
         min_turn: int = 2,
         max_searches_per_turn: int = 2,
         max_root_options: int = 16,
+        verification_worlds: int = 4,
+        verification_pool: int = 24,
     ) -> None:
         self.fallback = fallback_module
         self.deck = [int(x) for x in deck]
@@ -84,6 +92,8 @@ class ExactAuthorityRuntime:
         self.min_turn = int(min_turn)
         self.max_searches_per_turn = max(1, int(max_searches_per_turn))
         self.max_root_options = max(2, int(max_root_options))
+        self.verification_worlds = max(2, int(verification_worlds))
+        self.verification_pool = max(self.verification_worlds, int(verification_pool))
         self.memory = PublicGameMemory()
         self.diagnostics = AuthorityDiagnostics()
         self._turn_searches: dict[int, int] = {}
@@ -167,6 +177,8 @@ class ExactAuthorityRuntime:
             return {"qualified": True, "gain": False, "terminal": False, "prize": False}
         parts = result.get("particles") or []
         pairs = []
+        proof_lengths = []
+        candidate_paths = []
         for part in parts:
             rows = {tuple(row["root_action"]): row for row in part.get("rows") or []}
             fr = rows.get(fb)
@@ -177,13 +189,24 @@ class ExactAuthorityRuntime:
             cv = tuple(cr.get("boundary") or ())
             if len(fv) < 2 or len(cv) < 2:
                 return {"qualified": False, "gain": False, "terminal": False, "prize": False}
+            exact_path = [tuple(int(x) for x in step[:2]) for step in (cr.get("exact_path") or [])]
+            semantic_path = list(cr.get("semantic_path") or [])
+            if not exact_path or len(exact_path) != len(semantic_path):
+                return {"qualified": False, "gain": False, "terminal": False, "prize": False}
             pairs.append((cv[:2], fv[:2]))
+            candidate_paths.append(semantic_path)
+            proof_lengths.append(next(
+                (index + 1 for index, exact_step in enumerate(exact_path) if exact_step > fv[:2]),
+                0,
+            ))
         if not pairs:
             return {"qualified": False, "gain": False, "terminal": False, "prize": False}
         nondown = all(cv >= fv for cv, fv in pairs)
         gain = nondown and any(cv > fv for cv, fv in pairs)
         terminal = gain and any(cv[0] > fv[0] for cv, fv in pairs)
         prize = gain and not terminal and any(cv[1] > fv[1] for cv, fv in pairs)
+        if gain and any(length <= 0 for length in proof_lengths):
+            return {"qualified": False, "gain": False, "terminal": False, "prize": False}
         return {
             "qualified": True,
             "nondown": nondown,
@@ -191,6 +214,30 @@ class ExactAuthorityRuntime:
             "terminal": terminal,
             "prize": prize,
             "pairs": pairs,
+            "proof_lengths": proof_lengths,
+            "candidate_paths": candidate_paths,
+        }
+
+    @staticmethod
+    def _proof_plan(exact: dict[str, Any]) -> dict[str, Any] | None:
+        paths = list(exact.get("candidate_paths") or [])
+        lengths = [int(x) for x in (exact.get("proof_lengths") or [])]
+        if not paths or len(paths) != len(lengths) or any(length <= 0 for length in lengths):
+            return None
+        required = max(lengths)
+        if any(len(path) < required for path in paths):
+            return None
+        prefix = []
+        for index in range(required):
+            step = paths[0][index]
+            if not all(path[index] == step for path in paths[1:]):
+                return None
+            prefix.append(step)
+        return {
+            "semantic_path": [[list(sig) for sig in step] for step in prefix],
+            "steps": required,
+            "proof_lengths": lengths,
+            "consensus_particles": len(paths),
         }
 
     def _continue_plan(self, raw: dict) -> list[int] | None:
@@ -269,7 +316,6 @@ class ExactAuthorityRuntime:
             return fallback_action
         self.diagnostics.disagreements += 1
 
-        plan = result.get("plan")
         exact = self._exact_dominance(result)
         if not exact.get("qualified"):
             self.diagnostics.fallback_unqualified += 1
@@ -279,14 +325,46 @@ class ExactAuthorityRuntime:
             self.diagnostics.last_reason = "no-current-turn-exact-gain"
             return fallback_action
         self.diagnostics.exact_candidates += 1
-        if not plan or not plan.get("complete_consensus"):
-            self.diagnostics.last_reason = "exact-gain-without-full-consensus"
-            return fallback_action
-
         candidate = list(result.get("suggested") or [])
         if not candidate:
             self.diagnostics.last_reason = "empty-candidate"
             return fallback_action
+
+        # Proposal particles are deliberately insufficient for live authority.
+        # Re-search only fallback vs challenger across own-hidden worlds selected
+        # to stress every DECK/LOOKING dependency in the candidate continuation.
+        dependencies = PLANNER.hidden_dependency_ids(result)
+        self.diagnostics.proof_verifications += 1
+        verification_started = time.perf_counter()
+        try:
+            verified = PLANNER.verify_current_turn_pair(
+                raw,
+                self.deck,
+                self._seed(raw) + 5000003,
+                fallback_action,
+                candidate,
+                dependency_ids=dependencies,
+                worlds=self.verification_worlds,
+                pool_size=self.verification_pool,
+            )
+        except Exception:
+            self.diagnostics.proof_rejections += 1
+            self.diagnostics.last_reason = "proof-verification-failed"
+            return fallback_action
+        finally:
+            self.diagnostics.verification_seconds += time.perf_counter() - verification_started
+
+        exact = self._exact_dominance(verified)
+        if not exact.get("qualified") or not exact.get("gain"):
+            self.diagnostics.proof_rejections += 1
+            self.diagnostics.last_reason = "exact-gain-rejected-by-hidden-worlds"
+            return fallback_action
+        plan = self._proof_plan(exact)
+        if not plan:
+            self.diagnostics.proof_rejections += 1
+            self.diagnostics.last_reason = "exact-gain-without-proof-consensus"
+            return fallback_action
+        self.diagnostics.proof_prefix_candidates += 1
         EXECUTOR.apply_probe_choice(self.fallback, raw, candidate, probe_state)
         self._plan = copy.deepcopy(plan)
         self._plan_step = 1
