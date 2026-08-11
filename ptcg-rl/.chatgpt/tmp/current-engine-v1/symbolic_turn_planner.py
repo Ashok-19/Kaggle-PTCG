@@ -735,6 +735,17 @@ class Node:
         self.semantic_path = semantic_path
 
 
+def _own_turn_boundary(obs, root_player: int, root_turn: int) -> bool:
+    st = obs.current
+    return (
+        st is None
+        or int(st.result) != -1
+        or obs.select is None
+        or int(st.yourIndex) != int(root_player)
+        or int(st.turn) != int(root_turn)
+    )
+
+
 def _search_root(root, root_action, root_player: int, root_turn: int, start_prizes: int):
     root_raw = asdict(root.observation)
     root_semantic = semantic_signature(root_raw, root_action)
@@ -753,7 +764,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
             st = obs.current
             if st is None:
                 continue
-            if int(st.result) != -1 or obs.select is None or int(st.yourIndex) != root_player or int(st.turn) != root_turn:
+            if _own_turn_boundary(obs, root_player, root_turn):
                 v = strategic_vector(obs, root_player, root_turn, start_prizes)
                 if best_boundary is None or v > best_boundary:
                     best_boundary = v
@@ -802,16 +813,23 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
             break
 
     for node in front:
-        v = strategic_vector(node.state.observation, root_player, root_turn, start_prizes)
-        if best_boundary is None or v > best_boundary:
-            best_boundary = v
-            best_path = list(node.path)
-            best_semantic_path = list(node.semantic_path)
+        obs = node.state.observation
+        v = strategic_vector(obs, root_player, root_turn, start_prizes)
+        if v > best_mid:
+            best_mid = v
+        # Depth exhaustion is not a turn boundary. Only a genuinely completed
+        # own turn may populate best_boundary / executable semantic_path.
+        if _own_turn_boundary(obs, root_player, root_turn):
+            if best_boundary is None or v > best_boundary:
+                best_boundary = v
+                best_path = list(node.path)
+                best_semantic_path = list(node.semantic_path)
         try:
             search_release(node.state.searchId)
         except Exception:
             pass
 
+    complete = best_boundary is not None
     # A root can hit the expansion cap before reaching an explicit end-of-turn
     # boundary.  Keep it comparable, but below any fully resolved boundary, by
     # using its best partial state as a conservative fallback.
@@ -826,6 +844,7 @@ def _search_root(root, root_action, root_player: int, root_turn: int, start_priz
         "mid": best_mid,
         "path": best_path,
         "semantic_path": best_semantic_path,
+        "complete": bool(complete),
         "expansions": expansions,
     }
 
@@ -870,6 +889,13 @@ def solve(raw, own_deck: list[int], seed_base: int, fallback, particles: int = 2
     common = set(maps[0])
     for m in maps[1:]:
         common &= set(m)
+    # Comparisons are valid only for roots that reached a real end-of-turn or
+    # terminal boundary in every hidden particle. Partial depth-limited states
+    # are diagnostics/pruning signals only and never earn live authority.
+    common = {
+        action for action in common
+        if all(bool(m[action].get("complete")) for m in maps)
+    }
 
     def robust_key(a):
         rr = [m[a] for m in maps]
@@ -883,9 +909,14 @@ def solve(raw, own_deck: list[int], seed_base: int, fallback, particles: int = 2
         # non-fallback roots that are otherwise macro-equivalent.
         return (worst_macro, a == fb, mean_scalar)
 
-    best = max(common, key=robust_key) if common else fb
-    if fb in common and robust_key(best) <= robust_key(fb):
+    if fb not in common:
+        # Search has no comparison authority if Dawn's own line could not reach a
+        # genuine boundary under the exact same particle/budget qualification.
         best = fb
+    else:
+        best = max(common, key=robust_key)
+        if robust_key(best) <= robust_key(fb):
+            best = fb
     # Physical duplicate copies are not strategic disagreements. Keep Dawn's
     # already-synchronized action whenever the functional action is identical.
     if best != fb and functional_signature(raw, best) == functional_signature(raw, fb):
