@@ -49,6 +49,7 @@ class AuthorityDiagnostics:
     proof_rejections: int = 0
     tactical_authorizations: int = 0
     adrena_ko_authorizations: int = 0
+    shadow_split_authorizations: int = 0
     authorizations: int = 0
     terminal_authorizations: int = 0
     prize_authorizations: int = 0
@@ -345,6 +346,82 @@ class ExactAuthorityRuntime:
             return bench[index] if 0 <= index < len(bench) and isinstance(bench[index], dict) else None
         return None
 
+    @staticmethod
+    def _has_rule_box(card_id: int) -> bool:
+        data = PLANNER.CARD.get(int(card_id))
+        return bool(data is not None and (bool(getattr(data, "ex", False)) or bool(getattr(data, "megaEx", False))))
+
+    def _exact_shadow_split_finish(self, raw: dict, fallback_action: list[int], probe_state: dict):
+        """Redirect Shadow Bullet's 30 bench damage only for an exact final-prize split."""
+        select = self._select(raw)
+        context = int(select.get("context", -1) if select.get("context") is not None else -1)
+        effect = select.get("effect") if isinstance(select.get("effect"), dict) else {}
+        if context != 15 or int(effect.get("id", 0) or 0) != 648:
+            return None
+        current = self._current(raw)
+        your_index = current.get("yourIndex")
+        players = current.get("players") or []
+        if not isinstance(your_index, int) or not (0 <= your_index < len(players)):
+            return None
+        opponent_index = 1 - your_index
+        if not (0 <= opponent_index < len(players)):
+            return None
+        me = players[your_index] if isinstance(players[your_index], dict) else {}
+        opponent = players[opponent_index] if isinstance(players[opponent_index], dict) else {}
+        active = opponent.get("active") or []
+        active = active[0] if active and isinstance(active[0], dict) else None
+        # CABT exposes the already-hit Active at hp==0 during Shadow Bullet's
+        # bench-target selection. Its prizes have not yet been taken at this point.
+        if not isinstance(active, dict) or int(active.get("hp", -1) or 0) != 0:
+            return None
+        active_prize = int(PLANNER._prize_value(int(active.get("id", 0) or 0)))
+        remaining_prizes = len(me.get("prize") or [])
+        if active_prize <= 0 or remaining_prizes <= active_prize:
+            # Active KO alone already wins; target choice cannot improve the result.
+            return None
+        bench = opponent.get("bench") or []
+        shaymin_live = any(
+            isinstance(card, dict) and int(card.get("id", 0) or 0) == 343 and int(card.get("hp", 0) or 0) > 0
+            for card in bench
+        )
+        options = select.get("option") or []
+        candidates = []
+        for index, option in enumerate(options):
+            if not isinstance(option, dict) or int(option.get("area", 0) or 0) != 5:
+                continue
+            bench_index = option.get("index")
+            if not isinstance(bench_index, int) or not (0 <= bench_index < len(bench)):
+                continue
+            pokemon = bench[bench_index]
+            if not isinstance(pokemon, dict):
+                continue
+            card_id = int(pokemon.get("id", 0) or 0)
+            hp = int(pokemon.get("hp", 0) or 0)
+            if not (0 < hp <= 30):
+                continue
+            # Known public attack-damage protection: Tera bench rule and Shaymin's
+            # Flower Curtain for non-Rule-Box Benched Pokemon.
+            if card_id in (96, 117):
+                continue
+            if shaymin_live and not self._has_rule_box(card_id):
+                continue
+            prize_value = int(PLANNER._prize_value(card_id))
+            if active_prize + prize_value < remaining_prizes:
+                continue
+            candidates.append((prize_value, -hp, -index, index))
+        if not candidates:
+            return None
+        # Preserve Dawn if it already selected any exact winning split target.
+        winning_indices = {row[-1] for row in candidates}
+        if any(isinstance(index, int) and index in winning_indices for index in fallback_action):
+            return None
+        candidate = [int(max(candidates)[-1])]
+        EXECUTOR.apply_probe_choice(self.fallback, raw, candidate, probe_state)
+        self.diagnostics.tactical_authorizations += 1
+        self.diagnostics.shadow_split_authorizations += 1
+        self.diagnostics.last_reason = "authorized-shadow-final-split"
+        return candidate
+
     def _exact_adrena_ko(self, raw: dict, fallback_action: list[int], probe_state: dict):
         """Correct only a visible Adrena-Brain KO that Dawn's target would miss."""
         select = self._select(raw)
@@ -430,6 +507,9 @@ class ExactAuthorityRuntime:
         # already synchronized to the action we return.
         fallback_action, probe_state = EXECUTOR.probe_policy_action(self.fallback, raw)
         fallback_action = list(fallback_action)
+        tactical = self._exact_shadow_split_finish(raw, fallback_action, probe_state)
+        if tactical is not None:
+            return tactical
         tactical = self._exact_adrena_ko(raw, fallback_action, probe_state)
         if tactical is not None:
             return tactical
