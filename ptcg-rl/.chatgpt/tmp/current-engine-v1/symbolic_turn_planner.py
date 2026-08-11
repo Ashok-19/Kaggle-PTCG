@@ -263,20 +263,21 @@ def _basic_energy_in_discard(ps, energy_type: int) -> int:
     return total
 
 
-def _public_attack_threat(attacker, defender, attacker_ps, defender_ps) -> tuple[int, bool, bool]:
-    """Return (best_damage_or_counters, delayed_auto_ko, uncertain_high_variance).
+def _public_attack_profile(attacker, defender, attacker_ps, defender_ps) -> tuple[int, int, bool, bool]:
+    """Return (certain_damage, damage_ceiling, delayed_auto_ko, high_variance).
 
-    Only public state and official attack text are used. Common conditional forms
-    in the current card pool are evaluated explicitly; stochastic top-deck attacks
-    contribute a ceiling and are marked uncertain so they cannot masquerade as an
-    exact next-turn KO.
+    Exact public-text damage contributes to `certain_damage`. Hidden top-deck or
+    other unresolved stochastic multipliers contribute only to `damage_ceiling`.
+    This prevents a possible high roll from being treated as repeatable throughput
+    in the prize-race deadline while still exposing its one-turn knockout risk.
     """
     if attacker is None:
-        return (0, False, False)
+        return (0, 0, False, False)
     data = CARD.get(int(attacker.id))
     if data is None:
-        return (0, False, False)
-    best = 0
+        return (0, 0, False, False)
+    best_certain = 0
+    best_ceiling = 0
     delayed = False
     uncertain = False
     for aid in list(getattr(data, "attacks", None) or []):
@@ -286,41 +287,53 @@ def _public_attack_threat(attacker, defender, attacker_ps, defender_ps) -> tuple
         text = (getattr(attack, "text", "") or "")
         low = text.lower()
         damage = int(getattr(attack, "damage", 0) or 0)
+        ceiling = damage
         counters = False
+        attack_uncertain = False
 
-        # e.g. Myriad Leaf Shower: 30 more for each Energy on both Active.
         import re
         m = re.search(r"does (\d+) more damage for each energy attached to both active", low)
         if m:
             damage += int(m.group(1)) * (_energy_count(attacker) + _energy_count(defender))
+            ceiling = damage
 
-        # e.g. Alakazam Powerful Hand: 2 counters per card in the attacker's hand.
         m = re.search(r"place (\d+) damage counters?.*for each card in your hand", low)
         if m:
             damage = 10 * int(m.group(1)) * int(getattr(attacker_ps, "handCount", 0) or 0)
+            ceiling = damage
             counters = True
 
-        # e.g. Kyogre Riptide: 20 per Basic {W} Energy in discard.
         m = re.search(r"does (\d+) damage for each basic \{([grwl pfdm])\} energy card in your discard pile", low.replace("{l}", "{l}"))
         if m:
             symbol = m.group(2).upper().replace(" ", "")
             et = _ENERGY_SYMBOL.get(symbol)
             if et is not None:
                 damage = int(m.group(1)) * _basic_energy_in_discard(attacker_ps, et)
+                ceiling = damage
 
-        # e.g. Mega Abomasnow Hammer-lanche. Exact top cards are hidden; use the
-        # public maximum as a risk ceiling but mark it uncertain.
         m = re.search(r"discard the top (\d+) cards of your deck, and this attack does (\d+) damage for each basic \{([grwlpfdm])\} energy card", low)
         if m:
-            damage = max(damage, int(m.group(1)) * int(m.group(2)))
+            ceiling = max(ceiling, int(m.group(1)) * int(m.group(2)))
+            attack_uncertain = True
             uncertain = True
 
         if "will be knocked out" in low and "end of your opponent’s next turn" in low:
             delayed = True
 
-        damage = _weakness_adjust(damage, attacker, defender, low, counters=counters)
-        best = max(best, int(damage))
-    return (best, delayed, uncertain)
+        adjusted = _weakness_adjust(damage, attacker, defender, low, counters=counters)
+        adjusted_ceiling = _weakness_adjust(ceiling, attacker, defender, low, counters=counters)
+        if attack_uncertain:
+            printed = int(getattr(attack, "damage", 0) or 0)
+            best_certain = max(best_certain, _weakness_adjust(printed, attacker, defender, low, counters=counters))
+        else:
+            best_certain = max(best_certain, int(adjusted))
+        best_ceiling = max(best_ceiling, int(adjusted), int(adjusted_ceiling))
+    return (best_certain, best_ceiling, delayed, uncertain)
+
+
+def _public_attack_threat(attacker, defender, attacker_ps, defender_ps) -> tuple[int, bool, bool]:
+    certain, ceiling, delayed, uncertain = _public_attack_profile(attacker, defender, attacker_ps, defender_ps)
+    return (max(certain, ceiling), delayed, uncertain)
 
 
 def _greedy_prize_turns(targets, per_hit: int, required_prizes: int, first_bonus: int = 0) -> int:
@@ -348,7 +361,7 @@ def _greedy_prize_turns(targets, per_hit: int, required_prizes: int, first_bonus
     return min(9, turns + max(0, required_prizes - prizes))
 
 
-def race_macro_terms(obs, root_player: int) -> tuple[int, int, int, int, int]:
+def race_macro_terms(obs, root_player: int) -> tuple[int, int, int, int, int, int]:
     """Public turns-to-win / turns-to-loss approximation.
 
     This is a proposal-ranking macro, never independent authority. The native
@@ -356,7 +369,7 @@ def race_macro_terms(obs, root_player: int) -> tuple[int, int, int, int, int]:
     """
     st = obs.current
     if st is None:
-        return (0, -9, 0, -9, 0)
+        return (0, 0, -9, 0, -9, 0)
     me = st.players[root_player]
     opp = st.players[1 - root_player]
     own_field = [p for p in list(me.active) + list(me.bench) if p is not None]
@@ -371,17 +384,22 @@ def race_macro_terms(obs, root_player: int) -> tuple[int, int, int, int, int]:
     own_turns = setup_delay + _greedy_prize_turns(opp_field, 180, len(me.prize), first_bonus=transfer)
     own_turns = min(9, own_turns)
 
-    threat, delayed_ko, uncertain = _public_attack_threat(oa, ma, opp, me)
+    certain_threat, threat_ceiling, delayed_ko, uncertain = _public_attack_profile(oa, ma, opp, me)
     opp_required = len(opp.prize)
-    immediate_ko = bool(ma is not None and threat >= int(ma.hp) > 0 and not uncertain)
+    immediate_ko = bool(ma is not None and certain_threat >= int(ma.hp) > 0)
     immediate_win = bool(immediate_ko and _prize_value(int(ma.id)) >= opp_required)
     if delayed_ko and ma is not None and _prize_value(int(ma.id)) >= opp_required:
         immediate_win = True
+    uncertain_ko_risk = bool(
+        uncertain and ma is not None and threat_ceiling >= int(ma.hp) > max(0, certain_threat)
+    )
 
+    # Only public-deterministic damage sets the repeatable prize clock. A hidden
+    # top-deck ceiling is represented separately as a one-turn risk bit.
     if delayed_ko:
-        opp_turns = 1 + _greedy_prize_turns(own_field[1:], max(1, threat), max(0, opp_required - _prize_value(int(ma.id)) if ma is not None else opp_required))
-    elif threat > 0:
-        opp_turns = _greedy_prize_turns(own_field, threat, opp_required)
+        opp_turns = 1 + _greedy_prize_turns(own_field[1:], max(1, certain_threat), max(0, opp_required - _prize_value(int(ma.id)) if ma is not None else opp_required))
+    elif certain_threat > 0:
+        opp_turns = _greedy_prize_turns(own_field, certain_threat, opp_required)
     else:
         opp_turns = 9
     opp_turns = min(9, opp_turns)
@@ -400,6 +418,7 @@ def race_macro_terms(obs, root_player: int) -> tuple[int, int, int, int, int]:
     race_margin = max(-9, min(9, opp_turns - own_turns))
     return (
         int(not immediate_win),
+        int(not uncertain_ko_risk),
         int(race_margin),
         int(next_shadow_prize),
         int(-own_turns),
@@ -579,7 +598,7 @@ def attacker_macro_terms(obs, root_player: int) -> tuple[int, int, int, int, int
 def strategic_vector(obs, root_player: int, root_turn: int, start_prizes: int) -> tuple:
     st = obs.current
     if st is None:
-        return (-9, -9, *([0] * 12), -1e9)
+        return (-9, -9, *([0] * 13), -1e9)
     result = int(st.result)
     taken = start_prizes - len(st.players[root_player].prize)
     # Deadline/race terms rank before structural development. A larger tuple means
