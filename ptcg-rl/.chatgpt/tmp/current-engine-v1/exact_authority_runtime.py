@@ -47,6 +47,8 @@ class AuthorityDiagnostics:
     proof_prefix_candidates: int = 0
     proof_verifications: int = 0
     proof_rejections: int = 0
+    tactical_authorizations: int = 0
+    adrena_ko_authorizations: int = 0
     authorizations: int = 0
     terminal_authorizations: int = 0
     prize_authorizations: int = 0
@@ -103,6 +105,7 @@ class ExactAuthorityRuntime:
         self._plan_step = 0
         self._plan_turn = -1
         self._plan_player = -1
+        self._adrena_counters: dict[int, int] = {}
 
     def reset(self) -> None:
         self.memory.reset()
@@ -111,6 +114,7 @@ class ExactAuthorityRuntime:
         self._plan_step = 0
         self._plan_turn = -1
         self._plan_player = -1
+        self._adrena_counters.clear()
         self.diagnostics.last_reason = "reset"
 
     @staticmethod
@@ -320,6 +324,95 @@ class ExactAuthorityRuntime:
             self._plan = None
         return list(action)
 
+    @staticmethod
+    def _option_public_pokemon(raw: dict, option: dict):
+        current = raw.get("current") or {}
+        players = current.get("players") or []
+        your_index = current.get("yourIndex")
+        if not isinstance(your_index, int):
+            return None
+        opponent_index = 1 - your_index
+        if not (0 <= opponent_index < len(players)) or not isinstance(players[opponent_index], dict):
+            return None
+        opponent = players[opponent_index]
+        area = int(option.get("area", 0) or 0)
+        index = option.get("index")
+        if area == 4:
+            active = opponent.get("active") or []
+            return active[0] if active and isinstance(active[0], dict) else None
+        if area == 5 and isinstance(index, int):
+            bench = opponent.get("bench") or []
+            return bench[index] if 0 <= index < len(bench) and isinstance(bench[index], dict) else None
+        return None
+
+    def _exact_adrena_ko(self, raw: dict, fallback_action: list[int], probe_state: dict):
+        """Correct only a visible Adrena-Brain KO that Dawn's target would miss."""
+        select = self._select(raw)
+        context = int(select.get("context", -1) if select.get("context") is not None else -1)
+        effect = select.get("effect") if isinstance(select.get("effect"), dict) else {}
+        effect_id = int(effect.get("id", 0) or 0)
+        effect_serial = int(effect.get("serial", -1) if effect.get("serial") is not None else -1)
+        if context == 0:
+            self._adrena_counters.clear()
+            return None
+        if effect_id != 112 or effect_serial < 0:
+            return None
+        options = select.get("option") or []
+        if context == 40:
+            chosen_numbers = [
+                int(options[index].get("number", 0) or 0)
+                for index in fallback_action
+                if isinstance(index, int)
+                and 0 <= index < len(options)
+                and isinstance(options[index], dict)
+            ]
+            if chosen_numbers:
+                self._adrena_counters[effect_serial] = max(chosen_numbers)
+            return None
+        if context != 13:
+            return None
+        counters = int(self._adrena_counters.pop(effect_serial, 0) or 0)
+        if counters <= 0:
+            return None
+        packet = 10 * counters
+        current = self._current(raw)
+        your_index = current.get("yourIndex")
+        players = current.get("players") or []
+        if not isinstance(your_index, int) or not (0 <= your_index < len(players)) or not isinstance(players[your_index], dict):
+            return None
+        remaining_prizes = len(players[your_index].get("prize") or [])
+        knockout_candidates = []
+        for index, option in enumerate(options):
+            if not isinstance(option, dict):
+                continue
+            pokemon = self._option_public_pokemon(raw, option)
+            if not isinstance(pokemon, dict):
+                continue
+            hp = int(pokemon.get("hp", 0) or 0)
+            if not (0 < hp <= packet):
+                continue
+            card_id = int(pokemon.get("id", 0) or 0)
+            prize_value = int(PLANNER._prize_value(card_id))
+            if prize_value < remaining_prizes:
+                continue
+            knockout_candidates.append((prize_value, -hp, -index, index))
+        if not knockout_candidates:
+            return None
+        # Preserve Dawn whenever it is already taking a deterministic KO.
+        for index in fallback_action:
+            if not isinstance(index, int) or not (0 <= index < len(options)):
+                continue
+            option = options[index]
+            pokemon = self._option_public_pokemon(raw, option) if isinstance(option, dict) else None
+            if isinstance(pokemon, dict) and 0 < int(pokemon.get("hp", 0) or 0) <= packet:
+                return None
+        candidate = [int(max(knockout_candidates)[-1])]
+        EXECUTOR.apply_probe_choice(self.fallback, raw, candidate, probe_state)
+        self.diagnostics.tactical_authorizations += 1
+        self.diagnostics.adrena_ko_authorizations += 1
+        self.diagnostics.last_reason = "authorized-adrena-final-ko"
+        return candidate
+
     def act(self, raw: dict) -> list[int]:
         self.diagnostics.calls += 1
         current = raw.get("current")
@@ -337,6 +430,9 @@ class ExactAuthorityRuntime:
         # already synchronized to the action we return.
         fallback_action, probe_state = EXECUTOR.probe_policy_action(self.fallback, raw)
         fallback_action = list(fallback_action)
+        tactical = self._exact_adrena_ko(raw, fallback_action, probe_state)
+        if tactical is not None:
+            return tactical
         if not self._eligible(raw, fallback_action):
             self.diagnostics.last_reason = "fallback-ineligible"
             return fallback_action
