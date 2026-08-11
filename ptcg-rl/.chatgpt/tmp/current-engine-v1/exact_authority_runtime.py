@@ -85,6 +85,7 @@ class ExactAuthorityRuntime:
         max_root_options: int = 16,
         verification_worlds: int = 4,
         verification_pool: int = 24,
+        exact_shortlist: int = 3,
     ) -> None:
         self.fallback = fallback_module
         self.deck = [int(x) for x in deck]
@@ -94,6 +95,7 @@ class ExactAuthorityRuntime:
         self.max_root_options = max(2, int(max_root_options))
         self.verification_worlds = max(2, int(verification_worlds))
         self.verification_pool = max(self.verification_worlds, int(verification_pool))
+        self.exact_shortlist = max(1, int(exact_shortlist))
         self.memory = PublicGameMemory()
         self.diagnostics = AuthorityDiagnostics()
         self._turn_searches: dict[int, int] = {}
@@ -218,6 +220,41 @@ class ExactAuthorityRuntime:
             "candidate_paths": candidate_paths,
         }
 
+    def _exact_root_shortlist(self, raw: dict, result: dict) -> list[list[int]]:
+        """Proposal roots with current-turn exact nondown/gain in every proposal particle."""
+        parts = result.get("particles") or []
+        if not parts:
+            return []
+        maps = [{tuple(row.get("root_action") or ()): row for row in part.get("rows") or []} for part in parts]
+        fb = tuple(result.get("fallback") or [])
+        common = set(maps[0])
+        for mapping in maps[1:]:
+            common &= set(mapping)
+        if fb not in common or not all(bool(mapping[fb].get("complete")) for mapping in maps):
+            return []
+        fallback_exact = [tuple(mapping[fb].get("boundary") or ())[:2] for mapping in maps]
+        rows = []
+        fb_functional = PLANNER.functional_signature(raw, fb)
+        for action in common:
+            if action == fb or PLANNER.functional_signature(raw, action) == fb_functional:
+                continue
+            candidate_rows = [mapping[action] for mapping in maps]
+            if not all(bool(row.get("complete")) for row in candidate_rows):
+                continue
+            candidate_exact = [tuple(row.get("boundary") or ())[:2] for row in candidate_rows]
+            if not all(len(value) == 2 for value in candidate_exact):
+                continue
+            nondown = all(cv >= fv for cv, fv in zip(candidate_exact, fallback_exact))
+            gain = nondown and any(cv > fv for cv, fv in zip(candidate_exact, fallback_exact))
+            if not gain:
+                continue
+            worst = min(candidate_exact)
+            mean_prizes = sum(value[1] for value in candidate_exact) / len(candidate_exact)
+            gain_count = sum(cv > fv for cv, fv in zip(candidate_exact, fallback_exact))
+            rows.append((worst, gain_count, mean_prizes, action == tuple(result.get("suggested") or ()), action))
+        rows.sort(reverse=True)
+        return [list(row[-1]) for row in rows[: self.exact_shortlist]]
+
     @staticmethod
     def _proof_plan(exact: dict[str, Any]) -> dict[str, Any] | None:
         paths = list(exact.get("candidate_paths") or [])
@@ -316,54 +353,50 @@ class ExactAuthorityRuntime:
             return fallback_action
         self.diagnostics.disagreements += 1
 
-        exact = self._exact_dominance(result)
-        if not exact.get("qualified"):
-            self.diagnostics.fallback_unqualified += 1
-            self.diagnostics.last_reason = "exact-unqualified"
-            return fallback_action
-        if not exact.get("gain"):
+        shortlist = self._exact_root_shortlist(raw, result)
+        if not shortlist:
             self.diagnostics.last_reason = "no-current-turn-exact-gain"
             return fallback_action
-        self.diagnostics.exact_candidates += 1
-        candidate = list(result.get("suggested") or [])
-        if not candidate:
-            self.diagnostics.last_reason = "empty-candidate"
-            return fallback_action
+        self.diagnostics.exact_candidates += len(shortlist)
 
-        # Proposal particles are deliberately insufficient for live authority.
-        # Re-search only fallback vs challenger across own-hidden worlds selected
-        # to stress every DECK/LOOKING dependency in the candidate continuation.
-        dependencies = PLANNER.hidden_dependency_ids(result)
-        self.diagnostics.proof_verifications += 1
-        verification_started = time.perf_counter()
-        try:
-            verified = PLANNER.verify_current_turn_pair(
-                raw,
-                self.deck,
-                self._seed(raw) + 5000003,
-                fallback_action,
-                candidate,
-                dependency_ids=dependencies,
-                worlds=self.verification_worlds,
-                pool_size=self.verification_pool,
-            )
-        except Exception:
-            self.diagnostics.proof_rejections += 1
-            self.diagnostics.last_reason = "proof-verification-failed"
-            return fallback_action
-        finally:
-            self.diagnostics.verification_seconds += time.perf_counter() - verification_started
+        passed = []
+        for shortlist_index, candidate in enumerate(shortlist):
+            dependencies = PLANNER.hidden_dependency_ids(result, candidate)
+            self.diagnostics.proof_verifications += 1
+            verification_started = time.perf_counter()
+            try:
+                verified = PLANNER.verify_current_turn_pair(
+                    raw,
+                    self.deck,
+                    self._seed(raw) + 5000003 + 100003 * shortlist_index,
+                    fallback_action,
+                    candidate,
+                    dependency_ids=dependencies,
+                    worlds=self.verification_worlds,
+                    pool_size=self.verification_pool,
+                )
+            except Exception:
+                self.diagnostics.proof_rejections += 1
+                continue
+            finally:
+                self.diagnostics.verification_seconds += time.perf_counter() - verification_started
 
-        exact = self._exact_dominance(verified)
-        if not exact.get("qualified") or not exact.get("gain"):
-            self.diagnostics.proof_rejections += 1
-            self.diagnostics.last_reason = "exact-gain-rejected-by-hidden-worlds"
+            exact = self._exact_dominance(verified)
+            if not exact.get("qualified") or not exact.get("gain"):
+                self.diagnostics.proof_rejections += 1
+                continue
+            plan = self._proof_plan(exact)
+            if not plan:
+                self.diagnostics.proof_rejections += 1
+                continue
+            worst = min(tuple(pair[0]) for pair in exact.get("pairs") or [((0, 0), (0, 0))])
+            passed.append((worst, int(bool(exact.get("terminal"))), int(bool(exact.get("prize"))), candidate, plan, exact))
+
+        if not passed:
+            self.diagnostics.last_reason = "exact-shortlist-rejected-by-hidden-worlds"
             return fallback_action
-        plan = self._proof_plan(exact)
-        if not plan:
-            self.diagnostics.proof_rejections += 1
-            self.diagnostics.last_reason = "exact-gain-without-proof-consensus"
-            return fallback_action
+        passed.sort(reverse=True, key=lambda row: (row[0], row[1], row[2]))
+        _, _, _, candidate, plan, exact = passed[0]
         self.diagnostics.proof_prefix_candidates += 1
         EXECUTOR.apply_probe_choice(self.fallback, raw, candidate, probe_state)
         self._plan = copy.deepcopy(plan)

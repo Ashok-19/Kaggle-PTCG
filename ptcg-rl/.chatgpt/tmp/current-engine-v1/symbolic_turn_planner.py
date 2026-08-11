@@ -1137,9 +1137,9 @@ def solve(raw, own_deck: list[int], seed_base: int, fallback, particles: int = 2
 # hidden-deck/prize worlds. This catches lines that depend on a search target being
 # unprized or on one favorable hidden deck order.
 
-def hidden_dependency_ids(result: dict) -> tuple[int, ...]:
-    """Card identities selected from hidden DECK/LOOKING zones by the candidate."""
-    candidate = tuple(result.get("suggested") or [])
+def hidden_dependency_ids(result: dict, candidate=None) -> tuple[int, ...]:
+    """Card identities selected from hidden DECK/LOOKING zones by one candidate."""
+    candidate = tuple(result.get("suggested") or []) if candidate is None else tuple(candidate)
     ids = set()
     for part in result.get("particles") or []:
         rows = {tuple(row.get("root_action") or ()): row for row in part.get("rows") or []}
