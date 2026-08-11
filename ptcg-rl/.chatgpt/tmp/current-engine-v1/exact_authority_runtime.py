@@ -156,6 +156,43 @@ class ExactAuthorityRuntime:
         ).digest()
         return int.from_bytes(digest[:8], "big") & 0x7FFFFFFF
 
+    def _plausible_exact_turn_route(self, raw: dict) -> bool:
+        """Public prerequisite for a current-turn terminal/prize improvement.
+
+        Live search authority is exact current-turn outcome only. Skip expensive
+        search when no public legal route can possibly damage the opponent this
+        turn. Later MAIN observations are reconsidered after Dawn performs setup.
+        """
+        select = self._select(raw)
+        options = select.get("option") or []
+        try:
+            semantics = [PLANNER.pf.semantic(raw, option) for option in options if isinstance(option, dict)]
+        except Exception:
+            return True  # fail open rather than lose exact-search recall
+        for item in semantics:
+            kind = int(item.get("type", -1))
+            source_id = int(item.get("source_id", 0) or 0)
+            if kind == 13:  # an attack is already legal
+                return True
+            if kind == 9 and source_id == 648:  # direct Grimmsnarl evolution -> Punk Up
+                return True
+            if kind == 7 and source_id == 1079:  # Rare Candy can create Grimmsnarl this turn
+                return True
+            if kind == 10 and source_id == 112:  # Adrena-Brain can create a prize immediately
+                return True
+        # A ready benched Grimmsnarl can become an attacker through a legal retreat.
+        if any(int(item.get("type", -1)) == 12 for item in semantics):
+            current = self._current(raw)
+            your_index = current.get("yourIndex")
+            players = current.get("players") or []
+            if isinstance(your_index, int) and 0 <= your_index < len(players) and isinstance(players[your_index], dict):
+                for pokemon in players[your_index].get("bench") or []:
+                    if not isinstance(pokemon, dict) or int(pokemon.get("id", 0) or 0) != 648:
+                        continue
+                    if len(pokemon.get("energyCards") or []) >= 2:
+                        return True
+        return False
+
     def _eligible(self, raw: dict, fallback_action=None) -> bool:
         current = self._current(raw)
         select = self._select(raw)
@@ -169,6 +206,8 @@ class ExactAuthorityRuntime:
             return False
         turn = int(current.get("turn", -1))
         if turn < self.min_turn:
+            return False
+        if not self._plausible_exact_turn_route(raw):
             return False
         # Raw CABT menus can contain many interchangeable physical copies. Search
         # complexity is determined by distinct functional actions, not raw option
