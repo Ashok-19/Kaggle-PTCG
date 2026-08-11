@@ -151,7 +151,7 @@ class ExactAuthorityRuntime:
         ).digest()
         return int.from_bytes(digest[:8], "big") & 0x7FFFFFFF
 
-    def _eligible(self, raw: dict) -> bool:
+    def _eligible(self, raw: dict, fallback_action=None) -> bool:
         current = self._current(raw)
         select = self._select(raw)
         if not current or not select:
@@ -165,8 +165,20 @@ class ExactAuthorityRuntime:
         turn = int(current.get("turn", -1))
         if turn < self.min_turn:
             return False
-        options = select.get("option") or []
-        if not (2 <= len(options) <= self.max_root_options):
+        # Raw CABT menus can contain many interchangeable physical copies. Search
+        # complexity is determined by distinct functional actions, not raw option
+        # count. Ask for one action beyond the live limit so >limit remains
+        # detectable without fully enumerating large duplicate menus.
+        try:
+            obs = PLANNER.to_observation_class(raw)
+            functional_actions = PLANNER.legal_actions(
+                obs,
+                self.max_root_options + 1,
+                fallback=fallback_action,
+            )
+        except Exception:
+            return False
+        if not (2 <= len(functional_actions) <= self.max_root_options):
             return False
         used = self._turn_searches.get(turn, 0)
         return used < self.max_searches_per_turn
@@ -325,7 +337,7 @@ class ExactAuthorityRuntime:
         # already synchronized to the action we return.
         fallback_action, probe_state = EXECUTOR.probe_policy_action(self.fallback, raw)
         fallback_action = list(fallback_action)
-        if not self._eligible(raw):
+        if not self._eligible(raw, fallback_action):
             self.diagnostics.last_reason = "fallback-ineligible"
             return fallback_action
 
