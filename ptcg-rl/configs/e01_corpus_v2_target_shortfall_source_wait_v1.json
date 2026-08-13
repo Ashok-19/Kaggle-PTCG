@@ -1,0 +1,96 @@
+{
+  "authorization": {
+    "agent_logs": false,
+    "external_compute": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "raw_exports": false,
+    "replay_transfer": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "authorization_consumed": false,
+  "authorized": false,
+  "created_at_utc": "2026-08-04T16:14:10Z",
+  "current_corpus": {
+    "episodes": 337,
+    "manifest": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+    "manifest_sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f",
+    "minimum_policy_loss_targets": 25000,
+    "policy_loss_targets": 23460,
+    "target_shortfall": 1540
+  },
+  "decision_id": "DEC-028",
+  "fail_closed_if": [
+    "teacher team or active submission identity changes",
+    "daily dataset version changes after request freeze",
+    "manifest or inventory hash changes after request freeze",
+    "any selected filename has unknown or mismatched declared bytes",
+    "balanced strata cannot be constructed without a recorded deterministic fallback"
+  ],
+  "live_metadata_snapshot": {
+    "august_4_daily_dataset_available": false,
+    "completed_public_episodes": 867,
+    "latest_complete_daily_dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03/1",
+    "observed_at_utc": "2026-08-04T16:14:10Z",
+    "public_episodes": 869,
+    "replay_bodies_read": 0
+  },
+  "next_action": "WAIT_FOR_VERSION_PINNED_DAILY_SOURCE_THEN_FREEZE_EXACT_MAX_48_FILE_REQUEST_AND_REQUEST_SEPARATE_APPROVAL",
+  "next_request_template": {
+    "exclude_episode_ids_from_corpus_v2": true,
+    "maximum_file_and_byte_caps_frozen_only_after_daily_manifest_exists": true,
+    "maximum_files": 48,
+    "projected_targets_at_mean": 2890.627306273063,
+    "projected_targets_at_p10": 1872.0,
+    "projected_targets_at_p25": 2376.0,
+    "require_body_level_deck_module_action_terminal_and_duplicate_review": true,
+    "require_manifest_filename_and_exact_declared_bytes": true,
+    "require_teacher_submission_id": 55186239,
+    "selection_order": "newest completed episodes within each stratum, round-robin seat_0_loss, seat_0_win, seat_1_loss, seat_1_win",
+    "stop_review_when_cumulative_qualified_corpus_targets_reach_25000": true,
+    "target_strata": {
+      "seat_0_loss": 12,
+      "seat_0_win": 12,
+      "seat_1_loss": 12,
+      "seat_1_win": 12
+    }
+  },
+  "producer": "chatgpt-local-agent",
+  "qualified_yield_calibration": {
+    "episodes_required_at_mean": 26,
+    "episodes_required_at_p25": 32,
+    "majkel_episodes": 271,
+    "mean_targets_per_episode": 60.22140221402214,
+    "median_targets_per_episode": 62.0,
+    "p10_targets_per_episode": 39.0,
+    "p25_targets_per_episode": 49.5,
+    "policy_loss_targets": 16320,
+    "projection_is_guarantee": false
+  },
+  "record_id": "e01-corpus-v2-target-shortfall-source-wait-v1",
+  "request_ready": false,
+  "schema_version": 1,
+  "source_path": "configs/e01_corpus_v2_target_shortfall_source_wait_v1.json",
+  "source_ready_when": [
+    "A version-pinned daily dataset containing post-August-3 Majkel submission 55186239 replay JSON bodies is READY.",
+    "Its manifest exposes exact filenames, episode IDs, create times and declared bytes.",
+    "At least 48 eligible completed episodes exist after excluding all corpus-v2 episode IDs."
+  ],
+  "status": "WAITING_VERSION_PINNED_DAILY_SOURCE",
+  "teacher": {
+    "accepted_module_versions": [
+      "1.32.2",
+      "1.32.3"
+    ],
+    "deck_multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278",
+    "submission_id": 55186239,
+    "team_id": 16374395,
+    "team_name": "Majkel1337"
+  }
+}

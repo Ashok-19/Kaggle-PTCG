@@ -1,0 +1,255 @@
+{
+  "authorization": {
+    "agent_logs_authorized": false,
+    "exact_replay_transfer_authorization_consumed": true,
+    "external_compute_authorized": false,
+    "further_replay_transfer_authorized": false,
+    "git_commit_authorized": false,
+    "git_push_authorized": false,
+    "label_generation_authorized": false,
+    "optimizer_steps_authorized": false,
+    "raw_exports_authorized": false,
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "consistency": {
+    "both_replay_action_alignment": "PASS",
+    "combined_all_player_active_selection_requests": 40,
+    "combined_teacher_active_selection_requests": 35,
+    "combined_teacher_forced_singleton_requests": 3,
+    "combined_teacher_policy_loss_targets_if_later_authorized": 32,
+    "current_asset_deck_construction_compatibility": "PASS",
+    "exact_teacher_deck_match": true,
+    "module_transition_observed": "1.32.2_TO_1.32.3",
+    "module_versions": [
+      "1.32.2",
+      "1.32.3"
+    ],
+    "same_environment_identity": true,
+    "same_module_version": false,
+    "same_schema_version": true,
+    "teacher_archetype_context_label": "Mega Lucario ex",
+    "teacher_deck_multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278"
+  },
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-08-04T13:08:38Z",
+  "decision": "ACCEPT_EXACT_MAJKEL_CURRENT_RANK_1_TWO_FILE_MIXED_MODULE_CONTRACT_COMPATIBILITY_AND_STOP",
+  "episodes": [
+    {
+      "action_alignment": {
+        "active_requests_by_player": {
+          "0": 3,
+          "1": 16
+        },
+        "active_selection_requests": 19,
+        "empty_lagged_selections_by_player": {
+          "0": 0,
+          "1": 0
+        },
+        "maximum_option_count": 9,
+        "maximum_selection_count": 1,
+        "nonempty_lagged_selections_by_player": {
+          "0": 3,
+          "1": 16
+        },
+        "status": "PASS",
+        "teacher_active_selection_requests": 16,
+        "teacher_forced_singleton_requests": 1,
+        "teacher_policy_loss_targets_if_later_authorized": 15
+      },
+      "agent_names": [
+        "Yushin Ito",
+        "Majkel1337"
+      ],
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 89651832,
+      "file": {
+        "bytes": 376976,
+        "path": "private/g3/e01/majkel-live-gold-teacher-probe-v1/89651832.json",
+        "sha256": "6e03791819464b8376423a7e2d0cda171cf4abfc1541ac84cd2b90069aeec288"
+      },
+      "module_version": "1.32.2",
+      "opponent_deck_multiset_sha256": "606a775392ffe25e058b19c17801d58a4bf30f7cd8c62782388d3de7e7eb5283",
+      "rewards": [
+        -1,
+        1
+      ],
+      "schema_version": 1,
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 21,
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Mega Lucario ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 17,
+        "missing_card_ids": 0,
+        "multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 1,
+      "teacher_reward": 1,
+      "team_names": [
+        "Yushin Ito",
+        "Majkel1337"
+      ]
+    },
+    {
+      "action_alignment": {
+        "active_requests_by_player": {
+          "0": 19,
+          "1": 2
+        },
+        "active_selection_requests": 21,
+        "empty_lagged_selections_by_player": {
+          "0": 0,
+          "1": 0
+        },
+        "maximum_option_count": 9,
+        "maximum_selection_count": 2,
+        "nonempty_lagged_selections_by_player": {
+          "0": 19,
+          "1": 2
+        },
+        "status": "PASS",
+        "teacher_active_selection_requests": 19,
+        "teacher_forced_singleton_requests": 2,
+        "teacher_policy_loss_targets_if_later_authorized": 17
+      },
+      "agent_names": [
+        "Majkel1337",
+        "Dominic Peel"
+      ],
+      "environment_name": "cabt",
+      "environment_version": "1.0.0",
+      "episode_id": 89802438,
+      "file": {
+        "bytes": 455901,
+        "path": "private/g3/e01/majkel-live-gold-teacher-probe-v1/89802438.json",
+        "sha256": "ec5ab4bce6e29c8062f504ae24aac754d83c32689103ec3e997d4ab44cfe97e2"
+      },
+      "module_version": "1.32.3",
+      "opponent_deck_multiset_sha256": "02e83b8f57a9fe76327ed14abe88fd9123c008f131e88a453d9953371a4ec7be",
+      "rewards": [
+        1,
+        -1
+      ],
+      "schema_version": 1,
+      "statuses": [
+        "DONE",
+        "DONE"
+      ],
+      "steps": 23,
+      "teacher_deck": {
+        "ace_spec_cards": 1,
+        "archetype_context_basis": "most frequent Pokemon ex card name",
+        "archetype_context_label": "Mega Lucario ex",
+        "basic_pokemon_cards": 10,
+        "cards": 60,
+        "current_asset_construction_checks": "PASS",
+        "distinct_card_ids": 17,
+        "missing_card_ids": 0,
+        "multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278",
+        "non_basic_energy_name_limit_violations": 0,
+        "raw_card_list_exported": false
+      },
+      "teacher_player_index": 0,
+      "teacher_reward": 1,
+      "team_names": [
+        "Majkel1337",
+        "Dominic Peel"
+      ]
+    }
+  ],
+  "inputs": {
+    "approved_prior_request": {
+      "path": "configs/e01_majkel_live_gold_teacher_probe_request_v1.json",
+      "sha256": "e0b43f2a507728f5b2048a9ac7d8e30b6f444448e74885503267058477029886"
+    },
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "consumed_request": {
+      "path": "configs/e01_majkel_live_gold_teacher_probe_request_v1.json",
+      "sha256": "5a35b00b201dd4ab8cf9f054ec62a152ea06ce121726e89c3f78139ff1efd63f"
+    },
+    "contract_review": {
+      "path": "reports/artifacts/e01-majkel-live-gold-teacher-contract-review-v1.json",
+      "review_sha256": "12e82afaf04b50c245d4cfaecf0a06cced488ef6abec45fa015db3bcbbe79384",
+      "sha256": "5d3e2682554690990ba1bc301bf9a0a075ed56bf4707df5ff473c4e8761fffc0"
+    },
+    "readiness_review": {
+      "path": "reports/artifacts/e01-majkel-next-step-readiness-v1.json",
+      "sha256": "b4bf06e417f24e533c63627c14800c04d1fcbfac46c25777cd306edcc4c93520"
+    }
+  },
+  "next_action": "STOP_AFTER_CONTRACT_REVIEW_CORPUS_PROMOTION_BC_CANARY_AND_TRAINING_REQUIRE_NEW_EXPLICIT_APPROVAL",
+  "producer": "scripts/finalize_e01_majkel_live_gold_teacher_probe.py",
+  "qualification": {
+    "action_aligned_supervision_available": true,
+    "both_modules_action_contract_compatible": true,
+    "both_teacher_wins_qualified": true,
+    "contract_review_passed": true,
+    "corpus_promotion_authorized": false,
+    "current_asset_deck_construction_compatibility_qualified": true,
+    "current_rank_1_source_identity_qualified": true,
+    "exact_deck_consistency_qualified": true,
+    "external_compute_authorized": false,
+    "label_generation_authorized": false,
+    "mixed_module_transition_reviewed": true,
+    "opposite_teacher_seats_qualified": true,
+    "optimizer_steps_authorized": false,
+    "same_module_version_qualified": false,
+    "same_submission_identity_qualified": true,
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "record_id": "e01-majkel-live-gold-teacher-probe-review-v1",
+  "review_sha256": "a9dfd2d92f10b95aad3032566e3f5bd7973d007d81ef19722ebf3ec4452efead",
+  "reviewed_decision": "DEC-025",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-majkel-live-gold-teacher-probe-review-v1.json",
+  "status": "PASS",
+  "teacher": {
+    "both_terminal_results_are_teacher_wins": true,
+    "live_rank_at_readiness_refresh": 1,
+    "live_score_at_readiness_refresh": 1259.0,
+    "opposite_player_slots": true,
+    "same_exact_public_submission_across_episodes": true,
+    "score_is_snapshot_only": true,
+    "submission_id": 55186239,
+    "submission_identity_bound_by_public_metadata": true,
+    "submission_ids_present_in_replay_bodies": false,
+    "team_id": 16374395,
+    "team_name": "Majkel1337"
+  },
+  "transfer": {
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "exact_byte_cap_met": true,
+    "external_compute": false,
+    "git_commit": false,
+    "git_push": false,
+    "new_bytes_downloaded": 832877,
+    "new_files_downloaded": 2,
+    "new_replay_sha256": [
+      "6e03791819464b8376423a7e2d0cda171cf4abfc1541ac84cd2b90069aeec288",
+      "ec5ab4bce6e29c8062f504ae24aac754d83c32689103ec3e997d4ab44cfe97e2"
+    ],
+    "optimizer_steps": 0,
+    "overwrite_used": false,
+    "raw_replay_body_exports": 0,
+    "submission": false,
+    "training": false,
+    "training_label_exports": 0,
+    "unexpected_files": 0
+  }
+}

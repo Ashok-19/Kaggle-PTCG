@@ -1,0 +1,57 @@
+{
+  "created_at_utc": "2026-08-04T15:55:00Z",
+  "inputs": {
+    "canary_execution_review": {
+      "path": "reports/artifacts/e01-bc-engineering-canary-execution-review-v1.json",
+      "self_hash": "2f365281ed62e91139b67a9cb3b0fdb5a7149fed1fd7ec9cbd7d43097175280d",
+      "sha256": "1f25828a78400801f6dc5d2d8630890579e29584762ad95b18af795ca810c100"
+    },
+    "canary_request": {
+      "path": "configs/e01_bc_engineering_canary_request_v1.json",
+      "sha256": "b4b7477dd8bcf174f7e9865ef3c127bcb8dc52ad2201a46a774f343b2d17d35c"
+    },
+    "corpus_manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "self_hash": "e736f609209805c28bb4aa97106e163386667d639b9b21573f8ea749b11925b6",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "corpus_review": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-review-v2.json",
+      "self_hash": "dc995dfd07d509c0271f1c7e4138408248cabbe2a64134b04439b9b121ced6c3",
+      "sha256": "87eaee15513189d7f2ff4ca44e631016b3f937165df31db8696383a30c1cad56"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-028_E01_CORPUS_V2_AND_BC_CANARY_CLOSEOUT.md",
+      "sha256": "61732095fb09bac0a943f064a8b35dfe5e4f5016bdb4a3924fde95bea902868d"
+    },
+    "expansion_request": {
+      "path": "configs/e01_majkel_corpus_expansion_request_v1.json",
+      "sha256": "705cfe9d17ac99fac2812c764cfe55d545e363c50acbb874c5bf2db4212576eb"
+    },
+    "job": {
+      "path": "reports/jobs/e01-majkel-corpus-review-v1.json",
+      "self_hash": "2f569b6f00f075e2c0a61aff9373ed2e480fdc576cd6f01512b372fd909bbaf2",
+      "sha256": "1e8e065b0562a0854825e1e3813e3b9620ed6fa01dbed5a4f96f4f4b5278f30e"
+    }
+  },
+  "producer": "scripts/finalize_e01_dec028_closeout.py",
+  "qualification": {
+    "bc_canary_cumulative_optimizer_steps": 64,
+    "bc_canary_non_promotable": true,
+    "corpus_v2_episodes": 337,
+    "corpus_v2_policy_loss_targets": 23460,
+    "exact_269_file_review_passed": true,
+    "further_replay_reads_authorized": false,
+    "production_target_shortfall": 1540,
+    "production_training_authorized": false,
+    "qualified_new_files": 269,
+    "rejected_new_files": 0,
+    "submission_authorized": false
+  },
+  "record_id": "e01-dec028-closeout-review-v1",
+  "review_sha256": "08fd391041835de56b7f8658d3546ca2a977361987f1077c52c00c76bceafc15",
+  "reviewed_decision": "DEC-028",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-dec028-closeout-review-v1.json",
+  "status": "PASS"
+}

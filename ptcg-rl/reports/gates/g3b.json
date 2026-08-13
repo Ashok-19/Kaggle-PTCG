@@ -1,13 +1,14 @@
 {
-  "approved_next_action": "Implement and independently qualify the remaining policy-competence path by performing a metadata-only refresh after a pinned daily episode dataset contains current rank-1 haggle submission 55104355, or after the live rank-1 submission changes. Only then prepare the smallest exact opposite-seat/opposite-result replay request with pinned file names and declared byte counts, leave it unauthorized, and require separate explicit approval before transfer. Do not download replay bodies or logs, export raw data or labels, train, launch compute, rerun E04, freeze a deck or submit.",
-  "authorization": "DEC_024_DRIES_GRIMMSNARL_CALIBRATION_PASS_CURRENT_RANK_1_SOURCE_WAIT_E04_QUALIFIED_TRAINING_BLOCKED",
+  "approved_next_action": "Obtain exact approval text SHA-256 `48c575e4aae749d1f830b554d046f59d4830ce7bc7604d1733b9744ffa90f151` for unchanged request `configs/e01_production_recurrent_bc_notebook_request_v3.json` at `30b7b049f6fe8e069f3253fac7fde8db44dc7cd862e923d47db84bfd5894c9bd`, then create and run exactly one private CPU notebook v3.",
+  "authorization": "RENEWED_NOTEBOOK_V3_APPROVAL_READY_NO_NOTEBOOK_REPLAY_OPTIMIZER_TRAINING_EVALUATION_PROMOTION_OR_SUBMISSION_AUTHORIZED",
   "blockers": [
-    "DEC-023 is complete and independently reviewed: all 12 Dries Grimmsnarl calibration files qualify as schema 1, CABT 1.0.0, module 1.32.2, exact deck consistent, current-asset compatible and action aligned. They add 1175 teacher decisions, bringing confirmation to two teachers, 66 episodes and 7542 decisions; the remaining shortfalls are 134 episodes and 17458 decisions.",
-    "The live rank-1 is now haggle submission 55104355 with 76 public episodes, but the latest complete pinned daily dataset is July 29 version 1 and has zero matching files. No current-rank-1 replay request is source-ready. Behavior cloning, competence evaluation, confirmation floors and submission selection remain incomplete; replay transfer, training, external compute and submission remain unauthorized."
+    "The prior v3 approval failed closed before notebook creation after accidental creation of `ashok205/new-benchmark-task-8065e`.",
+    "The same v3 request and wrapper remain valid, but execution requires the renewed exact approval.",
+    "Test replay reads, candidate evaluation, model promotion, and submission remain blocked."
   ],
   "cost_usd": 0.0,
   "created_at_utc": "2026-07-23T11:30:27Z",
-  "decision": "NOT_REVIEWED",
+  "decision": "DEC-047_PRODUCTION_BC_NOTEBOOK_V3_RENEWED_APPROVAL_READY_UNAUTHORIZED",
   "gate_id": "G3b",
   "producer": "chatgpt-local-agent",
   "producer_version": "1",
@@ -215,16 +216,171 @@
       "evidence": "reports/artifacts/e01-live-confirmation-source-wait-review-v1.json",
       "name": "DEC-024 current-rank-1 versioned-source wait",
       "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/raw/e01-live-gold-refresh-20260804-v1.json",
+      "name": "DEC-025 authenticated live leaderboard, daily source and forum refresh",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-majkel-live-gold-teacher-contract-review-v1.json",
+      "name": "DEC-025 exact two-file Majkel request contract",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-approved-replay-corpus-review-v1.json",
+      "name": "DEC-025 immutable approved replay corpus and episode-level split review",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-approved-replay-policy-loss-recount-v1.json",
+      "name": "DEC-025 corrected policy-loss target recount",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-bc-engineering-canary-preflight-review-v1.json",
+      "name": "DEC-025 bounded BC engineering canary preflight",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-pretraining-freeze-review-v1.json",
+      "name": "DEC-027 pretraining configuration and gold sequence frozen",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-majkel-corpus-expansion-contract-review-v1.json",
+      "name": "DEC-027 exact remaining 269-file Majkel corpus expansion request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-majkel-corpus-review-independent-review-v1.json",
+      "name": "DEC-027 exact Majkel 269-file private Kaggle CPU review",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-approved-replay-corpus-review-v2.json",
+      "name": "qualified-only corpus v2 episode floor",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-approved-replay-corpus-review-v3.json",
+      "name": "qualified-only corpus v3 25000-target floor",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-bc-engineering-canary-execution-review-v1.json",
+      "name": "bounded recurrent BC engineering canary",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-approved-replay-corpus-review-v2.json",
+      "name": "DEC-028 exact 269-file Majkel private CPU review and corpus-v2 finalization",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-bc-engineering-canary-execution-review-v1.json",
+      "name": "DEC-028 exact 64-step local-CPU BC engineering canary",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-approved-replay-corpus-review-v3.json",
+      "name": "minimum 25,000 valid policy-loss targets",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-corpus-v2-target-shortfall-supplement-contract-review-v1.json",
+      "name": "DEC-029 exact balanced corpus-target supplemental request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-majkel-module-1324-compatibility-probe-review-v1.json",
+      "name": "DEC-030 module 1.32.4 compatibility gate",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-corpus-v2-target-shortfall-supplement-contract-review-v2.json",
+      "name": "DEC-031 renewed module-1.32.4-aware supplemental request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-corpus-target-supplement-review-v2.json",
+      "name": "DEC-031 exact supplement execution and corpus-v3 finalization",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/incidents/e01-production-bc-preparation-local-replay-read-v1.json",
+      "name": "DEC-032 production BC preparation replay-read boundary",
+      "status": "FAILED_CLOSED"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-bc-input-publication-contract-review-v1.json",
+      "name": "DEC-033 exact retained replay input-publication request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-contract-review-v1.json",
+      "name": "DEC-033 implementation-bound production recurrent BC request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-bc-input-publication-execution-review-v1.json",
+      "name": "DEC-034 retained private dataset publication execution",
+      "status": "FAILED_CLOSED"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-bc-retained-dataset-remediation-contract-review-v1.json",
+      "name": "DEC-035 retained dataset root-basename remediation request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-contract-review-v2.json",
+      "name": "DEC-035 renewed implementation-bound production recurrent BC request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-bc-remediation-consumption-review-v1.json",
+      "name": "DEC-036 remediation-consumption boundary",
+      "status": "FAILED_CLOSED"
+    },
+    {
+      "evidence": "reports/artifacts/e01-source-bundle-v2-checkpoint-directory-verification-contract-review-v1.json",
+      "name": "DEC-039 deterministic extracted checkpoint verification request",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-notebook-contract-review-v1.json",
+      "name": "DEC-041 extracted checkpoint verification and production BC notebook wrapper",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-notebook-execution-review-v1.json",
+      "name": "DEC-042 production BC notebook v1 execution",
+      "status": "FAILED_CLOSED"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-notebook-contract-review-v2.json",
+      "name": "DEC-043 corrected production BC notebook v2 contract",
+      "status": "PASS"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-notebook-execution-review-v2.json",
+      "name": "DEC-044 production BC notebook v2 approval-kind failure boundary",
+      "status": "FAILED_CLOSED"
+    },
+    {
+      "evidence": "reports/artifacts/e01-production-recurrent-bc-notebook-contract-review-v3.json",
+      "name": "DEC-045 shared V1 approval-kind notebook wrapper and request",
+      "status": "PASS"
     }
   ],
   "title": "Evidence-gated Pokemon policy competence",
-  "updated_at_utc": "2026-07-30T18:21:47.271471Z",
+  "updated_at_utc": "2026-08-06T16:21:21Z",
   "warnings": [
-    "G2 reliability and G3a toy PPO correctness do not establish Pokemon policy competence.",
-    "Historical DEC-013–018 records remain compatibility evidence; DEC-018 was superseded without transfer.",
-    "DEC-021 establishes the exact flg submission screening floor with 6340 decisions; it does not by itself establish confirmation or authorize training.",
-    "DEC-022 and DEC-023 qualify exact historical Dries submission 55002825 and bring confirmation evidence to 66 episodes and 7542 decisions; they do not transfer to later Dries submissions or haggle.",
-    "DEC-024 is a zero-transfer source wait because current rank-1 submission 55104355 has no files in the latest complete daily dataset.",
-    "The accepted E04 results establish zero-update bridge reliability only; they do not establish Pokemon policy competence or authorize training."
+    "G2 reliability, G3a toy PPO correctness and the E04 zero-update bridge do not establish Pokemon policy competence.",
+    "The 7140 policy-loss targets exclude 402 deterministic forced singleton calls while preserving those calls in recurrent sequence context.",
+    "Simulation ratings are dynamic snapshots; stable team, submission, dataset, episode and byte identities are the authorization basis.",
+    "DEC-025 prepares two separate unauthorized requests. Neither replay transfer nor optimizer execution may occur without exact explicit approval.",
+    "Unauthorized Kaggle benchmark-task kernel created during metadata-only remediation preflight; no deletion or further mutation performed.",
+    "Notebook v2 read/hash-verified 316 approved replay bodies before failing on approval-kind identity; semantic parsing and optimizer construction did not begin."
   ]
 }

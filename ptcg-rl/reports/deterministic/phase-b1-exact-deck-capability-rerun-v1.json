@@ -1,0 +1,19 @@
+{
+  "record_id": "phase-b1-exact-deck-capability-rerun-v1",
+  "schema_version": 1,
+  "status": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW",
+  "scope": "NATIVE_QUALIFIED_CANDIDATE",
+  "plan_sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88",
+  "candidate_deck": {
+    "path": "private/baselines/mega-abomasnow-ex/deck.csv",
+    "file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+    "count": 60,
+    "multiset": {"3": 34, "721": 2, "722": 4, "723": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 3}
+  },
+  "proof_goals": ["snover_1044_first", "snover_1045_first", "snover_to_mega_evolution", "prize_route_targets"],
+  "stop_conditions": {"stop_on_any_reliability_counter": true, "native_launch": false, "kaggle_run": false, "submission": false},
+  "scope_labels": {"capability": "NATIVE_QUALIFIED_CANDIDATE", "policy_integration": "NOT_ESTABLISHED", "outcome_promotion": "NOT_ESTABLISHED"},
+  "capability_evidence_available": false,
+  "native_execution": "NOT_RUN_BY_DESIGN"
+}

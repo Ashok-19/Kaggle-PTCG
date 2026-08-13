@@ -1,0 +1,38 @@
+{
+  "approval_consumed": true,
+  "approval_receipt_sha256": "9285504a6bb6324413daccad6b60d1d58d3801e2d417f17360b091ccfbbfdd1d",
+  "builder_sha256": "8c8ba2194138d14d139157dfce3c0ecf40f7079c74a92303ff51f0c615fcc026",
+  "created_at_utc": "2026-08-06T15:11:18Z",
+  "incident_file_sha256": "e7d4b3b8e10c61de8c872634dd09cc7db241602ddf3ea00580bce9a0dce9e6b8",
+  "incident_path": "reports/incidents/e01-production-recurrent-bc-notebook-v1-august3-mount-count-v1.json",
+  "incident_self_hash": "4ad3bc1ae7e8fdc515947ca09e699d6548de444473413726abd154a042cb3640",
+  "notebook_id": 129904937,
+  "notebook_ref": "ashok205/kptcg-e01-production-recurrent-bc-v1",
+  "notebook_request_sha256": "6d50e6b70c2a144948342bf8366ea481ee1330744bd96f6b82924500cc735d30",
+  "notebook_source_sha256": "566c1624e0d5726d561a91b5ec66d4902f96403b028e65e049f4e9937921c02d",
+  "notebook_status": "ERROR",
+  "notebook_version": 1,
+  "record_id": "e01-production-recurrent-bc-notebook-execution-review-v1",
+  "remediation": {
+    "all_replay_hashes_unchanged": true,
+    "all_training_hyperparameters_unchanged": true,
+    "august_3_files_after": 4721,
+    "august_3_files_before": 4724,
+    "kind": "MOUNT_METADATA_COUNT_ONLY",
+    "new_notebook_slug_required": true
+  },
+  "result": {
+    "epoch_checkpoints_emitted": 0,
+    "execution_report_emitted": false,
+    "failure_phase": "AUGUST_3_MOUNT_INVENTORY_PREFLIGHT",
+    "notebook_envelope_emitted": false,
+    "optimizer_steps": 0,
+    "output_files": 2,
+    "replay_bodies_read": 0,
+    "training": false
+  },
+  "review_sha256": "f0ba35cf8800c7352e1db5bd215e56202e4a0eb3edac2515b31524b02c5247b2",
+  "schema_version": 1,
+  "status": "FAILED_CLOSED_PREFLIGHT_NO_REPLAY_OR_TRAINING",
+  "wrapper_sha256": "44dfdc02b0c0f180c2929fa3fca4bb32426a99721d9892f129b7ffdc4bca0ebe"
+}

@@ -1,0 +1,45 @@
+{
+  "authorization": {
+    "corpus_promotion": false,
+    "git_commit": false,
+    "git_push": false,
+    "optimizer_steps": 0,
+    "replay_body_reads": 0,
+    "submission": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-05T07:31:25Z",
+  "dataset": {
+    "id": 11506836,
+    "inventory_files": 4812,
+    "inventory_json_files": 4811,
+    "inventory_sha256": "5620e055a25407c47e7744eaa0ffb9ab2a04fe2287b0f6180f54726cf7a00f77",
+    "last_updated_utc": "2026-08-05T00:11:02.203Z",
+    "manifest_sha256": "bb190f62f0585dc2a1db2b02752a4d7e6fa6de15a800ed9e769d8daecd8bf9a1",
+    "reference": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04",
+    "status": "READY",
+    "total_bytes": 21457813826,
+    "version": 1
+  },
+  "probe": {
+    "module_1324_compatible": true,
+    "output_manifest_self_hash": "3521bda8656c2c5a05408f069205b79cf79f372894da4a9a96be163f3c1bf2f5",
+    "output_manifest_sha256": "72f467b09326d488fd860221cae6647b6ceafd8b4b00c2d4f3fa54844e1a89e3",
+    "request_sha256": "dc38df7b76e01682d3e735499aab352e963c9d454423c71756ededee98b69331",
+    "review_self_hash": "ba28a9baabd2799934936138386aaeec2e58e666e6f3d486e9b378113b797faa",
+    "review_sha256": "e956d010552bcab7489852daa8367a8c11eb06138b98dc21486c11b9ae30d4f2"
+  },
+  "producer": "chatgpt-local-agent",
+  "record_id": "e01-module-1324-supplement-source-recheck-20260805-v1",
+  "record_sha256": "63ef7a000c81ad1a328320d43a0c56ab17daee19bba9b7ea9cefcfde9fff18d5",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/raw/e01-module-1324-supplement-source-recheck-20260805-v1.json",
+  "status": "PASS_SOURCE_IDENTITY_UNCHANGED",
+  "teacher": {
+    "active_submission_id": 55186239,
+    "active_submission_public_score_snapshot": 1256.3,
+    "public_score_is_dynamic_and_not_authorization_basis": true,
+    "team_id": 16374395,
+    "team_name": "Majkel1337"
+  }
+}

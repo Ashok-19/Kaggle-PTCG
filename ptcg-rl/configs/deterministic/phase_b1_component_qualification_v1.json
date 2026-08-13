@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "experiment_id": "B1-COMPONENT-001",
+  "phase": "B1",
+  "status": "TECHNICALLY_BLOCKED_PENDING_INDEPENDENT_REVIEW_RECEIPT",
+  "purpose": "Bounded natural-seat component comparison of frozen B0 against receipt-qualified B1-A and B1-B; no native launch is authorized by this plan.",
+  "runtime_receipt": "configs/deterministic/phase_b1_native_route_receipt_v1.json",
+  "candidate": {
+    "deck_profile": "mega-abomasnow-ex",
+    "deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "arms": [
+      {"id": "B0", "import_spec": "ptcg_rl.deterministic.policy:DeterministicStrategicPolicy", "authority": "B0_CONTROL"},
+      {"id": "B1-A", "import_spec": "ptcg_rl.deterministic.b1_policy:B1APolicyV1", "authority": "EXPERIMENTAL_PUBLIC_ROUTE_RUNTIME"},
+      {"id": "B1-B", "import_spec": "ptcg_rl.deterministic.b1_policy:B1BPolicyV1", "authority": "EXPERIMENTAL_PUBLIC_ROUTE_RUNTIME"}
+    ]
+  },
+  "anchors": [
+    "rule:dragapult-ex",
+    "rule:iono",
+    "rule:mega-abomasnow-ex",
+    "rule:mega-lucario-ex"
+  ],
+  "evaluation": {
+    "natural_deployment": true,
+    "candidate_seat_values": [0, 1],
+    "candidate_seat_balance": true,
+    "terminal_outcome_only": true,
+    "candidate_perspective_wdl": true,
+    "independent_arms": true,
+    "permutation_control": 32,
+    "stop_on_any_reliability_defect": true,
+    "mechanical_launch": "BLOCKED_UNTIL_INDEPENDENT_REVIEW_RECEIPT",
+    "submission": false,
+    "kaggle_runs": 0
+  },
+  "budgets": {
+    "games_per_anchor_per_candidate_seat": 8,
+    "games_per_arm": 64,
+    "games_all_arms": 192,
+    "request_cap_per_game": 900,
+    "game_timeout_seconds": 600,
+    "wall_seconds": 1800,
+    "evidence_bytes_cap": 67108864,
+    "workers": 1
+  },
+  "component_runtime_budget": {
+    "scope": "experiment_local_only",
+    "promotion_criteria_change": false,
+    "p99_latency_ms_max": 100.0,
+    "component_cpu_seconds_per_game_max": 1.0,
+    "peak_rss_bytes_max": 536870912,
+    "metrics_required": ["finite", "nonnegative", "request_cardinality", "per_arm", "per_seat"]
+  },
+  "reliability_counters": [
+    "invalid_selections",
+    "fallback_actions",
+    "b0_delegations",
+    "post_terminal_actions",
+    "timeouts",
+    "failures",
+    "incomplete_games",
+    "missing_outputs",
+    "stale_requests",
+    "duplicate_payload_mismatches"
+  ],
+  "evidence": {
+    "raw_root": "runs",
+    "sanitized_report_root": "reports/deterministic",
+    "sealed_mode": "content_sha256_plus_read_only_sidecar",
+    "resume_requires": ["run_id", "plan_sha256", "source_receipts", "raw_evidence_sha256", "last_completed_game"],
+    "absolute_paths_forbidden": true
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "ids": ["DR-001", "DR-002", "DR-004", "DR-005", "DR-006", "DR-007", "DR-008", "DR-012", "DR-022", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033", "AP-001", "AP-008", "AP-009", "AP-011", "AP-014", "RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-009"]
+  },
+  "launch_gate": {
+    "status": "BLOCKED",
+    "required_receipt": "independent review of runtime receipt, B1 policy, harness, and source/hash binding",
+    "native_run_performed": false,
+    "kaggle_run_performed": false,
+    "fallback_is_not_delegation": true
+  }
+}

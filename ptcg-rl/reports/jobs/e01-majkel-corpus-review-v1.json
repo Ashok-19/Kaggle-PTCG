@@ -1,0 +1,64 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-08-04T15:55:00Z",
+  "decision": "PRIVATE_KAGGLE_CPU_EXACT_269_FILE_REVIEW_COMPLETE",
+  "execution": {
+    "bytes_read": 1030207171,
+    "log_sha256": "9d32086a220d8384a3f64812e96f9d287706d8e3c7cd33b279b63f44af998e29",
+    "model_mutation": false,
+    "named_replay_bodies_read": 269,
+    "optimizer_steps": 0,
+    "qualified": 269,
+    "rejected": 0,
+    "replay_body_outputs": 0,
+    "submission": false,
+    "training": false,
+    "wall_seconds_from_notebook_log": 96.548250296
+  },
+  "inputs": {
+    "approved_request_sha256": "7652f617e9bba2cd5a18a3d4b9956d348438989359e0fb200ef0f6066a590d3c",
+    "competition_attachment": "pokemon-tcg-ai-battle",
+    "daily_dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03/1",
+    "source_bundle_sha256": "ceec17e0a76097af8f25de4ecddfa627f509f44a58bb67e2528a2c0696f3a97a",
+    "source_dataset": "ashok205/kptcg-e01-majkel-corpus-review-inputs/1",
+    "source_dataset_id": 11501808
+  },
+  "notebook": {
+    "docker_image": "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9",
+    "gpu": false,
+    "internet": false,
+    "kernel_id": 129704016,
+    "owner": "ashok205",
+    "private": true,
+    "saved_version": 2,
+    "slug": "kptcg-e01-majkel-corpus-review-v1",
+    "source_code_sha256": "4669730a0943ea669fb9b75db90b9452f57ab03d1adf9767b7b98723d72fd89a",
+    "tpu": false
+  },
+  "outputs": {
+    "manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "self_hash": "e736f609209805c28bb4aa97106e163386667d639b9b21573f8ea749b11925b6",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "output_manifest": {
+      "path": "reports/artifacts/e01-majkel-corpus-review-v1-output-manifest.json",
+      "self_hash": "dd9c53fa64ba8be1a86af5d10f39215bf4352236dab2385673ea970e9cbc4233",
+      "sha256": "ef8ce73b6185e183ac8f32ea8267e50b3e3bb67e161cee22016c25d4ee7ef2ed"
+    },
+    "review": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-review-v2.json",
+      "self_hash": "dc995dfd07d509c0271f1c7e4138408248cabbe2a64134b04439b9b121ced6c3",
+      "sha256": "87eaee15513189d7f2ff4ca44e631016b3f937165df31db8696383a30c1cad56"
+    },
+    "run": {
+      "path": "reports/artifacts/e01-majkel-corpus-review-v1.json",
+      "sha256": "31fdff1a40de058407b07de5975e2bf531fdc417aae456f54e88759386918d16"
+    }
+  },
+  "producer": "chatgpt-local-agent",
+  "record_id": "job-e01-majkel-corpus-review-v1",
+  "schema_version": 1,
+  "source_path": "reports/jobs/e01-majkel-corpus-review-v1.json",
+  "status": "SUCCEEDED"
+}

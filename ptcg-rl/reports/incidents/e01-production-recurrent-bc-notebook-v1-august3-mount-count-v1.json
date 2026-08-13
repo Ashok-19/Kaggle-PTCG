@@ -1,0 +1,83 @@
+{
+  "approved_notebook_request": {
+    "path": "configs/e01_production_recurrent_bc_notebook_request_v1.json",
+    "sha256": "6d50e6b70c2a144948342bf8366ea481ee1330744bd96f6b82924500cc735d30"
+  },
+  "boundary": {
+    "agent_logs_read": 0,
+    "checkpoint_reconstructed": false,
+    "dataset_mutations": 0,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "labels_materialized": 0,
+    "model_mutation": false,
+    "notebook_creations": 1,
+    "notebook_retries": 0,
+    "notebook_versions": 1,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "replay_bodies_read": 0,
+    "replay_bytes_read": 0,
+    "submission": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-06T15:11:18Z",
+  "downloaded_outputs": [
+    {
+      "bytes": 1306,
+      "matches_local": true,
+      "path": "e01-production-recurrent-bc-bootstrap-v1/e01-production-recurrent-bc-approval-v1.json",
+      "sha256": "9285504a6bb6324413daccad6b60d1d58d3801e2d417f17360b091ccfbbfdd1d"
+    },
+    {
+      "bytes": 65227,
+      "matches_local": true,
+      "path": "e01-production-recurrent-bc-bootstrap-v1/e01_production_recurrent_bc_notebook_v1.py",
+      "sha256": "44dfdc02b0c0f180c2929fa3fca4bb32426a99721d9892f129b7ffdc4bca0ebe"
+    }
+  ],
+  "failure": {
+    "actual_mounted_files": 4721,
+    "exception": "NotebookContractError",
+    "expected_and_actual_bytes": 21451850075,
+    "expected_files_v1": 4724,
+    "message": "August 3 daily dataset inventory aggregate differs: 4721 files/21451850075 bytes",
+    "official_file_summary": {
+      "csv_bytes": 390697,
+      "csv_files": 1,
+      "files": 4721,
+      "json_bytes": 21451459378,
+      "json_files": 4720
+    },
+    "phase": "AUGUST_3_MOUNT_INVENTORY_PREFLIGHT",
+    "root_cause": "The v1 wrapper used a historical API inventory row count of 4724 instead of the current Kaggle notebook-mount file summary of 4721. The total bytes and all selected replay identities were unchanged."
+  },
+  "incident_sha256": "4ad3bc1ae7e8fdc515947ca09e699d6548de444473413726abd154a042cb3640",
+  "notebook": {
+    "dataset_sources": [
+      "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+      "ashok205/kptcg-e01-production-bc-retained-inputs",
+      "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03",
+      "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04"
+    ],
+    "gpu": false,
+    "id": 129904937,
+    "internet": false,
+    "kernel_type": "script",
+    "output_kernel_file_id": 340611521,
+    "private": true,
+    "ref": "ashok205/kptcg-e01-production-recurrent-bc-v1",
+    "status": "ERROR",
+    "tpu": false,
+    "version": 1
+  },
+  "record_id": "e01-production-recurrent-bc-notebook-v1-august3-mount-count-v1",
+  "retained_incident_evidence": [
+    "ashok205/new-benchmark-task-b1c52",
+    "ashok205/new-benchmark-task-daa06",
+    "ashok205/new-benchmark-task-4abba"
+  ],
+  "schema_version": 1,
+  "status": "FAILED_CLOSED_AUGUST3_MOUNT_FILE_COUNT_MISMATCH"
+}

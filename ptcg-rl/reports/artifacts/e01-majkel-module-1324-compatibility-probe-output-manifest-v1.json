@@ -1,0 +1,21 @@
+{
+  "agent_log_outputs": 0,
+  "approved_request_sha256": "dc38df7b76e01682d3e735499aab352e963c9d454423c71756ededee98b69331",
+  "corpus_promotion": false,
+  "created_at_utc": "2026-08-05T06:21:41.583574Z",
+  "files": [
+    {
+      "bytes": 3741,
+      "path": "e01-majkel-module-1324-compatibility-probe-review-v1.json",
+      "sha256": "e956d010552bcab7489852daa8367a8c11eb06138b98dc21486c11b9ae30d4f2"
+    }
+  ],
+  "manifest_sha256": "3521bda8656c2c5a05408f069205b79cf79f372894da4a9a96be163f3c1bf2f5",
+  "metadata_files": 2,
+  "producer": "scripts/e01_majkel_module_1324_compatibility_probe.py",
+  "record_id": "e01-majkel-module-1324-compatibility-probe-output-manifest-v1",
+  "replay_body_outputs": 0,
+  "schema_version": 1,
+  "source_path": "e01-majkel-module-1324-compatibility-probe-output-manifest-v1.json",
+  "training_label_outputs": 0
+}

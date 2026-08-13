@@ -1,0 +1,683 @@
+{
+  "actual": {
+    "bytes": 7645589,
+    "files": 79,
+    "inventory_sha256": "2bc151d35af0ef3bd9177f44275ef04be0de017a07ef5cf86b283c94834f83ab",
+    "records": [
+      {
+        "bytes": 16953,
+        "name": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json"
+      },
+      {
+        "bytes": 1501,
+        "name": "docs/decisions/DEC-034_E01_PRODUCTION_BC_RETAINED_DATASET_PATH_FLATTENING.md"
+      },
+      {
+        "bytes": 443,
+        "name": "input-manifest.json"
+      },
+      {
+        "bytes": 188960,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/configs/e01_majkel_corpus_expansion_request_v1.json"
+      },
+      {
+        "bytes": 359151,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/private/assets/official/EN_Card_Data.csv"
+      },
+      {
+        "bytes": 99686,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/reports/artifacts/e01-approved-replay-corpus-manifest-v1.json"
+      },
+      {
+        "bytes": 8958,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/reports/artifacts/e01-majkel-live-gold-teacher-probe-review-v1.json"
+      },
+      {
+        "bytes": 25678,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/scripts/e01_dries_confirmation_teacher_probe_review.py"
+      },
+      {
+        "bytes": 24513,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/scripts/e01_majkel_corpus_expansion_review.py"
+      },
+      {
+        "bytes": 55,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/__init__.py"
+      },
+      {
+        "bytes": 49,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/__main__.py"
+      },
+      {
+        "bytes": 10783,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/assets.py"
+      },
+      {
+        "bytes": 1146,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/audit.py"
+      },
+      {
+        "bytes": 4106,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/cli.py"
+      },
+      {
+        "bytes": 42,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/__init__.py"
+      },
+      {
+        "bytes": 11038,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/app.py"
+      },
+      {
+        "bytes": 1463,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/cli.py"
+      },
+      {
+        "bytes": 1381,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/models.py"
+      },
+      {
+        "bytes": 19807,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/store.py"
+      },
+      {
+        "bytes": 6604,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/doctor.py"
+      },
+      {
+        "bytes": 437,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/__init__.py"
+      },
+      {
+        "bytes": 7039,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/acceptance.py"
+      },
+      {
+        "bytes": 15275,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/actions.py"
+      },
+      {
+        "bytes": 13976,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/arena.py"
+      },
+      {
+        "bytes": 11016,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/benchmark.py"
+      },
+      {
+        "bytes": 20177,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/cli.py"
+      },
+      {
+        "bytes": 6781,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/engine_compare.py"
+      },
+      {
+        "bytes": 16431,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/environment.py"
+      },
+      {
+        "bytes": 4060,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/evidence.py"
+      },
+      {
+        "bytes": 16134,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/models.py"
+      },
+      {
+        "bytes": 3597,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/native.py"
+      },
+      {
+        "bytes": 3928,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/recurrent.py"
+      },
+      {
+        "bytes": 3610,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/rule_baseline.py"
+      },
+      {
+        "bytes": 36407,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/semantic.py"
+      },
+      {
+        "bytes": 16485,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/soak.py"
+      },
+      {
+        "bytes": 4807,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/verdict.py"
+      },
+      {
+        "bytes": 2382,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/verification.py"
+      },
+      {
+        "bytes": 428,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/__init__.py"
+      },
+      {
+        "bytes": 18573,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/card_table.py"
+      },
+      {
+        "bytes": 41459,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/checkpoint.py"
+      },
+      {
+        "bytes": 2862,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/cli.py"
+      },
+      {
+        "bytes": 5984,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/models.py"
+      },
+      {
+        "bytes": 40268,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/network.py"
+      },
+      {
+        "bytes": 16723,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/projection.py"
+      },
+      {
+        "bytes": 28339,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/reliability.py"
+      },
+      {
+        "bytes": 1273,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/__init__.py"
+      },
+      {
+        "bytes": 36891,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/bc_canary.py"
+      },
+      {
+        "bytes": 16867,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/checkpoint.py"
+      },
+      {
+        "bytes": 17985,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_execution.py"
+      },
+      {
+        "bytes": 6356,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_notebook.py"
+      },
+      {
+        "bytes": 24089,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_plan.py"
+      },
+      {
+        "bytes": 20860,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_runner.py"
+      },
+      {
+        "bytes": 30225,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/competence_plan.py"
+      },
+      {
+        "bytes": 6569,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/e04_authorization.py"
+      },
+      {
+        "bytes": 29858,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/evaluation.py"
+      },
+      {
+        "bytes": 155682,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/gold_path.py"
+      },
+      {
+        "bytes": 14607,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/local_correctness.py"
+      },
+      {
+        "bytes": 7956,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/native_zero_update.py"
+      },
+      {
+        "bytes": 25460,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/ppo.py"
+      },
+      {
+        "bytes": 25429,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/toy.py"
+      },
+      {
+        "bytes": 24694,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/zero_update_bridge.py"
+      },
+      {
+        "bytes": 4178,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/native_probe.py"
+      },
+      {
+        "bytes": 1101,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/__init__.py"
+      },
+      {
+        "bytes": 17278,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/acquisition.py"
+      },
+      {
+        "bytes": 7933,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/cli.py"
+      },
+      {
+        "bytes": 14948,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/independent_review.py"
+      },
+      {
+        "bytes": 23749,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/planner.py"
+      },
+      {
+        "bytes": 22591,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/semantic_loader.py"
+      },
+      {
+        "bytes": 1056442,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/card-table-v1.json"
+      },
+      {
+        "bytes": 26493,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/manifest.json"
+      },
+      {
+        "bytes": 24378,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/reference-v1.json"
+      },
+      {
+        "bytes": 4321431,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/state-v1.bin"
+      },
+      {
+        "bytes": 496720,
+        "name": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json"
+      },
+      {
+        "bytes": 2390,
+        "name": "reports/artifacts/e01-approved-replay-corpus-review-v3.json"
+      },
+      {
+        "bytes": 1928,
+        "name": "reports/artifacts/e01-production-bc-input-publication-execution-review-v1.json"
+      },
+      {
+        "bytes": 16528,
+        "name": "reports/artifacts/raw/e01-production-bc-retained-dataset-verification-20260805-v1.json"
+      },
+      {
+        "bytes": 1594,
+        "name": "reports/incidents/e01-production-bc-retained-dataset-path-flattening-v1.json"
+      },
+      {
+        "bytes": 1326,
+        "name": "scripts/e01_production_recurrent_bc_v2.py"
+      },
+      {
+        "bytes": 40285,
+        "name": "src/ptcg_rl/g3/bc_production_v2.py"
+      }
+    ]
+  },
+  "created_at_utc": "2026-08-06T09:55:04Z",
+  "dataset": {
+    "dataset_id": 11501808,
+    "last_updated_utc": "2026-08-06T09:53:15.123Z",
+    "private": true,
+    "ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+    "status": "READY",
+    "version": 2
+  },
+  "differences": {
+    "byte_delta": -446,
+    "extra": [
+      {
+        "bytes": 1056442,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/card-table-v1.json"
+      },
+      {
+        "bytes": 26493,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/manifest.json"
+      },
+      {
+        "bytes": 24378,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/reference-v1.json"
+      },
+      {
+        "bytes": 4321431,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/state-v1.bin"
+      }
+    ],
+    "file_count_delta": 3,
+    "missing": [
+      {
+        "bytes": 5429190,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip"
+      }
+    ],
+    "size_mismatches": []
+  },
+  "expected": {
+    "bytes": 7646035,
+    "files": 76,
+    "inventory_sha256": "78fa9caa32782729a28cb9254449f22e46a6edcb5f83b7b2f763756bd970fa90",
+    "records": [
+      {
+        "bytes": 16953,
+        "name": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json"
+      },
+      {
+        "bytes": 1501,
+        "name": "docs/decisions/DEC-034_E01_PRODUCTION_BC_RETAINED_DATASET_PATH_FLATTENING.md"
+      },
+      {
+        "bytes": 443,
+        "name": "input-manifest.json"
+      },
+      {
+        "bytes": 188960,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/configs/e01_majkel_corpus_expansion_request_v1.json"
+      },
+      {
+        "bytes": 359151,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/private/assets/official/EN_Card_Data.csv"
+      },
+      {
+        "bytes": 99686,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/reports/artifacts/e01-approved-replay-corpus-manifest-v1.json"
+      },
+      {
+        "bytes": 8958,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/reports/artifacts/e01-majkel-live-gold-teacher-probe-review-v1.json"
+      },
+      {
+        "bytes": 25678,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/scripts/e01_dries_confirmation_teacher_probe_review.py"
+      },
+      {
+        "bytes": 24513,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/scripts/e01_majkel_corpus_expansion_review.py"
+      },
+      {
+        "bytes": 55,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/__init__.py"
+      },
+      {
+        "bytes": 49,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/__main__.py"
+      },
+      {
+        "bytes": 10783,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/assets.py"
+      },
+      {
+        "bytes": 1146,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/audit.py"
+      },
+      {
+        "bytes": 4106,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/cli.py"
+      },
+      {
+        "bytes": 42,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/__init__.py"
+      },
+      {
+        "bytes": 11038,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/app.py"
+      },
+      {
+        "bytes": 1463,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/cli.py"
+      },
+      {
+        "bytes": 1381,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/models.py"
+      },
+      {
+        "bytes": 19807,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/dashboard/store.py"
+      },
+      {
+        "bytes": 6604,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/doctor.py"
+      },
+      {
+        "bytes": 437,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/__init__.py"
+      },
+      {
+        "bytes": 7039,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/acceptance.py"
+      },
+      {
+        "bytes": 15275,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/actions.py"
+      },
+      {
+        "bytes": 13976,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/arena.py"
+      },
+      {
+        "bytes": 11016,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/benchmark.py"
+      },
+      {
+        "bytes": 20177,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/cli.py"
+      },
+      {
+        "bytes": 6781,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/engine_compare.py"
+      },
+      {
+        "bytes": 16431,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/environment.py"
+      },
+      {
+        "bytes": 4060,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/evidence.py"
+      },
+      {
+        "bytes": 16134,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/models.py"
+      },
+      {
+        "bytes": 3597,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/native.py"
+      },
+      {
+        "bytes": 3928,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/recurrent.py"
+      },
+      {
+        "bytes": 3610,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/rule_baseline.py"
+      },
+      {
+        "bytes": 36407,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/semantic.py"
+      },
+      {
+        "bytes": 16485,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/soak.py"
+      },
+      {
+        "bytes": 4807,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/verdict.py"
+      },
+      {
+        "bytes": 2382,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g1/verification.py"
+      },
+      {
+        "bytes": 428,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/__init__.py"
+      },
+      {
+        "bytes": 18573,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/card_table.py"
+      },
+      {
+        "bytes": 41459,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/checkpoint.py"
+      },
+      {
+        "bytes": 2862,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/cli.py"
+      },
+      {
+        "bytes": 5984,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/models.py"
+      },
+      {
+        "bytes": 40268,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/network.py"
+      },
+      {
+        "bytes": 16723,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/projection.py"
+      },
+      {
+        "bytes": 28339,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g2/reliability.py"
+      },
+      {
+        "bytes": 1273,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/__init__.py"
+      },
+      {
+        "bytes": 36891,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/bc_canary.py"
+      },
+      {
+        "bytes": 16867,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/checkpoint.py"
+      },
+      {
+        "bytes": 17985,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_execution.py"
+      },
+      {
+        "bytes": 6356,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_notebook.py"
+      },
+      {
+        "bytes": 24089,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_plan.py"
+      },
+      {
+        "bytes": 20860,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/cloud_runner.py"
+      },
+      {
+        "bytes": 30225,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/competence_plan.py"
+      },
+      {
+        "bytes": 6569,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/e04_authorization.py"
+      },
+      {
+        "bytes": 29858,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/evaluation.py"
+      },
+      {
+        "bytes": 155682,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/gold_path.py"
+      },
+      {
+        "bytes": 14607,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/local_correctness.py"
+      },
+      {
+        "bytes": 7956,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/native_zero_update.py"
+      },
+      {
+        "bytes": 25460,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/ppo.py"
+      },
+      {
+        "bytes": 25429,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/toy.py"
+      },
+      {
+        "bytes": 24694,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/g3/zero_update_bridge.py"
+      },
+      {
+        "bytes": 4178,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/native_probe.py"
+      },
+      {
+        "bytes": 1101,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/__init__.py"
+      },
+      {
+        "bytes": 17278,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/acquisition.py"
+      },
+      {
+        "bytes": 7933,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/cli.py"
+      },
+      {
+        "bytes": 14948,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/independent_review.py"
+      },
+      {
+        "bytes": 23749,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/planner.py"
+      },
+      {
+        "bytes": 22591,
+        "name": "kptcg-e01-majkel-corpus-review-source-v1/src/ptcg_rl/replay/semantic_loader.py"
+      },
+      {
+        "bytes": 5429190,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip"
+      },
+      {
+        "bytes": 496720,
+        "name": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json"
+      },
+      {
+        "bytes": 2390,
+        "name": "reports/artifacts/e01-approved-replay-corpus-review-v3.json"
+      },
+      {
+        "bytes": 1928,
+        "name": "reports/artifacts/e01-production-bc-input-publication-execution-review-v1.json"
+      },
+      {
+        "bytes": 16528,
+        "name": "reports/artifacts/raw/e01-production-bc-retained-dataset-verification-20260805-v1.json"
+      },
+      {
+        "bytes": 1594,
+        "name": "reports/incidents/e01-production-bc-retained-dataset-path-flattening-v1.json"
+      },
+      {
+        "bytes": 1326,
+        "name": "scripts/e01_production_recurrent_bc_v2.py"
+      },
+      {
+        "bytes": 40285,
+        "name": "src/ptcg_rl/g3/bc_production_v2.py"
+      }
+    ]
+  },
+  "inventory_sha256": "69db307c555a904f75131fdce3ba9f19dce6a9672f6b6bf5e7227cf78a135b53",
+  "record_id": "e01-source-bundle-v2-remote-inventory-20260806-v1",
+  "schema_version": 1,
+  "verification_scope": {
+    "metadata_only": true,
+    "remote_file_sha256_verified": 0,
+    "remote_files_downloaded": 0,
+    "stopped_before_download_due_contract_mismatch": true
+  }
+}

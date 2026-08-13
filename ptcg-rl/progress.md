@@ -4465,3 +4465,79 @@ or a relaxed per-group criterion.
 **Commit SHA**
 
 Pending Gate-1 code/evidence milestone commit.
+
+
+## 2026-08-11T04:30:00+05:30 - Step 46: Dawn generalized-search pivot; terminal action-Q rejected
+
+**Promotion requirement preserved**
+
+- Hard target remains **>95% overall native engine win rate** on a broad, both-seat, generalized deck suite. Do not promote a named-matchup specialist or hide weak cells behind the aggregate.
+- Added `.chatgpt/KPTCG_PROMOTION_CRITERIA.local.md` and `.chatgpt/tmp/generalization-suite-v1.json` to preserve this gate.
+
+**Completed Kaggle action-Q v5 version 2**
+
+- `ashok205/kptcg-dawn-actionq-v5`, version 2, completed with all 8 fresh family collectors succeeding at 12 roots × 4 particles.
+- Combined corpus: 112 roots, 81 informative roots, 496 action rows, 207 features.
+- Best held-out-family global action-Q model was inadequate: mean top-1 `0.4959`, mean pairwise `0.5296`, mean regret `0.3755`; research gate failed.
+- Imported report: `.chatgpt/tmp/flg-floor4-research/kaggle-v2/kptcg_dawn_actionq_report_v2.json`.
+- More importantly, the collector was found structurally noisy for terminal continuation: the root action is forced through native search without updating Dawn's stateful `_HISTORY` and other stateful sidecars as normal `agent()` execution would. Do not launch another full-game terminal-Q fit without changing the target/continuation architecture.
+
+**Resolver-free current-turn planner**
+
+- Built `.chatgpt/tmp/current-search/enumerative_turn_solver.py`.
+- It branches MAIN and all native follow-up effect/search/discard/attach/damage selections directly through the engine. It does not use the old heuristic effect resolver and does not invoke a stateful future continuation policy.
+- Public-only opponent determinization is used; no opponent name/deck routing.
+- Tractability canary across one decision from each of 8 archetypes: 8 scans, 3 disagreements, mean ~`0.0699 s` and ~`79.75` expansions per scan. This is runtime evidence only, not strength evidence.
+
+**Multi-step current-turn lethal evidence**
+
+- `.chatgpt/tmp/current-search/enumerative-terminal-shadow-v1.json`: 32 broad shadow games, 15 late-game scans, 4 baseline root actions had a different root with a current-turn terminal win across both public-hidden particles; examples occurred versus Abomasnow, Dragapult, and modern Lucario. Total search cost ~`5.53 s`.
+- Added semantic path fingerprints. `.chatgpt/tmp/current-search/enumerative-terminal-consensus-v1.json` found a Dragapult state with four winning roots whose complete action-index and semantic paths agreed across both particles.
+- Conservative live execution probe verifies every live semantic step before execution. In a later targeted 30-game probe it encountered one consensus plan and executed it successfully: `1/1` terminal win, `0` semantic divergences. That proof happened to be a one-step lethal; multi-step live execution remains shadow-proven only. Do not package/promote the lethal planner yet.
+
+**Generalized public value and next boundary model**
+
+- Existing Kaggle public MAIN-state value model remains promising: 160 games / 4,889 states, leave-one-family-out state AUC ~`0.758`, game AUC ~`0.895`.
+- Its tree importance identifies `opp_total_energy` as the strongest feature by a wide margin (gain ~`286.95`; next `opp_prize_count` ~`165.68`). Finalized value shards show losses diverge strongly in opponent board Energy around turn 4 for Iono and Lucario, and later for Abomasnow. Alakazam is different: its loss signature is more opponent hand-size / board-development driven.
+- Prepared Kaggle-only boundary-model notebook using the existing `kptcg-dawn-native-lab-v6` dataset plus competition input:
+  `.chatgpt/tmp/flg-floor4-research/manual-upload-simple/kptcg_dawn_boundary_value_v1.ipynb`
+  (source sibling `.py`). It plans 240 native games on Kaggle and trains a canonical post-own-turn public-state value model with LOFO validation; no exact opponent card IDs or private hand-card identities are features.
+- `.chatgpt/tmp/current-search/enumerative_turn_solver.py` is already wired to automatically use the future boundary model from `.chatgpt/tmp/flg-floor4-research/kaggle-boundary/` when those artifacts arrive; otherwise it retains the current heuristic boundary fallback.
+
+**Generalization holdout evidence**
+
+- Added a stricter development/holdout definition. A small clean-subprocess holdout screen gave independent Alakazam policy `4/4`, Lucario-control `3/4`, and Kangaskhan/Slowking `2/4`; the 4-game Kanga cell was treated as too noisy.
+- Expanded distinct Kangaskhan/Slowking to 20 both-seat games: **18/20 = 90%**, seat0 `90%`, seat1 `90%`, zero errors/invalid/fallback/post-terminal actions. This is below the >95 target and must remain in the generalized holdout suite.
+- Some layered Grim holdout packages are not valid simultaneous subprocess baselines because their generic sidecar module names/fixed-deck checks collide; do not count those package errors as gameplay losses. Build namespace-safe holdouts before using them.
+
+**Rejected side branch**
+
+- High-Elo modern-Lucario film suggested low-hand Lunar Cycle often precedes finishing Mega attachment. A one-line score fix looked positive in 32 games but failed 80-game confirmation: candidate `46/80 = 57.5%` versus modern-v1 baseline `49/80 = 61.25%`; rejected.
+
+**Current status**
+
+- Dawn3/Petrel3 remains the lead. Recent 160-game confirmations place it roughly `78–82%` overall, with persistent/volatile weaknesses in Iono, Abomasnow, stock Lucario, and Alakazam. No >95 generalized agent exists yet.
+- No live submission and no promotion occurred.
+- Next major evidence step: run/pull the 240-game Kaggle turn-boundary value notebook, replace the planner's crude boundary heuristic, then shadow and causally validate high-margin robust current-turn search decisions across development + holdout suites before any full strength sweep.
+
+
+## 2026-08-11 — generalized Dawn planner/value resume
+
+- Re-established the post-action-Q state from repo evidence rather than relying only on the chat handoff. The action-Q gate remains rejected (112 roots / 81 informative / 496 rows; family-held-out top-1 ~= 49.6%, pairwise ~= 53.0%).
+- Re-ran the existing resolver-free native current-turn planner canary before changing the boundary path. It again found four Dawn disagreements across the eight-family canary. Fresh timings were materially wider than the earliest ~0.07 s observation: mean about 0.339 s, maximum about 0.796 s in that run; a separate fresh Alakazam 7-option state reached ~1.39 s / 138 expansions. Any eventual live deployment therefore needs explicit latency/expansion discipline.
+- Re-ran the conservative consensus-lethal executor over its existing 30-game Abomasnow/Dragapult/modern-Lucario stress panel. This fresh run produced zero eligible consensus-lethal overrides. The prior historical 1/1 successful lethal conversion remains encouraging but sparse; lethal-only search is not sufficient to close the generalized win-rate gap.
+- Rechecked recent broad Dawn confirmations from existing evidence. Representative fresh panels remain roughly 75.0%, 79.375%, 81.875%, and 83.75% depending on seed/panel, with Iono / Abomasnow / stock Lucario / Alakazam recurring as weak/volatile cells. No >95% promotion evidence exists.
+- Verified current Kaggle state read-only. `ashok205/kptcg-dawn-native-lab-v6` is Ready. `ashok205/kptcg-dawn-actionq-v5` is saved at version 2. No saved `kptcg-dawn-boundary-value` notebook/output was found, so the prepared boundary-value experiment remains the next cloud run.
+- Found and fixed a real feature-parity bug in the prepared boundary-value experiment: `first_player_rel` used `cur.get('firstPlayer',-1) or -1`, which incorrectly mapped player 0 to unknown. After the fix, a synthetic parity check showed all 128 boundary feature keys and values exactly matching the planner extractor.
+- Hardened both synchronized boundary experiment sources:
+  - `.chatgpt/tmp/flg-floor4-research/manual-upload-simple/kptcg_dawn_boundary_value_v1.py`
+  - `.chatgpt/tmp/flg-floor4-research/manual-upload-simple/kptcg_dawn_boundary_value_v1.ipynb`
+  The notebook is valid one-cell JSON and exactly mirrors the `.py`; the script compiles.
+- Added `dawn_boundary_value_support_v1.json` output containing empirical min/max, robust quantiles, mean/std, and exact observed values for intrinsic categorical public features. This addresses the key remaining methodological risk: family-held-out CV is on Dawn's natural trajectory distribution, whereas planner-generated turn-boundary states are counterfactual/off-policy.
+- Updated `.chatgpt/tmp/current-search/enumerative_turn_solver.py` so the learned boundary evaluator is only enabled when model + feature list + support metadata are all present. Clearly out-of-support counterfactual states fall back to the existing public heuristic instead of extrapolating with the learned model. Planner and boundary script compile after the change.
+- Current live Kaggle ladder check on 2026-08-11: top score was ~1203.6 and rank 50 ~1042.3. Therefore a generic "1000+ rating" target is no longer a safe proxy for gold-level placement. The engineering promotion criterion remains >95% generalized native win rate with both-seat and unseen-holdout confirmation; leaderboard rating should be treated as a separate external validation signal.
+- Official Kaggle data/evaluation pages confirm daily high-rated episode datasets are intended for replay review and BC/RL/IL. The official episode index `kaggle/pokemon-tcg-ai-battle-episodes-index` was current through 2026-08-11 (version 56). Use this after the boundary experiment to expand genuinely live, unseen holdouts rather than overfitting the existing eight-family panel.
+
+### Immediate next gate
+
+Run the corrected/hardened `kptcg_dawn_boundary_value_v1.ipynb` on Kaggle with the existing `kptcg-dawn-native-lab-v6` dataset plus the competition input. Expected outputs are `dawn_boundary_value_xgb_v1.json`, `dawn_boundary_value_features_v1.json`, `dawn_boundary_value_support_v1.json`, `kptcg_dawn_boundary_value_report_v1.json`, and `dawn_boundary_rows_v1.jsonl`. Do not promote from CV alone. After outputs are downloaded, first perform shadow planner ranking with OOD-support coverage/margins, then only conservative live execution, and finally broad + untouched Kanga + newer daily-top-episode holdouts before any promotion/submission.

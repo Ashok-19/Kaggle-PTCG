@@ -1,0 +1,66 @@
+{
+  "authorization": {
+    "agent_logs": false,
+    "external_compute": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "raw_exports": false,
+    "replay_transfer": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-04T16:14:10Z",
+  "decision": "ACCEPT_METADATA_ONLY_48_FILE_BALANCED_SOURCE_WAIT_PLAN_NO_TRANSFER_AUTHORIZED",
+  "inputs": {
+    "corpus_v2_manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "corpus_v2_review": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-review-v2.json",
+      "sha256": "87eaee15513189d7f2ff4ca44e631016b3f937165df31db8696383a30c1cad56"
+    },
+    "source_wait_config": {
+      "path": "configs/e01_corpus_v2_target_shortfall_source_wait_v1.json",
+      "sha256": "79edb337cd65ef43f691779c042c1cfc35720d36fd3c41469ed5f9be60aa83e5"
+    }
+  },
+  "next_action": "WAIT_FOR_VERSION_PINNED_DAILY_SOURCE_THEN_FREEZE_EXACT_MAX_48_FILE_REQUEST_AND_REQUEST_SEPARATE_APPROVAL",
+  "producer": "chatgpt-local-agent",
+  "qualification": {
+    "balanced_plan_defined": true,
+    "candidate_request_ready": false,
+    "daily_source_available": false,
+    "exact_filename_and_byte_caps_deferred_until_manifest": true,
+    "optimizer_steps": 0,
+    "replay_bodies_read": 0,
+    "source_wait_required": true,
+    "training": false
+  },
+  "recalculation": {
+    "current_targets": 23460,
+    "maximum_planned_files": 48,
+    "mean_projection": 2890.627306273063,
+    "mean_targets_per_episode": 60.22140221402214,
+    "p10_projection": 1872.0,
+    "p10_targets_per_episode": 39.0,
+    "p25_projection": 2376.0,
+    "p25_targets_per_episode": 49.5,
+    "projection_is_guarantee": false,
+    "qualified_majkel_episodes": 271,
+    "qualified_majkel_targets": 16320,
+    "shortfall": 1540,
+    "target_floor": 25000
+  },
+  "record_id": "e01-corpus-v2-target-shortfall-source-wait-review-v1",
+  "review_sha256": "2f58b70345ff45d6c80abb01bd02ed910f89574c7826034c3866a2be0c5b53c7",
+  "reviewed_decision": "DEC-028",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-corpus-v2-target-shortfall-source-wait-review-v1.json",
+  "status": "PASS_WAITING_SOURCE"
+}

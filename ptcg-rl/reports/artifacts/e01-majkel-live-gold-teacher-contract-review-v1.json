@@ -1,0 +1,42 @@
+{
+  "created_at_utc": "2026-08-04T10:40:05Z",
+  "decision": "ACCEPT_EXACT_TWO_FILE_MAJKEL_CURRENT_RANK_1_PROBE_REQUEST_UNAUTHORIZED",
+  "inputs": {
+    "live_refresh": {
+      "evidence_sha256": "a51849f4e9da8f7855c9dfe3254911ad0a6436c9efcd07131ae7349bb3854c88",
+      "path": "reports/artifacts/raw/e01-live-gold-refresh-20260804-v1.json",
+      "sha256": "7e27f564d3d90824f98484379fa58fedb7fd197774d446aaefeb7e33eda11bd1"
+    },
+    "request": {
+      "path": "configs/e01_majkel_live_gold_teacher_probe_request_v1.json",
+      "sha256": "e0b43f2a507728f5b2048a9ac7d8e30b6f444448e74885503267058477029886"
+    }
+  },
+  "next_action": "REQUEST_SEPARATE_EXPLICIT_APPROVAL_FOR_THE_EXACT_TWO_NAMED_REPLAY_BODIES",
+  "producer": "scripts/e01_live_gold_refresh_review.py",
+  "record_id": "e01-majkel-live-gold-teacher-contract-review-v1",
+  "request": {
+    "agent_logs_authorized": false,
+    "authorized": false,
+    "both_teacher_wins": true,
+    "external_compute_authorized": false,
+    "maximum_new_bytes": 832877,
+    "maximum_new_files": 2,
+    "opposite_teacher_seats": true,
+    "output_directory_exists": false,
+    "raw_exports_authorized": false,
+    "replay_transfer_authorized": false,
+    "request_ready": true,
+    "selected_episode_ids": [
+      89651832,
+      89802438
+    ],
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "review_sha256": "12e82afaf04b50c245d4cfaecf0a06cced488ef6abec45fa015db3bcbbe79384",
+  "reviewed_decision": "DEC-025",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-majkel-live-gold-teacher-contract-review-v1.json",
+  "status": "PASS"
+}

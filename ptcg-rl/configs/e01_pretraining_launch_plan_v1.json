@@ -1,0 +1,100 @@
+{
+  "architecture": {
+    "architecture_change_authorized": false,
+    "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+    "policy_artifact": "reports/artifacts/g2-policy-v1.json",
+    "policy_artifact_sha256": "d80991027e0c4d89538d0ba9edde6cde4f372afdc08e2cda73d9ab4d481b5614",
+    "trainable_parameters": 970022
+  },
+  "authorization": {
+    "external_compute": false,
+    "final_deck_freeze": false,
+    "git_commit": false,
+    "git_push": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "replay_transfer": false,
+    "submission": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-04T14:45:26Z",
+  "data": {
+    "base_corpus_review": "reports/artifacts/e01-approved-replay-corpus-review-v1.json",
+    "base_corpus_review_sha256": "d089090dc94a9bb29ac55c996bc69d18c9fb60bd1ab15f0b91791257a85d405f",
+    "base_episodes": 66,
+    "base_policy_loss_targets": 7140,
+    "corpus_v2_final": false,
+    "majkel_expansion_contract_review": "reports/artifacts/e01-majkel-corpus-expansion-contract-review-v1.json",
+    "majkel_expansion_contract_review_sha256": "282cf8c09fea88c1df392ef66f9b197e6f7f3712119f4e3b5681a1a66da52807",
+    "majkel_expansion_request": "configs/e01_majkel_corpus_expansion_request_v1.json",
+    "majkel_expansion_request_sha256": "7652f617e9bba2cd5a18a3d4b9956d348438989359e0fb200ef0f6066a590d3c"
+  },
+  "decision_id": "DEC-027",
+  "primary_teacher": {
+    "deck_multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278",
+    "final_submission_deck_frozen": false,
+    "initial_training_deck_frozen": true,
+    "submission_id": 55186239,
+    "team_id": 16374395,
+    "team_name": "Majkel1337"
+  },
+  "record_id": "e01-pretraining-launch-plan-v1",
+  "schema_version": 1,
+  "source_path": "configs/e01_pretraining_launch_plan_v1.json",
+  "stages": [
+    {
+      "authorized": false,
+      "exact_approval_required": true,
+      "maximum_optimizer_steps": 64,
+      "may_run_in_parallel_with_stage_2": true,
+      "order": 1,
+      "production_checkpoint_eligible": false,
+      "request": "configs/e01_bc_engineering_canary_request_v1.json",
+      "request_sha256": "5e78bcd7595a1f30b5eba5ab179203aa53ecad43f0ef3275a773a4b0ee4f2299",
+      "stage": "BC_ENGINEERING_CANARY"
+    },
+    {
+      "authorized": false,
+      "exact_approval_required": true,
+      "maximum_new_bytes": 1030207171,
+      "maximum_new_files": 269,
+      "may_run_in_parallel_with_stage_1": true,
+      "optimizer_steps": 0,
+      "order": 2,
+      "platform": "private_kaggle_cpu",
+      "replay_body_outputs": 0,
+      "request": "configs/e01_majkel_corpus_expansion_request_v1.json",
+      "request_sha256": "7652f617e9bba2cd5a18a3d4b9956d348438989359e0fb200ef0f6066a590d3c",
+      "stage": "MAJKEL_PRIVATE_KAGGLE_CPU_BODY_REVIEW_AND_QUALIFIED_CORPUS_V2_FINALIZATION"
+    },
+    {
+      "authorized": false,
+      "exact_approval_required": true,
+      "order": 3,
+      "request_status": "GENERATE_ONLY_AFTER_STAGES_1_AND_2_PASS_AND_CORPUS_V2_IS_HASH_FROZEN",
+      "stage": "PRODUCTION_RECURRENT_BC"
+    },
+    {
+      "authorized": false,
+      "exact_approval_required_for_external_execution": true,
+      "order": 4,
+      "stage": "HELD_OUT_AND_ON_POLICY_COMPETENCE_EVALUATION"
+    },
+    {
+      "authorized": false,
+      "exact_approval_required": true,
+      "maximum_choices_before_new_decision": 500000,
+      "order": 5,
+      "requires_bc_competence": true,
+      "stage": "BOUNDED_KL_AUXILIARY_BC_RECURRENT_PPO"
+    },
+    {
+      "authorized": false,
+      "exact_approval_required": true,
+      "final_submission_deck_frozen": false,
+      "order": 6,
+      "stage": "D1_DECK_AND_CHECKPOINT_TOURNAMENT_FREEZE"
+    }
+  ],
+  "status": "FROZEN_UNAUTHORIZED"
+}

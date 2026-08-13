@@ -1,0 +1,37 @@
+{
+  "external_compute": false,
+  "final_state_sha256": "8bde0dae2a3d33b22b8c9324aebe5b3dabcafab1a8d60859508116823b5dc603",
+  "gradient_norm": {
+    "all_finite": true,
+    "maximum_pre_clip": 20.018998919488983
+  },
+  "kind": "KPTCG_E01_BC_ENGINEERING_CANARY_EXECUTION",
+  "loss": {
+    "all_finite": true,
+    "first": 1.81972336769104,
+    "last": 1.4326117038726807
+  },
+  "optimizer_steps": 64,
+  "policy_competence_claimed": false,
+  "prior_failed_attempt_optimizer_steps": 10,
+  "production_checkpoint_eligible": false,
+  "record_id": "e01-bc-engineering-canary-execution-v1",
+  "recovery_from_fail_closed_scheduler_bug": true,
+  "request_sha256": "30bb97782cf898c06782e27345ca3f37e3d44f37c9528b54b73165e2c32f1edb",
+  "resume": {
+    "checkpoint_step": 32,
+    "payload_sha256": "c8df3666c87a895639092d6898b3ab8254ca6f0785c44980f1fba96d0000ec5d",
+    "state_match_after_restore": true
+  },
+  "schema_version": 1,
+  "skipped_forced_only_chunks": [
+    {
+      "episode_index": 5,
+      "start": 96
+    }
+  ],
+  "source_path": "reports/evaluations/e01-bc-engineering-canary-v1.json",
+  "status": "PASS",
+  "submission_authorized": false,
+  "successful_attempt_optimizer_steps": 54
+}

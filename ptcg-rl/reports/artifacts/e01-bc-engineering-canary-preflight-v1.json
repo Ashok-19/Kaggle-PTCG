@@ -1,0 +1,131 @@
+{
+  "assets": {
+    "card_data": {
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "initial_checkpoint": {
+      "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+      "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+      "state_sha256": "531b799b29830954dce62cd7d1b455eb30d5189cf670158723ee01b3e2ed6ab0"
+    }
+  },
+  "corpus_manifest": {
+    "bytes": 99686,
+    "manifest_sha256": "841cb7e535ad841218d6678f00f8ffe9b442e0ee1e7fbd9819f758347e591b27",
+    "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v1.json",
+    "sha256": "4a2ba5775ed617da14973912ef719aae71906a9d4c48432b5732db72cdc11c54"
+  },
+  "coverage": {
+    "episodes": 8,
+    "forced_decisions": 56,
+    "maximum_option_count": 33,
+    "maximum_selected_count": 5,
+    "meaningful_decisions": 609,
+    "ordered_requests": 5,
+    "per_episode": {
+      "88295625": {
+        "forced_decisions": 10,
+        "meaningful_decisions": 131,
+        "stratum": "seat_0_win",
+        "teacher_decisions": 141,
+        "teacher_key": "dries"
+      },
+      "88302734": {
+        "forced_decisions": 1,
+        "meaningful_decisions": 4,
+        "stratum": "seat_1_loss",
+        "teacher_decisions": 5,
+        "teacher_key": "flg"
+      },
+      "88304411": {
+        "forced_decisions": 5,
+        "meaningful_decisions": 82,
+        "stratum": "seat_0_loss",
+        "teacher_decisions": 87,
+        "teacher_key": "flg"
+      },
+      "88318931": {
+        "forced_decisions": 12,
+        "meaningful_decisions": 122,
+        "stratum": "seat_1_win",
+        "teacher_decisions": 134,
+        "teacher_key": "flg"
+      },
+      "88324713": {
+        "forced_decisions": 5,
+        "meaningful_decisions": 103,
+        "stratum": "seat_1_loss",
+        "teacher_decisions": 108,
+        "teacher_key": "dries"
+      },
+      "88325214": {
+        "forced_decisions": 7,
+        "meaningful_decisions": 90,
+        "stratum": "seat_1_win",
+        "teacher_decisions": 97,
+        "teacher_key": "dries"
+      },
+      "88332011": {
+        "forced_decisions": 2,
+        "meaningful_decisions": 2,
+        "stratum": "seat_0_loss",
+        "teacher_decisions": 4,
+        "teacher_key": "dries"
+      },
+      "88333037": {
+        "forced_decisions": 14,
+        "meaningful_decisions": 75,
+        "stratum": "seat_0_win",
+        "teacher_decisions": 89,
+        "teacher_key": "flg"
+      }
+    },
+    "safe_teacher_stream_sha256": "cdb0f15b4acfda68d150f6f8237bce31906d66acfddb795accd69b5fce778856",
+    "selected_options": 686,
+    "stop_targets": 17,
+    "teacher_decisions": 665
+  },
+  "execution_boundary": {
+    "checkpoint_output_exists": false,
+    "external_compute": false,
+    "model_promotion": false,
+    "optimizer_steps_authorized": false,
+    "optimizer_steps_executed": 0,
+    "production_training": false,
+    "request_authorized": false,
+    "submission": false
+  },
+  "gradient_probe": {
+    "episodes": 8,
+    "global_gradient_norm": 0.08743491031978069,
+    "loss": 1.0786664485931396,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "parameters_changed": false
+  },
+  "kind": "KPTCG_E01_BC_ENGINEERING_CANARY_PREFLIGHT",
+  "record_id": "e01-bc-engineering-canary-preflight-v1",
+  "request": {
+    "authorized": false,
+    "bytes": 8958,
+    "path": "configs/e01_bc_engineering_canary_request_v1.json",
+    "sha256": "5e78bcd7595a1f30b5eba5ab179203aa53ecad43f0ef3275a773a4b0ee4f2299"
+  },
+  "resources": {
+    "torch_interop_threads": 1,
+    "torch_threads": 2
+  },
+  "schema_version": 1,
+  "semantics": {
+    "episode_split_leakage": 0,
+    "forced_calls_advance_recurrence": true,
+    "forced_calls_create_policy_loss": false,
+    "lag_alignment": true,
+    "legal_option_mask_verified": true,
+    "ordered_selection_preserved": true,
+    "stop_first_class": true
+  },
+  "source_path": "reports/artifacts/e01-bc-engineering-canary-preflight-v1.json",
+  "status": "PASS"
+}

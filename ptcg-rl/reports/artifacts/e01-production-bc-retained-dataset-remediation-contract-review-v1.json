@@ -1,0 +1,41 @@
+{
+  "bytes": 341559745,
+  "checks": {
+    "corpus_v3_identity": "PASS",
+    "dec034_evidence_hashes": "PASS",
+    "no_remote_mutation_authorized": "PASS",
+    "no_replay_read_or_download_authorized": "PASS",
+    "no_training_authorized": "PASS",
+    "remote_dataset_identity": "PASS",
+    "root_basename_inventory": "PASS"
+  },
+  "created_at_utc": "2026-08-06T07:23:00Z",
+  "dataset": {
+    "bytes": 341559745,
+    "dataset_id": 11514316,
+    "files": 58,
+    "path_contract": "root_basename",
+    "private": true,
+    "ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+    "remote_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+    "status": "READY",
+    "version": 1
+  },
+  "dataset_mutations": 0,
+  "decision_id": "DEC-035",
+  "optimizer_steps": 0,
+  "record_id": "e01-production-bc-retained-dataset-remediation-contract-review-v1",
+  "records": 58,
+  "remote_replay_bodies_downloaded": 0,
+  "replay_bodies_read": 0,
+  "request_path": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json",
+  "request_sha256": "24abd3c96a95b57cbef294c04332bafad16e0ba24557f86b6cd912eae476b080",
+  "review_sha256": "71b3bd9ac7601171c7c9ad7ec949c8deb007f9c48e33e602f5e5e175546d672b",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-production-bc-retained-dataset-remediation-contract-review-v1.json",
+  "status": "PASS_READY_UNAUTHORIZED",
+  "test_records": 0,
+  "train_records": 50,
+  "training": false,
+  "validation_records": 8
+}

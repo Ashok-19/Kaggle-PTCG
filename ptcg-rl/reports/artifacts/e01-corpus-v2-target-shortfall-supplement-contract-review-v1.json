@@ -1,0 +1,66 @@
+{
+  "authorization": {
+    "agent_logs": false,
+    "corpus_v3_qualified_only_finalization": false,
+    "external_compute_private_kaggle_cpu": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "raw_exports": false,
+    "replay_body_exports": false,
+    "replay_body_reads_exact_named_files": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-05T05:13:52Z",
+  "decision": "ACCEPT_EXACT_BALANCED_48_FILE_REQUEST_READY_UNAUTHORIZED",
+  "inputs": {
+    "corpus_v2_manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-029_E01_CORPUS_TARGET_SUPPLEMENT_REQUEST.md",
+      "sha256": "993207fa1219c92e3e0d4efe4fbccb0515b815a0a79ffddf5c689567042b6bbc"
+    },
+    "raw_refresh": {
+      "path": "reports/artifacts/raw/e01-corpus-v2-source-refresh-20260805-v1.json",
+      "self_hash": "6169024a23e5a95572cd563ee53872950480bcb29a85442576f7ad549ac16cce",
+      "sha256": "627a3988869e4dfadc1626a96908041c75a23876369b3b8c546c92339f4217d3"
+    },
+    "request": {
+      "path": "configs/e01_corpus_v2_target_shortfall_supplement_request_v1.json",
+      "sha256": "d94c12e424ba26a06a4085c7273faeadd512351828b2b2aa84b85bf014a2f92e"
+    },
+    "source_wait_v2": {
+      "path": "configs/e01_corpus_v2_target_shortfall_source_wait_v2.json",
+      "sha256": "ef1fabf282aceb53571bd4cc8b29c9ff2cfbacb5ac149fd468d474fd1be02652"
+    }
+  },
+  "producer": "chatgpt-local-agent",
+  "qualification": {
+    "all_selected_files_exist_in_dataset_inventory": true,
+    "all_selected_files_have_exact_inventory_and_manifest_bytes": true,
+    "all_selected_ids_absent_from_corpus_v2": true,
+    "balanced_12_per_stratum": true,
+    "candidate_request_ready": true,
+    "dataset_ready": true,
+    "exact_files": 48,
+    "exact_maximum_bytes": 180695173,
+    "optimizer_steps": 0,
+    "replay_bodies_read": 0,
+    "teacher_identity_unchanged": true,
+    "training": false
+  },
+  "record_id": "e01-corpus-v2-target-shortfall-supplement-contract-review-v1",
+  "review_sha256": "28b0d81821aed9ac509fff9296fb7aa29a1d3837f107f82cfd80a5d418a0456b",
+  "reviewed_decision": "DEC-029",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-corpus-v2-target-shortfall-supplement-contract-review-v1.json",
+  "status": "PASS_READY_UNAUTHORIZED"
+}

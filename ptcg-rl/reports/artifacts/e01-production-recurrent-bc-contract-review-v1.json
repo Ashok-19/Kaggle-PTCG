@@ -1,0 +1,73 @@
+{
+  "boundary": {
+    "agent_logs_read": 0,
+    "data_loading_path_executed": false,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "kaggle_dataset_created_or_updated": false,
+    "kaggle_notebook_created_or_run": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "replay_bodies_read_during_preparation": 0,
+    "submission": false,
+    "training": false
+  },
+  "corpus": {
+    "record_listing_sha256": "75fb72b6d81d3e72860c1de40f0590de64577bdc04a96fb01753b1165fcdcfc1",
+    "records_embedded": false,
+    "records_reconstructed_from_frozen_manifest_at_execution": true,
+    "selected_bytes": 1327994902,
+    "selected_episodes": 316,
+    "test_bytes_sealed": 189787857,
+    "test_episodes_sealed": 46,
+    "test_policy_loss_targets_sealed": 3092,
+    "train_bytes": 1190672201,
+    "train_episodes": 284,
+    "train_forced_recurrent_calls": 1338,
+    "train_policy_loss_targets": 19646,
+    "train_teacher_active_requests": 20984,
+    "validation_bytes": 137322701,
+    "validation_episodes": 32,
+    "validation_forced_recurrent_calls": 153,
+    "validation_policy_loss_targets": 2318,
+    "validation_teacher_active_requests": 2471
+  },
+  "created_at_utc": "2026-08-05T10:20:00Z",
+  "decision": "ACCEPT_IMPLEMENTATION_BOUND_PRODUCTION_RECURRENT_BC_REQUEST_READY_UNAUTHORIZED_BLOCKED_INPUT_PUBLICATION",
+  "dependencies": {
+    "august_3_daily": "PINNED_VERSION_1",
+    "august_4_daily": "PINNED_VERSION_1",
+    "retained_dataset": "PLANNED_UNPUBLISHED",
+    "source_bundle_version_2": "PLANNED_UNPUBLISHED_VERSION_UPDATE"
+  },
+  "implementation": {
+    "path": "src/ptcg_rl/g3/bc_production.py",
+    "sha256": "6d7526d430caff7f90542bd98cffd3bc14716f0291706a03f1ddd30efad4f7e5"
+  },
+  "record_id": "e01-production-recurrent-bc-contract-review-v1",
+  "request": {
+    "path": "configs/e01_production_recurrent_bc_request_v1.json",
+    "sha256": "709837e07d7d8e6089662e3b03e1e131b3be72111894eab2cc70d54bb8d5520b",
+    "status": "READY_UNAUTHORIZED"
+  },
+  "review_sha256": "206741b502da3ad51226c2a2abd6b58ec56f6f5742910cac2ad94485f320f266",
+  "reviewed_decision": "DEC-033",
+  "runner": {
+    "path": "scripts/e01_production_recurrent_bc.py",
+    "sha256": "57e4d828056b3532cb5920dc3dab1f1d755f4087d3f5920e9d8b39021dd83d6d"
+  },
+  "schedule": {
+    "balanced_primary_legacy_fraction": "80/20",
+    "maximum_epochs": 4,
+    "maximum_optimizer_steps": 844,
+    "metadata_steps_per_epoch_upper": 211,
+    "one_majkel_chunk_per_stratum_per_step": true,
+    "test_split_sealed": true
+  },
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-production-recurrent-bc-contract-review-v1.json",
+  "status": "PASS"
+}

@@ -1,0 +1,508 @@
+{
+  "record_id": "phase-b1-native-integration-review-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-08-08T04:23:09Z",
+  "status": "REVIEW_COMPLETE_BLOCKED",
+  "verdict": "BLOCKED_NO_EXACT_DECK_CAPABILITY_OR_VALID_24_GAME_RECEIPT",
+  "scope": {
+    "review_kind": "INDEPENDENT_READ_ONLY_RED_TEAM_REVIEW_AND_CLOSURE_PROBES",
+    "candidate_deck": "mega-abomasnow-ex exact production deck",
+    "reviewed_package": "reports/deterministic/phase-b1-native-integration-package-v2.json",
+    "exact_deck_plan": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json",
+    "component_plan": "configs/deterministic/phase_b1_component_qualification_v2.json",
+    "runtime_receipt": "configs/deterministic/phase_b1_native_route_receipt_v2.json",
+    "audited_head": "41be61fd894e42f228a82d7410935123eda37bbd",
+    "audited_worktree_status_sha256": "fdf408f98e0c712b8d1ed0e9479b5ecd7d088ca8302428229b462d7a4958f9a4",
+    "native_games_run": 0,
+    "kaggle_runs": 0,
+    "training": false,
+    "submission_created": false,
+    "commit_created": false,
+    "implementation_config_tests_edited": false,
+    "only_owned_artifact": "reports/deterministic/phase-b1-native-integration-review-v1.json",
+    "review_boundary": "Final read-only re-review after the RED-015..017 corrections. Re-audited typed source/process manifests against current bytes, scopes, paths, parsed runtime-receipt content, process-identity claims, stage-0 attestation schema, parent authorization, exact-deck plan/runner, superseded-v1 artifacts, private dependency hashes, and the local knowledge base. No native game, Kaggle job, training, submission, implementation/config/test edit, or external mutation was performed. Historical B1-RED-001 through B1-RED-017 are preserved below; new residual blockers are B1-RED-018 through B1-RED-021."
+  },
+  "authoritative_inputs": {
+    "instructions": [
+      {"path": "../AGENTS.md", "sha256": "1cc7370a7bc72fd656ff2828c884ac91fb1d3a8578e1ffafdd7eac52d6f6a0b0"},
+      {"path": "AGENTS.md", "sha256": "ab2b5b4ceea5569122ea9e60dcb7d165e8b45df8e548910537e154647bfa17ae"},
+      {"path": "../.chatgpt/handoffs/KPTCG_GOLD_PATH_MASTER_PROMPT.local.md", "sha256": "6f5e88deeeafbf084a3b9792121bf3ba36f7537a541cca648a39bf8d5b817bd6"},
+      {"path": "../PROJECT_STATUS_ANALYSIS.md", "sha256": "5f882f18c860721f4b5b918014c3dc24b694b07e57ca1268100e41b160f1071c"},
+      {"path": "PROJECT_STATUS.md", "sha256": "c533dfb407aa23c863c9e27e46982b9b7d4017694b1c9f3c5f8da432104c1d30"}
+    ],
+    "committed_b1_evidence": [
+      {"path": "reports/deterministic/phase-b1-prize-route-design-v1.json", "sha256": "9471945421feb5231651954a6a68a67aa6efb759db77a33dd4c20bc6fb9ec1b7"},
+      {"path": "reports/deterministic/phase-b1-runtime-oracle-audit-v1.json", "sha256": "4eb6f523185e9156827aad1a8ba1956ecd0428a2ab503c82ef5282b584c4cb43"},
+      {"path": "reports/deterministic/phase-a-b1-capability-capsules-v1.json", "sha256": "e980bca37f74908f6f15675395195c7dcb160d68ae8484ca8d228d7a3fa7df65"},
+      {"path": "reports/deterministic/phase-b-semantics-audit-v1.json", "sha256": "40293c28e87f1f99ce935725f426073b0308318f1490a881807a0820e9c7efed"}
+    ],
+    "corrected_current_files": [
+      {"path": "configs/deterministic/phase_b1_native_route_receipt_v2.json", "sha256": "35f8a412db9f545fb768f08b9bd5757ab5ba3c4affb2e3874b0d2a979d6b6ff2"},
+      {"path": "configs/deterministic/phase_b1_component_qualification_v2.json", "sha256": "0c3852238a96b60de7f6dedd08237f414143f6c1b3df655223a2596c50ca6555"},
+      {"path": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json", "sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88"},
+      {"path": "src/ptcg_rl/deterministic/b1_policy.py", "sha256": "bdd5f03f6a8acd900aeaade23a9b8f68746765e6e90f55c6e08db087157b15e9"},
+      {"path": "src/ptcg_rl/deterministic/b1_component_harness.py", "sha256": "53fdf7f7b2cc95faef8d9a203c2a1eb0dd9cf9f7814445db307d32483f342016"},
+      {"path": "src/ptcg_rl/deterministic/b1_oracle.py", "sha256": "becd99d4d5fbd1c9cdab1eb5d0909689c003bfd900045afab0178c2647f965d4"},
+      {"path": "scripts/deterministic/phase_b1_component_qualification.py", "sha256": "0a800efbd1c0bfcbfca10a719904f62028022c9d66491eae6151439902c9bfba"},
+      {"path": "scripts/deterministic/phase_b1_exact_deck_capability_rerun.py", "sha256": "622651658bffe385e7d3b0c0c8df5261cd0ebd5748ea6213ec3d930be0ff05c1"},
+      {"path": "tests/deterministic/test_phase_b1_policy.py", "sha256": "95e50814cd729e6ea809833cee19465484144a521ae2619b39319dfd8c3ec8e9"},
+      {"path": "tests/deterministic/test_phase_b1_component_harness.py", "sha256": "43801f059e2edb49c78edc7be7cd023f2114e7db83278ff71c8e9aad3b4241a4"},
+      {"path": "reports/deterministic/phase-b1-native-integration-package-v2.json", "sha256": "d712d8e07728ffd0b4f47b2abe46cf42482f364c233a538098d59c0baae859b5"},
+      {"path": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.json", "sha256": "8591505d33160d52e66aaa7ebbd26132ca6369c1562fa55e8c45c37814483c4b"},
+      {"path": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.raw.json", "sha256": "3e24247dfbfd0e6479dfe82b0f17ffc74b9d56d59d28d08cb963d67e38d342c4"}
+    ]
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS_WITH_OPEN_QUESTIONS",
+    "requeried_ids": ["DR-001", "DR-002", "DR-004", "DR-005", "DR-006", "DR-007", "DR-008", "DR-012", "DR-022", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033", "AP-001", "AP-008", "AP-009", "AP-011", "AP-014", "RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-009"],
+    "counts": {"sources": 56, "claims": 62, "strategies": 20, "decision_rules": 36, "anti_patterns": 14, "research_questions": 15, "contradictions": 6},
+    "warnings": "12 P0/P1 research questions remain open/in review/blocked; 3 contradictions remain explicitly unresolved"
+  },
+  "current_hash_recalculation": {
+    "assets": {
+      "native_library": {"path": "private/assets/official/sample_submission/sample_submission/cg/libcg.so", "sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "receipt_claim_matches": true, "receipt_file_path_bound": true, "native_process_loaded": false},
+      "api": {"path": "private/assets/official/sample_submission/sample_submission/cg/api.py", "sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced", "receipt_claim_matches": true, "receipt_file_path_bound": true, "native_process_loaded": false},
+      "wrapper": {"path": "private/assets/official/sample_submission/sample_submission/cg/game.py", "sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2", "receipt_claim_matches": true, "receipt_file_path_bound": true},
+      "card_data": {"path": "private/assets/official/EN_Card_Data.csv", "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "receipt_claim_matches": true, "receipt_file_path_bound": true},
+      "card_table": {"path": "private/g2/card-table-v1.json", "file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714", "semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0", "receipt_claim_matches": true, "receipt_file_path_bound": true},
+      "candidate_deck": {"path": "private/baselines/mega-abomasnow-ex/deck.csv", "file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd", "receipt_claim_matches": true, "receipt_file_path_bound": true},
+      "knowledge_base": {"path": "knowledge_base/ptcg_gold.sqlite", "file_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f", "asset_hash_claim_matches": true, "separate_provenance_hash_checked": true}
+    },
+    "corrected_runtime_receipt": {"path": "configs/deterministic/phase_b1_native_route_receipt_v2.json", "file_sha256": "35f8a412db9f545fb768f08b9bd5757ab5ba3c4affb2e3874b0d2a979d6b6ff2", "config_sha256": "9dd98157759bd260af37d0268c6a62efb40d05f83618350c2fc10f4cdac5fd02", "canonical_content_sha256": "b07725b4e05c803be6071487624f0a68f977b08a790e8c5db4d35462fc7f5be5", "load_and_hash_validation": "PASS", "runtime_authority": "ROUTE_CAPABILITY_ONLY", "parsed_content_path_binding": true},
+    "capability_evidence": {
+      "config_path": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json",
+      "config_sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88",
+      "report_path": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.json",
+      "report_sha256": "8591505d33160d52e66aaa7ebbd26132ca6369c1562fa55e8c45c37814483c4b",
+      "raw_path": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.raw.json",
+      "raw_sha256": "3e24247dfbfd0e6479dfe82b0f17ffc74b9d56d59d28d08cb963d67e38d342c4",
+      "plan_report_raw_hashes_match": true,
+      "plan_report_raw_status": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW",
+      "native_games": 0,
+      "capability_proofs": 0,
+      "scope": "NATIVE_QUALIFIED_CANDIDATE",
+      "policy_integration_authority": false,
+      "native_integration_authority": false
+    },
+    "current_source_hashes": {
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+      "src/ptcg_rl/deterministic/b1_oracle.py": "becd99d4d5fbd1c9cdab1eb5d0909689c003bfd900045afab0178c2647f965d4",
+      "src/ptcg_rl/deterministic/b1_policy.py": "bdd5f03f6a8acd900aeaade23a9b8f68746765e6e90f55c6e08db087157b15e9",
+      "src/ptcg_rl/deterministic/b1_component_harness.py": "53fdf7f7b2cc95faef8d9a203c2a1eb0dd9cf9f7814445db307d32483f342016",
+      "scripts/deterministic/phase_b1_exact_deck_capability_rerun.py": "622651658bffe385e7d3b0c0c8df5261cd0ebd5748ea6213ec3d930be0ff05c1"
+    },
+    "exact_capability_plan_source_hashes": {
+      "scripts/deterministic/phase_a_b1_capability_capsules_v1.py": "cbcc97dd526665e3fca0d84e327eb8f48e4da72b87c1301accf017514b14504c",
+      "scripts/deterministic/phase_a_route_capsules_v1.py": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/native.py": "0e8daa0c46569f5bb1ba33c30ecff78347a39f35fe5c85b36de3b3ad5c2ce6fa",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+      "src/ptcg_rl/deterministic/control.py": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+      "src/ptcg_rl/deterministic/policy.py": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"
+    }
+  },
+  "exact_deck_binding": {
+    "deck_file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "deck_semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+    "deck_count": 60,
+    "actual_multiset": {"3": 34, "721": 2, "722": 4, "723": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 3},
+    "exact_plan_declared_multiset_matches_file": true,
+    "runtime_receipt_declared_multiset_matches_file": true,
+    "exact_plan_runner": "PASS; loaded and hashed the actual deck.csv",
+    "old_phase_a_capability_deck": {"multiset_sha256": "7d5f90c8c53f22fcdba99acce88a9e76c8a91f7e9e5a5b41315dd9dbcd2a0aa2", "matches_current_exact_deck": false, "native_proof_reused": false},
+    "binding_verdict": "Corrected exact-deck plan and v2 route receipt bind the same pending deck file; no native capability proof exists for it. The historical Phase A capability evidence remains a different deck and is not promotable evidence."
+  },
+  "exact_deck_capability_plan_runner_review": {
+    "review_scope": "SEPARATE_PLAN_AND_RUNNER_REVIEW_ONLY; NO_POLICY_INTEGRATION_OR_24_192_EVIDENCE",
+    "plan_path": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json",
+    "plan_sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88",
+    "runner_path": "scripts/deterministic/phase_b1_exact_deck_capability_rerun.py",
+    "runner_sha256": "622651658bffe385e7d3b0c0c8df5261cd0ebd5748ea6213ec3d930be0ff05c1",
+    "plan_status": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW",
+    "scope": "NATIVE_QUALIFIED_CANDIDATE",
+    "candidate_deck": {
+      "path": "private/baselines/mega-abomasnow-ex/deck.csv",
+      "file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+      "semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+      "count": 60,
+      "multiset": {"3": 34, "721": 2, "722": 4, "723": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 3}
+    },
+    "assets": {
+      "native_library": {"path": "private/assets/official/sample_submission/sample_submission/cg/libcg.so", "sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "scope": "OFFICIAL_ENGINE"},
+      "wrapper": {"path": "private/assets/official/sample_submission/sample_submission/cg/game.py", "sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2", "scope": "OFFICIAL_WRAPPER"},
+      "api": {"path": "private/assets/official/sample_submission/sample_submission/cg/api.py", "sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced", "scope": "OFFICIAL_API"},
+      "card_data": {"path": "private/assets/official/EN_Card_Data.csv", "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "OFFICIAL_CARD_DATA"},
+      "card_table": {"path": "private/g2/card-table-v1.json", "sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714", "semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0", "scope": "VERSIONED_CARD_TABLE"},
+      "candidate_deck": {"path": "private/baselines/mega-abomasnow-ex/deck.csv", "sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd", "scope": "EXACT_PRODUCTION_DECK"},
+      "knowledge_base": {"path": "knowledge_base/ptcg_gold.sqlite", "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f", "scope": "LOCAL_KNOWLEDGE_BASE"}
+    },
+    "source_paths_and_hashes": {
+      "scripts/deterministic/phase_a_b1_capability_capsules_v1.py": "cbcc97dd526665e3fca0d84e327eb8f48e4da72b87c1301accf017514b14504c",
+      "scripts/deterministic/phase_a_route_capsules_v1.py": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/native.py": "0e8daa0c46569f5bb1ba33c30ecff78347a39f35fe5c85b36de3b3ad5c2ce6fa",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"
+    },
+    "proof_goals": [
+      {"id": "snover_1044_first", "required_attack_ids": [1044]},
+      {"id": "snover_1045_first", "required_attack_ids": [1045]},
+      {"id": "snover_to_mega_evolution", "required_attack_ids": []},
+      {"id": "prize_route_targets", "required_attack_ids": []}
+    ],
+    "limits": {"games_per_attack_formulation": 12, "games_per_evolution_seat": 12, "games_per_prize_target": 48, "request_cap_per_game": 900, "wall_seconds": 600, "evidence_bytes_cap": 67108864, "max_capsules": 384},
+    "stop_conditions": {"stop_on_any_reliability_counter": true, "required_zero_counters": ["invalid_actions", "semantic_contract_failures", "request_cap_failures", "timeouts", "native_errors", "fallbacks", "post_terminal_actions", "unclassified_terminal", "incomplete_games", "other_failures", "ambiguous_prize_pairings"], "unknown_if_unobserved": true, "native_launch": false, "kaggle_run": false, "submission": false},
+    "evidence_destinations": {
+      "plan": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json",
+      "blocked_report": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.json",
+      "blocked_raw": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.raw.json",
+      "blocked_report_sha256": "8591505d33160d52e66aaa7ebbd26132ca6369c1562fa55e8c45c37814483c4b",
+      "blocked_raw_sha256": "3e24247dfbfd0e6479dfe82b0f17ffc74b9d56d59d28d08cb963d67e38d342c4",
+      "status": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW; native_games=0; capability_proofs=0"
+    },
+    "runner_checks": {"actual_deck_file_and_multiset": "PASS", "asset_hashes_and_scopes": "PASS", "source_hashes_and_paths": "PASS", "duplicate_knowledge_base_binding": "PASS", "caps_stops_and_evidence_budget": "PASS", "capability_only_labels": "PASS", "native_import_or_launch": "NOT_PRESENT; NOT_RUN"},
+    "policy_integration_separation": {"policy_integration_authority": false, "stage0_24_authority": false, "stage1_192_accessible": false},
+    "bounded_local_capability_plan_verdict": "PLAN_CONTRACT_SOUND_FOR_FRESH_INDEPENDENT_REVIEW; NOT_LAUNCH_READY",
+    "launch_ready": false,
+    "launch_verdict": "NOT_READY_PENDING_INDEPENDENT_TECHNICAL_REVIEW_AND_NATIVE_EXECUTION_EVIDENCE",
+    "review_conclusion": "The exact-deck plan/runner is independently sound as a bounded, capability-only planning contract and is separate from the policy 24/192 package. It is not a native launch receipt: the exact deck has no capability proofs, the report/raw are blocked plan-only artifacts, native launch is false, and no independent technical review or native run was performed. This review does not authorize execution."
+  },
+  "superseded_v1_cleanup": {
+    "status": "AUDITED_NOT_DELETED",
+    "deletion_performed": false,
+    "reason": "The review is restricted to this report; superseded artifacts are retained for historical/regression provenance and require owner-authorized cleanup.",
+    "artifacts": [
+      {
+        "path": "configs/deterministic/phase_b1_native_route_receipt_v1.json",
+        "exists": true,
+        "mode": "0664",
+        "sha256": "11fee007f5d3deae480f7b32f16e74cd96a503bb48266dcb217b2c2e5af7bbf5",
+        "superseded_by": "configs/deterministic/phase_b1_native_route_receipt_v2.json",
+        "active_production_reference": false,
+        "remaining_references": ["tests/deterministic/test_phase_b1_component_harness.py:133 (intentional old-receipt mutation regression)", "configs/deterministic/phase_b1_component_qualification_v1.json", "reports/deterministic/phase-b1-native-integration-package-v1.json"],
+        "cleanup_verdict": "OWNER_CLEANUP_PENDING"
+      },
+      {
+        "path": "configs/deterministic/phase_b1_component_qualification_v1.json",
+        "exists": true,
+        "mode": "0664",
+        "sha256": "ae427075b9e7aeee8f175a43ce3971aa80577fc72b44f96a8c60530c5b8da197",
+        "superseded_by": "configs/deterministic/phase_b1_component_qualification_v2.json",
+        "active_production_reference": false,
+        "remaining_references": ["configs/deterministic/phase_b1_native_route_receipt_v1.json", "reports/deterministic/phase-b1-native-integration-package-v1.json", "reports/deterministic/CURRENT_HANDOFF.md:244-248"],
+        "cleanup_verdict": "OWNER_CLEANUP_PENDING"
+      },
+      {
+        "path": "reports/deterministic/phase-b1-native-integration-package-v1.json",
+        "exists": true,
+        "mode": "0664",
+        "sha256": "682ad2c0a6e8ecb2fafbae49a0175da3a001968873fce124898c1e82c3b43b48",
+        "superseded_by": "reports/deterministic/phase-b1-native-integration-package-v2.json",
+        "active_production_reference": false,
+        "remaining_references": ["configs/deterministic/phase_b1_native_route_receipt_v1.json", "configs/deterministic/phase_b1_component_qualification_v1.json", "reports/deterministic/CURRENT_HANDOFF.md:244-248"],
+        "cleanup_verdict": "OWNER_CLEANUP_PENDING"
+      }
+    ]
+  },
+  "closure_probes": [
+    {"id": "terminal_poisoned_stale", "result": "PASS", "detail": "A terminal EngineObservationV1 plus a request object that raises on every attribute access caused only the terminal ContractViolation; terminal_boundary_count=1, oracle route_requests=0, last_request=null. A subsequent stale nonterminal request was rejected and error-reset."},
+    {"id": "dependency_hash_mutation", "result": "PASS_RECALCULATED", "detail": "Mutated engine, API, wrapper, card-data, card-table, candidate-deck, knowledge-base, source, and capability config/report/raw hashes were rejected. The receipt now hashes the actual knowledge_base path and cross-checks the duplicate plan/report/raw declarations."},
+    {"id": "dependency_scope_and_path_mutation", "result": "PASS_RECALCULATED", "detail": "Arbitrary asset/source scopes, capability plan/report/raw scope changes, absolute component-plan paths, and repository-escape paths were rejected. The exact-deck runner also rejects absolute paths, .. traversal, duplicate KB declarations, wrong enumerated scopes, deck mutations, cap mutations, and native-launch mutations."},
+    {"id": "resource_reserve", "result": "PASS_WITH_FIELD_RETAINED_AS_UNKNOWN", "detail": "No _resource_reserve implementation remains in the current-state oracle. Runtime attack/attach features always set resource_reserve=null and strategic keys exclude it; the unqualified static zero no longer influences B1-B."},
+    {"id": "evidence_seal_baseline", "result": "PASS_TYPED_MANIFESTS", "detail": "A temporary stage-0 24-record evidence set sealed and resumed with actual canonical 0444 source/process manifests, manifest path/content/scope/dependency rehashing, raw/sidecar digests, plan/source binding, records, and finite metrics. No native engine was run."},
+    {"id": "evidence_tamper", "result": "PARTIAL_EXACT_MODE_GAP", "detail": "Raw bytes, writable mode, sidecar bytes, cell-record mutation at seal, NaN p99, and CPU-over-budget mutations were rejected. A separate probe changed raw evidence and sidecar to read-only 0400; verify_resume accepted them despite the declared 0444 contract. Exact-mode residual is B1-RED-021."},
+    {"id": "evidence_resume_stop_and_forgery", "result": "PASS_DERIVED_GATE; EXACT_MODE_PARTIAL", "detail": "Honest reliability-defect evidence seals with reliability_gate_pass=false and resume rejects it. A forged reliability_gate_pass=true envelope, sidecar tamper, raw tamper, writable mode, noncanonical JSON, or metric/record mutation is rejected; verify_resume recomputes the gate from retained evidence. Read-only 0400 is accepted despite the 0444 claim; see B1-RED-021."},
+    {"id": "evidence_run_id_continuity", "result": "PASS_RECALCULATED", "detail": "Current and previous run_id, stage, plan, source receipts, cursor, metric-provenance digest, and sidecar lineage are cross-checked. Forged run, stage, source, plan, cursor, or prior-envelope substitutions reject."},
+    {"id": "stage0_matrix", "result": "PASS", "detail": "stage0_canary arm_matrix contains exactly 24 cells, each games=1, across 3 arms x 4 anchors x seats 0/1; stage0 games_per_arm=8 and games_all_arms=24. The plan is mechanically exact but no native stage0 receipt exists."},
+    {"id": "screen_gate", "result": "BLOCKED_CURRENT_ZERO_GATE_AND_SCHEMA; AUTHORITY_UNPROVEN", "detail": "stage1_screen without --review-receipt/actual sealed artifacts rejects. Fabricated review pointers, nonexistent artifacts, wrong evidence/sidecar/review digests, writable files, sidecar tamper, and review-field tamper reject. Current all-zero plan placeholders prevent any nonzero review digest from matching, and the review schema cannot pass because later-required metric_provenance_sha256/reliability_gate_pass are absent from its exact field set. The gate still has no cryptographic/known-authority binding for reviewer or parent metadata; a future nonzero transition must not rely on self-authored JSON."},
+    {"id": "runtime_metrics", "result": "PARTIAL_TYPED_AGGREGATE_ONLY", "detail": "ComponentRuntimeMetricsV1 enforces finite aggregate p99 from at least 32 retained samples, aggregate CPU/game, aggregate peak RSS, request count, exact per-arm/per-seat game-count keys and reconciliation; p99/CPU/RSS/cardinality mutations reject. Per-arm/per-seat p99/CPU/RSS distributions are not retained beyond count coverage. Native metrics were not run. Current typed process/source manifests are reloaded and rehashed, but live process identity, command, and native_engine_loaded are caller-attested; see B1-RED-019."},
+    {"id": "exact_deck_plan_caps_and_stops", "result": "PASS_PLAN_ONLY", "detail": "Exact-deck runner passes actual 60-card multiset/file hash, all seven actual asset hashes and enumerated scopes, all six source paths/hashes, duplicate KB hash/path, scope labels, request cap 900, wall cap 600 seconds, evidence cap 67108864 bytes, max_capsules 384, stop-on-reliability, native_launch=false, and blocked launch gate. It retains zero native proofs."},
+    {"id": "component_runtime_receipt_binding", "result": "PASS_EXACT_PARSED_CONTENT", "detail": "B1ComponentPlanV1 now requires runtime_receipt_sha256, loads RuntimeRouteReceiptV1, recomputes canonical content binding b07725b4..., and cross-checks receipt provenance to the exact component-plan path/SHA. The historical v1-existing-file mutation rejects."},
+    {"id": "process_manifest_binding", "result": "PASS_TYPED_FILE_CONTENT_SCOPE; LIVE_IDENTITY_PARTIAL", "detail": "The historical no-file/arbitrary-digest probe now rejects. SourceManifestV1 and ProcessManifestV1 require actual canonical 0444 files, exact run/stage/plan lineage, actual source/dependency bytes, path/hash/scope sets, parsed runtime receipt binding, and sidecar/resume revalidation. A separate probe accepted a manifest containing pid=1, FORGED_NOT_LIVE start token, /forged/executable, and a caller-chosen native_engine_loaded boolean, so actual process/native provenance remains open."},
+    {"id": "stage0_attestation_schema", "result": "FAIL_UNSATISFIABLE", "detail": "verify_stage0_artifacts exact review fields omit metric_provenance_sha256 and reliability_gate_pass, but later require both; adding them fails the exact-field check and omitting them fails the later check. Current plan's two zero placeholders also reject any actual review digest. No valid stage0 review can currently verify."},
+    {"id": "parent_and_reviewer_authority", "result": "FAIL_EXTERNAL_BINDING", "detail": "Reviewer id/authority digest and parent prepared_by/status are plain schema fields; no signature, known authority, or external review record is checked. Current zero placeholders block the present path, but authority cannot be treated as independent after a future placeholder transition without an external root."},
+    {"id": "evidence_exact_0444_mode", "result": "FAIL_READ_ONLY_IS_NOT_EXACT_0444", "detail": "A raw evidence plus sidecar chmod 0400 passed verify_resume even though the sidecar declared artifact_mode=0444; code checks only absence of write bits. Exact 0444 remains unverified for evidence/sidecars."},
+    {"id": "capability_only_labeling", "result": "PASS_LABELING_BLOCKED", "detail": "Package v2 labels capability=NATIVE_QUALIFIED_CANDIDATE, policy_integration=NOT_ESTABLISHED, outcome_promotion=NOT_ESTABLISHED, runtime_authority=ROUTE_CAPABILITY_ONLY, native_games=0; these labels do not establish integration or native qualification for the exact deck."},
+    {"id": "native_free_scan", "result": "PASS", "detail": "No native imports, ctypes/CDLL, cg import, subprocess launch, or engine launch path occurs in the active B1 policy/oracle/harness/planner source scan; native execution was not run."}
+  ],
+  "adversarial_findings": [
+    {
+      "id": "B1-RED-001",
+      "original_severity": "P0_BLOCKER",
+      "closure_status": "CLOSED_FOR_PENDING_EXACT_PLAN_BINDING; NATIVE_PROOF_STILL_MISSING",
+      "finding": "Native capability evidence was originally bound to a different candidate deck than the B1 runtime receipt.",
+      "original_evidence": "The historical capability runner/config produced 7d5f90c8... with cards 265/1086/1097/1118, while the old receipt deck.csv was 7af2d7e1... with 34 copies of card 3 and no those cards.",
+      "closure_evidence": "The new exact-deck runner loads private/baselines/mega-abomasnow-ex/deck.csv and independently obtains file hash 7af2d7e1... and semantic multiset hash 2de6cda9.... The v2 receipt and exact plan declare that same file. The exact plan report/raw remain blocked with native_games=0 and capability_proofs=0, so this closes binding only, not qualification.",
+      "required_follow_up": "Run and independently review the exact-deck semantic capability proof before any native B1 launch."
+    },
+    {
+      "id": "B1-RED-002",
+      "original_severity": "P0_BLOCKER",
+      "closure_status": "CLOSED_BY_SOURCE_AND_POISON_PROBE",
+      "finding": "B1PolicyV1 previously read request identity/digests and rejected stale lifecycle state before terminal handling.",
+      "original_evidence": "The prior stale-valid-request plus terminal observation reached lifecycle rejection and oracle terminal_overrides remained zero.",
+      "closure_evidence": "Current choose() reads only observation.terminal_result before request fields, resets B0 and oracle state, emits no action by ContractViolation, and the poisoned request probe confirmed no request attribute access; oracle route_requests remained zero. Subsequent stale request was rejected after the boundary.",
+      "required_follow_up": "Retain this regression in the independent review suite."
+    },
+    {
+      "id": "B1-RED-003",
+      "original_severity": "P0_BLOCKER",
+      "closure_status": "CLOSED_FOR_CURRENT_RECEIPT_VALIDATION; NATIVE_PROOF_STILL_MISSING",
+      "finding": "Capability report provenance was malformed and the old receipt did not verify every claimed dependency path/hash.",
+      "original_evidence": "The old report hash claim was 65 characters and differed from the actual report; old validation omitted capability config/report/raw, native library, and API path verification.",
+      "closure_evidence": "The v2 receipt now path-binds and hashes engine, API, wrapper, card data, card table, deck, knowledge base, source, exact capability config/report/raw, and component plan; current parsed receipt load and canonical binding pass (file 35f8a412..., canonical content b07725b4...). Current mutation probes reject duplicate KB hash, engine/API/wrapper/card/deck/source/capability evidence hash, arbitrary asset/source scope, plan/report/raw scope, absolute path, and component-plan path mutations. Exact capability evidence is still blocked/no native proof.",
+      "required_follow_up": "Retain actual native execution evidence and independently review the exact production-deck capability proof; parsed component-plan runtime-receipt binding is now closed, while live process/native-load provenance remains B1-RED-019."
+    },
+    {
+      "id": "B1-RED-004",
+      "original_severity": "P0_BLOCKER",
+      "closure_status": "PARTIAL_BLOCKER; ARTIFACT_BOUND BUT INDEPENDENT ATTESTATION MISSING",
+      "finding": "The old qualification plan exposed the 8-game-per-cell/192-game screen without a mandatory one-game-per-cell stage.",
+      "original_evidence": "The old v1 plan had only 8 per cell, 64 per arm, and 192 total; no stage ID or independent review dependency existed.",
+      "closure_evidence": "v2 declares stage0_canary at exactly 1 game per cell and 24 total, stop_on_any_reliability_defect=true, and stage1_screen at 8/64/192 with requires_stage0_review=true and accessible_without_review=false. Direct stage1 matrix access without review, fabricated digest pointers, nonexistent artifacts, wrong digests, writable artifacts, and review/sidecar tampering reject. Current zero placeholders and the contradictory review schema prevent a self-authored current receipt from passing; no native stage0 evidence or independent review receipt exists, and external reviewer authority remains unbound.",
+      "required_follow_up": "Require an externally retained independent-review attestation/signature or separately sealed review record bound to the exact stage0 artifact, then obtain and independently review a real exact-deck stage0 artifact after native capability qualification."
+    },
+    {
+      "id": "B1-RED-005",
+      "original_severity": "P1_HIGH_BLOCKER",
+      "closure_status": "CLOSED_FOR_CURRENT_SEAL_AND_RESUME; NATIVE_PROVENANCE_STILL_MISSING",
+      "finding": "The old evidence seal/resume helpers asserted sealing without verifying files, sidecars, digests, or records.",
+      "original_evidence": "Old seal_evidence() returned self-asserted sealed/read-only fields and old verify_resume() ignored raw digest, sidecar, run continuity, and record digests.",
+      "closure_evidence": "Current helpers create content-addressed 0444 raw and sidecar files, hash both, validate plan/source/records/metrics, derive the reliability flag, and reject raw/sidecar/mode/record/metric tampering. Current probes reject forged reliability_gate_pass, run/stage/plan/source/cursor substitutions, and prior-envelope lineage changes. A remaining process-manifest provenance gap is tracked as B1-RED-015.",
+      "required_follow_up": "Retain the current typed manifests, then close the live process identity/native-load and exact-mode gaps tracked as B1-RED-019 and B1-RED-021 before treating a native stage0 receipt as promotable."
+    },
+    {
+      "id": "B1-RED-006",
+      "original_severity": "P1_HIGH_BLOCKER",
+      "closure_status": "PARTIAL_BLOCKER; STRUCTURAL CONTRACT CLOSED, NATIVE PROVENANCE MISSING",
+      "finding": "The old p99/component CPU/RSS contract was declared but not implemented or seal-required.",
+      "original_evidence": "Old config required runtime metrics while old harness retained neither sampler nor per-arm/per-seat evidence.",
+      "closure_evidence": "Current ComponentRuntimeMetricsV1 and ProcessRuntimeSamplerV1 implement finite aggregate p99, require at least 32 samples, process CPU, ru_maxrss, request count, per-arm/per-seat game-count reconciliation, and hard budget checks; p99/CPU/RSS/cardinality mutations reject. Per-arm/seat resource distributions are not retained and no native sample exists. Typed process/source manifest path/content/scope binding now exists; live process/native-load provenance remains B1-RED-019 and exact raw/sidecar mode remains B1-RED-021.",
+      "required_follow_up": "Retain the actual typed process/source manifests and add independently reviewable per-arm/seat resource distributions if they are required by the measurement contract; no native sample exists."
+    },
+    {
+      "id": "B1-RED-007",
+      "original_severity": "P1_HIGH_BLOCKER",
+      "closure_status": "CLOSED_FOR_CURRENT_ROUTE_FEATURES",
+      "finding": "The old B1-B resource reserve used hard-coded card IDs and silently produced a false zero.",
+      "original_evidence": "Old _resource_reserve() intersected hand IDs absent from the receipt card table and fed that zero into the B1-B key.",
+      "closure_evidence": "No current-state _resource_reserve implementation remains. Runtime attack/attach features set resource_reserve=null and strategic keys do not include it; the test comparing a populated versus null reserve yields identical B1-B keys.",
+      "required_follow_up": "Do not reintroduce the feature without an exact receipt-bound role/context proof."
+    },
+    {
+      "id": "B1-RED-008",
+      "original_severity": "P1_BLOCKER",
+      "closure_status": "LABELING_CLOSED; PROMOTION_AND_NATIVE_READINESS_BLOCKED",
+      "finding": "Capability scope does not prove native B1 integration.",
+      "original_evidence": "Prior capability raw/report scope had native_integration_authority=false and policy_v1_integration=false; no B1 policy was loaded by that run.",
+      "closure_evidence": "Package v2 preserves capability=NATIVE_QUALIFIED_CANDIDATE, policy_integration=NOT_ESTABLISHED, outcome_promotion=NOT_ESTABLISHED, runtime_authority=ROUTE_CAPABILITY_ONLY, native_games=0, and a blocked exact-deck launch gate. The route receipt can load static route capsules, but that is not native integration or exact-deck proof.",
+      "required_follow_up": "Keep all downstream launch/promotion gates closed until exact-deck capability and separately reviewed stage0 evidence exist."
+    },
+    {
+      "id": "B1-RED-009",
+      "original_severity": "P1_TEST_GAP",
+      "closure_status": "CLOSED_FOR_CURRENT_REGRESSIONS; NATIVE_EVIDENCE_GAPS REMAIN",
+      "finding": "Focused tests were too narrow and the old harness test codified unsafe 8/192 staging.",
+      "original_evidence": "The original focused run had 15 passes and no terminal poison, provenance mutation, sidecar, metric, or stage receipt regressions.",
+      "closure_evidence": "Current focused B1/oracle/capability/harness run passes 70 tests; it covers terminal reset, report/deck/KB/scope/path mutation, exact stage0 matrix, typed 0444 manifest binding, sealed artifact and independent-review pointers, sidecar/raw tampering, derived reliability, run lineage, metric rejection, 32-sample p99, and sampler structure. Independent probes close the former digest-only and standalone receipt gaps but expose live process identity and exact-mode/schema/authority residuals below.",
+      "required_follow_up": "Add regressions that require an actual process-manifest artifact/hash and bind the standalone component plan's runtime receipt by content and scope."
+    },
+    {
+      "id": "B1-RED-010",
+      "severity": "P1_HIGH_BLOCKER",
+      "closure_status": "CLOSED_BY_CURRENT_MUTATION_PROBES",
+      "finding": "Provenance mutation enforcement is incomplete despite the v2 receipt's broader path/hash coverage.",
+      "evidence": "Historical probe: with the old receipt config digest recomputed, changing provenance.knowledge_base_sha256 alone was accepted; arbitrary nonempty asset_scope/source_scope values were accepted; plan/report/raw scope mutations were accepted; and an absolute component_plan_path inside the repository was accepted. Engine/API/wrapper/card/deck/source/capability-report hash mutations did reject.",
+      "contract": "Every claimed dependency hash, scope, and path must be actual, self-consistent, explicit, repository-bound, and independently recalculable.",
+      "closure_evidence": "Current v2 RuntimeRouteReceiptV1 and exact-deck runner reject duplicate KB hash/path changes, all actual asset/source/capability hash changes, arbitrary scopes, plan/report/raw scope changes, absolute or escaping paths, deck/multiset changes, and native-launch/cap mutations. Current v2 receipt file hash is 35f8a412db9f545fb768f08b9bd5757ab5ba3c4affb2e3874b0d2a979d6b6ff2 and its independently recomputed parsed-content binding is b07725b4e05c803be6071487624f0a68f977b08a790e8c5db4d35462fc7f5be5.",
+      "required_follow_up": "Keep the receipt and exact-deck plan content-addressed; retain actual native execution evidence before changing the capability-only status."
+    },
+    {
+      "id": "B1-RED-011",
+      "severity": "P0_BLOCKER",
+      "closure_status": "CLOSED_FOR_HISTORICAL_POINTER_FORGERY; CURRENT ZERO-GATE/SCHEMA/AUTHORITY BLOCKERS REMAIN",
+      "finding": "The 192-game screen can be unlocked by a forged in-memory stage0 review receipt.",
+      "evidence": "Historical probe: B1ComponentPlanV1.verify_canary_review checked status/scope/plan hash/stage/launch flags and only format-validity of canary_evidence_sha256; 'a'*64 without an artifact unlocked the 192-screen cells.",
+      "contract": "The screen must remain inaccessible until a separately sealed exact 24-game canary artifact has been independently reviewed; a digest string alone is not evidence.",
+      "closure_evidence": "Current verify_canary_review requires review/evidence/sidecar paths and SHA-256 values, resolves repository-relative paths, reloads typed process/source manifests and parsed runtime receipt content, recomputes reliability, and rejects fabricated digest pointers. The current plan keeps both configured attestation digests at zero, so no current review can satisfy the parent-authorized hash check. In addition, the verifier's exact review-field set omits metric_provenance_sha256 and reliability_gate_pass even though it later requires both, making a complete review schema internally unsatisfiable. Reviewer identity/authority and parent prepared_by are only untrusted strings/digests; no signature or known authority root exists. No native independent review receipt exists.",
+      "required_follow_up": "Repair the attestation schema/transition, bind a real external reviewer authority and parent authorization (not self-authored metadata), then use only that exact-deck stage0 review to unlock stage1. Residuals are B1-RED-018 and B1-RED-020."
+    },
+    {
+      "id": "B1-RED-012",
+      "severity": "P0_BLOCKER",
+      "closure_status": "CLOSED_BY_DERIVED_RELIABILITY_RECHECK",
+      "finding": "Resume can be forged to bypass the stop-on-reliability-defect gate.",
+      "evidence": "Historical probe: honest defective evidence sealed with reliability_gate_pass=false and verify_resume rejected it; changing only the caller-provided envelope flag to true was accepted against the same defective raw evidence.",
+      "contract": "Any reliability defect must stop the stage and cannot be overridden by mutable envelope metadata.",
+      "closure_evidence": "Current seal_evidence derives sidecar reliability_gate_pass from retained counters/records/metrics. verify_resume revalidates raw/sidecar digests and recomputes the gate; a forged true flag, nonzero failure counter, or sidecar mismatch rejects. No native run was attempted.",
+      "required_follow_up": "Retain this regression and require zero counters in the independently reviewed native stage0 artifact."
+    },
+    {
+      "id": "B1-RED-013",
+      "severity": "P1_HIGH_BLOCKER",
+      "closure_status": "CLOSED_BY_RUN_STAGE_SOURCE_LINEAGE_CHECKS",
+      "finding": "Resume does not enforce run-id continuity across previous envelopes.",
+      "evidence": "Historical probe: a replacement sidecar and envelope using run-b after sealed run-a, with previous_envelope=run-a and the same cursor, were accepted; the old verify_resume checked cursor monotonicity but not run identity continuity.",
+      "contract": "Resume evidence must remain in one immutable run/stage lineage and cannot silently switch run identities.",
+      "closure_evidence": "Current seal_evidence and verify_resume require current/previous run_id, stage, plan SHA, source receipts, cursor, raw/sidecar digest, and metric-provenance lineage to match. Current probes reject run, stage, source, plan, cursor, and prior-envelope substitutions.",
+      "required_follow_up": "Retain the lineage regressions and bind source receipts to actual manifests before native promotion; typed artifact binding is closed, while live process provenance remains B1-RED-019."
+    },
+    {
+      "id": "B1-RED-014",
+      "severity": "P0_BLOCKER",
+      "closure_status": "OPEN_NO_EXACT_DECK_CAPABILITY_RECEIPT",
+      "finding": "A separately prepared exact-deck semantic capability native launch receipt is not currently available.",
+      "evidence": "The exact-production-deck plan, report, and raw evidence are all BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW; native_games=0; capability_proofs=[]; launch_gate.native_run_performed=false; native_launch=false. The v2 route receipt is explicitly ROUTE_CAPABILITY_ONLY, not policy integration authority.",
+      "contract": "Native semantic capability evidence must be independently reviewed for the actual production deck before any B1 mechanical canary launch receipt is prepared.",
+      "required_follow_up": "Freshly review the exact-deck plan, then only execute the explicitly authorized capability proof and independently recalculate its native asset/deck/prize/attack/evolution evidence."
+    },
+    {
+      "id": "B1-RED-015",
+      "severity": "P1_HIGH_BLOCKER",
+      "closure_status": "CLOSED_FOR_HISTORICAL_DIGEST_ONLY_BYPASS; LIVE_IDENTITY/NATIVE_LOAD RESIDUAL IN B1-RED-019",
+      "finding": "Sealed component evidence previously accepted format-valid process and source digests without binding them to actual manifest/source artifacts.",
+      "evidence": "Historical probe: _validate_metric_provenance accepted process_manifest_sha256='c'*64 with no process-manifest file and source_receipts that were only arbitrary digest fields.",
+      "contract": "p99, CPU, RSS, per-arm/per-seat, and reliability evidence must be tied to the actual native process/run manifest and actual source/dependency bytes; a self-consistent digest field is not provenance.",
+      "closure_evidence": "Current metric provenance requires repository-relative process_manifest_path plus digest and source_manifest_path plus digest. SourceManifestV1 and ProcessManifestV1 require canonical 0444 artifacts, exact run/stage/plan lineage, actual source/dependency bytes, enumerated scopes, parsed runtime receipt content binding, and sidecar/resume revalidation. The missing-manifest and arbitrary-source tests reject the historical probe. This closes the original digest-only defect, but it does not establish that the process identity/native_engine_loaded claim describes a live native process; see B1-RED-019.",
+      "required_follow_up": "Keep the typed content-addressed manifest checks and independently attest live process identity and actual native load before native promotion."
+    },
+    {
+      "id": "B1-RED-016",
+      "severity": "P1_HIGH_BLOCKER",
+      "closure_status": "CLOSED_BY_EXACT_PARSED_CONTENT_AND_PLAN_BINDING",
+      "finding": "The standalone component qualification plan previously bound runtime_receipt by existence only, not by content, hash, or exact plan scope.",
+      "evidence": "Historical probe: B1ComponentPlanV1.from_path accepted a mutated plan pointing runtime_receipt at another existing JSON file.",
+      "contract": "The plan/runner used to prepare a mechanical receipt must be bound to the exact reviewed runtime receipt and exact deck/capability scope, even when invoked independently of the policy loader.",
+      "closure_evidence": "Current component plan declares runtime_receipt_sha256=b07725b4e05c803be6071487624f0a68f977b08a790e8c5db4d35462fc7f5be5; B1ComponentPlanV1 loads RuntimeRouteReceiptV1, recomputes the canonical parsed-content binding, and cross-checks the exact component-plan path/SHA in receipt provenance. The current standalone mutation test rejects the old v1 path. The exact-deck capability runner independently rehashes the actual deck/assets/sources and remains blocked, so this closes binding, not capability qualification.",
+      "required_follow_up": "Retain the parsed-content binding and independently review the exact-deck capability proof before any native launch."
+    },
+    {
+      "id": "B1-RED-017",
+      "severity": "P0_BLOCKER",
+      "closure_status": "CLOSED_FOR_HISTORICAL_SELF_AUTHORED_POINTER_PROBE; OPEN_SCHEMA_AND_AUTHORITY_BLOCKER",
+      "finding": "The stage-1 gate must bind the PASS review to an independently authorized reviewer and external parent authorization; current code only partially supplies that gate.",
+      "evidence": "Historical probe: verify_canary_review validated review status/scope/plan/stage/launch fields and SHA-256 links to 0444 raw evidence and sidecar without a reviewer/parent authority root; a caller who self-authored all internally consistent files could therefore unlock the structural 192 matrix. The corrected current verifier additionally has the zero-placeholder and contradictory-schema blockers recorded below, and no native stage0 review artifact exists in the repository.",
+      "contract": "The 192-game screen must be inaccessible until a separately sealed exact 24-game stage0 artifact has been independently reviewed; self-authored PASS metadata is not an independent review receipt.",
+      "closure_evidence": "Current pointer-forgery probes reject nonexistent/wrong-digest/writable/tampered artifacts, and current zero placeholders prevent a self-authored review from satisfying the configured hash gate. However, the current review schema is internally contradictory (B1-RED-018), and reviewer_authority_sha256/reviewer_id plus parent prepared_by are only syntactically checked with no signature, known authority, or external parent root (B1-RED-020). Therefore the historical digest-only bypass is closed, but the independent-attestation contract is not closed.",
+      "required_follow_up": "Repair the review schema transition, add an independently verifiable reviewer/parent authority binding, and require the exact 24-game stage0 receipt before allowing 192."
+    },
+    {
+      "id": "B1-RED-018",
+      "severity": "P0_BLOCKER",
+      "closure_status": "OPEN_UNSATISFIABLE_STAGE0_ATTESTATION_SCHEMA",
+      "finding": "The stage-0 independent review artifact cannot satisfy the verifier's own required field set.",
+      "evidence": "In src/ptcg_rl/deterministic/b1_component_harness.py, verify_stage0_artifacts defines required_attestation_fields at lines 844-870 without metric_provenance_sha256 or reliability_gate_pass, then at lines 985-989 requires review.metric_provenance_sha256 to equal the recomputed digest and review.reliability_gate_pass to be true. Including those fields fails the exact set check; omitting them fails the later value check. Separately, B1ComponentPlanV1.validate requires both configured attestation digests to remain 64 zeroes, while verify_stage0_artifacts rejects a zero expected review digest, so the current plan has no valid transition to a passing receipt.",
+      "contract": "A separately sealed post-run 24-game review must be technically consumable, independently authorized, and bound to the exact evidence/sidecar/manifest lineage. A contradictory schema or permanently zero digest gate cannot prepare a receipt.",
+      "required_follow_up": "Define one exact attestation schema including all later-checked derived fields, add a reviewed parent-authorized transition from placeholders to actual digests, and add a positive test that a complete independent receipt verifies. Until then neither stage0 nor stage1 is technically receipt-ready."
+    },
+    {
+      "id": "B1-RED-019",
+      "severity": "P1_HIGH_BLOCKER",
+      "closure_status": "OPEN_LIVE_PROCESS_IDENTITY_AND_NATIVE_LOAD_PROVENANCE",
+      "finding": "Typed process manifests bind content and declared identity fields but do not verify that identity against the live process or that the native engine was actually loaded.",
+      "evidence": "ProcessManifestV1.from_path validates only pid>0, nonempty start_token/executable, nonempty command, platform/sampler equality, and a boolean native_engine_loaded. prepare_runtime_manifests accepts caller-supplied identity and native_engine_loaded. An independent local sealing probe passed with pid=1, start_token=FORGED_NOT_LIVE, executable=/forged/executable, and native_engine_loaded=false; no OS process identity or native-loader evidence was consulted. Stage0 only checks the manifest boolean is true, which remains a self-attested field.",
+      "contract": "A native stage0 resource receipt must identify the actual process/launcher and actual loaded engine/library, not merely rehash a manifest containing caller-chosen values.",
+      "required_follow_up": "Bind PID/start token/executable/command to an independently captured live process record and bind native_engine_loaded to an actual loader/launcher receipt or external attestation; reject caller-forged identity/boolean claims."
+    },
+    {
+      "id": "B1-RED-020",
+      "severity": "P0_BLOCKER",
+      "closure_status": "OPEN_EXTERNAL_AUTHORITY_ROOT_MISSING",
+      "finding": "Parent authorization and independent-review identity are not cryptographically or externally authority-bound.",
+      "evidence": "verify_stage0_artifacts accepts reviewer_id as any nonempty string and reviewer_authority_sha256 as any format-valid digest; it accepts parent.prepared_by == PARENT_AGENT and the expected status as plain JSON fields. There is no signature, known reviewer registry, parent authorization key, review-record path/hash, or independent service binding. The current all-zero placeholders block current fabricated artifacts, but once a transition permits nonzero hashes, a writer able to create the plan/review/parent files can self-author internally consistent authority metadata. The existing test only uses an invalid {} parent and does not prove that a fully matching forged authority cannot pass.",
+      "contract": "Independent post-run review and parent authorization must be independently attributable and impossible to self-author by editing matching JSON and digest fields.",
+      "required_follow_up": "Require a separately retained signed/known-authority review and parent authorization, bind their signatures and digests into the plan/evidence lineage, and test a fully internally consistent forged reviewer/parent package is rejected."
+    },
+    {
+      "id": "B1-RED-021",
+      "severity": "P1_HIGH_BLOCKER",
+      "closure_status": "OPEN_EXACT_0444_MODE_ENFORCEMENT_GAP",
+      "finding": "Raw evidence and sidecar verification enforces read-only bits, not the required exact 0444 mode.",
+      "evidence": "seal_evidence writes 0444 artifacts, but verify_resume and verify_stage0_artifacts reject only stat.S_IMODE(path.stat().st_mode) & 0o222. A local probe changed both raw evidence and sidecar to 0400; verify_resume still accepted them while the sidecar declared artifact_mode='0444'. SourceManifestV1 and ProcessManifestV1 do require exact 0444, but the evidence/sidecar contract is weaker than claimed.",
+      "contract": "Sealed evidence and sidecars must be actual 0444 artifacts, not merely non-writable files, before a native receipt is considered immutable evidence.",
+      "required_follow_up": "Require exact stat mode 0o444 for raw evidence and sidecars at seal, review, and resume, and add a regression for 0400/0440 rejection."
+    }
+  ],
+  "assurance_matrix": {
+    "actual_engine_api_wrapper_card_data_card_table_hashes": "PASS_STATIC_PATH_HASH; ACTUAL_NATIVE_LOAD_NOT_PROVEN",
+    "candidate_deck_hash_and_multiset_binding": "PASS_FOR_CORRECTED_PENDING_PLAN; HISTORICAL_NATIVE_PROOF_NOT_TRANSFERABLE",
+    "exact_deck_plan_runner_caps_stops_provenance": "PASS_PLAN_ONLY; EXACT_DECK_AND_COMPONENT_RECEIPT_BINDING VERIFIED; NO_NATIVE_PROOF",
+    "qualified_prize_attack_evolution_receipts": "PARTIAL_STATIC_CAPSULES; NO_EXACT_DECK_NATIVE_PROOF",
+    "static_prose_generalized_semantics": "PASS_FOR_RESOURCE_RESERVE_REMOVAL; ROUTE IDS/ATTACKS/PRIZES ARE RECEIPT-VALIDATED",
+    "all_current_options": "PASS_SOURCE_ITERATION; PARTIAL_MIXED_OPTION_TEST COVERAGE",
+    "optional_stop_and_evolution": "PARTIAL: G1 builder/oracle STOP and exact local evolution tests pass; no native mixed-transition evidence",
+    "public_only_no_successor_hidden": "PASS_BY_SOURCE_SCAN_AND_PUBLIC_BOUNDARY; no successor/counterfactual/opponent-hand traversal in active runtime",
+    "player_mirror_and_permutation": "PASS_NARROW: player-one and 32 permutation controls pass; no native arena evidence",
+    "idempotency_stale_out_of_order": "PASS_NARROW: duplicate/stale/out-of-order and poisoned terminal probes pass; resume lineage remains partial",
+    "b0_delegation_distinct_fallback": "PASS_NARROW: B0_CONTROL authority is distinct from final fallback; no native adapter evidence",
+    "terminal_first": "PASS_CURRENT_POLICY_BOUNDARY: terminal poison probe touched no request fields and reset B0/oracle",
+    "final_action_validation": "PASS_NARROW: selected and delegated actions use CompoundActionBuilder/validator",
+    "diagnostic_integrity": "PARTIAL_BLOCKED: aggregate p99/CPU/RSS plus per-arm/per-seat count reconciliation and 32-sample minimum exist; no per-arm/seat resource distributions, live process/native-load proof, or native retained receipt",
+    "evidence_sealing_resume": "PARTIAL_BLOCKED: typed source/process manifests, content/tamper/derived reliability/lineage checks pass; raw/sidecar exact-0444 enforcement, live process identity, and native-load provenance remain open",
+    "stage0_exact_24_and_screen_gate": "BLOCKED: exact 24 matrix and one-game-per-cell structure are enforced, but current zero-placeholder plus contradictory review schema prevents any valid stage0 receipt; independent authority is not externally bound; direct 192 access rejects",
+    "capability_only_labeling": "PASS_LABELS; NO INTEGRATION/PROMOTION AUTHORITY",
+    "source_hash_self_consistency": "PARTIAL_BLOCKED: route/plan asset/source/KB hashes and typed manifest content/scope dependencies recalculate and mutation probes reject; live process/native-load truth, exact evidence mode, and independent authority remain unproven",
+    "native_import_or_launch": "PASS: none run by design"
+  },
+  "launch_readiness": {
+    "current_package": "BLOCKED",
+    "native_launch_authorized": false,
+    "exact_deck_semantic_capability_native_receipt": {
+      "receipt_preparable_now": false,
+      "bounded_plan_runner_ready": true,
+      "reason": "The exact-production-deck runner independently loads the 60-card deck/multiset, all seven asset hashes/scopes, all six source hashes, caps, stops, evidence budget, and capability-only labels. But plan/report/raw remain BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW with native_games=0 and capability_proofs=0; the v2 receipt is ROUTE_CAPABILITY_ONLY. A separately reviewed exact-deck semantic capability native launch receipt cannot be prepared now and was not run."
+    },
+    "mechanical_canary_24_games": {
+      "required_matrix": "3 arms x 4 anchors x 2 candidate seats = 24 games, exactly 1 game per cell",
+      "contract_present": true,
+      "receipt_preparable_now": false,
+      "reason": "The stage0 matrix is mechanically exact and stop-on-any-defect; typed source/process manifest binding, parsed runtime receipt binding, derived reliability, and lineage checks are present. Exact-deck native capability proof is absent, no native stage0 review exists, raw/sidecar exact 0444 is not enforced, live process/native-load truth is not proven, and the current independent-review schema is unsatisfiable with zero placeholders. No native launch receipt was prepared."
+    },
+    "192_game_screen": {
+      "accessible_without_review": false,
+      "accessible_with_self_authored_review": false,
+      "receipt_preparable_now": false,
+      "forged_review_bypass_probe": false,
+      "format_only_forged_review_bypass_probe": false,
+      "self_authored_sealed_review_bypass_probe": false,
+      "current_zero_placeholder_block": true,
+      "future_authority_fabrication_risk": true,
+      "reason": "Direct stage1 access without a review receipt rejects; fabricated digest/nonexistent-artifact pointers, wrong review/evidence/sidecar digests, writable files, and tampered review/sidecar artifacts reject. In the current v2 plan, nonzero review/parent digests cannot match the required zero placeholders, and the review schema itself is contradictory, so a self-authored package does not unlock the matrix. The authority root is still absent, so a future transition must not treat matching JSON/digests as independent review. No independently reviewed native stage0 receipt exists."
+    },
+    "final_separated_readiness": {
+      "exact_deck_capability": "NOT_READY",
+      "stage0_24_game_mechanical_canary": "NOT_READY",
+      "stage1_192_game_screen": "INACCESSIBLE_CURRENTLY; BLOCKED_PENDING_SCHEMA_REPAIR_AND_EXTERNAL_INDEPENDENT_ATTESTATION"
+    },
+    "next_authorized_action": "Do not run native games. First repair the stage0 attestation schema/placeholder transition, exact 0444 evidence-mode checks, live process/native-load attestation, and external reviewer/parent authority binding. Then obtain fresh independent technical review of the exact-deck capability plan; only after an exact-deck semantic capability native receipt is independently reviewed may a separately sealed 24-game mechanical canary be considered. Stop on any defect and require independent review before 192; keep 192 inaccessible."
+  },
+  "tests_and_verification": {
+    "focused_b1_oracle_policy_harness_tests": {"command": "TMPDIR=.pytest_cache PYTHONDONTWRITEBYTECODE=1 .venv/bin/pytest -q -p no:cacheprovider tests/deterministic/test_phase_a_b1_capability_capsules_v1.py tests/deterministic/test_phase_b1_oracle.py tests/deterministic/test_phase_b1_policy.py tests/deterministic/test_phase_b1_component_harness.py", "result": "70 passed in 1.86s"},
+    "current_deterministic_suite": {"command": "TMPDIR=.pytest_cache PYTHONDONTWRITEBYTECODE=1 .venv/bin/pytest -q -p no:cacheprovider tests/deterministic", "result": "248 passed, 1 failed, 15 errors in 6.46s; all failures/errors are the unrelated B5 fixture dependency-manifest mismatch, with no B1 test failure", "not_a_b1_verdict": true},
+    "package_deterministic_suite_claim": {"result": "PACKAGE_V2_REPORTED_264_PASS_BUT_NOT_REPRODUCED_IN_CURRENT_DIRTY_CHECKOUT", "source": "reports/deterministic/phase-b1-native-integration-package-v2.json"},
+    "ruff": {"command": ".venv/bin/ruff check current B1 oracle/policy/harness/planners/tests", "result": "PASS"},
+    "syntax_parse": {"command": ".venv/bin/python -c ast.parse over 7 current B1 source/script/test files", "result": "PASS"},
+    "exact_deck_plan_cli": {"command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python scripts/deterministic/phase_b1_exact_deck_capability_rerun.py", "result": "PASS_PLAN_ONLY", "detail": "Actual deck loaded; file hash 7af2d7e1..., semantic multiset 2de6cda9..., count 60, all seven asset scopes/hashes, all six source paths/hashes, caps/stops/evidence budget, capability-only labels, and blocked launch gate validate."},
+    "component_stage0_cli": {"result": "PASS_EXACT_24", "detail": "--stage stage0_canary --arm-matrix prints 24 cells, exactly one game per arm x anchor x candidate seat (3 x 4 x 2), natural_deployment=true; no native game runs."},
+    "component_stage1_without_review": {"result": "BLOCKED_AS_REQUIRED", "detail": "--stage stage1_screen --arm-matrix without --review-receipt exits 1 with '192-game screen is inaccessible without stage-0 review receipt'."},
+    "runtime_receipt_load_and_hash_validation": {"result": "PASS_EXACT_PARSED_CONTENT", "detail": "v2 receipt loads as NATIVE_QUALIFIED with ROUTE_CAPABILITY_ONLY; file hash 35f8a412..., canonical parsed-content binding b07725b4..., config hash 9dd98157..., and current asset/source path/hash claims recalculate."},
+    "knowledge_base_validation": {"result": "PASS_WITH_OPEN_QUESTIONS", "detail": "Read-only SQLite requery found all 24 required DR/AP/RQ identifiers; database hash e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f; 12 P0/P1 questions and 3 contradictions remain explicitly open/unresolved."},
+    "forged_process_identity_probe": {"result": "FAIL_LIVE_IDENTITY_PROVENANCE", "detail": "Typed manifests and a 24-record seal were accepted with pid=1, start_token=FORGED_NOT_LIVE, executable=/forged/executable, and caller-chosen native_engine_loaded=false; this was a planning-only local probe and did not run native."},
+    "evidence_exact_mode_probe": {"result": "FAIL_EXACT_0444", "detail": "After sealing, chmod 0400 on both raw evidence and sidecar; verify_resume accepted them although the sidecar declared artifact_mode=0444."},
+    "attestation_schema_and_zero_placeholder_probe": {"result": "BLOCKED_UNSATISFIABLE", "detail": "Current plan requires both review/parent digests to be all-zero, while the verifier rejects a zero expected review digest; the exact review set omits two fields checked later. No complete stage0 attestation can currently verify."},
+    "native_import_or_launch_scan": {"result": "PASS_NO_NATIVE_PATH", "detail": "No ctypes/CDLL/cg/subprocess/native launch path in active B1 policy/oracle/harness/planners; native execution intentionally not run."},
+    "native_execution": "NOT_RUN_BY_DESIGN",
+    "kaggle_execution": "NOT_RUN_BY_DESIGN",
+    "external_compute": "NONE",
+    "private_assets_modified": false,
+    "implementation_config_tests_edited": false,
+    "commit_created": false,
+    "self_digest": "NOT_EMBEDDED_TO_AVOID_RECURSIVE_SELF_HASH"
+  },
+  "conclusion": "The corrected package closes the historical deck-binding, terminal-first, resource-reserve, digest-only manifest, standalone runtime-receipt, reliability-resume, run-lineage, and dependency-mutation defects for their tested structural contracts. The exact-production-deck plan/runner independently binds the actual 60-card multiset, engine/API/wrapper/card/card-table/KB/deck hashes, enumerated source scopes, caps, stops, evidence budget, and capability-only labels; its report/raw remain plan-only with zero native games/proofs. The final red-team pass finds four residual blockers: the stage-0 attestation schema is internally unsatisfiable and the current zero-placeholder transition cannot verify any review; process identity/command/native-engine-loaded remain caller-attested rather than live/native evidence; parent/reviewer authority has no external signature or known root; and raw/sidecar verification accepts read-only 0400 rather than exact 0444. Aggregate p99/CPU/RSS and per-arm/per-seat count checks exist, but no per-arm/seat resource distributions or native metrics exist. Therefore a separately reviewed exact-deck semantic capability native launch receipt cannot now be prepared, the exact 24-game mechanical canary remains blocked, and the 192-game screen is inaccessible in the current plan and must remain inaccessible until schema, authority, mode, and capability gates are independently repaired. No native game, Kaggle run, training, submission, implementation/config/test edit, or commit was performed."
+}

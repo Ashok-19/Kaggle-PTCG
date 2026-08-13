@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "record_id": "e01-majkel-next-step-readiness-v1",
+  "source_path": "reports/artifacts/e01-majkel-next-step-readiness-v1.json",
+  "created_at_utc": "2026-08-04T12:21:27Z",
+  "producer": "chatgpt-local-agent",
+  "kind": "KPTCG_E01_MAJKEL_NEXT_STEP_READINESS_REVIEW",
+  "status": "PASS_READY_UNAUTHORIZED",
+  "decision": "EXACT_MAJKEL_REQUEST_REMAINS_CURRENT_AND_IS_THE_RECOMMENDED_NEXT_GATED_STEP",
+  "live_leaderboard": {
+    "competition": "pokemon-tcg-ai-battle",
+    "fetched_at_utc": "2026-08-04T12:21:27Z",
+    "rank_1": {
+      "team_id": 16374395,
+      "team_name": "Majkel1337",
+      "score": 1259.0,
+      "submission_date_utc": "2026-08-02T12:57:04.700Z"
+    },
+    "rank_2": {
+      "team_id": 16371703,
+      "team_name": "やる気元気ミワハルキ",
+      "score": 1197.7,
+      "submission_date_utc": "2026-08-04T09:27:57.763333300Z"
+    },
+    "score_is_snapshot_only": true,
+    "score_is_authorization_basis": false
+  },
+  "rank_1_public_submissions": [
+    {
+      "submission_id": 55186239,
+      "date_submitted_utc": "2026-08-02T12:57:04.700Z",
+      "public_score": 1259.0,
+      "matches_request_teacher_submission": true
+    },
+    {
+      "submission_id": 55147326,
+      "date_submitted_utc": "2026-07-31T21:33:01.977Z",
+      "public_score": 1047.8,
+      "matches_request_teacher_submission": false
+    }
+  ],
+  "daily_source": {
+    "search_query": "pokemon-tcg-ai-battle-episodes-2026-08",
+    "latest_result_ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03",
+    "latest_result_version": 1,
+    "latest_result_last_updated_utc": "2026-08-04T00:09:42.390Z",
+    "latest_result_reported_total_bytes": 741739498,
+    "august_4_dataset_present_in_search_results": false,
+    "request_source_ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03",
+    "request_source_version": 1,
+    "request_source_unchanged": true,
+    "file_bodies_read": false,
+    "replay_bodies_read": false
+  },
+  "exact_request": {
+    "path": "configs/e01_majkel_live_gold_teacher_probe_request_v1.json",
+    "bytes": 3605,
+    "sha256": "e0b43f2a507728f5b2048a9ac7d8e30b6f444448e74885503267058477029886",
+    "teacher_team_id": 16374395,
+    "teacher_team_name": "Majkel1337",
+    "teacher_submission_id": 55186239,
+    "files": [
+      {
+        "file_name": "89651832.json",
+        "declared_bytes": 376976,
+        "teacher_index": 1,
+        "teacher_reward": 1.0
+      },
+      {
+        "file_name": "89802438.json",
+        "declared_bytes": 455901,
+        "teacher_index": 0,
+        "teacher_reward": 1.0
+      }
+    ],
+    "maximum_new_files": 2,
+    "maximum_new_bytes": 832877,
+    "output_directory": "private/g3/e01/majkel-live-gold-teacher-probe-v1",
+    "authorized": false,
+    "authorization_consumed": false
+  },
+  "checks": {
+    "rank_1_team_identity_unchanged": true,
+    "rank_1_active_submission_identity_unchanged": true,
+    "latest_daily_source_identity_unchanged": true,
+    "latest_daily_source_version_unchanged": true,
+    "request_hash_unchanged": true,
+    "request_ready": true,
+    "replay_transfer_authorized": false,
+    "training_authorized": false,
+    "optimizer_steps_authorized": false,
+    "external_compute_authorized": false,
+    "submission_authorized": false
+  },
+  "sequencing": {
+    "recommended_next_task": "T-E01-MAJKEL-LIVE-GOLD-PROBE-025",
+    "reason": "It is the smallest current-rank-1 evidence step, transfers only two bounded replay bodies after approval, performs no optimizer step, and stops after exact contract review.",
+    "bc_canary_task": "T-E01-BC-ENGINEERING-CANARY-025",
+    "bc_canary_remains_separately_approval_gated": true,
+    "generic_proceed_is_not_exact_request_approval": true
+  },
+  "required_approval": {
+    "request_path": "configs/e01_majkel_live_gold_teacher_probe_request_v1.json",
+    "request_sha256": "e0b43f2a507728f5b2048a9ac7d8e30b6f444448e74885503267058477029886",
+    "files": [
+      "89651832.json",
+      "89802438.json"
+    ],
+    "maximum_new_bytes": 832877,
+    "approval_must_be_explicit": true
+  },
+  "external_service_mutated": false,
+  "cost_usd": 0.0
+}

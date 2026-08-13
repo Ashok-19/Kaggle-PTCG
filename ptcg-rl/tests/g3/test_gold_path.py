@@ -20,7 +20,7 @@ REPOSITORY_ROOT = ROOT.parent
 def test_frozen_work_orders_validate() -> None:
     value = json.loads((ROOT / "configs/gold_path_work_orders_v1.json").read_text())
     validated = validate_work_orders(value)
-    assert validated["decision_id"] == "DEC-024"
+    assert validated["decision_id"] == "DEC-028"
     assert validated["work_orders"]["E04"]["optimizer_steps"] == 0
     assert validated["work_orders"]["E04"]["native_games_completed"] == 191
     assert validated["work_orders"]["E04"]["native_meaningful_decisions"] == 11_961
@@ -34,11 +34,12 @@ def test_frozen_work_orders_validate() -> None:
     assert validated["work_orders"]["E04"]["next_stage"] is None
     e01a = validated["work_orders"]["E01-A"]
     assert e01a["state"] == (
-        "FLG_DRAGAPULT_SCREENING_PASS_DRIES_GRIMMSNARL_CALIBRATION_PASS_"
-        "CURRENT_RANK_1_SOURCE_WAIT"
+        "CORPUS_V2_337_EPISODES_23460_TARGETS_BC_CANARY_PASS_"
+        "PRODUCTION_TRAINING_BLOCKED"
     )
     assert e01a["source_provenance_status"] == (
-        "PASS_TWO_RECENT_TEACHERS_CONFIRMATION_BLOCKED_CURRENT_RANK_1_SOURCE_WAIT"
+        "PASS_MAJKEL_271_EPISODES_CORPUS_V2_FROZEN_"
+        "BC_CANARY_PASS_TARGET_FLOOR_BLOCKED"
     )
     assert e01a["selected_episode_ids_match"] is True
     assert e01a["selected_rows_with_byte_or_timestamp_mismatch"] == 8
@@ -163,8 +164,10 @@ def test_frozen_work_orders_validate() -> None:
     assert e01a["confirmation_independent_recent_teachers_met"] is True
     assert e01a["confirmation_observed_recent_teacher_episodes"] == 66
     assert e01a["confirmation_episode_shortfall"] == 134
-    assert e01a["confirmation_observed_recent_teacher_decisions"] == 7_542
-    assert e01a["confirmation_decision_shortfall"] == 17_458
+    assert e01a["confirmation_observed_recent_teacher_decisions"] == 7_140
+    assert e01a["confirmation_observed_recent_teacher_active_requests"] == 7_542
+    assert e01a["confirmation_observed_forced_teacher_requests"] == 402
+    assert e01a["confirmation_decision_shortfall"] == 17_860
     assert e01a["confirmation_teacher_calibration_request_ready"] is False
     assert e01a["confirmation_teacher_calibration_request_authorized"] is False
     assert e01a["confirmation_teacher_calibration_authorization_consumed"] is True
@@ -185,18 +188,49 @@ def test_frozen_work_orders_validate() -> None:
     assert e01a["confirmation_teacher_calibration_action_alignment_qualified"] is True
     assert e01a["confirmation_teacher_probe_completes_confirmation"] is False
     assert e01a["confirmation_gate_passed"] is False
-    assert e01a["current_rank_1_team_name"] == "haggle"
-    assert e01a["current_rank_1_submission_id"] == 55_104_355
-    assert e01a["current_rank_1_public_episode_count"] == 76
-    assert e01a["current_rank_1_dataset_intersection_files"] == 0
-    assert e01a["current_rank_1_dataset_intersection_bytes"] == 0
-    assert e01a["current_rank_1_source_ready"] is False
+    assert e01a["current_rank_1_team_name"] == "Majkel1337"
+    assert e01a["current_rank_1_submission_id"] == 55_186_239
+    assert e01a["current_rank_1_public_episode_count"] == 573
+    assert e01a["current_rank_1_completed_public_episode_count"] == 571
+    assert e01a["current_rank_1_dataset_intersection_files"] == 271
+    assert e01a["current_rank_1_dataset_intersection_bytes"] == 1_031_040_048
+    assert e01a["current_rank_1_source_ready"] is True
     assert e01a["current_rank_1_probe_request_ready"] is False
-    assert e01a["current_rank_1_probe_request_exists"] is False
-    assert e01a["current_rank_1_output_exists"] is False
-    assert e01a["current_rank_1_source_wait_active"] is True
+    assert e01a["current_rank_1_probe_request_exists"] is True
+    assert e01a["current_rank_1_output_exists"] is True
+    assert e01a["live_current_rank_1_probe_authorization_consumed"] is True
+    assert e01a["live_current_rank_1_probe_request_ready"] is False
+    assert e01a["live_current_rank_1_probe_files_transferred"] == 2
+    assert e01a["live_current_rank_1_probe_bytes_transferred"] == 832_877
+    assert e01a["live_current_rank_1_probe_module_versions"] == ["1.32.2", "1.32.3"]
+    assert e01a["live_current_rank_1_probe_teacher_active_requests"] == 35
+    assert e01a["live_current_rank_1_probe_forced_teacher_requests"] == 3
+    assert e01a["live_current_rank_1_probe_policy_loss_targets"] == 32
+    assert e01a["live_current_rank_1_probe_corpus_promotion_authorized"] is False
+    assert e01a["current_rank_1_source_wait_active"] is False
+    assert e01a["approved_replay_qualified_episodes"] == 337
+    assert e01a["approved_replay_policy_loss_targets"] == 23_460
+    assert e01a["approved_replay_forced_teacher_requests"] == 1_598
+    assert e01a["approved_replay_target_floor_shortfall"] == 1_540
+    assert e01a["approved_replay_episode_floor_passed"] is True
+    assert e01a["approved_replay_target_floor_passed"] is False
+    assert e01a["majkel_corpus_expansion_authorization_consumed"] is True
+    assert e01a["majkel_corpus_expansion_files_read"] == 269
+    assert e01a["majkel_corpus_expansion_bytes_read"] == 1_030_207_171
+    assert e01a["majkel_corpus_expansion_qualified_files"] == 269
+    assert e01a["majkel_corpus_expansion_rejected_files"] == 0
+    assert e01a["bc_engineering_canary_request_ready"] is False
+    assert e01a["bc_engineering_canary_request_authorized"] is False
+    assert e01a["bc_engineering_canary_authorization_consumed"] is True
+    assert e01a["bc_engineering_canary_passed"] is True
+    assert e01a["bc_engineering_canary_maximum_optimizer_steps"] == 64
+    assert e01a["bc_engineering_canary_optimizer_steps_executed"] == 64
+    assert e01a["bc_engineering_canary_production_checkpoint_eligible"] is False
     assert e01a["transfer_authorized"] is False
-    assert e01a["next_stage"] == "current_rank_1_daily_dataset_wait"
+    assert e01a["next_stage"] in {
+        "corpus_v2_target_shortfall_1540_awaiting_source_refresh_and_exact_approval",
+        "resolve_1540_target_shortfall_then_request_production_bc_approval",
+    }
     assert validated["work_orders"]["E08"]["final_submitted_deck_frozen"] is False
 
 
@@ -632,7 +666,7 @@ def test_independent_gold_path_review_passes() -> None:
         dry_run_path=ROOT / "reports/artifacts/e01a-public-replay-dry-run-v1.json",
         decision_path=(
             ROOT
-            / "docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md"
+            / "docs/decisions/DEC-028_E01_CORPUS_V2_AND_BC_CANARY_RESULTS.md"
         ),
     )
     assert report["status"] == "PASS"
@@ -672,12 +706,25 @@ def test_independent_gold_path_review_passes() -> None:
     assert report["authorization"]["e01_current_rank_1_dries_grimmsnarl_calibration_authorization_consumed"] is True
     assert report["authorization"]["e01_current_rank_1_dries_grimmsnarl_calibration_request_ready"] is False
     assert report["authorization"]["e01_current_rank_1_source_wait_completed"] is True
-    assert report["authorization"]["e01_current_rank_1_source_ready"] is False
+    assert report["authorization"]["e01_current_rank_1_source_ready"] is True
+    assert report["authorization"]["e01_current_rank_1_probe_authorization_consumed"] is True
     assert report["authorization"]["e01_current_rank_1_probe_request_ready"] is False
+    assert report["authorization"]["e01_current_rank_1_probe_corpus_promotion_authorized"] is False
+    assert report["authorization"]["e01_approved_replay_corpus_frozen"] is True
+    assert report["authorization"]["e01_approved_replay_episode_floor_passed"] is True
+    assert report["authorization"]["e01_approved_replay_target_floor_passed"] is False
+    assert report["authorization"]["e01_approved_replay_target_floor_shortfall"] == 1_540
+    assert report["authorization"]["e01_majkel_corpus_expansion_completed"] is True
+    assert report["authorization"]["e01_majkel_corpus_expansion_authorization_consumed"] is True
+    assert report["authorization"]["e01_bc_engineering_canary_completed"] is True
+    assert report["authorization"]["e01_bc_engineering_canary_authorization_consumed"] is True
+    assert report["authorization"]["e01_bc_engineering_canary_request_ready"] is False
+    assert report["authorization"]["e01_bc_engineering_canary_optimizer_steps_authorized"] is False
+    assert report["authorization"]["e01_bc_engineering_canary_production_checkpoint_eligible"] is False
     assert report["authorization"]["replay_transfer"] is False
     assert report["authorization"]["native_e04_single_trace_completed"] is True
     assert report["authorization"]["native_e04_ten_game_smoke_completed"] is True
-    assert report["reviewed_decision"] == "DEC-024"
+    assert report["reviewed_decision"] == "DEC-028"
     assert report["authorization"]["qualification_contract_review_required"] is False
     assert report["authorization"]["qualification_request_ready"] is False
     assert report["authorization"]["qualification_execution_completed"] is True

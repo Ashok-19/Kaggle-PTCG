@@ -1,0 +1,58 @@
+{
+  "created_at_utc": "2026-08-04T15:44:42Z",
+  "decision": "ACCEPT_NON_PROMOTABLE_64_STEP_BC_ENGINEERING_CANARY_WITH_FAIL_CLOSED_10_PLUS_54_RECOVERY",
+  "execution": {
+    "all_gradients_finite": true,
+    "all_loss_finite": true,
+    "cumulative_optimizer_steps": 64,
+    "deterministic_resume_state_match": true,
+    "failed_attempt_optimizer_steps": 10,
+    "final_state_sha256": "8bde0dae2a3d33b22b8c9324aebe5b3dabcafab1a8d60859508116823b5dc603",
+    "forced_only_chunks_skipped": 1,
+    "loss_first": 1.81972336769104,
+    "loss_last": 1.4326117038726807,
+    "maximum_pre_clip_gradient_norm": 20.018998919488983,
+    "recovery_optimizer_steps": 54,
+    "step_32_checkpoint_created": true
+  },
+  "inputs": {
+    "approved_prior_request_sha256": "5e78bcd7595a1f30b5eba5ab179203aa53ecad43f0ef3275a773a4b0ee4f2299",
+    "authorized_recovery_request_sha256": "30bb97782cf898c06782e27345ca3f37e3d44f37c9528b54b73165e2c32f1edb",
+    "checkpoint": {
+      "bytes": 11645159,
+      "path": "private/g3/e01/bc-engineering-canary-v1/step-32.pt",
+      "sha256": "c8df3666c87a895639092d6898b3ab8254ca6f0785c44980f1fba96d0000ec5d"
+    },
+    "checkpoint_manifest": {
+      "path": "private/g3/e01/bc-engineering-canary-v1/step-32.pt.manifest.json",
+      "sha256": "cf0b6317976733ed2acad214e644fbd0c86def35ca96930d22427dc139f404e7"
+    },
+    "execution_report": {
+      "path": "reports/evaluations/e01-bc-engineering-canary-v1.json",
+      "sha256": "51e06333619f1e8fc34ebb889d84cb196997632b0e347c731fe558df7813c1ee"
+    },
+    "implementation": {
+      "path": "src/ptcg_rl/g3/bc_canary.py",
+      "sha256": "422af5c427b8b4d717a651edf41c0afb4fbd460e6d702c9b6a169cf495ce6fa9"
+    }
+  },
+  "next_action": "STOP_CANARY; PRODUCTION_BC_REQUIRES_FINAL_CORPUS_V2_AND_NEW_EXPLICIT_APPROVAL",
+  "producer": "scripts/finalize_e01_bc_engineering_canary_execution.py",
+  "qualification": {
+    "checkpoint_resume_engineering": "PASS",
+    "data_path_and_masking_engineering": "PASS",
+    "external_compute_authorized": false,
+    "model_promotion_authorized": false,
+    "optimizer_cap_respected": true,
+    "policy_competence_claimed": false,
+    "production_checkpoint_eligible": false,
+    "production_training_authorized": false,
+    "submission_authorized": false
+  },
+  "record_id": "e01-bc-engineering-canary-execution-review-v1",
+  "review_sha256": "2f365281ed62e91139b67a9cb3b0fdb5a7149fed1fd7ec9cbd7d43097175280d",
+  "reviewed_decision": "DEC-027",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-bc-engineering-canary-execution-review-v1.json",
+  "status": "PASS"
+}

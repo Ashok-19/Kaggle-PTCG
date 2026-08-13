@@ -1,0 +1,669 @@
+{
+  "authorization": {
+    "agent_log_read": false,
+    "copy": false,
+    "dataset_update": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "internet": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "private_dataset_create": false,
+    "private_dataset_upload": false,
+    "replay_body_read": false,
+    "stage": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "corpus_manifest": {
+    "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json",
+    "self_hash": "bb6319e23f3d5b12bd9ed7383b0f3e007dd7059cbf39afcd5325af12392c35a9",
+    "sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267"
+  },
+  "created_at_utc": "2026-08-05T10:20:00Z",
+  "decision_id": "DEC-033",
+  "implementation": {
+    "path": "src/ptcg_rl/g3/bc_production.py",
+    "sha256": "6d7526d430caff7f90542bd98cffd3bc14716f0291706a03f1ddd30efad4f7e5"
+  },
+  "publication": {
+    "bytes": 341559745,
+    "dataset_ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+    "dataset_version": 1,
+    "files": 58,
+    "listing_sha256": "e15baf3decce2c3f6c4191f643b5e05505c30fec28327ff7dcb4e15361cbf641",
+    "private": true,
+    "staging_outputs": [
+      "dataset/episodes/<episode_id>.json",
+      "dataset/dataset-metadata.json",
+      "publication-report.json"
+    ],
+    "test_bytes": 0,
+    "test_files": 0,
+    "train_bytes": 303098913,
+    "train_files": 50,
+    "validation_bytes": 38460832,
+    "validation_files": 8
+  },
+  "purpose": "Publish only the retained flg/Dries train and validation replay bodies required by production recurrent BC into one private versioned Kaggle dataset. Test replays remain sealed.",
+  "record_id": "e01-production-bc-input-publication-request-v1",
+  "records": [
+    {
+      "bytes": 5819313,
+      "dataset_path": "episodes/88276868.json",
+      "episode_id": 88276868,
+      "sha256": "8308c00dd517128b0b16e7cd393fdd2eac6f046c945e09a48254f40901cc1ef7",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88276868.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 9234114,
+      "dataset_path": "episodes/88278479.json",
+      "episode_id": 88278479,
+      "sha256": "f3c24d349643b8fbec0602eebaeafbd033da59eda054b01ca4d16e50cbf27824",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88278479.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4119037,
+      "dataset_path": "episodes/88278632.json",
+      "episode_id": 88278632,
+      "sha256": "71a918023feeda7c67d85898048efe38c2ada074d1b44fe3bb23836aaefb0dfc",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88278632.json",
+      "split": "validation",
+      "stratum": "seat_1_loss",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 7020621,
+      "dataset_path": "episodes/88280071.json",
+      "episode_id": 88280071,
+      "sha256": "276042a83ac52c624658b88689834426c0c145a960f0051f7d2faae3d53cd16e",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88280071.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5574112,
+      "dataset_path": "episodes/88280592.json",
+      "episode_id": 88280592,
+      "sha256": "17675c56a50ef0f15760d0a7efe25824c315f301456ff4fa8a5a8f0edff26234",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88280592.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 625479,
+      "dataset_path": "episodes/88281294.json",
+      "episode_id": 88281294,
+      "sha256": "46929a43e1c84f79a8738be5258058206d5f730f57b706b3a0998675bf49364a",
+      "source_path": "private/g3/e01/dries-confirmation-teacher-probe-v1/88281294.json",
+      "split": "validation",
+      "stratum": "seat_1_win",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 4144487,
+      "dataset_path": "episodes/88282349.json",
+      "episode_id": 88282349,
+      "sha256": "118d14fa27c644738a4e65253b10b2717a66f1bdc42a5abbf95d475da00d6176",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88282349.json",
+      "split": "validation",
+      "stratum": "seat_0_loss",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 8160732,
+      "dataset_path": "episodes/88285882.json",
+      "episode_id": 88285882,
+      "sha256": "3b109e68854218fba900514b06fa15f5a9b73026126d04a362bc81ec3df295a2",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88285882.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6198953,
+      "dataset_path": "episodes/88287982.json",
+      "episode_id": 88287982,
+      "sha256": "6d0991b7db4a7e31b7b9ed2eade108fd6960017b6b2debb426d3f4df28cc694c",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88287982.json",
+      "split": "validation",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4850748,
+      "dataset_path": "episodes/88289166.json",
+      "episode_id": 88289166,
+      "sha256": "67cff69dbeb50aa2b1c033920ede6abca61164d62d886fa50f0be51be2160bf1",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88289166.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7047362,
+      "dataset_path": "episodes/88290739.json",
+      "episode_id": 88290739,
+      "sha256": "9025792fe15632badf0b6039c327a328f9249e0a17728e8efeeb47f5c3802ef9",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88290739.json",
+      "split": "validation",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7025672,
+      "dataset_path": "episodes/88291779.json",
+      "episode_id": 88291779,
+      "sha256": "e8a09ead6ab1412294955e42f9057840d03cc02187d474339b0baad33fbe681d",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88291779.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7522052,
+      "dataset_path": "episodes/88293851.json",
+      "episode_id": 88293851,
+      "sha256": "2d6299ea7d34b2cae55369e50f4557dca88cab3abb0f5a4cd6b10087d11e1990",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88293851.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5887456,
+      "dataset_path": "episodes/88295625.json",
+      "episode_id": 88295625,
+      "sha256": "d51b83e3d2f0a9ae2ee617202bf8301cbe544f90d1fbad08be5f0c9b68e1681d",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88295625.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 6604538,
+      "dataset_path": "episodes/88298059.json",
+      "episode_id": 88298059,
+      "sha256": "2916030d300e17efea158659a6649af7c1423c482c4cd0e091453138aa34e767",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88298059.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5861769,
+      "dataset_path": "episodes/88300130.json",
+      "episode_id": 88300130,
+      "sha256": "68ba4607fd10a879e3fae67178d22a09e94e739859e24ec7080b79db855c3c7b",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88300130.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4754075,
+      "dataset_path": "episodes/88300654.json",
+      "episode_id": 88300654,
+      "sha256": "5cd7a24f60a737c7f2571cc79b8822fd7d4335afdb1f81de722cb10252e3f63b",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88300654.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 624407,
+      "dataset_path": "episodes/88302734.json",
+      "episode_id": 88302734,
+      "sha256": "30a97dfb6bbfe65b224011103b215c7e2ec946ad1cd977cc82a88b1232444452",
+      "source_path": "private/g3/e01/flg-gold-teacher-probe-v1/88302734.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4377850,
+      "dataset_path": "episodes/88304411.json",
+      "episode_id": 88304411,
+      "sha256": "d84aac31c4398df9ac2aca33a5e4dd7e3e651f0c310f324dba64c3ba970e8d6c",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88304411.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4779822,
+      "dataset_path": "episodes/88308561.json",
+      "episode_id": 88308561,
+      "sha256": "3d6dfd984cf3bd319f42671dab67a8c72e3838e24e71156fa6cbb73f089ced40",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88308561.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7673503,
+      "dataset_path": "episodes/88309614.json",
+      "episode_id": 88309614,
+      "sha256": "c2db1968df73ab16de81bc76faab7434586ed50f8621b788dda8a336dfa6f404",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88309614.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4609394,
+      "dataset_path": "episodes/88309616.json",
+      "episode_id": 88309616,
+      "sha256": "248e8ae8f8eda581e9f087c578405520a7c0393f178fc9b2d30ac6991bca86b3",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88309616.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 8488713,
+      "dataset_path": "episodes/88310633.json",
+      "episode_id": 88310633,
+      "sha256": "b78304917e2bfddde04a8533487eb4a8aa882c3ee2a9cff3eb2cc18543f8d311",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88310633.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 8040542,
+      "dataset_path": "episodes/88312764.json",
+      "episode_id": 88312764,
+      "sha256": "d00599769abf1b4ef79f5d63a0b9bbccfcb13812f46d98ee6a9952cfee4c53b0",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88312764.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5222527,
+      "dataset_path": "episodes/88314806.json",
+      "episode_id": 88314806,
+      "sha256": "3863e0bbb5d25af8c3093236a79b3fe02c051f503634d816cad7dab8954905fc",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88314806.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 7164618,
+      "dataset_path": "episodes/88315326.json",
+      "episode_id": 88315326,
+      "sha256": "492ea008f610efd5abd0c5e81f366bcbef7e4aa9b5ea52ade1983717872c9479",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88315326.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7370388,
+      "dataset_path": "episodes/88315840.json",
+      "episode_id": 88315840,
+      "sha256": "077ef4968dc48ffc2e33eee2ee6b24ea29179dd21894170a317491cac8230626",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88315840.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6251226,
+      "dataset_path": "episodes/88316351.json",
+      "episode_id": 88316351,
+      "sha256": "24accb1a28261ca6e44e449efc48c473976d065767246e2cacdd813d7492d577",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88316351.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7076633,
+      "dataset_path": "episodes/88317383.json",
+      "episode_id": 88317383,
+      "sha256": "b3b00ca7aa046d18cfbd2f6ca626868ebf013232efc08d20b1056b2f542498c0",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88317383.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6355732,
+      "dataset_path": "episodes/88318415.json",
+      "episode_id": 88318415,
+      "sha256": "d8e9d4e7da8517aa5e576f11ba5d6dea2a53455f40e1d9a75db6f91dba88c6c6",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88318415.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 8129282,
+      "dataset_path": "episodes/88318421.json",
+      "episode_id": 88318421,
+      "sha256": "7f08abec8e1dbdfb6b411f84a2d74440554f4899daec6155c871c4c0f67dbf9f",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88318421.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5624889,
+      "dataset_path": "episodes/88318931.json",
+      "episode_id": 88318931,
+      "sha256": "c45d9ec2f591ee7d0398371599755b363b6ee591531f5f7ef146dd4d5bd10c79",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88318931.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5246538,
+      "dataset_path": "episodes/88318940.json",
+      "episode_id": 88318940,
+      "sha256": "99acbd1dd3b951f72604c58fad6cb300a08d087d84738d342dd7421f72b61f6a",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88318940.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5542084,
+      "dataset_path": "episodes/88319436.json",
+      "episode_id": 88319436,
+      "sha256": "dac62115ddfa48ae09f849198808e993c14c9effcbe683301e413de5f0bea62e",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88319436.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4971442,
+      "dataset_path": "episodes/88321518.json",
+      "episode_id": 88321518,
+      "sha256": "d4272cf2ac0120277678e7bca3a819f6fdf8b9ef36882f7b2d39ad0e73612813",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88321518.json",
+      "split": "validation",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6705055,
+      "dataset_path": "episodes/88322606.json",
+      "episode_id": 88322606,
+      "sha256": "f7f145280abb92b6befa97a3e7b501a53e2d40dadc2e17dade6a963f966b4812",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88322606.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4747191,
+      "dataset_path": "episodes/88324168.json",
+      "episode_id": 88324168,
+      "sha256": "5e1df438954c449cdd557b56440264467a914431210b0274c0e4ea770d3a247c",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88324168.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7773531,
+      "dataset_path": "episodes/88324699.json",
+      "episode_id": 88324699,
+      "sha256": "f14b0f5bd7dc7dd9dde6d64424b66bd0eadea1b76ece578032489edd4c237284",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88324699.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6105640,
+      "dataset_path": "episodes/88324713.json",
+      "episode_id": 88324713,
+      "sha256": "06518e3501634603e66a3e2f23ab18d9e13f7b6a27677b4c21cc7fad26bbb1c9",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88324713.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 7145674,
+      "dataset_path": "episodes/88324732.json",
+      "episode_id": 88324732,
+      "sha256": "19ed2194e6f43ed4001e092708e215f622c3f175c51af7f8d8a0914ae25d68da",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88324732.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4667363,
+      "dataset_path": "episodes/88325214.json",
+      "episode_id": 88325214,
+      "sha256": "65eb6da594ce1176dfec0ce38f07bce19bf1b7ace9869e577785e86f64d5d3a1",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88325214.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 7154119,
+      "dataset_path": "episodes/88325730.json",
+      "episode_id": 88325730,
+      "sha256": "5518d8405b75409b709af7e92541ceddc249b3ee140423934c12ce8488c8e5df",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88325730.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 4132196,
+      "dataset_path": "episodes/88325741.json",
+      "episode_id": 88325741,
+      "sha256": "0959905bceee62abffd6efe32c91b35a74fd1cb6298ba094f6dd12780ca52214",
+      "source_path": "private/g3/e01/dries-grimmsnarl-calibration-v1/88325741.json",
+      "split": "validation",
+      "stratum": "seat_0_win",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 5938415,
+      "dataset_path": "episodes/88326253.json",
+      "episode_id": 88326253,
+      "sha256": "66911661f293bd6b7fc383fc3e70340eafb6a32cc7aa30c5a789093a371fd3d7",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88326253.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6736937,
+      "dataset_path": "episodes/88327275.json",
+      "episode_id": 88327275,
+      "sha256": "0754f2cf3c8de6be6f275f0743c43274e4c376cc1d3d0945a1b78ce798e5826f",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88327275.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7643264,
+      "dataset_path": "episodes/88328306.json",
+      "episode_id": 88328306,
+      "sha256": "bb610fde003f01ed4be7df709be8629aa77e7a3df84580b0e5032fb5efeffeae",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88328306.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 2996616,
+      "dataset_path": "episodes/88329376.json",
+      "episode_id": 88329376,
+      "sha256": "aa6bb3b74d140d195fdcb1933d9738978d72840d86a8a37b5f887a165ae965cb",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88329376.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6794256,
+      "dataset_path": "episodes/88330964.json",
+      "episode_id": 88330964,
+      "sha256": "5aaaa29edf35cb54a8ea17f902fddcc3acd0f3c369517f4d23eea0b19329360c",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88330964.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6471053,
+      "dataset_path": "episodes/88331484.json",
+      "episode_id": 88331484,
+      "sha256": "339d095694c6a746e46fcb81d736d431450a770bcb182ec54c7550001eaf5a14",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88331484.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 509759,
+      "dataset_path": "episodes/88332011.json",
+      "episode_id": 88332011,
+      "sha256": "07f7662d1c7cbd98195400f33f3dcff4cf4b188ba51a6ecd58159cc2875e64ee",
+      "source_path": "private/g3/e01/dries-confirmation-teacher-probe-v1/88332011.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "dries"
+    },
+    {
+      "bytes": 6464753,
+      "dataset_path": "episodes/88333027.json",
+      "episode_id": 88333027,
+      "sha256": "c4a3f7fec14551aca9d3b116e6ccb0afadd146fa4dc99f0a6ec53c30d414ddf6",
+      "source_path": "private/g3/e01/flg-dragapult-calibration-v1/88333027.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 3371991,
+      "dataset_path": "episodes/88333037.json",
+      "episode_id": 88333037,
+      "sha256": "5b6b330d543037e561a889fe76baaf84d427019b0fc0523080045a6abc5214d6",
+      "source_path": "private/g3/e01/flg-gold-teacher-probe-v1/88333037.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6337005,
+      "dataset_path": "episodes/88333549.json",
+      "episode_id": 88333549,
+      "sha256": "87185ab6adced26dc4fcfb763917074528ecfb0e4e660d03d1403db461cb25a5",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88333549.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 7221876,
+      "dataset_path": "episodes/88335132.json",
+      "episode_id": 88335132,
+      "sha256": "2c201e77a113f8a282c6a2fb5f4f6d78fdaa0aef0bbf147f10708531dc1df6e4",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88335132.json",
+      "split": "validation",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5678713,
+      "dataset_path": "episodes/88335650.json",
+      "episode_id": 88335650,
+      "sha256": "476fc79d7099e6a7846ab0e50bb8bd74b199ef74df5b3f3717d94cc3d8bf2e52",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88335650.json",
+      "split": "train",
+      "stratum": "seat_1_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6935134,
+      "dataset_path": "episodes/88336699.json",
+      "episode_id": 88336699,
+      "sha256": "fcdf08bda2bb157745b2a2dfd73cd6267792d31ebc1574a7b8ed818d3116b646",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88336699.json",
+      "split": "train",
+      "stratum": "seat_1_win",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 5412475,
+      "dataset_path": "episodes/88339327.json",
+      "episode_id": 88339327,
+      "sha256": "092ba671052c74046576eaf2d460712d2fa6a900bbb0cf3bf65f12e857a7c76e",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88339327.json",
+      "split": "train",
+      "stratum": "seat_0_loss",
+      "teacher_key": "flg"
+    },
+    {
+      "bytes": 6616619,
+      "dataset_path": "episodes/88340379.json",
+      "episode_id": 88340379,
+      "sha256": "83ed51f78d0cbabb95406b8963582cd603709e3b12ec408cb08541db61864802",
+      "source_path": "private/g3/e01/flg-dragapult-screening-expansion-v1/88340379.json",
+      "split": "train",
+      "stratum": "seat_0_win",
+      "teacher_key": "flg"
+    }
+  ],
+  "request_ready": true,
+  "requested_authorization_for_later_exact_approval": {
+    "agent_log_read": false,
+    "copy": true,
+    "git_commit": false,
+    "git_push": false,
+    "label_materialization": false,
+    "maximum_replay_bytes": 341559745,
+    "maximum_replay_files": 58,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "private_dataset_create": true,
+    "private_dataset_upload": true,
+    "replay_body_read": true,
+    "stage": true,
+    "submission": false,
+    "test_replay_files": 0,
+    "training": false
+  },
+  "runner": {
+    "path": "scripts/e01_prepare_production_bc_input_dataset.py",
+    "sha256": "36b7185e5652a867c8bc4d3aa2aebde01493e6c09e5e236270e1a14eafe82588"
+  },
+  "schema_version": 1,
+  "source_path": "configs/e01_production_bc_input_publication_request_v1.json",
+  "status": "READY_UNAUTHORIZED",
+  "stop_conditions": [
+    "Do not execute without a separate user approval receipt bound to this request file SHA-256 and the publication runner SHA-256.",
+    "Fail before staging if any selected source path, episode ID, split, byte count, SHA-256, listing order, total count or total bytes differs.",
+    "Never select, read, copy, stage or upload a test-split replay.",
+    "Never publish an agent log, label, checkpoint, code file or other non-replay payload under this request.",
+    "Stop after the exact private dataset is uploaded and independently inventory-verified; do not train."
+  ]
+}

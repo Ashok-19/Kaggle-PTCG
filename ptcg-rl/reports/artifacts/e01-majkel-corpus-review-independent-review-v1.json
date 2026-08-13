@@ -1,0 +1,67 @@
+{
+  "authorization": {
+    "additional_replay_transfer": false,
+    "git_commit": false,
+    "git_push": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "production_training": false,
+    "submission": false,
+    "training_label_materialization": false
+  },
+  "created_at_utc": "2026-08-04T15:55:00Z",
+  "decision": "ACCEPT_EXACT_TRANSFER_AND_QUALIFIED_CORPUS_V2_RETAIN_PRODUCTION_TARGET_FLOOR_BLOCK",
+  "inputs": {
+    "canary_execution": {
+      "path": "reports/evaluations/e01-bc-engineering-canary-v1.json",
+      "sha256": "51e06333619f1e8fc34ebb889d84cb196997632b0e347c731fe558df7813c1ee"
+    },
+    "canary_review": {
+      "path": "reports/artifacts/e01-bc-engineering-canary-execution-review-v1.json",
+      "self_hash": "2f365281ed62e91139b67a9cb3b0fdb5a7149fed1fd7ec9cbd7d43097175280d",
+      "sha256": "1f25828a78400801f6dc5d2d8630890579e29584762ad95b18af795ca810c100"
+    },
+    "corpus_review": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-review-v2.json",
+      "self_hash": "dc995dfd07d509c0271f1c7e4138408248cabbe2a64134b04439b9b121ced6c3",
+      "sha256": "87eaee15513189d7f2ff4ca44e631016b3f937165df31db8696383a30c1cad56"
+    },
+    "job": {
+      "path": "reports/jobs/e01-majkel-corpus-review-v1.json",
+      "sha256": "e5cc6f3b3e86b007668b32fe124b21a4e5f15cf248a863f3ebf77f200f11903e"
+    },
+    "manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "self_hash": "e736f609209805c28bb4aa97106e163386667d639b9b21573f8ea749b11925b6",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "run": {
+      "path": "reports/artifacts/e01-majkel-corpus-review-v1.json",
+      "self_hash": "124f4d08bc1cd0143c8709af8f109ba9290911dd28068ddcdc768f5d1ea2990b",
+      "sha256": "31fdff1a40de058407b07de5975e2bf531fdc417aae456f54e88759386918d16"
+    }
+  },
+  "next_action": "RESOLVE_EXACT_1540_TARGET_SHORTFALL_THEN_REQUEST_SEPARATE_PRODUCTION_BC_APPROVAL",
+  "producer": "scripts/finalize_e01_corpus_v2_and_canary.py",
+  "recalculation": {
+    "canary_cumulative_optimizer_steps": 64,
+    "canary_non_promotable": true,
+    "content_hashes_unique": true,
+    "corpus_v2_episodes": 337,
+    "corpus_v2_policy_loss_targets": 23460,
+    "episode_floor_shortfall": 0,
+    "episode_ids_unique": true,
+    "new_bytes_read": 1030207171,
+    "new_files_qualified": 269,
+    "new_files_read": 269,
+    "new_files_rejected": 0,
+    "replay_body_outputs": 0,
+    "target_floor_shortfall": 1540
+  },
+  "record_id": "e01-majkel-corpus-review-independent-review-v1",
+  "review_sha256": "6025b5d9602e4f73d0398f46018e303c5ad23b38e51358d80e641694acd2f57a",
+  "reviewed_decision": "DEC-028",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-majkel-corpus-review-independent-review-v1.json",
+  "status": "PASS"
+}

@@ -1,0 +1,146 @@
+{
+  "authorization": {
+    "agent_logs": false,
+    "corpus_promotion": false,
+    "external_compute_private_kaggle_cpu": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "raw_exports": false,
+    "replay_body_exports": false,
+    "replay_body_reads_exact_named_files": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "authorization_consumed": false,
+  "authorization_scope": "UNAUTHORIZED_EXACT_ONE_FILE_PRIVATE_KAGGLE_CPU_MODULE_1324_COMPATIBILITY_REVIEW_ONLY_NO_CORPUS_PROMOTION",
+  "authorized": false,
+  "compute": {
+    "cpu_threads_maximum": 4,
+    "gpu": false,
+    "internet": false,
+    "notebook_slug": "kptcg-e01-majkel-module-1324-compatibility-v1",
+    "platform": "private-kaggle-cpu",
+    "tpu": false,
+    "wall_seconds_maximum": 1800
+  },
+  "created_at_utc": "2026-08-05T05:39:27Z",
+  "decision_id": "DEC-030",
+  "decision_path": "docs/decisions/DEC-030_E01_MODULE_1324_CONTRACT_DRIFT.md",
+  "decision_sha256": "c8dff75fb1a4e7c4a991c2a2a010f8c09b8618af9a72aebe8673bb5bf9687993",
+  "fail_closed_if": [
+    "request, source, teacher, filename or declared bytes differ",
+    "module version is not exactly 1.32.4",
+    "deck, current-card construction, terminal, reward or action alignment fails",
+    "any corpus promotion, label, optimizer, training, accelerator, submission, commit or push is attempted"
+  ],
+  "files": [
+    {
+      "create_time": "2026-08-04T23:16:53.5856062",
+      "declared_bytes": 4882237,
+      "end_time": "2026-08-04T23:17:52.8099328Z",
+      "episode_id": 90037133,
+      "file_name": "90037133.json",
+      "opponent_player_index": 1,
+      "opponent_reward": 1.0,
+      "opponent_submission_id": 55177269,
+      "opponent_team_id": 16422241,
+      "opponent_team_name": "Raihan Ramadistra",
+      "public_create_time": "2026-08-04T23:16:53.5856062Z",
+      "review_order": 1,
+      "state": "COMPLETED",
+      "stratum": "seat_0_loss",
+      "teacher_player_index": 0,
+      "teacher_reward": -1.0,
+      "teacher_submission_id": 55186239,
+      "teacher_team_id": 16374395,
+      "teacher_team_name": "Majkel1337",
+      "type": "PUBLIC"
+    }
+  ],
+  "maximum_declared_bytes": 4882237,
+  "maximum_files": 1,
+  "output_contract": {
+    "agent_log_outputs": 0,
+    "metadata_files": [
+      "e01-majkel-module-1324-compatibility-probe-review-v1.json",
+      "e01-majkel-module-1324-compatibility-probe-output-manifest-v1.json"
+    ],
+    "raw_replay_body_outputs": 0,
+    "training_label_outputs": 0
+  },
+  "producer": "chatgpt-local-agent",
+  "requested_authorization": {
+    "agent_logs": false,
+    "corpus_promotion": false,
+    "external_compute_private_kaggle_cpu": true,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "raw_exports": false,
+    "replay_body_exports": false,
+    "replay_body_reads_exact_named_files": true,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "review_contract": {
+    "accepted_for_probe_only": [
+      "1.32.4"
+    ],
+    "body_checks": [
+      "schema and environment identity",
+      "exact Mega Lucario deck multiset",
+      "teacher player and terminal reward identity",
+      "current-card construction compatibility",
+      "lag-aligned full-compound action validity including STOP",
+      "forced-singleton recurrence-only classification",
+      "duplicate episode and split leakage exclusion"
+    ],
+    "corpus_promotion": false,
+    "observed_module_version": "1.32.4",
+    "supplement_continuation": false
+  },
+  "schema_version": 1,
+  "source": {
+    "dataset_id": 11506836,
+    "dataset_info_total_bytes": 21457813826,
+    "dataset_inventory_files": 4812,
+    "dataset_inventory_json_files": 4811,
+    "dataset_inventory_sha256": "5620e055a25407c47e7744eaa0ffb9ab2a04fe2287b0f6180f54726cf7a00f77",
+    "dataset_inventory_total_bytes": 21457813826,
+    "dataset_last_updated_utc": "2026-08-05T00:11:02.203Z",
+    "dataset_reference": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04",
+    "dataset_search_card_download_bytes": 742933013,
+    "dataset_status": "READY",
+    "dataset_version": 1,
+    "live_source_identity_sha256": "b0254da354b5f8cf17ff15ad3af8173ca6b2a97dec59fef476f4fd44afcc2260",
+    "manifest_rows_without_json_body": 5,
+    "manifest_sha256": "bb190f62f0585dc2a1db2b02752a4d7e6fa6de15a800ed9e769d8daecd8bf9a1",
+    "public_episode_metadata_sha256": "53ce7e4428227844a9038431ea09f4b7fca18cb9d7fa147b5d24decc3381e64a",
+    "raw_refresh": "reports/artifacts/raw/e01-corpus-v2-source-refresh-20260805-v1.json",
+    "raw_refresh_self_hash": "6169024a23e5a95572cd563ee53872950480bcb29a85442576f7ad549ac16cce",
+    "raw_refresh_sha256": "627a3988869e4dfadc1626a96908041c75a23876369b3b8c546c92339f4217d3"
+  },
+  "source_path": "configs/e01_majkel_module_1324_compatibility_probe_request_v1.json",
+  "status": "READY_UNAUTHORIZED",
+  "teacher": {
+    "accepted_module_versions": [
+      "1.32.2",
+      "1.32.3"
+    ],
+    "deck_multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278",
+    "submission_id": 55186239,
+    "team_id": 16374395,
+    "team_name": "Majkel1337"
+  }
+}

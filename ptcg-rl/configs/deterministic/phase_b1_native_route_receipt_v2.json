@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "receipt_id": "phase-b1-native-route-receipt-v2-exact-deck-plan-bound",
+  "scope": "NATIVE_QUALIFIED",
+  "runtime_authority": "ROUTE_CAPABILITY_ONLY",
+  "scope_labels": {
+    "capability": "NATIVE_QUALIFIED_CANDIDATE",
+    "policy_integration": "NOT_ESTABLISHED",
+    "outcome_promotion": "NOT_ESTABLISHED"
+  },
+  "candidate_deck": "mega-abomasnow-ex-exact-production-deck-v1",
+  "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+  "candidate_deck_semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+  "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+  "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+  "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+  "cards": [
+    {"card_id": 721, "hp": 150, "card_type": 0, "weakness_type": 4, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 722, "hp": 90, "card_type": 0, "weakness_type": 8, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 723, "hp": 350, "card_type": 0, "weakness_type": 8, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 754, "hp": 280, "card_type": 0, "weakness_type": -1, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"}
+  ],
+  "attacks": [
+    {"card_id": 722, "attack_id": 1044, "damage": 10, "energy_counts": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], "attack_type": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED", "effect_status": "PASS"},
+    {"card_id": 722, "attack_id": 1045, "damage": 30, "energy_counts": [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0], "attack_type": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED", "effect_status": "PASS"}
+  ],
+  "prizes": [
+    {"card_id": 721, "prize_units": 1, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 722, "prize_units": 1, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 723, "prize_units": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 754, "prize_units": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"}
+  ],
+  "contexts": [
+    {"selection_type": 6, "selection_context": 35, "option_type": 13, "context_card_id": null, "effect_card_id": null, "choice_role": "ATTACK", "scope": "NATIVE_QUALIFIED"},
+    {"selection_type": 7, "selection_context": 37, "option_type": 9, "context_card_id": null, "effect_card_id": null, "choice_role": "EVOLVE", "scope": "NATIVE_QUALIFIED"}
+  ],
+  "route_contract": {
+    "qualified_attack_ids": [1044, 1045],
+    "snover_card_id": 722,
+    "evolution": {"selection_type": 7, "selection_context": 37, "option_type": 9, "source_card_id": 722, "target_card_id": 723, "source_zones": [4, 5], "local_delta": ["zone", "position", "attached_energy_count", "energy_types", "damage", "statuses"], "serial_policy": "native_event_links_replacement_serial; serial identity is not assumed preserved"},
+    "partial_route_ids_never_authority": [1042, 1043, 1046, 1047, 1262],
+    "unsupported_inputs": ["successor", "counterfactual", "hidden", "private_native", "raw_option_order"]
+  },
+  "provenance": {
+    "knowledge_base": "knowledge_base/ptcg_gold.sqlite",
+    "knowledge_base_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "asset_paths": {
+      "native_library": "private/assets/official/sample_submission/sample_submission/cg/libcg.so",
+      "api": "private/assets/official/sample_submission/sample_submission/cg/api.py",
+      "wrapper": "private/assets/official/sample_submission/sample_submission/cg/game.py",
+      "card_data": "private/assets/official/EN_Card_Data.csv",
+      "card_table": "private/g2/card-table-v1.json",
+      "candidate_deck": "private/baselines/mega-abomasnow-ex/deck.csv",
+      "knowledge_base": "knowledge_base/ptcg_gold.sqlite"
+    },
+    "asset_sha256": {
+      "native_library": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+      "api": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+      "wrapper": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+      "card_data": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "candidate_deck": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+      "candidate_deck_semantic_multiset": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+      "knowledge_base": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f"
+    },
+    "asset_scope": {
+      "native_library": "OFFICIAL_ENGINE",
+      "api": "OFFICIAL_API",
+      "wrapper": "OFFICIAL_WRAPPER",
+      "card_data": "OFFICIAL_CARD_DATA",
+      "card_table": "VERSIONED_CARD_TABLE",
+      "candidate_deck": "EXACT_PRODUCTION_DECK",
+      "knowledge_base": "LOCAL_KNOWLEDGE_BASE"
+    },
+    "capability_evidence": {
+      "scope": "NATIVE_QUALIFIED_CANDIDATE",
+      "status": "BLOCKED_PENDING_EXACT_DECK_CAPABILITY_RERUN",
+      "config_path": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json",
+      "config_sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88",
+      "report_path": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.json",
+      "report_sha256": "8591505d33160d52e66aaa7ebbd26132ca6369c1562fa55e8c45c37814483c4b",
+      "raw_path": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.raw.json",
+      "raw_sha256": "3e24247dfbfd0e6479dfe82b0f17ffc74b9d56d59d28d08cb963d67e38d342c4"
+    },
+    "component_plan_path": "configs/deterministic/phase_b1_component_qualification_v2.json",
+    "component_plan_sha256": "0c3852238a96b60de7f6dedd08237f414143f6c1b3df655223a2596c50ca6555",
+    "frozen_source_sha256": {
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+      "src/ptcg_rl/deterministic/b1_oracle.py": "becd99d4d5fbd1c9cdab1eb5d0909689c003bfd900045afab0178c2647f965d4",
+      "src/ptcg_rl/deterministic/control.py": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+      "src/ptcg_rl/deterministic/policy.py": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"
+    },
+    "owned_source_sha256": {
+      "src/ptcg_rl/deterministic/b1_policy.py": "bdd5f03f6a8acd900aeaade23a9b8f68746765e6e90f55c6e08db087157b15e9",
+      "src/ptcg_rl/deterministic/b1_component_harness.py": "53fdf7f7b2cc95faef8d9a203c2a1eb0dd9cf9f7814445db307d32483f342016",
+      "scripts/deterministic/phase_b1_component_qualification.py": "0a800efbd1c0bfcbfca10a719904f62028022c9d66491eae6151439902c9bfba",
+      "scripts/deterministic/phase_b1_exact_deck_capability_rerun.py": "622651658bffe385e7d3b0c0c8df5261cd0ebd5748ea6213ec3d930be0ff05c1"
+    },
+    "source_scope": {
+      "src/ptcg_rl/g1/actions.py": "FROZEN_CONTRACT_DEPENDENCY",
+      "src/ptcg_rl/g1/models.py": "FROZEN_CONTRACT_DEPENDENCY",
+      "src/ptcg_rl/g1/semantic.py": "FROZEN_CONTRACT_DEPENDENCY",
+      "src/ptcg_rl/deterministic/b1_oracle.py": "B1_ORACLE_DEPENDENCY",
+      "src/ptcg_rl/deterministic/control.py": "FROZEN_B0_CONTROL",
+      "src/ptcg_rl/deterministic/policy.py": "FROZEN_B0_POLICY_ENTRY",
+      "src/ptcg_rl/deterministic/b1_policy.py": "B1_OWNED_RUNTIME",
+      "src/ptcg_rl/deterministic/b1_component_harness.py": "B1_OWNED_HARNESS",
+      "scripts/deterministic/phase_b1_component_qualification.py": "B1_OWNED_PLANNER",
+      "scripts/deterministic/phase_b1_exact_deck_capability_rerun.py": "B1_OWNED_CAPABILITY_PLAN"
+    },
+    "scope_labels": {"capability": "NATIVE_QUALIFIED_CANDIDATE", "policy_integration": "NOT_ESTABLISHED", "outcome_promotion": "NOT_ESTABLISHED"},
+    "config_sha256_rule": "sha256(canonical_json(config with provenance.config_sha256 omitted))",
+    "runtime_receipt_binding_sha256": "b07725b4e05c803be6071487624f0a68f977b08a790e8c5db4d35462fc7f5be5",
+    "config_sha256": "9dd98157759bd260af37d0268c6a62efb40d05f83618350c2fc10f4cdac5fd02"
+  }
+}

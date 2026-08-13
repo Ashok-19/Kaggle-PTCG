@@ -1,0 +1,83 @@
+{
+  "authorization": {
+    "additional_replay_reads": false,
+    "compatibility_probe_authorized": false,
+    "corpus_promotion": false,
+    "failed_request_authorization_consumed": true,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-05T05:39:27Z",
+  "decision": "ACCEPT_STOP_AND_RETAIN_CORPUS_V2_PREPARE_ONE_FILE_COMPATIBILITY_PROBE_UNAUTHORIZED",
+  "inputs": {
+    "base_manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-030_E01_MODULE_1324_CONTRACT_DRIFT.md",
+      "sha256": "c8dff75fb1a4e7c4a991c2a2a010f8c09b8618af9a72aebe8673bb5bf9687993"
+    },
+    "job": {
+      "path": "reports/jobs/e01-corpus-target-supplement-v1.json",
+      "self_hash": "1183c17d3b056f55bc1bfd11e24caf1cf3a478d921f1c7b5d870849d6c60a877",
+      "sha256": "fa60ba7bcf4987835fa8a1389d6d3cd0a913d48e62325e3c8d83e7644fb1f980"
+    },
+    "probe_contract": {
+      "path": "reports/artifacts/e01-majkel-module-1324-compatibility-probe-contract-review-v1.json",
+      "self_hash": "ff45ed83fa1a23b48434d461517bb4b396b09b6534c770a4fa51087b9478f8e4",
+      "sha256": "7f5273b372c22e98fb24dcc479ef368c65c4b8d1feb38abf752ea4fbd4a06695"
+    },
+    "probe_request": {
+      "path": "configs/e01_majkel_module_1324_compatibility_probe_request_v1.json",
+      "sha256": "dc38df7b76e01682d3e735499aab352e963c9d454423c71756ededee98b69331"
+    },
+    "request": {
+      "path": "configs/e01_corpus_v2_target_shortfall_supplement_request_v1.json",
+      "sha256": "d94c12e424ba26a06a4085c7273faeadd512351828b2b2aa84b85bf014a2f92e"
+    },
+    "saved_version_1_log": {
+      "path": "private/kaggle/e01-corpus-target-supplement-output-v1/kptcg-e01-corpus-target-supplement-v1.log",
+      "sha256": "4622e9cbb96cfc5a6c6a822744aac6128fec9803b2f4bd12ea364d63d52eb37d"
+    },
+    "saved_version_2_log": {
+      "path": "private/kaggle/e01-corpus-target-supplement-output-v2/kptcg-e01-corpus-target-supplement-v1.log",
+      "sha256": "0ebfbfc5acbc37150bd4771d81e9451af39e5b7cf1b7326237ef86798e104acd"
+    }
+  },
+  "producer": "chatgpt-local-agent",
+  "recalculation": {
+    "corpus_v2_episodes": 337,
+    "corpus_v2_policy_loss_targets": 23460,
+    "corpus_v3_finalized": false,
+    "first_approved_file_identity_matches": true,
+    "metadata_outputs_created": 0,
+    "module_contract_drift": {
+      "expected": [
+        "1.32.2",
+        "1.32.3"
+      ],
+      "observed": "1.32.4"
+    },
+    "optimizer_steps": 0,
+    "saved_version_1_replay_bodies_read": 0,
+    "saved_version_2_replay_bodies_read": 1,
+    "saved_version_2_replay_body_bytes_read": 4882237,
+    "submission": false,
+    "target_floor_shortfall": 1540,
+    "training": false
+  },
+  "record_id": "e01-corpus-target-supplement-failure-review-v1",
+  "review_sha256": "57a86da7e4bdaed30f1316e0a65090d0319da9b7a515a29ffba1901a57e408a1",
+  "reviewed_decision": "DEC-030",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-corpus-target-supplement-failure-review-v1.json",
+  "status": "PASS_FAILED_CLOSED"
+}

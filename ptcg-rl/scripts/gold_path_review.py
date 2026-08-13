@@ -29,7 +29,7 @@ def main() -> int:
         type=Path,
         default=(
             ROOT
-            / "docs/decisions/DEC-024_E01_CURRENT_RANK_1_SOURCE_WAIT.md"
+            / "docs/decisions/DEC-028_E01_CORPUS_V2_AND_BC_CANARY_RESULTS.md"
         ),
     )
     parser.add_argument(

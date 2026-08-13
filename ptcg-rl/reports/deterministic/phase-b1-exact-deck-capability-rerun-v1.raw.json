@@ -1,0 +1,14 @@
+{
+  "record_id": "phase-b1-exact-deck-capability-rerun-v1",
+  "schema_version": 1,
+  "status": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW",
+  "scope": "NATIVE_QUALIFIED_CANDIDATE",
+  "plan_sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88",
+  "candidate_deck_file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+  "candidate_deck_semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+  "actual_deck_loaded": true,
+  "native_games": 0,
+  "capability_proofs": [],
+  "stop_conditions": {"stop_on_any_reliability_counter": true, "native_launch": false},
+  "scope_labels": {"capability": "NATIVE_QUALIFIED_CANDIDATE", "policy_integration": "NOT_ESTABLISHED", "outcome_promotion": "NOT_ESTABLISHED"}
+}

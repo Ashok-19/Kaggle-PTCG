@@ -1,0 +1,40 @@
+{
+  "corpus_manifest_sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f",
+  "counts": {
+    "bytes": 1414841670,
+    "episodes": 337,
+    "forced_teacher_requests": 1598,
+    "meaningful_teacher_decisions": 23460,
+    "policy_loss_targets": 23460,
+    "teacher_active_requests": 25058
+  },
+  "created_at_utc": "2026-08-04T15:24:13Z",
+  "decision": "RETAIN_CORPUS_V2_BUT_BLOCK_PRODUCTION_TRAINING_FLOORS",
+  "new_review": {
+    "qualified": 269,
+    "read_bytes": 1030207171,
+    "rejected": 0
+  },
+  "producer": "scripts/e01_majkel_corpus_expansion_review.py",
+  "qualification": {
+    "action_alignment_verified": true,
+    "deck_and_module_filtering_applied": true,
+    "duplicate_episode_or_content_hashes": 0,
+    "episode_level_split": true,
+    "exact_named_file_set_read": true,
+    "exact_new_byte_cap_met": true,
+    "minimum_200_episodes": true,
+    "minimum_25000_policy_loss_targets": false,
+    "model_mutation": false,
+    "optimizer_steps": 0,
+    "replay_body_outputs": 0,
+    "submission": false,
+    "training": false
+  },
+  "record_id": "e01-approved-replay-corpus-review-v2",
+  "review_sha256": "dc995dfd07d509c0271f1c7e4138408248cabbe2a64134b04439b9b121ced6c3",
+  "reviewed_decision": "DEC-027",
+  "schema_version": 2,
+  "source_path": "e01-approved-replay-corpus-review-v2.json",
+  "status": "BLOCKED_FLOORS"
+}

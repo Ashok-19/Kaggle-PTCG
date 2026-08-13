@@ -1,0 +1,35 @@
+{
+  "approval_text": "I approve consumption of `configs/e01_production_recurrent_bc_notebook_request_v2.json` at SHA-256 `93ad27ae290bdf56f0e6259a252625d7bd15150054d85139f29c9cae7fb7f4eb` and authorize exactly one private Kaggle CPU production recurrent-BC notebook run under the following scope:\n\n* Bind training to `configs/e01_production_recurrent_bc_request_v2.json` at SHA-256 `297679d5a1a2ca43b3f8ef1dc158cdc82fc68e8c5fe7b6791d790bded586ea0d`, runner SHA-256 `92e2eeab5986d21e648b8db64ee19a85ffadb60904351863af528d48c4c94413`, and implementation SHA-256 `4e30361f7319673b8f597ca65c65ea191e6c82a46a839c355bc6a59b8644dbde`.\n* Bind notebook execution to corrected wrapper `scripts/kaggle/e01_production_recurrent_bc_notebook_v2.py` at SHA-256 `59db2271582b45f886347755ef7e401af1603ac761977ba2d6600e70233bcf52` and deterministic source builder `scripts/kaggle/build_e01_production_recurrent_bc_notebook_v2.py` at SHA-256 `289d1eaf8de9eaf5d0805bc088045f78c1882556d508883ba834dbf95ca07a17`.\n* Create exactly one new private Kaggle script notebook `ashok205/kptcg-e01-production-recurrent-bc-v2` titled `KPTCG E01 Production Recurrent BC V2`. Fail closed if that slug already exists. Leave failed notebook `ashok205/kptcg-e01-production-recurrent-bc-v1`, version 1, unchanged and do not rerun it.\n* Configure `SaveAndRunAll`, CPU only, internet disabled, GPU disabled, TPU disabled, and a session timeout of exactly `14,400` seconds.\n* Attach exactly these dataset sources: `ashok205/kptcg-e01-majkel-corpus-review-inputs` dataset ID `11501808` version `2`; `ashok205/kptcg-e01-production-bc-retained-inputs` dataset ID `11514316` version `1`; `kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03` dataset ID `11490894` version `1`; and `kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04` dataset ID `11506836` version `1`.\n* Require the mounted dataset aggregates to be exactly: source bundle `79` files / `7,645,589` bytes / inventory SHA-256 `2bc151d35af0ef3bd9177f44275ef04be0de017a07ef5cf86b283c94834f83ab`; retained dataset `58` files / `341,559,745` bytes / inventory SHA-256 `d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43`; August 3 dataset `4,721` files / `21,451,850,075` bytes; and August 4 dataset `4,812` files / `21,457,813,826` bytes.\n* Accept source-bundle version 2 only through deterministic reconstruction of the `5,429,190`-byte checkpoint at SHA-256 `4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827` before training.\n* Verify every selected replay before semantic loading. Authorize reading, hashing and parsing exactly `316` train/validation replay bodies totaling `1,327,994,902` bytes: `237` files from the August 3 dataset, `21` files from the August 4 dataset, and `58` files from the retained private dataset.\n* Authorize validation and production recurrent behavior cloning for at most `4` epochs and at most `844` optimizer steps using AdamW, learning rate `0.0001`, weight decay `0.0`, sequence length `32`, seed `20260805`, and the existing deterministic 80/20 primary/legacy schedule.\n* Authorize construction of the optimizer, recurrent semantic loading, on-the-fly compound-action supervision, gradient updates, validation before training and after each epoch, and one checkpoint after each completed epoch. Do not create a separate persistent label dataset.\n* Keep all `46` test episodes sealed. Do not read any test replay body or any simulation agent log. Do not perform held-out test, on-policy, tournament, or submission evaluation under this approval.\n* After completion, download the notebook outputs, independently hash and review `execution-report.json`, `notebook-execution-envelope.json`, and all emitted epoch checkpoints, then stop and prepare the separate candidate-evaluation approval.\n* Do not promote or publish a model, create or update a Kaggle model or dataset, submit to the competition, or make a Git commit or push.\n* Retain `ashok205/new-benchmark-task-b1c52`, `ashok205/new-benchmark-task-daa06`, and `ashok205/new-benchmark-task-4abba` unchanged as incident evidence.\n* Fail closed immediately on any authorization, notebook, dataset, version, privacy, mount, path, file, byte count, SHA-256, replay, checkpoint, environment, loss, gradient, optimizer-step, wall-time, output, or download mismatch.\n",
+  "approval_text_sha256": "2e6f98386958bf207a3eeb10bacaf88a03e712ba67d20b3f3105bf8f32397c21",
+  "authorization": {
+    "notebook_create": false,
+    "notebook_run": false,
+    "optimizer_steps": false,
+    "replay_body_read": false,
+    "training": false
+  },
+  "builder_path": "scripts/kaggle/build_e01_production_recurrent_bc_notebook_v2.py",
+  "builder_sha256": "289d1eaf8de9eaf5d0805bc088045f78c1882556d508883ba834dbf95ca07a17",
+  "correction": {
+    "after": 4721,
+    "before": 4724,
+    "bytes_unchanged": 21451850075,
+    "field": "AUGUST_3_FILES",
+    "replay_hashes_unchanged": true,
+    "replay_records_unchanged": 316,
+    "training_contract_unchanged": true
+  },
+  "created_at_utc": "2026-08-06T15:11:18Z",
+  "focused_test_path": "tests/g3/test_e01_production_bc_notebook_v2.py",
+  "focused_test_sha256": "d5ceb8b9e0352ed85c3db0c3ea0c3d0cdc941548f0ef976dc87bc7ab286fa11e",
+  "prior_execution_review_path": "reports/artifacts/e01-production-recurrent-bc-notebook-execution-review-v1.json",
+  "prior_execution_review_sha256": "1f1f76cf9bcba191f46b774f668b0ff04d45a206814f51d600bea8687ab2f593",
+  "record_id": "e01-production-recurrent-bc-notebook-contract-review-v2",
+  "request_path": "configs/e01_production_recurrent_bc_notebook_request_v2.json",
+  "request_sha256": "93ad27ae290bdf56f0e6259a252625d7bd15150054d85139f29c9cae7fb7f4eb",
+  "review_sha256": "2a1e93b12a939a23de6224c640b1d024caba8b6e2b5c65ba80a71847458d6caf",
+  "schema_version": 1,
+  "status": "PASS_CORRECTED_NOTEBOOK_REQUEST_READY_UNAUTHORIZED",
+  "wrapper_path": "scripts/kaggle/e01_production_recurrent_bc_notebook_v2.py",
+  "wrapper_sha256": "59db2271582b45f886347755ef7e401af1603ac761977ba2d6600e70233bcf52"
+}

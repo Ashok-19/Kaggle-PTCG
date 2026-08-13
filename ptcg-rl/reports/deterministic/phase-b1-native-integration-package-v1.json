@@ -1,0 +1,59 @@
+{
+  "record_id": "phase-b1-native-integration-package-v1",
+  "schema_version": 1,
+  "status": "IMPLEMENTATION_READY_TECHNICALLY_BLOCKED",
+  "scope": {
+    "native_games": 0,
+    "kaggle_runs": 0,
+    "submission": false,
+    "deck_freeze": false,
+    "frozen_b0_modified": false,
+    "native_launch_gate": "BLOCKED_UNTIL_INDEPENDENT_REVIEW_RECEIPT"
+  },
+  "runtime_receipt": {
+    "path": "configs/deterministic/phase_b1_native_route_receipt_v1.json",
+    "config_sha256_rule": "sha256(canonical_json(payload without provenance.config_sha256))",
+    "config_content_sha256": "22ee16e4af75abb11cae76314420b78f07996c8501e21f91fb3d35f2269afe61",
+    "native_scope": "NATIVE_QUALIFIED",
+    "prize_units": {"721": 1, "722": 1, "723": 3, "754": 3},
+    "qualified_attacks": {"1044": {"card_id": 722, "damage": 10, "water_cost": 1}, "1045": {"card_id": 722, "damage": 30, "water_cost": 2}},
+    "evolution": {"source_card_id": 722, "target_card_id": 723, "selection_context": 37, "local_delta_only": true},
+    "forbidden_generalizations": ["successor", "counterfactual", "hidden", "private_native", "raw_option_order", "partial_routes"]
+  },
+  "policy_variants": {
+    "B1-A": "ptcg_rl.deterministic.b1_policy:B1APolicyV1",
+    "B1-B": "ptcg_rl.deterministic.b1_policy:B1BPolicyV1",
+    "abstention_authority": "B0_CONTROL",
+    "selected_action_builder": "ptcg_rl.g1.actions.CompoundActionBuilder",
+    "final_validator": "CompoundActionBuilder.build -> validate_compound_action",
+    "delegation_is_fallback": false
+  },
+  "component_plan": {
+    "path": "configs/deterministic/phase_b1_component_qualification_v1.json",
+    "sha256": "ae427075b9e7aeee8f175a43ce3971aa80577fc72b44f96a8c60530c5b8da197",
+    "arms": ["B0", "B1-A", "B1-B"],
+    "anchors": ["rule:dragapult-ex", "rule:iono", "rule:mega-abomasnow-ex", "rule:mega-lucario-ex"],
+    "games_per_anchor_per_seat": 8,
+    "games_per_arm": 64,
+    "games_all_arms": 192,
+    "candidate_seats": [0, 1],
+    "permutations_per_arm": 32,
+    "stop_on_any_reliability_defect": true,
+    "prospective_budget": {"p99_latency_ms": 100.0, "component_cpu_seconds_per_game": 1.0, "peak_rss_bytes": 536870912}
+  },
+  "verification": {
+    "focused_policy_and_harness_tests": {"passed": 15, "failed": 0},
+    "focused_deterministic_regression_tests": {"passed": 85, "failed": 0},
+    "ruff": "PASS",
+    "compileall": "PASS",
+    "script_help": "PASS",
+    "knowledge_base_validation": "PASS",
+    "native_execution": "NOT_RUN_BY_DESIGN"
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "queried_ids": ["DR-001", "DR-002", "DR-004", "DR-005", "DR-006", "DR-007", "DR-008", "DR-012", "DR-022", "DR-025", "DR-030", "DR-031", "DR-032", "DR-033", "AP-001", "AP-008", "AP-009", "AP-011", "AP-014", "RQ-004", "RQ-005", "RQ-006", "RQ-007", "RQ-009"]
+  },
+  "next_gate": "Independent review of receipt/hash binding, route activation boundary, diagnostics, natural-seat harness, and no-native-launch condition; only that receipt may unblock a separately approved mechanical canary."
+}

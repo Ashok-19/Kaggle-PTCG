@@ -1,0 +1,25 @@
+{
+  "created_at_utc": "2026-08-04T15:24:13Z",
+  "files": [
+    {
+      "bytes": 6270,
+      "path": "e01-majkel-corpus-review-v1.json",
+      "sha256": "31fdff1a40de058407b07de5975e2bf531fdc417aae456f54e88759386918d16"
+    },
+    {
+      "bytes": 458440,
+      "path": "e01-approved-replay-corpus-manifest-v2.json",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    {
+      "bytes": 1357,
+      "path": "e01-approved-replay-corpus-review-v2.json",
+      "sha256": "87eaee15513189d7f2ff4ca44e631016b3f937165df31db8696383a30c1cad56"
+    }
+  ],
+  "manifest_sha256": "dd9c53fa64ba8be1a86af5d10f39215bf4352236dab2385673ea970e9cbc4233",
+  "record_id": "e01-majkel-corpus-review-v1-output-manifest",
+  "replay_body_outputs": 0,
+  "schema_version": 1,
+  "source_path": "e01-majkel-corpus-review-v1-output-manifest.json"
+}

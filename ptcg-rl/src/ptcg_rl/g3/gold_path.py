@@ -84,8 +84,8 @@ def _require_false(value: Any, name: str) -> None:
 def validate_work_orders(value: Mapping[str, Any]) -> dict[str, Any]:
     if value.get("schema_version") != WORK_ORDER_SCHEMA_VERSION:
         raise GoldPathContractError("unsupported gold-path work-order schema")
-    if value.get("decision_id") != "DEC-024":
-        raise GoldPathContractError("work orders are not bound to DEC-024")
+    if value.get("decision_id") != "DEC-028":
+        raise GoldPathContractError("work orders are not bound to DEC-028")
     if tuple(value.get("strategy", ())) != EXPECTED_STRATEGY:
         raise GoldPathContractError("gold-path strategy sequence differs")
 
@@ -157,14 +157,15 @@ def validate_work_orders(value: Mapping[str, Any]) -> dict[str, Any]:
         raise GoldPathContractError("E01-A dry-run caps differ")
     _require_false(e01a.get("transfer_authorized"), "E01-A.transfer_authorized")
     if e01a.get("state") != (
-        "FLG_DRAGAPULT_SCREENING_PASS_DRIES_GRIMMSNARL_CALIBRATION_PASS_"
-        "CURRENT_RANK_1_SOURCE_WAIT"
+        "CORPUS_V2_337_EPISODES_23460_TARGETS_BC_CANARY_PASS_"
+        "PRODUCTION_TRAINING_BLOCKED"
     ):
-        raise GoldPathContractError("E01-A current rank-1 source-wait state differs")
+        raise GoldPathContractError("E01-A DEC-028 state differs")
     if e01a.get("source_provenance_status") != (
-        "PASS_TWO_RECENT_TEACHERS_CONFIRMATION_BLOCKED_CURRENT_RANK_1_SOURCE_WAIT"
+        "PASS_MAJKEL_271_EPISODES_CORPUS_V2_FROZEN_"
+        "BC_CANARY_PASS_TARGET_FLOOR_BLOCKED"
     ):
-        raise GoldPathContractError("E01-A source-provenance status differs")
+        raise GoldPathContractError("E01-A DEC-028 source-provenance status differs")
     for field in (
         "selected_episode_ids_match",
         "episode_identity_reproduced",
@@ -219,7 +220,14 @@ def validate_work_orders(value: Mapping[str, Any]) -> dict[str, Any]:
         "confirmation_teacher_calibration_exact_deck_consistency_qualified",
         "confirmation_teacher_calibration_action_alignment_qualified",
         "confirmation_teacher_calibration_current_asset_compatibility_qualified",
-        "current_rank_1_source_wait_active",
+        "current_rank_1_source_ready",
+        "current_rank_1_probe_request_exists",
+        "current_rank_1_output_exists",
+        "live_current_rank_1_probe_authorization_consumed",
+        "approved_replay_episode_floor_passed",
+        "majkel_corpus_expansion_authorization_consumed",
+        "bc_engineering_canary_authorization_consumed",
+        "bc_engineering_canary_passed",
     ):
         if e01a.get(field) is not True:
             raise GoldPathContractError(f"E01-A required field differs: {field}")
@@ -252,10 +260,12 @@ def validate_work_orders(value: Mapping[str, Any]) -> dict[str, Any]:
         "confirmation_teacher_calibration_request_authorized",
         "confirmation_teacher_calibration_active",
         "confirmation_teacher_calibration_projection_is_guarantee",
-        "current_rank_1_source_ready",
+        "current_rank_1_source_wait_active",
         "current_rank_1_probe_request_ready",
-        "current_rank_1_probe_request_exists",
-        "current_rank_1_output_exists",
+        "live_current_rank_1_probe_corpus_promotion_authorized",
+        "approved_replay_target_floor_passed",
+        "bc_engineering_canary_request_ready",
+        "bc_engineering_canary_production_checkpoint_eligible",
         "confirmation_gate_passed",
     ):
         _require_false(e01a.get(field), f"E01-A.{field}")
@@ -452,8 +462,10 @@ def validate_work_orders(value: Mapping[str, Any]) -> dict[str, Any]:
         or e01a.get("confirmation_independent_recent_teachers_observed") != 2
         or e01a.get("confirmation_observed_recent_teacher_episodes") != 66
         or e01a.get("confirmation_episode_shortfall") != 134
-        or e01a.get("confirmation_observed_recent_teacher_decisions") != 7_542
-        or e01a.get("confirmation_decision_shortfall") != 17_458
+        or e01a.get("confirmation_observed_recent_teacher_decisions") != 7_140
+        or e01a.get("confirmation_observed_recent_teacher_active_requests") != 7_542
+        or e01a.get("confirmation_observed_forced_teacher_requests") != 402
+        or e01a.get("confirmation_decision_shortfall") != 17_860
         or e01a.get("confirmation_teacher_calibration_request_files") != 12
         or e01a.get("confirmation_teacher_calibration_request_bytes") != 60_869_451
         or e01a.get("confirmation_teacher_calibration_files_transferred") != 12
@@ -473,25 +485,50 @@ def validate_work_orders(value: Mapping[str, Any]) -> dict[str, Any]:
         != 904_390_533
         or e01a.get("confirmation_teacher_current_top20_rank") is not None
         or e01a.get("confirmation_teacher_active_submission_changed") is not True
-        or e01a.get("current_rank_1_team_id") != 16_441_077
-        or e01a.get("current_rank_1_team_name") != "haggle"
+        or e01a.get("current_rank_1_team_id") != 16_374_395
+        or e01a.get("current_rank_1_team_name") != "Majkel1337"
         or e01a.get("current_rank_1_rank") != 1
-        or e01a.get("current_rank_1_score") != 1169.5
-        or e01a.get("current_rank_1_submission_id") != 55_104_355
-        or e01a.get("current_rank_1_public_episode_count") != 76
+        or e01a.get("current_rank_1_score") != 1253.6
+        or e01a.get("current_rank_1_score_is_snapshot_only") is not True
+        or e01a.get("current_rank_1_submission_id") != 55_186_239
+        or e01a.get("current_rank_1_public_episode_count") != 573
+        or e01a.get("current_rank_1_completed_public_episode_count") != 571
         or e01a.get("current_rank_1_public_episode_strata")
-        != {"seat_0_loss": 10, "seat_0_win": 26, "seat_1_loss": 14, "seat_1_win": 26}
+        != {"seat_0_loss": 34, "seat_0_win": 97, "seat_1_loss": 54, "seat_1_win": 86}
         or e01a.get("current_rank_1_latest_complete_daily_dataset")
-        != "kaggle/pokemon-tcg-ai-battle-episodes-2026-07-29/1"
-        or e01a.get("current_rank_1_latest_dataset_json_files") != 4_387
+        != "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03/1"
+        or e01a.get("current_rank_1_latest_dataset_json_files") != 4_720
+        or e01a.get("current_rank_1_latest_dataset_manifest_rows") != 4_724
+        or e01a.get("current_rank_1_latest_dataset_manifest_rows_without_json") != 4
         or e01a.get("current_rank_1_latest_dataset_declared_json_bytes")
-        != 21_474_480_425
-        or e01a.get("current_rank_1_dataset_intersection_files") != 0
-        or e01a.get("current_rank_1_dataset_intersection_bytes") != 0
+        != 21_451_459_378
+        or e01a.get("current_rank_1_dataset_intersection_files") != 271
+        or e01a.get("current_rank_1_dataset_intersection_bytes") != 1_031_040_048
     ):
         raise GoldPathContractError("E01-A completed calibration or source-wait state differs")
-    if e01a.get("next_stage") != "current_rank_1_daily_dataset_wait":
-        raise GoldPathContractError("E01-A next stage differs")
+    if (
+        e01a.get("approved_replay_bytes") != 1_414_841_670
+        or e01a.get("approved_replay_files") != 337
+        or e01a.get("approved_replay_qualified_episodes") != 337
+        or e01a.get("approved_replay_teacher_active_requests") != 25_058
+        or e01a.get("approved_replay_forced_teacher_requests") != 1_598
+        or e01a.get("approved_replay_policy_loss_targets") != 23_460
+        or e01a.get("approved_replay_target_floor_shortfall") != 1_540
+        or e01a.get("approved_replay_split_counts")
+        != {"test": 42, "train": 266, "validation": 29}
+        or e01a.get("majkel_corpus_expansion_files_read") != 269
+        or e01a.get("majkel_corpus_expansion_bytes_read") != 1_030_207_171
+        or e01a.get("majkel_corpus_expansion_qualified_files") != 269
+        or e01a.get("majkel_corpus_expansion_rejected_files") != 0
+        or e01a.get("bc_engineering_canary_maximum_optimizer_steps") != 64
+        or e01a.get("bc_engineering_canary_optimizer_steps_executed") != 64
+        or e01a.get("next_stage")
+        not in {
+            "corpus_v2_target_shortfall_1540_awaiting_source_refresh_and_exact_approval",
+            "resolve_1540_target_shortfall_then_request_production_bc_approval",
+        }
+    ):
+        raise GoldPathContractError("E01-A DEC-028 corpus or canary state differs")
     for key in (
         "source_provenance_decision_sha256",
         "current_manifest_snapshot_sha256",
@@ -1016,6 +1053,18 @@ def review_gold_path(
         (
             "confirmation_teacher_calibration_review",
             "confirmation_teacher_calibration_review_sha256",
+        ),
+        (
+            "live_current_rank_1_probe_request",
+            "live_current_rank_1_probe_request_sha256",
+        ),
+        (
+            "live_current_rank_1_probe_review_script",
+            "live_current_rank_1_probe_review_script_sha256",
+        ),
+        (
+            "live_current_rank_1_probe_review",
+            "live_current_rank_1_probe_review_sha256",
         ),
         (
             "current_rank_1_source_wait_decision",
@@ -2375,6 +2424,283 @@ def review_gold_path(
         }
     )
 
+    live_refresh = load_json(
+        repository_root / "ptcg-rl" / str(e01a["live_current_rank_1_refresh"])
+    )
+    live_request = load_json(
+        repository_root / "ptcg-rl" / str(e01a["live_current_rank_1_probe_request"])
+    )
+    live_request_review = load_json(
+        repository_root / "ptcg-rl" / str(e01a["live_current_rank_1_probe_review"])
+    )
+    live_approval = _require_mapping(
+        live_request.get("approval"), "DEC-025 exact replay approval"
+    )
+    live_execution = _require_mapping(
+        live_request.get("execution"), "DEC-025 exact replay execution"
+    )
+    live_transfer = _require_mapping(
+        live_request_review.get("transfer"), "DEC-025 exact replay transfer review"
+    )
+    live_consistency = _require_mapping(
+        live_request_review.get("consistency"), "DEC-025 exact replay consistency"
+    )
+    live_qualification = _require_mapping(
+        live_request_review.get("qualification"), "DEC-025 exact replay qualification"
+    )
+    live_authorization = _require_mapping(
+        live_request_review.get("authorization"), "DEC-025 exact replay authorization"
+    )
+    corpus_manifest = load_json(
+        repository_root / "ptcg-rl" / str(e01a["approved_replay_corpus_manifest"])
+    )
+    corpus_review = load_json(
+        repository_root / "ptcg-rl" / str(e01a["approved_replay_corpus_review"])
+    )
+    canary_request = load_json(
+        repository_root / "ptcg-rl" / str(e01a["bc_engineering_canary_request"])
+    )
+    canary_contract_review = load_json(
+        repository_root / "ptcg-rl" / str(e01a["bc_engineering_canary_contract_review"])
+    )
+    canary_execution = load_json(
+        repository_root / "ptcg-rl" / str(e01a["bc_engineering_canary_execution"])
+    )
+    canary_execution_review = load_json(
+        repository_root
+        / "ptcg-rl"
+        / str(e01a["bc_engineering_canary_execution_review"])
+    )
+    expansion_request = load_json(
+        repository_root / "ptcg-rl" / str(e01a["majkel_corpus_expansion_request"])
+    )
+    expansion_review = load_json(
+        repository_root
+        / "ptcg-rl"
+        / str(e01a["majkel_corpus_independent_review"])
+    )
+    expansion_job = load_json(
+        repository_root / "ptcg-rl" / str(e01a["majkel_corpus_expansion_job"])
+    )
+    latest_snapshot = _require_mapping(
+        live_refresh.get("latest_leaderboard_snapshot"), "DEC-025 latest leaderboard snapshot"
+    )
+    latest_top_five = latest_snapshot.get("top_five")
+    live_dataset = _require_mapping(live_refresh.get("daily_dataset"), "DEC-025 daily dataset")
+    live_intersection = _require_mapping(
+        live_refresh.get("current_rank_1_intersection"), "DEC-025 current rank-1 intersection"
+    )
+    live_probe = _require_mapping(
+        live_refresh.get("smallest_balanced_winning_probe"), "DEC-025 exact replay probe"
+    )
+    qualified = _require_mapping(
+        corpus_manifest.get("qualified_training_corpus"), "DEC-025 qualified corpus"
+    )
+    corpus_split_counts = _require_mapping(
+        qualified.get("split_counts"), "DEC-028 corpus-v2 split counts"
+    )
+    corpus_teacher_counts = _require_mapping(
+        qualified.get("teacher_counts"), "DEC-028 corpus-v2 teacher counts"
+    )
+    if (
+        live_refresh.get("evidence_sha256") != e01a["live_current_rank_1_refresh_evidence_sha256"]
+        or sha256_file(repository_root / "ptcg-rl" / str(e01a["live_current_rank_1_refresh"]))
+        != e01a["live_current_rank_1_refresh_sha256"]
+        or not isinstance(latest_top_five, list)
+        or latest_top_five[0].get("team_id") != 16_374_395
+        or latest_top_five[0].get("active_submission_id") != 55_186_239
+        or latest_snapshot.get("scores_are_dynamic_snapshot_only") is not True
+        or live_dataset.get("ref") != "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03"
+        or live_dataset.get("version") != 1
+        or live_dataset.get("replay_json_file_count") != 4_720
+        or live_dataset.get("manifest_rows") != 4_724
+        or live_dataset.get("manifest_rows_without_json_body") != 4
+        or live_intersection.get("exact_count") != 271
+        or live_intersection.get("total_bytes") != 1_031_040_048
+        or live_probe.get("episode_ids") != [89_651_832, 89_802_438]
+        or live_probe.get("total_bytes") != 832_877
+        or live_request.get("status") != "CONSUMED"
+        or live_request.get("authorized") is not False
+        or live_request.get("request_ready") is not False
+        or live_request.get("authorization_consumed") is not True
+        or live_approval.get("approved_prior_request_sha256")
+        != e01a["live_current_rank_1_probe_prior_request_sha256"]
+        or live_approval.get("replay_transfer_authorized") is not True
+        or live_approval.get("optimizer_steps_authorized") is not False
+        or live_approval.get("training_authorized") is not False
+        or live_approval.get("external_compute_authorized") is not False
+        or live_approval.get("submission_authorized") is not False
+        or live_execution.get("files_downloaded") != 2
+        or live_execution.get("bytes_downloaded") != 832_877
+        or live_execution.get("unexpected_files") != 0
+        or live_execution.get("agent_logs_downloaded") != 0
+        or live_execution.get("additional_replays_downloaded_after_named_files") != 0
+        or live_execution.get("optimizer_steps") != 0
+        or live_execution.get("training") is not False
+        or live_execution.get("external_compute") is not False
+        or live_execution.get("submission") is not False
+        or live_request_review.get("status") != "PASS"
+        or live_request_review.get("reviewed_decision") != "DEC-025"
+        or live_request_review.get("review_sha256")
+        != e01a["live_current_rank_1_probe_review_self_hash"]
+        or live_transfer.get("new_files_downloaded") != 2
+        or live_transfer.get("new_bytes_downloaded") != 832_877
+        or live_transfer.get("unexpected_files") != 0
+        or live_transfer.get("optimizer_steps") != 0
+        or live_transfer.get("training") is not False
+        or live_consistency.get("module_versions") != ["1.32.2", "1.32.3"]
+        or live_consistency.get("teacher_deck_multiset_sha256")
+        != e01a["live_current_rank_1_probe_teacher_deck_multiset_sha256"]
+        or live_consistency.get("combined_teacher_active_selection_requests") != 35
+        or live_consistency.get("combined_teacher_forced_singleton_requests") != 3
+        or live_consistency.get(
+            "combined_teacher_policy_loss_targets_if_later_authorized"
+        )
+        != 32
+        or live_consistency.get("both_replay_action_alignment") != "PASS"
+        or live_qualification.get("contract_review_passed") is not True
+        or live_qualification.get("corpus_promotion_authorized") is not False
+        or live_qualification.get("optimizer_steps_authorized") is not False
+        or live_qualification.get("training_authorized") is not False
+        or live_authorization.get("exact_replay_transfer_authorization_consumed")
+        is not True
+        or live_authorization.get("further_replay_transfer_authorized") is not False
+        or live_authorization.get("training_authorized") is not False
+        or corpus_manifest.get("manifest_sha256")
+        != e01a["approved_replay_corpus_manifest_self_hash"]
+        or sha256_file(
+            repository_root
+            / "ptcg-rl"
+            / str(e01a["approved_replay_corpus_manifest"])
+        )
+        != e01a["approved_replay_corpus_manifest_sha256"]
+        or qualified.get("episodes") != 337
+        or qualified.get("bytes") != 1_414_841_670
+        or qualified.get("teacher_active_requests") != 25_058
+        or qualified.get("forced_teacher_requests") != 1_598
+        or qualified.get("policy_loss_targets") != 23_460
+        or {key: value.get("episodes") for key, value in corpus_split_counts.items()}
+        != {"test": 42, "train": 266, "validation": 29}
+        or corpus_teacher_counts.get("majkel", {}).get("episodes") != 271
+        or corpus_teacher_counts.get("flg", {}).get("episodes") != 52
+        or corpus_teacher_counts.get("dries", {}).get("episodes") != 14
+        or corpus_review.get("status") != "BLOCKED_FLOORS"
+        or corpus_review.get("review_sha256")
+        != e01a["approved_replay_corpus_review_self_hash"]
+        or corpus_review.get("qualification", {}).get("minimum_200_episodes")
+        is not True
+        or corpus_review.get("qualification", {}).get(
+            "minimum_25000_policy_loss_targets"
+        )
+        is not False
+        or expansion_request.get("status")
+        != "CONSUMED_PASS_CORPUS_V2_BLOCKED_TARGET_FLOOR"
+        or expansion_request.get("authorization_consumed") is not True
+        or expansion_request.get("authorized") is not False
+        or expansion_request.get("request_ready") is not False
+        or expansion_request.get("execution_receipt", {}).get("new_files_read")
+        != 269
+        or expansion_request.get("execution_receipt", {}).get("new_bytes_read")
+        != 1_030_207_171
+        or expansion_request.get("execution_receipt", {}).get(
+            "target_floor_shortfall"
+        )
+        != 1_540
+        or expansion_review.get("status") != "PASS"
+        or expansion_review.get("review_sha256")
+        != e01a["majkel_corpus_independent_review_self_hash"]
+        or expansion_job.get("status") != "SUCCEEDED"
+        or expansion_job.get("execution", {}).get("named_replay_bodies_read")
+        != 269
+        or expansion_job.get("execution", {}).get("bytes_read")
+        != 1_030_207_171
+        or canary_request.get("status") != "CONSUMED_PASS_NON_PROMOTABLE"
+        or canary_request.get("authorized") is not False
+        or canary_request.get("authorization_consumed") is not True
+        or canary_request.get("execution", {}).get("maximum_optimizer_steps")
+        != 64
+        or canary_request.get("corpus", {}).get("episode_count") != 8
+        or canary_execution.get("status") != "PASS"
+        or canary_execution.get("optimizer_steps") != 64
+        or canary_execution.get("production_checkpoint_eligible") is not False
+        or canary_execution_review.get("status") != "PASS"
+        or canary_execution_review.get("review_sha256")
+        != e01a["bc_engineering_canary_execution_review_self_hash"]
+        or canary_contract_review.get("status") != "PASS"
+        or canary_contract_review.get("review_sha256")
+        != e01a["bc_engineering_canary_contract_review_self_hash"]
+    ):
+        raise GoldPathContractError("DEC-028 live source, corpus, or canary evidence differs")
+    live_downloads = live_execution.get("downloaded_files")
+    if not isinstance(live_downloads, list) or len(live_downloads) != 2:
+        raise GoldPathContractError("DEC-025 exact replay list differs")
+    live_quarantine = (
+        repository_root / "ptcg-rl/private/g3/e01/majkel-live-gold-teacher-probe-v1"
+    )
+    expected_live_names = ["89651832.json", "89802438.json"]
+    if sorted(path.name for path in live_quarantine.iterdir() if path.is_file()) != (
+        expected_live_names
+    ):
+        raise GoldPathContractError("DEC-025 Majkel quarantine differs")
+    for item in live_downloads:
+        replay_path = repository_root / "ptcg-rl" / str(item["path"])
+        if (
+            not replay_path.is_file()
+            or replay_path.stat().st_size != item.get("bytes")
+            or sha256_file(replay_path) != item.get("sha256")
+        ):
+            raise GoldPathContractError("DEC-025 quarantined Majkel replay differs")
+    if [item.get("sha256") for item in live_downloads] != e01a[
+        "live_current_rank_1_probe_replay_sha256"
+    ]:
+        raise GoldPathContractError("DEC-025 Majkel replay hashes differ")
+
+    checks.extend(
+        [
+            {
+                "check": "e01_live_current_rank_1_probe",
+                "status": "PASS",
+                "decision": "DEC-025",
+                "team_name": "Majkel1337",
+                "submission_id": 55_186_239,
+                "dataset_intersection_files": 271,
+                "request_ready": False,
+                "authorization_consumed": True,
+                "files": 2,
+                "bytes": 832_877,
+                "module_versions": ["1.32.2", "1.32.3"],
+                "teacher_active_requests": 35,
+                "forced_teacher_requests": 3,
+                "potential_policy_loss_targets": 32,
+                "corpus_promotion_authorized": False,
+                "replay_transfer_authorized": False,
+                "training_authorized": False,
+            },
+            {
+                "check": "e01_approved_replay_corpus_v2",
+                "status": "BLOCKED_FLOORS",
+                "decision": "DEC-028",
+                "episodes": 337,
+                "policy_loss_targets": 23_460,
+                "forced_teacher_requests": 1_598,
+                "target_floor_shortfall": 1_540,
+                "new_files_qualified": 269,
+                "new_files_rejected": 0,
+                "training_authorized": False,
+            },
+            {
+                "check": "e01_bc_engineering_canary_execution",
+                "status": "PASS",
+                "decision": "DEC-028",
+                "episodes": 8,
+                "optimizer_steps": 64,
+                "deterministic_resume": True,
+                "production_checkpoint_eligible": False,
+                "optimizer_steps_authorized": False,
+            },
+        ]
+    )
+
     for relative, expected in sorted(work_orders["source_evidence"].items()):
         observed = sha256_file(repository_root / relative)
         if observed != expected:
@@ -2784,13 +3110,16 @@ def review_gold_path(
     decision_raw = decision_path.read_text(encoding="utf-8")
     for required in (
         "Status: Accepted",
-        "Do not prepare, authorize or execute a current-rank-1 replay request",
-        "exact current-rank-1 intersection with that dataset: `0` files and `0` bytes",
-        "This decision authorizes no replay transfer",
-        "requires a new exact request and separate explicit user approval",
+        "269/269 new Majkel files qualified, zero rejected, exactly 1,030,207,171 newly read bytes.",
+        "Corpus v2: 337 unique episodes",
+        "23,460 policy-loss targets.",
+        "1,540 below the frozen 25,000-target floor",
+        "exactly 64 cumulative AdamW steps",
+        "non-promotable",
+        "No additional replay transfer, label materialization, production optimizer step",
     ):
         if required not in decision_raw:
-            raise GoldPathContractError(f"DEC-024 is missing required text: {required}")
+            raise GoldPathContractError(f"DEC-028 is missing required text: {required}")
     checks.append({"check": "decision_scope", "status": "PASS"})
 
     private_root = repository_root / "ptcg-rl/private/baselines/mega-lucario-ex"
@@ -2818,9 +3147,9 @@ def review_gold_path(
     report: dict[str, Any] = {
         "schema_version": REVIEW_SCHEMA_VERSION,
         "record_id": "gold-path-work-orders-review-v1",
-        "created_at_utc": "2026-07-24T11:20:00Z",
+        "created_at_utc": "2026-08-04T15:55:00Z",
         "source_path": "reports/artifacts/gold-path-work-orders-review-v1.json",
-        "reviewed_decision": "DEC-024",
+        "reviewed_decision": "DEC-028",
         "status": "PASS",
         "decision": "ACCEPT",
         "work_orders_sha256": sha256_file(work_orders_path),
@@ -2864,8 +3193,21 @@ def review_gold_path(
             "e01_current_rank_1_dries_grimmsnarl_calibration_authorization_consumed": True,
             "e01_current_rank_1_dries_grimmsnarl_calibration_request_ready": False,
             "e01_current_rank_1_source_wait_completed": True,
-            "e01_current_rank_1_source_ready": False,
+            "e01_current_rank_1_source_ready": True,
+            "e01_current_rank_1_probe_authorization_consumed": True,
             "e01_current_rank_1_probe_request_ready": False,
+            "e01_current_rank_1_probe_corpus_promotion_authorized": False,
+            "e01_approved_replay_corpus_frozen": True,
+            "e01_approved_replay_episode_floor_passed": True,
+            "e01_approved_replay_target_floor_passed": False,
+            "e01_approved_replay_target_floor_shortfall": 1_540,
+            "e01_majkel_corpus_expansion_completed": True,
+            "e01_majkel_corpus_expansion_authorization_consumed": True,
+            "e01_bc_engineering_canary_completed": True,
+            "e01_bc_engineering_canary_authorization_consumed": True,
+            "e01_bc_engineering_canary_request_ready": False,
+            "e01_bc_engineering_canary_optimizer_steps_authorized": False,
+            "e01_bc_engineering_canary_production_checkpoint_eligible": False,
             "training": False,
             "native_e04_single_trace_completed": True,
             "native_e04_ten_game_smoke_completed": True,
@@ -2879,7 +3221,7 @@ def review_gold_path(
             "external_compute": False,
             "submission": False,
         },
-        "revisit_trigger": "Any source or evidence hash changes, any consumed E01 replay changes, a pinned daily dataset begins containing current rank-1 submission 55104355, the active rank-1 team or submission changes, runtime asset parity is resolved differently, or any replay transfer, optimizer step, external compute, submission, rerun or later native E04 execution becomes authorized."
+        "revisit_trigger": "Any DEC-028 source, episode, byte, corpus-v2, split, semantic, canary, code, asset, request, job, decision or review hash changes; the 1540-target shortfall is resolved or altered; runtime asset parity is resolved differently; or any further replay transfer, label materialization, optimizer step, external compute, model promotion, submission, rerun or later native E04 execution becomes authorized."
     }
     report["review_sha256"] = _self_hash(report, "review_sha256")
     return report

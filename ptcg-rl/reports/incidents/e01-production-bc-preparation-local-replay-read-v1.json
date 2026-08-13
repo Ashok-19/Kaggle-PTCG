@@ -1,0 +1,76 @@
+{
+  "created_at_utc": "2026-08-05T09:06:24.888649Z",
+  "decision": "STOP_PRODUCTION_BC_REQUEST_PREPARATION_AFTER_UNAUTHORIZED_LOCAL_RAW_BYTE_HASH_VERIFICATION",
+  "frozen_state": {
+    "corpus_v3_episodes": 362,
+    "corpus_v3_manifest_path": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json",
+    "corpus_v3_manifest_self_hash": "bb6319e23f3d5b12bd9ed7383b0f3e007dd7059cbf39afcd5325af12392c35a9",
+    "corpus_v3_manifest_sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267",
+    "corpus_v3_policy_loss_targets": 25056,
+    "corpus_v3_unchanged": true
+  },
+  "incident_sha256": "de139b89f032ef9d51fd57250d517c43cd7574dd5a318f9f5250755660ac8b26",
+  "persistent_effects": {
+    "dataset_staging_directory_created": false,
+    "git_commit": false,
+    "git_push": false,
+    "kaggle_dataset_created_or_updated": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "notebook_created_or_launched": false,
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "raw_replay_exports": 0,
+    "replay_files_copied": 0,
+    "replay_files_created": 0,
+    "submission": false,
+    "training": false,
+    "training_labels_created": 0
+  },
+  "producer": "chatgpt-local-agent",
+  "read_scope": {
+    "additional_majkel_daily_dataset_bodies_read": 0,
+    "agent_logs_read": 0,
+    "all_length_and_sha256_comparisons_matched_manifest": true,
+    "local_existing_replay_bytes_read": 383801622,
+    "local_existing_replay_files_read": 66,
+    "manifest_records_used": 66,
+    "split_breakdown": {
+      "test": {
+        "bytes": 42241877,
+        "files": 8
+      },
+      "train": {
+        "bytes": 303098913,
+        "files": 50
+      },
+      "validation": {
+        "bytes": 38460832,
+        "files": 8
+      }
+    },
+    "teachers": [
+      "dries",
+      "flg"
+    ]
+  },
+  "record_id": "e01-production-bc-preparation-local-replay-read-v1",
+  "remediation": {
+    "further_replay_body_reads_authorized": false,
+    "next_action": "Obtain an exact approval before any further replay-body read or transfer. A later metadata-only request may be derived strictly from corpus-v3 manifest records without rereading bodies.",
+    "production_bc_input_publication_request_created": false,
+    "production_bc_training_request_created": false,
+    "request_preparation_stopped": true
+  },
+  "schema_version": 1,
+  "source_path": "reports/incidents/e01-production-bc-preparation-local-replay-read-v1.json",
+  "status": "PASS_FAILED_CLOSED",
+  "trigger": {
+    "actual_operation": "an inline local verifier invoked Path.read_bytes() to recompute length and SHA-256 for every retained flg/Dries corpus record",
+    "content_decoding_performed": false,
+    "intended_boundary": "derive file identities from the frozen corpus-v3 manifest without replay-body reads",
+    "json_parsing_of_replay_bodies": false,
+    "operation": "metadata-only production BC input planning",
+    "task_id": "T-E01-PRODUCTION-BC-REQUEST-032"
+  }
+}

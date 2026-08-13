@@ -1,0 +1,45 @@
+{
+  "boundary": {
+    "agent_logs_read": 0,
+    "files_copied_or_staged": 0,
+    "git_commit": false,
+    "git_push": false,
+    "kaggle_dataset_created_or_updated": false,
+    "labels": 0,
+    "model_mutation": false,
+    "optimizer_steps": 0,
+    "replay_bodies_read_during_preparation": 0,
+    "submission": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-05T10:20:00Z",
+  "decision": "ACCEPT_EXACT_58_FILE_RETAINED_TRAIN_VALIDATION_PRIVATE_PUBLICATION_REQUEST_READY_UNAUTHORIZED",
+  "implementation": {
+    "path": "src/ptcg_rl/g3/bc_production.py",
+    "sha256": "6d7526d430caff7f90542bd98cffd3bc14716f0291706a03f1ddd30efad4f7e5"
+  },
+  "record_id": "e01-production-bc-input-publication-contract-review-v1",
+  "request": {
+    "path": "configs/e01_production_bc_input_publication_request_v1.json",
+    "sha256": "aeacd6377db8bf2b0bce0bfd5e3f20f71094735fd2cb51cfdacd9b7348a60c7b",
+    "status": "READY_UNAUTHORIZED"
+  },
+  "review_sha256": "75cdd3f539861a751594666e8cebe4173ff6941a7ddf7cb831e81ef9bc7ee2b8",
+  "reviewed_decision": "DEC-033",
+  "runner": {
+    "path": "scripts/e01_prepare_production_bc_input_dataset.py",
+    "sha256": "36b7185e5652a867c8bc4d3aa2aebde01493e6c09e5e236270e1a14eafe82588"
+  },
+  "schema_version": 1,
+  "selection": {
+    "bytes": 341559745,
+    "files": 58,
+    "listing_sha256": "e15baf3decce2c3f6c4191f643b5e05505c30fec28327ff7dcb4e15361cbf641",
+    "source_values_derived_from_manifest_metadata_only": true,
+    "test_files": 0,
+    "train_files": 50,
+    "validation_files": 8
+  },
+  "source_path": "reports/artifacts/e01-production-bc-input-publication-contract-review-v1.json",
+  "status": "PASS"
+}

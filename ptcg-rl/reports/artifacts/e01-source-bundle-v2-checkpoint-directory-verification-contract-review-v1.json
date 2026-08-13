@@ -1,0 +1,84 @@
+{
+  "approval_text": "I approve consumption of `configs/e01_source_bundle_v2_checkpoint_directory_verification_request_v1.json` at SHA-256 `443098120fa03dcbaa1d430e3f74505926d2e45fa5ea382856b80422816bba78`, under exactly the following scope:\n\n* Bind the operation to private Kaggle dataset `ashok205/kptcg-e01-majkel-corpus-review-inputs`, dataset ID `11501808`, version `2`.\n* Require the dataset to remain private and Ready with exactly `79` files, `7,645,589` bytes, and metadata inventory SHA-256 `2bc151d35af0ef3bd9177f44275ef04be0de017a07ef5cf86b283c94834f83ab`.\n* Download and hash only the following four version-2 files; do not download the full dataset:\n  * `private/g2/checkpoint-v1/g2-policy-checkpoint-v1/card-table-v1.json` \u2014 `1,056,442` bytes \u2014 expected SHA-256 `5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714`.\n  * `private/g2/checkpoint-v1/g2-policy-checkpoint-v1/manifest.json` \u2014 `26,493` bytes \u2014 expected SHA-256 `1185c97d1fca8cb795e2c5f84f5d0a915cf41fac242aefed888b4e0dd84b267c`.\n  * `private/g2/checkpoint-v1/g2-policy-checkpoint-v1/reference-v1.json` \u2014 `24,378` bytes \u2014 expected SHA-256 `cf0fe3bb2e47ff3644f6ea2a8647ca47472e698e1fedd2f14f9156de063bb1c3`.\n  * `private/g2/checkpoint-v1/g2-policy-checkpoint-v1/state-v1.bin` \u2014 `4,321,431` bytes \u2014 expected SHA-256 `bb91fa17ea74101cc70e02b6ef85cefe8f90e096478bf63e1cc63384c23f3e5c`.\n* Bind reconstruction to `scripts/e01_verify_extracted_checkpoint_delivery.py` at SHA-256 `bd2ae5820fee1fd39675eb326a22ad206f3ad6796c57a039504d586c62948870` and its focused test at SHA-256 `95d790091b1ceb76ae2e981d2beb410132d8d56f864a27104a270789c6c8b9d0`.\n* Reconstruct the checkpoint locally with sorted members, timestamp `1980-01-01 00:00:00`, stored compression, Unix creator system `3`, regular-file mode `0600`, zero flags and zero internal attributes.\n* Require the reconstructed package to be exactly `5,429,190` bytes with SHA-256 `4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827` and byte-for-byte equal to the approved local checkpoint.\n* If and only if every member and reconstructed package identity matches, record source-bundle version 2 as acceptable through verified extracted-checkpoint delivery and deterministic local reconstruction. Do not modify or create a Kaggle dataset version.\n* May write only local scratch files, the verification report, and local decision/task/gate/project-status/progress metadata needed to record the result.\n* Prepare the exact notebook-wrapper contract and separate approval text after a pass. Do not create, save, or run a notebook under this approval.\n* Do not access, read, hash, parse, copy, stage, transfer, upload, or download any replay body or agent log.\n* Do not create, delete, update, upload to, or otherwise mutate any Kaggle dataset, notebook, model, benchmark task, or competition submission. Retain `ashok205/new-benchmark-task-b1c52` unchanged as incident evidence.\n* Do not materialize labels, construct an optimizer, perform optimizer steps, launch training or evaluation, use GPU or TPU, mutate or promote a model, or submit to the competition.\n* Do not make a Git commit or push.\n* Stop after exact verification is recorded and notebook-wrapper approval text is prepared.\n* Fail closed immediately if any dataset, version, privacy, status, path, file, byte count, SHA-256, reconstruction, request, script, evidence, or authorization identity differs.",
+  "approval_text_sha256": "a2ed4213e3cf8f5e51cb451be8af7bfbbaa1acaa4e0831833f91c373056cc860",
+  "boundary": {
+    "agent_logs": 0,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "labels": 0,
+    "model_mutation": false,
+    "notebook": false,
+    "optimizer_steps": 0,
+    "replay_bodies": 0,
+    "submission": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-06T10:26:44Z",
+  "dataset": {
+    "bytes": 7645589,
+    "dataset_id": 11501808,
+    "files": 79,
+    "last_updated_utc": "2026-08-06T09:53:15.123Z",
+    "private": true,
+    "ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+    "remote_inventory_sha256": "2bc151d35af0ef3bd9177f44275ef04be0de017a07ef5cf86b283c94834f83ab",
+    "status": "READY",
+    "version": 2
+  },
+  "focused_tests": {
+    "failed": 0,
+    "passed": 3
+  },
+  "local_reconstruction": {
+    "byte_for_byte_equal_to_approved_local_package": true,
+    "package_bytes": 5429190,
+    "package_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+    "status": "PASS_EXACT_PACKAGE_RECONSTRUCTED"
+  },
+  "record_id": "e01-source-bundle-v2-checkpoint-directory-verification-contract-review-v1",
+  "remote_downloads_performed_during_preparation": 0,
+  "remote_members": [
+    {
+      "bytes": 1056442,
+      "expected_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "member_name": "card-table-v1.json",
+      "remote_name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/card-table-v1.json",
+      "sha256_verification_status": "UNVERIFIED_REMOTE_DOWNLOAD_REQUIRED"
+    },
+    {
+      "bytes": 26493,
+      "expected_sha256": "1185c97d1fca8cb795e2c5f84f5d0a915cf41fac242aefed888b4e0dd84b267c",
+      "member_name": "manifest.json",
+      "remote_name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/manifest.json",
+      "sha256_verification_status": "UNVERIFIED_REMOTE_DOWNLOAD_REQUIRED"
+    },
+    {
+      "bytes": 24378,
+      "expected_sha256": "cf0fe3bb2e47ff3644f6ea2a8647ca47472e698e1fedd2f14f9156de063bb1c3",
+      "member_name": "reference-v1.json",
+      "remote_name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/reference-v1.json",
+      "sha256_verification_status": "UNVERIFIED_REMOTE_DOWNLOAD_REQUIRED"
+    },
+    {
+      "bytes": 4321431,
+      "expected_sha256": "bb91fa17ea74101cc70e02b6ef85cefe8f90e096478bf63e1cc63384c23f3e5c",
+      "member_name": "state-v1.bin",
+      "remote_name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/state-v1.bin",
+      "sha256_verification_status": "UNVERIFIED_REMOTE_DOWNLOAD_REQUIRED"
+    }
+  ],
+  "remote_mutations_performed_during_preparation": 0,
+  "request_path": "configs/e01_source_bundle_v2_checkpoint_directory_verification_request_v1.json",
+  "request_sha256": "443098120fa03dcbaa1d430e3f74505926d2e45fa5ea382856b80422816bba78",
+  "review_sha256": "af67da44b1f7efa072b82b993772ba43130cd337c2ac7ddc920e4f67a01ce884",
+  "schema_version": 1,
+  "selected_remediation": "verify_only_four_remote_members_then_accept_version_2_with_deterministic_local_checkpoint_reconstruction",
+  "source_bundle_version_3_required": false,
+  "source_path": "reports/artifacts/e01-source-bundle-v2-checkpoint-directory-verification-contract-review-v1.json",
+  "status": "PASS_READY_UNAUTHORIZED",
+  "test_path": "tests/g3/test_checkpoint_delivery.py",
+  "test_sha256": "95d790091b1ceb76ae2e981d2beb410132d8d56f864a27104a270789c6c8b9d0",
+  "verifier_path": "scripts/e01_verify_extracted_checkpoint_delivery.py",
+  "verifier_sha256": "bd2ae5820fee1fd39675eb326a22ad206f3ad6796c57a039504d586c62948870"
+}

@@ -1,0 +1,44 @@
+{
+  "actual_substituted_bytes": 5428744,
+  "actual_substituted_paths": [
+    {
+      "bytes": 1056442,
+      "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/card-table-v1.json"
+    },
+    {
+      "bytes": 26493,
+      "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/manifest.json"
+    },
+    {
+      "bytes": 24378,
+      "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/reference-v1.json"
+    },
+    {
+      "bytes": 4321431,
+      "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/state-v1.bin"
+    }
+  ],
+  "byte_delta": -446,
+  "created_at_utc": "2026-08-06T09:55:04Z",
+  "dataset_id": 11501808,
+  "dataset_ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+  "dataset_version": 2,
+  "evidence_path": "reports/artifacts/raw/e01-source-bundle-v2-remote-inventory-20260806-v1.json",
+  "evidence_self_hash": "69db307c555a904f75131fdce3ba9f19dce6a9672f6b6bf5e7227cf78a135b53",
+  "evidence_sha256": "c6e58fe08c3b65ddd727430e916c8a2622a914989b7b0ca75d30182c323562eb",
+  "expected_checkpoint_bytes": 5429190,
+  "expected_checkpoint_path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+  "file_count_delta": 3,
+  "impact": "Version 2 violates the exact path, file-count, byte-count, inventory, and sealed-checkpoint identity contract and is rejected as a production training dependency.",
+  "incident_sha256": "0720746464c413b1a893d11427c42cb9cb786e95822feb5d6403a863948ff073",
+  "kind": "KAGGLE_RECURSIVE_ARCHIVE_EXPANSION",
+  "notebook_wrapper_prepared": false,
+  "record_id": "e01-source-bundle-v2-checkpoint-archive-expansion-v1",
+  "remote_mutations_after_detection": 0,
+  "root_cause": "Kaggle expanded the approved checkpoint ZIP while processing the parent private.zip directory archive, replacing one sealed archive with four internal members.",
+  "schema_version": 1,
+  "status": "OPEN_FAILED_CLOSED",
+  "training_authorized": false,
+  "version_1_deleted_or_modified": false,
+  "version_2_deleted_or_modified_after_detection": false
+}

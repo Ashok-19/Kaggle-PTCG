@@ -1,0 +1,321 @@
+{
+  "acceptance": {
+    "all_gradients_finite": true,
+    "all_losses_finite": true,
+    "candidate_not_promoted": true,
+    "optimizer_step_cap_respected": true,
+    "policy_competence_not_claimed": true,
+    "separate_held_out_and_on_policy_evaluation_required": true,
+    "zero_duplicate_ordered_selections": true,
+    "zero_invalid_targets": true,
+    "zero_mask_violations": true,
+    "zero_split_leakage": true,
+    "zero_test_replay_reads": true
+  },
+  "assets": {
+    "card_data": {
+      "bytes": 359151,
+      "path": "private/assets/official/EN_Card_Data.csv",
+      "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+    },
+    "engineering_canary_review": {
+      "checkpoint_promotable": false,
+      "cumulative_optimizer_steps": 64,
+      "path": "reports/artifacts/e01-bc-engineering-canary-execution-review-v1.json",
+      "self_hash": "2f365281ed62e91139b67a9cb3b0fdb5a7149fed1fd7ec9cbd7d43097175280d",
+      "sha256": "1f25828a78400801f6dc5d2d8630890579e29584762ad95b18af795ca810c100"
+    },
+    "initial_checkpoint": {
+      "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+      "bytes": 5429190,
+      "card_table_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+      "model_schema_sha256": "61f6f71008c847b03bbab913d767da2c6bc6469311a0fe7249f3d03ee512bf68",
+      "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+      "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+      "trainable_parameters": 970022
+    }
+  },
+  "authorization": {
+    "agent_log_read": false,
+    "competence_evaluation": false,
+    "external_compute": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "internet": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "private_kaggle_cpu": false,
+    "replay_body_read": false,
+    "retained_dataset_publication": false,
+    "source_bundle_dataset_update": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "corpus": {
+    "record_listing_sha256": "4f1cf8c745ed0862d1ab2068c9bdc6f8a606eec6940d891df741125c5b490c15",
+    "records_embedded": false,
+    "records_reconstructed_from_frozen_manifest_at_execution": true,
+    "selected_bytes": 1327994902,
+    "selected_episodes": 316,
+    "test_bytes_sealed": 189787857,
+    "test_episodes_sealed": 46,
+    "test_policy_loss_targets_sealed": 3092,
+    "train_bytes": 1190672201,
+    "train_episodes": 284,
+    "train_forced_recurrent_calls": 1338,
+    "train_policy_loss_targets": 19646,
+    "train_teacher_active_requests": 20984,
+    "validation_bytes": 137322701,
+    "validation_episodes": 32,
+    "validation_forced_recurrent_calls": 153,
+    "validation_policy_loss_targets": 2318,
+    "validation_teacher_active_requests": 2471
+  },
+  "corpus_manifest": {
+    "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json",
+    "self_hash": "bb6319e23f3d5b12bd9ed7383b0f3e007dd7059cbf39afcd5325af12392c35a9",
+    "sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267"
+  },
+  "corpus_review": {
+    "path": "reports/artifacts/e01-approved-replay-corpus-review-v3.json",
+    "self_hash": "46f5fd553d1c9b499d326cbc3b89dc7dd9de9ad1b7af0a640e0d8d399ad95f92",
+    "sha256": "5d9c42412659dd6a0d783cd1220bc97e6b4c5aae3e7288fe4e94dbb7f60b500e"
+  },
+  "created_at_utc": "2026-08-06T07:23:00Z",
+  "dataset_sources": {
+    "august_3_daily": {
+      "dataset_id": 11490894,
+      "declared_json_bytes": 21451459378,
+      "inventory_sha256": "3f1d4c27d13eb3308d9efe3e32cb45a543439711e1dfd1f51dd30baa6ba0436d",
+      "json_files": 4720,
+      "ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03",
+      "reported_total_bytes": 21451850075,
+      "version": 1
+    },
+    "august_4_daily": {
+      "dataset_id": 11506836,
+      "inventory_files": 4812,
+      "inventory_sha256": "5620e055a25407c47e7744eaa0ffb9ab2a04fe2287b0f6180f54726cf7a00f77",
+      "manifest_sha256": "bb190f62f0585dc2a1db2b02752a4d7e6fa6de15a800ed9e769d8daecd8bf9a1",
+      "ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04",
+      "reported_total_bytes": 21457813826,
+      "version": 1
+    },
+    "retained_private": {
+      "bytes": 341559745,
+      "dataset_id": 11514316,
+      "files": 58,
+      "path_contract": "root_basename",
+      "private": true,
+      "ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+      "remote_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+      "status": "READY",
+      "version": 1
+    }
+  },
+  "decision_id": "DEC-035",
+  "execution": {
+    "candidate_requires_strict_improvement_over_initial_by": 1e-06,
+    "candidate_selection": "lowest validation mean compound-action NLL; ties choose earliest epoch",
+    "checkpoint_after_each_epoch": true,
+    "data_workers": 0,
+    "gpu": false,
+    "initial_checkpoint_may_win": true,
+    "internet": false,
+    "learning_rate": 0.0001,
+    "legacy_chunks_per_step": 1,
+    "maximum_epochs": 4,
+    "maximum_gradient_norm": 1.0,
+    "maximum_optimizer_steps": 844,
+    "maximum_wall_seconds": 21600,
+    "optimizer": "AdamW",
+    "platform": "private_kaggle_cpu",
+    "primary_chunks_per_step": 4,
+    "recurrent_sequence_length": 32,
+    "seed": 20260805,
+    "test_evaluation": false,
+    "torch_num_interop_threads": 1,
+    "torch_num_threads": 4,
+    "tpu": false,
+    "validation_after_each_epoch": true,
+    "validation_before_training": true,
+    "weight_decay": 0.0
+  },
+  "focused_tests": {
+    "path": "tests/g3/test_bc_production.py",
+    "sha256": "d4b33b306f3d2051218078ba45788be3ff37f1882ac2a03e7fd179cda6e821d2"
+  },
+  "implementation": {
+    "path": "src/ptcg_rl/g3/bc_production_v2.py",
+    "sha256": "4e30361f7319673b8f597ca65c65ea191e6c82a46a839c355bc6a59b8644dbde"
+  },
+  "metadata_schedule_bound": {
+    "balanced_steps_per_epoch_upper": 211,
+    "legacy_chunk_upper": 211,
+    "primary_stratum_chunk_upper_max": 206
+  },
+  "output_contract": {
+    "agent_log_outputs": 0,
+    "candidate_eligible_for_separate_evaluation_only": true,
+    "checkpoint_outputs": [
+      "epoch-1.pt",
+      "epoch-1.pt.manifest.json",
+      "epoch-2.pt",
+      "epoch-2.pt.manifest.json",
+      "epoch-3.pt",
+      "epoch-3.pt.manifest.json",
+      "epoch-4.pt",
+      "epoch-4.pt.manifest.json"
+    ],
+    "metadata_outputs": [
+      "execution-report.json"
+    ],
+    "private_kaggle_working_directory": "/kaggle/working/e01-production-recurrent-bc-v2",
+    "production_model_promotion": false,
+    "replay_body_outputs": 0,
+    "training_label_outputs": 0
+  },
+  "purpose": "Train the sealed recurrent semantic policy on corpus-v3 using the verified root-basename retained dataset contract, while keeping test records sealed and all candidates evaluation-only.",
+  "record_id": "e01-production-recurrent-bc-request-v2",
+  "request_ready": true,
+  "requested_authorization_for_later_exact_approval": {
+    "agent_log_read": false,
+    "competence_evaluation": false,
+    "external_compute": true,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "internet": false,
+    "label_materialization": false,
+    "maximum_epochs": 4,
+    "maximum_optimizer_steps": 844,
+    "model_promotion": false,
+    "optimizer_steps": true,
+    "private_kaggle_cpu": true,
+    "replay_body_read": true,
+    "retained_dataset_remediation_must_be_exactly_approved": true,
+    "source_bundle_dataset_update": true,
+    "submission": false,
+    "tpu": false,
+    "training": true
+  },
+  "retained_dataset_dependency": {
+    "dataset": {
+      "bytes": 341559745,
+      "dataset_id": 11514316,
+      "files": 58,
+      "path_contract": "root_basename",
+      "private": true,
+      "ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+      "remote_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+      "status": "READY",
+      "version": 1
+    },
+    "exact_remediation_approval_required": true,
+    "remediation_request_path": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json",
+    "remediation_request_sha256": "24abd3c96a95b57cbef294c04332bafad16e0ba24557f86b6cd912eae476b080",
+    "status": "READY_REMEDIATION_UNAUTHORIZED"
+  },
+  "runner": {
+    "path": "scripts/e01_production_recurrent_bc_v2.py",
+    "sha256": "92e2eeab5986d21e648b8db64ee19a85ffadb60904351863af528d48c4c94413"
+  },
+  "sampling": {
+    "forced_calls_advance_recurrence": true,
+    "forced_calls_create_policy_loss": false,
+    "legacy_chunks_per_step": 1,
+    "legacy_fraction": 0.2,
+    "legacy_teachers": [
+      "flg",
+      "dries"
+    ],
+    "one_primary_chunk_per_seat_result_stratum": true,
+    "ordering_seed": 20260805,
+    "policy": "deterministic balanced recurrent chunks",
+    "primary_chunks_per_step": 4,
+    "primary_fraction": 0.8,
+    "primary_teacher": "majkel",
+    "recurrent_sequence_length": 32,
+    "test_split_inaccessible": true
+  },
+  "schema_version": 1,
+  "source_bundle_dependency": {
+    "base_dataset_id": 11501808,
+    "base_dataset_ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+    "base_dataset_total_bytes": 1637620,
+    "base_dataset_version": 1,
+    "base_source_bundle_sha256": "ceec17e0a76097af8f25de4ecddfa627f509f44a58bb67e2528a2c0696f3a97a",
+    "exact_version_2_inventory_must_be_bound_by_later_approval": true,
+    "overlay_bytes": 6008415,
+    "overlay_files": 10,
+    "overlay_listing_sha256": "0c84e281fdfdfa4db2a33303515e8bb57bf4909727b55cb2eea0206babaa6704",
+    "overlay_records": [
+      {
+        "bytes": 40285,
+        "path": "src/ptcg_rl/g3/bc_production_v2.py",
+        "sha256": "4e30361f7319673b8f597ca65c65ea191e6c82a46a839c355bc6a59b8644dbde"
+      },
+      {
+        "bytes": 1326,
+        "path": "scripts/e01_production_recurrent_bc_v2.py",
+        "sha256": "92e2eeab5986d21e648b8db64ee19a85ffadb60904351863af528d48c4c94413"
+      },
+      {
+        "bytes": 496720,
+        "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json",
+        "sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267"
+      },
+      {
+        "bytes": 2390,
+        "path": "reports/artifacts/e01-approved-replay-corpus-review-v3.json",
+        "sha256": "5d9c42412659dd6a0d783cd1220bc97e6b4c5aae3e7288fe4e94dbb7f60b500e"
+      },
+      {
+        "bytes": 5429190,
+        "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827"
+      },
+      {
+        "bytes": 16953,
+        "path": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json",
+        "sha256": "24abd3c96a95b57cbef294c04332bafad16e0ba24557f86b6cd912eae476b080"
+      },
+      {
+        "bytes": 16528,
+        "path": "reports/artifacts/raw/e01-production-bc-retained-dataset-verification-20260805-v1.json",
+        "sha256": "1a08b64f1f492a09536fb4894797b1e3cd59fa34283532f83ec538280157c991"
+      },
+      {
+        "bytes": 1928,
+        "path": "reports/artifacts/e01-production-bc-input-publication-execution-review-v1.json",
+        "sha256": "ad80752c394408153a4ea1db4790b100cc6a3444cc63e8a388e0431a76b53765"
+      },
+      {
+        "bytes": 1594,
+        "path": "reports/incidents/e01-production-bc-retained-dataset-path-flattening-v1.json",
+        "sha256": "7d4f993cd5f2b85413590708f50e94d5a6cd7fc53b7abb97f58af86aec50f7c3"
+      },
+      {
+        "bytes": 1501,
+        "path": "docs/decisions/DEC-034_E01_PRODUCTION_BC_RETAINED_DATASET_PATH_FLATTENING.md",
+        "sha256": "28c4b3ea1c256ce68507481729850c93bd4fc70c4d1dc63f1ab2f108387172c8"
+      }
+    ],
+    "required_dataset_version": 2,
+    "status": "PLANNED_UNPUBLISHED_VERSION_UPDATE"
+  },
+  "source_path": "configs/e01_production_recurrent_bc_request_v2.json",
+  "status": "READY_UNAUTHORIZED",
+  "stop_conditions": [
+    "Do not execute without a separate approval receipt bound to this request SHA-256, the v2 runner SHA-256, the v2 implementation SHA-256, and an exact notebook-wrapper SHA-256.",
+    "Do not execute until the retained dataset remediation request is exactly approved and the private source bundle version 2 is published, Ready, independently inventoried, and bound in the approval receipt.",
+    "Fail before the first replay-body read if any request, remediation, runner, implementation, corpus, checkpoint, card-data, dataset, inventory, source-bundle, notebook, split, or authorization identity differs.",
+    "Resolve retained records only by the exact verified root-level <episode_id>.json names; read only corpus-v3 train and validation records and never resolve a test record.",
+    "Stop at four epochs, 844 optimizer steps, the wall cap, or any earlier contract failure.",
+    "Do not materialize labels, promote a checkpoint, claim competence, run held-out/on-policy evaluation, submit, commit, or push."
+  ]
+}

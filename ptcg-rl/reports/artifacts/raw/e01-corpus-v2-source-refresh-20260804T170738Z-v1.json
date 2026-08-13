@@ -1,0 +1,58 @@
+{
+  "agent_logs_read": 0,
+  "authorization": {
+    "agent_logs": false,
+    "external_compute": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "raw_exports": false,
+    "replay_transfer": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-04T17:07:38Z",
+  "dataset_query": {
+    "dataset_indexed": false,
+    "exact_api_lookup": "DATASET_NOT_FOUND",
+    "exit_code": 0,
+    "expected_ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04",
+    "expected_version": null,
+    "kaggle_cli_command": [
+      "kaggle",
+      "datasets",
+      "list",
+      "-s",
+      "pokemon-tcg-ai-battle-episodes-2026-08-04",
+      "--csv"
+    ],
+    "stdout": "No datasets found"
+  },
+  "decision_id": "DEC-028",
+  "evidence_sha256": "674abeb964c10dbcc17dc283b4ddc4e8901e60dbabb65741a35c3b64c0142fdc",
+  "latest_complete_daily_dataset": {
+    "ref": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03",
+    "version": 1
+  },
+  "producer": "chatgpt-local-agent",
+  "record_id": "e01-corpus-v2-source-refresh-20260804t170738z-v1",
+  "replay_bodies_read": 0,
+  "schema_version": 1,
+  "source_path": "reports/artifacts/raw/e01-corpus-v2-source-refresh-20260804T170738Z-v1.json",
+  "status": "PASS_SOURCE_NOT_INDEXED",
+  "teacher_snapshot": {
+    "active_submission_id": 55186239,
+    "latest_completed_episode_created_at_utc": "2026-08-04T16:56:37Z",
+    "latest_completed_episode_ended_at_utc": "2026-08-04T16:57:47Z",
+    "latest_completed_episode_id": 89975204,
+    "live_activity_after_prior_source_wait_snapshot": true,
+    "public_score_snapshot": 1261.0,
+    "score_is_dynamic_snapshot_only": true,
+    "team_id": 16374395,
+    "team_name": "Majkel1337"
+  }
+}

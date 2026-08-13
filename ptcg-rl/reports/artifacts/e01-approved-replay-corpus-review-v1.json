@@ -1,0 +1,61 @@
+{
+  "authorization": {
+    "external_compute": false,
+    "label_generation": false,
+    "optimizer_steps": false,
+    "production_training": false
+  },
+  "created_at_utc": "2026-08-04T10:40:05Z",
+  "decision": "ACCEPT_IMMUTABLE_APPROVED_CORPUS_INVENTORY_AND_LEAKAGE_SAFE_EPISODE_SPLITS",
+  "inputs": {
+    "manifest": {
+      "manifest_sha256": "841cb7e535ad841218d6678f00f8ffe9b442e0ee1e7fbd9819f758347e591b27",
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v1.json",
+      "sha256": "4a2ba5775ed617da14973912ef719aae71906a9d4c48432b5732db72cdc11c54"
+    },
+    "policy_loss_recount": {
+      "path": "reports/artifacts/e01-approved-replay-policy-loss-recount-v1.json",
+      "review_sha256": "92fee5ea33b412a4d789d064dd24c05eee0034da291e5ecb08f111210c45023d",
+      "sha256": "5f4a9a8e12b01a7eecba0b5396b7056e08d6d77472145cecc79eb2ab2e444a39"
+    }
+  },
+  "inventory": {
+    "bytes": 453143981,
+    "files": 82,
+    "mismatches": 0,
+    "unique_content_hashes": 82,
+    "unique_episode_ids": 82
+  },
+  "producer": "scripts/e01_live_gold_refresh_review.py",
+  "qualified_corpus": {
+    "episode_level_leakage": 0,
+    "episodes": 66,
+    "forced_teacher_requests": 402,
+    "meaningful_teacher_decisions": 7140,
+    "policy_loss_targets": 7140,
+    "split_counts": {
+      "test": 8,
+      "train": 50,
+      "validation": 8
+    },
+    "split_decisions": {
+      "test": 753,
+      "train": 5653,
+      "validation": 734
+    },
+    "teacher_active_requests": 7542
+  },
+  "record_id": "e01-approved-replay-corpus-review-v1",
+  "review_sha256": "63befb564f9e6cb16160505f04c797bb3296a97f8b07e64b909a5b306e7c8798",
+  "reviewed_decision": "DEC-025",
+  "schema_version": 1,
+  "semantics": {
+    "forced_recurrence_without_policy_loss": true,
+    "lag_alignment": true,
+    "legal_option_mask": true,
+    "ordered_multi_selection": true,
+    "stop_first_class": true
+  },
+  "source_path": "reports/artifacts/e01-approved-replay-corpus-review-v1.json",
+  "status": "PASS"
+}

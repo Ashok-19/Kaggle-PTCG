@@ -1,0 +1,122 @@
+{
+  "record_id": "phase-b1-native-integration-package-v2",
+  "schema_version": 2,
+  "status": "ROUTE_CAPABILITY_ONLY_TECHNICALLY_BLOCKED",
+  "scope": {
+    "capability": "NATIVE_QUALIFIED_CANDIDATE",
+    "policy_integration": "NOT_ESTABLISHED",
+    "outcome_promotion": "NOT_ESTABLISHED",
+    "native_games": 0,
+    "kaggle_runs": 0,
+    "submission": false,
+    "frozen_b0_modified": false
+  },
+  "independent_review": {
+    "prior_review": "reports/deterministic/phase-b1-native-integration-review-v1.json",
+    "prior_verdict": "BLOCKED_NO_24_GAME_CANARY_RECEIPT",
+    "red_findings_addressed": ["B1-RED-002", "B1-RED-003", "B1-RED-004", "B1-RED-005", "B1-RED-006", "B1-RED-007", "B1-RED-008", "B1-RED-009", "B1-RED-010", "B1-RED-011", "B1-RED-012", "B1-RED-013", "B1-RED-015", "B1-RED-016", "B1-RED-017"],
+    "red_findings_remaining": ["B1-RED-001", "B1-RED-014"],
+    "fresh_review_required": true,
+    "review_report_modified": false
+  },
+  "exact_deck_capability_rerun": {
+    "plan": "configs/deterministic/phase_b1_exact_deck_capability_rerun_v1.json",
+    "plan_sha256": "7a459695535a909dfae79eef6c81fe0a58f1441b1cda038272301eba0078ca88",
+    "report": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.json",
+    "report_sha256": "8591505d33160d52e66aaa7ebbd26132ca6369c1562fa55e8c45c37814483c4b",
+    "raw_plan_evidence": "reports/deterministic/phase-b1-exact-deck-capability-rerun-v1.raw.json",
+    "raw_plan_evidence_sha256": "3e24247dfbfd0e6479dfe82b0f17ffc74b9d56d59d28d08cb963d67e38d342c4",
+    "candidate_deck_file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "candidate_deck_semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+    "candidate_deck_count": 60,
+    "native_capability_evidence": "NOT_RUN",
+    "readiness": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW"
+  },
+  "runtime_receipt": {
+    "path": "configs/deterministic/phase_b1_native_route_receipt_v2.json",
+    "file_sha256": "35f8a412db9f545fb768f08b9bd5757ab5ba3c4affb2e3874b0d2a979d6b6ff2",
+    "config_sha256": "9dd98157759bd260af37d0268c6a62efb40d05f83618350c2fc10f4cdac5fd02",
+    "canonical_content_sha256": "b07725b4e05c803be6071487624f0a68f977b08a790e8c5db4d35462fc7f5be5",
+    "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+    "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+    "card_table_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+    "knowledge_base_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "prize_units": {"721": 1, "722": 1, "723": 3, "754": 3},
+    "qualified_attacks": {"1044": {"card_id": 722, "damage": 10, "water_cost": 1}, "1045": {"card_id": 722, "damage": 30, "water_cost": 2}},
+    "evolution": {"source_card_id": 722, "target_card_id": 723, "selection_context": 37, "local_delta_only": true},
+    "forbidden_generalizations": ["successor", "counterfactual", "hidden", "private_native", "raw_option_order", "partial_routes"]
+  },
+  "component_plan": {
+    "path": "configs/deterministic/phase_b1_component_qualification_v2.json",
+    "sha256": "0c3852238a96b60de7f6dedd08237f414143f6c1b3df655223a2596c50ca6555",
+    "stage0": {"arms": ["B0", "B1-A", "B1-B"], "anchors": ["rule:dragapult-ex", "rule:iono", "rule:mega-abomasnow-ex", "rule:mega-lucario-ex"], "candidate_seats": [0, 1], "games_per_cell": 1, "games_total": 24, "stop_on_any_reliability_defect": true, "readiness": "BLOCKED_PENDING_EXACT_DECK_CAPABILITY_REVIEW"},
+    "stage1_screen": {"games_per_cell": 8, "games_per_arm": 64, "games_total": 192, "accessible_without_stage0_review": false},
+    "sealed_evidence": "content_addressed_0444_artifact_plus_0444_sidecar",
+    "runtime_budget": {"p99_latency_ms": 100.0, "p99_min_samples": 32, "component_cpu_seconds_per_game": 1.0, "peak_rss_bytes": 536870912}
+  },
+  "independent_attestation": {
+    "schema": "B1_INDEPENDENT_STAGE0_ATTESTATION_V1",
+    "review_artifact_path": "reports/deterministic/phase-b1-stage0-independent-attestation-v1.json",
+    "parent_authorization_path": "reports/deterministic/phase-b1-stage0-parent-prepared-authorization-v1.json",
+    "review_artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "parent_authorization_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "status": "BLOCKED_PENDING_POST_RUN_INDEPENDENT_REVIEW_AND_PARENT_AUTHORIZATION",
+    "native_stage0_artifacts_present": false
+  },
+  "verification": {
+    "full_deterministic_tests": {"passed": 264, "failed": 0, "failure_scope": "none; repository deterministic suite passed"},
+    "b1_adversarial_policy_harness_tests": {"passed": 70, "failed": 0},
+    "ruff": "PASS",
+    "compileall": "PASS",
+    "exact_deck_plan_cli": "PASS",
+    "component_stage0_plan_cli": "PASS",
+    "component_stage1_without_review": "BLOCKED_AS_REQUIRED",
+    "runtime_receipt_load_and_hash_validation": "PASS",
+    "knowledge_base_validation": "PASS_WITH_OPEN_QUESTIONS",
+    "native_execution": "NOT_RUN_BY_DESIGN",
+    "kaggle_execution": "NOT_RUN_BY_DESIGN"
+  },
+  "owned_source_sha256": {
+    "src/ptcg_rl/deterministic/b1_policy.py": "bdd5f03f6a8acd900aeaade23a9b8f68746765e6e90f55c6e08db087157b15e9",
+    "src/ptcg_rl/deterministic/b1_oracle.py": "becd99d4d5fbd1c9cdab1eb5d0909689c003bfd900045afab0178c2647f965d4",
+    "src/ptcg_rl/deterministic/b1_component_harness.py": "53fdf7f7b2cc95faef8d9a203c2a1eb0dd9cf9f7814445db307d32483f342016",
+    "scripts/deterministic/phase_b1_component_qualification.py": "0a800efbd1c0bfcbfca10a719904f62028022c9d66491eae6151439902c9bfba",
+    "scripts/deterministic/phase_b1_exact_deck_capability_rerun.py": "622651658bffe385e7d3b0c0c8df5261cd0ebd5748ea6213ec3d930be0ff05c1",
+    "tests/deterministic/test_phase_b1_policy.py": "95e50814cd729e6ea809833cee19465484144a521ae2619b39319dfd8c3ec8e9",
+    "tests/deterministic/test_phase_b1_component_harness.py": "43801f059e2edb49c78edc7be7cd023f2114e7db83278ff71c8e9aad3b4241a4"
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "validation": "PASS_WITH_OPEN_QUESTIONS",
+    "requeried_required_ids": 24,
+    "open_questions_and_contradictions_preserved": true
+  },
+  "readiness": {
+    "exact_deck_capability_canary_review": "NOT_READY_FOR_NATIVE_EXECUTION; PLAN_ONLY_AND_BLOCKED",
+    "stage0_24_game_policy_canary_review": "NOT_READY; REQUIRES EXACT_DECK_CAPABILITY_REVIEW_AND_FRESH_INDEPENDENT_REVIEW",
+    "stage1_192_game_screen": "INACCESSIBLE_UNTIL_SEALED_STAGE0_REVIEW",
+    "next_task": "Obtain fresh independent review of the exact-deck plan and this corrected provenance/evidence package. Keep native execution blocked; only after exact-deck capability review and separate stage-0 policy canary review may any bounded native canary be considered."
+  },
+  "closure_probes": {
+    "kb_duplicate_hash": "PASS_REJECTS_RESEALED_MUTATION",
+    "enumerated_scopes_and_paths": "PASS_REJECTS_ASSET_SOURCE_SCOPE_AND_ABSOLUTE_DEPENDENCY_PATH_MUTATION",
+    "sealed_stage0_review": "PASS_REQUIRES_ACTUAL_0444_EVIDENCE_SIDECAR_AND_REVIEW_ARTIFACT",
+    "derived_reliability_gate": "PASS_RECOMPUTED_FROM_RETAINED_RECORDS_AND_METRICS",
+    "resume_lineage": "PASS_SAME_RUN_STAGE_PLAN_SOURCE_ONLY; NEW_RUN_REQUIRES_ZERO_RESUME_CURSOR",
+    "metric_provenance_and_p99_cardinality": "PASS_TYPED_0444_PROCESS_AND_SOURCE_MANIFESTS_RECOMPUTED_WITH_PATH_HASH_SCOPE_AND_32_SAMPLES",
+    "runtime_receipt_binding": "PASS_EXACT_REPO_RELATIVE_PATH_PARSED_CONTENT_BINDING_AND_COMPONENT_PLAN_CROSS_CHECK",
+    "independent_attestation_gate": "BLOCKED_PARENT_PREPARED_AUTHORIZATION_AND_POST_RUN_REVIEW_REQUIRED; SELF_AUTHORED_REVIEW_CANNOT_SATISFY_ZERO_PLACEHOLDER_HASHES",
+    "process_manifest_schema": "B1_PROCESS_RUNTIME_MANIFEST_V1",
+    "process_manifest_native_load": "REQUIRED_TRUE_FOR_POST_RUN_STAGE0_REVIEW; PLAN_ONLY_HELPER_DEFAULTS_FALSE",
+    "source_manifest_schema": "B1_SOURCE_DEPENDENCY_MANIFEST_V1",
+    "obsolete_untracked_artifacts_recommendation": [
+      "configs/deterministic/phase_b1_native_route_receipt_v1.json",
+      "configs/deterministic/phase_b1_component_qualification_v1.json",
+      "reports/deterministic/phase-b1-native-integration-package-v1.json"
+    ]
+  },
+  "conclusion": "RED-015 through RED-017 are addressed by typed 0444 process/source manifests with recomputed path/hash/scope dependencies, exact parsed runtime-receipt binding, and a post-run independent attestation plus parent-prepared authorization gate. The exact-deck capability plan remains blocked; no native stage0 evidence or independent attestation exists, so the 24-game canary and 192-game screen remain inaccessible. No native game, Kaggle run, training, submission, or commit was performed."
+}

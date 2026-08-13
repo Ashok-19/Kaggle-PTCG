@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "record_id": "artifact-e01-kaggle-cpu-infra-qualification-review-v1",
+  "created_at_utc": "2026-08-04T12:11:36Z",
+  "source_path": "reports/artifacts/e01-kaggle-cpu-infra-qualification-review-v1.json",
+  "producer": "chatgpt-independent-kaggle-output-reviewer",
+  "producer_version": "1",
+  "kind": "KPTCG_E01_KAGGLE_CPU_INFRASTRUCTURE_QUALIFICATION_REVIEW",
+  "status": "SUCCEEDED",
+  "decision": "PASS",
+  "notebook": {
+    "owner": "ashok205",
+    "slug": "kptcg-e01-cpu-infra-v1",
+    "kernel_id": 129685552,
+    "saved_version": 4,
+    "script_version_id": 340139179,
+    "private": true,
+    "competition_data_sources": [
+      "pokemon-tcg-ai-battle"
+    ],
+    "internet": false,
+    "gpu": false,
+    "tpu": false,
+    "session_status": "COMPLETE"
+  },
+  "outputs": {
+    "listed_file_count": 2,
+    "receipt": {
+      "path": "e01-cpu-infra-qualification-v1.json",
+      "bytes": 8918,
+      "sha256": "1111472bd2e6782c684228214b524446c220958b86dab361c12c1716389e2454"
+    },
+    "manifest": {
+      "path": "e01-cpu-infra-qualification-v1-output-manifest.json",
+      "bytes": 296,
+      "sha256": "9931a23da9049959ea4ad3557485c4289fce38feb5d911b3a0dfddfd54538efc"
+    },
+    "manifest_receipt_binding_matches": true,
+    "missing_files": 0,
+    "extra_files": 0,
+    "byte_mismatches": 0,
+    "sha256_mismatches": 0
+  },
+  "qualification": {
+    "notebook_status": "PASS",
+    "notebook_decision": "PRIVATE_KAGGLE_CPU_COMPETITION_ATTACHMENT_QUALIFIED",
+    "input_root": "/kaggle/input/competitions",
+    "competition_mount": "pokemon-tcg-ai-battle",
+    "competition_path": "/kaggle/input/competitions/pokemon-tcg-ai-battle",
+    "metadata_entries": 67,
+    "file_entries": 60,
+    "directory_entries": 7,
+    "file_bodies_read": false,
+    "replay_bodies_read": false,
+    "runtime": {
+      "cpu_count": 4,
+      "machine": "x86_64",
+      "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+      "python": "3.12.13",
+      "torch": "2.10.0+cpu",
+      "cuda_available": false,
+      "cuda_device_count": 0,
+      "tpu_environment_present": false
+    }
+  },
+  "authorization": {
+    "replay_transfer": false,
+    "agent_logs": false,
+    "raw_exports": false,
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "training_ran": false,
+    "model_parameters_mutated": false,
+    "gpu_used": false,
+    "tpu_used": false,
+    "external_network_requested_by_notebook": false,
+    "model_promotion": false,
+    "submission": false,
+    "git_commit": false,
+    "git_push": false
+  },
+  "claim_boundaries": {
+    "private_kaggle_cpu_attachment_qualified": true,
+    "competition_file_contents_qualified": false,
+    "replay_access_authorized": false,
+    "training_authorized": false,
+    "accelerator_authorized": false,
+    "policy_competence_established": false
+  }
+}

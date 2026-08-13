@@ -1,0 +1,170 @@
+{
+  "approval": {
+    "agent_logs_authorized": false,
+    "approval_receipt_sha256": "a023d542bbd2cb0a44ea82bff46b4b14fa2b9e6f60eb05a87f9d6357bc9ccccd",
+    "approval_received_at_utc": "2026-08-04T12:56:00Z",
+    "approval_scope": "AUTHORIZED_EXACT_TWO_FILE_MAJKEL_LIVE_GOLD_TEACHER_PROBE_ONLY",
+    "approval_time_precision": "minute_from_conversation_metadata",
+    "approved_by": "user",
+    "approved_prior_request_sha256": "e0b43f2a507728f5b2048a9ac7d8e30b6f444448e74885503267058477029886",
+    "consumed_at_utc": "2026-08-04T13:08:38Z",
+    "external_compute_authorized": false,
+    "git_commit_authorized": false,
+    "git_push_authorized": false,
+    "label_generation_authorized": false,
+    "maximum_new_bytes": 832877,
+    "maximum_new_files": 2,
+    "one_time": true,
+    "optimizer_steps_authorized": false,
+    "raw_exports_authorized": false,
+    "replay_transfer_authorized": true,
+    "submission_authorized": false,
+    "training_authorized": false
+  },
+  "authorization": {
+    "agent_logs": false,
+    "behavior_cloning": false,
+    "external_compute": false,
+    "label_generation": false,
+    "ppo": false,
+    "raw_exports": false,
+    "replay_transfer": false,
+    "submission": false
+  },
+  "authorization_consumed": true,
+  "authorization_scope": "CONSUMED_EXACT_TWO_FILE_MAJKEL_LIVE_GOLD_TEACHER_PROBE_ONLY",
+  "authorized": false,
+  "completed_at_utc": "2026-08-04T13:08:38Z",
+  "created_at_utc": "2026-08-04T10:40:05Z",
+  "decision_id": "DEC-025",
+  "execution": {
+    "action_sequence_exports": 0,
+    "additional_replays_downloaded_after_named_files": 0,
+    "agent_logs_downloaded": 0,
+    "bytes_downloaded": 832877,
+    "card_list_exports": 0,
+    "completed_at_utc": "2026-08-04T13:08:38Z",
+    "dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-03/1",
+    "downloaded_files": [
+      {
+        "bytes": 376976,
+        "episode_id": 89651832,
+        "file_name": "89651832.json",
+        "path": "private/g3/e01/majkel-live-gold-teacher-probe-v1/89651832.json",
+        "sha256": "6e03791819464b8376423a7e2d0cda171cf4abfc1541ac84cd2b90069aeec288"
+      },
+      {
+        "bytes": 455901,
+        "episode_id": 89802438,
+        "file_name": "89802438.json",
+        "path": "private/g3/e01/majkel-live-gold-teacher-probe-v1/89802438.json",
+        "sha256": "ec5ab4bce6e29c8062f504ae24aac754d83c32689103ec3e997d4ab44cfe97e2"
+      }
+    ],
+    "execution_receipt_sha256": "f1bc85328c76efb02f735e3407926969282c96444259adfdcf110ce4dc663bcd",
+    "external_compute": false,
+    "files_downloaded": 2,
+    "git_commit": false,
+    "git_push": false,
+    "observation_exports": 0,
+    "optimizer_steps": 0,
+    "option_exports": 0,
+    "output_directory": "private/g3/e01/majkel-live-gold-teacher-probe-v1",
+    "overwrite_used": false,
+    "raw_replay_body_exports": 0,
+    "raw_step_exports": 0,
+    "request_exports": 0,
+    "retrieval_method": "authenticated_kaggle_cli_filename_scoped_download",
+    "submission": false,
+    "training": false,
+    "training_label_exports": 0,
+    "unexpected_files": 0
+  },
+  "output_directory": "private/g3/e01/majkel-live-gold-teacher-probe-v1",
+  "purpose": "Smallest exact opposite-seat, both-winning current-rank-1 source probe for identity, module, exact deck, current-card compatibility, and lag-aligned action-contract review only.",
+  "record_id": "e01-majkel-live-gold-teacher-probe-request-v1",
+  "request_ready": false,
+  "schema_version": 1,
+  "selection": {
+    "episodes": [
+      {
+        "create_time_utc": "2026-08-03T04:35:17.0251932Z",
+        "declared_bytes": 376976,
+        "end_time_utc": "2026-08-03T04:36:07.2362104Z",
+        "episode_id": 89651832,
+        "file_name": "89651832.json",
+        "opponents": [
+          {
+            "index": 0,
+            "reward": -1.0,
+            "submission_id": 54773249,
+            "team_id": 16381823,
+            "team_name": "AlphaStarmie"
+          }
+        ],
+        "teacher_index": 1,
+        "teacher_reward": 1.0
+      },
+      {
+        "create_time_utc": "2026-08-03T22:08:05.2289204Z",
+        "declared_bytes": 455901,
+        "end_time_utc": "2026-08-03T22:08:52.7118073Z",
+        "episode_id": 89802438,
+        "file_name": "89802438.json",
+        "opponents": [
+          {
+            "index": 1,
+            "reward": -1.0,
+            "submission_id": 55193872,
+            "team_id": 16514272,
+            "team_name": "Dominic Peel"
+          }
+        ],
+        "teacher_index": 0,
+        "teacher_reward": 1.0
+      }
+    ],
+    "maximum_new_bytes": 832877,
+    "maximum_new_files": 2,
+    "method": "Minimum total manifest bytes among exact-intersection pairs with opposite teacher seats and both teacher terminal rewards +1.",
+    "selection_mode": "win",
+    "selection_sha256": "662a7ac37da5568a8871c3c84a08f01f0e15dcfba1dad419172fb434be83577e"
+  },
+  "source": {
+    "available_json_file_count": 4720,
+    "dataset_owner": "kaggle",
+    "dataset_slug": "pokemon-tcg-ai-battle-episodes-2026-08-03",
+    "dataset_version": 1,
+    "leaderboard_snapshot": {
+      "fetched_at_utc": "2026-08-04T10:40:05Z",
+      "rank": 1,
+      "score": 1253.6,
+      "score_is_authorization_basis": false,
+      "score_is_snapshot_only": true
+    },
+    "manifest_metadata_row_count": 4724,
+    "manifest_rows_without_json_body": 4,
+    "manifest_sha256": "ab80af203ef7958503ab5f244bee8adc377eb3b8da71504b7c83e348ffa73991",
+    "teacher_submission_id": 55186239,
+    "teacher_team_id": 16374395,
+    "teacher_team_name": "Majkel1337"
+  },
+  "source_path": "configs/e01_majkel_live_gold_teacher_probe_request_v1.json",
+  "status": "CONSUMED",
+  "stop_conditions": [
+    "Any source identity, episode ID, byte count, teacher submission, output path, or authorization flag changes.",
+    "Any selected file fails exact byte verification, schema/module/deck/current-card/action alignment.",
+    "Stop after independent review of exactly the two named files whether pass or fail."
+  ],
+  "transfer_contract": {
+    "additional_files": false,
+    "agent_logs": false,
+    "external_compute": false,
+    "optimizer_steps": false,
+    "overwrite": false,
+    "raw_exports": false,
+    "retrieve_replay_bodies_only_after_separate_explicit_approval": true,
+    "submission": false,
+    "training_labels": false
+  }
+}

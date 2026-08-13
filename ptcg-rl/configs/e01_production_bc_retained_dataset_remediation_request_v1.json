@@ -1,0 +1,511 @@
+{
+  "authorization": {
+    "accept_existing_dataset_as_dependency": false,
+    "agent_log_read": false,
+    "dataset_create": false,
+    "dataset_delete": false,
+    "dataset_upload": false,
+    "dataset_version_create": false,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "remote_replay_download": false,
+    "renew_training_contract": false,
+    "replay_body_read": false,
+    "source_bundle_update": false,
+    "submission": false,
+    "training": false
+  },
+  "corpus_manifest": {
+    "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json",
+    "self_hash": "bb6319e23f3d5b12bd9ed7383b0f3e007dd7059cbf39afcd5325af12392c35a9",
+    "sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267"
+  },
+  "created_at_utc": "2026-08-06T07:23:00Z",
+  "dataset": {
+    "bytes": 341559745,
+    "dataset_id": 11514316,
+    "files": 58,
+    "path_contract": "root_basename",
+    "private": true,
+    "ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+    "remote_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+    "status": "READY",
+    "version": 1
+  },
+  "decision_id": "DEC-035",
+  "evidence": {
+    "decision": {
+      "path": "docs/decisions/DEC-034_E01_PRODUCTION_BC_RETAINED_DATASET_PATH_FLATTENING.md",
+      "sha256": "28c4b3ea1c256ce68507481729850c93bd4fc70c4d1dc63f1ab2f108387172c8"
+    },
+    "execution_review": {
+      "path": "reports/artifacts/e01-production-bc-input-publication-execution-review-v1.json",
+      "self_hash": "54bf03e9c243f45522174acdc47d30c0af4a002362327468aa6a83100a15c750",
+      "self_hash_field": "review_sha256",
+      "sha256": "ad80752c394408153a4ea1db4790b100cc6a3444cc63e8a388e0431a76b53765"
+    },
+    "incident": {
+      "path": "reports/incidents/e01-production-bc-retained-dataset-path-flattening-v1.json",
+      "self_hash": "5baf9bd2fa399d7858fb55bde665dee26177fcdd72ed00b0ed0c2c8bef25774b",
+      "self_hash_field": "incident_sha256",
+      "sha256": "7d4f993cd5f2b85413590708f50e94d5a6cd7fc53b7abb97f58af86aec50f7c3"
+    },
+    "raw_verification": {
+      "path": "reports/artifacts/raw/e01-production-bc-retained-dataset-verification-20260805-v1.json",
+      "self_hash": "f2c3a75129117b88a88320f26d9b2de4fdd816a462cc559338a0ad986afea864",
+      "self_hash_field": "evidence_sha256",
+      "sha256": "1a08b64f1f492a09536fb4894797b1e3cd59fa34283532f83ec538280157c991"
+    }
+  },
+  "purpose": "Adopt the already-created private retained dataset using its verified root-level replay basenames, without deleting, versioning, re-uploading, downloading, or rereading any replay body.",
+  "record_id": "e01-production-bc-retained-dataset-remediation-request-v1",
+  "records": [
+    {
+      "bytes": 5819313,
+      "episode_id": 88276868,
+      "remote_name": "88276868.json",
+      "sha256": "8308c00dd517128b0b16e7cd393fdd2eac6f046c945e09a48254f40901cc1ef7",
+      "split": "train"
+    },
+    {
+      "bytes": 9234114,
+      "episode_id": 88278479,
+      "remote_name": "88278479.json",
+      "sha256": "f3c24d349643b8fbec0602eebaeafbd033da59eda054b01ca4d16e50cbf27824",
+      "split": "train"
+    },
+    {
+      "bytes": 4119037,
+      "episode_id": 88278632,
+      "remote_name": "88278632.json",
+      "sha256": "71a918023feeda7c67d85898048efe38c2ada074d1b44fe3bb23836aaefb0dfc",
+      "split": "validation"
+    },
+    {
+      "bytes": 7020621,
+      "episode_id": 88280071,
+      "remote_name": "88280071.json",
+      "sha256": "276042a83ac52c624658b88689834426c0c145a960f0051f7d2faae3d53cd16e",
+      "split": "train"
+    },
+    {
+      "bytes": 5574112,
+      "episode_id": 88280592,
+      "remote_name": "88280592.json",
+      "sha256": "17675c56a50ef0f15760d0a7efe25824c315f301456ff4fa8a5a8f0edff26234",
+      "split": "train"
+    },
+    {
+      "bytes": 625479,
+      "episode_id": 88281294,
+      "remote_name": "88281294.json",
+      "sha256": "46929a43e1c84f79a8738be5258058206d5f730f57b706b3a0998675bf49364a",
+      "split": "validation"
+    },
+    {
+      "bytes": 4144487,
+      "episode_id": 88282349,
+      "remote_name": "88282349.json",
+      "sha256": "118d14fa27c644738a4e65253b10b2717a66f1bdc42a5abbf95d475da00d6176",
+      "split": "validation"
+    },
+    {
+      "bytes": 8160732,
+      "episode_id": 88285882,
+      "remote_name": "88285882.json",
+      "sha256": "3b109e68854218fba900514b06fa15f5a9b73026126d04a362bc81ec3df295a2",
+      "split": "train"
+    },
+    {
+      "bytes": 6198953,
+      "episode_id": 88287982,
+      "remote_name": "88287982.json",
+      "sha256": "6d0991b7db4a7e31b7b9ed2eade108fd6960017b6b2debb426d3f4df28cc694c",
+      "split": "validation"
+    },
+    {
+      "bytes": 4850748,
+      "episode_id": 88289166,
+      "remote_name": "88289166.json",
+      "sha256": "67cff69dbeb50aa2b1c033920ede6abca61164d62d886fa50f0be51be2160bf1",
+      "split": "train"
+    },
+    {
+      "bytes": 7047362,
+      "episode_id": 88290739,
+      "remote_name": "88290739.json",
+      "sha256": "9025792fe15632badf0b6039c327a328f9249e0a17728e8efeeb47f5c3802ef9",
+      "split": "validation"
+    },
+    {
+      "bytes": 7025672,
+      "episode_id": 88291779,
+      "remote_name": "88291779.json",
+      "sha256": "e8a09ead6ab1412294955e42f9057840d03cc02187d474339b0baad33fbe681d",
+      "split": "train"
+    },
+    {
+      "bytes": 7522052,
+      "episode_id": 88293851,
+      "remote_name": "88293851.json",
+      "sha256": "2d6299ea7d34b2cae55369e50f4557dca88cab3abb0f5a4cd6b10087d11e1990",
+      "split": "train"
+    },
+    {
+      "bytes": 5887456,
+      "episode_id": 88295625,
+      "remote_name": "88295625.json",
+      "sha256": "d51b83e3d2f0a9ae2ee617202bf8301cbe544f90d1fbad08be5f0c9b68e1681d",
+      "split": "train"
+    },
+    {
+      "bytes": 6604538,
+      "episode_id": 88298059,
+      "remote_name": "88298059.json",
+      "sha256": "2916030d300e17efea158659a6649af7c1423c482c4cd0e091453138aa34e767",
+      "split": "train"
+    },
+    {
+      "bytes": 5861769,
+      "episode_id": 88300130,
+      "remote_name": "88300130.json",
+      "sha256": "68ba4607fd10a879e3fae67178d22a09e94e739859e24ec7080b79db855c3c7b",
+      "split": "train"
+    },
+    {
+      "bytes": 4754075,
+      "episode_id": 88300654,
+      "remote_name": "88300654.json",
+      "sha256": "5cd7a24f60a737c7f2571cc79b8822fd7d4335afdb1f81de722cb10252e3f63b",
+      "split": "train"
+    },
+    {
+      "bytes": 624407,
+      "episode_id": 88302734,
+      "remote_name": "88302734.json",
+      "sha256": "30a97dfb6bbfe65b224011103b215c7e2ec946ad1cd977cc82a88b1232444452",
+      "split": "train"
+    },
+    {
+      "bytes": 4377850,
+      "episode_id": 88304411,
+      "remote_name": "88304411.json",
+      "sha256": "d84aac31c4398df9ac2aca33a5e4dd7e3e651f0c310f324dba64c3ba970e8d6c",
+      "split": "train"
+    },
+    {
+      "bytes": 4779822,
+      "episode_id": 88308561,
+      "remote_name": "88308561.json",
+      "sha256": "3d6dfd984cf3bd319f42671dab67a8c72e3838e24e71156fa6cbb73f089ced40",
+      "split": "train"
+    },
+    {
+      "bytes": 7673503,
+      "episode_id": 88309614,
+      "remote_name": "88309614.json",
+      "sha256": "c2db1968df73ab16de81bc76faab7434586ed50f8621b788dda8a336dfa6f404",
+      "split": "train"
+    },
+    {
+      "bytes": 4609394,
+      "episode_id": 88309616,
+      "remote_name": "88309616.json",
+      "sha256": "248e8ae8f8eda581e9f087c578405520a7c0393f178fc9b2d30ac6991bca86b3",
+      "split": "train"
+    },
+    {
+      "bytes": 8488713,
+      "episode_id": 88310633,
+      "remote_name": "88310633.json",
+      "sha256": "b78304917e2bfddde04a8533487eb4a8aa882c3ee2a9cff3eb2cc18543f8d311",
+      "split": "train"
+    },
+    {
+      "bytes": 8040542,
+      "episode_id": 88312764,
+      "remote_name": "88312764.json",
+      "sha256": "d00599769abf1b4ef79f5d63a0b9bbccfcb13812f46d98ee6a9952cfee4c53b0",
+      "split": "train"
+    },
+    {
+      "bytes": 5222527,
+      "episode_id": 88314806,
+      "remote_name": "88314806.json",
+      "sha256": "3863e0bbb5d25af8c3093236a79b3fe02c051f503634d816cad7dab8954905fc",
+      "split": "train"
+    },
+    {
+      "bytes": 7164618,
+      "episode_id": 88315326,
+      "remote_name": "88315326.json",
+      "sha256": "492ea008f610efd5abd0c5e81f366bcbef7e4aa9b5ea52ade1983717872c9479",
+      "split": "train"
+    },
+    {
+      "bytes": 7370388,
+      "episode_id": 88315840,
+      "remote_name": "88315840.json",
+      "sha256": "077ef4968dc48ffc2e33eee2ee6b24ea29179dd21894170a317491cac8230626",
+      "split": "train"
+    },
+    {
+      "bytes": 6251226,
+      "episode_id": 88316351,
+      "remote_name": "88316351.json",
+      "sha256": "24accb1a28261ca6e44e449efc48c473976d065767246e2cacdd813d7492d577",
+      "split": "train"
+    },
+    {
+      "bytes": 7076633,
+      "episode_id": 88317383,
+      "remote_name": "88317383.json",
+      "sha256": "b3b00ca7aa046d18cfbd2f6ca626868ebf013232efc08d20b1056b2f542498c0",
+      "split": "train"
+    },
+    {
+      "bytes": 6355732,
+      "episode_id": 88318415,
+      "remote_name": "88318415.json",
+      "sha256": "d8e9d4e7da8517aa5e576f11ba5d6dea2a53455f40e1d9a75db6f91dba88c6c6",
+      "split": "train"
+    },
+    {
+      "bytes": 8129282,
+      "episode_id": 88318421,
+      "remote_name": "88318421.json",
+      "sha256": "7f08abec8e1dbdfb6b411f84a2d74440554f4899daec6155c871c4c0f67dbf9f",
+      "split": "train"
+    },
+    {
+      "bytes": 5624889,
+      "episode_id": 88318931,
+      "remote_name": "88318931.json",
+      "sha256": "c45d9ec2f591ee7d0398371599755b363b6ee591531f5f7ef146dd4d5bd10c79",
+      "split": "train"
+    },
+    {
+      "bytes": 5246538,
+      "episode_id": 88318940,
+      "remote_name": "88318940.json",
+      "sha256": "99acbd1dd3b951f72604c58fad6cb300a08d087d84738d342dd7421f72b61f6a",
+      "split": "train"
+    },
+    {
+      "bytes": 5542084,
+      "episode_id": 88319436,
+      "remote_name": "88319436.json",
+      "sha256": "dac62115ddfa48ae09f849198808e993c14c9effcbe683301e413de5f0bea62e",
+      "split": "train"
+    },
+    {
+      "bytes": 4971442,
+      "episode_id": 88321518,
+      "remote_name": "88321518.json",
+      "sha256": "d4272cf2ac0120277678e7bca3a819f6fdf8b9ef36882f7b2d39ad0e73612813",
+      "split": "validation"
+    },
+    {
+      "bytes": 6705055,
+      "episode_id": 88322606,
+      "remote_name": "88322606.json",
+      "sha256": "f7f145280abb92b6befa97a3e7b501a53e2d40dadc2e17dade6a963f966b4812",
+      "split": "train"
+    },
+    {
+      "bytes": 4747191,
+      "episode_id": 88324168,
+      "remote_name": "88324168.json",
+      "sha256": "5e1df438954c449cdd557b56440264467a914431210b0274c0e4ea770d3a247c",
+      "split": "train"
+    },
+    {
+      "bytes": 7773531,
+      "episode_id": 88324699,
+      "remote_name": "88324699.json",
+      "sha256": "f14b0f5bd7dc7dd9dde6d64424b66bd0eadea1b76ece578032489edd4c237284",
+      "split": "train"
+    },
+    {
+      "bytes": 6105640,
+      "episode_id": 88324713,
+      "remote_name": "88324713.json",
+      "sha256": "06518e3501634603e66a3e2f23ab18d9e13f7b6a27677b4c21cc7fad26bbb1c9",
+      "split": "train"
+    },
+    {
+      "bytes": 7145674,
+      "episode_id": 88324732,
+      "remote_name": "88324732.json",
+      "sha256": "19ed2194e6f43ed4001e092708e215f622c3f175c51af7f8d8a0914ae25d68da",
+      "split": "train"
+    },
+    {
+      "bytes": 4667363,
+      "episode_id": 88325214,
+      "remote_name": "88325214.json",
+      "sha256": "65eb6da594ce1176dfec0ce38f07bce19bf1b7ace9869e577785e86f64d5d3a1",
+      "split": "train"
+    },
+    {
+      "bytes": 7154119,
+      "episode_id": 88325730,
+      "remote_name": "88325730.json",
+      "sha256": "5518d8405b75409b709af7e92541ceddc249b3ee140423934c12ce8488c8e5df",
+      "split": "train"
+    },
+    {
+      "bytes": 4132196,
+      "episode_id": 88325741,
+      "remote_name": "88325741.json",
+      "sha256": "0959905bceee62abffd6efe32c91b35a74fd1cb6298ba094f6dd12780ca52214",
+      "split": "validation"
+    },
+    {
+      "bytes": 5938415,
+      "episode_id": 88326253,
+      "remote_name": "88326253.json",
+      "sha256": "66911661f293bd6b7fc383fc3e70340eafb6a32cc7aa30c5a789093a371fd3d7",
+      "split": "train"
+    },
+    {
+      "bytes": 6736937,
+      "episode_id": 88327275,
+      "remote_name": "88327275.json",
+      "sha256": "0754f2cf3c8de6be6f275f0743c43274e4c376cc1d3d0945a1b78ce798e5826f",
+      "split": "train"
+    },
+    {
+      "bytes": 7643264,
+      "episode_id": 88328306,
+      "remote_name": "88328306.json",
+      "sha256": "bb610fde003f01ed4be7df709be8629aa77e7a3df84580b0e5032fb5efeffeae",
+      "split": "train"
+    },
+    {
+      "bytes": 2996616,
+      "episode_id": 88329376,
+      "remote_name": "88329376.json",
+      "sha256": "aa6bb3b74d140d195fdcb1933d9738978d72840d86a8a37b5f887a165ae965cb",
+      "split": "train"
+    },
+    {
+      "bytes": 6794256,
+      "episode_id": 88330964,
+      "remote_name": "88330964.json",
+      "sha256": "5aaaa29edf35cb54a8ea17f902fddcc3acd0f3c369517f4d23eea0b19329360c",
+      "split": "train"
+    },
+    {
+      "bytes": 6471053,
+      "episode_id": 88331484,
+      "remote_name": "88331484.json",
+      "sha256": "339d095694c6a746e46fcb81d736d431450a770bcb182ec54c7550001eaf5a14",
+      "split": "train"
+    },
+    {
+      "bytes": 509759,
+      "episode_id": 88332011,
+      "remote_name": "88332011.json",
+      "sha256": "07f7662d1c7cbd98195400f33f3dcff4cf4b188ba51a6ecd58159cc2875e64ee",
+      "split": "train"
+    },
+    {
+      "bytes": 6464753,
+      "episode_id": 88333027,
+      "remote_name": "88333027.json",
+      "sha256": "c4a3f7fec14551aca9d3b116e6ccb0afadd146fa4dc99f0a6ec53c30d414ddf6",
+      "split": "train"
+    },
+    {
+      "bytes": 3371991,
+      "episode_id": 88333037,
+      "remote_name": "88333037.json",
+      "sha256": "5b6b330d543037e561a889fe76baaf84d427019b0fc0523080045a6abc5214d6",
+      "split": "train"
+    },
+    {
+      "bytes": 6337005,
+      "episode_id": 88333549,
+      "remote_name": "88333549.json",
+      "sha256": "87185ab6adced26dc4fcfb763917074528ecfb0e4e660d03d1403db461cb25a5",
+      "split": "train"
+    },
+    {
+      "bytes": 7221876,
+      "episode_id": 88335132,
+      "remote_name": "88335132.json",
+      "sha256": "2c201e77a113f8a282c6a2fb5f4f6d78fdaa0aef0bbf147f10708531dc1df6e4",
+      "split": "validation"
+    },
+    {
+      "bytes": 5678713,
+      "episode_id": 88335650,
+      "remote_name": "88335650.json",
+      "sha256": "476fc79d7099e6a7846ab0e50bb8bd74b199ef74df5b3f3717d94cc3d8bf2e52",
+      "split": "train"
+    },
+    {
+      "bytes": 6935134,
+      "episode_id": 88336699,
+      "remote_name": "88336699.json",
+      "sha256": "fcdf08bda2bb157745b2a2dfd73cd6267792d31ebc1574a7b8ed818d3116b646",
+      "split": "train"
+    },
+    {
+      "bytes": 5412475,
+      "episode_id": 88339327,
+      "remote_name": "88339327.json",
+      "sha256": "092ba671052c74046576eaf2d460712d2fa6a900bbb0cf3bf65f12e857a7c76e",
+      "split": "train"
+    },
+    {
+      "bytes": 6616619,
+      "episode_id": 88340379,
+      "remote_name": "88340379.json",
+      "sha256": "83ed51f78d0cbabb95406b8963582cd603709e3b12ec408cb08541db61864802",
+      "split": "train"
+    }
+  ],
+  "remediation_method": "contract_only_adopt_verified_root_basenames",
+  "request_ready": true,
+  "requested_authorization_for_later_exact_approval": {
+    "accept_existing_dataset_as_dependency": true,
+    "agent_log_read": false,
+    "dataset_create": false,
+    "dataset_delete": false,
+    "dataset_id": 11514316,
+    "dataset_upload": false,
+    "dataset_version": 1,
+    "dataset_version_create": false,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "label_materialization": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "path_contract": "root_basename",
+    "remote_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+    "remote_replay_download": false,
+    "renew_training_contract": true,
+    "replay_body_read": false,
+    "source_bundle_update": false,
+    "submission": false,
+    "training": false
+  },
+  "schema_version": 1,
+  "source_path": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json",
+  "status": "READY_UNAUTHORIZED",
+  "stop_conditions": [
+    "Do not consume this remediation without a separate exact user approval bound to this request SHA-256 and dataset ID 11514316/version 1.",
+    "Do not delete, replace, version, upload to, or download from the retained dataset under this request.",
+    "Do not open or hash any local or remote replay body while consuming this metadata-only remediation.",
+    "Fail closed if the dataset identity, privacy, Ready status, file count, byte total, remote inventory hash, corpus-v3 identity, or DEC-034 evidence differs.",
+    "Stop after adopting the root-basename contract and renewing the production BC request; source-bundle publication and training remain separately gated."
+  ]
+}

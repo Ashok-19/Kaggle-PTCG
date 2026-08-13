@@ -1,0 +1,47 @@
+{
+  "approval_consumed": true,
+  "approval_receipt_sha256": "194e9de3a434088d289672d9f3d81810cf2c285cf098567335392f4d5a021184",
+  "builder_sha256": "425ee2fe2ed3674424a0e432b95ea45327cf89676f553dca41cfd73e663d8421",
+  "created_at_utc": "2026-08-06T16:21:21Z",
+  "downloaded_audit_outputs": [
+    {
+      "path": "private/g3/e01/production-recurrent-bc-notebook-run-v2/remote-outputs/e01-production-recurrent-bc-approval-v2.json",
+      "sha256": "194e9de3a434088d289672d9f3d81810cf2c285cf098567335392f4d5a021184"
+    },
+    {
+      "path": "private/g3/e01/production-recurrent-bc-notebook-run-v2/remote-outputs/e01_production_recurrent_bc_notebook_v2.py",
+      "sha256": "59db2271582b45f886347755ef7e401af1603ac761977ba2d6600e70233bcf52"
+    },
+    {
+      "path": "private/g3/e01/production-recurrent-bc-notebook-run-v2/remote-outputs/e01-notebook-checkpoint-reconstruction-v1.json",
+      "sha256": "1e87ce65c0339f9d5132b5f964f0e6ad8df3f349a999c0a6a70776d656ed73fb"
+    }
+  ],
+  "incident_file_sha256": "22b868fe01be4d2551db0ce5971f7905ccbfbdf847347ae2515e48d74c09d48d",
+  "incident_path": "reports/incidents/e01-production-recurrent-bc-notebook-v2-approval-kind-mismatch-v1.json",
+  "incident_self_hash": "21de73713163d70f1b99bbee7ce6f33766c5014f274a30b0df86feda9e3e7561",
+  "notebook_id": 129909738,
+  "notebook_ref": "ashok205/kptcg-e01-production-recurrent-bc-v2",
+  "notebook_request_sha256": "93ad27ae290bdf56f0e6259a252625d7bd15150054d85139f29c9cae7fb7f4eb",
+  "notebook_source_sha256": "0438eb695925a23a2a6cfe8eba65af3192814095922b0ad2129392ec4dd65860",
+  "notebook_status": "ERROR",
+  "notebook_version": 1,
+  "record_id": "e01-production-recurrent-bc-notebook-execution-review-v2",
+  "result": {
+    "checkpoint_reconstructed": true,
+    "epoch_checkpoints_emitted": 0,
+    "execution_report_emitted": false,
+    "failure_phase": "SHARED_APPROVAL_KIND_VALIDATION",
+    "notebook_envelope_emitted": false,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "replay_bodies_hash_verified": 316,
+    "replay_bytes_hash_verified": 1327994902,
+    "semantic_parsing_started": false,
+    "training": false
+  },
+  "review_sha256": "2fb933d2f5bbf4f52d09380ca191cdc1e9793ee3dc569999ce62f51a0c55afab",
+  "schema_version": 1,
+  "status": "FAILED_CLOSED_AFTER_REPLAY_HASH_PREFLIGHT_NO_OPTIMIZER_OR_TRAINING",
+  "wrapper_sha256": "59db2271582b45f886347755ef7e401af1603ac761977ba2d6600e70233bcf52"
+}

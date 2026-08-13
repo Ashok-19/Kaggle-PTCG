@@ -1,0 +1,130 @@
+{
+  "approval": {
+    "approved_remediation_request_path": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json",
+    "approved_remediation_request_sha256": "24abd3c96a95b57cbef294c04332bafad16e0ba24557f86b6cd912eae476b080",
+    "implementation_sha256": "4e30361f7319673b8f597ca65c65ea191e6c82a46a839c355bc6a59b8644dbde",
+    "renewed_training_request_path": "configs/e01_production_recurrent_bc_request_v2.json",
+    "renewed_training_request_sha256": "297679d5a1a2ca43b3f8ef1dc158cdc82fc68e8c5fe7b6791d790bded586ea0d",
+    "runner_sha256": "92e2eeab5986d21e648b8db64ee19a85ffadb60904351863af528d48c4c94413",
+    "user_followup_disposition": "RETAIN_UNAUTHORIZED_BENCHMARK_TASK_AS_INCIDENT_EVIDENCE_AND_PROCEED"
+  },
+  "boundary": {
+    "agent_logs_read": 0,
+    "benchmark_task_mutations": 0,
+    "competition_submission": false,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "labels_materialized": 0,
+    "model_mutation": false,
+    "model_promotion": false,
+    "notebook_run": false,
+    "optimizer_steps": 0,
+    "replay_bodies_opened_read_hashed_parsed_copied_staged_transferred_uploaded_or_downloaded": 0,
+    "retained_dataset_mutations": 0,
+    "source_bundle_dataset_mutations": 0,
+    "training": false
+  },
+  "created_at_utc": "2026-08-06T09:38:01Z",
+  "incident_disposition": {
+    "disposition": "RETAIN_AS_INCIDENT_EVIDENCE",
+    "kernel_ref": "ashok205/new-benchmark-task-b1c52",
+    "prior_review_path": "reports/artifacts/e01-production-bc-remediation-consumption-review-v1.json",
+    "prior_review_sha256": "81daef11cdc6f18735601d24ae80b27cabfd17c7d3222b1b62d1939b95530453",
+    "privacy_and_execution_state": "UNRESOLVED_RETAINED_UNCHANGED",
+    "remote_object_deleted_modified_or_executed_under_this_step": false,
+    "returned_kernel_url": "/code/ashok205/new-benchmark-task-b1c52/edit/run/340537492"
+  },
+  "record_id": "e01-production-bc-remediation-consumption-review-v2",
+  "retained_dataset": {
+    "bytes": 341559745,
+    "dataset_id": 11514316,
+    "files": 58,
+    "last_updated_utc": "2026-08-05T11:10:53.517Z",
+    "path_contract": "root_basename",
+    "private": true,
+    "ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+    "remediation_consumed": true,
+    "remote_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+    "status": "READY",
+    "version": 1
+  },
+  "review_sha256": "d3f10c2e0724ca6ae1f7d63372d3c96fc0875e31a0ae147bea6a14606227dbe4",
+  "schema_version": 1,
+  "source_bundle_version_2_plan": {
+    "approval_text": "I approve publication of source-bundle version 2 for private Kaggle dataset `ashok205/kptcg-e01-majkel-corpus-review-inputs`, dataset ID `11501808`, under exactly the following scope:\n\n* Require the current base dataset to remain private and Ready at version `1`, with exactly `66` files and `1,637,620` bytes.\n* Bind the version-1 metadata inventory SHA-256 to `cb83097fab781719ef01e902570beed8ddf203894e00dddb6d025a118e187e8d` and the frozen base source-bundle SHA-256 to `ceec17e0a76097af8f25de4ecddfa627f509f44a58bb67e2528a2c0696f3a97a`.\n* Create exactly version `2` on the same private dataset. Do not create a replacement dataset and do not delete or modify version `1`.\n* Preserve all `66` version-1 files byte-for-byte and add exactly the `10` overlay records frozen in `configs/e01_production_recurrent_bc_request_v2.json` at SHA-256 `297679d5a1a2ca43b3f8ef1dc158cdc82fc68e8c5fe7b6791d790bded586ea0d`.\n* Bind the overlay to exactly `10` files, `6,008,415` bytes, and listing SHA-256 `0c84e281fdfdfa4db2a33303515e8bb57bf4909727b55cb2eea0206babaa6704`.\n* Require version `2` to contain exactly `76` files and `7,646,035` bytes with metadata inventory SHA-256 `78fa9caa32782729a28cb9254449f22e46a6edcb5f83b7b2f763756bd970fa90`.\n* Preserve every remote path exactly. Fail closed if Kaggle flattens, renames, omits, duplicates, or adds any file.\n* May read, hash, copy, download, and stage only the `66` version-1 source-bundle files and the exact `10` approved local overlay files. These files contain code, configuration, metadata, card data, and the sealed initial checkpoint; they contain no replay bodies or agent logs.\n* May upload only the exact staged `76`-file source bundle as private dataset version `2` and independently verify its privacy, Ready status, version, paths, file count, byte count, and file SHA-256 identities.\n* Bind the overlay implementation to `src/ptcg_rl/g3/bc_production_v2.py` at SHA-256 `4e30361f7319673b8f597ca65c65ea191e6c82a46a839c355bc6a59b8644dbde` and runner to `scripts/e01_production_recurrent_bc_v2.py` at SHA-256 `92e2eeab5986d21e648b8db64ee19a85ffadb60904351863af528d48c4c94413`.\n* Bind corpus-v3 to manifest file SHA-256 `c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267` and self-hash `bb6319e23f3d5b12bd9ed7383b0f3e007dd7059cbf39afcd5325af12392c35a9`.\n* Do not access, read, hash, parse, copy, stage, transfer, upload, or download any replay body or agent log.\n* Do not materialize training labels, construct an optimizer, perform optimizer steps, launch training or evaluation, use GPU or TPU, run a notebook, mutate or promote a model, or submit to the competition.\n* Do not create, delete, modify, or execute any Kaggle benchmark task. Retain `ashok205/new-benchmark-task-b1c52` unchanged as incident evidence.\n* Do not make a Git commit or push.\n* Stop after version `2` is independently verified and the exact notebook-wrapper contract and approval text are prepared. Do not train under this approval.\n* Fail closed immediately if any dataset, version, privacy, status, path, file, byte count, SHA-256, request, implementation, runner, corpus, checkpoint, or authorization identity differs.",
+    "approval_text_prepared": true,
+    "approval_text_sha256": "f99906186f531a5635ec7525eccbfe8eec3314bc932a7b2e9f8c05e18ccd06b5",
+    "base_bytes": 1637620,
+    "base_files": 66,
+    "base_inventory_sha256": "cb83097fab781719ef01e902570beed8ddf203894e00dddb6d025a118e187e8d",
+    "base_source_bundle_sha256": "ceec17e0a76097af8f25de4ecddfa627f509f44a58bb67e2528a2c0696f3a97a",
+    "base_status": "READY",
+    "base_version": 1,
+    "dataset_id": 11501808,
+    "dataset_ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+    "expected_version_2_bytes": 7646035,
+    "expected_version_2_files": 76,
+    "expected_version_2_inventory_sha256": "78fa9caa32782729a28cb9254449f22e46a6edcb5f83b7b2f763756bd970fa90",
+    "overlay_bytes": 6008415,
+    "overlay_files": 10,
+    "overlay_listing_sha256": "0c84e281fdfdfa4db2a33303515e8bb57bf4909727b55cb2eea0206babaa6704",
+    "overlay_records": [
+      {
+        "bytes": 40285,
+        "path": "src/ptcg_rl/g3/bc_production_v2.py",
+        "sha256": "4e30361f7319673b8f597ca65c65ea191e6c82a46a839c355bc6a59b8644dbde"
+      },
+      {
+        "bytes": 1326,
+        "path": "scripts/e01_production_recurrent_bc_v2.py",
+        "sha256": "92e2eeab5986d21e648b8db64ee19a85ffadb60904351863af528d48c4c94413"
+      },
+      {
+        "bytes": 496720,
+        "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v3.json",
+        "sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267"
+      },
+      {
+        "bytes": 2390,
+        "path": "reports/artifacts/e01-approved-replay-corpus-review-v3.json",
+        "sha256": "5d9c42412659dd6a0d783cd1220bc97e6b4c5aae3e7288fe4e94dbb7f60b500e"
+      },
+      {
+        "bytes": 5429190,
+        "path": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827"
+      },
+      {
+        "bytes": 16953,
+        "path": "configs/e01_production_bc_retained_dataset_remediation_request_v1.json",
+        "sha256": "24abd3c96a95b57cbef294c04332bafad16e0ba24557f86b6cd912eae476b080"
+      },
+      {
+        "bytes": 16528,
+        "path": "reports/artifacts/raw/e01-production-bc-retained-dataset-verification-20260805-v1.json",
+        "sha256": "1a08b64f1f492a09536fb4894797b1e3cd59fa34283532f83ec538280157c991"
+      },
+      {
+        "bytes": 1928,
+        "path": "reports/artifacts/e01-production-bc-input-publication-execution-review-v1.json",
+        "sha256": "ad80752c394408153a4ea1db4790b100cc6a3444cc63e8a388e0431a76b53765"
+      },
+      {
+        "bytes": 1594,
+        "path": "reports/incidents/e01-production-bc-retained-dataset-path-flattening-v1.json",
+        "sha256": "7d4f993cd5f2b85413590708f50e94d5a6cd7fc53b7abb97f58af86aec50f7c3"
+      },
+      {
+        "bytes": 1501,
+        "path": "docs/decisions/DEC-034_E01_PRODUCTION_BC_RETAINED_DATASET_PATH_FLATTENING.md",
+        "sha256": "28c4b3ea1c256ce68507481729850c93bd4fc70c4d1dc63f1ab2f108387172c8"
+      }
+    ],
+    "private": true,
+    "publication_authorized": false,
+    "target_version": 2
+  },
+  "source_path": "reports/artifacts/e01-production-bc-remediation-consumption-review-v2.json",
+  "status": "PASS_REMEDIATION_CONSUMED_SOURCE_BUNDLE_V2_APPROVAL_PREPARED"
+}

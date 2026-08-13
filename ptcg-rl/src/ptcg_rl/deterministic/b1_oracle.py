@@ -890,7 +890,15 @@ class CurrentStateRouteOracleV1:
                     candidate_count=len(candidates),
                     partial=tuple(sorted(partial)),
                 )
-            if not candidate.is_stop and any(value is None for value in candidate.features.__dict__.values()):
+            # ``resource_reserve`` is intentionally diagnostic-only until an
+            # exact card-role receipt exists.  It must not deactivate an
+            # otherwise complete route merely because the non-authoritative
+            # field is unknown.
+            if not candidate.is_stop and any(
+                value is None
+                for name, value in candidate.features.__dict__.items()
+                if name != "resource_reserve"
+            ):
                 self._diagnostics.unknown_resource_count += 1
                 self._diagnostics.b0_delegation_count += 1
                 return self._decision(
@@ -1020,7 +1028,7 @@ class CurrentStateRouteOracleV1:
             visible_threat_denial=ko and target.zone == AREA["ACTIVE"] and target.position == 0,
             current_active_survival_slack=survival,
             next_attacker_ready=next_deficit == 0 if next_deficit is not None else None,
-            resource_reserve=self._resource_reserve(observation),
+            resource_reserve=None,
         )
 
     def _attach_features(self, observation: EngineObservationV1, target: Any) -> RouteFeatureV1:
@@ -1042,7 +1050,7 @@ class CurrentStateRouteOracleV1:
             visible_threat_denial=denial,
             current_active_survival_slack=survival,
             next_attacker_ready=next_deficit == 0 if next_deficit is not None else None,
-            resource_reserve=self._resource_reserve(observation),
+            resource_reserve=None,
         )
 
     @staticmethod
@@ -1116,19 +1124,6 @@ class CurrentStateRouteOracleV1:
             total += prize.prize_units
         return total
 
-    def _resource_reserve(self, observation: EngineObservationV1) -> int:
-        qualified_card_ids = set(self.receipt.card_by_id)
-        return sum(
-            1
-            for entity in observation.entities
-            if (
-                entity.owner == observation.acting_player
-                and entity.zone == AREA["HAND"]
-                and entity.card_id in qualified_card_ids
-                and entity.card_id in {3, 1121, 1126, 1192, 1227}
-            )
-        )
-
     @staticmethod
     def _strategic_key(candidate: RouteCandidateV1, formulation_id: str) -> tuple[Any, ...]:
         feature = candidate.features
@@ -1148,7 +1143,6 @@ class CurrentStateRouteOracleV1:
             int(feature.next_attacker_ready) if feature.next_attacker_ready is not None else -1,
             -(feature.public_prize_distance_lower_bound if feature.public_prize_distance_lower_bound is not None else 10**9),
             feature.backup_attacker_count if feature.backup_attacker_count is not None else -1,
-            feature.resource_reserve if feature.resource_reserve is not None else -1,
             -(feature.bench_liability if feature.bench_liability is not None else 10**9),
         )
 

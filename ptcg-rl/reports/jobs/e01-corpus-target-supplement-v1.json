@@ -1,0 +1,85 @@
+{
+  "cost_usd": 0.0,
+  "created_at_utc": "2026-08-05T05:39:27Z",
+  "decision": "STOP_EXACT_SUPPLEMENT_AFTER_FIRST_APPROVED_BODY_REVEALS_UNAPPROVED_MODULE_1324",
+  "execution": {
+    "additional_replay_bodies_read": 0,
+    "agent_log_outputs": 0,
+    "agent_logs_read": 0,
+    "authorization_consumed": true,
+    "expected_module_versions": [
+      "1.32.2",
+      "1.32.3"
+    ],
+    "failed_episode_id": 90037133,
+    "failed_file_name": "90037133.json",
+    "failed_review_order": 1,
+    "failure_stage": "MODULE_VERSION_CHECK_BEFORE_DECK_AND_ACTION_QUALIFICATION",
+    "model_mutation": false,
+    "model_promotion": false,
+    "named_replay_bodies_read": 1,
+    "observed_module_version": "1.32.4",
+    "optimizer_steps": 0,
+    "replay_body_bytes_read": 4882237,
+    "replay_body_outputs": 0,
+    "submission": false,
+    "training": false,
+    "training_label_outputs": 0
+  },
+  "inputs": {
+    "approved_request": {
+      "path": "configs/e01_corpus_v2_target_shortfall_supplement_request_v1.json",
+      "sha256": "d94c12e424ba26a06a4085c7273faeadd512351828b2b2aa84b85bf014a2f92e"
+    },
+    "base_manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "daily_dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-04/1",
+    "dataset_id": 11506836,
+    "dataset_inventory_sha256": "5620e055a25407c47e7744eaa0ffb9ab2a04fe2287b0f6180f54726cf7a00f77",
+    "dataset_manifest_sha256": "bb190f62f0585dc2a1db2b02752a4d7e6fa6de15a800ed9e769d8daecd8bf9a1"
+  },
+  "job_sha256": "1183c17d3b056f55bc1bfd11e24caf1cf3a478d921f1c7b5d870849d6c60a877",
+  "notebook": {
+    "gpu": false,
+    "internet": false,
+    "owner": "ashok205",
+    "private": true,
+    "runner_sha256_saved_version_2": "900cc6e705061c8782d07b7d50cc1a8252d48db49be7c39a78243324457881e9",
+    "saved_versions": [
+      {
+        "log_sha256": "4622e9cbb96cfc5a6c6a822744aac6128fec9803b2f4bd12ea364d63d52eb37d",
+        "replay_bodies_read": 0,
+        "status": "ERROR_IMPORT_PATH",
+        "version": 1
+      },
+      {
+        "log_sha256": "0ebfbfc5acbc37150bd4771d81e9451af39e5b7cf1b7326237ef86798e104acd",
+        "replay_bodies_read": 1,
+        "replay_body_bytes_read": 4882237,
+        "status": "ERROR_MODULE_VERSION_DRIFT",
+        "version": 2
+      }
+    ],
+    "slug": "kptcg-e01-corpus-target-supplement-v1",
+    "source_code_sha256_saved_version_2": "41b5df82016f4d7a068b0d4defa15bdd738193d4d1cd7c9eeca852df2994d0c7",
+    "tpu": false
+  },
+  "outputs": {
+    "actual_metadata_files": 0,
+    "corpus_v2_unchanged": true,
+    "corpus_v3_finalized": false,
+    "expected_metadata_files": [
+      "e01-corpus-target-supplement-review-v1.json",
+      "e01-approved-replay-corpus-manifest-v3.json",
+      "e01-approved-replay-corpus-review-v3.json",
+      "e01-corpus-target-supplement-output-manifest-v1.json"
+    ]
+  },
+  "producer": "chatgpt-local-agent",
+  "record_id": "job-e01-corpus-target-supplement-v1",
+  "schema_version": 1,
+  "source_path": "reports/jobs/e01-corpus-target-supplement-v1.json",
+  "status": "FAILED_CLOSED_MODULE_VERSION_DRIFT"
+}

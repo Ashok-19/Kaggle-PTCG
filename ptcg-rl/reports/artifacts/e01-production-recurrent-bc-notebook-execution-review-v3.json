@@ -1,0 +1,23 @@
+{
+  "approval_consumed": false,
+  "approved_request_path": "configs/e01_production_recurrent_bc_notebook_request_v3.json",
+  "approved_request_sha256": "30b7b049f6fe8e069f3253fac7fde8db44dc7cd862e923d47db84bfd5894c9bd",
+  "created_at_utc": "2026-08-06T17:05:24Z",
+  "incident_path": "reports/incidents/e01-production-recurrent-bc-notebook-v3-unauthorized-benchmark-task-v1.json",
+  "incident_self_hash": "c70d7d0e829c9bb7651930ccad849a79438e580ea7d1c4143a55b2204a2f8dc0",
+  "incident_sha256": "2dc8b95a642c7660e86eded07a4f0b13c99c6f3ceb40d3588321f67de86026a8",
+  "local_identity_preflight_passed": true,
+  "notebook_created": false,
+  "notebook_ref": "ashok205/kptcg-e01-production-recurrent-bc-v3",
+  "notebook_submitted": false,
+  "optimizer_constructed": false,
+  "optimizer_steps": 0,
+  "record_id": "e01-production-recurrent-bc-notebook-execution-review-v3",
+  "replay_bodies_read": 0,
+  "replay_bytes_read": 0,
+  "review_sha256": "4639a695d5b1f41c54745c8b33c9776528da07ce5499edfe156620c2d5ba3d60",
+  "schema_version": 1,
+  "status": "FAILED_CLOSED_UNAUTHORIZED_BENCHMARK_TASK_BEFORE_NOTEBOOK_CREATION",
+  "training": false,
+  "unauthorized_object_ref": "ashok205/new-benchmark-task-8065e"
+}

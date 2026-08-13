@@ -1,0 +1,643 @@
+{
+  "approval": {
+    "approval_receipt_path": "private/g3/e01/approvals/e01-production-bc-input-publication-approval-v1.json",
+    "approval_receipt_sha256": "00cefef64010f821f4e252a008e17153f2e5aca554d14a81e20a034808419c47",
+    "implementation_sha256": "6d7526d430caff7f90542bd98cffd3bc14716f0291706a03f1ddd30efad4f7e5",
+    "request_path": "configs/e01_production_bc_input_publication_request_v1.json",
+    "request_sha256": "aeacd6377db8bf2b0bce0bfd5e3f20f71094735fd2cb51cfdacd9b7348a60c7b",
+    "runner_sha256": "36b7185e5652a867c8bc4d3aa2aebde01493e6c09e5e236270e1a14eafe82588"
+  },
+  "boundary": {
+    "agent_logs_read": 0,
+    "dataset_deleted": false,
+    "dataset_version_created_after_failure": false,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": 0,
+    "remote_replay_bodies_downloaded_for_verification": 0,
+    "submission": false,
+    "test_replay_bodies_read_or_uploaded": 0,
+    "training": false,
+    "training_labels": 0
+  },
+  "created_at_utc": "2026-08-05T11:15:36.894998Z",
+  "dataset": {
+    "id": 11514316,
+    "private": true,
+    "ref": "ashok205/kptcg-e01-production-bc-retained-inputs",
+    "reported_files": 58,
+    "reported_total_bytes": 341559745,
+    "status": "Ready",
+    "version": 1
+  },
+  "evidence_sha256": "f2c3a75129117b88a88320f26d9b2de4fdd816a462cc559338a0ad986afea864",
+  "record_id": "e01-production-bc-retained-dataset-verification-20260805-v1",
+  "remote_inventory": {
+    "actual_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+    "basename_and_byte_identity_match": true,
+    "exact_requested_path_identity_match": false,
+    "expected_flat_inventory_sha256": "d03105906d9e066045410bc4da07ec7bd045f5b1285d35ddc516c1e7960b5c43",
+    "expected_nested_inventory_sha256": "8a16c85b80758138eb613f471b62848aaa604ee6372843b4781dbdaf20f27a36",
+    "file_count": 58,
+    "filename_mismatch_count": 58,
+    "files": [
+      {
+        "bytes": 5819313,
+        "name": "88276868.json"
+      },
+      {
+        "bytes": 9234114,
+        "name": "88278479.json"
+      },
+      {
+        "bytes": 4119037,
+        "name": "88278632.json"
+      },
+      {
+        "bytes": 7020621,
+        "name": "88280071.json"
+      },
+      {
+        "bytes": 5574112,
+        "name": "88280592.json"
+      },
+      {
+        "bytes": 625479,
+        "name": "88281294.json"
+      },
+      {
+        "bytes": 4144487,
+        "name": "88282349.json"
+      },
+      {
+        "bytes": 8160732,
+        "name": "88285882.json"
+      },
+      {
+        "bytes": 6198953,
+        "name": "88287982.json"
+      },
+      {
+        "bytes": 4850748,
+        "name": "88289166.json"
+      },
+      {
+        "bytes": 7047362,
+        "name": "88290739.json"
+      },
+      {
+        "bytes": 7025672,
+        "name": "88291779.json"
+      },
+      {
+        "bytes": 7522052,
+        "name": "88293851.json"
+      },
+      {
+        "bytes": 5887456,
+        "name": "88295625.json"
+      },
+      {
+        "bytes": 6604538,
+        "name": "88298059.json"
+      },
+      {
+        "bytes": 5861769,
+        "name": "88300130.json"
+      },
+      {
+        "bytes": 4754075,
+        "name": "88300654.json"
+      },
+      {
+        "bytes": 624407,
+        "name": "88302734.json"
+      },
+      {
+        "bytes": 4377850,
+        "name": "88304411.json"
+      },
+      {
+        "bytes": 4779822,
+        "name": "88308561.json"
+      },
+      {
+        "bytes": 7673503,
+        "name": "88309614.json"
+      },
+      {
+        "bytes": 4609394,
+        "name": "88309616.json"
+      },
+      {
+        "bytes": 8488713,
+        "name": "88310633.json"
+      },
+      {
+        "bytes": 8040542,
+        "name": "88312764.json"
+      },
+      {
+        "bytes": 5222527,
+        "name": "88314806.json"
+      },
+      {
+        "bytes": 7164618,
+        "name": "88315326.json"
+      },
+      {
+        "bytes": 7370388,
+        "name": "88315840.json"
+      },
+      {
+        "bytes": 6251226,
+        "name": "88316351.json"
+      },
+      {
+        "bytes": 7076633,
+        "name": "88317383.json"
+      },
+      {
+        "bytes": 6355732,
+        "name": "88318415.json"
+      },
+      {
+        "bytes": 8129282,
+        "name": "88318421.json"
+      },
+      {
+        "bytes": 5624889,
+        "name": "88318931.json"
+      },
+      {
+        "bytes": 5246538,
+        "name": "88318940.json"
+      },
+      {
+        "bytes": 5542084,
+        "name": "88319436.json"
+      },
+      {
+        "bytes": 4971442,
+        "name": "88321518.json"
+      },
+      {
+        "bytes": 6705055,
+        "name": "88322606.json"
+      },
+      {
+        "bytes": 4747191,
+        "name": "88324168.json"
+      },
+      {
+        "bytes": 7773531,
+        "name": "88324699.json"
+      },
+      {
+        "bytes": 6105640,
+        "name": "88324713.json"
+      },
+      {
+        "bytes": 7145674,
+        "name": "88324732.json"
+      },
+      {
+        "bytes": 4667363,
+        "name": "88325214.json"
+      },
+      {
+        "bytes": 7154119,
+        "name": "88325730.json"
+      },
+      {
+        "bytes": 4132196,
+        "name": "88325741.json"
+      },
+      {
+        "bytes": 5938415,
+        "name": "88326253.json"
+      },
+      {
+        "bytes": 6736937,
+        "name": "88327275.json"
+      },
+      {
+        "bytes": 7643264,
+        "name": "88328306.json"
+      },
+      {
+        "bytes": 2996616,
+        "name": "88329376.json"
+      },
+      {
+        "bytes": 6794256,
+        "name": "88330964.json"
+      },
+      {
+        "bytes": 6471053,
+        "name": "88331484.json"
+      },
+      {
+        "bytes": 509759,
+        "name": "88332011.json"
+      },
+      {
+        "bytes": 6464753,
+        "name": "88333027.json"
+      },
+      {
+        "bytes": 3371991,
+        "name": "88333037.json"
+      },
+      {
+        "bytes": 6337005,
+        "name": "88333549.json"
+      },
+      {
+        "bytes": 7221876,
+        "name": "88335132.json"
+      },
+      {
+        "bytes": 5678713,
+        "name": "88335650.json"
+      },
+      {
+        "bytes": 6935134,
+        "name": "88336699.json"
+      },
+      {
+        "bytes": 5412475,
+        "name": "88339327.json"
+      },
+      {
+        "bytes": 6616619,
+        "name": "88340379.json"
+      }
+    ],
+    "mismatches": [
+      {
+        "actual_name": "88276868.json",
+        "bytes": 5819313,
+        "episode_id": 88276868,
+        "expected_name": "episodes/88276868.json"
+      },
+      {
+        "actual_name": "88278479.json",
+        "bytes": 9234114,
+        "episode_id": 88278479,
+        "expected_name": "episodes/88278479.json"
+      },
+      {
+        "actual_name": "88278632.json",
+        "bytes": 4119037,
+        "episode_id": 88278632,
+        "expected_name": "episodes/88278632.json"
+      },
+      {
+        "actual_name": "88280071.json",
+        "bytes": 7020621,
+        "episode_id": 88280071,
+        "expected_name": "episodes/88280071.json"
+      },
+      {
+        "actual_name": "88280592.json",
+        "bytes": 5574112,
+        "episode_id": 88280592,
+        "expected_name": "episodes/88280592.json"
+      },
+      {
+        "actual_name": "88281294.json",
+        "bytes": 625479,
+        "episode_id": 88281294,
+        "expected_name": "episodes/88281294.json"
+      },
+      {
+        "actual_name": "88282349.json",
+        "bytes": 4144487,
+        "episode_id": 88282349,
+        "expected_name": "episodes/88282349.json"
+      },
+      {
+        "actual_name": "88285882.json",
+        "bytes": 8160732,
+        "episode_id": 88285882,
+        "expected_name": "episodes/88285882.json"
+      },
+      {
+        "actual_name": "88287982.json",
+        "bytes": 6198953,
+        "episode_id": 88287982,
+        "expected_name": "episodes/88287982.json"
+      },
+      {
+        "actual_name": "88289166.json",
+        "bytes": 4850748,
+        "episode_id": 88289166,
+        "expected_name": "episodes/88289166.json"
+      },
+      {
+        "actual_name": "88290739.json",
+        "bytes": 7047362,
+        "episode_id": 88290739,
+        "expected_name": "episodes/88290739.json"
+      },
+      {
+        "actual_name": "88291779.json",
+        "bytes": 7025672,
+        "episode_id": 88291779,
+        "expected_name": "episodes/88291779.json"
+      },
+      {
+        "actual_name": "88293851.json",
+        "bytes": 7522052,
+        "episode_id": 88293851,
+        "expected_name": "episodes/88293851.json"
+      },
+      {
+        "actual_name": "88295625.json",
+        "bytes": 5887456,
+        "episode_id": 88295625,
+        "expected_name": "episodes/88295625.json"
+      },
+      {
+        "actual_name": "88298059.json",
+        "bytes": 6604538,
+        "episode_id": 88298059,
+        "expected_name": "episodes/88298059.json"
+      },
+      {
+        "actual_name": "88300130.json",
+        "bytes": 5861769,
+        "episode_id": 88300130,
+        "expected_name": "episodes/88300130.json"
+      },
+      {
+        "actual_name": "88300654.json",
+        "bytes": 4754075,
+        "episode_id": 88300654,
+        "expected_name": "episodes/88300654.json"
+      },
+      {
+        "actual_name": "88302734.json",
+        "bytes": 624407,
+        "episode_id": 88302734,
+        "expected_name": "episodes/88302734.json"
+      },
+      {
+        "actual_name": "88304411.json",
+        "bytes": 4377850,
+        "episode_id": 88304411,
+        "expected_name": "episodes/88304411.json"
+      },
+      {
+        "actual_name": "88308561.json",
+        "bytes": 4779822,
+        "episode_id": 88308561,
+        "expected_name": "episodes/88308561.json"
+      },
+      {
+        "actual_name": "88309614.json",
+        "bytes": 7673503,
+        "episode_id": 88309614,
+        "expected_name": "episodes/88309614.json"
+      },
+      {
+        "actual_name": "88309616.json",
+        "bytes": 4609394,
+        "episode_id": 88309616,
+        "expected_name": "episodes/88309616.json"
+      },
+      {
+        "actual_name": "88310633.json",
+        "bytes": 8488713,
+        "episode_id": 88310633,
+        "expected_name": "episodes/88310633.json"
+      },
+      {
+        "actual_name": "88312764.json",
+        "bytes": 8040542,
+        "episode_id": 88312764,
+        "expected_name": "episodes/88312764.json"
+      },
+      {
+        "actual_name": "88314806.json",
+        "bytes": 5222527,
+        "episode_id": 88314806,
+        "expected_name": "episodes/88314806.json"
+      },
+      {
+        "actual_name": "88315326.json",
+        "bytes": 7164618,
+        "episode_id": 88315326,
+        "expected_name": "episodes/88315326.json"
+      },
+      {
+        "actual_name": "88315840.json",
+        "bytes": 7370388,
+        "episode_id": 88315840,
+        "expected_name": "episodes/88315840.json"
+      },
+      {
+        "actual_name": "88316351.json",
+        "bytes": 6251226,
+        "episode_id": 88316351,
+        "expected_name": "episodes/88316351.json"
+      },
+      {
+        "actual_name": "88317383.json",
+        "bytes": 7076633,
+        "episode_id": 88317383,
+        "expected_name": "episodes/88317383.json"
+      },
+      {
+        "actual_name": "88318415.json",
+        "bytes": 6355732,
+        "episode_id": 88318415,
+        "expected_name": "episodes/88318415.json"
+      },
+      {
+        "actual_name": "88318421.json",
+        "bytes": 8129282,
+        "episode_id": 88318421,
+        "expected_name": "episodes/88318421.json"
+      },
+      {
+        "actual_name": "88318931.json",
+        "bytes": 5624889,
+        "episode_id": 88318931,
+        "expected_name": "episodes/88318931.json"
+      },
+      {
+        "actual_name": "88318940.json",
+        "bytes": 5246538,
+        "episode_id": 88318940,
+        "expected_name": "episodes/88318940.json"
+      },
+      {
+        "actual_name": "88319436.json",
+        "bytes": 5542084,
+        "episode_id": 88319436,
+        "expected_name": "episodes/88319436.json"
+      },
+      {
+        "actual_name": "88321518.json",
+        "bytes": 4971442,
+        "episode_id": 88321518,
+        "expected_name": "episodes/88321518.json"
+      },
+      {
+        "actual_name": "88322606.json",
+        "bytes": 6705055,
+        "episode_id": 88322606,
+        "expected_name": "episodes/88322606.json"
+      },
+      {
+        "actual_name": "88324168.json",
+        "bytes": 4747191,
+        "episode_id": 88324168,
+        "expected_name": "episodes/88324168.json"
+      },
+      {
+        "actual_name": "88324699.json",
+        "bytes": 7773531,
+        "episode_id": 88324699,
+        "expected_name": "episodes/88324699.json"
+      },
+      {
+        "actual_name": "88324713.json",
+        "bytes": 6105640,
+        "episode_id": 88324713,
+        "expected_name": "episodes/88324713.json"
+      },
+      {
+        "actual_name": "88324732.json",
+        "bytes": 7145674,
+        "episode_id": 88324732,
+        "expected_name": "episodes/88324732.json"
+      },
+      {
+        "actual_name": "88325214.json",
+        "bytes": 4667363,
+        "episode_id": 88325214,
+        "expected_name": "episodes/88325214.json"
+      },
+      {
+        "actual_name": "88325730.json",
+        "bytes": 7154119,
+        "episode_id": 88325730,
+        "expected_name": "episodes/88325730.json"
+      },
+      {
+        "actual_name": "88325741.json",
+        "bytes": 4132196,
+        "episode_id": 88325741,
+        "expected_name": "episodes/88325741.json"
+      },
+      {
+        "actual_name": "88326253.json",
+        "bytes": 5938415,
+        "episode_id": 88326253,
+        "expected_name": "episodes/88326253.json"
+      },
+      {
+        "actual_name": "88327275.json",
+        "bytes": 6736937,
+        "episode_id": 88327275,
+        "expected_name": "episodes/88327275.json"
+      },
+      {
+        "actual_name": "88328306.json",
+        "bytes": 7643264,
+        "episode_id": 88328306,
+        "expected_name": "episodes/88328306.json"
+      },
+      {
+        "actual_name": "88329376.json",
+        "bytes": 2996616,
+        "episode_id": 88329376,
+        "expected_name": "episodes/88329376.json"
+      },
+      {
+        "actual_name": "88330964.json",
+        "bytes": 6794256,
+        "episode_id": 88330964,
+        "expected_name": "episodes/88330964.json"
+      },
+      {
+        "actual_name": "88331484.json",
+        "bytes": 6471053,
+        "episode_id": 88331484,
+        "expected_name": "episodes/88331484.json"
+      },
+      {
+        "actual_name": "88332011.json",
+        "bytes": 509759,
+        "episode_id": 88332011,
+        "expected_name": "episodes/88332011.json"
+      },
+      {
+        "actual_name": "88333027.json",
+        "bytes": 6464753,
+        "episode_id": 88333027,
+        "expected_name": "episodes/88333027.json"
+      },
+      {
+        "actual_name": "88333037.json",
+        "bytes": 3371991,
+        "episode_id": 88333037,
+        "expected_name": "episodes/88333037.json"
+      },
+      {
+        "actual_name": "88333549.json",
+        "bytes": 6337005,
+        "episode_id": 88333549,
+        "expected_name": "episodes/88333549.json"
+      },
+      {
+        "actual_name": "88335132.json",
+        "bytes": 7221876,
+        "episode_id": 88335132,
+        "expected_name": "episodes/88335132.json"
+      },
+      {
+        "actual_name": "88335650.json",
+        "bytes": 5678713,
+        "episode_id": 88335650,
+        "expected_name": "episodes/88335650.json"
+      },
+      {
+        "actual_name": "88336699.json",
+        "bytes": 6935134,
+        "episode_id": 88336699,
+        "expected_name": "episodes/88336699.json"
+      },
+      {
+        "actual_name": "88339327.json",
+        "bytes": 5412475,
+        "episode_id": 88339327,
+        "expected_name": "episodes/88339327.json"
+      },
+      {
+        "actual_name": "88340379.json",
+        "bytes": 6616619,
+        "episode_id": 88340379,
+        "expected_name": "episodes/88340379.json"
+      }
+    ],
+    "total_bytes": 341559745
+  },
+  "schema_version": 1,
+  "source_path": "reports/artifacts/raw/e01-production-bc-retained-dataset-verification-20260805-v1.json",
+  "staging": {
+    "bytes": 341559745,
+    "files": 58,
+    "listing_sha256": "e15baf3decce2c3f6c4191f643b5e05505c30fec28327ff7dcb4e15361cbf641",
+    "report_path": "private/g3/e01/production-bc-input-publication-v1/publication-report.json",
+    "report_sha256": "ca89e41eb1ff03817147575a3e8cc7c3deab1fbc82be71c58d12ddfcd70c3ebb",
+    "test_replay_files": 0
+  },
+  "status": "FAIL_REMOTE_FILENAMES_FLATTENED"
+}

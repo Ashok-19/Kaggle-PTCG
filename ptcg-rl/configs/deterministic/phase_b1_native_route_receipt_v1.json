@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "receipt_id": "phase-b1-native-route-receipt-v1",
+  "scope": "NATIVE_QUALIFIED",
+  "candidate_deck": "mega-abomasnow-ex-exact-local-v1",
+  "candidate_deck_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+  "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+  "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+  "card_table_file_sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+  "card_table_semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0",
+  "wrapper_sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2",
+  "api_sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced",
+  "cards": [
+    {"card_id": 721, "hp": 150, "card_type": 0, "weakness_type": 4, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 722, "hp": 90, "card_type": 0, "weakness_type": 8, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 723, "hp": 350, "card_type": 0, "weakness_type": 8, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 754, "hp": 280, "card_type": 0, "weakness_type": -1, "resistance_type": -1, "resistance_value": 0, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"}
+  ],
+  "attacks": [
+    {"card_id": 722, "attack_id": 1044, "damage": 10, "energy_counts": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], "attack_type": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED", "effect_status": "PASS"},
+    {"card_id": 722, "attack_id": 1045, "damage": 30, "energy_counts": [0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0], "attack_type": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED", "effect_status": "PASS"}
+  ],
+  "prizes": [
+    {"card_id": 721, "prize_units": 1, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 722, "prize_units": 1, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 723, "prize_units": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"},
+    {"card_id": 754, "prize_units": 3, "engine_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "NATIVE_QUALIFIED"}
+  ],
+  "contexts": [
+    {"selection_type": 6, "selection_context": 35, "option_type": 13, "context_card_id": null, "effect_card_id": null, "choice_role": "ATTACK", "scope": "NATIVE_QUALIFIED"},
+    {"selection_type": 7, "selection_context": 37, "option_type": 9, "context_card_id": null, "effect_card_id": null, "choice_role": "EVOLVE", "scope": "NATIVE_QUALIFIED"}
+  ],
+  "route_contract": {
+    "qualified_attack_ids": [1044, 1045],
+    "snover_card_id": 722,
+    "evolution": {
+      "selection_type": 7,
+      "selection_context": 37,
+      "option_type": 9,
+      "source_card_id": 722,
+      "target_card_id": 723,
+      "source_zones": [4, 5],
+      "local_delta": ["zone", "position", "attached_energy_count", "energy_types", "damage", "statuses"],
+      "serial_policy": "native_event_links_replacement_serial; serial identity is not assumed preserved"
+    },
+    "partial_route_ids_never_authority": [1042, 1043, 1046, 1047, 1262],
+    "unsupported_inputs": ["successor", "counterfactual", "hidden", "private_native", "raw_option_order"]
+  },
+  "provenance": {
+    "knowledge_base": "knowledge_base/ptcg_gold.sqlite",
+    "knowledge_base_sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "asset_paths": {
+      "knowledge_base": "knowledge_base/ptcg_gold.sqlite",
+      "card_data": "private/assets/official/EN_Card_Data.csv",
+      "card_table": "private/g2/card-table-v1.json",
+      "candidate_deck": "private/baselines/mega-abomasnow-ex/deck.csv",
+      "wrapper": "private/assets/official/sample_submission/sample_submission/cg/game.py"
+    },
+    "asset_sha256": {
+      "knowledge_base": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+      "card_data": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373",
+      "card_table": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714",
+      "candidate_deck": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+      "wrapper": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2"
+    },
+    "capability_config": "configs/deterministic/phase_a_b1_capability_capsules_v1.json",
+    "capability_config_sha256": "1f0cc5c3d9e22bfe54ef695b7bb7e2a2d51f2ccf77688375f7b321dfabcf58b1",
+    "capability_report": "reports/deterministic/phase-a-b1-capability-capsules-v1.json",
+    "capability_report_sha256": "e980bca37f74908f6f15675395195c7dcb160d68ae8484ca8d228dd7a3fa7df65",
+    "capability_raw_evidence": "runs/phase-a-b1-capability-capsules-20260808T010820Z-285206f53634/raw-evidence.json",
+    "capability_raw_evidence_sha256": "3ba2dc3160fc3df3a180c03683a9ce61aee7362a0fa2a40404cc3dbf422fe722",
+    "source_commits": {
+      "capability": "78b34063c5f8edcb50c81ef76af7a9404ac81c28",
+      "oracle": "b7b53f7",
+      "semantic_status": "83467f5",
+      "frost_capsule": "baaeb55"
+    },
+    "frozen_source_sha256": {
+      "src/ptcg_rl/g1/actions.py": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "src/ptcg_rl/g1/models.py": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "src/ptcg_rl/g1/semantic.py": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab",
+      "src/ptcg_rl/deterministic/b1_oracle.py": "33e56711c9526739c3fcf52a5ffb779c9ed4eb27181b781b3fd576fe2445dc8a",
+      "src/ptcg_rl/deterministic/control.py": "4e5a4b00bed7e56a02592dd6bb124846f357557df452503af58ae79f65f4af53",
+      "src/ptcg_rl/deterministic/policy.py": "d8f98a979b1b09ec3f8865325d700442d5b0f4bff7dace6f7d13f8cade1d85b6"
+    },
+    "owned_source_sha256": {
+      "src/ptcg_rl/deterministic/b1_policy.py": "990fe85db22b3fda8b95ac5bcb620f14fa133d115c1099af45e0e5ba2354c0d7",
+      "src/ptcg_rl/deterministic/b1_component_harness.py": "4a9041a68a31eb73669cdf1240ad21f46cbeec6312d58906d884304396a8c534",
+      "scripts/deterministic/phase_b1_component_qualification.py": "0c9dd0459a1ae11632a9f5db3adab2c2650ab6f0b89fa51be076194d067a0d7a",
+      "tests/deterministic/test_phase_b1_policy.py": "4f23c1b5e2bd2681db957962c4566fa7be9619c67bf5b5fb4d50a982dbd5f591",
+      "tests/deterministic/test_phase_b1_component_harness.py": "f598e2453fff1bcf36ffdb9f61f59dab505535ac21c0b9d29604fe5766ee3592"
+    },
+    "component_plan_path": "configs/deterministic/phase_b1_component_qualification_v1.json",
+    "component_plan_sha256": "ae427075b9e7aeee8f175a43ce3971aa80577fc72b44f96a8c60530c5b8da197",
+    "config_sha256_rule": "sha256(canonical_json(config with provenance.config_sha256 omitted))",
+    "config_sha256": "22ee16e4af75abb11cae76314420b78f07996c8501e21f91fb3d35f2269afe61"
+  }
+}

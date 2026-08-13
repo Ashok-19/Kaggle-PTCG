@@ -1,0 +1,71 @@
+{
+  "boundary": {
+    "agent_logs": 0,
+    "checkpoint_bytes_downloaded": 0,
+    "checkpoint_files_downloaded": 0,
+    "dataset_mutations": 0,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "labels": 0,
+    "model_mutations": 0,
+    "notebook_wrapper_approval_text_prepared": false,
+    "notebook_wrapper_contract_prepared": false,
+    "optimizer_steps": 0,
+    "reconstructed_package_created": false,
+    "remote_mutations": 2,
+    "remote_mutations_after_fail_closed_detection": 0,
+    "replay_bodies": 0,
+    "submissions": 0,
+    "training": false
+  },
+  "created_at_utc": "2026-08-06T14:27:56Z",
+  "dataset_binding_not_revalidated_due_incident": {
+    "dataset_id": 11501808,
+    "expected_bytes": 7645589,
+    "expected_files": 79,
+    "expected_inventory_sha256": "2bc151d35af0ef3bd9177f44275ef04be0de017a07ef5cf86b283c94834f83ab",
+    "expected_private": true,
+    "expected_status": "READY",
+    "ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+    "version": 2
+  },
+  "frozen_local_bindings": {
+    "test_path": "tests/g3/test_checkpoint_delivery.py",
+    "test_sha256": "95d790091b1ceb76ae2e981d2beb410132d8d56f864a27104a270789c6c8b9d0",
+    "verifier_path": "scripts/e01_verify_extracted_checkpoint_delivery.py",
+    "verifier_sha256": "bd2ae5820fee1fd39675eb326a22ad206f3ad6796c57a039504d586c62948870"
+  },
+  "incident": {
+    "path": "reports/incidents/e01-source-bundle-v2-verification-unauthorized-benchmark-tasks-v1.json",
+    "self_hash": "22e5f24d2ffca6fb14e9b8957dbf57764eb8908b4ec785aa6a65cf245e76c1a3",
+    "sha256": "c6cebe544ac9a798b3b58ae0e91daf767f14bb855863420d8af89032bfdd7483"
+  },
+  "record_id": "e01-source-bundle-v2-checkpoint-directory-verification-execution-review-v1",
+  "request": {
+    "approval_consumed": false,
+    "approval_received": true,
+    "frozen_approval_text_sha256": "a2ed4213e3cf8f5e51cb451be8af7bfbbaa1acaa4e0831833f91c373056cc860",
+    "path": "configs/e01_source_bundle_v2_checkpoint_directory_verification_request_v1.json",
+    "sha256": "443098120fa03dcbaa1d430e3f74505926d2e45fa5ea382856b80422816bba78"
+  },
+  "review_sha256": "d0797f4e1e34b09143c91a0f996d5f917b7583a7556a8a370786fb2f27e04bf9",
+  "schema_version": 1,
+  "status": "FAILED_CLOSED_UNAUTHORIZED_BENCHMARK_TASKS_CREATED",
+  "unauthorized_remote_objects": [
+    {
+      "deleted_or_modified_after_creation": false,
+      "execution_state": "UNRESOLVED",
+      "kernel_url": "/code/ashok205/new-benchmark-task-daa06/edit/run/340605099",
+      "privacy": "UNRESOLVED",
+      "ref": "ashok205/new-benchmark-task-daa06"
+    },
+    {
+      "deleted_or_modified_after_creation": false,
+      "execution_state": "UNRESOLVED",
+      "kernel_url": "/code/ashok205/new-benchmark-task-4abba/edit/run/340605166",
+      "privacy": "UNRESOLVED",
+      "ref": "ashok205/new-benchmark-task-4abba"
+    }
+  ]
+}

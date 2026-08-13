@@ -1,5 +1,14 @@
 {
   "authorization": {
+    "e01_approved_replay_corpus_frozen": true,
+    "e01_approved_replay_episode_floor_passed": true,
+    "e01_approved_replay_target_floor_passed": false,
+    "e01_approved_replay_target_floor_shortfall": 1540,
+    "e01_bc_engineering_canary_authorization_consumed": true,
+    "e01_bc_engineering_canary_completed": true,
+    "e01_bc_engineering_canary_optimizer_steps_authorized": false,
+    "e01_bc_engineering_canary_production_checkpoint_eligible": false,
+    "e01_bc_engineering_canary_request_ready": false,
     "e01_current_rank_1_dragapult_calibration_authorization_consumed": true,
     "e01_current_rank_1_dragapult_calibration_completed": true,
     "e01_current_rank_1_dragapult_calibration_request_ready": false,
@@ -12,8 +21,10 @@
     "e01_current_rank_1_dries_grimmsnarl_calibration_authorization_consumed": true,
     "e01_current_rank_1_dries_grimmsnarl_calibration_completed": true,
     "e01_current_rank_1_dries_grimmsnarl_calibration_request_ready": false,
+    "e01_current_rank_1_probe_authorization_consumed": true,
+    "e01_current_rank_1_probe_corpus_promotion_authorized": false,
     "e01_current_rank_1_probe_request_ready": false,
-    "e01_current_rank_1_source_ready": false,
+    "e01_current_rank_1_source_ready": true,
     "e01_current_rank_1_source_wait_completed": true,
     "e01_current_rank_1_teacher_authorization_consumed": true,
     "e01_current_rank_1_teacher_completed": true,
@@ -29,6 +40,8 @@
     "e01_luca_screening_expansion_execution": false,
     "e01_luca_screening_expansion_request_ready": true,
     "e01_luca_screening_expansion_superseded": true,
+    "e01_majkel_corpus_expansion_authorization_consumed": true,
+    "e01_majkel_corpus_expansion_completed": true,
     "e01_provenance_probe_authorization_consumed": true,
     "e01_provenance_probe_completed": true,
     "e01_provenance_probe_request_ready": false,
@@ -266,6 +279,50 @@
       "team_name": "haggle"
     },
     {
+      "authorization_consumed": true,
+      "bytes": 832877,
+      "check": "e01_live_current_rank_1_probe",
+      "corpus_promotion_authorized": false,
+      "dataset_intersection_files": 271,
+      "decision": "DEC-025",
+      "files": 2,
+      "forced_teacher_requests": 3,
+      "module_versions": [
+        "1.32.2",
+        "1.32.3"
+      ],
+      "potential_policy_loss_targets": 32,
+      "replay_transfer_authorized": false,
+      "request_ready": false,
+      "status": "PASS",
+      "submission_id": 55186239,
+      "teacher_active_requests": 35,
+      "team_name": "Majkel1337",
+      "training_authorized": false
+    },
+    {
+      "check": "e01_approved_replay_corpus_v2",
+      "decision": "DEC-028",
+      "episodes": 337,
+      "forced_teacher_requests": 1598,
+      "new_files_qualified": 269,
+      "new_files_rejected": 0,
+      "policy_loss_targets": 23460,
+      "status": "BLOCKED_FLOORS",
+      "target_floor_shortfall": 1540,
+      "training_authorized": false
+    },
+    {
+      "check": "e01_bc_engineering_canary_execution",
+      "decision": "DEC-028",
+      "deterministic_resume": true,
+      "episodes": 8,
+      "optimizer_steps": 64,
+      "optimizer_steps_authorized": false,
+      "production_checkpoint_eligible": false,
+      "status": "PASS"
+    },
+    {
       "check": "source_evidence_hash",
       "path": "audit-reports/KPTCG_EXPERIMENT_BACKLOG.csv",
       "sha256": "21735dab7122f72b3c2589efc650e3de753d92faffb60af3295a0820352b2dc4"
@@ -481,17 +538,17 @@
       "status": "PASS"
     }
   ],
-  "created_at_utc": "2026-07-24T11:20:00Z",
+  "created_at_utc": "2026-08-04T15:55:00Z",
   "decision": "ACCEPT",
-  "decision_sha256": "19bcd93ad39eddeedd4b7b32a81d503794f77bfea63cb57252da2d832086f2ce",
+  "decision_sha256": "aaaed58c9fe42ae1456550d3af198ff485b08eb4479ed0d912bbd4917d9bf53d",
   "dry_run_sha256": "ecec3f97e62d177fbb111b528a3f70ad9b0059991af50935861b937ab87ea599",
   "official_asset_parity_sha256": "fdc222579568f00c13f096be778a954f0fa28c0609062933811a79e8a30b6dad",
   "record_id": "gold-path-work-orders-review-v1",
-  "review_sha256": "1ec37283e3269128211d2b985a9e27ecf1423a91d1192c5f47280e51e53a19a5",
-  "reviewed_decision": "DEC-024",
-  "revisit_trigger": "Any source or evidence hash changes, any consumed E01 replay changes, a pinned daily dataset begins containing current rank-1 submission 55104355, the active rank-1 team or submission changes, runtime asset parity is resolved differently, or any replay transfer, optimizer step, external compute, submission, rerun or later native E04 execution becomes authorized.",
+  "review_sha256": "5d0d1a26960f0eda17f3d3c34f239c5373c1b71443d9add46bc94a18ed55873d",
+  "reviewed_decision": "DEC-028",
+  "revisit_trigger": "Any DEC-028 source, episode, byte, corpus-v2, split, semantic, canary, code, asset, request, job, decision or review hash changes; the 1540-target shortfall is resolved or altered; runtime asset parity is resolved differently; or any further replay transfer, label materialization, optimizer step, external compute, model promotion, submission, rerun or later native E04 execution becomes authorized.",
   "schema_version": 1,
   "source_path": "reports/artifacts/gold-path-work-orders-review-v1.json",
   "status": "PASS",
-  "work_orders_sha256": "4e65f7ebf2b34fab9178478137c23202ef1a360316d99447dadd149924031883"
+  "work_orders_sha256": "daaa38fdc63aa26178a568f8fdbd8aaccf18d1321a839d46a9d63516c1afc50d"
 }

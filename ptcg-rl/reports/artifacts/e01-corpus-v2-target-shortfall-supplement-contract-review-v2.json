@@ -1,0 +1,85 @@
+{
+  "authorization": {
+    "agent_logs": false,
+    "corpus_v3_qualified_only_finalization": false,
+    "external_compute_private_kaggle_cpu": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "label_materialization": false,
+    "model_mutation": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "prequalified_probe_record_promotion": false,
+    "raw_exports": false,
+    "replay_body_exports": false,
+    "replay_body_reads_exact_named_files": false,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-05T07:31:25Z",
+  "decision": "ACCEPT_PREQUALIFIED_90037133_METADATA_PROMOTION_PLUS_EXACT_REMAINING_47_FILE_REQUEST_READY_UNAUTHORIZED",
+  "inputs": {
+    "base_manifest": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-manifest-v2.json",
+      "sha256": "ccc247edbc4cac0aba11c6acb26fc5e2a8c75e0a4f005d1441ce6949c0c4997f"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-031_E01_MODULE_1324_SUPPLEMENT_REQUEST.md",
+      "sha256": "0814e4ac845fda575852d47a40edf926ed11f4cc8d3602ea1095ebf3310c78b3"
+    },
+    "old_consumed_request": {
+      "path": "configs/e01_corpus_v2_target_shortfall_supplement_request_v1.json",
+      "sha256": "d94c12e424ba26a06a4085c7273faeadd512351828b2b2aa84b85bf014a2f92e"
+    },
+    "probe_review": {
+      "path": "reports/artifacts/e01-majkel-module-1324-compatibility-probe-review-v1.json",
+      "self_hash": "ba28a9baabd2799934936138386aaeec2e58e666e6f3d486e9b378113b797faa",
+      "sha256": "e956d010552bcab7489852daa8367a8c11eb06138b98dc21486c11b9ae30d4f2"
+    },
+    "request": {
+      "path": "configs/e01_corpus_v2_target_shortfall_supplement_request_v2.json",
+      "sha256": "eddb6673d2d90d12038b448ed3d8890c3393124ce4a212cad4fd51cb738c77b3"
+    },
+    "runner": {
+      "path": "scripts/e01_corpus_target_supplement_review_v2.py",
+      "sha256": "2acdfe06fa0dd6a79c29e6add267d9c3ca75a5577cdf4ace51d157369c08b30f"
+    },
+    "source_recheck": {
+      "path": "reports/artifacts/raw/e01-module-1324-supplement-source-recheck-20260805-v1.json",
+      "self_hash": "63ef7a000c81ad1a328320d43a0c56ab17daee19bba9b7ea9cefcfde9fff18d5",
+      "sha256": "b1705839328dcda8b21f003d8d85294d9e40c8b3cc68fb8e873460a5536a9294"
+    }
+  },
+  "producer": "chatgpt-local-agent",
+  "qualification": {
+    "accepted_module_versions": [
+      "1.32.2",
+      "1.32.3",
+      "1.32.4"
+    ],
+    "combined_balanced_strata": true,
+    "corpus_promotion_during_preparation": false,
+    "effective_starting_policy_loss_targets": 23529,
+    "exact_body_read_bytes": 175812936,
+    "exact_body_read_files": 47,
+    "model_mutation": false,
+    "optimizer_steps": 0,
+    "prequalified_metadata_records": 1,
+    "prequalified_policy_loss_targets": 69,
+    "prequalified_replay_body_rereads": 0,
+    "remaining_file_bytes_match_frozen_inventory": true,
+    "remaining_files_present_in_frozen_inventory": true,
+    "remaining_shortfall": 1471,
+    "replay_bodies_read_during_preparation": 0,
+    "submission": false,
+    "training": false
+  },
+  "record_id": "e01-corpus-v2-target-shortfall-supplement-contract-review-v2",
+  "review_sha256": "bdbffa5a08b0e4a5434d68f2ed8b5847d2053b441ab8a453735c307ff60dc268",
+  "reviewed_decision": "DEC-031",
+  "schema_version": 2,
+  "source_path": "reports/artifacts/e01-corpus-v2-target-shortfall-supplement-contract-review-v2.json",
+  "status": "PASS_READY_UNAUTHORIZED"
+}

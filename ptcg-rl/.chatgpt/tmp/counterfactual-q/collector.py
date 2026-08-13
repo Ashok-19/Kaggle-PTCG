@@ -1236,26 +1236,17 @@ def _child_continuation(
                     "option_count": len(request.options),
                     "request_fingerprint": sha256_value(_request_record(request)),
                 }
-                if (
-                    int(request.selection_type) != 0
-                    or int(request.selection_context) != 0
-                    or int(request.min_count) != 1
-                    or int(request.max_count) != 1
-                ):
-                    label["status"] = "UNSUPPORTED_FIRST_OPPONENT_REQUEST"
-                    label["error"] = None
             policy = policies[acting_player]
             chosen = policy.choose_native(raw, semantic, request)
             submitted = _validate_action(request, chosen)
             search_state = runtime["search_step"](search_state.searchId, list(submitted))
             record["continuation_steps"] += 1
             if first_opponent:
-                if label["status"] == "MISSING_OR_ERROR":
-                    label["status"] = "OBSERVED"
-                    label["error"] = None
-                    label["chosen_action"] = _semantic_action_record(
-                        request, submitted, semantic, learner_slot,
-                    )
+                label["status"] = "OBSERVED"
+                label["error"] = None
+                label["chosen_action"] = _semantic_action_record(
+                    request, submitted, semantic, learner_slot,
+                )
     except (ValueError, IndexError) as error:
         _set_opponent_transition_error(record["opponent_transition"], error)
         record.update({
@@ -2241,13 +2232,6 @@ else {{ process.stdout.write(JSON.stringify(validate.errors)); process.exitCode 
         if status == "OBSERVED":
             if not request or not chosen:
                 errors.append("label %d: OBSERVED requires request and chosen action" % index)
-            elif (
-                request.get("selection_type") != 0
-                or request.get("selection_context") != 0
-                or request.get("min_count") != 1
-                or request.get("max_count") != 1
-            ):
-                errors.append(f"label {index}: OBSERVED request is not MAIN context0 singleton")
         elif status == "UNSUPPORTED_FIRST_OPPONENT_REQUEST":
             if not request or chosen is not None:
                 errors.append(f"label {index}: unsupported request must retain request and no chosen action")
@@ -2279,36 +2263,43 @@ else {{ process.stdout.write(JSON.stringify(validate.errors)); process.exitCode 
             }
             if not chosen_keys <= legal_keys:
                 errors.append(f"label {index}: chosen semantic path is outside retained legal set")
-            if status == "OBSERVED" and (
-                len(chosen_keys) != 1
-                or chosen.get("semantic_equivalence_key") != next(iter(chosen_keys))
-            ):
-                errors.append(f"label {index}: chosen action equivalence key is inconsistent")
             if status == "OBSERVED":
                 indices = chosen.get("transport_original_indices")
-                if (
-                    not isinstance(indices, list)
-                    or len(indices) != 1
-                    or len(set(indices)) != 1
-                    or not isinstance(indices[0], int)
-                    or indices[0] < 0
-                ):
-                    errors.append(f"label {index}: OBSERVED requires one unique in-range transport index")
-                else:
-                    selected = option_by_index.get(indices[0])
-                    path = chosen.get("semantic_path")
-                    if selected is None:
-                        errors.append(f"label {index}: chosen transport index is outside the retained legal set")
-                    if not isinstance(path, list) or len(path) != 1:
-                        errors.append(f"label {index}: OBSERVED requires exactly one semantic path option")
-                    elif selected is not None:
-                        path_option = path[0]
+                path = chosen.get("semantic_path")
+                valid_indices = (
+                    isinstance(indices, list)
+                    and bool(indices)
+                    and all(isinstance(item, int) and not isinstance(item, bool) and item >= 0 for item in indices)
+                    and len(indices) == len(set(indices))
+                )
+                if not valid_indices:
+                    errors.append(f"label {index}: OBSERVED requires unique nonnegative transport indices")
+                elif not request.get("min_count", 0) <= len(indices) <= request.get("max_count", 0):
+                    errors.append(f"label {index}: OBSERVED action count violates the native request")
+                if not isinstance(path, list) or not path or (valid_indices and len(path) != len(indices)):
+                    errors.append(f"label {index}: OBSERVED semantic path must match submitted action length")
+                elif valid_indices:
+                    path_keys = []
+                    for selected_index, path_option in zip(indices, path):
+                        selected = option_by_index.get(selected_index)
+                        if selected is None:
+                            errors.append(f"label {index}: chosen transport index is outside the retained legal set")
+                            continue
+                        if not isinstance(path_option, dict):
+                            errors.append(f"label {index}: chosen semantic path contains a malformed option")
+                            continue
+                        path_keys.append(path_option.get("semantic_equivalence_key"))
                         if path_option.get("semantic_equivalence_key") != selected.get("semantic_equivalence_key"):
                             errors.append(f"label {index}: chosen canonical key does not match transport option")
                         if path_option.get("semantic_fingerprint") != selected.get("semantic_fingerprint"):
                             errors.append(f"label {index}: chosen audit fingerprint does not match transport option")
-                        if chosen.get("semantic_equivalence_key") != selected.get("semantic_equivalence_key"):
-                            errors.append(f"label {index}: chosen action key does not match transport option")
+                    if len(path_keys) == len(path):
+                        expected_key = path_keys[0] if len(path_keys) == 1 else sha256_value({
+                            "ordering": request.get("ordering"),
+                            "semantic_path": path_keys if request.get("ordering") == "ORDERED" else sorted(path_keys),
+                        })
+                        if chosen.get("semantic_equivalence_key") != expected_key:
+                            errors.append(f"label {index}: chosen action equivalence key is inconsistent")
                         if chosen.get("semantic_action_fingerprint") != sha256_value(path):
                             errors.append(f"label {index}: chosen action fingerprint was not recomputed from semantic path")
     return errors
@@ -2972,6 +2963,7 @@ def _self_check() -> int:
     transition_config = load_json(transition_path)
     transition_config["_config_path"] = str(transition_path.resolve())
     transition_config["source_commit"] = _canonical_source_commit()
+    transition_config["opponent_transition_label_schema"]["sha256"] = sha256_file(OPPONENT_LABEL_SCHEMA)
     transition_validation = validate_schedule(transition_config, DEFAULT_FIXTURE)
     if (
         transition_validation.get("profile") != OPPONENT_TRANSITION_PROFILE
@@ -3318,6 +3310,80 @@ def _self_check() -> int:
     sidecar_bad_fingerprint["labels"][0]["chosen_action"]["semantic_action_fingerprint"] = "1" * 64
     if not _validate_opponent_sidecar_shape(sidecar_bad_fingerprint):
         raise ScheduleError("restricted sidecar parity check did not reject stale action fingerprint")
+    to_active_options = []
+    for option_index in range(3):
+        to_active_options.append({
+            **sidecar_option,
+            "original_index": option_index,
+            "semantic_fingerprint": sha256_value({"case": "TO_ACTIVE", "index": option_index}),
+            "semantic_equivalence_key": sha256_value({"case": "TO_ACTIVE_KEY", "index": option_index}),
+        })
+    to_active_sidecar = json.loads(json.dumps(synthetic_sidecar))
+    to_active_label = to_active_sidecar["labels"][0]
+    to_active_label["first_opponent_request"] = {
+        "request_id": "to-active-request", "selection_seq": 2,
+        "selection_type": 1, "selection_context": 4, "min_count": 1,
+        "max_count": 1, "ordering": "UNORDERED", "option_count": 3,
+        "options": to_active_options,
+    }
+    to_active_path = [to_active_options[2]]
+    to_active_keys = [item["semantic_equivalence_key"] for item in to_active_path]
+    to_active_label["chosen_action"] = {
+        "transport_original_indices": [2],
+        "semantic_path": to_active_path,
+        "semantic_equivalence_key": to_active_keys[0],
+        "semantic_action_fingerprint": sha256_value(to_active_path),
+    }
+    if _validate_opponent_sidecar_shape(to_active_sidecar):
+        raise ScheduleError("TO_ACTIVE singleton sidecar self-check failed")
+    skill_options = []
+    for option_index in range(2):
+        skill_options.append({
+            **sidecar_option,
+            "option_type": 15,
+            "choice_role": "SKILL",
+            "original_index": option_index,
+            "semantic_fingerprint": sha256_value({"case": "SKILL_ORDER", "index": option_index}),
+            "semantic_equivalence_key": sha256_value({"case": "SKILL_ORDER_KEY", "index": option_index}),
+        })
+    skill_sidecar = json.loads(json.dumps(synthetic_sidecar))
+    skill_label = skill_sidecar["labels"][0]
+    skill_label["first_opponent_request"] = {
+        "request_id": "skill-order-request", "selection_seq": 3,
+        "selection_type": 5, "selection_context": 34, "min_count": 2,
+        "max_count": 2, "ordering": "ORDERED", "option_count": 2,
+        "options": skill_options,
+    }
+    skill_path = [skill_options[1], skill_options[0]]
+    skill_keys = [item["semantic_equivalence_key"] for item in skill_path]
+    skill_label["chosen_action"] = {
+        "transport_original_indices": [1, 0],
+        "semantic_path": skill_path,
+        "semantic_equivalence_key": sha256_value({
+            "ordering": "ORDERED", "semantic_path": skill_keys,
+        }),
+        "semantic_action_fingerprint": sha256_value(skill_path),
+    }
+    if _validate_opponent_sidecar_shape(skill_sidecar):
+        raise ScheduleError("SKILL_ORDER ordered-pair sidecar self-check failed")
+    sidecar_duplicate = json.loads(json.dumps(skill_sidecar))
+    sidecar_duplicate["labels"][0]["chosen_action"]["transport_original_indices"] = [1, 1]
+    sidecar_duplicate["labels"][0]["chosen_action"]["semantic_path"] = [skill_options[1], skill_options[1]]
+    if not _validate_opponent_sidecar_shape(sidecar_duplicate):
+        raise ScheduleError("restricted sidecar did not reject duplicate ordered indices")
+    sidecar_count = json.loads(json.dumps(skill_sidecar))
+    sidecar_count["labels"][0]["chosen_action"]["transport_original_indices"] = [1]
+    sidecar_count["labels"][0]["chosen_action"]["semantic_path"] = [skill_options[1]]
+    if not _validate_opponent_sidecar_shape(sidecar_count):
+        raise ScheduleError("restricted sidecar did not reject an ordered count mismatch")
+    skill_bad_order = json.loads(json.dumps(skill_sidecar))
+    skill_bad_order["labels"][0]["chosen_action"]["transport_original_indices"] = [0, 1]
+    if not _validate_opponent_sidecar_shape(skill_bad_order):
+        raise ScheduleError("restricted sidecar did not reject an altered ordered semantic path")
+    sidecar_with_raw_field = json.loads(json.dumps(synthetic_sidecar))
+    sidecar_with_raw_field["labels"][0]["raw_observation"] = {}
+    if not _validate_opponent_sidecar_shape(sidecar_with_raw_field):
+        raise ScheduleError("restricted sidecar raw-observation firewall did not reject leakage")
     blocked_report = {"status": "PASS_EXECUTION", "dataset_emitted": True}
     _mark_preflight_blocked(blocked_report, ScheduleError("synthetic emission failure"))
     if (
@@ -3410,7 +3476,11 @@ def _self_check() -> int:
         "unauthorized_full_execution_refused": True,
         "opponent_transition_sidecar_schema_valid": True,
         "opponent_transition_model_firewall_refused": True,
+        "opponent_transition_raw_observation_firewall_refused": True,
         "opponent_transition_incomplete_label_refused": True,
+        "opponent_transition_multiselect_valid": True,
+        "opponent_transition_ordered_pair_valid": True,
+        "opponent_transition_duplicate_count_refused": True,
         "opponent_key_aliases_and_permutations": True,
         "opponent_key_endpoint_and_attack_distinction": True,
         "opponent_key_serial_rejected": True,

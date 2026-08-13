@@ -146,7 +146,9 @@ def test_negative_attempts_and_edge_cases_are_retained() -> None:
 def test_gate_and_tasks_preserve_blocked_integration_and_launch_boundaries() -> None:
     gate = read(GATE)
     assert gate["status"] == "BLOCKED"
-    assert gate["decision"] == "NOT_REVIEWED"
+    assert gate["decision"] == (
+        "DEC-047_PRODUCTION_BC_NOTEBOOK_V3_RENEWED_APPROVAL_READY_UNAUTHORIZED"
+    )
     checks = {item["name"]: item for item in gate["technical_checks"]}
     assert checks["independent frozen-plan review"]["status"] == "PASS"
     assert checks["CABT actor learner bridge implemented and independently qualified"][
@@ -157,8 +159,12 @@ def test_gate_and_tasks_preserve_blocked_integration_and_launch_boundaries() -> 
     assert checks["three-seed five-million-choice competence confirmation"][
         "status"
     ] == "BLOCKED"
-    assert len(gate["blockers"]) == 2
-    assert "Implement and independently qualify" in gate["approved_next_action"]
+    assert len(gate["blockers"]) == 3
+    assert "prior v3 approval failed closed" in gate["blockers"][0]
+    assert "renewed exact approval" in gate["blockers"][1]
+    assert "Test replay reads" in gate["blockers"][2]
+    assert "exact approval text SHA-256" in gate["approved_next_action"]
+    assert "private CPU notebook v3" in gate["approved_next_action"]
 
     tasks = {item["task_id"]: item for item in read(TASKS)}
     plan_task = tasks["T-G3B-PLAN-001"]

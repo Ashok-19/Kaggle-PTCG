@@ -1,0 +1,99 @@
+{
+  "actual": {
+    "bytes": 7645589,
+    "files": 79,
+    "inventory_sha256": "2bc151d35af0ef3bd9177f44275ef04be0de017a07ef5cf86b283c94834f83ab",
+    "records": null
+  },
+  "approval_receipt_path": "private/g3/e01/approvals/e01-source-bundle-v2-publication-approval-v1.json",
+  "approval_receipt_sha256": "d97a222dc5e293eaf51cf176ebb5f46e538ca024c5f185764e09429d67336e9a",
+  "approval_text_sha256": "f99906186f531a5635ec7525eccbfe8eec3314bc932a7b2e9f8c05e18ccd06b5",
+  "boundary": {
+    "agent_logs": 0,
+    "base_source_bytes": 1637620,
+    "base_source_files_read_hashed_downloaded": 66,
+    "benchmark_task_mutations": 0,
+    "evaluation": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "labels": 0,
+    "model_mutation": false,
+    "model_promotion": false,
+    "notebook": false,
+    "optimizer_steps": 0,
+    "overlay_bytes": 6008415,
+    "overlay_files_read_hashed_copied_uploaded": 10,
+    "remote_mutations_after_mismatch": 0,
+    "replay_bodies": 0,
+    "submission": false,
+    "tpu": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-06T09:55:04Z",
+  "dataset": {
+    "created_version": 2,
+    "dataset_id": 11501808,
+    "private": true,
+    "ref": "ashok205/kptcg-e01-majkel-corpus-review-inputs",
+    "status": "READY",
+    "version_1_preserved": true
+  },
+  "expected": {
+    "bytes": 7646035,
+    "files": 76,
+    "inventory_sha256": "78fa9caa32782729a28cb9254449f22e46a6edcb5f83b7b2f763756bd970fa90",
+    "records": null
+  },
+  "incident_path": "reports/incidents/e01-source-bundle-v2-checkpoint-archive-expansion-v1.json",
+  "incident_self_hash": "0720746464c413b1a893d11427c42cb9cb786e95822feb5d6403a863948ff073",
+  "incident_sha256": "5840125b78b96bde8928067a45e4d5eeb6552ce14ab9e229cd550647623d0a77",
+  "mismatch": {
+    "byte_delta": -446,
+    "extra": [
+      {
+        "bytes": 1056442,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/card-table-v1.json"
+      },
+      {
+        "bytes": 26493,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/manifest.json"
+      },
+      {
+        "bytes": 24378,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/reference-v1.json"
+      },
+      {
+        "bytes": 4321431,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1/state-v1.bin"
+      }
+    ],
+    "file_count_delta": 3,
+    "missing": [
+      {
+        "bytes": 5429190,
+        "name": "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip"
+      }
+    ],
+    "size_mismatches": []
+  },
+  "notebook_wrapper_approval_text_prepared": false,
+  "notebook_wrapper_contract_prepared": false,
+  "raw_inventory_path": "reports/artifacts/raw/e01-source-bundle-v2-remote-inventory-20260806-v1.json",
+  "raw_inventory_self_hash": "69db307c555a904f75131fdce3ba9f19dce6a9672f6b6bf5e7227cf78a135b53",
+  "raw_inventory_sha256": "c6e58fe08c3b65ddd727430e916c8a2622a914989b7b0ca75d30182c323562eb",
+  "record_id": "e01-source-bundle-v2-publication-execution-review-v1",
+  "review_sha256": "04295038642c1f1519d635c9b750d5d03cfd2c1957b4e167674949e549caab87",
+  "schema_version": 1,
+  "staging_report_path": "private/g3/e01/source-bundle-v2-publication-v1/staging-report.json",
+  "staging_report_sha256": "e5aa4c02d125b9e7921548615826cd4a95bf70b98592a95f4fa267356a112ec9",
+  "status": "FAILED_CLOSED_CHECKPOINT_ARCHIVE_EXPANDED",
+  "verification": {
+    "file_sha256_verification_skipped_due_earlier_contract_failure": true,
+    "metadata_inventory_verified": true,
+    "privacy_verified": true,
+    "ready_verified": true,
+    "version_2_accepted_as_dependency": false,
+    "version_verified": true
+  }
+}

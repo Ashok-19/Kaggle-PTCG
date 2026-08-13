@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "record_id": "phase-b1-exact-deck-capability-rerun-v1",
+  "status": "BLOCKED_PENDING_INDEPENDENT_TECHNICAL_REVIEW",
+  "scope": "NATIVE_QUALIFIED_CANDIDATE",
+  "purpose": "Plan-only remediation of the Phase A/B1 capability capsule run using the actual production Mega Abomasnow exact-deck file; no native launch or capability claim is authorized until this plan receives independent technical review.",
+  "candidate_deck": {
+    "path": "private/baselines/mega-abomasnow-ex/deck.csv",
+    "file_sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd",
+    "semantic_multiset_sha256": "2de6cda970bdd02af6de83ba8b0865fe751ff9282f381a6e775a4017abbca776",
+    "count": 60,
+    "multiset": {"3": 34, "721": 2, "722": 4, "723": 4, "1121": 4, "1126": 1, "1192": 4, "1227": 4, "1262": 3}
+  },
+  "assets": {
+    "native_library": {"path": "private/assets/official/sample_submission/sample_submission/cg/libcg.so", "sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887", "scope": "OFFICIAL_ENGINE"},
+    "wrapper": {"path": "private/assets/official/sample_submission/sample_submission/cg/game.py", "sha256": "3bd3d4f4a369a11e6d2f5da9094cf15ebc410a2221835e6417b7cff4883f1fc2", "scope": "OFFICIAL_WRAPPER"},
+    "api": {"path": "private/assets/official/sample_submission/sample_submission/cg/api.py", "sha256": "593f1298e52a635f90f8f505a52113e9af114f444c293404e37906f18ee06ced", "scope": "OFFICIAL_API"},
+    "card_data": {"path": "private/assets/official/EN_Card_Data.csv", "sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373", "scope": "OFFICIAL_CARD_DATA"},
+    "card_table": {"path": "private/g2/card-table-v1.json", "sha256": "5fc3a1cf31dd5f4b1b3542fc1baa91fe2b68b772cb5748f50f0f75c9a74f7714", "semantic_sha256": "7aa6384644c5dbc22fe6b7e1e84bf3d274bd35e0ff0b0ab9c9f3bf2e1141f8a0", "scope": "VERSIONED_CARD_TABLE"},
+    "candidate_deck": {"path": "private/baselines/mega-abomasnow-ex/deck.csv", "sha256": "7af2d7e111c084da535b89758730b3fd6cbb7c0543a9444499c5b61efdc8aecd", "scope": "EXACT_PRODUCTION_DECK"},
+    "knowledge_base": {"path": "knowledge_base/ptcg_gold.sqlite", "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f", "scope": "LOCAL_KNOWLEDGE_BASE"}
+  },
+  "knowledge_base": {
+    "path": "knowledge_base/ptcg_gold.sqlite",
+    "sha256": "e6c588fa1dbe4c485e6723926ebf051ddb1a228fd75cdcb396a5bf3370cac60f",
+    "ids": ["DR-004", "DR-005", "DR-006", "DR-025", "DR-030", "DR-033", "AP-014", "RQ-004", "RQ-005", "RQ-007"]
+  },
+  "route_capsule": {
+    "cards": {"721": {"hp": 150, "weakness_type": 4}, "722": {"hp": 90, "weakness_type": 8}, "723": {"hp": 350, "weakness_type": 8}, "754": {"hp": 280, "weakness_type": -1}},
+    "attacks": {"1044": {"card_id": 722, "damage": 10, "water_cost": 1}, "1045": {"card_id": 722, "damage": 30, "water_cost": 2}},
+    "prize_units": {"721": 1, "722": 1, "723": 3, "754": 3},
+    "contexts": [{"selection_type": 6, "selection_context": 35, "option_type": 13, "choice_role": "ATTACK"}, {"selection_type": 7, "selection_context": 37, "option_type": 9, "choice_role": "EVOLVE"}],
+    "evolution": {"source_card_id": 722, "target_card_id": 723, "selection_type": 7, "selection_context": 37, "option_type": 9, "source_zones": [4, 5], "local_delta_only": ["zone", "position", "attached_energy_count", "energy_types", "damage", "statuses"]},
+    "partial_route_ids_never_authority": [1042, 1043, 1046, 1047, 1262],
+    "forbidden_inputs": ["successor", "counterfactual", "hidden", "private_native", "raw_option_order"]
+  },
+  "formulations": [
+    {"id": "snover_1044_first", "goal": "observe 1044 with one Water and 10 damage", "required_attack_ids": [1044]},
+    {"id": "snover_1045_first", "goal": "observe 1045 with two Water and 30 damage", "required_attack_ids": [1045]},
+    {"id": "snover_to_mega_evolution", "goal": "observe 722-to-723 legal evolution and local delta", "required_attack_ids": []},
+    {"id": "prize_route_targets", "goal": "observe exact public PrizeStatic deltas for all four target classes", "required_attack_ids": []}
+  ],
+  "limits": {
+    "games_per_attack_formulation": 12,
+    "games_per_evolution_seat": 12,
+    "games_per_prize_target": 48,
+    "request_cap_per_game": 900,
+    "wall_seconds": 600,
+    "evidence_bytes_cap": 67108864,
+    "max_capsules": 384
+  },
+  "stop_conditions": {
+    "stop_on_any_reliability_counter": true,
+    "required_zero_counters": ["invalid_actions", "semantic_contract_failures", "request_cap_failures", "timeouts", "native_errors", "fallbacks", "post_terminal_actions", "unclassified_terminal", "incomplete_games", "other_failures", "ambiguous_prize_pairings"],
+    "unknown_if_unobserved": true,
+    "native_launch": false,
+    "kaggle_run": false,
+    "submission": false
+  },
+  "provenance": {
+    "actual_deck_file_loaded_and_hashed": true,
+    "deck_order_not_authority": true,
+    "scope_labels": {"capability": "NATIVE_QUALIFIED_CANDIDATE", "policy_integration": "NOT_ESTABLISHED", "outcome_promotion": "NOT_ESTABLISHED"},
+    "source_paths": {
+      "runner": "scripts/deterministic/phase_a_b1_capability_capsules_v1.py",
+      "route_runner": "scripts/deterministic/phase_a_route_capsules_v1.py",
+      "actions": "src/ptcg_rl/g1/actions.py",
+      "models": "src/ptcg_rl/g1/models.py",
+      "native": "src/ptcg_rl/g1/native.py",
+      "semantic": "src/ptcg_rl/g1/semantic.py"
+    },
+    "source_sha256": {
+      "runner": "cbcc97dd526665e3fca0d84e327eb8f48e4da72b87c1301accf017514b14504c",
+      "route_runner": "edffea92e8d6e55baab413863db41b7f5010861c7504163d62f8f2df38351f69",
+      "actions": "c73f262b2ec912800c028cb9580bc82de2d7484bc5b837c6daf09011718db907",
+      "models": "38bafb6741f1d06ed9a7c277f9517003b6d3a0ea25eac4c1ed86812ec219ea7f",
+      "native": "0e8daa0c46569f5bb1ba33c30ecff78347a39f35fe5c85b36de3b3ad5c2ce6fa",
+      "semantic": "bc0f51fbc73d4c6226f8ccbed191b3cf99a2a5088c9d7fcacf0e096d1fa8b1ab"
+    }
+  },
+  "launch_gate": {
+    "status": "BLOCKED",
+    "required_receipt": "independent technical review of exact-deck plan and later native capability evidence",
+    "native_run_performed": false,
+    "capability_evidence_available": false,
+    "policy_integration_authorized": false
+  }
+}

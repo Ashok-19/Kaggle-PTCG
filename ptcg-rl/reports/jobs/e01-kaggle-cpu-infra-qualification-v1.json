@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "record_id": "job-e01-kaggle-cpu-infra-qualification-v1",
+  "created_at_utc": "2026-08-04T11:56:52Z",
+  "updated_at_utc": "2026-08-04T12:11:36Z",
+  "source_path": "reports/jobs/e01-kaggle-cpu-infra-qualification-v1.json",
+  "producer": "chatgpt-local-agent",
+  "producer_version": "2",
+  "job_id": "e01-kaggle-cpu-infra-qualification-v1",
+  "gate_id": "G3b",
+  "kind": "PRIVATE_KAGGLE_CPU_INFRASTRUCTURE_QUALIFICATION",
+  "title": "Qualify private Kaggle CPU with competition input attached",
+  "status": "SUCCEEDED",
+  "decision": "PRIVATE_KAGGLE_CPU_COMPETITION_ATTACHMENT_QUALIFIED",
+  "user_compute_policy": {
+    "heavy_local_experiments_allowed": false,
+    "light_local_checks_allowed": true,
+    "private_kaggle_cpu_default": true,
+    "kaggle_gpu_default": false,
+    "kaggle_tpu_default": false,
+    "training_requires_separate_approval": true,
+    "accelerator_use_requires_separate_approval": true,
+    "stable_versioned_dataset_preferred": true
+  },
+  "notebook": {
+    "owner": "ashok205",
+    "slug": "kptcg-e01-cpu-infra-v1",
+    "kernel_id": 129685552,
+    "private": true,
+    "successful_saved_version": 4,
+    "successful_script_version_id": 340139179,
+    "requested_settings": {
+      "internet": false,
+      "gpu": false,
+      "tpu": false,
+      "session_timeout_seconds": 900,
+      "competition_data_source": "pokemon-tcg-ai-battle"
+    },
+    "observed_metadata": {
+      "internet": false,
+      "gpu": false,
+      "tpu": false,
+      "competition_data_sources": [
+        "pokemon-tcg-ai-battle"
+      ],
+      "docker_image": "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9"
+    },
+    "completed_negative_results": [
+      {
+        "version": 1,
+        "status": "ERROR",
+        "failure": "expected competition mount containing 'pokemon-tcg-ai-battle'; observed=[]",
+        "input_access_started": false
+      },
+      {
+        "version": 2,
+        "status": "ERROR",
+        "failure": "expected competition mount containing 'pokemon-tcg-ai-battle'; observed=[]",
+        "input_access_started": false
+      }
+    ],
+    "successful_run": {
+      "saved_version": 4,
+      "script_version_id": 340139179,
+      "status": "COMPLETE",
+      "notebook_result": "PASS",
+      "notebook_decision": "PRIVATE_KAGGLE_CPU_COMPETITION_ATTACHMENT_QUALIFIED",
+      "input_root": "/kaggle/input/competitions",
+      "competition_path": "/kaggle/input/competitions/pokemon-tcg-ai-battle",
+      "metadata_entries": 67,
+      "file_entries": 60,
+      "directory_entries": 7,
+      "file_bodies_read": false,
+      "replay_bodies_read": false
+    }
+  },
+  "runtime": {
+    "cpu_count": 4,
+    "machine": "x86_64",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cpu",
+    "cuda_available": false,
+    "cuda_device_count": 0,
+    "tpu_environment_present": false
+  },
+  "outputs": {
+    "listed_file_count": 2,
+    "receipt": {
+      "path": "e01-cpu-infra-qualification-v1.json",
+      "bytes": 8918,
+      "sha256": "1111472bd2e6782c684228214b524446c220958b86dab361c12c1716389e2454"
+    },
+    "manifest": {
+      "path": "e01-cpu-infra-qualification-v1-output-manifest.json",
+      "bytes": 296,
+      "sha256": "9931a23da9049959ea4ad3557485c4289fce38feb5d911b3a0dfddfd54538efc"
+    },
+    "manifest_binding_verified": true,
+    "independent_review": "reports/artifacts/e01-kaggle-cpu-infra-qualification-review-v1.json"
+  },
+  "authorization": {
+    "replay_transfer": false,
+    "agent_logs": false,
+    "raw_exports": false,
+    "optimizer_created": false,
+    "optimizer_steps": 0,
+    "training_ran": false,
+    "model_parameters_mutated": false,
+    "gpu_used": false,
+    "tpu_used": false,
+    "external_network_requested_by_notebook": false,
+    "model_promotion": false,
+    "submission": false,
+    "git_commit": false,
+    "git_push": false
+  },
+  "external_service_mutated": true,
+  "notebook_created": true,
+  "cost_usd": 0.0,
+  "verdict": "PASS_PRIVATE_KAGGLE_CPU_ATTACHMENT_READY_NONTRAINING_ONLY",
+  "next_action": "Use the verified competition mount path for future approved Kaggle workflows. Keep replay access, optimizer steps, training, GPU/TPU use, promotion and submission separately blocked."
+}

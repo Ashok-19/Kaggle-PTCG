@@ -1,0 +1,31 @@
+{
+  "agent_log_outputs": 0,
+  "approved_request_sha256": "eddb6673d2d90d12038b448ed3d8890c3393124ce4a212cad4fd51cb738c77b3",
+  "created_at_utc": "2026-08-05T07:52:43.279661Z",
+  "files": [
+    {
+      "bytes": 12839,
+      "path": "e01-corpus-target-supplement-review-v2.json",
+      "sha256": "fe067987e72bf1a12cbe0aecc2b38dde714c2484b5e3f7e38124054e287a46a0"
+    },
+    {
+      "bytes": 496720,
+      "path": "e01-approved-replay-corpus-manifest-v3.json",
+      "sha256": "c032694d3601d2570c8e2199c886e452af11f2d72b47379ad08761f16a6b3267"
+    },
+    {
+      "bytes": 2390,
+      "path": "e01-approved-replay-corpus-review-v3.json",
+      "sha256": "5d9c42412659dd6a0d783cd1220bc97e6b4c5aae3e7288fe4e94dbb7f60b500e"
+    }
+  ],
+  "manifest_sha256": "52a46d2404189af95c964ff81fad52f4ae6d85f15763a9a60710200f3be1788d",
+  "metadata_files": 4,
+  "producer": "scripts/e01_corpus_target_supplement_review_v2.py",
+  "record_id": "e01-corpus-target-supplement-output-manifest-v2",
+  "replay_body_outputs": 0,
+  "runner_sha256": "2acdfe06fa0dd6a79c29e6add267d9c3ca75a5577cdf4ace51d157369c08b30f",
+  "schema_version": 2,
+  "source_path": "e01-corpus-target-supplement-output-manifest-v2.json",
+  "training_label_outputs": 0
+}

@@ -1,0 +1,46 @@
+{
+  "actual_out_of_scope_operation": "Two Kaggle benchmark-task objects were created by incorrect connector invocations before any approved checkpoint file download.",
+  "agent_logs_accessed": 0,
+  "approved_request_path": "configs/e01_source_bundle_v2_checkpoint_directory_verification_request_v1.json",
+  "approved_request_sha256": "443098120fa03dcbaa1d430e3f74505926d2e45fa5ea382856b80422816bba78",
+  "checkpoint_bytes_downloaded": 0,
+  "checkpoint_files_downloaded": 0,
+  "created_at_utc": "2026-08-06T14:27:56Z",
+  "dataset_mutations": 0,
+  "evaluation": false,
+  "frozen_approval_text_sha256": "a2ed4213e3cf8f5e51cb451be8af7bfbbaa1acaa4e0831833f91c373056cc860",
+  "git_commit": false,
+  "git_push": false,
+  "incident_sha256": "22e5f24d2ffca6fb14e9b8957dbf57764eb8908b4ec785aa6a65cf245e76c1a3",
+  "intended_operation": "Verify live dataset metadata, download exactly four non-replay checkpoint members, reconstruct the deterministic checkpoint ZIP, and prepare notebook-wrapper approval text.",
+  "kind": "UNAUTHORIZED_KAGGLE_BENCHMARK_TASK_CREATION_DURING_READ_ONLY_VERIFICATION_PREFLIGHT",
+  "labels_materialized": 0,
+  "model_mutations": 0,
+  "notebook_mutations_other_than_benchmark_task_side_effects": 0,
+  "notebook_wrapper_prepared": false,
+  "optimizer_steps": 0,
+  "record_id": "e01-source-bundle-v2-verification-unauthorized-benchmark-tasks-v1",
+  "replay_bodies_accessed": 0,
+  "response": "Stopped immediately after detecting the out-of-scope creations. The two objects were left unchanged because deletion or modification was not authorized.",
+  "schema_version": 1,
+  "status": "OPEN_FAILED_CLOSED",
+  "submissions": 0,
+  "training": false,
+  "unauthorized_remote_mutations": 2,
+  "unauthorized_remote_objects": [
+    {
+      "deleted_or_modified_after_creation": false,
+      "execution_state": "UNRESOLVED",
+      "kernel_url": "/code/ashok205/new-benchmark-task-daa06/edit/run/340605099",
+      "privacy": "UNRESOLVED",
+      "ref": "ashok205/new-benchmark-task-daa06"
+    },
+    {
+      "deleted_or_modified_after_creation": false,
+      "execution_state": "UNRESOLVED",
+      "kernel_url": "/code/ashok205/new-benchmark-task-4abba/edit/run/340605166",
+      "privacy": "UNRESOLVED",
+      "ref": "ashok205/new-benchmark-task-4abba"
+    }
+  ]
+}

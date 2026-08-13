@@ -1,0 +1,74 @@
+{
+  "authorization": {
+    "corpus_promotion": false,
+    "external_compute": false,
+    "git_commit": false,
+    "git_push": false,
+    "gpu": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "replay_transfer": false,
+    "submission": false,
+    "tpu": false,
+    "training": false,
+    "training_label_materialization": false
+  },
+  "created_at_utc": "2026-08-04T14:45:26Z",
+  "decision": "ACCEPT_EXACT_REMAINING_269_FILE_MAJKEL_BODY_REVIEW_AND_QUALIFIED_CORPUS_V2_FINALIZATION_REQUEST_UNAUTHORIZED",
+  "freeze": {
+    "data_selection_universe_locked": true,
+    "final_submission_deck_locked": false,
+    "initial_bc_training_deck_locked": true,
+    "macro_training_strategy_locked": true,
+    "model_architecture_locked": true,
+    "primary_teacher_locked": true,
+    "training_corpus_final": false
+  },
+  "inputs": {
+    "decision": {
+      "path": "docs/decisions/DEC-027_PRETRAINING_FREEZE_AND_MAJKEL_PRIMARY_SOURCE.md",
+      "sha256": "457b59eb064b862a7f2eaa735bf3336cb1cee7d78ae677dbdd8b61be88d4f1f4"
+    },
+    "live_refresh": {
+      "evidence_sha256": "a51849f4e9da8f7855c9dfe3254911ad0a6436c9efcd07131ae7349bb3854c88",
+      "path": "reports/artifacts/raw/e01-live-gold-refresh-20260804-v1.json",
+      "sha256": "7e27f564d3d90824f98484379fa58fedb7fd197774d446aaefeb7e33eda11bd1"
+    },
+    "probe_review": {
+      "path": "reports/artifacts/e01-majkel-live-gold-teacher-probe-review-v1.json",
+      "review_sha256": "a9dfd2d92f10b95aad3032566e3f5bd7973d007d81ef19722ebf3ec4452efead",
+      "sha256": "6d9e9b6e8b4e3ed6bc471b7f9c2e6092bef856072428ccbc9ba1b205f630bc75"
+    },
+    "request": {
+      "path": "configs/e01_majkel_corpus_expansion_request_v1.json",
+      "sha256": "7652f617e9bba2cd5a18a3d4b9956d348438989359e0fb200ef0f6066a590d3c"
+    }
+  },
+  "next_action": "REQUEST_SEPARATE_EXPLICIT_APPROVAL_FOR_THE_EXACT_PRIVATE_KAGGLE_CPU_269_FILE_BODY_REVIEW_AND_QUALIFIED_CORPUS_V2_FINALIZATION;_THE_64_STEP_BC_CANARY_REMAINS_A_SEPARATE_EXACT_APPROVAL",
+  "producer": "scripts/finalize_e01_pretraining_freeze.py",
+  "record_id": "e01-majkel-corpus-expansion-contract-review-v1",
+  "review_sha256": "e08beb1fec322b07ce015e74cbb4b5193e1db677f2b7ca78719580f86b5ec589",
+  "reviewed_decision": "DEC-027",
+  "schema_version": 1,
+  "selection": {
+    "intersection_bytes": 1031040048,
+    "intersection_files": 271,
+    "new_bytes": 1030207171,
+    "new_declared_bytes_exact": true,
+    "new_episode_ids_unique": true,
+    "new_files": 269,
+    "persistent_replay_output_directory": null,
+    "replay_body_outputs": 0,
+    "requested_platform": "private_kaggle_cpu",
+    "reused_reviewed_bytes": 832877,
+    "reused_reviewed_files": 2,
+    "strata": {
+      "seat_0_loss": 34,
+      "seat_0_win": 97,
+      "seat_1_loss": 54,
+      "seat_1_win": 86
+    }
+  },
+  "source_path": "reports/artifacts/e01-majkel-corpus-expansion-contract-review-v1.json",
+  "status": "PASS_READY_UNAUTHORIZED"
+}

@@ -1,0 +1,76 @@
+{
+  "authorization": {
+    "external_compute": false,
+    "final_deck_freeze": false,
+    "git_commit": false,
+    "git_push": false,
+    "model_promotion": false,
+    "optimizer_steps": false,
+    "replay_transfer": false,
+    "submission": false,
+    "training": false
+  },
+  "created_at_utc": "2026-08-04T14:45:26Z",
+  "decision": "FREEZE_INITIAL_TRAINING_DECK_PRIMARY_TEACHER_MODEL_ARCHITECTURE_DATA_SELECTION_UNIVERSE_AND_GOLD_SEQUENCE",
+  "freeze_status": {
+    "bc_canary": "READY_UNAUTHORIZED",
+    "data_selection_universe": "FINAL",
+    "final_submission_deck": "NOT_FINAL_PENDING_D1",
+    "gold_strategy_sequence": "FINAL",
+    "initial_bc_training_deck": "FINAL",
+    "model_architecture": "FINAL_FOR_INITIAL_BC_AND_FIRST_BOUNDED_PPO",
+    "primary_teacher": "FINAL_FOR_INITIAL_TRAINING",
+    "production_training": "BLOCKED_EXACT_APPROVAL",
+    "training_corpus": "NOT_FINAL_PENDING_EXACT_BODY_REVIEW"
+  },
+  "inputs": {
+    "base_corpus": {
+      "path": "reports/artifacts/e01-approved-replay-corpus-review-v1.json",
+      "review_sha256": "63befb564f9e6cb16160505f04c797bb3296a97f8b07e64b909a5b306e7c8798",
+      "sha256": "d089090dc94a9bb29ac55c996bc69d18c9fb60bd1ab15f0b91791257a85d405f"
+    },
+    "bc_canary": {
+      "path": "configs/e01_bc_engineering_canary_request_v1.json",
+      "sha256": "5e78bcd7595a1f30b5eba5ab179203aa53ecad43f0ef3275a773a4b0ee4f2299"
+    },
+    "decision": {
+      "path": "docs/decisions/DEC-027_PRETRAINING_FREEZE_AND_MAJKEL_PRIMARY_SOURCE.md",
+      "sha256": "457b59eb064b862a7f2eaa735bf3336cb1cee7d78ae677dbdd8b61be88d4f1f4"
+    },
+    "expansion_contract_review": {
+      "path": "reports/artifacts/e01-majkel-corpus-expansion-contract-review-v1.json",
+      "review_sha256": "e08beb1fec322b07ce015e74cbb4b5193e1db677f2b7ca78719580f86b5ec589",
+      "sha256": "282cf8c09fea88c1df392ef66f9b197e6f7f3712119f4e3b5681a1a66da52807"
+    },
+    "expansion_request": {
+      "path": "configs/e01_majkel_corpus_expansion_request_v1.json",
+      "sha256": "7652f617e9bba2cd5a18a3d4b9956d348438989359e0fb200ef0f6066a590d3c"
+    },
+    "launch_plan": {
+      "path": "configs/e01_pretraining_launch_plan_v1.json",
+      "sha256": "f771871cdab100fbbeccf18aba53cde41cdda919008aeb59020d0818b343f7e7"
+    },
+    "majkel_probe": {
+      "path": "reports/artifacts/e01-majkel-live-gold-teacher-probe-review-v1.json",
+      "review_sha256": "a9dfd2d92f10b95aad3032566e3f5bd7973d007d81ef19722ebf3ec4452efead",
+      "sha256": "6d9e9b6e8b4e3ed6bc471b7f9c2e6092bef856072428ccbc9ba1b205f630bc75"
+    },
+    "model": {
+      "path": "reports/artifacts/g2-policy-v1.json",
+      "sha256": "d80991027e0c4d89538d0ba9edde6cde4f372afdc08e2cda73d9ab4d481b5614"
+    }
+  },
+  "producer": "scripts/finalize_e01_pretraining_freeze.py",
+  "record_id": "e01-pretraining-freeze-review-v1",
+  "remaining_gates": [
+    "Exact 269-file Majkel transfer and corpus-v2 body review approval.",
+    "Exact 64-step BC engineering canary optimizer approval.",
+    "Corpus-v2 hash freeze and production BC request generation.",
+    "Separate production BC approval."
+  ],
+  "review_sha256": "6065a925c2f6a7e4e91abc467da4ef3bdcd6adc7732cde29c1a767a3d7b960a2",
+  "reviewed_decision": "DEC-027",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-pretraining-freeze-review-v1.json",
+  "status": "PASS"
+}

@@ -1,0 +1,42 @@
+{
+  "created_at_utc": "2026-08-04T10:00:34Z",
+  "decision": "ACCEPT_HASH_BOUND_ZERO_UPDATE_BC_CANARY_PREFLIGHT",
+  "inputs": {
+    "implementation": {
+      "path": "src/ptcg_rl/g3/bc_canary.py",
+      "sha256": "e8050ed49080f43e62f6833c7e0eda1e2f5cdff83a5a76120d540f017a416dd7"
+    },
+    "preflight": {
+      "path": "reports/artifacts/e01-bc-engineering-canary-preflight-v1.json",
+      "sha256": "597501b2e9af60e0f0745c44b7d25b89a0ab965e97f0a250538ca910d0d34b18"
+    },
+    "request": {
+      "path": "configs/e01_bc_engineering_canary_request_v1.json",
+      "sha256": "5e78bcd7595a1f30b5eba5ab179203aa53ecad43f0ef3275a773a4b0ee4f2299"
+    },
+    "runner": {
+      "path": "scripts/e01_bc_engineering_canary.py",
+      "sha256": "7ec57f5045f43b90842dc4c3940e714107d4994a961097474f5fff8eb701a58e"
+    }
+  },
+  "next_action": "REQUEST_SEPARATE_EXPLICIT_APPROVAL_FOR_THE_EXACT_64_STEP_LOCAL_BC_ENGINEERING_CANARY",
+  "producer": "scripts/e01_bc_engineering_canary_review.py",
+  "qualification": {
+    "all_609_meaningful_targets_replayed": true,
+    "all_eight_episodes_hash_verified": true,
+    "execution_authorized": false,
+    "execution_request_ready": true,
+    "finite_gradient_path_verified": true,
+    "forced_recurrence_without_policy_loss_verified": true,
+    "optimizer_constructed": false,
+    "optimizer_steps": 0,
+    "ordered_multiselect_stop_and_masks_verified": true,
+    "production_training_authorized": false
+  },
+  "record_id": "e01-bc-engineering-canary-preflight-review-v1",
+  "review_sha256": "8c328b2aa73c454a2bc3044a4a7ab02d05fbe79cc2ed95f101d3218336e0dd6e",
+  "reviewed_decision": "DEC-025",
+  "schema_version": 1,
+  "source_path": "reports/artifacts/e01-bc-engineering-canary-preflight-review-v1.json",
+  "status": "PASS"
+}
