@@ -8,6 +8,7 @@ namespace gpu_cabt {
 static constexpr int kOptionCapacity = 128;
 static constexpr int kSelectedCapacity = 128;
 static constexpr int kContinuationCapacity = 256;
+static constexpr int kTargetCapacity = 64;
 
 static constexpr gc_u32 kRuntimeErrorOptionOverflow = 1u << 0;
 static constexpr gc_u32 kRuntimeErrorSelectedOverflow = 1u << 1;
@@ -17,6 +18,7 @@ static constexpr gc_u32 kRuntimeErrorUnsupportedTransition = 1u << 4;
 static constexpr gc_u32 kRuntimeErrorInvalidSelection = 1u << 5;
 static constexpr gc_u32 kRuntimeErrorNoBasicPokemon = 1u << 6;
 static constexpr gc_u32 kRuntimeErrorMulliganLoopLimit = 1u << 7;
+static constexpr gc_u32 kRuntimeErrorTargetOverflow = 1u << 8;
 
 static constexpr gc_u16 kContinuationNone = 0;
 static constexpr gc_u16 kContinuationSelectedIsFirst = 1;
@@ -49,20 +51,29 @@ struct ContinuationState {
     gc_i32 arg2;
 };
 
+struct AreaRefState {
+    gc_u8 card;
+    gc_u8 reserved0;
+    gc_u16 reserved1;
+    gc_i32 move_counter;
+};
+
 struct BattleRuntimeState {
     gc_u32 error_flags;
     gc_u16 option_count;
     gc_u16 selected_count;
     gc_u16 continuation_count;
-    gc_u16 reserved;
+    gc_u16 target_count;
     gc_u64 rng_draw_index;
     SelectOptionState options[kOptionCapacity];
     gc_i32 selected[kSelectedCapacity];
     ContinuationState continuations[kContinuationCapacity];
+    AreaRefState targets[kTargetCapacity];
 };
 
 static_assert(sizeof(SelectOptionState) == 12, "SelectOptionState ABI");
 static_assert(sizeof(ContinuationState) == 20, "ContinuationState ABI");
+static_assert(sizeof(AreaRefState) == 8, "AreaRefState ABI");
 static_assert(sizeof(BattleRuntimeState) <= 8 * 1024, "runtime buffer must stay compact");
 
 }  // namespace gpu_cabt
