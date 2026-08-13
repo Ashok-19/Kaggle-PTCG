@@ -64,7 +64,9 @@ extern "C" __global__ void gpu_cabt_project_events(
     const gc_i32 actor = state.select_type != gpu_cabt::kSelectNone ? state.select_player : -1;
     if (actor < 0 || actor > 1) {
         event_counts[env_index] = 0;
-        event_status[env_index] = gpu_cabt::kRuntimeErrorUnsupportedTransition;
+        // Terminal/no-selection environments have no actor and therefore no
+        // event delivery boundary. This is a clean no-op, not an engine error.
+        event_status[env_index] = 0;
         return;
     }
     gpu_cabt::project_public_logs_for_actor(
