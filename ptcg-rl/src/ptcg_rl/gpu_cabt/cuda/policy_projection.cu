@@ -99,6 +99,16 @@ __device__ __forceinline__ gc_i32 policy_visible_prize_count(
     return count;
 }
 
+__device__ __forceinline__ gc_i32 policy_public_looking_mode(
+    const BattleCoreState& state,
+    gc_i32 actor
+) {
+    if (state.looking.count == 0 || actor < 0 || actor > 1) return 0;
+    if (state.looking_player == actor || state.looking_player == 2) return 1;
+    if (state.looking_player == actor + 3) return 2;
+    return 0;
+}
+
 __device__ __forceinline__ gc_i32 policy_pre_evolution_count(
     const BattleCoreState& state,
     const CardState& pokemon
@@ -430,7 +440,8 @@ __device__ __forceinline__ void project_policy_full(
     globals[1] = state.turn_action_count;
     globals[2] = state.first_player < 0 ? -1 : policy_relative_player(state.first_player, actor);
     globals[3] = state.first_player < 0 ? -1 : policy_relative_player(rule_active_player_index(state), actor);
-    globals[4] = state.phase;
+    // globals[4] is reserved. Native ToJsonApi does not expose the internal
+    // phase state, so it must not cross the learner-facing firewall.
     if (state.game_result != 0) globals[5] = (state.game_result - 1) == actor ? 1 : 2;
     globals[6] = state.select_type;
     globals[7] = state.select_context;
@@ -449,12 +460,8 @@ __device__ __forceinline__ void project_policy_full(
         ? state.effect_state.ability.effect_card.card_index : 0;
     if (effect_ref > 0 && effect_ref < kAllCardCapacity) globals[17] = state.all_card[effect_ref].card_id;
     globals[18] = state.select_deck ? 1 : 0;
-    if (state.looking.count > 0) {
-        if (state.looking_player == actor) globals[19] = 1;
-        else if (state.looking_player == 2) globals[19] = 2;
-        else if (state.looking_player == actor + 3) globals[19] = 3;
-        if (globals[19] != 0) globals[20] = state.looking.count;
-    }
+    globals[19] = policy_public_looking_mode(state, actor);
+    if (globals[19] != 0) globals[20] = state.looking.count;
     if (state.stadium.count > 0) globals[21] = state.all_card[state.stadium.values[0]].card_id;
     globals[22] = runtime.option_count;
 
