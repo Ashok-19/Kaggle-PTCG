@@ -15,6 +15,7 @@ static constexpr int kTurnSkillCapacity = 128;
 static constexpr int kTurnCardCapacity = 128;
 static constexpr int kTurnEvolveCapacity = 64;
 static constexpr int kCardEffectCapacity = 128;
+static constexpr int kPublicLogCapacity = 1024;
 static constexpr int kAbilitySetWordCount = 14;  // 448 skill ids / 32.
 
 static constexpr gc_u32 kRuntimeErrorOptionOverflow = 1u << 0;
@@ -33,6 +34,7 @@ static constexpr gc_u32 kRuntimeErrorTurnHistoryOverflow = 1u << 12;
 static constexpr gc_u32 kRuntimeErrorCardEffectOverflow = 1u << 13;
 static constexpr gc_u32 kRuntimeErrorRefreshDepth = 1u << 14;
 static constexpr gc_u32 kRuntimeErrorInterpreterLimit = 1u << 15;
+static constexpr gc_u32 kRuntimeErrorLogOverflow = 1u << 16;
 
 static constexpr gc_u16 kContinuationNone = 0;
 static constexpr gc_u16 kContinuationSelectedIsFirst = 1;
@@ -123,6 +125,13 @@ struct CardEffectOrderState {
     gc_i32 move_counter;
 };
 
+struct PublicLogState {
+    gc_u8 type;
+    gc_u8 param_count;
+    gc_u16 reserved;
+    gc_i32 param[7];
+};
+
 struct BattleRuntimeState {
     gc_u32 error_flags;
     gc_u16 option_count;
@@ -179,7 +188,10 @@ struct BattleRuntimeState {
     gc_u64 rng_seed;
     gc_u64 rng_stream;
     gc_u64 rng_draw_index;
+    gc_u16 public_log_count;
+    gc_u16 public_log_index[2];
 
+    PublicLogState public_logs[kPublicLogCapacity];
     SelectOptionState options[kOptionCapacity];
     gc_i32 selected[kSelectedCapacity];
     ContinuationState continuations[kContinuationCapacity];
@@ -201,11 +213,12 @@ struct BattleRuntimeState {
     CardEffectOrderState card_effects[kCardEffectCapacity];
 };
 
+static_assert(sizeof(PublicLogState) == 32, "PublicLogState ABI");
 static_assert(sizeof(SelectOptionState) == 12, "SelectOptionState ABI");
 static_assert(sizeof(ContinuationState) == 20, "ContinuationState ABI");
 static_assert(sizeof(AreaRefState) == 8, "AreaRefState ABI");
 static_assert(sizeof(EvolveState) == 4, "EvolveState ABI");
 static_assert(sizeof(CardEffectOrderState) == 12, "CardEffectOrderState ABI");
-static_assert(sizeof(BattleRuntimeState) <= 32 * 1024, "runtime buffer must stay compact");
+static_assert(sizeof(BattleRuntimeState) <= 64 * 1024, "runtime buffer must stay compact");
 
 }  // namespace gpu_cabt

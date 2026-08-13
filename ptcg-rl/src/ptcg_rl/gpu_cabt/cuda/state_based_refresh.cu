@@ -8,7 +8,7 @@ static constexpr gc_u8 kRefreshStageActive = 4;
 static constexpr gc_u8 kRefreshStageTriggers = 5;
 static constexpr gc_u8 kRefreshStageDone = 6;
 
-__device__ __forceinline__ bool finish_check_full(BattleCoreState& state) {
+__device__ __forceinline__ bool finish_check_full(BattleCoreState& state, BattleRuntimeState& runtime) {
     if (state.game_result != 0) return true;
     gc_i32 score[2] = {0, 0};
     gc_u8 reason = 0;
@@ -30,6 +30,7 @@ __device__ __forceinline__ bool finish_check_full(BattleCoreState& state) {
     else if (score[0] > score[1]) state.game_result = 1;
     else state.game_result = 3;
     state.finish_reason = reason;
+    log_result(runtime, (gc_i32)state.game_result - 1, reason);
     return true;
 }
 
@@ -329,7 +330,7 @@ __device__ __forceinline__ void continue_refresh_full(
 
         if (runtime.refresh_process_stage == kRefreshStageKo) {
             if (runtime.ko_process_active) return;
-            if (finish_check_full(state)) {
+            if (finish_check_full(state, runtime)) {
                 runtime.refresh_process_stage = kRefreshStageDone;
                 continue;
             }
@@ -362,7 +363,7 @@ __device__ __forceinline__ void continue_refresh_full(
                 if (runtime.error_flags != 0) return;
                 continue;
             }
-            finish_check_full(state);
+            finish_check_full(state, runtime);
             runtime.refresh_process_stage = kRefreshStageDone;
             continue;
         }

@@ -24,6 +24,7 @@ __device__ __forceinline__ gc_i32 heal_card(
     card.damage -= heal;
     if (card.damage < 0) card.damage = 0;
     const gc_i32 healed = source_damage - card.damage;
+    if (healed >= 0) log_hp_change(state, runtime, card.player_index, ref, healed, false);
     if (record_heal && healed > 0) append_turn_heal(runtime, ref);
     return healed;
 }
@@ -43,10 +44,14 @@ __device__ __noinline__ void add_damage_full(
     CardState& card = state.all_card[ref];
     const RuleCardMaster* target_master = rule_card(rules, card.card_id);
     if (target_master == nullptr) return;
-    if (damage <= 0) return;
+    if (damage <= 0) {
+        log_hp_change(state, runtime, card.player_index, ref, 0, put_damage_counter);
+        return;
+    }
     const gc_i32 max_hp = get_max_hp(card, *target_master);
     if (card.damage >= max_hp) {
         card.damage += damage;
+        log_hp_change(state, runtime, card.player_index, ref, -damage, put_damage_counter);
         return;
     }
     if (cause_ref == 0 || cause_ref >= kAllCardCapacity) cause_ref = ref;
@@ -101,7 +106,7 @@ __device__ __noinline__ void add_damage_full(
             }
         }
     }
-    (void)put_damage_counter;
+    log_hp_change(state, runtime, card.player_index, ref, -damage, put_damage_counter);
 }
 
 __device__ __forceinline__ bool prevent_effect_active(
@@ -124,6 +129,7 @@ __device__ __forceinline__ bool no_special_condition_card(
 
 __device__ __forceinline__ void effect_poison(
     BattleCoreState& state,
+    BattleRuntimeState& runtime,
     const RuleTableView& rules,
     gc_i32 player_index,
     gc_i32 damage_counter
@@ -134,45 +140,50 @@ __device__ __forceinline__ void effect_poison(
     const CardState& card = state.all_card[player.active.values[0]];
     if (no_special_condition_card(card, rules)) return;
     if (player_active_state(player).fields.poison_damage_counter == damage_counter) return;
+    log_condition(state, runtime, kLogPoisoned, player_index, false, player.active.values[0]);
     state.changed = true;
     player_active_state(player).fields.poison_damage_counter = (gc_i8)damage_counter;
 }
 
-__device__ __forceinline__ void effect_burn(BattleCoreState& state, const RuleTableView& rules, gc_i32 player_index) {
+__device__ __forceinline__ void effect_burn(BattleCoreState& state, BattleRuntimeState& runtime, const RuleTableView& rules, gc_i32 player_index) {
     if (prevent_effect_active(state, rules, player_index)) return;
     PlayerState& player = state.players[player_index]; if (player.active.count == 0) return;
     const CardState& card = state.all_card[player.active.values[0]];
     if (no_special_condition_card(card, rules) || player_active_state(player).fields.burned) return;
+    log_condition(state, runtime, kLogBurned, player_index, false, player.active.values[0]);
     state.changed = true; player_active_state(player).fields.burned = true;
 }
 
-__device__ __forceinline__ void effect_sleep(BattleCoreState& state, const RuleTableView& rules, gc_i32 player_index) {
+__device__ __forceinline__ void effect_sleep(BattleCoreState& state, BattleRuntimeState& runtime, const RuleTableView& rules, gc_i32 player_index) {
     if (prevent_effect_active(state, rules, player_index)) return;
     PlayerState& player = state.players[player_index]; if (player.active.count == 0) return;
     const CardState& card = state.all_card[player.active.values[0]];
     const auto& f = card_continual(card).fields;
     if (f.no_special_condition || f.no_sleep_paralyze_confuse || f.no_sleep) return;
     if (player_active_state(player).fields.bad_status == 1) return;
+    log_condition(state, runtime, kLogAsleep, player_index, false, player.active.values[0]);
     state.changed = true; player_active_state(player).fields.bad_status = 1;
 }
 
-__device__ __forceinline__ void effect_paralyze(BattleCoreState& state, const RuleTableView& rules, gc_i32 player_index) {
+__device__ __forceinline__ void effect_paralyze(BattleCoreState& state, BattleRuntimeState& runtime, const RuleTableView& rules, gc_i32 player_index) {
     if (prevent_effect_active(state, rules, player_index)) return;
     PlayerState& player = state.players[player_index]; if (player.active.count == 0) return;
     const CardState& card = state.all_card[player.active.values[0]];
     const auto& f = card_continual(card).fields;
     if (f.no_special_condition || f.no_sleep_paralyze_confuse) return;
     if (player_active_state(player).fields.bad_status == 2) return;
+    log_condition(state, runtime, kLogParalyzed, player_index, false, player.active.values[0]);
     state.changed = true; player_active_state(player).fields.bad_status = 2;
 }
 
-__device__ __forceinline__ void effect_confuse(BattleCoreState& state, const RuleTableView& rules, gc_i32 player_index) {
+__device__ __forceinline__ void effect_confuse(BattleCoreState& state, BattleRuntimeState& runtime, const RuleTableView& rules, gc_i32 player_index) {
     if (prevent_effect_active(state, rules, player_index)) return;
     PlayerState& player = state.players[player_index]; if (player.active.count == 0) return;
     const CardState& card = state.all_card[player.active.values[0]];
     const auto& f = card_continual(card).fields;
     if (f.no_special_condition || f.no_sleep_paralyze_confuse) return;
     if (player_active_state(player).fields.bad_status == 3) return;
+    log_condition(state, runtime, kLogConfused, player_index, false, player.active.values[0]);
     state.changed = true; player_active_state(player).fields.bad_status = 3;
 }
 

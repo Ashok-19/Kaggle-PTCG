@@ -142,17 +142,6 @@ __device__ __noinline__ void static_effect(
     }
 }
 
-__device__ __forceinline__ void clear_sleep_paralyze_confuse(PlayerState& player) {
-    player_active_state(player).fields.bad_status = 0;
-}
-
-__device__ __forceinline__ void clear_special_condition(PlayerState& player) {
-    auto& active = player_active_state(player).fields;
-    active.bad_status = 0;
-    active.poison_damage_counter = 0;
-    active.burned = false;
-}
-
 __device__ __noinline__ void refresh_effect(
     BattleCoreState& state,
     BattleRuntimeState& runtime,
@@ -201,8 +190,8 @@ __device__ __noinline__ void refresh_effect(
         PlayerState& player = state.players[p];
         for (gc_i32 i = 0; i < (gc_i32)player.active.count; ++i) {
             const CardState& card = state.all_card[player.active.values[i]];
-            if (card_continual(card).fields.no_special_condition) clear_special_condition(player);
-            if (card_continual(card).fields.no_sleep_paralyze_confuse) clear_sleep_paralyze_confuse(player);
+            if (card_continual(card).fields.no_special_condition) clear_special_condition_logged(state, runtime, p);
+            if (card_continual(card).fields.no_sleep_paralyze_confuse) clear_sleep_paralyze_confuse_logged(state, runtime, p);
         }
     }
 }

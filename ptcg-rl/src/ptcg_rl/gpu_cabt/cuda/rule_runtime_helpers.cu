@@ -752,6 +752,7 @@ __device__ __forceinline__ void shuffle_player_deck(
         deck.values[index] = deck.values[swap_index];
         deck.values[swap_index] = tmp;
     }
+    log_shuffle(runtime, player_index);
 }
 
 __device__ __forceinline__ void shuffle_u8_list(

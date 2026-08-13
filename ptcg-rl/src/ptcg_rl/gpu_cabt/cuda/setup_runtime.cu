@@ -125,12 +125,15 @@ __device__ __forceinline__ void setup_open_return_shuffle_full(
         const gc_u8 ref = player.hand.values[(gc_i32)player.hand.count - 1];
         --player.hand.count;
         player.deck.values[player.deck.count++] = ref;
+        log_move_card(state, runtime, player_index, ref, kAreaHand, kAreaDeck, 0);
+        if (runtime.error_flags != 0) return;
         card_moved_non_field(&state, &runtime, ref, kAreaDeck, 0);
         if (runtime.error_flags != 0) return;
     }
     if (player.deck.count > 0) {
         state.changed = 1;
         shuffle_setup_deck_full(player.deck, runtime);
+        log_shuffle(runtime, player_index);
     }
 }
 
@@ -152,6 +155,7 @@ __device__ __forceinline__ bool setup_prepare_pre_full(
     const SetupRuleFlagsFull flags = setup_hand_flags_full(state, runtime, rules, player_index);
     if (runtime.error_flags != 0) return false;
     if (flags.has_basic) {
+        log_has_basic(runtime, player_index, true);
         state.mulligan[player_index] = 0;
         return false;
     }
@@ -159,6 +163,7 @@ __device__ __forceinline__ bool setup_prepare_pre_full(
         setup_make_mulligan_select_full(state, runtime, player_index);
         return true;
     }
+    log_has_basic(runtime, player_index, false);
     state.mulligan[player_index] = 1;
     return false;
 }
@@ -225,6 +230,8 @@ __device__ __forceinline__ gc_u8 setup_move_selected_active_full(
         return 0;
     }
     const gc_u8 ref = player.hand.values[hand_index];
+    log_move_card(state, runtime, player_index, ref, kAreaHand, kAreaActive, 1);
+    if (runtime.error_flags != 0) return 0;
     for (gc_i32 i = hand_index; i + 1 < (gc_i32)player.hand.count; ++i)
         player.hand.values[i] = player.hand.values[i + 1];
     --player.hand.count;
@@ -262,6 +269,8 @@ __device__ __forceinline__ void setup_prize_player_full(
         const gc_u8 ref = player.deck.values[(gc_i32)player.deck.count - 1];
         --player.deck.count;
         player.prize.values[player.prize.count++] = ref;
+        log_move_card(state, runtime, player_index, ref, kAreaDeck, kAreaPrize, 2);
+        if (runtime.error_flags != 0) return;
         card_moved_non_field(&state, &runtime, ref, kAreaPrize, 1);
         if (runtime.error_flags != 0) return;
     }
@@ -350,6 +359,8 @@ __device__ __forceinline__ void setup_move_saved_bench_targets_full(
             runtime.error_flags |= hand_index < 0 ? kRuntimeErrorInvalidSelection : kRuntimeErrorZoneOverflow;
             return;
         }
+        log_move_card(state, runtime, player_index, ref, kAreaHand, kAreaBench, 1);
+        if (runtime.error_flags != 0) return;
         for (gc_i32 i = hand_index; i + 1 < (gc_i32)player.hand.count; ++i)
             player.hand.values[i] = player.hand.values[i + 1];
         --player.hand.count;
@@ -512,6 +523,8 @@ __device__ __forceinline__ void continue_setup_full(
                 const SetupRuleFlagsFull flags = setup_hand_flags_full(state, runtime, rules, p);
                 if (runtime.error_flags != 0) return;
                 if (flags.has_basic) {
+                    log_has_basic(runtime, p, true);
+                    if (runtime.error_flags != 0) return;
                     state.mulligan[p] = 0;
                     setup_make_active_select_full(state, runtime, rules, p);
                     if (runtime.error_flags != 0) return;
@@ -525,6 +538,8 @@ __device__ __forceinline__ void continue_setup_full(
                     found_boundary = true;
                     break;
                 }
+                log_has_basic(runtime, p, false);
+                if (runtime.error_flags != 0) return;
                 state.mulligan[p] = 1;
                 if (!setup_deck_has_basic_full(state, runtime, rules, p)) {
                     if (runtime.error_flags == 0) runtime.error_flags |= kRuntimeErrorNoBasicPokemon;
@@ -537,7 +552,9 @@ __device__ __forceinline__ void continue_setup_full(
         }
         if (runtime.setup_process_stage == kSetupStageCompensation) {
             while (runtime.setup_comp_cursor < 2) {
-                const gc_i32 p = runtime.setup_comp_cursor == 0 ? first : second;
+                // StartSetupBench pushes compensation callbacks in basicPlayerOrder,
+                // so LIFO execution resolves the second player's mulligans first.
+                const gc_i32 p = runtime.setup_comp_cursor == 0 ? second : first;
                 if (state.mulligan_count[p] > 0) {
                     setup_make_compensation_select_full(state, runtime, p);
                     runtime.setup_process_stage = kSetupStageWaitCompensation;
@@ -561,16 +578,19 @@ __device__ __forceinline__ void continue_setup_full(
             return;
         }
         if (runtime.setup_process_stage == kSetupStageTurnStart) {
-            if (finish_check_full(state)) {
+            if (finish_check_full(state, runtime)) {
                 runtime.setup_process_active = 0;
                 runtime.setup_process_stage = kSetupStageIdle;
                 return;
             }
             turn_start_state_roll_full(state, runtime);
             const gc_i32 active_player = rule_active_player_index(state);
+            log_turn_start(runtime, active_player);
+            if (runtime.error_flags != 0) return;
             if (state.players[active_player].deck.count == 0) {
                 state.game_result = active_player == 0 ? 2 : 1;
                 state.finish_reason = 2;
+                log_result(runtime, (gc_i32)state.game_result - 1, 2);
                 runtime.setup_process_active = 0;
                 runtime.setup_process_stage = kSetupStageIdle;
                 return;
@@ -660,6 +680,8 @@ __device__ __forceinline__ void resume_setup_selection_full(
         if (!setup_selected_yes_full(runtime, yes)) return;
         const gc_i32 p = stage == kSetupStageWaitPreFirst ? first
             : stage == kSetupStageWaitPreSecond ? second : runtime.setup_player;
+        log_has_basic(runtime, p, !yes);
+        if (runtime.error_flags != 0) return;
         state.mulligan[p] = yes ? 1 : 0;
         clear_select_full(state, runtime);
         if (stage == kSetupStageWaitPreFirst) runtime.setup_process_stage = kSetupStagePreSecond;
@@ -783,6 +805,7 @@ __device__ __forceinline__ void reset_game_full(
     runtime.rng_stream = stream;
     for (gc_i32 p = 0; p < 2; ++p) {
         shuffle_setup_deck_full(state.players[p].deck, runtime);
+        log_shuffle(runtime, p);
         state.changed = 1;
     }
     set_select_full(state, runtime, kSelectYesNo, kSelectContextIsFirst, 0);

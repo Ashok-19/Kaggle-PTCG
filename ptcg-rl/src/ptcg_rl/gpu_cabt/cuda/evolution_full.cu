@@ -24,10 +24,6 @@ __device__ __forceinline__ bool after_confuse_evolve(
         && card_continual(card).fields.not_recover_confuse_evolve;
 }
 
-__device__ __forceinline__ void clear_special_condition_full(PlayerState& player) {
-    player.active_state = 0;
-}
-
 __device__ __noinline__ void devolve_ref_full(
     BattleCoreState& state,
     BattleRuntimeState& runtime,
@@ -51,6 +47,8 @@ __device__ __noinline__ void devolve_ref_full(
         if (to_area == kAreaHand && cannot_to_hand(state, current_ref)) continue;
 
         const bool keep_confuse = after_confuse_evolve(state, current);
+        log_devolve(state, runtime, p, pre_ref, current_ref);
+        if (runtime.error_flags != 0) return;
         const gc_i32 move_counter = current.move_counter;
         const gc_i32 damage = current.damage;
 
@@ -72,7 +70,7 @@ __device__ __noinline__ void devolve_ref_full(
         state.changed = true;
 
         if (field_area == kAreaActive) {
-            clear_special_condition_full(player);
+            clear_special_condition_logged(state, runtime, p);
             if (keep_confuse) player_active_state(player).fields.bad_status = 3;
         }
         refresh_effect(state, runtime, rules, 0);
@@ -114,6 +112,8 @@ __device__ __noinline__ void evolve_proc_full(
         runtime.error_flags |= kRuntimeErrorTurnHistoryOverflow;
         return;
     }
+    log_evolve(state, runtime, p, evolve_ref, in_play_ref_value);
+    if (runtime.error_flags != 0) return;
     runtime.turn_evolve[runtime.turn_evolve_count++] = {in_play_ref_value, evolve_ref, 0};
 
     const gc_u8 source_area = evolve.area;
@@ -127,7 +127,7 @@ __device__ __noinline__ void evolve_proc_full(
     evolve.move_counter = move_counter;
     evolve.damage = damage;
     if (field_area == kAreaActive) {
-        clear_special_condition_full(player);
+        clear_special_condition_logged(state, runtime, p);
         if (keep_confuse) player_active_state(player).fields.bad_status = 3;
     }
     refresh_effect(state, runtime, rules, 0);
@@ -158,6 +158,8 @@ __device__ __noinline__ void transform_proc_full(
     if (replacement_index < 0 || field_index < 0) return;
 
     const gc_u32 active_state = player.active_state;
+    log_change(state, runtime, pre.player_index, pre_ref, replacement_ref);
+    if (runtime.error_flags != 0) return;
     const gc_i32 replacement_card_id = after.card_id;
     const CardState copied_state = pre;
     remove_area_ref(state, runtime, pre.player_index, replacement_area, replacement_index);

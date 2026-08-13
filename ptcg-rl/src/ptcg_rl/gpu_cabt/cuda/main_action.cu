@@ -63,7 +63,7 @@ __device__ __forceinline__ void finish_playing_cards_full(
     while (state.playing.count > 0) {
         const gc_u8 ref = state.playing.values[0];
         const gc_i32 owner = ref > 0 && ref < kAllCardCapacity ? state.all_card[ref].player_index : player;
-        move_card_full(state, runtime, rules, owner, 13, 0, 3, 0, false, false, false);
+        move_card_full(state, runtime, rules, owner, 13, 0, 3, 0, false, false, false, true);
         if (runtime.error_flags != 0) return;
     }
 }
@@ -196,14 +196,16 @@ __device__ __forceinline__ void execute_main_play_full(
         runtime.error_flags |= kRuntimeErrorUnsupportedTransition;
         return;
     }
+    log_play(state, runtime, player, ref);
+    if (runtime.error_flags != 0) return;
     if (master->card_type == 0) {
-        move_card_full(state, runtime, rules, player, kAreaHand, hand_index, kAreaBench, 0, false, false, false);
+        move_card_full(state, runtime, rules, player, kAreaHand, hand_index, kAreaBench, 0, false, false, false, true);
         if (runtime.error_flags == 0) finish_main_refresh_full(state, runtime, rules);
         return;
     }
     if (master->card_type == 4) {
         state_turn(state).fields.stadium_played = true;
-        move_card_full(state, runtime, rules, player, kAreaHand, hand_index, 7, 0, false, false, false);
+        move_card_full(state, runtime, rules, player, kAreaHand, hand_index, 7, 0, false, false, false, true);
         if (runtime.error_flags == 0) finish_main_refresh_full(state, runtime, rules);
         return;
     }
@@ -216,11 +218,11 @@ __device__ __forceinline__ void execute_main_play_full(
         if (!append_turn_play_full(runtime, ref)) return;
     }
     if (card_flag(*master, kCardFlagToBench)) {
-        move_card_full(state, runtime, rules, player, kAreaHand, hand_index, kAreaBench, 0, false, false, false);
+        move_card_full(state, runtime, rules, player, kAreaHand, hand_index, kAreaBench, 0, false, false, false, true);
         if (runtime.error_flags == 0) finish_main_refresh_full(state, runtime, rules);
         return;
     }
-    const gc_u8 moved = move_card_full(state, runtime, rules, player, kAreaHand, hand_index, 13, 0, false, false, false);
+    const gc_u8 moved = move_card_full(state, runtime, rules, player, kAreaHand, hand_index, 13, 0, false, false, false, true);
     if (runtime.error_flags != 0 || moved == 0) return;
     runtime.main_action_stage = kMainActionPlaySkill;
     set_main_ability_full(state, runtime, master->play_skill_id, moved, player);

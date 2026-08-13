@@ -212,7 +212,7 @@ __device__ __forceinline__ void continue_turn_cycle_full(
         if (turn_cycle_waiting(state, runtime)) return;
 
         if (runtime.turn_cycle_stage == kTurnCycleAfterEndRefresh) {
-            if (finish_check_full(state)) {
+            if (finish_check_full(state, runtime)) {
                 runtime.turn_cycle_stage = kTurnCycleDone;
                 continue;
             }
@@ -226,7 +226,7 @@ __device__ __forceinline__ void continue_turn_cycle_full(
         }
 
         if (runtime.turn_cycle_stage == kTurnCycleAfterEnd2Refresh) {
-            if (finish_check_full(state)) {
+            if (finish_check_full(state, runtime)) {
                 runtime.turn_cycle_stage = kTurnCycleDone;
                 continue;
             }
@@ -240,7 +240,7 @@ __device__ __forceinline__ void continue_turn_cycle_full(
         }
 
         if (runtime.turn_cycle_stage == kTurnCycleAfterCheckupRefresh) {
-            if (finish_check_full(state)) {
+            if (finish_check_full(state, runtime)) {
                 runtime.turn_cycle_stage = kTurnCycleDone;
                 continue;
             }
@@ -251,15 +251,18 @@ __device__ __forceinline__ void continue_turn_cycle_full(
         }
 
         if (runtime.turn_cycle_stage == kTurnCycleAfterCheckupEndRefresh) {
-            if (finish_check_full(state)) {
+            if (finish_check_full(state, runtime)) {
                 runtime.turn_cycle_stage = kTurnCycleDone;
                 continue;
             }
             turn_start_state_roll_full(state, runtime);
             const gc_i32 active_player = rule_active_player_index(state);
+            log_turn_start(runtime, active_player);
+            if (runtime.error_flags != 0) return;
             if (state.players[active_player].deck.count == 0) {
                 state.game_result = active_player == 0 ? 2 : 1;
                 state.finish_reason = 2;
+                log_result(runtime, (gc_i32)state.game_result - 1, 2);
                 runtime.turn_cycle_stage = kTurnCycleDone;
                 continue;
             }
@@ -292,9 +295,11 @@ __device__ __forceinline__ void start_turn_end_full(
     BattleRuntimeState& runtime,
     const RuleTableView& rules
 ) {
-    if (runtime.turn_cycle_active || finish_check_full(state)) return;
+    if (runtime.turn_cycle_active || finish_check_full(state, runtime)) return;
     runtime.turn_cycle_active = 1;
     const gc_i32 active_player = rule_active_player_index(state);
+    log_turn_end(runtime, active_player);
+    if (runtime.error_flags != 0) return;
     collect_turn_end_delayed_triggers(state, runtime, active_player);
     if (runtime.error_flags != 0) return;
     pull_trigger(state, runtime, rules, 1, (gc_u8)(1 + active_player), 0, 0);

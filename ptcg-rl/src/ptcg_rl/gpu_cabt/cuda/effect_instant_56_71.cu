@@ -135,7 +135,7 @@ __device__ __noinline__ bool effect_instant_56_71(
                     const gc_u8 energy_ref = state.selected_list.values[j];
                     state.changed = true;
                     if (is_prevent_effect(state, rules, target_ref)) move_ref_card_full(state, runtime, rules, energy_ref, 3);
-                    else switch_energy_proc_full(state, energy_ref, target_ref);
+                    else switch_energy_proc_full(state, runtime, energy_ref, target_ref);
                 }
                 break;
             }
@@ -159,7 +159,7 @@ __device__ __noinline__ bool effect_instant_56_71(
                 const gc_u8 target_ref = runtime.targets[i].card;
                 state.changed = true;
                 if (is_prevent_effect(state, rules, target_ref)) move_ref_card_full(state, runtime, rules, energy_ref, 3);
-                else switch_energy_proc_full(state, energy_ref, target_ref);
+                else switch_energy_proc_full(state, runtime, energy_ref, target_ref);
             }
             return true;
         }

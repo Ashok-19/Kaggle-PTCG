@@ -324,7 +324,7 @@ __device__ __forceinline__ void begin_main_select_full(
     BattleRuntimeState& runtime,
     const RuleTableView& rules
 ) {
-    if (finish_check_full(state)) return;
+    if (finish_check_full(state, runtime)) return;
     if (state.phase != 1 || state.select_type != kSelectNone) {
         runtime.error_flags |= kRuntimeErrorUnsupportedTransition;
         return;

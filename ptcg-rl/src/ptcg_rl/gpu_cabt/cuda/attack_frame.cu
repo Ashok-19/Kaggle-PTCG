@@ -307,6 +307,8 @@ __device__ __forceinline__ void begin_selected_attack_id_full(
         return;
     }
     const CardState& attacker = state.all_card[state.attacker];
+    log_attack(state, runtime, attacker.player_index, state.attacker, attack_id);
+    if (runtime.error_flags != 0) return;
     if (!satisfy_attack_state_condition_full(state, rules, attacker, *attack, source_attack_id)) {
         start_after_attack_full(state, runtime, rules);
         return;
@@ -539,8 +541,13 @@ __device__ __forceinline__ void start_attack_from_main_full(
         attacker_ref = ps.bench.values[runtime.main_attack_bench_index];
     }
     const RuleAttack* attack = rule_attack(rules, runtime.main_attack_id);
-    if (attacker_ref == 0 || attack == nullptr
-        || !can_attack_card_full(state, rules, attacker_ref)
+    if (attacker_ref == 0 || attack == nullptr) {
+        start_after_attack_full(state, runtime, rules);
+        return;
+    }
+    log_attack(state, runtime, state.all_card[attacker_ref].player_index, attacker_ref, attack->attack_id);
+    if (runtime.error_flags != 0) return;
+    if (!can_attack_card_full(state, rules, attacker_ref)
         || !satisfy_attack_state_condition_full(
             state, rules, state.all_card[attacker_ref], *attack,
             runtime.main_src_attack_id)) {

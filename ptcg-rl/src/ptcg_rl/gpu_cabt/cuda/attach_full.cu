@@ -72,6 +72,8 @@ __device__ __noinline__ gc_u8 attach_proc_full(
     }
     if (moved == 0 || runtime.error_flags != 0) return moved;
     state.all_card[moved].attach_move_counter = state.all_card[target_ref].move_counter;
+    log_attach(state, runtime, source.player_index, moved, target_ref);
+    if (runtime.error_flags != 0) return moved;
 
     if (from_area == kAreaHand) {
         if (is_energy_card(source_master->card_type)) {
@@ -104,12 +106,16 @@ __device__ __noinline__ gc_u8 attach_proc_full(
 
 __device__ __forceinline__ void switch_energy_proc_full(
     BattleCoreState& state,
+    BattleRuntimeState& runtime,
     gc_u8 energy_ref,
     gc_u8 pokemon_ref
 ) {
     if (energy_ref == 0 || pokemon_ref == 0
         || energy_ref >= kAllCardCapacity || pokemon_ref >= kAllCardCapacity) return;
+    const RefPositionState before = attached_card_position(state, state.all_card[energy_ref]);
     state.all_card[energy_ref].attach_move_counter = state.all_card[pokemon_ref].move_counter;
+    if (before.ref != 0) log_move_attached(
+        state, runtime, state.all_card[pokemon_ref].player_index, energy_ref, before.ref, pokemon_ref);
 }
 
 }  // namespace gpu_cabt

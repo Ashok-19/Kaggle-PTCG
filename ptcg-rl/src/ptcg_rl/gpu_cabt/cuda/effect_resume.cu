@@ -560,27 +560,42 @@ __device__ __forceinline__ bool resume_disable_attack(
 
 __device__ __forceinline__ void apply_selected_special_condition(
     BattleCoreState& state,
+    BattleRuntimeState& runtime,
     const RuleTableView& rules,
     gc_i32 player_index,
     gc_i32 condition
 ) {
-    if (condition == 0) effect_poison(state, rules, player_index, 1);
-    else if (condition == 1) effect_burn(state, rules, player_index);
-    else if (condition == 2) effect_sleep(state, rules, player_index);
-    else if (condition == 3) effect_paralyze(state, rules, player_index);
-    else if (condition == 4) effect_confuse(state, rules, player_index);
+    if (condition == 0) effect_poison(state, runtime, rules, player_index, 1);
+    else if (condition == 1) effect_burn(state, runtime, rules, player_index);
+    else if (condition == 2) effect_sleep(state, runtime, rules, player_index);
+    else if (condition == 3) effect_paralyze(state, runtime, rules, player_index);
+    else if (condition == 4) effect_confuse(state, runtime, rules, player_index);
 }
 
 __device__ __forceinline__ void recover_selected_special_condition(
     BattleCoreState& state,
+    BattleRuntimeState& runtime,
     gc_i32 player_index,
     gc_i32 condition
 ) {
     if (player_index < 0 || player_index > 1) return;
-    auto& active = player_active_state(state.players[player_index]).fields;
-    if (condition == 0) active.poison_damage_counter = 0;
-    else if (condition == 1) active.burned = false;
-    else if (condition >= 2 && condition <= 4) active.bad_status = 0;
+    PlayerState& player = state.players[player_index];
+    if (player.active.count == 0) return;
+    const gc_u8 ref = player.active.values[0];
+    auto& active = player_active_state(player).fields;
+    if (condition == 0) {
+        if (active.poison_damage_counter != 0) {
+            active.poison_damage_counter = 0;
+            log_condition(state, runtime, kLogPoisoned, player_index, true, ref);
+        }
+    } else if (condition == 1) {
+        if (active.burned) {
+            active.burned = false;
+            log_condition(state, runtime, kLogBurned, player_index, true, ref);
+        }
+    } else if (condition >= 2 && condition <= 4) {
+        clear_sleep_paralyze_confuse_logged(state, runtime, player_index);
+    }
 }
 
 __device__ __noinline__ void resume_effect_selection_full(
@@ -695,7 +710,7 @@ __device__ __noinline__ void resume_effect_selection_full(
         const SelectOptionState option = *first_selected_option(runtime);
         const gc_i32 player_index = runtime.pending_effect_arg0;
         clear_select_full(state, runtime);
-        apply_selected_special_condition(state, rules, player_index, option.param0);
+        apply_selected_special_condition(state, runtime, rules, player_index, option.param0);
         finish_waiting_effect_and_run(state, runtime, rules, *effect, depth);
         return;
     }
@@ -703,7 +718,7 @@ __device__ __noinline__ void resume_effect_selection_full(
         const SelectOptionState option = *first_selected_option(runtime);
         const gc_i32 player_index = runtime.pending_effect_arg0;
         clear_select_full(state, runtime);
-        recover_selected_special_condition(state, player_index, option.param0);
+        recover_selected_special_condition(state, runtime, player_index, option.param0);
         finish_waiting_effect_and_run(state, runtime, rules, *effect, depth);
         return;
     }

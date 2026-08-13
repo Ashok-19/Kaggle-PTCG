@@ -40,9 +40,11 @@ __device__ __forceinline__ void checkup_burn_player(
     const gc_i32 damage = 20 + (gc_i32)player_continual(player).fields.burn_damage_change;
     if (damage > 0)
         add_damage_full(state, runtime, rules, ref, damage, false, ref, false, nullptr);
-    select_coin_full(state, runtime, 1);
-    if (state.coin_head_count > 0 && player_active_state(player).fields.burned)
+    select_coin_full(state, runtime, 1, player_index);
+    if (state.coin_head_count > 0 && player_active_state(player).fields.burned) {
+        log_condition(state, runtime, kLogBurned, player_index, true, ref);
         player_active_state(player).fields.burned = false;
+    }
 }
 
 __device__ __forceinline__ void checkup_sleep_player(
@@ -52,16 +54,23 @@ __device__ __forceinline__ void checkup_sleep_player(
 ) {
     PlayerState& player = state.players[player_index];
     if (player.active.count == 0 || player_active_state(player).fields.bad_status != 1) return;
-    select_coin_full(state, runtime, 1);
-    if (state.coin_head_count > 0)
+    select_coin_full(state, runtime, 1, player_index);
+    if (state.coin_head_count > 0) {
+        log_condition(state, runtime, kLogAsleep, player_index, true, player.active.values[0]);
         player_active_state(player).fields.bad_status = 0;
+    }
 }
 
-__device__ __forceinline__ void checkup_paralyze_active_player(BattleCoreState& state) {
+__device__ __forceinline__ void checkup_paralyze_active_player(
+    BattleCoreState& state,
+    BattleRuntimeState& runtime
+) {
     const gc_i32 player_index = rule_active_player_index(state);
     PlayerState& player = state.players[player_index];
-    if (player.active.count > 0 && player_active_state(player).fields.bad_status == 2)
+    if (player.active.count > 0 && player_active_state(player).fields.bad_status == 2) {
+        log_condition(state, runtime, kLogParalyzed, player_index, true, player.active.values[0]);
         player_active_state(player).fields.bad_status = 0;
+    }
 }
 
 __device__ __forceinline__ void special_condition_proc_full(
@@ -80,7 +89,7 @@ __device__ __forceinline__ void special_condition_proc_full(
     if (runtime.error_flags != 0) return;
     checkup_sleep_player(state, runtime, first);
     checkup_sleep_player(state, runtime, 1 - first);
-    checkup_paralyze_active_player(state);
+    checkup_paralyze_active_player(state, runtime);
 }
 
 __device__ __forceinline__ bool append_special_condition_trigger(

@@ -77,8 +77,9 @@ __device__ __forceinline__ void draw_cards(
     for (gc_i32 index = 0; index < count; ++index) {
         if (state->players[player_index].deck.count == 0) break;
         state->changed = 1;
-        move_last_deck_to_hand(state, runtime, player_index);
+        const gc_u8 ref = move_last_deck_to_hand(state, runtime, player_index);
         if (runtime->error_flags != 0) return;
+        if (ref != 0) log_draw(*state, *runtime, player_index, ref);
     }
 }
 

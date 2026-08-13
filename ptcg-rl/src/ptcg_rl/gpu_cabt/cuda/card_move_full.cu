@@ -219,13 +219,15 @@ __device__ __noinline__ gc_u8 move_card_full(
     gc_i32 open_type,
     bool with_attach,
     bool must_move,
-    bool ko
+    bool ko,
+    bool no_log = false
 ) {
     if (from_area == to_area) { runtime.error_flags |= kRuntimeErrorUnsupportedTransition; return 0; }
     gc_u8 ref = area_ref_at(state, player_index, from_area, from_index);
     if (ref == 0) { runtime.error_flags |= kRuntimeErrorInvalidSelection; return 0; }
     PlayerState& player = state.players[player_index];
     CardState& original = state.all_card[ref];
+    const gc_u8 log_from_area = from_area == 24 ? original.pre_area : from_area;
     const RuleCardMaster* master = rule_card(rules, original.card_id);
     if (master == nullptr) { runtime.error_flags |= kRuntimeErrorUnsupportedTransition; return ref; }
 
@@ -259,6 +261,9 @@ __device__ __noinline__ gc_u8 move_card_full(
     const gc_i32 old_move_counter = state.all_card[ref].move_counter;
     const gc_u8 normalized_to_area = to_area == 14 ? 1 : to_area;
     card_moved_full(state, runtime, ref, normalized_to_area, false);
+    if (runtime.error_flags != 0) return ref;
+    if (!no_log && to_area != 10)
+        log_move_card(state, runtime, player_index, ref, log_from_area, to_area, open_type);
     if (runtime.error_flags != 0) return ref;
 
     if (from_area == 7) state.last_stadium_player = (gc_i8)player_index;
@@ -378,7 +383,10 @@ __device__ __noinline__ void switch_pokemon_full(
         if (bench_index < 0 || bench_index >= (gc_i32)player.bench.count) { runtime.error_flags |= kRuntimeErrorInvalidSelection; return; }
         const gc_u8 bench_ref = player.bench.values[bench_index];
         const gc_u8 old_active = player.active.values[0];
-        player.active_state = 0;
+        log_switch(state, runtime, player_index, old_active, bench_ref);
+        if (runtime.error_flags != 0) return;
+        clear_special_condition_logged(state, runtime, player_index);
+        if (runtime.error_flags != 0) return;
         player.active.values[0] = bench_ref;
         player.bench.values[bench_index] = old_active;
         card_moved_full(state, runtime, bench_ref, 4, false);

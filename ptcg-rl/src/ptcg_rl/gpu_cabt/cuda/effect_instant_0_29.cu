@@ -252,11 +252,28 @@ __device__ __noinline__ bool effect_instant_0_29(
             }
             return true;
         }
-        case 29:  // LookAndReturn: log-only in native; only reverse-clear has state semantics.
-            if (value == 1) for (gc_i32 i = 0; i < (gc_i32)runtime.target_count; ++i) {
-                const AreaRefState r = runtime.targets[i]; if (valid_area_ref(state, r)) state.all_card[r.card].reverse = 0;
+        case 29: {  // LookAndReturn: native emits synthetic movement logs only.
+            if (runtime.target_count == 0) return true;
+            gc_i32 open_type = owner + 3;
+            const AreaRefState first_ref = runtime.targets[0];
+            if (valid_area_ref(state, first_ref) && state.all_card[first_ref.card].area == kAreaHand)
+                open_type = 0;
+            for (gc_i32 i = 0; i < (gc_i32)runtime.target_count; ++i) {
+                const AreaRefState r = runtime.targets[i];
+                if (!valid_area_ref(state, r)) continue;
+                const CardState& card = state.all_card[r.card];
+                log_move_card(state, runtime, card.player_index, r.card, card.area, 12, open_type);
+            }
+            if (value == 1) open_type = 0;
+            for (gc_i32 i = 0; i < (gc_i32)runtime.target_count; ++i) {
+                const AreaRefState r = runtime.targets[i];
+                if (!valid_area_ref(state, r)) continue;
+                CardState& card = state.all_card[r.card];
+                log_move_card(state, runtime, card.player_index, r.card, 12, card.area, open_type);
+                if (value == 1) card.reverse = 0;
             }
             return true;
+        }
     }
     (void)depth;
     return true;
