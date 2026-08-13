@@ -68,6 +68,7 @@ static constexpr gc_u16 kPendingRecoverSpecialCondition = 21;
 static constexpr gc_u16 kPendingMoreDevolve = 22;
 static constexpr gc_u16 kPendingEffectSelection = 23;
 static constexpr gc_u16 kPendingAttackDamagePutCounter = 24;
+static constexpr gc_u16 kPendingTriggerOrder = 25;
 
 struct SelectOptionState {
     gc_u8 type;
@@ -140,7 +141,9 @@ struct BattleRuntimeState {
     gc_u8 effect_repeat_mode;
     gc_u8 effect_execution_active;
     gc_u8 effect_instance_waiting;
-    gc_u8 reserved_effect;
+    gc_u8 trigger_resolution_active;
+    gc_i8 trigger_resolution_depth;
+    gc_u8 trigger_activation_waiting;
     gc_u16 pending_effect_kind;
     gc_u16 pending_effect_substep;
     gc_i32 pending_effect_arg0;
