@@ -206,6 +206,14 @@ def run(args: argparse.Namespace) -> dict[str, object]:
     all_terminal = bool(np.all(final_results != 0))
     zero_errors = bool(np.all(final_errors == 0) and np.all(final_event_status == 0))
     passed = failure is None and all_terminal and zero_errors
+    terminal_values, terminal_counts = np.unique(final_results, return_counts=True)
+    result_counts = {
+        str(int(value)): int(count)
+        for value, count in zip(terminal_values, terminal_counts, strict=True)
+    }
+    event_min = int(event_totals.min()) if event_totals.size else 0
+    event_max = int(event_totals.max()) if event_totals.size else 0
+    max_turn = int(final_turns.max()) if final_turns.size else 0
     return {
         "status": "PASS" if passed else "FAIL",
         "seed": args.seed,
@@ -221,6 +229,10 @@ def run(args: argparse.Namespace) -> dict[str, object]:
         "run_seconds": run_seconds,
         "memory_bytes": runtime.memory_bytes(),
         "abi": runtime.abi.__dict__,
+        "result_counts": result_counts,
+        "event_min": event_min,
+        "event_max": event_max,
+        "max_turn": max_turn,
         "games": games,
     }
 
@@ -237,11 +249,15 @@ def main() -> None:
     )
     parser.add_argument("--max-boundaries", type=int, default=5000)
     parser.add_argument("--stack-bytes", type=int, default=16 * 1024)
+    parser.add_argument("--summary-only", action="store_true")
     args = parser.parse_args()
     if args.repeats <= 0:
         parser.error("--repeats must be positive")
     result = run(args)
-    print(json.dumps(result, sort_keys=True))
+    output = dict(result)
+    if args.summary_only:
+        output.pop("games", None)
+    print(json.dumps(output, sort_keys=True))
     if result["status"] != "PASS":
         raise SystemExit(1)
 
