@@ -1,0 +1,548 @@
+{
+  "abi": {
+    "all_card_capacity": 128,
+    "deck_size": 60,
+    "entity_capacity": 128,
+    "entity_width": 18,
+    "global_width": 24,
+    "option_capacity": 128,
+    "option_width": 20,
+    "player_width": 12,
+    "public_event_width": 10,
+    "public_log_capacity": 1024,
+    "runtime_bytes": 62320,
+    "runtime_option_capacity": 128,
+    "selected_capacity": 128,
+    "state_bytes": 21016
+  },
+  "best_gpu_decisions_per_second": {
+    "decisions_per_second": 45153.3148662721,
+    "env_count": 6000,
+    "games_per_second": 370.2750538460302
+  },
+  "best_gpu_games_per_second": {
+    "decisions_per_second": 45153.3148662721,
+    "env_count": 6000,
+    "games_per_second": 370.2750538460302
+  },
+  "compile_mode": "nvrtc-fast-compile-max-conservative-local",
+  "completion_checks": {
+    "gpu_sweep_no_non_capacity_failures": true,
+    "native_public_zero_failures": true,
+    "production_stack_16k_pass": true,
+    "stress_at_least_6000_games_pass": true
+  },
+  "cpu_vs_gpu_public_speedup": {
+    "cpu_baseline": "single-process official native CABT with ToJsonApi",
+    "decisions_per_second": 0.35213398067746193,
+    "games_per_second": 0.36335486060325456
+  },
+  "cubin_build_seconds_excluded_from_throughput": 0.23065607700846158,
+  "deck_families": [
+    "lucario",
+    "dragapult",
+    "alakazam",
+    "lopunny",
+    "iono",
+    "abomasnow",
+    "grim"
+  ],
+  "device": {
+    "compute_capability": "8.6",
+    "multiprocessors": 16,
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "total_global_memory_bytes": 3953393664
+  },
+  "gpu_sweep": [
+    {
+      "aggregate_decisions": 49792,
+      "aggregate_games": 384,
+      "aggregate_seconds": 9.829897154995706,
+      "decisions_per_second": 5065.363270326276,
+      "env_count": 384,
+      "free_vram_after_allocation_bytes": 3411410944,
+      "games_per_second": 39.06449822873734,
+      "runtime_memory_bytes": 55937160,
+      "runtime_memory_bytes_per_env": 145669.6875,
+      "sample_seconds": [
+        9.829897154995706
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 9.829897154995706,
+        "p95": 9.829897154995706,
+        "p99": 9.829897154995706
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 384,
+          "decisions": 49792,
+          "decisions_per_second": 5065.363270326276,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 5321.614121989114,
+            "p95": 9194.00627099094,
+            "p99": 9669.569054996828
+          },
+          "games": 384,
+          "games_per_second": 39.06449822873734,
+          "max_turn": 65,
+          "seconds": 9.829897154995706,
+          "status": "PASS",
+          "telemetry": {
+            "memory_total_mib": 4096.0,
+            "memory_used_max_mib": 517.0,
+            "power_mean_w": 34.76857142857143,
+            "samples": 98,
+            "utilization_mean_pct": 100.0,
+            "utilization_p95_pct": 100.0
+          },
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    },
+    {
+      "aggregate_decisions": 96328,
+      "aggregate_games": 768,
+      "aggregate_seconds": 10.879901159991277,
+      "decisions_per_second": 8853.75690307073,
+      "env_count": 768,
+      "free_vram_after_allocation_bytes": 3356884992,
+      "games_per_second": 70.58887656297566,
+      "runtime_memory_bytes": 111223560,
+      "runtime_memory_bytes_per_env": 144822.34375,
+      "sample_seconds": [
+        10.879901159991277
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 10.879901159991277,
+        "p95": 10.879901159991277,
+        "p99": 10.879901159991277
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 448,
+          "decisions": 96328,
+          "decisions_per_second": 8853.75690307073,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 4905.5799760099035,
+            "p95": 9818.147192010656,
+            "p99": 10426.97026298265
+          },
+          "games": 768,
+          "games_per_second": 70.58887656297566,
+          "max_turn": 87,
+          "seconds": 10.879901159991277,
+          "status": "PASS",
+          "telemetry": {
+            "memory_total_mib": 4096.0,
+            "memory_used_max_mib": 569.0,
+            "power_mean_w": 35.852660550458715,
+            "samples": 109,
+            "utilization_mean_pct": 100.0,
+            "utilization_p95_pct": 100.0
+          },
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    },
+    {
+      "aggregate_decisions": 185942,
+      "aggregate_games": 1536,
+      "aggregate_seconds": 11.113290118984878,
+      "decisions_per_second": 16731.498773918855,
+      "env_count": 1536,
+      "free_vram_after_allocation_bytes": 3245735936,
+      "games_per_second": 138.21289497122413,
+      "runtime_memory_bytes": 221796360,
+      "runtime_memory_bytes_per_env": 144398.671875,
+      "sample_seconds": [
+        11.113290118984878
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 11.113290118984878,
+        "p95": 11.113290118984878,
+        "p99": 11.113290118984878
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 416,
+          "decisions": 185942,
+          "decisions_per_second": 16731.498773918855,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 5067.351482983213,
+            "p95": 10033.758756995667,
+            "p99": 10671.94989498239
+          },
+          "games": 1536,
+          "games_per_second": 138.21289497122413,
+          "max_turn": 69,
+          "seconds": 11.113290118984878,
+          "status": "PASS",
+          "telemetry": {
+            "memory_total_mib": 4096.0,
+            "memory_used_max_mib": 677.0,
+            "power_mean_w": 38.85153153153155,
+            "samples": 111,
+            "utilization_mean_pct": 99.95495495495496,
+            "utilization_p95_pct": 100.0
+          },
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    },
+    {
+      "aggregate_decisions": 376717,
+      "aggregate_games": 3072,
+      "aggregate_seconds": 12.466500924987486,
+      "decisions_per_second": 30218.342922906264,
+      "env_count": 3072,
+      "free_vram_after_allocation_bytes": 3023437824,
+      "games_per_second": 246.42038840606622,
+      "runtime_memory_bytes": 442941960,
+      "runtime_memory_bytes_per_env": 144186.8359375,
+      "sample_seconds": [
+        12.466500924987486
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 12.466500924987486,
+        "p95": 12.466500924987486,
+        "p99": 12.466500924987486
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 432,
+          "decisions": 376717,
+          "decisions_per_second": 30218.342922906264,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 5610.49672900117,
+            "p95": 11128.637079003965,
+            "p99": 11898.086225992301
+          },
+          "games": 3072,
+          "games_per_second": 246.42038840606622,
+          "max_turn": 75,
+          "seconds": 12.466500924987486,
+          "status": "PASS",
+          "telemetry": {
+            "memory_total_mib": 4096.0,
+            "memory_used_max_mib": 889.0,
+            "power_mean_w": 43.70392,
+            "samples": 125,
+            "utilization_mean_pct": 100.0,
+            "utilization_p95_pct": 100.0
+          },
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    },
+    {
+      "aggregate_decisions": 555858,
+      "aggregate_games": 4608,
+      "aggregate_seconds": 14.327556577976793,
+      "decisions_per_second": 38796.42679997661,
+      "env_count": 4608,
+      "free_vram_after_allocation_bytes": 2799042560,
+      "games_per_second": 321.6179936140025,
+      "runtime_memory_bytes": 664087560,
+      "runtime_memory_bytes_per_env": 144116.22395833334,
+      "sample_seconds": [
+        14.327556577976793
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 14.327556577976793,
+        "p95": 14.327556577976793,
+        "p99": 14.327556577976793
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 432,
+          "decisions": 555858,
+          "decisions_per_second": 38796.42679997661,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 6721.790374984266,
+            "p95": 12937.650476000272,
+            "p99": 13888.431785977446
+          },
+          "games": 4608,
+          "games_per_second": 321.6179936140025,
+          "max_turn": 72,
+          "seconds": 14.327556577976793,
+          "status": "PASS",
+          "telemetry": {
+            "memory_total_mib": 4096.0,
+            "memory_used_max_mib": 1105.0,
+            "power_mean_w": 47.17559440559441,
+            "samples": 143,
+            "utilization_mean_pct": 99.93006993006993,
+            "utilization_p95_pct": 100.0
+          },
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    },
+    {
+      "aggregate_decisions": 731672,
+      "aggregate_games": 6000,
+      "aggregate_seconds": 16.20417021799949,
+      "decisions_per_second": 45153.3148662721,
+      "env_count": 6000,
+      "free_vram_after_allocation_bytes": 2595618816,
+      "games_per_second": 370.2750538460302,
+      "runtime_memory_bytes": 864500760,
+      "runtime_memory_bytes_per_env": 144083.46,
+      "sample_seconds": [
+        16.20417021799949
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 16.20417021799949,
+        "p95": 16.20417021799949,
+        "p99": 16.20417021799949
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 432,
+          "decisions": 731672,
+          "decisions_per_second": 45153.3148662721,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 7685.9659340116195,
+            "p95": 14735.110830020858,
+            "p99": 15564.07669300097
+          },
+          "games": 6000,
+          "games_per_second": 370.2750538460302,
+          "max_turn": 76,
+          "seconds": 16.20417021799949,
+          "status": "PASS",
+          "telemetry": {
+            "memory_total_mib": 4096.0,
+            "memory_used_max_mib": 1299.0,
+            "power_mean_w": 50.11018518518519,
+            "samples": 162,
+            "utilization_mean_pct": 100.0,
+            "utilization_p95_pct": 100.0
+          },
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    }
+  ],
+  "local_compile_safety": {
+    "fully_optimized_nvrtc_attempt": "FORBIDDEN_ON_THIS_HOST_AFTER_CONFIRMED_OOM",
+    "host_ram_gib_approx": 15,
+    "observed_oom_anon_rss_bytes_approx": 13665058816,
+    "reason": "Kernel OOM killer terminated fully optimized NVRTC compile; fast-compile=max preserves engine semantics and yields a conservative local throughput measurement."
+  },
+  "native_single_process": {
+    "compile_seconds_excluded": 25.457222765980987,
+    "modes": [
+      {
+        "decisions": 743752,
+        "decisions_per_second": 262781.041192,
+        "failures": 0,
+        "game_latency_p50_ms": 0.430675,
+        "game_latency_p95_ms": 0.96665,
+        "game_latency_p99_ms": 1.169453,
+        "games": 6000,
+        "games_per_second": 2119.908581,
+        "json_bytes": 0,
+        "max_turn": 64,
+        "mode": "core",
+        "seconds": 2.830311
+      },
+      {
+        "decisions": 754987,
+        "decisions_per_second": 128227.65579,
+        "failures": 0,
+        "game_latency_p50_ms": 0.853439,
+        "game_latency_p95_ms": 2.136508,
+        "game_latency_p99_ms": 2.596242,
+        "games": 6000,
+        "games_per_second": 1019.045275,
+        "json_bytes": 2783691017,
+        "max_turn": 75,
+        "mode": "public",
+        "seconds": 5.887864
+      }
+    ]
+  },
+  "record_id": "gpu-cabt-final-local-qualification-v1",
+  "rule_extraction_seconds_excluded_from_throughput": 23.484959619003348,
+  "source_head": "1cba8801619e2a4a9f42295d927d11ac26aa35e8",
+  "stack_sweep": [
+    {
+      "aggregate_decisions": 91648,
+      "aggregate_games": 768,
+      "aggregate_seconds": 10.19789896599832,
+      "decisions_per_second": 8986.9492044951,
+      "env_count": 768,
+      "free_vram_after_allocation_bytes": 3558211584,
+      "games_per_second": 75.3096302052662,
+      "runtime_memory_bytes": 111223560,
+      "runtime_memory_bytes_per_env": 144822.34375,
+      "sample_seconds": [
+        10.19789896599832
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 10.19789896599832,
+        "p95": 10.19789896599832,
+        "p99": 10.19789896599832
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 448,
+          "decisions": 91648,
+          "decisions_per_second": 8986.9492044951,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 4795.340949000092,
+            "p95": 9120.595228014281,
+            "p99": 9853.961636121388
+          },
+          "games": 768,
+          "games_per_second": 75.3096302052662,
+          "max_turn": 75,
+          "seconds": 10.19789896599832,
+          "status": "PASS",
+          "telemetry": null,
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 8192,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    },
+    {
+      "aggregate_decisions": 92588,
+      "aggregate_games": 768,
+      "aggregate_seconds": 10.19455323900911,
+      "decisions_per_second": 9082.104711142729,
+      "env_count": 768,
+      "free_vram_after_allocation_bytes": 3356884992,
+      "games_per_second": 75.33434589965887,
+      "runtime_memory_bytes": 111223560,
+      "runtime_memory_bytes_per_env": 144822.34375,
+      "sample_seconds": [
+        10.19455323900911
+      ],
+      "sample_seconds_percentiles": {
+        "p50": 10.19455323900911,
+        "p95": 10.19455323900911,
+        "p99": 10.19455323900911
+      },
+      "samples": [
+        {
+          "all_terminal": true,
+          "boundaries": 400,
+          "decisions": 92588,
+          "decisions_per_second": 9082.104711142729,
+          "failure": null,
+          "game_latency_ms": {
+            "p50": 4729.828275012551,
+            "p95": 9394.466705009108,
+            "p99": 9956.936630012933
+          },
+          "games": 768,
+          "games_per_second": 75.33434589965887,
+          "max_turn": 64,
+          "seconds": 10.19455323900911,
+          "status": "PASS",
+          "telemetry": null,
+          "zero_errors": true
+        }
+      ],
+      "stack_bytes": 16384,
+      "status": "PASS",
+      "total_vram_bytes": 3953393664
+    }
+  ],
+  "status": "PASS",
+  "stress": {
+    "aggregate_decisions": 724828,
+    "aggregate_games": 6000,
+    "aggregate_seconds": 16.047696316993097,
+    "decisions_per_second": 45167.10596227267,
+    "env_count": 6000,
+    "free_vram_after_allocation_bytes": 2595618816,
+    "games_per_second": 373.88544009563094,
+    "runtime_memory_bytes": 864500760,
+    "runtime_memory_bytes_per_env": 144083.46,
+    "sample_seconds": [
+      16.047696316993097
+    ],
+    "sample_seconds_percentiles": {
+      "p50": 16.047696316993097,
+      "p95": 16.047696316993097,
+      "p99": 16.047696316993097
+    },
+    "samples": [
+      {
+        "all_terminal": true,
+        "boundaries": 432,
+        "decisions": 724828,
+        "decisions_per_second": 45167.10596227267,
+        "failure": null,
+        "game_latency_ms": {
+          "p50": 7725.970506988233,
+          "p95": 14666.480277985102,
+          "p99": 15426.784388982924
+        },
+        "games": 6000,
+        "games_per_second": 373.88544009563094,
+        "max_turn": 82,
+        "seconds": 16.047696316993097,
+        "status": "PASS",
+        "telemetry": {
+          "memory_total_mib": 4096.0,
+          "memory_used_max_mib": 1299.0,
+          "power_mean_w": 48.97325,
+          "samples": 160,
+          "utilization_mean_pct": 100.0,
+          "utilization_p95_pct": 100.0
+        },
+        "zero_errors": true
+      }
+    ],
+    "stack_bytes": 16384,
+    "status": "PASS",
+    "total_vram_bytes": 3953393664
+  },
+  "workload": {
+    "cpu_public_path": "official BattleData + official ToJsonApi every decision/terminal boundary + first-min selection",
+    "gpu_check_interval_boundaries": 16,
+    "gpu_public_path": "status + public events acknowledge + public policy projection + device first-min selection + GPU game step",
+    "matchup_cells": 12,
+    "native_rng_note": "native deployment-mode deviceRand=true uses system entropy; trajectories are not causally paired to GPU Philox games",
+    "policy": "first selectMin legal option indices at every decision boundary",
+    "timing_includes": "reset/shuffle/setup/gameplay/terminal; excludes compilation, rule extraction, persistent runtime allocation"
+  }
+}
