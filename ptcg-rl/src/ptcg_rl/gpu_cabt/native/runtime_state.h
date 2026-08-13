@@ -107,7 +107,9 @@ struct BattleRuntimeState {
     gc_u16 turn_heal_count;
     gc_u16 turn_evolve_count;
     gc_u16 card_effect_count;
+    gc_u16 scratch_target_count;
     gc_u16 reserved_count;
+    gc_u16 reserved_count2;
     gc_u64 rng_draw_index;
 
     SelectOptionState options[kOptionCapacity];
@@ -116,6 +118,7 @@ struct BattleRuntimeState {
     AreaRefState targets[kAreaRefCapacity];
     AreaRefState pre_targets[kAreaRefCapacity];
     AreaRefState ko_list[kAreaRefCapacity];
+    AreaRefState scratch_targets[kAreaRefCapacity];
     TriggeredAbilityState delay_triggers[kTriggerCapacity];
     TriggeredAbilityState temporary_triggers[kTriggerCapacity];
     TriggeredAbilityState triggers[kTriggerCapacity];
