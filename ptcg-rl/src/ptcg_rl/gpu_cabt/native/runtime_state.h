@@ -25,6 +25,7 @@ static constexpr gc_u16 kContinuationSelectedMulligan = 3;
 static constexpr gc_u16 kContinuationSelectedSetupActivePokemon = 4;
 static constexpr gc_u16 kContinuationAfterResetupActivePokemon = 5;
 static constexpr gc_u16 kContinuationSetupActivePokemon = 6;
+static constexpr gc_u16 kContinuationSelectedSetupBenchPokemon = 7;
 
 struct SelectOptionState {
     gc_u8 type;

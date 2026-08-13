@@ -28,6 +28,7 @@ static constexpr int kSelectCountCapacity = kBenchSizeMax + 1;
 static constexpr gc_u8 kAreaDeck = 1;
 static constexpr gc_u8 kAreaHand = 2;
 static constexpr gc_u8 kAreaActive = 4;
+static constexpr gc_u8 kAreaBench = 5;
 static constexpr gc_u8 kAreaPrize = 6;
 static constexpr gc_u8 kAreaPlayer = 11;
 
