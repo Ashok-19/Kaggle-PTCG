@@ -168,8 +168,13 @@ __device__ __forceinline__ void continue_trigger_resolution_full(
     --runtime.trigger_count;
 
     if (ability.activate.is_special_condition) {
-        runtime.error_flags |= kRuntimeErrorUnsupportedTransition;
-        runtime.trigger_resolution_active = 0;
+        runtime.trigger_activation_waiting = 1;
+        special_condition_proc_full(state, runtime, rules);
+        if (runtime.error_flags != 0) {
+            runtime.trigger_resolution_active = 0;
+            return;
+        }
+        finish_trigger_activation_full(state, runtime, rules, depth);
         return;
     }
 
