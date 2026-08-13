@@ -80,6 +80,8 @@ extern "C" __global__ void gpu_cabt_setup_is_first(
         raw_runtimes + (gc_i64)env_index * (gc_i32)sizeof(gpu_cabt::BattleRuntimeState)
     );
     gpu_cabt::zero_runtime(runtime);
+    runtime->rng_seed = seed;
+    runtime->rng_stream = stream_base + (gc_u64)env_index;
 
     const gc_u64 stream = stream_base + (gc_u64)env_index;
     for (gc_i32 player = 0; player < 2; ++player) {

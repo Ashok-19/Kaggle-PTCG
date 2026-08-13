@@ -43,6 +43,32 @@ static constexpr gc_u16 kContinuationAfterResetupActivePokemon = 5;
 static constexpr gc_u16 kContinuationSetupActivePokemon = 6;
 static constexpr gc_u16 kContinuationSelectedSetupBenchPokemon = 7;
 
+static constexpr gc_u16 kPendingNone = 0;
+static constexpr gc_u16 kPendingPrizeLuckyBonus = 1;
+static constexpr gc_u16 kPendingPrizeLuckyBonusCoin = 2;
+static constexpr gc_u16 kPendingSwitchPokemon = 3;
+static constexpr gc_u16 kPendingDevolveAny = 4;
+static constexpr gc_u16 kPendingSwapHp = 5;
+static constexpr gc_u16 kPendingCoin = 6;
+static constexpr gc_u16 kPendingDisableAttack = 7;
+static constexpr gc_u16 kPendingSelectActivate = 8;
+static constexpr gc_u16 kPendingSelectEffect = 9;
+static constexpr gc_u16 kPendingSpecialCondition = 10;
+static constexpr gc_u16 kPendingEnergyMove = 11;
+static constexpr gc_u16 kPendingEnergySwitch = 12;
+static constexpr gc_u16 kPendingSelectPile = 13;
+static constexpr gc_u16 kPendingCustom = 14;
+static constexpr gc_u16 kPendingDamageCounterAny = 15;
+static constexpr gc_u16 kPendingDamageCounterSwitchAny = 16;
+static constexpr gc_u16 kPendingRemoveDamageCounter = 17;
+static constexpr gc_u16 kPendingAttackDamageTargets = 18;
+static constexpr gc_u16 kPendingAttackDamageMulti = 19;
+static constexpr gc_u16 kPendingAttackDamageCoinTargets = 20;
+static constexpr gc_u16 kPendingRecoverSpecialCondition = 21;
+static constexpr gc_u16 kPendingMoreDevolve = 22;
+static constexpr gc_u16 kPendingEffectSelection = 23;
+static constexpr gc_u16 kPendingAttackDamagePutCounter = 24;
+
 struct SelectOptionState {
     gc_u8 type;
     gc_u8 reserved;
@@ -108,8 +134,21 @@ struct BattleRuntimeState {
     gc_u16 turn_evolve_count;
     gc_u16 card_effect_count;
     gc_u16 scratch_target_count;
-    gc_u16 reserved_count;
-    gc_u16 reserved_count2;
+    gc_i16 effect_cursor;
+    gc_i16 effect_repeat_index;
+    gc_i16 effect_repeat_count;
+    gc_u8 effect_repeat_mode;
+    gc_u8 effect_execution_active;
+    gc_u8 effect_instance_waiting;
+    gc_u8 reserved_effect;
+    gc_u16 pending_effect_kind;
+    gc_u16 pending_effect_substep;
+    gc_i32 pending_effect_arg0;
+    gc_i32 pending_effect_arg1;
+    gc_i32 pending_effect_arg2;
+    gc_i32 pending_effect_arg3;
+    gc_u64 rng_seed;
+    gc_u64 rng_stream;
     gc_u64 rng_draw_index;
 
     SelectOptionState options[kOptionCapacity];

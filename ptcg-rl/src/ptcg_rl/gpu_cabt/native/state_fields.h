@@ -28,6 +28,28 @@ union CardNextMyTurnEnemyFields {
     } fields;
 };
 
+union CardNextEnemyTurnBattleFieldFields {
+    gc_u16 value;
+    struct {
+        bool no_damage_and_effect_enemy_ex_attack_next_enemy_turn : 1;
+    } fields;
+};
+
+union CardNextEnemyTurnEndFields {
+    gc_u32 value;
+    struct {
+        gc_i16 take_damage_change_next_enemy_turn;
+        gc_u8 no_damage_less_equal_attack_next_enemy_turn;
+        bool no_damage_and_effect_attack_next_enemy_turn : 1;
+        bool no_damage_and_effect_enemy_attack_next_enemy_turn : 1;
+        bool no_damage_attack_next_enemy_turn : 1;
+        bool no_damage_basic_attack_next_enemy_turn : 1;
+        bool no_damage_basic_color_attack_next_enemy_turn : 1;
+        bool no_damage_ability_attack_next_enemy_turn : 1;
+        bool no_weakness_next_enemy_turn : 1;
+    } fields;
+};
+
 union CardTurnFields {
     gc_u32 value[3];
     struct {
@@ -199,8 +221,23 @@ __device__ __forceinline__ CardNextTurnFields& card_next_turn(CardState& card) {
 __device__ __forceinline__ CardNextMyTurnEnemyFields& card_this_turn_enemy(CardState& card) {
     return *reinterpret_cast<CardNextMyTurnEnemyFields*>(card.this_turn_enemy);
 }
+__device__ __forceinline__ const CardNextMyTurnEnemyFields& card_this_turn_enemy(const CardState& card) {
+    return *reinterpret_cast<const CardNextMyTurnEnemyFields*>(card.this_turn_enemy);
+}
 __device__ __forceinline__ CardNextMyTurnEnemyFields& card_next_turn_enemy(CardState& card) {
     return *reinterpret_cast<CardNextMyTurnEnemyFields*>(card.next_turn_enemy);
+}
+__device__ __forceinline__ CardNextEnemyTurnBattleFieldFields& card_next_enemy_battle_field(CardState& card) {
+    return *reinterpret_cast<CardNextEnemyTurnBattleFieldFields*>(&card.next_enemy_turn_end_state_battle_field);
+}
+__device__ __forceinline__ const CardNextEnemyTurnBattleFieldFields& card_next_enemy_battle_field(const CardState& card) {
+    return *reinterpret_cast<const CardNextEnemyTurnBattleFieldFields*>(&card.next_enemy_turn_end_state_battle_field);
+}
+__device__ __forceinline__ CardNextEnemyTurnEndFields& card_next_enemy_turn_end(CardState& card) {
+    return *reinterpret_cast<CardNextEnemyTurnEndFields*>(&card.next_enemy_turn_end_state);
+}
+__device__ __forceinline__ const CardNextEnemyTurnEndFields& card_next_enemy_turn_end(const CardState& card) {
+    return *reinterpret_cast<const CardNextEnemyTurnEndFields*>(&card.next_enemy_turn_end_state);
 }
 __device__ __forceinline__ CardTurnFields& card_turn(CardState& card) {
     return *reinterpret_cast<CardTurnFields*>(card.turn_state);
@@ -216,6 +253,9 @@ __device__ __forceinline__ const CardContinualFields& card_continual(const CardS
 }
 __device__ __forceinline__ PlayerNextTurnFields& player_this_turn(PlayerState& player) {
     return *reinterpret_cast<PlayerNextTurnFields*>(&player.this_turn);
+}
+__device__ __forceinline__ const PlayerNextTurnFields& player_this_turn(const PlayerState& player) {
+    return *reinterpret_cast<const PlayerNextTurnFields*>(&player.this_turn);
 }
 __device__ __forceinline__ PlayerNextTurnFields& player_next_turn(PlayerState& player) {
     return *reinterpret_cast<PlayerNextTurnFields*>(&player.next_turn);
@@ -234,6 +274,9 @@ __device__ __forceinline__ const PlayerContinualFields& player_continual(const P
 }
 __device__ __forceinline__ PlayerTurnFields& player_turn(PlayerState& player) {
     return *reinterpret_cast<PlayerTurnFields*>(&player.turn_state);
+}
+__device__ __forceinline__ const PlayerTurnFields& player_turn(const PlayerState& player) {
+    return *reinterpret_cast<const PlayerTurnFields*>(&player.turn_state);
 }
 __device__ __forceinline__ StateTurnFields& state_turn(BattleCoreState& state) {
     return *reinterpret_cast<StateTurnFields*>(&state.turn_state);

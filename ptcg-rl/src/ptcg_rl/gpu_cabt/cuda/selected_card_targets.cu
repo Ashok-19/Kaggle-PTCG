@@ -38,7 +38,7 @@ __device__ __forceinline__ void set_selected_card_targets(
             runtime->error_flags |= kRuntimeErrorInvalidSelection;
             return;
         }
-        if (runtime->target_count >= kTargetCapacity) {
+        if (runtime->target_count >= kAreaRefCapacity) {
             runtime->error_flags |= kRuntimeErrorTargetOverflow;
             return;
         }

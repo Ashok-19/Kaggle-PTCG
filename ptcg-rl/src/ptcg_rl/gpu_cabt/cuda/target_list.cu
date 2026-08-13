@@ -11,10 +11,6 @@ __device__ __forceinline__ bool on_skill(const BattleCoreState& state) {
     return state.effect_state.ability.skill_id > 0;
 }
 
-__device__ __forceinline__ bool card_flag(const RuleCardMaster& master, gc_u64 flag) {
-    return (master.flags & flag) != 0;
-}
-
 __device__ __noinline__ bool target_single(
     const BattleCoreState& state,
     const BattleRuntimeState& runtime,

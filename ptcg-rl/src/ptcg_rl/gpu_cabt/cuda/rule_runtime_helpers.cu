@@ -1,5 +1,9 @@
 namespace gpu_cabt {
 
+__device__ __forceinline__ bool card_flag(const RuleCardMaster& master, gc_u64 flag) {
+    return (master.flags & flag) != 0;
+}
+
 static constexpr gc_u16 kEnergyColorless = 0;
 static constexpr gc_u16 kEnergyGrass = 1;
 static constexpr gc_u16 kEnergyFire = 2;
@@ -601,6 +605,169 @@ __device__ __forceinline__ gc_i8 clamp_i8(gc_i32 value, gc_i32 low, gc_i32 high)
     if (value < low) value = low;
     if (value > high) value = high;
     return (gc_i8)value;
+}
+
+
+__device__ __forceinline__ bool on_effect(const BattleCoreState& state) {
+    return state.effect_state.on_effect != 0;
+}
+
+__device__ __forceinline__ bool on_attack(const BattleCoreState& state) {
+    return state.current_attack_id > 0;
+}
+
+__device__ __forceinline__ bool on_attack_effect(const BattleCoreState& state) {
+    if (!on_attack(state)) return false;
+    if (on_effect(state)) {
+        const gc_u8 effect_ref = state.effect_state.ability.effect_card.card_index;
+        if (effect_ref != state.attacker) return false;
+    }
+    return true;
+}
+
+__device__ __forceinline__ bool is_prevent_effect(
+    const BattleCoreState& state,
+    const RuleTableView& rules,
+    gc_u8 source_ref
+) {
+    if (source_ref == 0 || source_ref >= kAllCardCapacity) return false;
+    const CardState* target = &state.all_card[source_ref];
+    if (target->area == 8 || target->area == 9) {
+        const RefPositionState pos = attached_card_position(state, *target);
+        if (pos.ref != 0) target = &state.all_card[pos.ref];
+    }
+    const CardContinualFields& continual = card_continual(*target);
+    const CardNextEnemyTurnEndFields& next_end = card_next_enemy_turn_end(*target);
+    if (on_attack_effect(state)) {
+        if (state.attacker == 0) return false;
+        const CardState& attacker = state.all_card[state.attacker];
+        const RuleCardMaster* attacker_master = rule_card(rules, attacker.card_id);
+        if (attacker.player_index != target->player_index) {
+            if (continual.fields.no_damage_and_effect_enemy_terastal_attack
+                && attacker_master != nullptr
+                && card_flag(*attacker_master, kCardFlagTera)) return true;
+            if (continual.fields.no_damage_and_effect_enemy_special_energy_attack
+                && has_attached_special_energy(state, rules, state.attacker)) return true;
+            if (continual.fields.no_effect_enemy_attack
+                || next_end.fields.no_damage_and_effect_enemy_attack_next_enemy_turn) return true;
+            if (card_next_enemy_battle_field(*target).fields.no_damage_and_effect_enemy_ex_attack_next_enemy_turn
+                && attacker_master != nullptr && is_ex(*attacker_master)) return true;
+        }
+        if (next_end.fields.no_damage_and_effect_attack_next_enemy_turn) return true;
+    } else if (on_effect(state)) {
+        const gc_u8 effect_ref = state.effect_state.ability.effect_card.card_index;
+        if (effect_ref != 0 && effect_ref < kAllCardCapacity) {
+            const CardState& effect_card = state.all_card[effect_ref];
+            if (effect_card.player_index != target->player_index) {
+                const RuleCardMaster* effect_master = rule_card(rules, effect_card.card_id);
+                if (effect_master != nullptr) {
+                    if (continual.fields.no_effect_enemy_item && effect_master->card_type == 1) return true;
+                    if (continual.fields.no_effect_enemy_supporter && effect_master->card_type == 3) return true;
+                }
+                if (continual.fields.no_enemy_ability
+                    && (effect_card.area == kAreaActive || effect_card.area == kAreaBench)) return true;
+            }
+        }
+    }
+    return false;
+}
+
+__device__ __forceinline__ bool valid_area_ref(
+    const BattleCoreState& state,
+    const AreaRefState& ref
+) {
+    return ref.card != 0 && ref.card < kAllCardCapacity
+        && state.all_card[ref.card].move_counter == ref.move_counter;
+}
+
+__device__ __forceinline__ bool valid_area_ref_not_prevented(
+    const BattleCoreState& state,
+    const RuleTableView& rules,
+    const AreaRefState& ref
+) {
+    return valid_area_ref(state, ref) && !is_prevent_effect(state, rules, ref.card);
+}
+
+__device__ __forceinline__ bool is_prevent_damage_counter(
+    const BattleCoreState& state,
+    const RuleTableView& rules,
+    gc_u8 target_ref
+) {
+    if (target_ref == 0 || target_ref >= kAllCardCapacity) return false;
+    const CardState& target = state.all_card[target_ref];
+    if (!card_continual(target).fields.no_damage_counter_enemy_attack_ability) return false;
+    const gc_u8 effect_ref = state.effect_state.ability.effect_card.card_index;
+    if (effect_ref == 0 || effect_ref >= kAllCardCapacity) return false;
+    const CardState& effect_card = state.all_card[effect_ref];
+    const RuleCardMaster* master = rule_card(rules, effect_card.card_id);
+    return master != nullptr && master->card_type == 0
+        && target.player_index != effect_card.player_index;
+}
+
+
+__device__ __forceinline__ gc_i32 effect_player_index(const BattleCoreState& state) {
+    const gc_i32 player = state.effect_state.ability.use_player_index;
+    if (player >= 0 && player <= 1) return player;
+    const gc_u8 ref = state.effect_state.ability.effect_card.card_index;
+    return ref != 0 && ref < kAllCardCapacity ? state.all_card[ref].player_index : 0;
+}
+
+__device__ __forceinline__ gc_i32 effect_target_player_index(
+    const BattleCoreState& state,
+    const RuleEffect& effect
+) {
+    const gc_i32 player = effect_player_index(state);
+    return effect.target.target_player == 1 ? player : 1 - player;
+}
+
+__device__ __forceinline__ gc_i32 effect_looking_player_index(
+    const BattleCoreState& state,
+    const RuleEffect& effect
+) {
+    if ((effect.flags & kEffectFlagOpen) != 0) return 2;
+    return effect_player_index(state);
+}
+
+__device__ __forceinline__ gc_i32 looking_open_type(const BattleCoreState& state) {
+    if (state.looking_player == 2) return 0;
+    if (state.looking_player < 0 || state.looking_player > 1) return 0;
+    return 3 + state.looking_player;
+}
+
+__device__ __forceinline__ void shuffle_player_deck(
+    BattleCoreState& state,
+    BattleRuntimeState& runtime,
+    gc_i32 player_index
+) {
+    if (player_index < 0 || player_index > 1) return;
+    auto& deck = state.players[player_index].deck;
+    for (gc_i32 index = (gc_i32)deck.count - 1; index > 0; --index) {
+        const gc_u32 swap_index = bounded_u32(
+            runtime.rng_seed,
+            runtime.rng_stream,
+            &runtime.rng_draw_index,
+            (gc_u32)(index + 1)
+        );
+        const gc_u8 tmp = deck.values[index];
+        deck.values[index] = deck.values[swap_index];
+        deck.values[swap_index] = tmp;
+    }
+}
+
+__device__ __forceinline__ void shuffle_u8_list(
+    gc_u8* values,
+    gc_i32 count,
+    BattleRuntimeState& runtime
+) {
+    for (gc_i32 index = count - 1; index > 0; --index) {
+        const gc_u32 swap_index = bounded_u32(
+            runtime.rng_seed,
+            runtime.rng_stream,
+            &runtime.rng_draw_index,
+            (gc_u32)(index + 1)
+        );
+        const gc_u8 tmp = values[index]; values[index] = values[swap_index]; values[swap_index] = tmp;
+    }
 }
 
 }  // namespace gpu_cabt
