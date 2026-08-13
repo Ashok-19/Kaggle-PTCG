@@ -361,10 +361,10 @@ __device__ __forceinline__ bool resume_lucky_bonus_prize(
 ) {
     collect_selected_card_targets(state, runtime);
     if (runtime.error_flags != 0) return false;
+    runtime.pending_effect_kind = kPendingNone;
+    runtime.pending_effect_substep = 0;
     prize_to_hand_full(state, runtime, rules);
-    if (runtime.pending_effect_kind != kPendingNone || state.select_type != kSelectNone) return true;
-    if (queue_next_lucky_bonus(state, runtime, rules)) return true;
-    return false;
+    return runtime.pending_effect_kind != kPendingNone || state.select_type != kSelectNone;
 }
 
 __device__ __forceinline__ bool reopen_damage_counter_any(

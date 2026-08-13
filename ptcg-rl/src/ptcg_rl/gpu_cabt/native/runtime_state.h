@@ -69,6 +69,7 @@ static constexpr gc_u16 kPendingMoreDevolve = 22;
 static constexpr gc_u16 kPendingEffectSelection = 23;
 static constexpr gc_u16 kPendingAttackDamagePutCounter = 24;
 static constexpr gc_u16 kPendingTriggerOrder = 25;
+static constexpr gc_u16 kPendingPrizeSelect = 26;
 
 struct SelectOptionState {
     gc_u8 type;
@@ -145,6 +146,10 @@ struct BattleRuntimeState {
     gc_i8 trigger_resolution_depth;
     gc_u8 trigger_activation_waiting;
     gc_u16 pending_effect_kind;
+    gc_u8 ko_process_active;
+    gc_u8 ko_process_stage;
+    gc_i16 ko_prize_obligation_count;
+    gc_i16 ko_prize_obligation_index;
     gc_u16 pending_effect_substep;
     gc_i32 pending_effect_arg0;
     gc_i32 pending_effect_arg1;
@@ -168,6 +173,8 @@ struct BattleRuntimeState {
     gc_u8 turn_play[kTurnCardCapacity];
     gc_u8 turn_heal[kTurnCardCapacity];
     EvolveState turn_evolve[kTurnEvolveCapacity];
+    gc_u8 ko_prize_player[kAreaRefCapacity];
+    gc_u8 ko_prize_count[kAreaRefCapacity];
     gc_u32 ability_set[2][kAbilitySetWordCount];
     CardEffectOrderState card_effects[kCardEffectCapacity];
 };
