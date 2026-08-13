@@ -19,6 +19,7 @@ static constexpr gc_u32 kRuntimeErrorInvalidSelection = 1u << 5;
 static constexpr gc_u16 kContinuationNone = 0;
 static constexpr gc_u16 kContinuationSelectedIsFirst = 1;
 static constexpr gc_u16 kContinuationAfterOpeningDraw = 2;
+static constexpr gc_u16 kContinuationSelectedMulligan = 3;
 
 struct SelectOptionState {
     gc_u8 type;
