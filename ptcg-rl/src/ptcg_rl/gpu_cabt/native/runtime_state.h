@@ -12,9 +12,13 @@ static constexpr int kContinuationCapacity = 256;
 static constexpr gc_u32 kRuntimeErrorOptionOverflow = 1u << 0;
 static constexpr gc_u32 kRuntimeErrorSelectedOverflow = 1u << 1;
 static constexpr gc_u32 kRuntimeErrorContinuationOverflow = 1u << 2;
+static constexpr gc_u32 kRuntimeErrorZoneOverflow = 1u << 3;
+static constexpr gc_u32 kRuntimeErrorUnsupportedTransition = 1u << 4;
+static constexpr gc_u32 kRuntimeErrorInvalidSelection = 1u << 5;
 
 static constexpr gc_u16 kContinuationNone = 0;
 static constexpr gc_u16 kContinuationSelectedIsFirst = 1;
+static constexpr gc_u16 kContinuationAfterOpeningDraw = 2;
 
 struct SelectOptionState {
     gc_u8 type;

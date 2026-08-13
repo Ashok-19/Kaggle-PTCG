@@ -26,6 +26,7 @@ static constexpr int kCardListCapacity = kDeckSize + 1;
 static constexpr int kAllCardCapacity = 128;
 static constexpr int kSelectCountCapacity = kBenchSizeMax + 1;
 static constexpr gc_u8 kAreaDeck = 1;
+static constexpr gc_u8 kAreaHand = 2;
 static constexpr gc_u8 kAreaPlayer = 11;
 
 template <typename T, int Capacity>
