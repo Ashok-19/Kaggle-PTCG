@@ -281,8 +281,14 @@ __device__ __forceinline__ const PlayerTurnFields& player_turn(const PlayerState
 __device__ __forceinline__ StateTurnFields& state_turn(BattleCoreState& state) {
     return *reinterpret_cast<StateTurnFields*>(&state.turn_state);
 }
+__device__ __forceinline__ const StateTurnFields& state_turn(const BattleCoreState& state) {
+    return *reinterpret_cast<const StateTurnFields*>(&state.turn_state);
+}
 __device__ __forceinline__ StateContinualFields& state_continual(BattleCoreState& state) {
     return *reinterpret_cast<StateContinualFields*>(&state.continual_state);
+}
+__device__ __forceinline__ const StateContinualFields& state_continual(const BattleCoreState& state) {
+    return *reinterpret_cast<const StateContinualFields*>(&state.continual_state);
 }
 
 static_assert(sizeof(CardNextTurnFields) == 16, "CardNextTurnFields ABI");
