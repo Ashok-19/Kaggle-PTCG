@@ -6,3 +6,4 @@ PTCG.zip
 scratch/
 ptcg-rl/scratch/
 .dual-graph/
+.chatgpt/handoffs/*.local.md

@@ -37,4 +37,17 @@ __pycache__/
 .mypy_cache/
 .coverage
 htmlcov/
+.chatgpt/tmp/
+.chatgpt/*.local.md
+.chatgpt/handoffs/*.local.md
+.chatgpt/codex-runs/
+.chatgpt/operations/
+.chatgpt/workspace-locks/
+.pytest-tmp*/
+.tmp_b1/
+interpreter-v4/
+sdists-v9/
+CACHEDIR.TAG
+.lock
+stage1-cli.err
 .dual-graph/
