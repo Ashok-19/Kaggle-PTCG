@@ -93,7 +93,10 @@ def main() -> int:
 
     source_paths = (
         "src/ptcg_rl/gpu_cabt/native/state_core.h",
+        "src/ptcg_rl/gpu_cabt/native/state_fields.h",
         "src/ptcg_rl/gpu_cabt/native/runtime_state.h",
+        "src/ptcg_rl/gpu_cabt/cuda/public_log_core.cu",
+        "src/ptcg_rl/gpu_cabt/cuda/public_log_emit.cu",
         "src/ptcg_rl/gpu_cabt/native/card_static.h",
         "src/ptcg_rl/gpu_cabt/cuda/rng_shuffle.cu",
         "src/ptcg_rl/gpu_cabt/cuda/battle_init.cu",
