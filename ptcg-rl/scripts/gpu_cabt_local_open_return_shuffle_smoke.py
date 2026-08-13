@@ -78,7 +78,10 @@ def main() -> int:
     deck0, deck1 = _load_deck(args.deck0), _load_deck(args.deck1)
     source_paths = (
         "src/ptcg_rl/gpu_cabt/native/state_core.h",
+        "src/ptcg_rl/gpu_cabt/native/state_fields.h",
         "src/ptcg_rl/gpu_cabt/native/runtime_state.h",
+        "src/ptcg_rl/gpu_cabt/cuda/public_log_core.cu",
+        "src/ptcg_rl/gpu_cabt/cuda/public_log_emit.cu",
         "src/ptcg_rl/gpu_cabt/cuda/rng_shuffle.cu",
         "src/ptcg_rl/gpu_cabt/cuda/battle_init.cu",
         "src/ptcg_rl/gpu_cabt/cuda/setup_is_first.cu",
