@@ -40,6 +40,9 @@ static constexpr gc_u64 kCardFlagLarry = 1ull << 24;
 static constexpr gc_u64 kCardFlagTeamRocket = 1ull << 25;
 static constexpr gc_u64 kCardFlagAceSpec = 1ull << 26;
 static constexpr gc_u64 kCardFlagCanUse = 1ull << 27;
+static constexpr gc_u64 kCardFlagSilcoonOrCascoon = 1ull << 28;
+static constexpr gc_u64 kCardFlagKoffingOrWeezing = 1ull << 29;
+static constexpr gc_u64 kCardFlagHonedgeOrDoubladeOrAegislash = 1ull << 30;
 
 static constexpr gc_u32 kSkillFlagMainAbility = 1u << 0;
 static constexpr gc_u32 kSkillFlagOnceTurn = 1u << 1;
@@ -151,7 +154,7 @@ struct RuleAttack {
     gc_i32 damage;
     gc_u32 flags;
     gc_u8 energy_count;
-    gc_u8 energies[kRuleAttackEnergyCapacity];
+    gc_u16 energies[kRuleAttackEnergyCapacity];
     gc_i32 pre_effect_offset;
     gc_i16 pre_effect_count;
     gc_i16 reserved0;
@@ -169,9 +172,9 @@ struct RuleCardMaster {
     gc_u8 evolution_type;
     gc_i8 retreat_cost;
     gc_i32 hp;
-    gc_u8 weakness;
-    gc_u8 resistance;
-    gc_u8 energy_type;
+    gc_u16 weakness;
+    gc_u16 resistance;
+    gc_u16 energy_type;
     gc_i8 energy_count;
     gc_u64 flags;
     gc_i16 ability_skill_id;
@@ -201,8 +204,8 @@ struct RuleTableView {
 
 }  // namespace gpu_cabt
 
-static_assert(sizeof(gpu_cabt::RuleCardMaster) == 64, "RuleCardMaster ABI");
+static_assert(sizeof(gpu_cabt::RuleCardMaster) == 72, "RuleCardMaster ABI");
 static_assert(sizeof(gpu_cabt::RuleSkill) == 48, "RuleSkill ABI");
-static_assert(sizeof(gpu_cabt::RuleAttack) == 48, "RuleAttack ABI");
+static_assert(sizeof(gpu_cabt::RuleAttack) == 56, "RuleAttack ABI");
 static_assert(sizeof(gpu_cabt::RuleEffect) == 144, "RuleEffect ABI");
 static_assert(sizeof(gpu_cabt::RuleTrigger) == 112, "RuleTrigger ABI");

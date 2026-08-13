@@ -52,6 +52,9 @@ static uint64_t card_flags(const CardMaster& card) {
     if (card.teamRocket) flags |= kCardFlagTeamRocket;
     if (card.aceSpec) flags |= kCardFlagAceSpec;
     if (card.canUse) flags |= kCardFlagCanUse;
+    if (card.name == u8"カラサリス" || card.name == u8"マユルド") flags |= kCardFlagSilcoonOrCascoon;
+    if (card.name.find(u8"ドガース") != std::u8string::npos || card.name.find(u8"マタドガス") != std::u8string::npos) flags |= kCardFlagKoffingOrWeezing;
+    if (card.name == u8"ヒトツキ" || card.name == u8"ニダンギル" || card.name == u8"ギルガルド") flags |= kCardFlagHonedgeOrDoubladeOrAegislash;
     return flags;
 }
 
@@ -225,7 +228,7 @@ int main() {
         row.flags = attack.attackFlags;
         row.energy_count = static_cast<uint8_t>(attack.energies.size());
         for (int index = 0; index < attack.energies.size(); ++index) {
-            row.energies[index] = static_cast<uint8_t>(attack.energies[index]);
+            row.energies[index] = static_cast<uint16_t>(attack.energies[index]);
         }
         row.pre_effect_offset = static_cast<int>(effects.size());
         row.pre_effect_count = static_cast<int16_t>(attack.preEffects.size());
@@ -250,9 +253,9 @@ int main() {
         row.evolution_type = static_cast<uint8_t>(card.evolutionType);
         row.retreat_cost = card.retreatCost;
         row.hp = card.hp;
-        row.weakness = static_cast<uint8_t>(card.weakness);
-        row.resistance = static_cast<uint8_t>(card.resistance);
-        row.energy_type = static_cast<uint8_t>(card.energyType);
+        row.weakness = static_cast<uint16_t>(card.weakness);
+        row.resistance = static_cast<uint16_t>(card.resistance);
+        row.energy_type = static_cast<uint16_t>(card.energyType);
         row.energy_count = card.energyCount;
         row.flags = card_flags(card);
         row.ability_skill_id = card.ability ? static_cast<int16_t>(card.ability->skillId) : -1;
