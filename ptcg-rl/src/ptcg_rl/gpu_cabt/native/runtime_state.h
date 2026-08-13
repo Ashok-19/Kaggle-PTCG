@@ -159,6 +159,8 @@ struct BattleRuntimeState {
     gc_i16 refresh_tool_count;
     gc_u8 refresh_iteration;
     gc_u8 reserved_refresh;
+    gc_u8 turn_cycle_active;
+    gc_u8 turn_cycle_stage;
     gc_u16 pending_effect_substep;
     gc_i32 pending_effect_arg0;
     gc_i32 pending_effect_arg1;
