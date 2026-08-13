@@ -6,7 +6,15 @@ from ptcg_rl.gpu_cabt.public_log import (
     LOG_MOVE_CARD,
     LOG_MOVE_CARD_REVERSE,
     project_public_log_for_actor,
+    public_event_actor,
 )
+
+
+def test_event_actor_retains_last_selector_at_terminal() -> None:
+    assert public_event_actor(0, 1, 2) == 1
+    assert public_event_actor(1, 0, 0) == 0
+    assert public_event_actor(0, 0, 0) is None
+    assert public_event_actor(0, -1, 1) is None
 
 
 def test_opponent_draw_masks_card_identity() -> None:

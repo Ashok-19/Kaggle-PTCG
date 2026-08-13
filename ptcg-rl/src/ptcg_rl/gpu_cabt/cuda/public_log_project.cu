@@ -10,6 +10,16 @@ __device__ __forceinline__ gc_i32 public_log_start_for_actor(
     return (gc_i32)runtime.public_log_index[actor];
 }
 
+__device__ __forceinline__ gc_i32 public_event_actor(
+    gc_u8 select_type,
+    gc_i32 select_player,
+    gc_u8 game_result
+) {
+    if (select_player < 0 || select_player > 1) return -1;
+    if (select_type != kSelectNone || game_result != 0) return select_player;
+    return -1;
+}
+
 __device__ __forceinline__ bool public_move_card_visible_to_actor(
     const PublicLogState& log,
     gc_i32 actor
@@ -26,7 +36,6 @@ __device__ __forceinline__ bool public_move_card_visible_to_actor(
 __device__ __forceinline__ void project_public_log_for_actor(
     const PublicLogState& log,
     gc_i32 actor,
-    gc_i32 raw_index,
     gc_i32* row
 ) {
     #pragma unroll
@@ -39,7 +48,6 @@ __device__ __forceinline__ void project_public_log_for_actor(
         row[0] = kLogDrawReverse;
         row[1] = 1;
         row[2] = log.param[0];
-        row[9] = raw_index;
         return;
     }
 
@@ -53,7 +61,6 @@ __device__ __forceinline__ void project_public_log_for_actor(
             row[2] = log.param[0];
             row[3] = log.param[3];
             row[4] = log.param[4];
-            row[9] = raw_index;
             return;
         }
         row[0] = kLogMoveCard;
@@ -63,7 +70,6 @@ __device__ __forceinline__ void project_public_log_for_actor(
         row[4] = log.param[2];
         row[5] = log.param[3];
         row[6] = log.param[4];
-        row[9] = raw_index;
         return;
     }
 
@@ -71,7 +77,6 @@ __device__ __forceinline__ void project_public_log_for_actor(
     row[1] = (gc_i32)log.param_count;
     #pragma unroll
     for (gc_i32 p = 0; p < 7; ++p) row[2 + p] = log.param[p];
-    row[9] = raw_index;
 }
 
 __device__ __forceinline__ void project_public_logs_for_actor(
@@ -95,7 +100,7 @@ __device__ __forceinline__ void project_public_logs_for_actor(
     for (gc_i32 i = 0; i < count; ++i) {
         const PublicLogState& log = runtime.public_logs[start + i];
         project_public_log_for_actor(
-            log, actor, start + i, rows + (gc_i64)i * kPublicEventWidth);
+            log, actor, rows + (gc_i64)i * kPublicEventWidth);
     }
     if (acknowledge) {
         runtime.public_log_index[actor] = runtime.public_log_count;
@@ -121,11 +126,12 @@ extern "C" __global__ void gpu_cabt_project_events(
         raw_states + (gc_i64)env_index * (gc_i32)sizeof(gpu_cabt::BattleCoreState));
     auto& runtime = *reinterpret_cast<gpu_cabt::BattleRuntimeState*>(
         raw_runtimes + (gc_i64)env_index * (gc_i32)sizeof(gpu_cabt::BattleRuntimeState));
-    const gc_i32 actor = state.select_type != gpu_cabt::kSelectNone ? state.select_player : -1;
+    const gc_i32 actor = gpu_cabt::public_event_actor(
+        state.select_type, state.select_player, state.game_result);
     if (actor < 0 || actor > 1) {
         event_counts[env_index] = 0;
-        // Terminal/no-selection environments have no actor and therefore no
-        // event delivery boundary. This is a clean no-op, not an engine error.
+        // Idle no-selection environments have no delivery boundary. Terminal
+        // states retain the last selectPlayer, matching native ToJsonApi.
         event_status[env_index] = 0;
         return;
     }

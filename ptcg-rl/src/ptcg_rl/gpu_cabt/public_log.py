@@ -8,6 +8,15 @@ LOG_MOVE_CARD = 6
 LOG_MOVE_CARD_REVERSE = 7
 
 
+def public_event_actor(select_type: int, select_player: int, game_result: int) -> int | None:
+    """Return the CABT viewer for a decision/terminal observation boundary."""
+    if select_player not in (0, 1):
+        return None
+    if select_type != 0 or game_result != 0:
+        return select_player
+    return None
+
+
 def project_public_log_for_actor(
     log_type: int,
     params: Sequence[int],
