@@ -73,6 +73,7 @@ static constexpr gc_u16 kPendingPrizeSelect = 26;
 static constexpr gc_u16 kPendingRefreshBenchTrash = 27;
 static constexpr gc_u16 kPendingRefreshToolTrash = 28;
 static constexpr gc_u16 kPendingRefreshActive = 29;
+static constexpr gc_u16 kPendingMainRetreatSwitch = 30;
 
 struct SelectOptionState {
     gc_u8 type;
@@ -161,6 +162,11 @@ struct BattleRuntimeState {
     gc_u8 reserved_refresh;
     gc_u8 turn_cycle_active;
     gc_u8 turn_cycle_stage;
+    gc_u8 main_action_active;
+    gc_u8 main_action_stage;
+    gc_i16 main_attack_id;
+    gc_i16 main_src_attack_id;
+    gc_i16 main_attack_bench_index;
     gc_u16 pending_effect_substep;
     gc_i32 pending_effect_arg0;
     gc_i32 pending_effect_arg1;
