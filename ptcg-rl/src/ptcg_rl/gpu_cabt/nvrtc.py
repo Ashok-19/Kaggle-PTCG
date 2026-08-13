@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import ctypes
+import hashlib
 import os
+import tempfile
 from pathlib import Path
 from types import ModuleType
 
@@ -186,6 +188,101 @@ def compile_cubin(
         library.nvrtcDestroyProgram(ctypes.byref(program))
 
 
+def _cubin_cache_dir() -> Path:
+    override = os.environ.get("GPU_CABT_CUBIN_CACHE_DIR")
+    if override:
+        return Path(override).expanduser().resolve()
+    return Path.home() / ".cache" / "ptcg_rl" / "gpu_cabt"
+
+
+def _cubin_cache_key(
+    source: str,
+    *,
+    major: int,
+    minor: int,
+    fast_compile: str | None,
+    nvrtc_library: Path,
+) -> str:
+    stat = nvrtc_library.stat()
+    payload = "\n".join(
+        (
+            "gpu-cabt-cubin-v1",
+            hashlib.sha256(source.encode()).hexdigest(),
+            f"sm_{major}{minor}",
+            fast_compile or "optimized",
+            str(nvrtc_library),
+            str(stat.st_size),
+            str(stat.st_mtime_ns),
+        )
+    )
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
+def _write_cached_cubin(path: Path, cubin: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{path.stem}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(cubin)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(tmp_name, path)
+    finally:
+        try:
+            os.unlink(tmp_name)
+        except FileNotFoundError:
+            pass
+
+
+def _compile_or_load_cached_cubin(
+    source: str,
+    *,
+    cupy_module: ModuleType,
+    major: int,
+    minor: int,
+    fast_compile: str | None,
+) -> tuple[bytes, Path | None]:
+    nvrtc_library = _find_nvrtc_library(cupy_module)
+    cache_disabled = os.environ.get("GPU_CABT_CUBIN_CACHE_DISABLE") == "1"
+    if cache_disabled:
+        return (
+            compile_cubin(
+                source,
+                nvrtc_library=nvrtc_library,
+                major=major,
+                minor=minor,
+                fast_compile=fast_compile,
+            ),
+            None,
+        )
+
+    cache_dir = _cubin_cache_dir()
+    key = _cubin_cache_key(
+        source,
+        major=major,
+        minor=minor,
+        fast_compile=fast_compile,
+        nvrtc_library=nvrtc_library,
+    )
+    cache_path = cache_dir / f"{key}.cubin"
+    try:
+        cached = cache_path.read_bytes()
+    except FileNotFoundError:
+        cached = b""
+    if cached:
+        return cached, cache_path
+
+    cubin = compile_cubin(
+        source,
+        nvrtc_library=nvrtc_library,
+        major=major,
+        minor=minor,
+        fast_compile=fast_compile,
+    )
+    _write_cached_cubin(cache_path, cubin)
+    return cubin, cache_path
+
+
 def load_cupy_module(
     cupy_module: ModuleType,
     source: str,
@@ -198,15 +295,36 @@ def load_cupy_module(
     major = int(properties["major"])
     minor = int(properties["minor"])
     fast_compile = os.environ.get("GPU_CABT_NVRTC_FAST_COMPILE") or None
-    cubin = compile_cubin(
+    cubin, cache_path = _compile_or_load_cached_cubin(
         source,
-        nvrtc_library=_find_nvrtc_library(cupy_module),
+        cupy_module=cupy_module,
         major=major,
         minor=minor,
         fast_compile=fast_compile,
     )
-    module = cupy_module.cuda.function.Module()
-    module.load(cubin)
-    for name in kernel_names:
-        module.get_function(name)
-    return module
+
+    def load(value: bytes):
+        module = cupy_module.cuda.function.Module()
+        module.load(value)
+        for name in kernel_names:
+            module.get_function(name)
+        return module
+
+    try:
+        return load(cubin)
+    except Exception:
+        if cache_path is None:
+            raise
+        try:
+            cache_path.unlink()
+        except FileNotFoundError:
+            pass
+        fresh = compile_cubin(
+            source,
+            nvrtc_library=_find_nvrtc_library(cupy_module),
+            major=major,
+            minor=minor,
+            fast_compile=fast_compile,
+        )
+        _write_cached_cubin(cache_path, fresh)
+        return load(fresh)
