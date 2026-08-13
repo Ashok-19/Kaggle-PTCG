@@ -266,6 +266,45 @@ __device__ __forceinline__ gc_u8 policy_nth_attached_ref(
     return 0;
 }
 
+__device__ __forceinline__ void policy_emit_public_option_params(
+    const SelectOptionState& option,
+    gc_i32* row
+) {
+    // Mirror the agent-visible SelectOptionJson fields. Internal execution
+    // parameters must not be promoted into learner features.
+    if (option.type == kOptionNumber || option.type == kOptionPlay
+        || option.type == kOptionSpecialCondition || option.type == kOptionSkill) {
+        row[3] = option.param0;
+    } else if (option.type == kOptionCard) {
+        row[3] = option.param0;
+        row[4] = option.param1;
+        row[5] = option.param2;
+    } else if (option.type == kOptionToolCard || option.type == kOptionEnergyCard) {
+        row[3] = option.param0;
+        row[4] = option.param1;
+        row[5] = option.param2;
+        row[6] = option.param3;
+    } else if (option.type == kOptionEnergy) {
+        row[3] = option.param0;
+        row[4] = option.param1;
+        row[5] = option.param2;
+        row[6] = option.param3;
+        row[7] = option.param4;
+    } else if (option.type == kOptionAttach || option.type == kOptionEvolve) {
+        row[3] = option.param0;
+        row[4] = option.param1;
+        row[5] = option.param2;
+        row[6] = option.param3;
+    } else if (option.type == kOptionAbility || option.type == kOptionDiscard) {
+        row[3] = option.param0;
+        row[4] = option.param1;
+    } else if (option.type == kOptionAttack) {
+        row[3] = option.param0;
+    }
+    // Skill serial is intentionally excluded from the semantic actor schema;
+    // row[8] carries the public card id.
+}
+
 __device__ __forceinline__ void policy_option_source(
     const BattleCoreState& state,
     gc_i32 actor,
@@ -307,10 +346,8 @@ __device__ __forceinline__ void policy_option_source(
         target_area = kAreaActive; target_index = 0; target_player = actor;
         target_ref = policy_ref_at(state, actor, target_area, 0);
     } else if (option.type == kOptionAttack) {
-        source_player = actor;
-        if (option.param2 >= 0) { source_area = kAreaBench; source_index = option.param2; }
-        else { source_area = kAreaActive; source_index = 0; }
-        source_ref = policy_ref_at(state, actor, source_area, source_index);
+        // Native CABT exposes only attackId for an Attack option. Do not derive
+        // a source-card feature from execution-only source/bench parameters.
     } else if (option.type == kOptionSkill) {
         source_ref = option.param1 > 0 && option.param1 < kAllCardCapacity ? (gc_u8)option.param1 : 0;
         if (source_ref) {
@@ -342,11 +379,7 @@ __device__ __forceinline__ void policy_emit_options(
         row[0] = option.type;
         row[1] = state.select_type;
         row[2] = state.select_context;
-        row[3] = option.param0;
-        row[4] = option.type == kOptionSkill ? 0 : option.param1;
-        row[5] = option.param2;
-        row[6] = option.param3;
-        row[7] = option.param4;
+        policy_emit_public_option_params(option, row);
         gc_u8 src = 0, dst = 0, src_area = 0, dst_area = 0;
         gc_i32 src_index = -1, dst_index = -1, src_player = -1, dst_player = -1;
         policy_option_source(state, actor, option, src, dst, src_area, src_index, src_player,
@@ -361,7 +394,6 @@ __device__ __forceinline__ void policy_emit_options(
         row[14] = policy_role(dst_area, dst_index);
         row[15] = policy_relative_player(dst_player, actor);
         row[16] = option.type == kOptionAttack ? option.param0 : 0;
-        row[17] = option.type == kOptionAttack ? option.param1 : 0;
         if (option.type == kOptionNumber || option.type == kOptionSpecialCondition) row[18] = option.param0;
         else if (option.type == kOptionEnergy) row[18] = option.param4;
         row[19] = 1;
