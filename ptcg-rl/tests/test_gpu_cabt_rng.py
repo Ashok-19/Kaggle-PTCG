@@ -39,3 +39,13 @@ def test_shuffle_is_deterministic_permutation_and_stream_separated() -> None:
     assert sorted(first) == list(range(60))
     assert draws_first == draws_second
     assert draws_first >= 59
+
+
+def test_shuffle_can_continue_from_existing_rng_cursor() -> None:
+    first = list(range(8))
+    second = list(range(8))
+    next_index = shuffle_in_place(first, seed=99, stream=7, draw_index=13)
+    repeated_next = shuffle_in_place(second, seed=99, stream=7, draw_index=13)
+    assert first == second
+    assert next_index == repeated_next
+    assert next_index >= 20

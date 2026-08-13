@@ -77,10 +77,13 @@ def bounded_u32(seed: int, stream: int, draw_index: int, bound: int) -> tuple[in
             return (product >> 32) & _U32_MASK, draw_index
 
 
-def shuffle_in_place(values: MutableSequence[int], *, seed: int, stream: int) -> int:
-    """Deterministic Fisher-Yates shuffle; return number of RNG draws consumed."""
+def shuffle_in_place(
+    values: MutableSequence[int], *, seed: int, stream: int, draw_index: int = 0
+) -> int:
+    """Deterministic Fisher-Yates shuffle; return the next RNG draw index."""
 
-    draw_index = 0
+    if draw_index < 0:
+        raise ValueError("draw_index must be nonnegative")
     for index in range(len(values) - 1, 0, -1):
         swap_index, draw_index = bounded_u32(seed, stream, draw_index, index + 1)
         values[index], values[swap_index] = values[swap_index], values[index]
