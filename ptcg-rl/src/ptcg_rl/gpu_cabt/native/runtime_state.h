@@ -16,6 +16,7 @@ static constexpr gc_u32 kRuntimeErrorZoneOverflow = 1u << 3;
 static constexpr gc_u32 kRuntimeErrorUnsupportedTransition = 1u << 4;
 static constexpr gc_u32 kRuntimeErrorInvalidSelection = 1u << 5;
 static constexpr gc_u32 kRuntimeErrorNoBasicPokemon = 1u << 6;
+static constexpr gc_u32 kRuntimeErrorMulliganLoopLimit = 1u << 7;
 
 static constexpr gc_u16 kContinuationNone = 0;
 static constexpr gc_u16 kContinuationSelectedIsFirst = 1;
