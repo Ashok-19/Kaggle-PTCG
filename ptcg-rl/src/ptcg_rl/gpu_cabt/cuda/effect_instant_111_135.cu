@@ -19,7 +19,15 @@ __device__ __noinline__ bool effect_instant_111_135(
         case 113: deck_to_trash_full(state,runtime,rules,effect,v,true); return true;
         case 114: for(gc_i32 p=0;p<2;++p)if(is_target_player(owner,p,effect.target.target_player)){state.changed=true;for(gc_i32 n=0;n<v&&state.players[p].deck.count;++n){gc_u8 r=move_card_full(state,runtime,rules,p,1,(gc_i32)state.players[p].deck.count-1,6,0,false,false,false);if(r)state.all_card[r].reverse=1;}}return true;
         case 115: for(gc_i32 p=0;p<2;++p)if(is_target_player(owner,p,effect.target.target_player))shuffle_player_deck(state,runtime,p);return true;
-        case 116: for(gc_i32 p=0;p<2;++p)if(is_target_player(owner,p,effect.target.target_player)){state.changed=true;state.game_result=(gc_u8)(p+1);state.finish_reason=4;break;}return true;
+        case 116:
+            for(gc_i32 p=0;p<2;++p)if(is_target_player(owner,p,effect.target.target_player)){
+                state.changed=true;
+                state.game_result=(gc_u8)(p+1);
+                state.finish_reason=4;
+                log_result(runtime,(gc_i32)state.game_result-1,4);
+                break;
+            }
+            return true;
         case 117: state.fail_retreat=1; return true;
         case 118: state.changed=true;state_turn(state).fields.turn_end=true;return true;
         case 119: case 120:

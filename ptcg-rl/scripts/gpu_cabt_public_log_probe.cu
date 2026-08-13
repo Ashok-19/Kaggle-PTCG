@@ -59,3 +59,20 @@ extern "C" __global__ void gpu_cabt_public_log_runtime_snapshot(
     out[2] = runtime.public_log_index[1];
     out[3] = (gc_i32)runtime.error_flags;
 }
+
+extern "C" __global__ void gpu_cabt_public_log_effect_win_setup(
+    unsigned char* raw_states,
+    unsigned char* raw_runtimes
+) {
+    if (blockIdx.x != 0 || threadIdx.x != 0) return;
+    auto& state = *reinterpret_cast<gpu_cabt::BattleCoreState*>(raw_states);
+    auto& runtime = *reinterpret_cast<gpu_cabt::BattleRuntimeState*>(raw_runtimes);
+    state = {};
+    runtime = {};
+    state.select_player = 1;
+    gpu_cabt::RuleEffect effect{};
+    effect.effect_type = 116;
+    effect.target.target_player = 3;
+    gpu_cabt::RuleTableView rules{};
+    gpu_cabt::effect_instant_111_135(state, runtime, rules, effect);
+}

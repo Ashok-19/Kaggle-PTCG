@@ -73,6 +73,7 @@ def main() -> None:
         "gpu_cabt_public_log_burst_setup",
         "gpu_cabt_public_log_set_actor",
         "gpu_cabt_public_log_terminal_setup",
+        "gpu_cabt_public_log_effect_win_setup",
         "gpu_cabt_public_log_runtime_snapshot",
     )
     module = load_cupy_module(cp, source, kernel_names=kernel_names)
@@ -232,6 +233,42 @@ def main() -> None:
                 "count": terminal_count,
                 "status": terminal_status,
                 "event": terminal_event.tolist(),
+            }
+        )
+
+    module.get_function("gpu_cabt_public_log_effect_win_setup")(
+        (1,), (1,), (states, runtimes)
+    )
+    event_kernel(
+        (1,),
+        (128,),
+        (
+            states,
+            runtimes,
+            events,
+            event_counts,
+            event_status,
+            np.uint8(0),
+            np.int32(1),
+        ),
+    )
+    cp.cuda.Stream.null.synchronize()
+    effect_win_count = int(event_counts.get()[0])
+    effect_win_status = int(event_status.get()[0])
+    effect_win_event = events.get()[0, 0]
+    expected_effect_win = np.zeros(event_width, dtype=np.int32)
+    expected_effect_win[:4] = (23, 2, 0, 4)
+    if (
+        effect_win_count != 1
+        or effect_win_status != 0
+        or not np.array_equal(effect_win_event, expected_effect_win)
+    ):
+        mismatches.append(
+            {
+                "label": "effect-win-result",
+                "count": effect_win_count,
+                "status": effect_win_status,
+                "event": effect_win_event.tolist(),
             }
         )
 
