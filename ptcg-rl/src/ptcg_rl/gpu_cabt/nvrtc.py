@@ -12,6 +12,12 @@ def compute_arch_option(major: int, minor: int) -> str:
     return f"--gpu-architecture=compute_{major}{minor}"
 
 
+def sm_arch_option(major: int, minor: int) -> str:
+    if major <= 0 or minor < 0:
+        raise ValueError("invalid CUDA compute capability")
+    return f"--gpu-architecture=sm_{major}{minor}"
+
+
 def _find_nvrtc_library(cupy_module: ModuleType) -> Path:
     override = os.environ.get("GPU_CABT_NVRTC_LIBRARY")
     if override:
@@ -106,25 +112,101 @@ def compile_ptx(
         library.nvrtcDestroyProgram(ctypes.byref(program))
 
 
+def compile_cubin(
+    source: str,
+    *,
+    nvrtc_library: Path,
+    major: int,
+    minor: int,
+    std: str = "c++14",
+    fast_compile: str | None = None,
+) -> bytes:
+    """Compile freestanding CUDA source directly to device-native CUBIN."""
+
+    library = ctypes.CDLL(str(nvrtc_library))
+    program_type = ctypes.c_void_p
+    library.nvrtcCreateProgram.argtypes = [
+        ctypes.POINTER(program_type), ctypes.c_char_p, ctypes.c_char_p,
+        ctypes.c_int, ctypes.c_void_p, ctypes.c_void_p,
+    ]
+    library.nvrtcCreateProgram.restype = ctypes.c_int
+    library.nvrtcCompileProgram.argtypes = [
+        program_type, ctypes.c_int, ctypes.POINTER(ctypes.c_char_p),
+    ]
+    library.nvrtcCompileProgram.restype = ctypes.c_int
+    library.nvrtcGetProgramLogSize.argtypes = [program_type, ctypes.POINTER(ctypes.c_size_t)]
+    library.nvrtcGetProgramLogSize.restype = ctypes.c_int
+    library.nvrtcGetProgramLog.argtypes = [program_type, ctypes.c_char_p]
+    library.nvrtcGetProgramLog.restype = ctypes.c_int
+    library.nvrtcGetCUBINSize.argtypes = [program_type, ctypes.POINTER(ctypes.c_size_t)]
+    library.nvrtcGetCUBINSize.restype = ctypes.c_int
+    library.nvrtcGetCUBIN.argtypes = [program_type, ctypes.c_char_p]
+    library.nvrtcGetCUBIN.restype = ctypes.c_int
+    library.nvrtcDestroyProgram.argtypes = [ctypes.POINTER(program_type)]
+    library.nvrtcDestroyProgram.restype = ctypes.c_int
+
+    program = program_type()
+    create_status = library.nvrtcCreateProgram(
+        ctypes.byref(program), source.encode(), b"gpu_cabt.cu", 0, None, None
+    )
+    if create_status != 0:
+        raise RuntimeError(f"nvrtcCreateProgram failed with status {create_status}")
+
+    options_list = [f"--std={std}", sm_arch_option(major, minor)]
+    if fast_compile is not None:
+        if fast_compile not in {"min", "mid", "max"}:
+            raise ValueError("fast_compile must be one of: min, mid, max")
+        options_list.append(f"--Ofast-compile={fast_compile}")
+    options_text = tuple(options_list)
+    options = (ctypes.c_char_p * len(options_text))(
+        *(option.encode() for option in options_text)
+    )
+    try:
+        compile_status = library.nvrtcCompileProgram(program, len(options_text), options)
+        log_size = ctypes.c_size_t()
+        library.nvrtcGetProgramLogSize(program, ctypes.byref(log_size))
+        log = ""
+        if log_size.value > 1:
+            log_buffer = ctypes.create_string_buffer(log_size.value)
+            library.nvrtcGetProgramLog(program, log_buffer)
+            log = log_buffer.value.decode(errors="replace")
+        if compile_status != 0:
+            raise RuntimeError(f"NVRTC CUBIN compile failed with status {compile_status}:\n{log}")
+
+        cubin_size = ctypes.c_size_t()
+        cubin_size_status = library.nvrtcGetCUBINSize(program, ctypes.byref(cubin_size))
+        if cubin_size_status != 0:
+            raise RuntimeError(f"nvrtcGetCUBINSize failed with status {cubin_size_status}")
+        cubin = ctypes.create_string_buffer(cubin_size.value)
+        cubin_status = library.nvrtcGetCUBIN(program, cubin)
+        if cubin_status != 0:
+            raise RuntimeError(f"nvrtcGetCUBIN failed with status {cubin_status}")
+        return cubin.raw
+    finally:
+        library.nvrtcDestroyProgram(ctypes.byref(program))
+
+
 def load_cupy_module(
     cupy_module: ModuleType,
     source: str,
     *,
     kernel_names: tuple[str, ...],
 ):
-    """Compile source with direct NVRTC, then load PTX through CuPy's driver wrapper."""
+    """Compile source to device-native CUBIN, then load it through CuPy."""
 
     properties = cupy_module.cuda.runtime.getDeviceProperties(0)
     major = int(properties["major"])
     minor = int(properties["minor"])
-    ptx = compile_ptx(
+    fast_compile = os.environ.get("GPU_CABT_NVRTC_FAST_COMPILE") or None
+    cubin = compile_cubin(
         source,
         nvrtc_library=_find_nvrtc_library(cupy_module),
         major=major,
         minor=minor,
+        fast_compile=fast_compile,
     )
     module = cupy_module.cuda.function.Module()
-    module.load(ptx)
+    module.load(cubin)
     for name in kernel_names:
         module.get_function(name)
     return module
