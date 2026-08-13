@@ -162,6 +162,10 @@ struct BattleRuntimeState {
     gc_u8 reserved_refresh;
     gc_u8 turn_cycle_active;
     gc_u8 turn_cycle_stage;
+    gc_u8 setup_process_active;
+    gc_u8 setup_process_stage;
+    gc_i8 setup_player;
+    gc_u8 setup_comp_cursor;
     gc_u8 main_action_active;
     gc_u8 main_action_stage;
     gc_i16 main_attack_id;
