@@ -10,6 +10,8 @@ from pathlib import Path
 
 import numpy as np
 
+from ptcg_rl.gpu_cabt.nvrtc import load_cupy_module
+
 _SNAPSHOT_SIZE = 625
 
 
@@ -78,10 +80,10 @@ def main() -> int:
     kernel_source = (repo_root / "src/ptcg_rl/gpu_cabt/cuda/battle_init.cu").read_text(
         encoding="utf-8"
     )
-    module = cp.RawModule(
-        code=header + "\n" + kernel_source,
-        options=("--std=c++14",),
-        name_expressions=(
+    module = load_cupy_module(
+        cp,
+        header + "\n" + kernel_source,
+        kernel_names=(
             "gpu_cabt_battle_core_size",
             "gpu_cabt_init_battles",
             "gpu_cabt_init_snapshot",

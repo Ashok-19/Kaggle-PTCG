@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from ptcg_rl.gpu_cabt.rng import shuffle_in_place
+from ptcg_rl.gpu_cabt.nvrtc import load_cupy_module
 
 
 def _parse_args() -> argparse.Namespace:
@@ -29,7 +30,7 @@ def main() -> int:
 
     source_path = Path(__file__).resolve().parents[1] / "src/ptcg_rl/gpu_cabt/cuda/rng_shuffle.cu"
     source = source_path.read_text(encoding="utf-8")
-    module = cp.RawModule(code=source, options=("--std=c++14",), name_expressions=("shuffle_decks",))
+    module = load_cupy_module(cp, source, kernel_names=("shuffle_decks",))
     kernel = module.get_function("shuffle_decks")
 
     properties = cp.cuda.runtime.getDeviceProperties(0)

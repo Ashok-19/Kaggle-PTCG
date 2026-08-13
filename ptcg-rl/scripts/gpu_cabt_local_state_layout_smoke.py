@@ -8,6 +8,8 @@ from pathlib import Path
 
 import numpy as np
 
+from ptcg_rl.gpu_cabt.nvrtc import load_cupy_module
+
 
 _DESCRIPTOR_NAMES = (
     "area_ref_size",
@@ -83,10 +85,10 @@ def main() -> int:
     kernel = (repo_root / "src/ptcg_rl/gpu_cabt/cuda/state_layout_probe.cu").read_text(
         encoding="utf-8"
     )
-    module = cp.RawModule(
-        code=header + "\n" + kernel,
-        options=("--std=c++14",),
-        name_expressions=("gpu_cabt_state_layout_probe", "gpu_cabt_fill_core_state_pattern"),
+    module = load_cupy_module(
+        cp,
+        header + "\n" + kernel,
+        kernel_names=("gpu_cabt_state_layout_probe", "gpu_cabt_fill_core_state_pattern"),
     )
     probe = module.get_function("gpu_cabt_state_layout_probe")
     fill = module.get_function("gpu_cabt_fill_core_state_pattern")
