@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -107,6 +108,12 @@ static RuleTarget flatten_target(
     const Target& target,
     const std::map<std::u8string, int>& substring_ids
 ) {
+    if (target.areas.size() > kRuleTargetAreaCapacity) {
+        throw std::runtime_error("target area capacity exceeded");
+    }
+    if (target.conditions.size() > kRuleTargetConditionCapacity) {
+        throw std::runtime_error("target condition capacity exceeded");
+    }
     RuleTarget result{};
     result.target_player = static_cast<uint8_t>(target.targetPlayer);
     result.flags = static_cast<uint8_t>((target.notMe ? 1 : 0) | (target.skipEnemyTarget ? 2 : 0));
@@ -180,9 +187,17 @@ int main() {
     int next_substring = 0;
     for (auto& [text, index] : substring_ids) index = next_substring++;
 
-    std::vector<RuleCardMaster> cards(1268);
-    std::vector<RuleSkill> skills(435);
-    std::vector<RuleAttack> attacks(1557);
+    auto dense_size = [](const auto& table) {
+        int max_id = 0;
+        for (const auto& [id, _] : table) {
+            if (id < 0) throw std::runtime_error("negative rule-table id");
+            max_id = std::max(max_id, id);
+        }
+        return static_cast<std::size_t>(max_id + 1);
+    };
+    std::vector<RuleCardMaster> cards(dense_size(CardTable));
+    std::vector<RuleSkill> skills(dense_size(SkillTable));
+    std::vector<RuleAttack> attacks(dense_size(AttackTable));
     std::vector<RuleEffect> effects;
     std::vector<RuleTrigger> triggers;
     effects.reserve(3067);
@@ -198,6 +213,9 @@ int main() {
         row.second_effect_start_index = skill.secondEffectStartIndex;
         row.second_effect_start_index_enemy = skill.secondEffectStartIndexEnemy;
         row.trigger_start_index = skill.triggerStartIndex;
+        if (skill.areas.size() > kRuleSkillAreaCapacity) {
+            throw std::runtime_error("skill area capacity exceeded");
+        }
         row.area_count = static_cast<uint8_t>(skill.areas.size());
         for (int index = 0; index < skill.areas.size(); ++index) {
             row.areas[index] = static_cast<uint8_t>(skill.areas[index]);
@@ -226,6 +244,9 @@ int main() {
         row.card_id = attack.cardId;
         row.damage = attack.damage;
         row.flags = attack.attackFlags;
+        if (attack.energies.size() > kRuleAttackEnergyCapacity) {
+            throw std::runtime_error("attack energy capacity exceeded");
+        }
         row.energy_count = static_cast<uint8_t>(attack.energies.size());
         for (int index = 0; index < attack.energies.size(); ++index) {
             row.energies[index] = static_cast<uint16_t>(attack.energies[index]);
@@ -261,6 +282,9 @@ int main() {
         row.ability_skill_id = card.ability ? static_cast<int16_t>(card.ability->skillId) : -1;
         row.play_skill_id = card.play ? static_cast<int16_t>(card.play->skillId) : -1;
         row.delay_skill_id = card.delay ? static_cast<int16_t>(card.delay->skillId) : -1;
+        if (card.attacks.size() > kRuleCardAttackCapacity) {
+            throw std::runtime_error("card attack capacity exceeded");
+        }
         row.attack_ids[0] = -1;
         row.attack_ids[1] = -1;
         for (int index = 0; index < static_cast<int>(card.attacks.size()); ++index) {
