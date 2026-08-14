@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
 from ptcg_rl.g2.checkpoint import load_checkpoint_package, state_dict_sha256  # noqa: E402
+from ptcg_rl.bc.training import recurrent_sequence_batch_loss  # noqa: E402
 from ptcg_rl.g3.bc_canary import (  # noqa: E402
     TeacherEpisodeV1,
     _action_nll,
@@ -167,12 +168,16 @@ def main() -> int:
     parser.add_argument("--validation-episodes", type=int, default=4)
     parser.add_argument("--steps", type=int, default=8)
     parser.add_argument("--decision-cap", type=int, default=24)
+    parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument("--bf16", action="store_true")
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
 
-    if args.steps <= 0 or args.decision_cap <= 0:
-        raise ValueError("steps and decision-cap must be positive")
+    if args.steps <= 0 or args.decision_cap <= 0 or args.batch_size <= 0:
+        raise ValueError("steps, decision-cap, and batch-size must be positive")
+    if args.bf16 and args.device != "cuda":
+        raise ValueError("BF16 smoke mode requires CUDA")
     device = torch.device(args.device)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable")
@@ -220,9 +225,28 @@ def main() -> int:
     for step_index in range(args.steps):
         optimizer.zero_grad(set_to_none=True)
         step_started = time.perf_counter()
-        loss, targets = training_loss(
-            model, train[step_index % len(train)], device, args.decision_cap
-        )
+        if args.batch_size == 1:
+            loss, targets = training_loss(
+                model, train[step_index % len(train)], device, args.decision_cap
+            )
+        else:
+            selected_episodes = [
+                train[(step_index * args.batch_size + offset) % len(train)]
+                for offset in range(args.batch_size)
+            ]
+            sequences = tuple(
+                episode.decisions[: args.decision_cap] for episode in selected_episodes
+            )
+            with torch.autocast(
+                device_type="cuda",
+                dtype=torch.bfloat16,
+                enabled=args.bf16 and device.type == "cuda",
+            ):
+                batch_result = recurrent_sequence_batch_loss(
+                    model, sequences, verify=False
+                )
+            loss = batch_result.loss
+            targets = batch_result.policy_targets
         if not torch.isfinite(loss):
             raise RuntimeError("nonfinite training loss")
         loss.backward()
@@ -285,6 +309,9 @@ def main() -> int:
             "optimizer": "AdamW-fused" if device.type == "cuda" else "AdamW",
             "optimizer_steps": args.steps,
             "decision_cap": args.decision_cap,
+            "batch_size": args.batch_size,
+            "bf16": bool(args.bf16),
+            "targets_per_second": sum(target_counts) / max(sum(step_seconds), 1e-9),
             "learning_rate": args.learning_rate,
             "loss_first": losses[0],
             "loss_last": losses[-1],
