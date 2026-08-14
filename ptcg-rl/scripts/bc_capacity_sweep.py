@@ -598,22 +598,40 @@ def main() -> int:
     exact_train_records = _records_for_split(exact_records, "train")
     exact_validation_records = _records_for_split(exact_records, "validation")
 
+    print(
+        json.dumps(
+            {"event": "capacity_corpus_load_start", "corpus": "archetype-v3"},
+            sort_keys=True,
+        ),
+        flush=True,
+    )
     load_started = time.perf_counter()
     archetype_episodes = load_all_episodes(
         args.archetype_materialized_dir,
         [*archetype_train_records, *archetype_validation_records],
         args.loader_workers,
     )
-    exact_episodes = load_all_episodes(
-        args.exact_materialized_dir,
-        [*exact_train_records, *exact_validation_records],
-        args.loader_workers,
-    )
-    load_seconds = time.perf_counter() - load_started
+    archetype_load_seconds = time.perf_counter() - load_started
     archetype_train = [episode for episode in archetype_episodes if episode.split == "train"]
     archetype_validation = [episode for episode in archetype_episodes if episode.split == "validation"]
-    exact_train = [episode for episode in exact_episodes if episode.split == "train"]
-    exact_validation = [episode for episode in exact_episodes if episode.split == "validation"]
+    print(
+        json.dumps(
+            {
+                "event": "capacity_corpus_load_complete",
+                "corpus": "archetype-v3",
+                "episodes": len(archetype_episodes),
+                "elapsed_seconds": archetype_load_seconds,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    exact_episodes: list[MaterializedEpisodeV1] | None = None
+    exact_train: list[MaterializedEpisodeV1] | None = None
+    exact_validation: list[MaterializedEpisodeV1] | None = None
+    exact_1150_train: list[MaterializedEpisodeV1] | None = None
+    exact_1150_validation: list[MaterializedEpisodeV1] | None = None
+    exact_load_seconds = 0.0
 
     archetype_1175_train_ids = {
         int(record["episode_id"])
@@ -633,8 +651,6 @@ def main() -> int:
     }
     archetype_1175_train = _episode_subset(archetype_train, archetype_1175_train_ids)
     archetype_1175_validation = _episode_subset(archetype_validation, archetype_1175_validation_ids)
-    exact_1150_train = _episode_subset(exact_train, exact_1150_train_ids)
-    exact_1150_validation = _episode_subset(exact_validation, exact_1150_validation_ids)
 
     card_table = load_card_table(args.card_table)
     for manifest in (archetype_manifest, exact_manifest):
@@ -792,12 +808,12 @@ def main() -> int:
         model_output = args.output_dir / label
         model_output.mkdir(parents=True, exist_ok=True)
         model = _build_model(config, card_table, seed=model_seed, device=device)
-        stage_specs = (
+        stage_specs: list[tuple[str, list[MaterializedEpisodeV1], list[MaterializedEpisodeV1], str, float | None, int, float]] = [
             (
                 "stage-a-archetype-all",
                 archetype_train,
                 archetype_validation,
-                archetype_manifest["manifest_sha256"],
+                str(archetype_manifest["manifest_sha256"]),
                 None,
                 args.stage_a_epochs,
                 chosen_lr,
@@ -806,41 +822,77 @@ def main() -> int:
                 "stage-b-archetype-1175",
                 archetype_1175_train,
                 archetype_1175_validation,
-                archetype_manifest["manifest_sha256"],
+                str(archetype_manifest["manifest_sha256"]),
                 1175.0,
                 args.stage_b_epochs,
                 chosen_lr * 0.5,
             ),
-            (
-                "stage-c-exact-all",
-                exact_train,
-                exact_validation,
-                exact_manifest["manifest_sha256"],
-                None,
-                args.stage_c_epochs,
-                chosen_lr * 0.5,
-            ),
-            (
-                "stage-d-exact-1150",
-                exact_1150_train,
-                exact_1150_validation,
-                exact_manifest["manifest_sha256"],
-                1150.0,
-                args.stage_d_epochs,
-                chosen_lr * 0.25,
-            ),
-        )
+        ]
         stage_reports: list[dict[str, Any]] = []
         effective_batch_sizes: dict[str, int] = {}
-        for stage_index, (
-            stage_name,
-            stage_train,
-            stage_validation,
-            manifest_sha,
-            minimum_teacher_score,
-            epochs,
-            stage_lr,
-        ) in enumerate(stage_specs):
+        for stage_index in range(4):
+            if stage_index == 2 and exact_episodes is None:
+                print(
+                    json.dumps(
+                        {"event": "capacity_corpus_load_start", "corpus": "exact-v2"},
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+                exact_started = time.perf_counter()
+                exact_episodes = load_all_episodes(
+                    args.exact_materialized_dir,
+                    [*exact_train_records, *exact_validation_records],
+                    args.loader_workers,
+                )
+                exact_load_seconds = time.perf_counter() - exact_started
+                exact_train = [episode for episode in exact_episodes if episode.split == "train"]
+                exact_validation = [episode for episode in exact_episodes if episode.split == "validation"]
+                exact_1150_train = _episode_subset(exact_train, exact_1150_train_ids)
+                exact_1150_validation = _episode_subset(exact_validation, exact_1150_validation_ids)
+                print(
+                    json.dumps(
+                        {
+                            "event": "capacity_corpus_load_complete",
+                            "corpus": "exact-v2",
+                            "episodes": len(exact_episodes),
+                            "elapsed_seconds": exact_load_seconds,
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+                stage_specs.extend(
+                    [
+                        (
+                            "stage-c-exact-all",
+                            exact_train,
+                            exact_validation,
+                            str(exact_manifest["manifest_sha256"]),
+                            None,
+                            args.stage_c_epochs,
+                            chosen_lr * 0.5,
+                        ),
+                        (
+                            "stage-d-exact-1150",
+                            exact_1150_train,
+                            exact_1150_validation,
+                            str(exact_manifest["manifest_sha256"]),
+                            1150.0,
+                            args.stage_d_epochs,
+                            chosen_lr * 0.25,
+                        ),
+                    ]
+                )
+            (
+                stage_name,
+                stage_train,
+                stage_validation,
+                manifest_sha,
+                minimum_teacher_score,
+                epochs,
+                stage_lr,
+            ) = stage_specs[stage_index]
             train_groups, effective_batch = _pack_with_fallback(
                 stage_train,
                 preferred_batch_size=chosen_batch_size,
@@ -925,7 +977,7 @@ def main() -> int:
         "status": "PASS_BC_CAPACITY_SWEEP_COMPLETED",
         "archetype_manifest_sha256": archetype_manifest["manifest_sha256"],
         "exact_manifest_sha256": exact_manifest["manifest_sha256"],
-        "load_seconds": load_seconds,
+        "load_seconds": archetype_load_seconds + exact_load_seconds,
         "parameter_counts": parameter_counts,
         "configuration": {
             "model_labels": labels,
@@ -942,10 +994,10 @@ def main() -> int:
             "archetype_validation": len(archetype_validation),
             "archetype_1175_train": len(archetype_1175_train),
             "archetype_1175_validation": len(archetype_1175_validation),
-            "exact_train": len(exact_train),
-            "exact_validation": len(exact_validation),
-            "exact_1150_train": len(exact_1150_train),
-            "exact_1150_validation": len(exact_1150_validation),
+            "exact_train": 0 if exact_train is None else len(exact_train),
+            "exact_validation": 0 if exact_validation is None else len(exact_validation),
+            "exact_1150_train": 0 if exact_1150_train is None else len(exact_1150_train),
+            "exact_1150_validation": 0 if exact_1150_validation is None else len(exact_1150_validation),
         },
         "models": model_reports,
         "validation_ranking": [
