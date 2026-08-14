@@ -500,7 +500,8 @@ def main() -> int:
 
     started = time.perf_counter()
     args.output_dir.mkdir(parents=True, exist_ok=False)
-    data_dir = args.output_dir / "_staged_train_validation"
+    staging_root = Path(tempfile.mkdtemp(prefix="kptcg-bc-train-staging-"))
+    data_dir = staging_root / "episodes"
     selected_records = [*train_records, *validation_records]
     extract_records(args.bundle, selected_records, data_dir)
 
@@ -584,7 +585,7 @@ def main() -> int:
         )
         history.append({"epoch": epoch, "training": training, "validation": validation})
 
-    shutil.rmtree(data_dir)
+    shutil.rmtree(staging_root)
     final_state_sha = state_dict_sha256(
         {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
     )
