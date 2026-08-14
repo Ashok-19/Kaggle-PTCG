@@ -44,11 +44,11 @@
     [1246, 2]
   ],
   "required_module_version": "1.32.6",
-  "base_min_score": 950.0,
-  "elite_rescue_min_score": 900.0,
+  "base_min_score": 1090.0,
+  "elite_rescue_min_score": 1090.0,
   "winner_only_labels": true,
-  "minimum_selected": 1000,
-  "minimum_active_requests": 50000,
+  "minimum_selected": 500,
+  "minimum_active_requests": 30000,
   "split_seed": 20260815,
   "raw_archives_retained": false,
   "teams": [

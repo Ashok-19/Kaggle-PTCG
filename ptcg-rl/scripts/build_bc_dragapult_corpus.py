@@ -95,8 +95,8 @@ def main() -> int:
         default=DOMINANT_DRAGAPULT_DECK_SHA256,
     )
     parser.add_argument("--module-version", default=CURRENT_REPLAY_MODULE_VERSION)
-    parser.add_argument("--base-min-score", type=float, default=950.0)
-    parser.add_argument("--elite-rescue-min-score", type=float, default=900.0)
+    parser.add_argument("--base-min-score", type=float, default=1090.0)
+    parser.add_argument("--elite-rescue-min-score", type=float, default=1090.0)
     parser.add_argument("--elite-teachers", type=Path)
     parser.add_argument("--split-seed", type=int, default=20260815)
     parser.add_argument("--minimum-selected", type=int, default=500)

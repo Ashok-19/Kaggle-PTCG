@@ -24,8 +24,8 @@ class EliteTeacher:
 class DragapultCorpusPolicy:
     target_deck_sha256: str = DOMINANT_DRAGAPULT_DECK_SHA256
     module_version: str = CURRENT_REPLAY_MODULE_VERSION
-    base_min_score: float = 950.0
-    elite_rescue_min_score: float = 900.0
+    base_min_score: float = 1090.0
+    elite_rescue_min_score: float = 1090.0
 
     def __post_init__(self) -> None:
         if len(self.target_deck_sha256) != 64:
@@ -47,17 +47,15 @@ def quality_tier(min_score: float) -> tuple[str, float]:
     rebuilding or rereading raw public replay datasets.
     """
 
+    if min_score >= 1200.0:
+        return "elite_1200", 1.35
     if min_score >= 1150.0:
-        return "elite_1150", 1.35
-    if min_score >= 1100.0:
-        return "elite_1100", 1.25
-    if min_score >= 1050.0:
-        return "high_1050", 1.15
-    if min_score >= 1000.0:
-        return "high_1000", 1.05
-    if min_score >= 950.0:
-        return "solid_950", 1.0
-    return "top20_rescue_900", 0.9
+        return "elite_1150", 1.25
+    if min_score >= 1120.0:
+        return "elite_1120", 1.15
+    if min_score >= 1090.0:
+        return "high_1090", 1.0
+    return "below_production_floor", 0.0
 
 
 def choose_dragapult_winner_teacher(
