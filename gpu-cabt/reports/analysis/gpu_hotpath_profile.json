@@ -1,0 +1,361 @@
+{
+  "attack_path": {
+    "after_attack_triggers": null,
+    "attack_ready": null,
+    "damage": null,
+    "measurement_status": "NOT_COLLECTED_CURRENT_SESSION",
+    "post_effects": null,
+    "pre_effects": null,
+    "refresh": null,
+    "turn_cycle": null
+  },
+  "effect_engine": {
+    "average_chain_depth": null,
+    "condition_checks": null,
+    "continual_refreshes": null,
+    "effect_executions": null,
+    "effect_resumes": null,
+    "effect_type_distribution": null,
+    "loop_iterations": null,
+    "maximum_chain_depth": null,
+    "measurement_status": "NOT_COLLECTED_CURRENT_SESSION",
+    "reason": "Existing retained probes stop at outer and main-action stage counters; no GPU device was visible to add effect counters.",
+    "selection_pauses": null,
+    "target_list_builds": null,
+    "trigger_activations": null,
+    "trigger_resolutions": null
+  },
+  "generated_at_utc": "2026-08-14T07:52:56.684394+00:00",
+  "main_action": {
+    "control_flow_efficiency_fraction": 0.1015625,
+    "divergent_lane_iterations_percent": 73.63,
+    "mean_same_stage_lanes_per_warp_iteration": 3.25,
+    "source": "retained .cache/main_stage_profile.py result supplied in task checkpoint; raw output was not retained in repository",
+    "stage_distribution": {
+      "1": {
+        "name": "PlaySkill",
+        "percent_of_main_action_stage_iterations": 37.06
+      },
+      "11": {
+        "name": "AttackPostEffects",
+        "percent_of_main_action_stage_iterations": 3.44
+      },
+      "15": {
+        "name": "AttackAfterRefresh",
+        "percent_of_main_action_stage_iterations": 11.13
+      },
+      "2": {
+        "name": "Ability",
+        "percent_of_main_action_stage_iterations": 15.9
+      },
+      "4": {
+        "name": "RetreatEnergy",
+        "percent_of_main_action_stage_iterations": 3.77
+      },
+      "5": {
+        "name": "RetreatSwitch",
+        "percent_of_main_action_stage_iterations": 4.32
+      },
+      "6": {
+        "name": "PostRefresh",
+        "percent_of_main_action_stage_iterations": 3.33
+      },
+      "8": {
+        "name": "AttackReady",
+        "percent_of_main_action_stage_iterations": 20.45
+      },
+      "other": {
+        "name": "all other stages",
+        "percent_of_main_action_stage_iterations": 0.6
+      }
+    },
+    "top_four_stage_percent": 84.54
+  },
+  "measurement_scope": {
+    "current_session_cuda_available": false,
+    "retained_dynamic_results_labeled": true,
+    "target": "gpu-cabt"
+  },
+  "outer_interpreter": {
+    "boundaries": 0,
+    "branch_percent": {
+      "main_action": 20.82,
+      "select_main": 29.18,
+      "setup": 2.14,
+      "terminal_or_error": 0.39,
+      "waiting_boundary": 47.48
+    },
+    "control_flow_efficiency_fraction": 0.45125,
+    "decisions": 188326,
+    "divergent_lane_iterations_percent": 80.1,
+    "env_count": 1536,
+    "internal_iterations_per_decision": 2.0889202765417414,
+    "mean_matching_lanes_per_warp_iteration": 14.44,
+    "source": "retained .cache/interpreter_profile.py result supplied in task checkpoint; raw output was not retained in repository",
+    "total_internal_iterations": 393398
+  },
+  "per_matchup": [
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "dragapult",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_first",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "dragapult",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_second",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "alakazam",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_first",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "alakazam",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_second",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "lopunny",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_first",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "lopunny",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_second",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "iono",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_first",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "iono",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_second",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "abomasnow",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_first",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "abomasnow",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_second",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "grim",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_first",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    },
+    {
+      "agent_deck": "lucario",
+      "attack_activity": null,
+      "decisions_per_game": null,
+      "divergence": null,
+      "effect_activity": null,
+      "games_per_second": null,
+      "interpreter_iterations_per_game": null,
+      "opponent_deck": "grim",
+      "reason": "No CUDA device was visible; no per-matchup raw counters are retained in the standalone repository.",
+      "seat_orientation": "lucario_second",
+      "status": "NOT_MEASURED_CURRENT_SESSION",
+      "turns_per_game": null
+    }
+  ],
+  "schema_version": "gpu-hotpath-profile-v1",
+  "static_hot_functions": [
+    {
+      "cubin_text_bytes": 204288,
+      "ifs": 46,
+      "line": 14,
+      "loops": 24,
+      "name": "target_single",
+      "path": "src/gpu_cabt/cuda/target_list.cu",
+      "source_body_bytes": 20299
+    },
+    {
+      "cubin_text_bytes": 130560,
+      "ifs": 5,
+      "line": 17,
+      "loops": 63,
+      "name": "effect_continual",
+      "path": "src/gpu_cabt/cuda/effect_continual.cu",
+      "source_body_bytes": 13550
+    },
+    {
+      "cubin_text_bytes": 99456,
+      "ifs": 45,
+      "line": 112,
+      "loops": 17,
+      "name": "effect_instant_0_29",
+      "path": "src/gpu_cabt/cuda/effect_instant_0_29.cu",
+      "source_body_bytes": 10675
+    },
+    {
+      "cubin_text_bytes": 87168,
+      "ifs": 46,
+      "line": 100,
+      "loops": 17,
+      "name": "effect_instant_30_47",
+      "path": "src/gpu_cabt/cuda/effect_instant_30_47.cu",
+      "source_body_bytes": 10807
+    },
+    {
+      "cubin_text_bytes": 32512,
+      "ifs": 34,
+      "line": 601,
+      "loops": 0,
+      "name": "resume_effect_selection_full",
+      "path": "src/gpu_cabt/cuda/effect_resume.cu",
+      "source_body_bytes": 6883
+    },
+    {
+      "cubin_text_bytes": 37376,
+      "ifs": 42,
+      "line": 322,
+      "loops": 5,
+      "name": "begin_main_select_full",
+      "path": "src/gpu_cabt/cuda/main_select.cu",
+      "source_body_bytes": 6106
+    },
+    {
+      "cubin_text_bytes": 15744,
+      "ifs": 26,
+      "line": 651,
+      "loops": 0,
+      "name": "resume_attack_full",
+      "path": "src/gpu_cabt/cuda/attack_frame.cu",
+      "source_body_bytes": 3972
+    }
+  ],
+  "static_loop_limits": {
+    "attack_slots": 2,
+    "bench_scan": "player.bench.count <= 8",
+    "condition_scan": "effect_count - effect_index",
+    "interpreter_guard": 512,
+    "main_hand_scan": "player.hand.count <= 61",
+    "refresh_guard": 256,
+    "setup_attempts": 64,
+    "setup_guard": 256
+  },
+  "target_condition": {
+    "conditions_checked": null,
+    "entities_examined": null,
+    "measurement_status": "NOT_COLLECTED_CURRENT_SESSION",
+    "rule_card_accesses": null,
+    "satisfy_condition_calls": null,
+    "substring_mask_accesses": null,
+    "target_list_calls": null
+  },
+  "turn_refresh": {
+    "checkup_work": null,
+    "ko_scans": null,
+    "measurement_status": "NOT_COLLECTED_CURRENT_SESSION",
+    "refresh_invocations": null,
+    "refresh_loop_lengths": null,
+    "state_based_refresh_work": null,
+    "trigger_pulls": null
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "best_tested_positive_speedup": 1.0,
+  "best_tested_positive_speedup_status": "NONE; all measured architecture changes were flat or negative, and new GPU POCs were blocked by device visibility.",
+  "experiments": [
+    {
+      "baseline": null,
+      "correctness_result": "PASS in retained qualification",
+      "decision": "baseline",
+      "hypothesis": "The standalone project reproduces the retained GPU baseline at 6000 environments.",
+      "id": "baseline-qualified-6000",
+      "implementation": "canonical GpuCabtRuntime, 128 threads/block, stack=16384, nvrtc-fast-compile=max",
+      "notes": "Historical evidence at source_head=0e891d2; current session could not rerun because CUDA device nodes are absent.",
+      "result": {
+        "all_terminal": true,
+        "boundaries": 432,
+        "decisions": 731672,
+        "decisions_per_second": 45391.03995172144,
+        "free_vram_after_allocation_bytes": 2595618816,
+        "games": 6000,
+        "games_per_second": 372.2244936396755,
+        "runtime_memory_bytes": 864500760,
+        "runtime_memory_bytes_per_env": 144083.46,
+        "seconds": 16.119304619991453,
+        "telemetry": {
+          "memory_total_mib": 4096.0,
+          "memory_used_max_mib": 1299.0,
+          "power_mean_w": 50.14826086956522,
+          "samples": 161,
+          "utilization_mean_pct": 99.96894409937889,
+          "utilization_p95_pct": 100.0
+        },
+        "zero_errors": true
+      },
+      "speedup": 1.0,
+      "workload": "6000 environments, seven-deck sweep, whole games"
+    },
+    {
+      "baseline": null,
+      "correctness_result": "PASS in retained qualification",
+      "decision": "baseline",
+      "hypothesis": "The standalone project reproduces the retained peak throughput at 12000 environments.",
+      "id": "baseline-qualified-12000",
+      "implementation": "canonical GpuCabtRuntime, 128 threads/block, stack=16384, nvrtc-fast-compile=max",
+      "notes": "Historical evidence at source_head=0e891d2; current session could not rerun because CUDA device nodes are absent.",
+      "result": {
+        "all_terminal": true,
+        "boundaries": 464,
+        "decisions": 1479071,
+        "decisions_per_second": 56988.324043619694,
+        "free_vram_after_allocation_bytes": 1731592192,
+        "games": 12000,
+        "games_per_second": 462.3577154331579,
+        "runtime_memory_bytes": 1728350760,
+        "runtime_memory_bytes_per_env": 144029.23,
+        "seconds": 25.95393047298421,
+        "telemetry": {
+          "memory_total_mib": 4096.0,
+          "memory_used_max_mib": 2125.0,
+          "power_mean_w": 55.19412451361868,
+          "samples": 257,
+          "utilization_mean_pct": 99.94552529182879,
+          "utilization_p95_pct": 100.0
+        },
+        "zero_errors": true
+      },
+      "speedup": 1.0,
+      "workload": "12000 environments, seven-deck sweep, whole games"
+    },
+    {
+      "baseline": {
+        "game_step_fraction": null
+      },
+      "correctness_result": "not applicable",
+      "decision": "focus-game-step",
+      "hypothesis": "Whole-game time is dominated by the interpreter kernel rather than public projections.",
+      "id": "game-step-time-breakdown",
+      "implementation": "retained CUDA-event timing of canonical kernels",
+      "notes": "Approximate retained profiler result; percentages are not a replacement for a new Nsight trace.",
+      "result": {
+        "game_step_fraction": 0.935,
+        "policy_projection_fraction": 0.056,
+        "public_events_fraction": 0.009,
+        "status_and_selector_launch_fraction": 0.0
+      },
+      "speedup": null,
+      "workload": "representative whole-game GPU run"
+    },
+    {
+      "baseline": {
+        "registers_per_thread": 128
+      },
+      "correctness_result": "preserved",
+      "decision": "reject-register-only",
+      "hypothesis": "Capping the game-step kernel at 96 registers improves occupancy enough to improve throughput.",
+      "id": "register-cap-96",
+      "implementation": "same canonical kernel with simple register cap",
+      "notes": "Retained negative experiment. Register pressure is present but not the first lever.",
+      "result": {
+        "meaningful_improvement": false,
+        "throughput_change": 0.0
+      },
+      "speedup": 1.0,
+      "workload": "same whole-game benchmark"
+    },
+    {
+      "baseline": {
+        "threads_per_block": 128
+      },
+      "correctness_result": "preserved",
+      "decision": "reject-launch-geometry",
+      "hypothesis": "Changing block geometry materially improves the interpreter kernel.",
+      "id": "launch-geometry",
+      "implementation": "64, 128, 256, and 512 threads/block",
+      "notes": "Retained negative experiment; launch overhead is not dominant.",
+      "result": {
+        "flat_geometries": [
+          64,
+          128,
+          256
+        ],
+        "worse_geometry": 512
+      },
+      "speedup": 1.0,
+      "workload": "same whole-game benchmark"
+    },
+    {
+      "baseline": {
+        "public_log_capacity": 1024,
+        "runtime_bytes": 62320
+      },
+      "correctness_result": "preserved",
+      "decision": "reject-public-log-size",
+      "hypothesis": "The 1024-entry public log inside BattleRuntimeState causes the main slowdown.",
+      "id": "external-public-log",
+      "implementation": "externalize public log storage from runtime struct",
+      "notes": "Retained negative experiment. The runtime struct is large, but this specific field is not causal by itself.",
+      "result": {
+        "correctness": "preserved",
+        "throughput_change": 0.0
+      },
+      "speedup": 1.0,
+      "workload": "same whole-game benchmark"
+    },
+    {
+      "baseline": {
+        "speedup": 1.0
+      },
+      "correctness_result": "preserved",
+      "decision": "reject-public-select-sorting",
+      "hypothesis": "Grouping environments by public select_type reduces branch divergence enough to win.",
+      "id": "select-type-sorting",
+      "implementation": "sort/group environments before game_step by public select_type",
+      "notes": "Public select_type is too coarse and scheduling/copy overhead dominates. Future queues must use internal stage and index indirection.",
+      "result": {
+        "slowdown_percent": 33.0,
+        "throughput_relative": 0.67
+      },
+      "speedup": 0.67,
+      "workload": "same whole-game benchmark"
+    },
+    {
+      "baseline": {
+        "local_memory_bytes": 0,
+        "registers_per_thread": 128
+      },
+      "correctness_result": "not a production candidate",
+      "decision": "reject-driver-jit",
+      "hypothesis": "Driver JIT from fast PTX can replace CUBIN compilation without runtime cost.",
+      "id": "fast-ptx-driver-jit",
+      "implementation": "fast-compiled PTX loaded by the driver",
+      "notes": "Retained negative resource result; generated code is clearly worse.",
+      "result": {
+        "driver_jit_seconds": 88.0,
+        "local_memory_bytes": 1352,
+        "registers_per_thread": 250
+      },
+      "speedup": null,
+      "workload": "kernel attribute probe and whole-game attempt"
+    },
+    {
+      "baseline": {
+        "game_step_registers_per_thread": 128
+      },
+      "correctness_result": "not a whole-game POC",
+      "decision": "reject-wrapper-only-specialization",
+      "hypothesis": "Calling existing large inline dispatch functions from specialized wrappers lowers register usage.",
+      "id": "direct-stage-wrappers",
+      "implementation": "stage 1, 2, 8, and 15 wrapper kernels over canonical source",
+      "notes": "Does not reject real dependency isolation; it shows that wrapper kernels over the same giant TU do not isolate code generation.",
+      "result": {
+        "stage_registers_per_thread": {
+          "1": 128,
+          "15": 128,
+          "2": 128,
+          "8": 128
+        }
+      },
+      "speedup": null,
+      "workload": "kernel attribute probes"
+    },
+    {
+      "baseline": {
+        "full_optimized_prior_oom_rss_bytes": 13665058816
+      },
+      "correctness_result": "not executed",
+      "decision": "reject-simple-policy-split",
+      "hypothesis": "A small source split immediately enables high-quality optimized machine code.",
+      "id": "compiler-runtime-without-policy-optimized",
+      "implementation": "see compiler experiments; hard 6 GiB address-space limit",
+      "notes": "A real dependency-closed stage TU is still worth testing; this specific split is insufficient.",
+      "result": {
+        "accept": false,
+        "compile_seconds": null,
+        "correctness": "NOT_EXECUTED",
+        "cubin_bytes": null,
+        "hypothesis": "A runtime-only translation unit can be fully optimized within the host safety cap.",
+        "id": "compile-runtime-without-policy-optimized-hard-6g",
+        "implementation": "build_cuda_source(include_policy=False), NVRTC sm_86 with no fast-compile flag, RLIMIT_AS=6 GiB",
+        "notes": "Process terminated with LLVM ERROR: out of memory and signal 6. The 6 GiB cap prevented a host-stability incident; do not retry monolithically.",
+        "peak_rss_bytes": null,
+        "result": "FAIL_LLVM_OOM_AT_HARD_LIMIT",
+        "source_bytes": 538269,
+        "speedup_vs_baseline": null,
+        "workload": "compile only; no GPU device available for execution"
+      },
+      "speedup": null,
+      "workload": "compile only"
+    },
+    {
+      "baseline": null,
+      "correctness_result": "not executed",
+      "decision": "retain-as-compiler-control",
+      "hypothesis": "NVRTC optimization itself is possible within the laptop safety envelope for small TUs.",
+      "id": "isolated-leaf-optimized",
+      "implementation": "synthetic hot-field leaf kernel, hard 6 GiB address-space limit",
+      "notes": "Supports reducing dependency closure before asking for optimized codegen.",
+      "result": {
+        "accept": false,
+        "compile_seconds": 0.17681575700407848,
+        "correctness": "NOT_EXECUTED",
+        "cubin_bytes": 25808,
+        "cubin_sha256": "e8d35bd2c75b2113e4276b7b79531c7853ce710dee3f6edf706ec9cd35c25c27",
+        "hypothesis": "A genuinely small translation unit can receive full optimization safely.",
+        "id": "compile-isolated-hot-field-leaf-optimized-hard-6g",
+        "implementation": "headers plus one synthetic hot-field kernel, NVRTC sm_86 with no fast-compile flag, RLIMIT_AS=6 GiB",
+        "notes": "Confirms the compiler cap is not a universal NVRTC limitation; useful engine-sized dependency isolation remains to be built.",
+        "peak_rss_bytes": 130113536,
+        "result": "PASS_COMPILE_ONLY",
+        "source_bytes": 34085,
+        "speedup_vs_baseline": null,
+        "workload": "compile only; synthetic kernel is not a gameplay benchmark"
+      },
+      "speedup": null,
+      "workload": "compile only"
+    },
+    {
+      "baseline": null,
+      "correctness_result": "not executed",
+      "decision": "blocked-environment",
+      "hypothesis": "A fresh 6000/12000 baseline can be collected in this session.",
+      "id": "current-session-device-check",
+      "implementation": "nvidia-smi query and CuPy device initialization under two-core limits",
+      "notes": "Host-level nvidia-smi later saw an idle RTX 3050, but no /dev/nvidia* nodes are visible to CuPy. Retained qualification evidence is used and labeled historical.",
+      "result": {
+        "cupy": "cudaErrorNoDevice",
+        "device_nodes": false,
+        "gameplay_started": false,
+        "nvidia_smi_host_query": "VISIBLE_IDLE"
+      },
+      "speedup": null,
+      "workload": "preflight only; no game launch"
+    }
+  ],
+  "generated_at_utc": "2026-08-14T07:52:56.684394+00:00",
+  "not_run": [
+    {
+      "id": "internal-stage-index-queues",
+      "reason": "requires CUDA execution; selected as first future POC"
+    },
+    {
+      "id": "active-env-compaction",
+      "reason": "requires CUDA execution"
+    },
+    {
+      "id": "aos-vs-soa-hot-fields",
+      "reason": "requires CUDA execution"
+    },
+    {
+      "id": "two-kernel-split",
+      "reason": "requires CUDA execution and correctness comparison"
+    },
+    {
+      "id": "generic-vs-attack-split",
+      "reason": "requires CUDA execution and correctness comparison"
+    },
+    {
+      "id": "top-four-stage-specialization",
+      "reason": "requires CUDA execution and correctness comparison"
+    },
+    {
+      "id": "per-matchup-profile",
+      "reason": "requires CUDA execution"
+    }
+  ],
+  "schema_version": "gpu-architecture-experiments-v1"
+}

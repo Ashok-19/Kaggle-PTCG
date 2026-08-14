@@ -1,0 +1,363 @@
+{
+  "baseline": {
+    "best_decisions_per_second": 56988.324043619694,
+    "best_games_per_second": 462.3577154331579,
+    "current_probe": {
+      "error": "cudaErrorNoDevice: no CUDA-capable device is detected",
+      "failure_point": "selector module load before gameplay",
+      "requested_env_counts": [
+        24,
+        6000,
+        12000
+      ],
+      "status": "BLOCKED_CUPY_NO_DEVICE"
+    },
+    "env_12000": {
+      "all_terminal": true,
+      "boundaries": 464,
+      "decisions": 1479071,
+      "decisions_per_second": 56988.324043619694,
+      "free_vram_after_allocation_bytes": 1731592192,
+      "games": 12000,
+      "games_per_second": 462.3577154331579,
+      "runtime_memory_bytes": 1728350760,
+      "runtime_memory_bytes_per_env": 144029.23,
+      "seconds": 25.95393047298421,
+      "telemetry": {
+        "memory_total_mib": 4096.0,
+        "memory_used_max_mib": 2125.0,
+        "power_mean_w": 55.19412451361868,
+        "samples": 257,
+        "utilization_mean_pct": 99.94552529182879,
+        "utilization_p95_pct": 100.0
+      },
+      "zero_errors": true
+    },
+    "env_6000": {
+      "all_terminal": true,
+      "boundaries": 432,
+      "decisions": 731672,
+      "decisions_per_second": 45391.03995172144,
+      "free_vram_after_allocation_bytes": 2595618816,
+      "games": 6000,
+      "games_per_second": 372.2244936396755,
+      "runtime_memory_bytes": 864500760,
+      "runtime_memory_bytes_per_env": 144083.46,
+      "seconds": 16.119304619991453,
+      "telemetry": {
+        "memory_total_mib": 4096.0,
+        "memory_used_max_mib": 1299.0,
+        "power_mean_w": 50.14826086956522,
+        "samples": 161,
+        "utilization_mean_pct": 99.96894409937889,
+        "utilization_p95_pct": 100.0
+      },
+      "zero_errors": true
+    },
+    "evidence_status": "RETAINED_HISTORICAL_BASELINE_CURRENT_SESSION_BLOCKED",
+    "gpu_to_native_public_decision_rate": 0.4406899323087444,
+    "gpu_to_native_public_game_rate": 0.44624343137750105,
+    "qualification_compile_mode": "nvrtc-fast-compile-max-conservative-local",
+    "qualification_source_head": "0e891d25c58ddb65cf384c4ef0a7001a962dc970",
+    "retained_native_public_decisions_per_second": 129316.146945,
+    "retained_native_public_games_per_second": 1036.110972
+  },
+  "commands": [
+    "nvidia-smi --query-gpu=name,compute_cap,driver_version,memory.total,memory.used,utilization.gpu,power.draw --format=csv,noheader,nounits",
+    ".venv/bin/python-local -c 'import cupy as cp; cp.cuda.runtime.getDeviceCount()'",
+    "GPU_CABT_NVRTC_FAST_COMPILE=max .venv/bin/python-local scripts/gpu_cabt_local_final_qualification.py",
+    ".venv/bin/python-local .cache/interpreter_profile.py",
+    ".venv/bin/python-local .cache/main_stage_profile.py",
+    ".venv/bin/python-local .cache/baseline_probe.py",
+    ".venv/bin/python-local .cache/analyze_static.py",
+    ".venv/bin/python-local .cache/compile_probe.py",
+    ".venv/bin/python-local .cache/compile_leaf.py",
+    "g++ -std=c++23 -O0 -D__device__= -D__forceinline__=inline .cache/layout_probe.cpp -o .cache/layout_probe && .cache/layout_probe"
+  ],
+  "compiler": {
+    "experiments": [
+      {
+        "accept": false,
+        "compile_seconds": 3.383941767999204,
+        "correctness": "NOT_EXECUTED",
+        "cubin_bytes": 4461816,
+        "cubin_sha256": "01fba93bdeb4563f071f75cd86d88fba217253e83b18158549bee85a6bb40ca4",
+        "hypothesis": "Removing policy projection may produce a smaller safe local CUBIN.",
+        "id": "compile-runtime-without-policy-fast-max",
+        "implementation": "build_cuda_source(include_policy=False), NVRTC sm_86 --Ofast-compile=max",
+        "notes": "Useful as a source-size control, not evidence of runtime speed.",
+        "peak_rss_bytes": 254771200,
+        "result": "PASS_COMPILE_ONLY",
+        "source_bytes": 538269,
+        "speedup_vs_baseline": null,
+        "workload": "compile only; no GPU device available for execution"
+      },
+      {
+        "accept": false,
+        "compile_seconds": null,
+        "correctness": "NOT_EXECUTED",
+        "cubin_bytes": null,
+        "hypothesis": "A runtime-only translation unit can be fully optimized within the host safety cap.",
+        "id": "compile-runtime-without-policy-optimized-hard-6g",
+        "implementation": "build_cuda_source(include_policy=False), NVRTC sm_86 with no fast-compile flag, RLIMIT_AS=6 GiB",
+        "notes": "Process terminated with LLVM ERROR: out of memory and signal 6. The 6 GiB cap prevented a host-stability incident; do not retry monolithically.",
+        "peak_rss_bytes": null,
+        "result": "FAIL_LLVM_OOM_AT_HARD_LIMIT",
+        "source_bytes": 538269,
+        "speedup_vs_baseline": null,
+        "workload": "compile only; no GPU device available for execution"
+      },
+      {
+        "accept": false,
+        "compile_seconds": 0.17681575700407848,
+        "correctness": "NOT_EXECUTED",
+        "cubin_bytes": 25808,
+        "cubin_sha256": "e8d35bd2c75b2113e4276b7b79531c7853ce710dee3f6edf706ec9cd35c25c27",
+        "hypothesis": "A genuinely small translation unit can receive full optimization safely.",
+        "id": "compile-isolated-hot-field-leaf-optimized-hard-6g",
+        "implementation": "headers plus one synthetic hot-field kernel, NVRTC sm_86 with no fast-compile flag, RLIMIT_AS=6 GiB",
+        "notes": "Confirms the compiler cap is not a universal NVRTC limitation; useful engine-sized dependency isolation remains to be built.",
+        "peak_rss_bytes": 130113536,
+        "result": "PASS_COMPILE_ONLY",
+        "source_bytes": 34085,
+        "speedup_vs_baseline": null,
+        "workload": "compile only; synthetic kernel is not a gameplay benchmark"
+      }
+    ],
+    "prior_fast_ptx_driver_jit_local_bytes": 1352,
+    "prior_fast_ptx_driver_jit_registers": 250,
+    "prior_full_optimized_oom_anon_rss_bytes": 13665058816
+  },
+  "divergence": {
+    "active_terminal_lane_waste": null,
+    "attack_stage": null,
+    "effect_stage": null,
+    "evidence_status": "OUTER_AND_MAIN_ACTION_ONLY",
+    "main_action": {
+      "control_flow_efficiency_fraction": 0.1015625,
+      "divergent_lane_iterations_percent": 73.63,
+      "mean_same_stage_lanes_per_warp_iteration": 3.25,
+      "source": "retained .cache/main_stage_profile.py result supplied in task checkpoint; raw output was not retained in repository",
+      "stage_distribution": {
+        "1": {
+          "name": "PlaySkill",
+          "percent_of_main_action_stage_iterations": 37.06
+        },
+        "11": {
+          "name": "AttackPostEffects",
+          "percent_of_main_action_stage_iterations": 3.44
+        },
+        "15": {
+          "name": "AttackAfterRefresh",
+          "percent_of_main_action_stage_iterations": 11.13
+        },
+        "2": {
+          "name": "Ability",
+          "percent_of_main_action_stage_iterations": 15.9
+        },
+        "4": {
+          "name": "RetreatEnergy",
+          "percent_of_main_action_stage_iterations": 3.77
+        },
+        "5": {
+          "name": "RetreatSwitch",
+          "percent_of_main_action_stage_iterations": 4.32
+        },
+        "6": {
+          "name": "PostRefresh",
+          "percent_of_main_action_stage_iterations": 3.33
+        },
+        "8": {
+          "name": "AttackReady",
+          "percent_of_main_action_stage_iterations": 20.45
+        },
+        "other": {
+          "name": "all other stages",
+          "percent_of_main_action_stage_iterations": 0.6
+        }
+      },
+      "top_four_stage_percent": 84.54
+    },
+    "outer": {
+      "boundaries": 0,
+      "branch_percent": {
+        "main_action": 20.82,
+        "select_main": 29.18,
+        "setup": 2.14,
+        "terminal_or_error": 0.39,
+        "waiting_boundary": 47.48
+      },
+      "control_flow_efficiency_fraction": 0.45125,
+      "decisions": 188326,
+      "divergent_lane_iterations_percent": 80.1,
+      "env_count": 1536,
+      "internal_iterations_per_decision": 2.0889202765417414,
+      "mean_matching_lanes_per_warp_iteration": 14.44,
+      "source": "retained .cache/interpreter_profile.py result supplied in task checkpoint; raw output was not retained in repository",
+      "total_internal_iterations": 393398
+    },
+    "refresh_stage": null,
+    "trigger_stage": null
+  },
+  "game_step": {
+    "evidence_status": "RETAINED_APPROXIMATE_CUDA_TIMING",
+    "gpu_time_fraction": 0.935,
+    "policy_projection_fraction": 0.056,
+    "public_events_fraction": 0.009,
+    "status_selector_launch_fraction": 0.0
+  },
+  "generated_at_utc": "2026-08-14T07:52:56.684394+00:00",
+  "git": {
+    "head": "5b62b60d81e9ed4bd986cf0eadc222a5ad76a3a1",
+    "production_source_modified": false,
+    "status_at_start": "clean"
+  },
+  "hardware": {
+    "compute_capability": "8.6",
+    "current_device_nodes_visible": false,
+    "current_session_device_visible": false,
+    "current_session_nvidia_smi": "host query later succeeded: RTX 3050, 0% utilization, 11.34 W, 15 MiB; CuPy still reports cudaErrorNoDevice",
+    "kernel_driver_source": "/proc/driver/nvidia/version",
+    "kernel_driver_version": "595.84",
+    "multiprocessors": 16,
+    "retained_device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "retained_total_vram_bytes": 3953393664
+  },
+  "rule_tables": {
+    "attack": {
+      "bytes": 87192,
+      "row_bytes": 56,
+      "rows": 1557
+    },
+    "card_master": {
+      "bytes": 91296,
+      "row_bytes": 72,
+      "rows": 1268
+    },
+    "effect": {
+      "bytes": 441648,
+      "row_bytes": 144,
+      "rows": 3067
+    },
+    "extraction_command": "taskset -c 0,1 nice -n 10 .venv/bin/python-local -c 'extract_rule_tables(...)'",
+    "skill": {
+      "bytes": 20880,
+      "row_bytes": 48,
+      "rows": 435
+    },
+    "substring_masks": {
+      "bytes": 1120,
+      "row_bytes": 160,
+      "rows": 7,
+      "words_per_row": 40
+    },
+    "total_bytes": 650760,
+    "trigger": {
+      "bytes": 8624,
+      "row_bytes": 112,
+      "rows": 77
+    }
+  },
+  "schema_version": "gpu-bottleneck-metrics-v1",
+  "software": {
+    "cupy": "14.1.1",
+    "cupy_driver_api_version": 13020,
+    "cupy_runtime_api_version": 12090,
+    "current_shell_compiler_mode": "unset",
+    "nsight_compute_available": false,
+    "nsight_systems_available": false,
+    "numpy": "2.0.2",
+    "nvrtc_package": "12.9.86",
+    "python": "3.11.14",
+    "retained_compiler_mode": "GPU_CABT_NVRTC_FAST_COMPILE=max"
+  },
+  "state_memory": {
+    "aos_soa_microbenchmark": "NOT_RUN_NO_CUDA_DEVICE",
+    "battle_core_state_bytes": 21016,
+    "battle_runtime_state_bytes": 62320,
+    "core_offsets": {
+      "all_card": 1560,
+      "game_result": 17,
+      "log_index": 1552,
+      "phase": 16,
+      "players": 464,
+      "select_type": 58,
+      "turn": 0
+    },
+    "core_stride_between_adjacent_threads_bytes": 21016,
+    "evidence_status": "STATIC_STRIDE_ANALYSIS_ONLY",
+    "hot_field_access_counts": {
+      "runtime.effect_cursor": 11,
+      "runtime.effect_execution_active": 27,
+      "runtime.error_flags": 207,
+      "runtime.main_action_stage": 28,
+      "runtime.options": 7,
+      "runtime.pending_effect_kind": 75,
+      "runtime.refresh_cursor": 25,
+      "runtime.refresh_process_active": 17,
+      "runtime.selected": 12,
+      "runtime.targets": 23,
+      "runtime.trigger_activation_waiting": 18,
+      "runtime.trigger_resolution_active": 17,
+      "runtime.turn_cycle_active": 13,
+      "state.all_card": 168,
+      "state.current_attack_id": 11,
+      "state.effect_state": 44,
+      "state.game_result": 16,
+      "state.players": 100,
+      "state.select_type": 38,
+      "state.selected_list": 16
+    },
+    "observed_runtime_allocation_bytes_per_env_at_12000": 144029.23,
+    "per_env_state_bytes": 83336,
+    "runtime_offsets": {
+      "card_effects": 60784,
+      "continuations": 34944,
+      "effect_execution_active": 41,
+      "error_flags": 0,
+      "main_action_active": 68,
+      "main_action_stage": 69,
+      "options": 32896,
+      "pending_effect_kind": 46,
+      "public_logs": 128,
+      "refresh_process_active": 54,
+      "selected": 34432,
+      "targets": 40064,
+      "triggers": 54400
+    },
+    "runtime_stride_between_adjacent_threads_bytes": 62320
+  },
+  "static_hot_path": {
+    "canonical_source_bytes": 564511,
+    "canonical_source_lines": 12672,
+    "compiled_cubin_bytes": 4704232,
+    "compiled_text_bytes": 3808000,
+    "compiled_text_section_count": 479,
+    "device_or_global_function_count": 482,
+    "evidence_status": "STATIC_PLUS_RETAINED_CUBIN_RESOURCE_PROBE",
+    "forceinline_function_count": 441,
+    "kernel_local_memory_bytes_per_thread": 0,
+    "kernel_max_threads_per_block": 512,
+    "kernel_registers_per_thread": 128,
+    "module_count": 46,
+    "reachable_body_bytes": 414934,
+    "reachable_forceinline_count": 409,
+    "reachable_function_count": 443,
+    "reachable_if_count": 1897,
+    "reachable_loop_count": 443,
+    "reachable_switch_count": 19,
+    "selected_compiled_text_bytes": {
+      "advance_game_to_boundary_full": 10112,
+      "begin_main_select_full": 37376,
+      "effect_continual": 130560,
+      "effect_instant_0_29": 99456,
+      "effect_instant_30_47": 87168,
+      "gpu_cabt_game_step": 11008,
+      "resume_attack_full": 15744,
+      "resume_effect_selection_full": 32512,
+      "resume_main_action_full": 16768,
+      "resume_refresh_full": 7936,
+      "target_single": 204288
+    }
+  }
+}
