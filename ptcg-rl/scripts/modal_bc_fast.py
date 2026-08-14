@@ -20,6 +20,8 @@ BUNDLE_PARTS = tuple(
     f"/data/inputs/bc-current-lucario-specialist-v1/part-{index:02d}" for index in range(6)
 )
 MATERIALIZED_DIR = "/data/materialized/bc-current-lucario-specialist-v1"
+MATERIALIZED_TAR = "/data/materialized/bc-current-lucario-specialist-v1.tar"
+MATERIALIZED_TAR_SHA256 = "/data/materialized/bc-current-lucario-specialist-v1.tar.sha256"
 WARM_START_PATH = "/data/runs/bc-current-lucario-specialist-v1-r1/epoch-2.pt"
 WARM_START_SHA256 = "822fc1bf2312ff1d2bdab02a5ba24c5ab2b491f8a8b7ca89c80ad901c8d47f17"
 
@@ -163,6 +165,76 @@ def _run_stream_with_gpu_telemetry(command: list[str]) -> tuple[list[str], dict[
     return tail, telemetry
 
 
+def _sha256_path(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(16 * 1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _ensure_materialized_tar(target: Path) -> dict[str, Any]:
+    tar_path = Path(MATERIALIZED_TAR)
+    sha_path = Path(MATERIALIZED_TAR_SHA256)
+    if tar_path.is_file() and sha_path.is_file():
+        return {
+            "tar_path": str(tar_path),
+            "tar_sha256": sha_path.read_text(encoding="ascii").strip(),
+            "tar_bytes": tar_path.stat().st_size,
+        }
+    partial = tar_path.with_suffix(".tar.partial")
+    partial.unlink(missing_ok=True)
+    subprocess.run(["tar", "-cf", str(partial), "-C", str(target), "."], check=True)
+    digest = _sha256_path(partial)
+    partial.replace(tar_path)
+    sha_path.write_text(digest + "\n", encoding="ascii")
+    receipt = {
+        "tar_path": str(tar_path),
+        "tar_sha256": digest,
+        "tar_bytes": tar_path.stat().st_size,
+    }
+    print(json.dumps({"event": "materialized_tar_ready", **receipt}, sort_keys=True), flush=True)
+    return receipt
+
+
+def _stage_materialized_tar() -> tuple[Path, dict[str, Any]]:
+    source = Path(MATERIALIZED_TAR)
+    sha_path = Path(MATERIALIZED_TAR_SHA256)
+    if not source.is_file() or not sha_path.is_file():
+        raise RuntimeError("materialized tar or SHA-256 sidecar is missing")
+    expected = sha_path.read_text(encoding="ascii").strip()
+    local_tar = Path("/tmp/bc-current-lucario-specialist-v1.tar")
+    digest = hashlib.sha256()
+    total = 0
+    with source.open("rb") as src, local_tar.open("wb") as dst:
+        while True:
+            chunk = src.read(16 * 1024 * 1024)
+            if not chunk:
+                break
+            dst.write(chunk)
+            digest.update(chunk)
+            total += len(chunk)
+    observed = digest.hexdigest()
+    if observed != expected:
+        raise RuntimeError(
+            f"materialized tar SHA-256 differs: expected {expected}, observed {observed}"
+        )
+    local_dir = Path("/tmp/bc-current-lucario-specialist-v1")
+    if local_dir.exists():
+        shutil.rmtree(local_dir)
+    local_dir.mkdir(parents=True)
+    subprocess.run(["tar", "-xf", str(local_tar), "-C", str(local_dir)], check=True)
+    if not (local_dir / "manifest.json").is_file():
+        raise RuntimeError("staged materialized tar has no manifest")
+    receipt = {
+        "tar_sha256": observed,
+        "tar_bytes": total,
+        "local_dir": str(local_dir),
+    }
+    print(json.dumps({"event": "materialized_tar_staged", **receipt}, sort_keys=True), flush=True)
+    return local_dir, receipt
+
+
 @app.function(
     cpu=16,
     memory=65536,
@@ -174,12 +246,17 @@ def materialize(force: bool = False) -> dict[str, Any]:
     if target.exists():
         if not force:
             manifest = json.loads((target / "manifest.json").read_text(encoding="utf-8"))
+            archive = _ensure_materialized_tar(target)
+            training_volume.commit()
             return {
                 "status": "EXISTS",
                 "manifest_sha256": manifest["manifest_sha256"],
                 "summary": manifest["summary"],
+                "archive": archive,
             }
         shutil.rmtree(target)
+        Path(MATERIALIZED_TAR).unlink(missing_ok=True)
+        Path(MATERIALIZED_TAR_SHA256).unlink(missing_ok=True)
     bundle = _reassemble_bundle()
     command = [
         "python",
@@ -198,12 +275,14 @@ def materialize(force: bool = False) -> dict[str, Any]:
         "bc-current-lucario-specialist-materialized-v1",
     ]
     _run_stream(command)
+    archive = _ensure_materialized_tar(target)
     training_volume.commit()
     manifest = json.loads((target / "manifest.json").read_text(encoding="utf-8"))
     return {
         "status": manifest["status"],
         "manifest_sha256": manifest["manifest_sha256"],
         "summary": manifest["summary"],
+        "archive": archive,
     }
 
 
@@ -220,9 +299,7 @@ def benchmark(
     train_limit: int = 512,
     validation_limit: int = 64,
 ) -> dict[str, Any]:
-    materialized = Path(MATERIALIZED_DIR)
-    if not (materialized / "manifest.json").is_file():
-        raise RuntimeError("materialized specialist corpus is missing")
+    materialized, stage_receipt = _stage_materialized_tar()
     warm_start = Path(WARM_START_PATH)
     warm_manifest = warm_start.with_name(warm_start.name + ".manifest.json")
     if not warm_start.is_file() or not warm_manifest.is_file():
@@ -238,7 +315,7 @@ def benchmark(
         "python",
         "/workspace/ptcg-rl/scripts/bc_train_materialized.py",
         "--materialized-dir",
-        MATERIALIZED_DIR,
+        str(materialized),
         "--checkpoint",
         "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
         "--card-table",
@@ -291,6 +368,7 @@ def benchmark(
         "materialized_load_seconds": report["materialized"]["load_seconds"],
         "gpu": report["gpu"],
         "gpu_telemetry": telemetry,
+        "materialized_stage": stage_receipt,
     }
 
 
@@ -308,9 +386,7 @@ def train(
     epochs: int = 6,
     learning_rate: float = 2.5e-5,
 ) -> dict[str, Any]:
-    materialized = Path(MATERIALIZED_DIR)
-    if not (materialized / "manifest.json").is_file():
-        raise RuntimeError("materialized specialist corpus is missing")
+    materialized, stage_receipt = _stage_materialized_tar()
     warm_start = Path(WARM_START_PATH)
     observed_warm_sha = hashlib.sha256(warm_start.read_bytes()).hexdigest()
     if observed_warm_sha != WARM_START_SHA256:
@@ -322,7 +398,7 @@ def train(
         "python",
         "/workspace/ptcg-rl/scripts/bc_train_materialized.py",
         "--materialized-dir",
-        MATERIALIZED_DIR,
+        str(materialized),
         "--checkpoint",
         "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
         "--card-table",
@@ -362,4 +438,5 @@ def train(
         "memory": report["memory"],
         "materialized": report["materialized"],
         "gpu_telemetry": telemetry,
+        "materialized_stage": stage_receipt,
     }
