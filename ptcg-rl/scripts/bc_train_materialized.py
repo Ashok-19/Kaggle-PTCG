@@ -532,6 +532,7 @@ def main() -> int:
     parser.add_argument("--bf16", action="store_true")
     parser.add_argument("--train-limit", type=int)
     parser.add_argument("--validation-limit", type=int)
+    parser.add_argument("--minimum-teacher-score", type=float)
     parser.add_argument("--maximum-train-groups", type=int)
     parser.add_argument("--maximum-validation-groups", type=int)
     args = parser.parse_args()
@@ -553,6 +554,8 @@ def main() -> int:
             _positive(value, label)
     if args.learning_rate <= 0 or args.weight_decay < 0 or args.maximum_gradient_norm <= 0:
         raise MaterializedBCTrainError("optimizer hyperparameters are invalid")
+    if args.minimum_teacher_score is not None and args.minimum_teacher_score <= 0:
+        raise MaterializedBCTrainError("minimum teacher score must be positive")
 
     device = torch.device(args.device)
     if device.type == "cuda" and not torch.cuda.is_available():
@@ -571,6 +574,25 @@ def main() -> int:
         torch.cuda.reset_peak_memory_stats(device)
 
     manifest, records = load_materialized_manifest(args.materialized_dir)
+    if args.minimum_teacher_score is not None:
+        filtered_records: list[dict[str, Any]] = []
+        for record in records:
+            value = record.get("teacher_score_qualification_value")
+            if value is None:
+                raise MaterializedBCTrainError(
+                    "minimum-teacher-score requested but materialized records lack teacher score provenance"
+                )
+            try:
+                teacher_score = float(value)
+            except (TypeError, ValueError) as error:
+                raise MaterializedBCTrainError(
+                    f"invalid teacher score provenance for episode {record['episode_id']}"
+                ) from error
+            if teacher_score >= args.minimum_teacher_score:
+                filtered_records.append(record)
+        records = filtered_records
+        if not records:
+            raise MaterializedBCTrainError("minimum teacher score filter removed all materialized records")
     train_records = sorted(
         (record for record in records if record["split"] == "train"),
         key=lambda record: int(record["episode_id"]),
@@ -809,6 +831,7 @@ def main() -> int:
             "scheduler": "constant",
             "seed": args.seed,
             "loader_workers": args.loader_workers,
+            "minimum_teacher_score": args.minimum_teacher_score,
             "vectorized_compound_decoder": True,
             "replay_json_parsing_inside_epoch": False,
             "projected_features_reused_across_epochs": True,
