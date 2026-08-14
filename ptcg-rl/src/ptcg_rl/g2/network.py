@@ -684,26 +684,31 @@ class PTCGPolicyV1(nn.Module):
         else:
             raw = self.entity_cls.new_empty((0, self.config.model_width))
 
-        lengths = (batch.entity_offsets[1:] - batch.entity_offsets[:-1]).tolist()
-        max_length = max(lengths, default=0)
-        padded = raw.new_zeros((batch.batch_size, max_length + 1, self.config.model_width))
+        lengths = batch.entity_offsets[1:] - batch.entity_offsets[:-1]
+        maximum_length = int(lengths.max().item()) if lengths.numel() else 0
+        padded = raw.new_zeros(
+            (batch.batch_size, maximum_length + 1, self.config.model_width)
+        )
         padding = torch.ones(
-            (batch.batch_size, max_length + 1), dtype=torch.bool, device=raw.device
+            (batch.batch_size, maximum_length + 1), dtype=torch.bool, device=raw.device
         )
         padded[:, 0] = self.entity_cls
         padding[:, 0] = False
-        for index, length in enumerate(lengths):
-            if length:
-                start = int(batch.entity_offsets[index])
-                padded[index, 1 : length + 1] = raw[start : start + length]
-                padding[index, 1 : length + 1] = False
+        if raw.shape[0]:
+            owner = torch.repeat_interleave(
+                torch.arange(batch.batch_size, device=raw.device, dtype=torch.long),
+                lengths,
+            )
+            local = torch.arange(raw.shape[0], device=raw.device, dtype=torch.long)
+            local = local - torch.repeat_interleave(batch.entity_offsets[:-1], lengths)
+            padded[owner, local + 1] = raw
+            padding[owner, local + 1] = False
+        else:
+            owner = torch.empty(0, dtype=torch.long, device=raw.device)
+            local = torch.empty(0, dtype=torch.long, device=raw.device)
         transformed = self.entity_transformer(padded, src_key_padding_mask=padding)
         pooled = transformed[:, 0]
-        flat: list[Tensor] = []
-        for index, length in enumerate(lengths):
-            if length:
-                flat.append(transformed[index, 1 : length + 1])
-        entities = torch.cat(flat, dim=0) if flat else raw
+        entities = transformed[owner, local + 1] if raw.shape[0] else raw
         return entities, pooled
 
     def _encode_events(self, batch: TorchDecisionBatch, entities: Tensor) -> Tensor:

@@ -153,6 +153,49 @@ def test_batched_event_gru_matches_per_decision_reference(tmp_path: Path) -> Non
     assert torch.allclose(observed, reference, rtol=0, atol=1e-6)
 
 
+def test_vectorized_entity_padding_matches_per_decision_reference(tmp_path: Path) -> None:
+    policy = model(tmp_path).eval()
+    batch = collate_projected(
+        (card_decision(), number_decision(4)[2], card_decision(), zero_option_decision())
+    )
+    captured: list[torch.Tensor] = []
+
+    def capture_raw(_module, _inputs, output):
+        captured.append(output.detach())
+
+    hook = policy.entity_projection.register_forward_hook(capture_raw)
+    try:
+        with torch.no_grad():
+            observed_entities, observed_pool = policy._encode_entities(batch)
+    finally:
+        hook.remove()
+    assert len(captured) == 1
+    raw = captured[0]
+    lengths = (batch.entity_offsets[1:] - batch.entity_offsets[:-1]).tolist()
+    maximum_length = max(lengths, default=0)
+    padded = raw.new_zeros((batch.batch_size, maximum_length + 1, policy.config.model_width))
+    padding = torch.ones(
+        (batch.batch_size, maximum_length + 1), dtype=torch.bool, device=raw.device
+    )
+    padded[:, 0] = policy.entity_cls
+    padding[:, 0] = False
+    for index, length in enumerate(lengths):
+        if length:
+            start = int(batch.entity_offsets[index])
+            padded[index, 1 : length + 1] = raw[start : start + length]
+            padding[index, 1 : length + 1] = False
+    with torch.no_grad():
+        transformed = policy.entity_transformer(padded, src_key_padding_mask=padding)
+    expected_pool = transformed[:, 0]
+    flat = []
+    for index, length in enumerate(lengths):
+        if length:
+            flat.append(transformed[index, 1 : length + 1])
+    expected_entities = torch.cat(flat, dim=0) if flat else raw
+    assert torch.allclose(observed_entities, expected_entities, rtol=0, atol=1e-6)
+    assert torch.allclose(observed_pool, expected_pool, rtol=0, atol=1e-6)
+
+
 def test_option_permutation_is_equivariant_and_state_is_invariant(tmp_path: Path) -> None:
     policy = model(tmp_path).eval()
     observation, request, original = number_decision(5)
