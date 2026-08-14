@@ -9,7 +9,6 @@ import modal
 
 ROOT = Path(__file__).resolve().parents[2]
 PTCG_RL = ROOT / "ptcg-rl"
-BUNDLE = ROOT / ".cache/bc-data/derived/bc-recent-hq-v1.zip"
 BUNDLE_SHA256 = "4377b1e514f4dff4f453c1dedcbc4af4e81a3b038296408ba86348da5cfe2434"
 VOLUME_NAME = "kptcg-training"
 
@@ -33,7 +32,6 @@ image = (
         PTCG_RL / "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
         remote_path="/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
     )
-    .add_local_file(BUNDLE, remote_path="/workspace/bc-recent-hq-v1.zip")
 )
 
 app = modal.App("kptcg-bc-production", image=image)
@@ -45,7 +43,7 @@ training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
     cpu=4,
     memory=32768,
     timeout=7200,
-    volumes={"/outputs": training_volume},
+    volumes={"/data": training_volume},
 )
 def run(
     run_name: str = "bc-recent-hq-v1-r1",
@@ -54,14 +52,14 @@ def run(
     sequence_length: int = 32,
     learning_rate: float = 1e-4,
 ) -> dict[str, Any]:
-    output_dir = Path("/outputs") / run_name
+    output_dir = Path("/data/runs") / run_name
     if output_dir.exists():
         raise RuntimeError(f"training output already exists: {output_dir}")
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/bc_train.py",
         "--bundle",
-        "/workspace/bc-recent-hq-v1.zip",
+        "/data/inputs/bc-recent-hq-v1.zip",
         "--expected-bundle-sha256",
         BUNDLE_SHA256,
         "--checkpoint",
@@ -108,7 +106,7 @@ def run(
         "status": report["status"],
         "run_name": run_name,
         "volume": VOLUME_NAME,
-        "remote_output": f"/{run_name}",
+        "remote_output": f"/runs/{run_name}",
         "best_epoch": report["best_epoch"],
         "baseline_validation_mean_nll": report["baseline_validation_mean_nll"],
         "best_validation_mean_nll": report["best_validation_mean_nll"],
