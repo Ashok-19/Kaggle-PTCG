@@ -408,6 +408,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.0)
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda _: 1.0)
+    # cuDNN requires recurrent modules to be in training mode for backward.
+    # PTCGPolicyV1 has dropout=0.0, so this does not change the action distribution.
+    model.train()
     optimizer.zero_grad(set_to_none=True)
     train_logp, train_values, train_entropies = _replay_rollout(
         model, rollout_steps, gradient=True
@@ -434,6 +437,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     )
     optimizer.step()
     scheduler.step()
+    model.eval()
     parameter_delta = _parameter_delta_l2(model, parameters_before)
     if parameter_delta <= 0:
         raise PPOSmokeError("PPO optimizer step did not change model parameters")
