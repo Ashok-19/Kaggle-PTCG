@@ -763,6 +763,11 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--model-labels", default="970k,1.4m,1.8m,2.9m,3.7m,5.0m")
+    parser.add_argument("--resume-model-label")
+    parser.add_argument("--resume-checkpoint", type=Path)
+    parser.add_argument("--resume-after-stage")
+    parser.add_argument("--resume-batch-size", type=int)
+    parser.add_argument("--resume-learning-rate", type=float)
     parser.add_argument("--batch-size-candidates", default="256,512,1024")
     parser.add_argument("--learning-rate-candidates", default="0.000025,0.00005,0.000075")
     parser.add_argument("--sequence-length", type=int, default=32)
@@ -786,6 +791,34 @@ def main() -> int:
     labels = tuple(item.strip() for item in args.model_labels.split(",") if item.strip())
     if not labels or any(label not in configs for label in labels):
         raise CapacitySweepError("model labels contain an unsupported variant")
+    resume_values = (
+        args.resume_model_label,
+        args.resume_checkpoint,
+        args.resume_after_stage,
+        args.resume_batch_size,
+        args.resume_learning_rate,
+    )
+    resume_enabled = any(value is not None for value in resume_values)
+    if resume_enabled and not all(value is not None for value in resume_values):
+        raise CapacitySweepError("resume arguments must be supplied together")
+    stage_names = (
+        "stage-a-archetype-all",
+        "stage-b-archetype-1175",
+        "stage-c-exact-all",
+        "stage-d-exact-1150",
+    )
+    if resume_enabled:
+        if args.resume_model_label not in labels or labels[0] != args.resume_model_label:
+            raise CapacitySweepError("resume model must be the first requested model label")
+        if args.resume_after_stage not in stage_names[:-1]:
+            raise CapacitySweepError("resume-after stage is unsupported")
+        if args.resume_batch_size is None or args.resume_batch_size <= 0:
+            raise CapacitySweepError("resume batch size must be positive")
+        if args.resume_learning_rate is None or args.resume_learning_rate <= 0:
+            raise CapacitySweepError("resume learning rate must be positive")
+        assert args.resume_checkpoint is not None
+        if not args.resume_checkpoint.is_file():
+            raise CapacitySweepError("resume checkpoint is missing")
     batch_candidates = _parse_csv_ints(args.batch_size_candidates, "batch-size candidates")
     lr_candidates = _parse_csv_floats(args.learning_rate_candidates, "learning-rate candidates")
     for value, label in (
@@ -851,12 +884,38 @@ def main() -> int:
         ),
         flush=True,
     )
-    exact_episodes: list[MaterializedEpisodeV1] | None = None
-    exact_train: list[MaterializedEpisodeV1] | None = None
-    exact_validation: list[MaterializedEpisodeV1] | None = None
-    exact_1150_train: list[MaterializedEpisodeV1] | None = None
-    exact_1150_validation: list[MaterializedEpisodeV1] | None = None
-    exact_load_seconds = 0.0
+    print(
+        json.dumps(
+            {"event": "capacity_corpus_load_start", "corpus": "exact-v2"},
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    exact_started = time.perf_counter()
+    exact_episodes, exact_load_source = _load_or_build_object_cache(
+        root=args.exact_materialized_dir,
+        records=[*exact_train_records, *exact_validation_records],
+        workers=args.loader_workers,
+        manifest_sha256=str(exact_manifest["manifest_sha256"]),
+        cache_path=args.exact_object_cache,
+        corpus_label="exact-v2",
+    )
+    exact_load_seconds = time.perf_counter() - exact_started
+    exact_train = [episode for episode in exact_episodes if episode.split == "train"]
+    exact_validation = [episode for episode in exact_episodes if episode.split == "validation"]
+    print(
+        json.dumps(
+            {
+                "event": "capacity_corpus_load_complete",
+                "corpus": "exact-v2",
+                "episodes": len(exact_episodes),
+                "elapsed_seconds": exact_load_seconds,
+                "source": exact_load_source,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
 
     archetype_1175_train_ids = {
         int(record["episode_id"])
@@ -876,6 +935,8 @@ def main() -> int:
     }
     archetype_1175_train = _episode_subset(archetype_train, archetype_1175_train_ids)
     archetype_1175_validation = _episode_subset(archetype_validation, archetype_1175_validation_ids)
+    exact_1150_train = _episode_subset(exact_train, exact_1150_train_ids)
+    exact_1150_validation = _episode_subset(exact_validation, exact_1150_validation_ids)
 
     card_table = load_card_table(args.card_table)
     for manifest in (archetype_manifest, exact_manifest):
@@ -913,126 +974,172 @@ def main() -> int:
             flush=True,
         )
 
-        speed_train = archetype_train[: min(args.speed_train_limit, len(archetype_train))]
-        speed_validation = archetype_validation[: min(args.speed_validation_limit, len(archetype_validation))]
+        is_resume_model = resume_enabled and label == args.resume_model_label
         speed_rows: list[dict[str, Any]] = []
-        for batch_size in batch_candidates:
-            train_groups: tuple[PackedRecurrentGroup, ...] | None = None
-            validation_groups: tuple[PackedRecurrentGroup, ...] | None = None
-            try:
-                train_groups = _pack(
-                    speed_train,
-                    batch_size=min(batch_size, len(speed_train)),
-                    sequence_length=args.sequence_length,
-                    seed=args.seed,
-                    device=device,
+        lr_rows: list[dict[str, Any]] = []
+        if is_resume_model:
+            assert args.resume_batch_size is not None
+            assert args.resume_learning_rate is not None
+            chosen_batch_size = args.resume_batch_size
+            chosen_lr = args.resume_learning_rate
+            print(
+                json.dumps(
+                    {
+                        "event": "capacity_resume_hyperparameters",
+                        "model": label,
+                        "batch_size": chosen_batch_size,
+                        "learning_rate": chosen_lr,
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+        else:
+            speed_train = archetype_train[: min(args.speed_train_limit, len(archetype_train))]
+            speed_validation = archetype_validation[: min(args.speed_validation_limit, len(archetype_validation))]
+            for batch_size in batch_candidates:
+                train_groups: tuple[PackedRecurrentGroup, ...] | None = None
+                validation_groups: tuple[PackedRecurrentGroup, ...] | None = None
+                try:
+                    train_groups = _pack(
+                        speed_train,
+                        batch_size=min(batch_size, len(speed_train)),
+                        sequence_length=args.sequence_length,
+                        seed=args.seed,
+                        device=device,
+                    )
+                    validation_groups = _pack(
+                        speed_validation,
+                        batch_size=min(batch_size, len(speed_validation)),
+                        sequence_length=args.sequence_length,
+                        seed=args.seed + 1,
+                        device=device,
+                    )
+                    smoke = _one_epoch_smoke(
+                        config=config,
+                        card_table=card_table,
+                        train_groups=train_groups,
+                        validation_groups=validation_groups,
+                        learning_rate=5e-5,
+                        seed=model_seed,
+                        device=device,
+                        bf16=args.bf16,
+                        maximum_gradient_norm=args.maximum_gradient_norm,
+                        weight_decay=args.weight_decay,
+                    )
+                    row = {
+                        "batch_size": min(batch_size, len(speed_train)),
+                        "sequence_length": args.sequence_length,
+                        "status": "PASS",
+                        "targets_per_second": smoke["training"]["policy_targets_per_second"],
+                        "training_mean_nll": smoke["training"]["mean_nll"],
+                        "validation_mean_nll": smoke["validation"]["mean_nll"],
+                        "gradient_norm_max_pre_clip": smoke["training"]["gradient_norm_max_pre_clip"],
+                        "peak_allocated_bytes": smoke["peak_allocated_bytes"],
+                        "gpu_telemetry": smoke["gpu_telemetry"],
+                    }
+                except torch.cuda.OutOfMemoryError:
+                    row = {
+                        "batch_size": min(batch_size, len(speed_train)),
+                        "sequence_length": args.sequence_length,
+                        "status": "OOM",
+                    }
+                    gc.collect()
+                    if device.type == "cuda":
+                        torch.cuda.empty_cache()
+                finally:
+                    del train_groups, validation_groups
+                    gc.collect()
+                    if device.type == "cuda":
+                        torch.cuda.empty_cache()
+                speed_rows.append(row)
+                print(
+                    json.dumps({"event": "capacity_speed_smoke", "model": label, **row}, sort_keys=True),
+                    flush=True,
                 )
-                validation_groups = _pack(
-                    speed_validation,
-                    batch_size=min(batch_size, len(speed_validation)),
-                    sequence_length=args.sequence_length,
-                    seed=args.seed + 1,
-                    device=device,
-                )
-                smoke = _one_epoch_smoke(
+            passing_speed = [row for row in speed_rows if row["status"] == "PASS"]
+            if not passing_speed:
+                raise CapacitySweepError(f"{label} has no viable batch-size smoke")
+            chosen_speed = max(passing_speed, key=lambda row: float(row["targets_per_second"]))
+            chosen_batch_size = int(chosen_speed["batch_size"])
+
+            lr_train = archetype_train[: min(args.lr_train_limit, len(archetype_train))]
+            lr_validation = archetype_validation[: min(args.lr_validation_limit, len(archetype_validation))]
+            lr_train_groups, lr_batch = _pack_with_fallback(
+                lr_train,
+                preferred_batch_size=chosen_batch_size,
+                sequence_length=args.sequence_length,
+                seed=args.seed,
+                device=device,
+            )
+            lr_validation_groups, _ = _pack_with_fallback(
+                lr_validation,
+                preferred_batch_size=lr_batch,
+                sequence_length=args.sequence_length,
+                seed=args.seed + 1,
+                device=device,
+            )
+            for learning_rate in lr_candidates:
+                row = _lr_smoke(
                     config=config,
                     card_table=card_table,
-                    train_groups=train_groups,
-                    validation_groups=validation_groups,
-                    learning_rate=5e-5,
+                    train_groups=lr_train_groups,
+                    validation_groups=lr_validation_groups,
+                    learning_rate=learning_rate,
+                    epochs=args.lr_smoke_epochs,
                     seed=model_seed,
                     device=device,
                     bf16=args.bf16,
                     maximum_gradient_norm=args.maximum_gradient_norm,
                     weight_decay=args.weight_decay,
                 )
-                row = {
-                    "batch_size": min(batch_size, len(speed_train)),
-                    "sequence_length": args.sequence_length,
-                    "status": "PASS",
-                    "targets_per_second": smoke["training"]["policy_targets_per_second"],
-                    "training_mean_nll": smoke["training"]["mean_nll"],
-                    "validation_mean_nll": smoke["validation"]["mean_nll"],
-                    "gradient_norm_max_pre_clip": smoke["training"]["gradient_norm_max_pre_clip"],
-                    "peak_allocated_bytes": smoke["peak_allocated_bytes"],
-                    "gpu_telemetry": smoke["gpu_telemetry"],
-                }
-            except torch.cuda.OutOfMemoryError:
-                row = {
-                    "batch_size": min(batch_size, len(speed_train)),
-                    "sequence_length": args.sequence_length,
-                    "status": "OOM",
-                }
-                gc.collect()
-                if device.type == "cuda":
-                    torch.cuda.empty_cache()
-            finally:
-                del train_groups, validation_groups
-                gc.collect()
-                if device.type == "cuda":
-                    torch.cuda.empty_cache()
-            speed_rows.append(row)
-            print(json.dumps({"event": "capacity_speed_smoke", "model": label, **row}, sort_keys=True), flush=True)
-        passing_speed = [row for row in speed_rows if row["status"] == "PASS"]
-        if not passing_speed:
-            raise CapacitySweepError(f"{label} has no viable batch-size smoke")
-        chosen_speed = max(passing_speed, key=lambda row: float(row["targets_per_second"]))
-        chosen_batch_size = int(chosen_speed["batch_size"])
+                lr_rows.append(row)
+                print(
+                    json.dumps(
+                        {
+                            "event": "capacity_lr_smoke",
+                            "model": label,
+                            "learning_rate": learning_rate,
+                            "best_validation_nll": row["best_validation_mean_nll"],
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+            del lr_train_groups, lr_validation_groups
+            gc.collect()
+            if device.type == "cuda":
+                torch.cuda.empty_cache()
+            chosen_lr_row = min(lr_rows, key=lambda row: float(row["best_validation_mean_nll"]))
+            chosen_lr = float(chosen_lr_row["learning_rate"])
 
-        lr_train = archetype_train[: min(args.lr_train_limit, len(archetype_train))]
-        lr_validation = archetype_validation[: min(args.lr_validation_limit, len(archetype_validation))]
-        lr_train_groups, lr_batch = _pack_with_fallback(
-            lr_train,
-            preferred_batch_size=chosen_batch_size,
-            sequence_length=args.sequence_length,
-            seed=args.seed,
-            device=device,
-        )
-        lr_validation_groups, _ = _pack_with_fallback(
-            lr_validation,
-            preferred_batch_size=lr_batch,
-            sequence_length=args.sequence_length,
-            seed=args.seed + 1,
-            device=device,
-        )
-        lr_rows: list[dict[str, Any]] = []
-        for learning_rate in lr_candidates:
-            row = _lr_smoke(
-                config=config,
-                card_table=card_table,
-                train_groups=lr_train_groups,
-                validation_groups=lr_validation_groups,
-                learning_rate=learning_rate,
-                epochs=args.lr_smoke_epochs,
-                seed=model_seed,
-                device=device,
-                bf16=args.bf16,
-                maximum_gradient_norm=args.maximum_gradient_norm,
-                weight_decay=args.weight_decay,
-            )
-            lr_rows.append(row)
+        model_output = args.output_dir / label
+        model_output.mkdir(parents=True, exist_ok=True)
+        model = _build_model(config, card_table, seed=model_seed, device=device)
+        resumed_checkpoint: dict[str, Any] | None = None
+        resume_after_index = -1
+        if is_resume_model:
+            assert args.resume_checkpoint is not None
+            assert args.resume_after_stage is not None
+            loaded = load_training_checkpoint_model_state(args.resume_checkpoint, model=model)
+            resume_after_index = stage_names.index(args.resume_after_stage)
+            resumed_checkpoint = {
+                "path": str(args.resume_checkpoint),
+                "payload_sha256": loaded.payload_sha256,
+                "payload_bytes": loaded.payload_bytes,
+                "after_stage": args.resume_after_stage,
+            }
             print(
                 json.dumps(
                     {
-                        "event": "capacity_lr_smoke",
+                        "event": "capacity_model_resumed",
                         "model": label,
-                        "learning_rate": learning_rate,
-                        "best_validation_nll": row["best_validation_mean_nll"],
+                        **resumed_checkpoint,
                     },
                     sort_keys=True,
                 ),
                 flush=True,
             )
-        del lr_train_groups, lr_validation_groups
-        gc.collect()
-        if device.type == "cuda":
-            torch.cuda.empty_cache()
-        chosen_lr_row = min(lr_rows, key=lambda row: float(row["best_validation_mean_nll"]))
-        chosen_lr = float(chosen_lr_row["learning_rate"])
-
-        model_output = args.output_dir / label
-        model_output.mkdir(parents=True, exist_ok=True)
-        model = _build_model(config, card_table, seed=model_seed, device=device)
         stage_specs: list[tuple[str, list[MaterializedEpisodeV1], list[MaterializedEpisodeV1], str, float | None, int, float]] = [
             (
                 "stage-a-archetype-all",
@@ -1052,76 +1159,38 @@ def main() -> int:
                 args.stage_b_epochs,
                 chosen_lr * 0.5,
             ),
+            (
+                "stage-c-exact-all",
+                exact_train,
+                exact_validation,
+                str(exact_manifest["manifest_sha256"]),
+                None,
+                args.stage_c_epochs,
+                chosen_lr * 0.5,
+            ),
+            (
+                "stage-d-exact-1150",
+                exact_1150_train,
+                exact_1150_validation,
+                str(exact_manifest["manifest_sha256"]),
+                1150.0,
+                args.stage_d_epochs,
+                chosen_lr * 0.25,
+            ),
         ]
         stage_reports: list[dict[str, Any]] = []
         effective_batch_sizes: dict[str, int] = {}
-        for stage_index in range(4):
-            if stage_index == 2 and exact_episodes is None:
-                print(
-                    json.dumps(
-                        {"event": "capacity_corpus_load_start", "corpus": "exact-v2"},
-                        sort_keys=True,
-                    ),
-                    flush=True,
-                )
-                exact_started = time.perf_counter()
-                exact_episodes, exact_load_source = _load_or_build_object_cache(
-                    root=args.exact_materialized_dir,
-                    records=[*exact_train_records, *exact_validation_records],
-                    workers=args.loader_workers,
-                    manifest_sha256=str(exact_manifest["manifest_sha256"]),
-                    cache_path=args.exact_object_cache,
-                    corpus_label="exact-v2",
-                )
-                exact_load_seconds = time.perf_counter() - exact_started
-                exact_train = [episode for episode in exact_episodes if episode.split == "train"]
-                exact_validation = [episode for episode in exact_episodes if episode.split == "validation"]
-                exact_1150_train = _episode_subset(exact_train, exact_1150_train_ids)
-                exact_1150_validation = _episode_subset(exact_validation, exact_1150_validation_ids)
-                print(
-                    json.dumps(
-                        {
-                            "event": "capacity_corpus_load_complete",
-                            "corpus": "exact-v2",
-                            "episodes": len(exact_episodes),
-                            "elapsed_seconds": exact_load_seconds,
-                            "source": exact_load_source,
-                        },
-                        sort_keys=True,
-                    ),
-                    flush=True,
-                )
-                stage_specs.extend(
-                    [
-                        (
-                            "stage-c-exact-all",
-                            exact_train,
-                            exact_validation,
-                            str(exact_manifest["manifest_sha256"]),
-                            None,
-                            args.stage_c_epochs,
-                            chosen_lr * 0.5,
-                        ),
-                        (
-                            "stage-d-exact-1150",
-                            exact_1150_train,
-                            exact_1150_validation,
-                            str(exact_manifest["manifest_sha256"]),
-                            1150.0,
-                            args.stage_d_epochs,
-                            chosen_lr * 0.25,
-                        ),
-                    ]
-                )
-            (
-                stage_name,
-                stage_train,
-                stage_validation,
-                manifest_sha,
-                minimum_teacher_score,
-                epochs,
-                stage_lr,
-            ) = stage_specs[stage_index]
+        for stage_index, (
+            stage_name,
+            stage_train,
+            stage_validation,
+            manifest_sha,
+            minimum_teacher_score,
+            epochs,
+            stage_lr,
+        ) in enumerate(stage_specs):
+            if is_resume_model and stage_index <= resume_after_index:
+                continue
             train_groups, effective_batch = _pack_with_fallback(
                 stage_train,
                 preferred_batch_size=chosen_batch_size,
@@ -1170,6 +1239,7 @@ def main() -> int:
             "chosen_batch_size": chosen_batch_size,
             "chosen_learning_rate": chosen_lr,
             "learning_rate_smoke": lr_rows,
+            "resumed_checkpoint": resumed_checkpoint,
             "effective_stage_batch_sizes": effective_batch_sizes,
             "stages": stage_reports,
             "final_checkpoint_path": final_stage["checkpoint_path"],

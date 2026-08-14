@@ -22,6 +22,8 @@ ARCHETYPE_EXPECTED_SHA256 = "c21694a3e5d6a68e7be55ae7dcb749258fbba0ef921e5a769d2
 EXACT_TAR = Path("/data/materialized/bc-dragapult-hq-v2.tar")
 EXACT_SHA = Path("/data/materialized/bc-dragapult-hq-v2.tar.sha256")
 EXACT_EXPECTED_SHA256 = "d7ccdbefe0b04f669a88017ded5d184c2f6448deceda3cc80aaa45c39ed3132d"
+VOLUME_ARCHETYPE_DIR = Path("/data/materialized/bc-dragapult-archetype-v3")
+VOLUME_EXACT_DIR = Path("/data/materialized/bc-dragapult-hq-v2")
 
 LOCAL_ARCHETYPE_TAR = Path("/tmp/bc-dragapult-archetype-v3.tar")
 LOCAL_ARCHETYPE_DIR = Path("/tmp/bc-dragapult-archetype-v3")
@@ -168,45 +170,78 @@ def _run_stream(command: list[str]) -> None:
     timeout=8 * 60 * 60,
     volumes={"/data": training_volume},
 )
-def run(force: bool = False) -> dict[str, Any]:
-    archetype_stage = _stage_tar(
-        ARCHETYPE_TAR,
-        ARCHETYPE_SHA,
-        ARCHETYPE_EXPECTED_SHA256,
-        LOCAL_ARCHETYPE_TAR,
-        LOCAL_ARCHETYPE_DIR,
-        "archetype-v3",
+def run(force: bool = False, resume: bool = False) -> dict[str, Any]:
+    if force and resume:
+        raise RuntimeError("force and resume are mutually exclusive")
+    cache_ready = all(
+        path.is_file()
+        for path in (
+            ARCHETYPE_OBJECT_CACHE,
+            ARCHETYPE_OBJECT_CACHE.with_name(ARCHETYPE_OBJECT_CACHE.name + ".meta.json"),
+            EXACT_OBJECT_CACHE,
+            EXACT_OBJECT_CACHE.with_name(EXACT_OBJECT_CACHE.name + ".meta.json"),
+            VOLUME_ARCHETYPE_DIR / "manifest.json",
+            VOLUME_EXACT_DIR / "manifest.json",
+        )
     )
-    exact_stage = _stage_tar(
-        EXACT_TAR,
-        EXACT_SHA,
-        EXACT_EXPECTED_SHA256,
-        LOCAL_EXACT_TAR,
-        LOCAL_EXACT_DIR,
-        "exact-v2",
-    )
+    if cache_ready:
+        archetype_dir = VOLUME_ARCHETYPE_DIR
+        exact_dir = VOLUME_EXACT_DIR
+        materialized_stage = {
+            "status": "PERSISTENT_OBJECT_CACHE_READY",
+            "archetype_dir": str(archetype_dir),
+            "exact_dir": str(exact_dir),
+        }
+        print(json.dumps({"event": "capacity_fast_materialized_stage", **materialized_stage}, sort_keys=True), flush=True)
+    else:
+        archetype_stage = _stage_tar(
+            ARCHETYPE_TAR,
+            ARCHETYPE_SHA,
+            ARCHETYPE_EXPECTED_SHA256,
+            LOCAL_ARCHETYPE_TAR,
+            LOCAL_ARCHETYPE_DIR,
+            "archetype-v3",
+        )
+        exact_stage = _stage_tar(
+            EXACT_TAR,
+            EXACT_SHA,
+            EXACT_EXPECTED_SHA256,
+            LOCAL_EXACT_TAR,
+            LOCAL_EXACT_DIR,
+            "exact-v2",
+        )
+        archetype_dir = LOCAL_ARCHETYPE_DIR
+        exact_dir = LOCAL_EXACT_DIR
+        materialized_stage = {
+            "status": "LOCAL_TARS_STAGED",
+            "archetype": archetype_stage,
+            "exact": exact_stage,
+        }
     if OUTPUT_DIR.exists():
-        if REPORT_PATH.is_file() and not force:
+        if REPORT_PATH.is_file() and not force and not resume:
             report = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
             return {
                 "status": "EXISTS",
                 "report_path": str(REPORT_PATH),
                 "report_sha256": _sha256_file(REPORT_PATH),
                 "validation_ranking": report.get("validation_ranking"),
-                "materialized_stage": [archetype_stage, exact_stage],
+                "materialized_stage": materialized_stage,
             }
-        if not force:
+        if resume:
+            pass
+        elif force:
+            shutil.rmtree(OUTPUT_DIR)
+        else:
             raise RuntimeError(f"partial capacity sweep output exists: {OUTPUT_DIR}")
-        shutil.rmtree(OUTPUT_DIR)
-    OUTPUT_DIR.mkdir(parents=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/bc_capacity_sweep.py",
         "--archetype-materialized-dir",
-        str(LOCAL_ARCHETYPE_DIR),
+        str(archetype_dir),
         "--exact-materialized-dir",
-        str(LOCAL_EXACT_DIR),
+        str(exact_dir),
         "--archetype-object-cache",
         str(ARCHETYPE_OBJECT_CACHE),
         "--exact-object-cache",
@@ -253,6 +288,39 @@ def run(force: bool = False) -> dict[str, Any]:
         "1.0",
         "--bf16",
     ]
+    if resume:
+        resume_checkpoint = OUTPUT_DIR / "1.4m/stage-b-archetype-1175-best.pt"
+        if not resume_checkpoint.is_file() or not resume_checkpoint.with_name(
+            resume_checkpoint.name + ".manifest.json"
+        ).is_file():
+            raise RuntimeError("1.4M Stage-B resume checkpoint is missing")
+        command[command.index("--model-labels") + 1] = "1.4m,1.8m,2.9m,3.7m,5.0m"
+        command.extend(
+            [
+                "--resume-model-label",
+                "1.4m",
+                "--resume-checkpoint",
+                str(resume_checkpoint),
+                "--resume-after-stage",
+                "stage-b-archetype-1175",
+                "--resume-batch-size",
+                "1024",
+                "--resume-learning-rate",
+                "0.000075",
+            ]
+        )
+        print(
+            json.dumps(
+                {
+                    "event": "capacity_resume_launch",
+                    "model": "1.4m",
+                    "checkpoint": str(resume_checkpoint),
+                    "after_stage": "stage-b-archetype-1175",
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
     _run_stream(command)
     if not REPORT_PATH.is_file():
         raise RuntimeError("capacity sweep completed without a final report")
@@ -267,7 +335,7 @@ def run(force: bool = False) -> dict[str, Any]:
         "parameter_counts": report["parameter_counts"],
         "validation_ranking": report["validation_ranking"],
         "elapsed_seconds": report["elapsed_seconds"],
-        "materialized_stage": [archetype_stage, exact_stage],
+        "materialized_stage": materialized_stage,
     }
 
 
