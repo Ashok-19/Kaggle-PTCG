@@ -57,6 +57,15 @@ class ReplayQualityRecord:
 
 
 @dataclass(frozen=True)
+class ReplayPrefixRecord:
+    team_names: tuple[str, str]
+    module_version: str
+    rewards: tuple[int, int]
+    winner_player_index: int | None
+    deck_sha256: tuple[str, str]
+
+
+@dataclass(frozen=True)
 class ReplayEpisodeRecord:
     episode_id: int
     date: str
@@ -266,6 +275,66 @@ def quality_select_archive_entries(
     return tuple(sorted((by_id[item.episode_id] for item in selected), key=lambda item: item.episode_id))
 
 
+def _raw_decode_after(prefix: bytes, marker: bytes, label: str) -> Any:
+    position = prefix.find(marker)
+    if position < 0:
+        raise BCSourceError(f"replay prefix is missing {label}")
+    try:
+        text = prefix[position + len(marker) :].decode("utf-8")
+        value, _ = json.JSONDecoder().raw_decode(text)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise BCSourceError(f"replay prefix cannot decode {label}: {error}") from error
+    return value
+
+
+def scan_replay_prefix(prefix: bytes) -> ReplayPrefixRecord:
+    """Read identity, terminal result and both deck hashes from an early replay prefix.
+
+    Official replay files expose all of these fields before the long trajectory body.
+    Reading a bounded prefix avoids parsing multi-megabyte episode JSON merely to
+    decide whether the episode belongs in a deck-specialized corpus.
+    """
+    if len(prefix) < 1024:
+        raise BCSourceError("replay prefix is too short")
+    teams = _raw_decode_after(prefix, b'"TeamNames": ', "TeamNames")
+    module_version = _raw_decode_after(prefix, b'"module_version": ', "module_version")
+    rewards = _raw_decode_after(prefix, b'"rewards": ', "rewards")
+    decks = _raw_decode_after(prefix, b'"visualize": [{"action": ', "initial deck actions")
+    if (
+        not isinstance(teams, list)
+        or len(teams) != 2
+        or any(not isinstance(value, str) for value in teams)
+    ):
+        raise BCSourceError("replay prefix TeamNames are invalid")
+    if not isinstance(module_version, str) or not module_version:
+        raise BCSourceError("replay prefix module_version is invalid")
+    if (
+        not isinstance(rewards, list)
+        or len(rewards) != 2
+        or any(isinstance(value, bool) or not isinstance(value, int) for value in rewards)
+    ):
+        raise BCSourceError("replay prefix rewards are invalid")
+    if rewards == [1, -1]:
+        winner: int | None = 0
+    elif rewards == [-1, 1]:
+        winner = 1
+    else:
+        winner = None
+    if (
+        not isinstance(decks, list)
+        or len(decks) != 2
+        or any(not isinstance(deck, list) for deck in decks)
+    ):
+        raise BCSourceError("replay prefix initial deck actions are invalid")
+    return ReplayPrefixRecord(
+        team_names=(teams[0], teams[1]),
+        module_version=module_version,
+        rewards=(rewards[0], rewards[1]),
+        winner_player_index=winner,
+        deck_sha256=(_deck_sha256(decks[0]), _deck_sha256(decks[1])),
+    )
+
+
 def select_archive_entries(
     entries: Sequence[ReplayArchiveEntry], *, count: int, seed: int
 ) -> tuple[ReplayArchiveEntry, ...]:
@@ -306,6 +375,7 @@ def replay_record_from_bytes(
     date: str,
     relative_path: str,
     split_seed: int,
+    teacher_player_index: int | None = None,
 ) -> ReplayEpisodeRecord:
     try:
         replay = json.loads(raw)
@@ -328,6 +398,9 @@ def replay_record_from_bytes(
         raise BCSourceError(f"episode {expected_episode_id} has unsupported terminal rewards")
     if replay.get("statuses") != ["DONE", "DONE"]:
         raise BCSourceError(f"episode {expected_episode_id} is not terminal")
+    teacher = winner if teacher_player_index is None else teacher_player_index
+    if teacher not in (0, 1):
+        raise BCSourceError(f"episode {expected_episode_id} teacher player index is invalid")
     steps = replay.get("steps")
     if not isinstance(steps, list) or len(steps) < 3:
         raise BCSourceError(f"episode {expected_episode_id} has too few steps")
@@ -351,8 +424,8 @@ def replay_record_from_bytes(
         current = steps[step_index]
         if not isinstance(previous, list) or not isinstance(current, list):
             raise BCSourceError(f"episode {expected_episode_id} step is malformed")
-        prev_teacher = previous[winner]
-        current_teacher = current[winner]
+        prev_teacher = previous[teacher]
+        current_teacher = current[teacher]
         if not isinstance(prev_teacher, Mapping) or not isinstance(current_teacher, Mapping):
             raise BCSourceError(f"episode {expected_episode_id} agent row is malformed")
         observation = prev_teacher.get("observation")
@@ -363,7 +436,7 @@ def replay_record_from_bytes(
                 action_steps += 1
     if active_requests <= 0 or action_steps != active_requests:
         raise BCSourceError(
-            f"episode {expected_episode_id} has invalid winner request/action alignment: "
+            f"episode {expected_episode_id} has invalid teacher request/action alignment: "
             f"requests={active_requests}, actions={action_steps}"
         )
     return ReplayEpisodeRecord(
@@ -375,11 +448,11 @@ def replay_record_from_bytes(
         module_version=str(replay.get("module_version", "")),
         team_names=(teams[0], teams[1]),
         winner_player_index=winner,
-        teacher_player_index=winner,
-        teacher_team_name=teams[winner],
-        teacher_result="win",
-        teacher_deck_sha256=_deck_sha256(decks[winner]),
-        opponent_deck_sha256=_deck_sha256(decks[1 - winner]),
+        teacher_player_index=teacher,
+        teacher_team_name=teams[teacher],
+        teacher_result="win" if teacher == winner else "loss",
+        teacher_deck_sha256=_deck_sha256(decks[teacher]),
+        opponent_deck_sha256=_deck_sha256(decks[1 - teacher]),
         teacher_active_requests=active_requests,
         teacher_action_steps=action_steps,
         split=_split_for_episode(expected_episode_id, split_seed),

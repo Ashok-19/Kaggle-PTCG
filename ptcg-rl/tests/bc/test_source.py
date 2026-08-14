@@ -15,6 +15,8 @@ from ptcg_rl.bc.source import (
     load_daily_index,
     load_archive_manifest,
     quality_select_archive_entries,
+    replay_record_from_bytes,
+    scan_replay_prefix,
     select_archive_entries,
 )
 
@@ -174,3 +176,44 @@ def test_archive_manifest_quality_selection_prefers_strong_minimum_score(tmp_pat
     assert [item.episode_id for item in selected] == [102, 103]
     with pytest.raises(BCSourceError):
         quality_select_archive_entries(entries, quality, count=3, minimum_min_score=1050.0)
+
+
+def test_prefix_scanner_and_explicit_losing_teacher_match_full_replay(tmp_path: Path) -> None:
+    replay = json.loads(_replay(301, 0))
+    replay["info"]["TeamNames"] = ["Alpha", "Beta"]
+    # Make the losing seat expose one aligned active request/action pair so the
+    # explicit-teacher path is exercised independently of winner selection.
+    replay["steps"][1][1]["status"] = "ACTIVE"
+    replay["steps"][2][1]["action"] = [0]
+    # Synthetic fixtures do not carry the official initial visualize deck copy, so
+    # inject the exact official-prefix shape before the serialized replay body.
+    deck0 = list(range(1, 61))
+    deck1 = list(range(101, 161))
+    replay["steps"][1][0]["action"] = deck0
+    replay["steps"][1][1]["action"] = deck1
+    raw = json.dumps(replay).encode("utf-8")
+    marker = b'"steps": '
+    location = raw.find(marker)
+    assert location >= 0
+    official_prefix = (
+        raw[:location]
+        + b'"visualize": [{"action": '
+        + json.dumps([deck0, deck1]).encode("ascii")
+        + b', "current": null}], '
+        + raw[location:]
+    )
+    scanned = scan_replay_prefix(official_prefix[:65536])
+    assert scanned.team_names == ("Alpha", "Beta")
+    assert scanned.winner_player_index == 0
+
+    losing = replay_record_from_bytes(
+        raw,
+        expected_episode_id=301,
+        date="2026-08-13",
+        relative_path="301.json",
+        split_seed=7,
+        teacher_player_index=1,
+    )
+    assert losing.teacher_player_index == 1
+    assert losing.teacher_team_name == "Beta"
+    assert losing.teacher_result == "loss"
