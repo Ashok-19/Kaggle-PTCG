@@ -15,7 +15,7 @@ else:
 PTCG_RL = ROOT / "ptcg-rl"
 BUNDLE_SHA256 = "da8e4b906523c98dfc47e4a39c51170a3c2cfb9ce8e5e764048a68a5d03e25cc"
 BUNDLE_PARTS = tuple(f"/data/inputs/bc-current-lucario-specialist-v1/part-{index:02d}" for index in range(6))
-WARM_START_PATH = "/data/inputs/bc-recent-hq-v1-r1-epoch-2.pt"
+WARM_START_PATH = "/data/inputs/bc-recent-hq-v1-r1/epoch-2.pt"
 WARM_START_SHA256 = "1d8ad47f1bd2942e4235d69320eba6261a22b2f1891844e7f82d15480b15befe"
 VOLUME_NAME = "kptcg-training"
 
