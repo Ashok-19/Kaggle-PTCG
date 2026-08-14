@@ -18,7 +18,7 @@ from ptcg_rl.bc.dragapult_corpus import (  # noqa: E402
     DOMINANT_DRAGAPULT_DECK_SHA256,
     DragapultCorpusPolicy,
     EliteTeacher,
-    choose_dragapult_winner_teacher,
+    choose_dragapult_teacher,
     quality_tier,
 )
 from ptcg_rl.bc.source import (  # noqa: E402
@@ -96,6 +96,7 @@ def main() -> int:
     )
     parser.add_argument("--module-version", default=CURRENT_REPLAY_MODULE_VERSION)
     parser.add_argument("--teacher-score-floor", type=float, default=1090.0)
+    parser.add_argument("--winner-only", action="store_true")
     parser.add_argument("--elite-teachers", type=Path)
     parser.add_argument("--split-seed", type=int, default=20260815)
     parser.add_argument("--minimum-selected", type=int, default=500)
@@ -168,10 +169,9 @@ def main() -> int:
                     discovery_rejections[str(error).split(":")[0]] += 1
                     continue
                 module_counts[discovered.module_version] += 1
-                winner = discovered.winner_player_index
-                if winner in (0, 1) and discovered.deck_sha256[winner] == policy.target_deck_sha256:
+                if policy.target_deck_sha256 in discovered.deck_sha256:
                     target_deck_seen += 1
-                choice = choose_dragapult_winner_teacher(
+                choice = choose_dragapult_teacher(
                     discovered,
                     policy=policy,
                     elite_teachers=elite_teachers,
@@ -179,6 +179,8 @@ def main() -> int:
                 if choice is None:
                     continue
                 teacher_player_index, admission_reason = choice
+                if args.winner_only and teacher_player_index != discovered.winner_player_index:
+                    continue
                 candidate_specs.append(
                     (day, entry, score, teacher_player_index, admission_reason)
                 )
@@ -242,10 +244,6 @@ def main() -> int:
                     raise BCSourceError(
                         f"full parser target deck differs for episode {entry.episode_id}"
                     )
-                if record.teacher_result != "win":
-                    raise BCSourceError(
-                        f"non-winning teacher reached retained corpus: {entry.episode_id}"
-                    )
                 retained.append((quality, record, admission_reason))
 
     active_requests = sum(record.teacher_active_requests for _, record, _ in retained)
@@ -266,6 +264,7 @@ def main() -> int:
     opponent_decks: Counter[str] = Counter()
     admission_counts: Counter[str] = Counter()
     per_day: Counter[str] = Counter()
+    outcome_counts: Counter[str] = Counter()
     for quality, record, admission_reason in sorted(
         retained, key=lambda item: (item[1].date, item[1].episode_id)
     ):
@@ -297,6 +296,7 @@ def main() -> int:
         opponent_decks[record.opponent_deck_sha256] += 1
         admission_counts[admission_reason] += 1
         per_day[record.date] += 1
+        outcome_counts[record.teacher_result] += 1
 
     split_counts = Counter(row["split"] for row in records)
     largest_teacher_count = max(team_counts.values())
@@ -308,7 +308,8 @@ def main() -> int:
             "days": args.days,
             "target_deck_sha256": policy.target_deck_sha256,
             "required_module_version": policy.module_version,
-            "winner_only_labels": True,
+            "winner_only_labels": args.winner_only,
+            "teacher_outcome_used_for_admission": args.winner_only,
             "teacher_score_floor": policy.teacher_score_floor,
             "opponent_score_used_for_admission": False,
             "match_min_score_used_for_admission": False,
@@ -329,6 +330,7 @@ def main() -> int:
             "opponent_decks": len(opponent_decks),
             "quality_tiers": dict(sorted(tier_counts.items())),
             "admission_counts": dict(sorted(admission_counts.items())),
+            "teacher_outcomes": dict(sorted(outcome_counts.items())),
             "per_day": dict(sorted(per_day.items())),
             "minimum_teacher_score": min(float(row["teacher_score_qualification_value"]) for row in records),
             "mean_teacher_score": sum(float(row["teacher_score_qualification_value"]) for row in records)

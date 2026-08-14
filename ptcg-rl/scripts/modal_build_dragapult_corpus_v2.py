@@ -17,11 +17,11 @@ if modal.is_local():
 else:
     ROOT = Path("/workspace")
 PTCG_RL = ROOT / "ptcg-rl"
-CONFIG_PATH = PTCG_RL / "configs/bc_dragapult_corpus_v1.json"
+CONFIG_PATH = PTCG_RL / "configs/bc_dragapult_corpus_v2.json"
 VOLUME_NAME = "kptcg-training"
 SECRET_NAME = "kptcg-kaggle"
 AUTH_BLOB_ENV = "KPTCG_AUTH_BLOB"
-REMOTE_CORPUS_ROOT = Path("/data/corpora/bc-dragapult-hq-v1")
+REMOTE_CORPUS_ROOT = Path("/data/corpora/bc-dragapult-hq-v2")
 RAW_ROOT = Path("/tmp/kptcg-daily-replays")
 CLIENT_CONFIG_DIR = Path("/root/.kaggle")
 CLIENT_CONFIG_PATH = CLIENT_CONFIG_DIR / "kaggle.json"
@@ -36,11 +36,11 @@ image = (
     )
     .add_local_file(
         CONFIG_PATH,
-        remote_path="/workspace/ptcg-rl/configs/bc_dragapult_corpus_v1.json",
+        remote_path="/workspace/ptcg-rl/configs/bc_dragapult_corpus_v2.json",
     )
 )
 
-app = modal.App("kptcg-bc-dragapult-corpus", image=image)
+app = modal.App("kptcg-bc-dragapult-corpus-v2", image=image)
 training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
 client_auth = modal.Secret.from_name(SECRET_NAME)
 
@@ -62,8 +62,8 @@ def _load_config() -> dict[str, Any]:
         raise RuntimeError("Dragapult corpus config has invalid days")
     if len(days) != len(set(days)):
         raise RuntimeError("Dragapult corpus config contains duplicate days")
-    if payload.get("winner_only_labels") is not True:
-        raise RuntimeError("production Dragapult corpus must remain winner-only")
+    if payload.get("winner_only_labels") is not False:
+        raise RuntimeError("production Dragapult v2 corpus must retain all qualified teacher outcomes")
     return payload
 
 
@@ -158,7 +158,7 @@ def _write_execution_report(
 ) -> Path:
     report = {
         "schema_version": 1,
-        "record_id": "bc-dragapult-hq-v1-modal-execution",
+        "record_id": "bc-dragapult-hq-v2-modal-execution",
         "status": "PASS",
         "volume": VOLUME_NAME,
         "remote_corpus_root": str(REMOTE_CORPUS_ROOT),
@@ -195,7 +195,7 @@ def _write_execution_report(
 def build(force: bool = False) -> dict[str, Any]:
     started = time.perf_counter()
     config = _load_config()
-    bundle = REMOTE_CORPUS_ROOT / "bc-dragapult-hq-v1.zip"
+    bundle = REMOTE_CORPUS_ROOT / "bc-dragapult-hq-v2.zip"
     builder_report_path = REMOTE_CORPUS_ROOT / "build-report.json"
     execution_report_path = REMOTE_CORPUS_ROOT / "modal-execution-report.json"
     if REMOTE_CORPUS_ROOT.exists():

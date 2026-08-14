@@ -50,22 +50,30 @@ def quality_tier(teacher_score: float) -> tuple[str, float]:
     return "below_teacher_floor", 0.0
 
 
-def choose_dragapult_winner_teacher(
+def choose_dragapult_teacher(
     prefix: ReplayPrefixRecord,
     *,
     policy: DragapultCorpusPolicy,
     elite_teachers: Mapping[str, EliteTeacher],
 ) -> tuple[int, str] | None:
-    """Admit only winning exact-deck Dragapult teachers at the score floor."""
+    """Choose one qualified exact-deck teacher perspective for an episode.
+
+    Outcome and opponent score are deliberately not admission criteria. If both
+    seats are qualified exact-deck teachers in a mirror match, prefer the winner
+    to preserve the one-record-per-episode contract used by materialization.
+    """
 
     if prefix.module_version != policy.module_version:
         return None
+    candidates: list[int] = []
+    for seat in (0, 1):
+        if prefix.deck_sha256[seat] != policy.target_deck_sha256:
+            continue
+        teacher = elite_teachers.get(prefix.team_names[seat])
+        if teacher is not None and teacher.score >= policy.teacher_score_floor:
+            candidates.append(seat)
+    if not candidates:
+        return None
     winner = prefix.winner_player_index
-    if winner not in (0, 1):
-        return None
-    if prefix.deck_sha256[winner] != policy.target_deck_sha256:
-        return None
-    teacher = elite_teachers.get(prefix.team_names[winner])
-    if teacher is None or teacher.score < policy.teacher_score_floor:
-        return None
-    return winner, "frozen_live_teacher_score"
+    teacher_seat = winner if winner in candidates else candidates[0]
+    return teacher_seat, "frozen_live_teacher_score"

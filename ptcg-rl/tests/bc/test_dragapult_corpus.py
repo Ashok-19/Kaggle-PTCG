@@ -4,20 +4,19 @@ from ptcg_rl.bc.dragapult_corpus import (
     DOMINANT_DRAGAPULT_DECK_SHA256,
     DragapultCorpusPolicy,
     EliteTeacher,
-    choose_dragapult_winner_teacher,
+    choose_dragapult_teacher,
     quality_tier,
 )
 from ptcg_rl.bc.source import ReplayPrefixRecord
 
 
-def _prefix(*, winner: int = 0, team: str = "teacher", module: str = "1.32.6") -> ReplayPrefixRecord:
+def _prefix(*, winner: int = 0, team0: str = "teacher", team1: str = "opponent", module: str = "1.32.6", both_target: bool = False) -> ReplayPrefixRecord:
     rewards = (1, -1) if winner == 0 else (-1, 1)
-    hashes = ["0" * 64, "1" * 64]
-    hashes[winner] = DOMINANT_DRAGAPULT_DECK_SHA256
-    teams = ["opponent", "opponent"]
-    teams[winner] = team
+    hashes = [DOMINANT_DRAGAPULT_DECK_SHA256, "1" * 64]
+    if both_target:
+        hashes[1] = DOMINANT_DRAGAPULT_DECK_SHA256
     return ReplayPrefixRecord(
-        team_names=(teams[0], teams[1]),
+        team_names=(team0, team1),
         module_version=module,
         rewards=rewards,
         winner_player_index=winner,
@@ -25,36 +24,48 @@ def _prefix(*, winner: int = 0, team: str = "teacher", module: str = "1.32.6") -
     )
 
 
-def test_qualified_teacher_exact_deck_winner_is_admitted() -> None:
+def test_qualified_exact_deck_teacher_is_admitted_even_when_losing() -> None:
     teachers = {"teacher": EliteTeacher(team_name="teacher", rank=10, score=1153.3)}
-    result = choose_dragapult_winner_teacher(
+    result = choose_dragapult_teacher(
         _prefix(winner=1),
         policy=DragapultCorpusPolicy(),
         elite_teachers=teachers,
     )
-    assert result == (1, "frozen_live_teacher_score")
+    assert result == (0, "frozen_live_teacher_score")
 
 
-def test_teacher_floor_is_1090_and_opponent_score_is_irrelevant() -> None:
+def test_teacher_floor_is_1090_and_opponent_score_is_not_part_of_selection() -> None:
     policy = DragapultCorpusPolicy()
-    assert choose_dragapult_winner_teacher(
-        _prefix(team="qualified"),
+    assert choose_dragapult_teacher(
+        _prefix(),
         policy=policy,
         elite_teachers={
-            "qualified": EliteTeacher(team_name="qualified", rank=20, score=1090.0)
+            "teacher": EliteTeacher(team_name="teacher", rank=20, score=1090.0)
         },
     ) == (0, "frozen_live_teacher_score")
-    assert choose_dragapult_winner_teacher(
-        _prefix(team="weak"),
+    assert choose_dragapult_teacher(
+        _prefix(),
         policy=policy,
-        elite_teachers={"weak": EliteTeacher(team_name="weak", rank=21, score=1089.9)},
+        elite_teachers={"teacher": EliteTeacher(team_name="teacher", rank=21, score=1089.9)},
     ) is None
+
+
+def test_mirror_match_prefers_qualified_winner_to_keep_episode_unique() -> None:
+    teachers = {
+        "teacher": EliteTeacher(team_name="teacher", rank=5, score=1170.0),
+        "opponent": EliteTeacher(team_name="opponent", rank=6, score=1160.0),
+    }
+    assert choose_dragapult_teacher(
+        _prefix(winner=1, both_target=True),
+        policy=DragapultCorpusPolicy(),
+        elite_teachers=teachers,
+    ) == (1, "frozen_live_teacher_score")
 
 
 def test_wrong_module_or_wrong_deck_is_rejected() -> None:
     policy = DragapultCorpusPolicy()
     teachers = {"teacher": EliteTeacher(team_name="teacher", rank=1, score=1217.0)}
-    assert choose_dragapult_winner_teacher(
+    assert choose_dragapult_teacher(
         _prefix(module="1.32.5"), policy=policy, elite_teachers=teachers
     ) is None
     prefix = _prefix()
@@ -65,9 +76,7 @@ def test_wrong_module_or_wrong_deck_is_rejected() -> None:
         winner_player_index=prefix.winner_player_index,
         deck_sha256=("f" * 64, prefix.deck_sha256[1]),
     )
-    assert choose_dragapult_winner_teacher(
-        wrong, policy=policy, elite_teachers=teachers
-    ) is None
+    assert choose_dragapult_teacher(wrong, policy=policy, elite_teachers=teachers) is None
 
 
 def test_teacher_score_tiers_preserve_curriculum_signal() -> None:
