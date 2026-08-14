@@ -253,6 +253,40 @@ class PackedRecurrentGroup:
     recurrent_decisions: int
 
 
+def packed_recurrent_group_to_device(
+    group: PackedRecurrentGroup,
+    device: torch.device | str,
+    *,
+    non_blocking: bool = False,
+) -> PackedRecurrentGroup:
+    """Move a fully prepacked recurrent group to one device exactly once."""
+    chunks: list[PackedRecurrentChunk] = []
+    for chunk in group.chunks:
+        steps: list[PackedRecurrentStep] = []
+        for step in chunk.steps:
+            steps.append(
+                PackedRecurrentStep(
+                    active_indices=step.active_indices.to(device, non_blocking=non_blocking),
+                    batch=step.batch.to(device, non_blocking=non_blocking),
+                    supervision=step.supervision.to(device, non_blocking=non_blocking),
+                    recurrent_decisions=step.recurrent_decisions,
+                )
+            )
+        chunks.append(
+            PackedRecurrentChunk(
+                steps=tuple(steps),
+                policy_targets=chunk.policy_targets,
+                recurrent_decisions=chunk.recurrent_decisions,
+            )
+        )
+    return PackedRecurrentGroup(
+        batch_size=group.batch_size,
+        chunks=tuple(chunks),
+        policy_targets=group.policy_targets,
+        recurrent_decisions=group.recurrent_decisions,
+    )
+
+
 def _pack_action_supervision(
     decisions: Sequence[SemanticReplayDecisionV1],
     *,
@@ -472,9 +506,14 @@ def packed_recurrent_chunk_loss(
     policy_targets = 0
     recurrent_decisions = 0
     for step in chunk.steps:
-        active = step.active_indices.to(device, non_blocking=non_blocking)
-        batch = step.batch.to(device, non_blocking=non_blocking)
-        supervision = step.supervision.to(device, non_blocking=non_blocking)
+        if step.active_indices.device == device:
+            active = step.active_indices
+            batch = step.batch
+            supervision = step.supervision
+        else:
+            active = step.active_indices.to(device, non_blocking=non_blocking)
+            batch = step.batch.to(device, non_blocking=non_blocking)
+            supervision = step.supervision.to(device, non_blocking=non_blocking)
         hidden_batch = states.index_select(0, active)
         output = model(batch, hidden_batch)
         if states.dtype != output.hidden.dtype:

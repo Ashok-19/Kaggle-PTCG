@@ -26,6 +26,7 @@ from ptcg_rl.bc.training import (  # noqa: E402
     PackedRecurrentGroup,
     pack_recurrent_group,
     packed_recurrent_chunk_loss,
+    packed_recurrent_group_to_device,
     recurrent_sequence_batch_loss,
 )
 from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
@@ -608,6 +609,19 @@ def main() -> int:
     )
     prepack_elapsed = time.perf_counter() - prepack_started
     train_episode_count = len(train_episodes)
+    gpu_resident_started = time.perf_counter()
+    gpu_resident_packed = device.type == "cuda"
+    if gpu_resident_packed:
+        train_groups = tuple(
+            packed_recurrent_group_to_device(group, device, non_blocking=True)
+            for group in train_groups
+        )
+        validation_groups = tuple(
+            packed_recurrent_group_to_device(group, device, non_blocking=True)
+            for group in validation_groups
+        )
+        torch.cuda.synchronize(device)
+    gpu_resident_elapsed = time.perf_counter() - gpu_resident_started
     validation_episode_count = len(validation_episodes)
     del episodes, train_episodes, validation_episodes
 
@@ -654,6 +668,7 @@ def main() -> int:
                 "targets_per_second": baseline["policy_targets_per_second"],
                 "materialized_load_seconds": load_elapsed,
                 "prepack_seconds": prepack_elapsed,
+                "gpu_resident_pack_seconds": gpu_resident_elapsed,
             },
             sort_keys=True,
         ),
@@ -766,6 +781,7 @@ def main() -> int:
             "test_episode_bodies_read": 0,
             "load_seconds": load_elapsed,
             "prepack_seconds": prepack_elapsed,
+            "gpu_resident_pack_seconds": gpu_resident_elapsed,
             "host_peak_rss_kib": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss),
         },
         "model": {
@@ -799,6 +815,7 @@ def main() -> int:
             "precollated_tensors_reused_across_epochs": True,
             "pinned_host_batches": device.type == "cuda",
             "nonblocking_h2d": device.type == "cuda",
+            "gpu_resident_packed_batches": gpu_resident_packed,
             "truncated_bptt": True,
             "hidden_carried_between_chunks": True,
         },
