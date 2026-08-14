@@ -477,6 +477,8 @@ def packed_recurrent_chunk_loss(
         supervision = step.supervision.to(device, non_blocking=non_blocking)
         hidden_batch = states.index_select(0, active)
         output = model(batch, hidden_batch)
+        if states.dtype != output.hidden.dtype:
+            states = states.to(dtype=output.hidden.dtype)
         states = states.index_copy(0, active, output.hidden)
         loss = _packed_vectorized_compound_nll(
             model,
