@@ -29,6 +29,9 @@ LOCAL_EXACT_TAR = Path("/tmp/bc-dragapult-hq-v2.tar")
 LOCAL_EXACT_DIR = Path("/tmp/bc-dragapult-hq-v2")
 OUTPUT_DIR = Path("/data/runs/bc-dragapult-capacity-sweep-v1")
 REPORT_PATH = OUTPUT_DIR / "capacity-sweep-report.json"
+OBJECT_CACHE_DIR = Path("/data/cache/materialized-episode-objects-v1")
+ARCHETYPE_OBJECT_CACHE = OBJECT_CACHE_DIR / "bc-dragapult-archetype-v3.pkl"
+EXACT_OBJECT_CACHE = OBJECT_CACHE_DIR / "bc-dragapult-hq-v2.pkl"
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -131,13 +134,18 @@ def _run_stream(command: list[str]) -> None:
             event = json.loads(line)
         except json.JSONDecodeError:
             event = None
-        if isinstance(event, dict) and event.get("event") == "capacity_model_complete":
+        if isinstance(event, dict) and event.get("event") in {
+            "capacity_object_cache_created",
+            "capacity_model_complete",
+        }:
             training_volume.commit()
             print(
                 json.dumps(
                     {
-                        "event": "capacity_model_volume_committed",
+                        "event": "capacity_volume_committed",
+                        "source_event": event.get("event"),
                         "model": event.get("model"),
+                        "corpus": event.get("corpus"),
                         "checkpoint_sha256": event.get("final_checkpoint_sha256"),
                     },
                     sort_keys=True,
@@ -199,6 +207,10 @@ def run(force: bool = False) -> dict[str, Any]:
         str(LOCAL_ARCHETYPE_DIR),
         "--exact-materialized-dir",
         str(LOCAL_EXACT_DIR),
+        "--archetype-object-cache",
+        str(ARCHETYPE_OBJECT_CACHE),
+        "--exact-object-cache",
+        str(EXACT_OBJECT_CACHE),
         "--card-table",
         "/workspace/ptcg-rl/private/g2/card-table-v1.json",
         "--output-dir",

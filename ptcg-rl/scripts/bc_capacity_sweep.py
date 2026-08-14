@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import os
+import pickle
 import random
 import resource
 import subprocess
@@ -243,6 +245,139 @@ def _episode_subset(
     allowed_ids: set[int],
 ) -> list[MaterializedEpisodeV1]:
     return [episode for episode in episodes if episode.episode_id in allowed_ids]
+
+
+def _validate_cached_episodes(
+    episodes: Sequence[MaterializedEpisodeV1],
+    records: Sequence[Mapping[str, Any]],
+) -> list[MaterializedEpisodeV1]:
+    if len(episodes) != len(records):
+        raise CapacitySweepError("object-cache episode count differs from manifest records")
+    expected = {
+        int(record["episode_id"]): (
+            str(record["split"]),
+            int(record["policy_targets"]),
+        )
+        for record in records
+    }
+    observed: dict[int, MaterializedEpisodeV1] = {}
+    for episode in episodes:
+        if not isinstance(episode, MaterializedEpisodeV1):
+            raise CapacitySweepError("object cache contains a non-materialized episode")
+        if episode.episode_id in observed:
+            raise CapacitySweepError("object cache contains duplicate episode IDs")
+        contract = expected.get(episode.episode_id)
+        if contract is None:
+            raise CapacitySweepError("object cache contains an unexpected episode ID")
+        if episode.split != contract[0] or episode.policy_targets != contract[1]:
+            raise CapacitySweepError("object-cache episode contract differs from manifest")
+        observed[episode.episode_id] = episode
+    if set(observed) != set(expected):
+        raise CapacitySweepError("object-cache episode ID set differs from manifest")
+    return [observed[episode_id] for episode_id in sorted(observed)]
+
+
+def _load_or_build_object_cache(
+    *,
+    root: Path,
+    records: Sequence[dict[str, Any]],
+    workers: int,
+    manifest_sha256: str,
+    cache_path: Path | None,
+    corpus_label: str,
+) -> tuple[list[MaterializedEpisodeV1], str]:
+    meta_path = None if cache_path is None else cache_path.with_name(cache_path.name + ".meta.json")
+    if cache_path is not None and meta_path is not None and cache_path.is_file() and meta_path.is_file():
+        started = time.perf_counter()
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            expected_meta = {
+                "schema_version": 1,
+                "kind": "KPTCG_MATERIALIZED_EPISODE_OBJECT_CACHE_V1",
+                "source_manifest_sha256": manifest_sha256,
+                "episode_count": len(records),
+                "payload_bytes": cache_path.stat().st_size,
+            }
+            if meta != expected_meta:
+                raise CapacitySweepError("object-cache metadata differs")
+            with cache_path.open("rb") as handle:
+                loaded = pickle.load(handle)
+            if not isinstance(loaded, (list, tuple)):
+                raise CapacitySweepError("object-cache payload is not an episode sequence")
+            episodes = _validate_cached_episodes(loaded, records)
+            elapsed = time.perf_counter() - started
+            print(
+                json.dumps(
+                    {
+                        "event": "capacity_object_cache_hit",
+                        "corpus": corpus_label,
+                        "episodes": len(episodes),
+                        "cache_path": str(cache_path),
+                        "cache_bytes": cache_path.stat().st_size,
+                        "elapsed_seconds": elapsed,
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            return episodes, "cache"
+        except Exception as error:
+            print(
+                json.dumps(
+                    {
+                        "event": "capacity_object_cache_invalid",
+                        "corpus": corpus_label,
+                        "cache_path": str(cache_path),
+                        "error": f"{type(error).__name__}: {error}",
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+
+    episodes = load_all_episodes(root, records, workers)
+    episodes = _validate_cached_episodes(episodes, records)
+    if cache_path is None or meta_path is None:
+        return episodes, "materialized"
+
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    payload_partial = cache_path.with_name(cache_path.name + ".partial")
+    meta_partial = meta_path.with_name(meta_path.name + ".partial")
+    payload_partial.unlink(missing_ok=True)
+    meta_partial.unlink(missing_ok=True)
+    try:
+        with payload_partial.open("wb") as handle:
+            pickle.dump(tuple(episodes), handle, protocol=pickle.HIGHEST_PROTOCOL)
+            handle.flush()
+            os.fsync(handle.fileno())
+        payload_bytes = payload_partial.stat().st_size
+        meta = {
+            "schema_version": 1,
+            "kind": "KPTCG_MATERIALIZED_EPISODE_OBJECT_CACHE_V1",
+            "source_manifest_sha256": manifest_sha256,
+            "episode_count": len(episodes),
+            "payload_bytes": payload_bytes,
+        }
+        meta_partial.write_text(json.dumps(meta, sort_keys=True) + "\n", encoding="utf-8")
+        payload_partial.replace(cache_path)
+        meta_partial.replace(meta_path)
+    finally:
+        payload_partial.unlink(missing_ok=True)
+        meta_partial.unlink(missing_ok=True)
+    print(
+        json.dumps(
+            {
+                "event": "capacity_object_cache_created",
+                "corpus": corpus_label,
+                "episodes": len(episodes),
+                "cache_path": str(cache_path),
+                "cache_bytes": cache_path.stat().st_size,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    return episodes, "materialized"
 
 
 def _pack(
@@ -539,6 +674,8 @@ def main() -> int:
     parser.add_argument("--archetype-materialized-dir", type=Path, required=True)
     parser.add_argument("--exact-materialized-dir", type=Path, required=True)
     parser.add_argument("--card-table", type=Path, required=True)
+    parser.add_argument("--archetype-object-cache", type=Path)
+    parser.add_argument("--exact-object-cache", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--model-labels", default="970k,1.4m,1.8m,2.9m,3.7m,5.0m")
@@ -606,10 +743,13 @@ def main() -> int:
         flush=True,
     )
     load_started = time.perf_counter()
-    archetype_episodes = load_all_episodes(
-        args.archetype_materialized_dir,
-        [*archetype_train_records, *archetype_validation_records],
-        args.loader_workers,
+    archetype_episodes, archetype_load_source = _load_or_build_object_cache(
+        root=args.archetype_materialized_dir,
+        records=[*archetype_train_records, *archetype_validation_records],
+        workers=args.loader_workers,
+        manifest_sha256=str(archetype_manifest["manifest_sha256"]),
+        cache_path=args.archetype_object_cache,
+        corpus_label="archetype-v3",
     )
     archetype_load_seconds = time.perf_counter() - load_started
     archetype_train = [episode for episode in archetype_episodes if episode.split == "train"]
@@ -621,6 +761,7 @@ def main() -> int:
                 "corpus": "archetype-v3",
                 "episodes": len(archetype_episodes),
                 "elapsed_seconds": archetype_load_seconds,
+                "source": archetype_load_source,
             },
             sort_keys=True,
         ),
@@ -840,10 +981,13 @@ def main() -> int:
                     flush=True,
                 )
                 exact_started = time.perf_counter()
-                exact_episodes = load_all_episodes(
-                    args.exact_materialized_dir,
-                    [*exact_train_records, *exact_validation_records],
-                    args.loader_workers,
+                exact_episodes, exact_load_source = _load_or_build_object_cache(
+                    root=args.exact_materialized_dir,
+                    records=[*exact_train_records, *exact_validation_records],
+                    workers=args.loader_workers,
+                    manifest_sha256=str(exact_manifest["manifest_sha256"]),
+                    cache_path=args.exact_object_cache,
+                    corpus_label="exact-v2",
                 )
                 exact_load_seconds = time.perf_counter() - exact_started
                 exact_train = [episode for episode in exact_episodes if episode.split == "train"]
@@ -857,6 +1001,7 @@ def main() -> int:
                             "corpus": "exact-v2",
                             "episodes": len(exact_episodes),
                             "elapsed_seconds": exact_load_seconds,
+                            "source": exact_load_source,
                         },
                         sort_keys=True,
                     ),
