@@ -36,6 +36,10 @@ image = (
         remote_path="/workspace/ptcg-rl/scripts/ppo_gpu_selfplay_smoke.py",
     )
     .add_local_file(
+        PTCG_RL / "scripts/ppo_gpu_rollout_scale.py",
+        remote_path="/workspace/ptcg-rl/scripts/ppo_gpu_rollout_scale.py",
+    )
+    .add_local_file(
         PTCG_RL / "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
         remote_path="/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
     )
@@ -141,6 +145,81 @@ def smoke(env_count: int = 16, seed: int = 20260814) -> dict[str, object]:
         raise RuntimeError("PPO smoke report did not satisfy the smoke-only contract")
     training_volume.commit()
     return report
+
+
+@app.function(gpu="RTX-PRO-6000", timeout=20 * 60)
+def scale(env_count: int = 2048, boundaries: int = 64, seed: int = 20260814, bf16: bool = True) -> dict[str, object]:
+    if env_count <= 0 or env_count > 8192:
+        raise ValueError("rollout scale env_count must stay within 1..8192")
+    if boundaries <= 8 or boundaries > 256:
+        raise ValueError("rollout scale boundaries must stay within 9..256")
+    env = os.environ.copy()
+    env["PYTHONPATH"] = "/workspace/ptcg-rl/src:/workspace/gpu-cabt/src"
+    env["GPU_CABT_OFFICIAL_DIR"] = "/workspace/official-engine"
+    env["GPU_CABT_NVRTC_FAST_COMPILE"] = "max"
+    command = [
+        "python",
+        "/workspace/ptcg-rl/scripts/ppo_gpu_rollout_scale.py",
+        "--checkpoint-package",
+        "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "--bc-checkpoint",
+        "/workspace/inputs/bc/epoch-1.pt",
+        "--bc-checkpoint-sha256",
+        BC_CHECKPOINT_SHA256,
+        "--deck",
+        "/workspace/inputs/current-lucario.csv",
+        "--env-count",
+        str(env_count),
+        "--boundaries",
+        str(boundaries),
+        "--warmup-boundaries",
+        "8",
+        "--seed",
+        str(seed),
+    ]
+    if bf16:
+        command.append("--bf16")
+    telemetry = subprocess.Popen(
+        [
+            "nvidia-smi",
+            "--query-gpu=utilization.gpu,memory.used,power.draw",
+            "--format=csv,noheader,nounits",
+            "--loop-ms=250",
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    process = subprocess.run(command, env=env, text=True, capture_output=True)
+    telemetry.terminate()
+    telemetry_output, _ = telemetry.communicate(timeout=5)
+    print(process.stdout, end="", flush=True)
+    if process.returncode != 0:
+        print(process.stderr, end="", flush=True)
+        raise RuntimeError(f"rollout scale probe exited {process.returncode}")
+    result = json.loads(process.stdout)
+    samples: list[tuple[float, float, float]] = []
+    for line in telemetry_output.splitlines():
+        fields = [field.strip() for field in line.split(",")]
+        if len(fields) != 3:
+            continue
+        try:
+            values = tuple(float(field) for field in fields)
+        except ValueError:
+            continue
+        if len(values) == 3:
+            samples.append((values[0], values[1], values[2]))
+    if samples:
+        result["gpu_telemetry"] = {
+            "samples": len(samples),
+            "utilization_mean_percent": sum(row[0] for row in samples) / len(samples),
+            "utilization_peak_percent": max(row[0] for row in samples),
+            "memory_peak_mib": max(row[1] for row in samples),
+            "power_mean_watts": sum(row[2] for row in samples) / len(samples),
+            "power_peak_watts": max(row[2] for row in samples),
+        }
+    result["full_run_authorized"] = False
+    return result
 
 
 @app.local_entrypoint()
