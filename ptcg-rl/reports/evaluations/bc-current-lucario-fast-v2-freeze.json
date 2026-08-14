@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "record_id": "bc-current-lucario-fast-v2-freeze",
+  "status": "PASS_BC_BOOTSTRAP_FROZEN",
+  "date": "2026-08-14",
+  "deck": {
+    "description": "current Majkel/Luca Mega Lucario exact deck",
+    "multiset_sha256": "dc8571d0bc2e546a1f85b938696cfc40a1451c68a4ccc1f695e7c3e1c74f1278",
+    "deck_file_sha256": "5ddb7ca2790518e3c1eac6e2ff8b7fdb6ff0a817bf888536349a090ec7582a9f"
+  },
+  "corpus": {
+    "module": "1.32.6",
+    "date_window": ["2026-08-10", "2026-08-13"],
+    "trajectories": 1028,
+    "winner_trajectories": 892,
+    "sampled_strong_loss_trajectories": 136,
+    "train_episodes": 886,
+    "validation_episodes": 95,
+    "sealed_test_episodes": 47,
+    "training_policy_targets_per_epoch": 55883,
+    "validation_policy_targets": 6245,
+    "test_episode_bodies_read": 0
+  },
+  "training": {
+    "modal_run": "bc-current-lucario-fast-v2",
+    "modal_app_id": "ap-75jj2TmMTDOdOAXErbVwrv",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "batch_size_episodes": 886,
+    "sequence_length": 32,
+    "bf16": true,
+    "learning_rate": 0.000025,
+    "baseline_validation_nll": 1.610425042399795,
+    "epochs": [
+      {"epoch": 1, "validation_nll": 1.5955271890394396, "checkpoint_sha256": "a6a136f2f0012b40ce67ea3eccbbf005ec0cd22d2670a02eeaf52843c6f29cc4"},
+      {"epoch": 2, "validation_nll": 1.6010039011700998, "checkpoint_sha256": "4232eb1a77a80d5135c03b11b2f6ba9c44dc27405717c2c521c128a65d1135e8"},
+      {"epoch": 3, "validation_nll": 1.603619271645649, "checkpoint_sha256": "6aae930c7e330635de1ab1cecba4d9b1f12371d6fdaf7ec40947a3689caed8d8"},
+      {"epoch": 4, "validation_nll": 1.6007071808493547, "checkpoint_sha256": "ef158c5f6cb98f1ae67684700a67f480ab1e930df60215f257ceec11d2072692"},
+      {"epoch": 5, "validation_nll": 1.5992156803560218, "checkpoint_sha256": "d9d34d4f4c738b2954c85718e178ab3aec36280e507f26a7e894c9282546a562"},
+      {"epoch": 6, "validation_nll": 1.598990364013623, "checkpoint_sha256": "abff8fa4bb8dfebbc80fbf861439a47843cb505f32ba396d3c9181f4549c557f"},
+      {"epoch": 7, "validation_nll": 1.5980978024492654, "checkpoint_sha256": "c0dd2a39178c517c687c784033041e196619f63a1256cc39bc618a6bcd2e723e"},
+      {"epoch": 8, "validation_nll": 1.596357579189267, "checkpoint_sha256": "eb043ba1e79afcd05f3b04613f2e2f320842fb11d26b8309433662a243576901"}
+    ],
+    "best_validation_epoch": 1,
+    "steady_state_training_targets_per_second": 13300,
+    "peak_gpu_utilization_percent": 97
+  },
+  "native_gameplay": {
+    "configuration": "16 games each versus mega-lucario-ex, dragapult-ex, iono, mega-abomasnow-ex; alternating seats; greedy recurrent policy; no fallback",
+    "epoch_1": {
+      "wins": 11,
+      "games": 64,
+      "win_rate": 0.171875,
+      "by_opponent_wins": {"mega-lucario-ex": 6, "dragapult-ex": 1, "iono": 1, "mega-abomasnow-ex": 3},
+      "invalid_selections": 0,
+      "fallback_actions": 0
+    },
+    "epoch_8": {
+      "wins": 10,
+      "games": 64,
+      "win_rate": 0.15625,
+      "by_opponent_wins": {"mega-lucario-ex": 3, "dragapult-ex": 3, "iono": 4, "mega-abomasnow-ex": 0},
+      "invalid_selections": 0,
+      "fallback_actions": 0
+    }
+  },
+  "decision": {
+    "selected_bc_seed_epoch": 1,
+    "selected_bc_seed_sha256": "a6a136f2f0012b40ce67ea3eccbbf005ec0cd22d2670a02eeaf52843c6f29cc4",
+    "bc_competence_claimed": false,
+    "reason": "Validation NLL reached its minimum at epoch 1 and did not improve over seven additional epochs; native gameplay also failed to improve. More imitation epochs on the same distribution are not justified.",
+    "next_stage": "neural-in-the-loop GPU-CABT bridge, then rollout policy improvement / expert iteration and league PPO"
+  }
+}
