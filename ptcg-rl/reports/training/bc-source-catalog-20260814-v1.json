@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "record_id": "bc-source-catalog-20260814-v1",
+  "status": "PASS_SOURCE_CATALOG_READY",
+  "official_index": {
+    "dataset": "kaggle/pokemon-tcg-ai-battle-episodes-index",
+    "days": 59,
+    "episodes": 292298,
+    "first_date": "2026-06-16",
+    "last_date": "2026-08-13",
+    "uncompressed_bytes": 1248214563622
+  },
+  "local_recent_archive": {
+    "date": "2026-08-13",
+    "dataset": "kaggle/pokemon-tcg-ai-battle-episodes-2026-08-13",
+    "episodes": 4615,
+    "uncompressed_bytes": 21474696807,
+    "compressed_bytes": 732870658
+  },
+  "smoke_corpus": {
+    "episodes": 64,
+    "bytes": 275140225,
+    "active_teacher_requests": 5259,
+    "train_episodes": 55,
+    "validation_episodes": 6,
+    "test_episodes": 3,
+    "winning_teams": 44,
+    "winning_deck_multisets": 28,
+    "winner_seat_0": 36,
+    "winner_seat_1": 28,
+    "date": "2026-08-13"
+  },
+  "selection_policy": {
+    "production_default": "recent high-quality compatible core plus downweighted compatible historical diversity",
+    "uniform_full_history_sampling": false,
+    "engine_and_action_contract_compatibility_required": true,
+    "recency_weighting_required": true,
+    "teacher_quality_weighting_required": true,
+    "raw_replay_bodies_tracked_in_git": false
+  }
+}

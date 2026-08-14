@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "bc-smoke-20260814-v1",
+  "status": "PASS_SMOKE_TRAINING_COMPLETED",
+  "source_report": "reports/training/bc-source-catalog-20260814-v1.json",
+  "execution": {
+    "device": "cpu",
+    "reason_cpu": "existing ptcg-rl PyTorch environment is CPU-only; CUDA runner path was exercised and failed closed before training when torch.cuda.is_available() was false",
+    "optimizer": "AdamW",
+    "optimizer_steps": 4,
+    "decision_cap": 12,
+    "learning_rate": 0.0003,
+    "train_episode_ids": [92484537, 92609167, 92688786, 92705214],
+    "validation_episode_ids": [92513441, 92785878],
+    "train_targets_used": 42,
+    "validation_targets": 21
+  },
+  "model": {
+    "trainable_parameters": 970022,
+    "architecture_sha256": "aff9a5f87e1c472761ea56fda29dd96f1124d75b3a5aaec280185397967c42cf",
+    "checkpoint_sha256": "4dfba2adb9f97607cfa5dabadba075236bb7aae51eafab264584e947feae3827",
+    "initial_state_sha256": "531b799b29830954dce62cd7d1b455eb30d5189cf670158723ee01b3e2ed6ab0",
+    "final_state_sha256": "a3474b7c2f533362fdf1a066e2855a727094a44cb9bee59ccc55b053ac47eaaf",
+    "state_changed": true
+  },
+  "numerics": {
+    "loss_first": 1.0269060134887695,
+    "loss_last": 2.375641345977783,
+    "loss_all_finite": true,
+    "gradient_norm_max_pre_clip": 1.9461650095700465,
+    "gradient_norms_all_finite": true,
+    "validation_baseline_mean_nll": 1.9622921972047715,
+    "validation_final_mean_nll": 1.9169145822525024,
+    "validation_delta_mean_nll": -0.04537761495226911
+  },
+  "claims": {
+    "data_pipeline_connected": true,
+    "semantic_replay_loader_connected": true,
+    "compound_action_bc_loss_connected": true,
+    "recurrent_state_connected": true,
+    "optimizer_mutates_model": true,
+    "competence_improvement_claimed": false,
+    "production_checkpoint_eligible": false,
+    "cuda_training_completed": false
+  }
+}

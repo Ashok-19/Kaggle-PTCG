@@ -409,7 +409,7 @@ def _action_nll(
     decision: SemanticReplayDecisionV1,
     hidden: Tensor,
 ) -> tuple[Tensor | None, Tensor, dict[str, Any]]:
-    batch = collate_projected((decision.projected,), device="cpu")
+    batch = collate_projected((decision.projected,), device=hidden.device)
     output = model(batch, hidden)
     next_hidden = output.hidden
     option_count = int(output.option_offsets[1] - output.option_offsets[0])
@@ -642,7 +642,7 @@ def _episode_chunk_loss(
     start: int,
     length: int,
 ) -> Tensor:
-    hidden = model.initial_hidden(1, "cpu")
+    hidden = model.initial_hidden(1, next(model.parameters()).device)
     with torch.no_grad():
         for decision in episode.decisions[:start]:
             _, hidden, _ = _action_nll(model, decision, hidden)
