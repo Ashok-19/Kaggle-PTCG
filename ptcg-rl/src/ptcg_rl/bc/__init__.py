@@ -7,6 +7,9 @@ from .source import (
     extract_selected_episodes,
     load_daily_index,
     select_archive_entries,
+    ReplayQualityRecord,
+    load_archive_manifest,
+    quality_select_archive_entries,
 )
 
 __all__ = [
@@ -15,5 +18,8 @@ __all__ = [
     "build_source_catalog",
     "extract_selected_episodes",
     "load_daily_index",
+    "ReplayQualityRecord",
+    "load_archive_manifest",
+    "quality_select_archive_entries",
     "select_archive_entries",
 ]

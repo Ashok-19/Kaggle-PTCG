@@ -46,6 +46,17 @@ class ReplayArchiveEntry:
 
 
 @dataclass(frozen=True)
+class ReplayQualityRecord:
+    episode_id: int
+    create_time: str
+    avg_score: float
+    min_score: float
+    sum_score: float
+    agent_count: int
+    size_bytes: int
+
+
+@dataclass(frozen=True)
 class ReplayEpisodeRecord:
     episode_id: int
     date: str
@@ -170,6 +181,89 @@ def archive_inventory(path: Path) -> tuple[ReplayArchiveEntry, ...]:
     if not entries or len({item.episode_id for item in entries}) != len(entries):
         raise BCSourceError("archive episode inventory is empty or contains duplicates")
     return tuple(entries)
+
+
+def load_archive_manifest(path: Path) -> tuple[ReplayQualityRecord, ...]:
+    if not path.is_file():
+        raise BCSourceError(f"replay archive does not exist: {path}")
+    with zipfile.ZipFile(path) as archive:
+        try:
+            raw = archive.read("manifest.csv")
+        except KeyError as error:
+            raise BCSourceError("daily replay archive is missing manifest.csv") from error
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise BCSourceError("daily archive manifest is not UTF-8") from error
+    reader = csv.DictReader(text.splitlines())
+    expected = (
+        "episode_id",
+        "create_time",
+        "avg_score",
+        "min_score",
+        "sum_score",
+        "agent_count",
+        "size_bytes",
+    )
+    if tuple(reader.fieldnames or ()) != expected:
+        raise BCSourceError(f"unexpected daily archive manifest columns: {reader.fieldnames}")
+    result: list[ReplayQualityRecord] = []
+    seen: set[int] = set()
+    for position, row in enumerate(reader):
+        episode_id = _positive_int(row["episode_id"], "episode_id")
+        if episode_id in seen:
+            raise BCSourceError(f"duplicate episode ID in daily manifest: {episode_id}")
+        seen.add(episode_id)
+        create_time = row["create_time"]
+        if not create_time:
+            raise BCSourceError(f"missing create_time at daily manifest row {position}")
+        agent_count = _positive_int(row["agent_count"], "agent_count")
+        if agent_count != 2:
+            raise BCSourceError(f"episode {episode_id} does not have exactly two agents")
+        result.append(
+            ReplayQualityRecord(
+                episode_id=episode_id,
+                create_time=create_time,
+                avg_score=_finite_float(row["avg_score"], "avg_score"),
+                min_score=_finite_float(row["min_score"], "min_score"),
+                sum_score=_finite_float(row["sum_score"], "sum_score"),
+                agent_count=agent_count,
+                size_bytes=_positive_int(row["size_bytes"], "size_bytes"),
+            )
+        )
+    if not result:
+        raise BCSourceError("daily archive manifest is empty")
+    return tuple(result)
+
+
+def quality_select_archive_entries(
+    entries: Sequence[ReplayArchiveEntry],
+    quality: Sequence[ReplayQualityRecord],
+    *,
+    count: int,
+    minimum_min_score: float | None = None,
+) -> tuple[ReplayArchiveEntry, ...]:
+    if count <= 0:
+        raise BCSourceError("selection count must be positive")
+    by_id = {item.episode_id: item for item in entries}
+    quality_by_id = {item.episode_id: item for item in quality}
+    if set(by_id) != set(quality_by_id):
+        raise BCSourceError("archive inventory and daily manifest episode sets differ")
+    for episode_id, entry in by_id.items():
+        if quality_by_id[episode_id].size_bytes != entry.bytes:
+            raise BCSourceError(f"daily manifest size differs for episode {episode_id}")
+    candidates = list(quality)
+    if minimum_min_score is not None:
+        candidates = [item for item in candidates if item.min_score >= minimum_min_score]
+    if len(candidates) < count:
+        raise BCSourceError(
+            f"quality selection needs {count} episodes but only {len(candidates)} satisfy the filter"
+        )
+    candidates.sort(
+        key=lambda item: (-item.min_score, -item.avg_score, -item.sum_score, item.episode_id)
+    )
+    selected = candidates[:count]
+    return tuple(sorted((by_id[item.episode_id] for item in selected), key=lambda item: item.episode_id))
 
 
 def select_archive_entries(

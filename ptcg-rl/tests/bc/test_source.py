@@ -13,6 +13,8 @@ from ptcg_rl.bc.source import (
     build_source_catalog,
     extract_selected_episodes,
     load_daily_index,
+    load_archive_manifest,
+    quality_select_archive_entries,
     select_archive_entries,
 )
 
@@ -148,3 +150,27 @@ def test_index_rejects_slug_date_mismatch(tmp_path: Path) -> None:
     path.write_text(text, encoding="utf-8")
     with pytest.raises(BCSourceError):
         load_daily_index(path)
+
+
+def test_archive_manifest_quality_selection_prefers_strong_minimum_score(tmp_path: Path) -> None:
+    archive = tmp_path / "day.zip"
+    rows = [
+        (101, 1000.0, 990.0, 10),
+        (102, 1200.0, 1100.0, 20),
+        (103, 1190.0, 1150.0, 30),
+    ]
+    with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as handle:
+        manifest = ["episode_id,create_time,avg_score,min_score,sum_score,agent_count,size_bytes"]
+        for episode_id, avg_score, min_score, size in rows:
+            payload = b"x" * size
+            handle.writestr(f"{episode_id}.json", payload)
+            manifest.append(
+                f"{episode_id},2026-08-13T00:00:00,{avg_score},{min_score},{avg_score * 2},2,{size}"
+            )
+        handle.writestr("manifest.csv", "\n".join(manifest) + "\n")
+    entries = archive_inventory(archive)
+    quality = load_archive_manifest(archive)
+    selected = quality_select_archive_entries(entries, quality, count=2, minimum_min_score=1050.0)
+    assert [item.episode_id for item in selected] == [102, 103]
+    with pytest.raises(BCSourceError):
+        quality_select_archive_entries(entries, quality, count=3, minimum_min_score=1050.0)
