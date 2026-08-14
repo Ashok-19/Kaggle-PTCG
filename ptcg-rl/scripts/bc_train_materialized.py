@@ -397,15 +397,24 @@ def main() -> int:
         torch.cuda.reset_peak_memory_stats(device)
 
     manifest, records = load_materialized_manifest(args.materialized_dir)
+    train_records = sorted(
+        (record for record in records if record["split"] == "train"),
+        key=lambda record: int(record["episode_id"]),
+    )
+    validation_records = sorted(
+        (record for record in records if record["split"] == "validation"),
+        key=lambda record: int(record["episode_id"]),
+    )
+    if args.train_limit is not None:
+        train_records = train_records[: args.train_limit]
+    if args.validation_limit is not None:
+        validation_records = validation_records[: args.validation_limit]
+    selected_records = [*train_records, *validation_records]
     load_started = time.perf_counter()
-    episodes = load_all_episodes(args.materialized_dir, records, args.loader_workers)
+    episodes = load_all_episodes(args.materialized_dir, selected_records, args.loader_workers)
     load_elapsed = time.perf_counter() - load_started
     train_episodes = [episode for episode in episodes if episode.split == "train"]
     validation_episodes = [episode for episode in episodes if episode.split == "validation"]
-    if args.train_limit is not None:
-        train_episodes = train_episodes[: args.train_limit]
-    if args.validation_limit is not None:
-        validation_episodes = validation_episodes[: args.validation_limit]
     if not train_episodes or not validation_episodes:
         raise MaterializedBCTrainError("materialized train/validation splits must both be nonempty")
 
