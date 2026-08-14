@@ -142,6 +142,41 @@ __device__ __noinline__ void static_effect(
     }
 }
 
+__device__ __forceinline__ bool potential_continual_card(
+    const BattleCoreState& state,
+    const RuleTableView& rules,
+    gc_u8 ref
+) {
+    if (ref == 0 || ref >= kAllCardCapacity) return false;
+    const CardState& card = state.all_card[ref];
+    const RuleCardMaster* master = rule_card(rules, card.card_id);
+    if (master == nullptr || master->ability_skill_id <= 0) return false;
+    const RuleSkill* ability = rule_skill(rules, master->ability_skill_id);
+    return ability != nullptr && skill_has_continual(*ability) && skill_area_match(*ability, card.area);
+}
+
+__device__ __forceinline__ bool any_potential_continual_card(
+    const BattleCoreState& state,
+    const RuleTableView& rules
+) {
+    for (gc_i32 p = 0; p < 2; ++p) {
+        const PlayerState& player = state.players[p];
+        for (gc_i32 i = 0; i < (gc_i32)player.active.count; ++i)
+            if (potential_continual_card(state, rules, player.active.values[i])) return true;
+        for (gc_i32 i = 0; i < (gc_i32)player.bench.count; ++i)
+            if (potential_continual_card(state, rules, player.bench.values[i])) return true;
+        for (gc_i32 i = 0; i < (gc_i32)player.hand.count; ++i)
+            if (potential_continual_card(state, rules, player.hand.values[i])) return true;
+        for (gc_i32 i = 0; i < (gc_i32)player.tool.count; ++i)
+            if (potential_continual_card(state, rules, player.tool.values[i])) return true;
+        for (gc_i32 i = 0; i < (gc_i32)player.energy.count; ++i)
+            if (potential_continual_card(state, rules, player.energy.values[i])) return true;
+    }
+    for (gc_i32 i = 0; i < (gc_i32)state.stadium.count; ++i)
+        if (potential_continual_card(state, rules, state.stadium.values[i])) return true;
+    return false;
+}
+
 __device__ __noinline__ void refresh_effect(
     BattleCoreState& state,
     BattleRuntimeState& runtime,
@@ -149,6 +184,7 @@ __device__ __noinline__ void refresh_effect(
     gc_i32 depth
 ) {
     if (depth > 10) { runtime.error_flags |= kRuntimeErrorRefreshDepth; return; }
+    if (depth == 0 && runtime.card_effect_count == 0 && !any_potential_continual_card(state, rules)) return;
     state.continual_state = 0;
     for (gc_i32 p = 0; p < 2; ++p) {
         for (gc_i32 w = 0; w < kAbilitySetWordCount; ++w) runtime.ability_set[p][w] = 0;
