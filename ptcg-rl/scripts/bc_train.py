@@ -516,6 +516,19 @@ def main() -> int:
         bf16=args.bf16,
         maximum_batches=args.maximum_validation_batches,
     )
+    print(
+        json.dumps(
+            {
+                "event": "baseline_validation",
+                "episodes": baseline_validation["episodes"],
+                "policy_targets": baseline_validation["policy_targets"],
+                "mean_nll": baseline_validation["mean_nll"],
+                "elapsed_seconds": baseline_validation["elapsed_seconds"],
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
     history: list[dict[str, Any]] = [
         {"epoch": 0, "validation": baseline_validation, "training": None}
     ]
@@ -584,6 +597,22 @@ def main() -> int:
             }
         )
         history.append({"epoch": epoch, "training": training, "validation": validation})
+        print(
+            json.dumps(
+                {
+                    "event": "epoch_complete",
+                    "epoch": epoch,
+                    "training_mean_nll": training["mean_nll"],
+                    "training_policy_targets": training["policy_targets"],
+                    "training_targets_per_second": training["policy_targets_per_second"],
+                    "validation_mean_nll": validation["mean_nll"],
+                    "validation_policy_targets": validation["policy_targets"],
+                    "optimizer_steps": training["optimizer_steps"],
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
 
     shutil.rmtree(staging_root)
     final_state_sha = state_dict_sha256(
