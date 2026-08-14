@@ -135,8 +135,15 @@ def main() -> int:
         entries = archive_inventory(archive_path)
         quality = load_archive_manifest(archive_path)
         quality_by_id = {item.episode_id: item for item in quality}
-        if {item.episode_id for item in entries} != set(quality_by_id):
-            raise BCSourceError(f"archive/manifest episode sets differ for {day}")
+        entry_ids = {item.episode_id for item in entries}
+        quality_ids = set(quality_by_id)
+        unscored_replay_ids = sorted(entry_ids - quality_ids)
+        if unscored_replay_ids:
+            raise BCSourceError(
+                f"archive contains replay bodies without manifest quality metadata for {day}: "
+                f"{unscored_replay_ids[:8]}"
+            )
+        missing_replay_ids = sorted(quality_ids - entry_ids)
         for entry in entries:
             if quality_by_id[entry.episode_id].size_bytes != entry.bytes:
                 raise BCSourceError(
@@ -192,6 +199,9 @@ def main() -> int:
                 "archive_sha256": sha256_file(archive_path),
                 "archive_compressed_bytes": archive_path.stat().st_size,
                 "episodes": len(entries),
+                "manifest_rows": len(quality),
+                "manifest_rows_missing_replay_body": len(missing_replay_ids),
+                "missing_replay_episode_ids": missing_replay_ids[:32],
                 "uncompressed_replay_bytes": sum(item.bytes for item in entries),
                 "prefix_scanned": scanned,
                 "module_counts_at_discovery_floor": dict(sorted(module_counts.items())),
