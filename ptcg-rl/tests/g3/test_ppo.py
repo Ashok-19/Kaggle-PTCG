@@ -18,6 +18,7 @@ from ptcg_rl.g3.ppo import (
     is_forced_compound_action,
     ppo_loss,
     replay_compound_action,
+    sample_compound_action,
     require_finite_gradients,
     split_recurrent_rollout,
     validate_local_workload,
@@ -95,6 +96,55 @@ def test_compound_log_probability_replays_exactly_and_backpropagates(action, min
     replay.log_probability.backward()
     assert prefix.grad is not None and torch.isfinite(prefix.grad).all()
     assert options.grad is not None and torch.isfinite(options.grad).all()
+
+
+def test_sampled_compound_action_is_legal_and_replays_exactly() -> None:
+    prefix = torch.tensor([0.2, -0.1, 0.3])
+    options = torch.tensor(
+        [[0.5, 0.1, -0.2], [-0.3, 0.7, 0.4], [0.2, -0.4, 0.8]]
+    )
+    generator = torch.Generator().manual_seed(20260814)
+    action, sampled = sample_compound_action(
+        initial_prefix=prefix,
+        option_embeddings=options,
+        available_mask=torch.tensor([True, False, True]),
+        minimum_count=1,
+        maximum_count=2,
+        decoder_logits=decoder_logits,
+        decoder_advance=decoder_advance,
+        generator=generator,
+    )
+    assert 1 <= len(action.selected_indices) <= 2
+    assert all(index in {0, 2} for index in action.selected_indices)
+    assert len(set(action.selected_indices)) == len(action.selected_indices)
+    replayed = replay_compound_action(
+        initial_prefix=prefix,
+        option_embeddings=options,
+        available_mask=torch.tensor([True, False, True]),
+        action=action,
+        minimum_count=1,
+        maximum_count=2,
+        decoder_logits=decoder_logits,
+        decoder_advance=decoder_advance,
+    )
+    assert torch.allclose(sampled.log_probability, replayed.log_probability, atol=1e-7, rtol=0)
+    assert torch.allclose(sampled.normalized_entropy, replayed.normalized_entropy, atol=1e-7, rtol=0)
+
+
+def test_sampled_zero_option_compound_action_emits_explicit_stop() -> None:
+    prefix = torch.tensor([0.1, 0.2])
+    options = torch.empty((0, 2))
+    action, replay = sample_compound_action(
+        initial_prefix=prefix,
+        option_embeddings=options,
+        available_mask=torch.empty(0, dtype=torch.bool),
+        minimum_count=0,
+        maximum_count=0,
+        decoder_logits=decoder_logits,
+        decoder_advance=decoder_advance,
+    )
+    assert action == CompoundActionV1((), True)
+    assert float(replay.log_probability) == 0.0
 
 
 def test_compound_replay_matches_manual_two_step_log_probability() -> None:

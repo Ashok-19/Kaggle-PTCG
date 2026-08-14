@@ -139,6 +139,105 @@ def _normalized_entropy(entropy: Tensor, legal_count: int) -> Tensor:
     return entropy / math.log(legal_count)
 
 
+def sample_compound_action(
+    *,
+    initial_prefix: Tensor,
+    option_embeddings: Tensor,
+    available_mask: Tensor,
+    minimum_count: int,
+    maximum_count: int,
+    decoder_logits: DecoderLogits,
+    decoder_advance: DecoderAdvance,
+    generator: torch.Generator | None = None,
+) -> tuple[CompoundActionV1, CompoundReplayV1]:
+    """Sample one legal autoregressive compound action and retain its exact PPO statistics."""
+    if initial_prefix.ndim != 1:
+        raise PPOContractError("decoder prefix must be one-dimensional")
+    if option_embeddings.ndim != 2:
+        raise PPOContractError("option embeddings must be two-dimensional")
+    if available_mask.dtype != torch.bool or available_mask.shape != (option_embeddings.shape[0],):
+        raise PPOContractError("available mask must match option embeddings")
+    if isinstance(minimum_count, bool) or isinstance(maximum_count, bool):
+        raise PPOContractError("selection bounds must be integers")
+    if not isinstance(minimum_count, int) or not isinstance(maximum_count, int):
+        raise PPOContractError("selection bounds must be integers")
+    if minimum_count < 0 or maximum_count < minimum_count:
+        raise PPOContractError("selection bounds are invalid")
+
+    available = available_mask.clone()
+    effective_maximum = min(maximum_count, int(available.sum().item()))
+    if minimum_count > effective_maximum:
+        raise PPOContractError("minimum selection count exceeds available options")
+
+    prefix = initial_prefix
+    selected: list[int] = []
+    subchoice_log_probabilities: list[Tensor] = []
+    subchoice_entropies: list[Tensor] = []
+    stopped = False
+
+    while len(selected) < effective_maximum:
+        stop_available = len(selected) >= minimum_count
+        logits = decoder_logits(prefix, option_embeddings, available, stop_available)
+        if logits.shape != (option_embeddings.shape[0] + 1,):
+            raise PPOContractError("decoder logits shape differs from option count plus STOP")
+        distribution_mask = torch.cat(
+            (available, torch.tensor([stop_available], dtype=torch.bool, device=available.device))
+        )
+        if not torch.any(distribution_mask):
+            raise PPOContractError("compound sampler has no legal outcome")
+        if torch.isnan(logits).any() or torch.isposinf(logits).any():
+            raise PPOContractError("distribution logits contain NaN or positive infinity")
+        if not torch.isfinite(logits[distribution_mask]).all():
+            raise PPOContractError("legal distribution logits must be finite")
+        masked = logits.masked_fill(~distribution_mask, float("-inf"))
+        probabilities = torch.softmax(masked, dim=0)
+        choice = int(torch.multinomial(probabilities, 1, generator=generator).item())
+        log_probability, entropy = _masked_log_probability_and_entropy(
+            logits, distribution_mask, choice
+        )
+        subchoice_log_probabilities.append(log_probability)
+        subchoice_entropies.append(_normalized_entropy(entropy, int(distribution_mask.sum())))
+        if choice == option_embeddings.shape[0]:
+            stopped = True
+            break
+        selected.append(choice)
+        prefix = decoder_advance(prefix, option_embeddings[choice])
+        if prefix.ndim != 1 or not torch.isfinite(prefix).all():
+            raise PPOContractError("decoder advance produced an invalid prefix")
+        available[choice] = False
+
+    if effective_maximum == 0:
+        logits = decoder_logits(prefix, option_embeddings, available, True)
+        if logits.shape != (option_embeddings.shape[0] + 1,):
+            raise PPOContractError("decoder STOP logits shape differs from contract")
+        distribution_mask = torch.cat(
+            (available, torch.ones(1, dtype=torch.bool, device=available.device))
+        )
+        log_probability, entropy = _masked_log_probability_and_entropy(
+            logits, distribution_mask, option_embeddings.shape[0]
+        )
+        subchoice_log_probabilities.append(log_probability)
+        subchoice_entropies.append(_normalized_entropy(entropy, int(distribution_mask.sum())))
+        stopped = True
+
+    if not subchoice_log_probabilities:
+        raise PPOContractError("compound sampler produced no decision")
+    action = CompoundActionV1(tuple(selected), stopped)
+    total_log_probability = torch.stack(subchoice_log_probabilities).sum()
+    normalized_entropy = torch.stack(subchoice_entropies).mean()
+    replay = CompoundReplayV1(
+        log_probability=total_log_probability,
+        normalized_entropy=normalized_entropy,
+        subchoice_log_probabilities=tuple(subchoice_log_probabilities),
+        subchoice_entropies=tuple(subchoice_entropies),
+        selected_indices=action.selected_indices,
+        stopped=action.stopped,
+    )
+    if not torch.isfinite(replay.log_probability) or not torch.isfinite(replay.normalized_entropy):
+        raise PPOContractError("compound sampler produced a nonfinite result")
+    return action, replay
+
+
 def replay_compound_action(
     *,
     initial_prefix: Tensor,
