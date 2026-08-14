@@ -187,7 +187,7 @@ def _write_execution_report(
 @app.function(
     cpu=16,
     memory=65536,
-    ephemeral_disk=32768,
+    ephemeral_disk=524288,
     timeout=12 * 60 * 60,
     secrets=[client_auth],
     volumes={"/data": training_volume},
