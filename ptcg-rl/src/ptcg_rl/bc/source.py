@@ -63,6 +63,7 @@ class ReplayPrefixRecord:
     rewards: tuple[int, int]
     winner_player_index: int | None
     deck_sha256: tuple[str, str]
+    deck_card_ids: tuple[tuple[int, ...], tuple[int, ...]]
 
 
 @dataclass(frozen=True)
@@ -332,6 +333,10 @@ def scan_replay_prefix(prefix: bytes) -> ReplayPrefixRecord:
         rewards=(rewards[0], rewards[1]),
         winner_player_index=winner,
         deck_sha256=(_deck_sha256(decks[0]), _deck_sha256(decks[1])),
+        deck_card_ids=(
+            tuple(int(value) for value in decks[0]),
+            tuple(int(value) for value in decks[1]),
+        ),
     )
 
 

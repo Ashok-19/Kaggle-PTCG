@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "record_id": "bc-dragapult-archetype-v3",
+  "competition": "pokemon-tcg-ai-battle",
+  "captured_at_utc": "2026-08-14T20:08:59.444176+00:00",
+  "days": [
+    "2026-08-10",
+    "2026-08-11",
+    "2026-08-12",
+    "2026-08-13"
+  ],
+  "target_deck_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+  "target_deck_card_id_multiset": [
+    [
+      2,
+      4
+    ],
+    [
+      5,
+      4
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      112,
+      2
+    ],
+    [
+      119,
+      4
+    ],
+    [
+      120,
+      4
+    ],
+    [
+      121,
+      3
+    ],
+    [
+      140,
+      1
+    ],
+    [
+      235,
+      2
+    ],
+    [
+      1071,
+      1
+    ],
+    [
+      1080,
+      1
+    ],
+    [
+      1086,
+      4
+    ],
+    [
+      1097,
+      2
+    ],
+    [
+      1120,
+      4
+    ],
+    [
+      1121,
+      4
+    ],
+    [
+      1152,
+      4
+    ],
+    [
+      1182,
+      3
+    ],
+    [
+      1198,
+      3
+    ],
+    [
+      1213,
+      1
+    ],
+    [
+      1227,
+      4
+    ],
+    [
+      1231,
+      1
+    ],
+    [
+      1246,
+      2
+    ]
+  ],
+  "required_module_version": "1.32.6",
+  "winner_only_labels": false,
+  "minimum_selected": 1500,
+  "minimum_active_requests": 150000,
+  "split_seed": 20260815,
+  "raw_archives_retained": false,
+  "teams": [
+    {
+      "rank": 1,
+      "team_id": 16375635,
+      "team_name": "palsystem",
+      "score": 1217.0,
+      "submission_date": "2026-08-13T10:49:23.776Z"
+    },
+    {
+      "rank": 2,
+      "team_id": 16372168,
+      "team_name": "goonew",
+      "score": 1205.3,
+      "submission_date": "2026-08-13T22:44:00.000Z"
+    },
+    {
+      "rank": 3,
+      "team_id": 16561259,
+      "team_name": "@kdcyberdude",
+      "score": 1188.3,
+      "submission_date": "2026-08-14T08:11:40.000Z"
+    },
+    {
+      "rank": 4,
+      "team_id": 16463316,
+      "team_name": "LiamK",
+      "score": 1182.8,
+      "submission_date": "2026-08-14T15:49:46.313Z"
+    },
+    {
+      "rank": 5,
+      "team_id": 16411029,
+      "team_name": "ANDPAD kaggler team",
+      "score": 1176.6,
+      "submission_date": "2026-08-13T23:31:20.476Z"
+    },
+    {
+      "rank": 6,
+      "team_id": 16425135,
+      "team_name": "Rmy",
+      "score": 1169.1,
+      "submission_date": "2026-08-13T12:04:55.000Z"
+    },
+    {
+      "rank": 7,
+      "team_id": 16581741,
+      "team_name": "Unown Gradiant",
+      "score": 1164.8,
+      "submission_date": "2026-08-14T16:27:33.533Z"
+    },
+    {
+      "rank": 8,
+      "team_id": 16380946,
+      "team_name": "flg",
+      "score": 1164.4,
+      "submission_date": "2026-08-14T17:26:12.436Z"
+    },
+    {
+      "rank": 9,
+      "team_id": 16536318,
+      "team_name": "李秉叡（ntumlnoob）",
+      "score": 1161.6,
+      "submission_date": "2026-08-14T10:36:23.000Z"
+    },
+    {
+      "rank": 10,
+      "team_id": 16422241,
+      "team_name": "Raihan Ramadistra",
+      "score": 1153.3,
+      "submission_date": "2026-08-14T17:42:13.833Z"
+    },
+    {
+      "rank": 11,
+      "team_id": 16569286,
+      "team_name": "Kh0a",
+      "score": 1150.0,
+      "submission_date": "2026-08-14T11:48:10.923Z"
+    },
+    {
+      "rank": 12,
+      "team_id": 16371653,
+      "team_name": "213tubo",
+      "score": 1147.3,
+      "submission_date": "2026-08-14T09:49:52.000Z"
+    },
+    {
+      "rank": 13,
+      "team_id": 16448747,
+      "team_name": "Luca",
+      "score": 1142.8,
+      "submission_date": "2026-08-14T12:15:48.163Z"
+    },
+    {
+      "rank": 14,
+      "team_id": 16450476,
+      "team_name": "Thai",
+      "score": 1141.8,
+      "submission_date": "2026-08-14T12:04:25.000Z"
+    },
+    {
+      "rank": 15,
+      "team_id": 16435304,
+      "team_name": "人入乂乂人入入乂人",
+      "score": 1131.2,
+      "submission_date": "2026-08-14T17:16:39.453Z"
+    },
+    {
+      "rank": 16,
+      "team_id": 16531497,
+      "team_name": "Bart, Edwyn",
+      "score": 1130.2,
+      "submission_date": "2026-08-14T16:12:17.253Z"
+    },
+    {
+      "rank": 17,
+      "team_id": 16556346,
+      "team_name": "sadwat",
+      "score": 1120.8,
+      "submission_date": "2026-08-14T17:26:04.973Z"
+    },
+    {
+      "rank": 18,
+      "team_id": 16452116,
+      "team_name": "Sixth Sense",
+      "score": 1120.6,
+      "submission_date": "2026-08-14T19:19:29.993Z"
+    },
+    {
+      "rank": 19,
+      "team_id": 16371427,
+      "team_name": "bono",
+      "score": 1118.4,
+      "submission_date": "2026-08-14T09:43:57.000Z"
+    },
+    {
+      "rank": 20,
+      "team_id": 16391123,
+      "team_name": "Iliamna",
+      "score": 1115.7,
+      "submission_date": "2026-08-14T17:57:23.000Z"
+    }
+  ],
+  "teacher_score_floor": 1090.0,
+  "opponent_score_used_for_admission": false,
+  "match_min_score_used_for_admission": false,
+  "teacher_outcome_used_for_admission": false,
+  "archetype_wide": true,
+  "required_archetype_card_id": 121
+}

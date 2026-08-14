@@ -25,6 +25,7 @@ class DragapultCorpusPolicy:
     target_deck_sha256: str = DOMINANT_DRAGAPULT_DECK_SHA256
     module_version: str = CURRENT_REPLAY_MODULE_VERSION
     teacher_score_floor: float = 1090.0
+    archetype_wide: bool = False
 
     def __post_init__(self) -> None:
         if len(self.target_deck_sha256) != 64:
@@ -67,7 +68,10 @@ def choose_dragapult_teacher(
         return None
     candidates: list[int] = []
     for seat in (0, 1):
-        if prefix.deck_sha256[seat] != policy.target_deck_sha256:
+        if policy.archetype_wide:
+            if DRAGAPULT_EX_CARD_ID not in prefix.deck_card_ids[seat]:
+                continue
+        elif prefix.deck_sha256[seat] != policy.target_deck_sha256:
             continue
         teacher = elite_teachers.get(prefix.team_names[seat])
         if teacher is not None and teacher.score >= policy.teacher_score_floor:

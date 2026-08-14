@@ -21,6 +21,10 @@ def _prefix(*, winner: int = 0, team0: str = "teacher", team1: str = "opponent",
         rewards=rewards,
         winner_player_index=winner,
         deck_sha256=(hashes[0], hashes[1]),
+        deck_card_ids=(
+            (121, *([2] * 59)),
+            ((121, *([3] * 59)) if both_target else tuple([3] * 60)),
+        ),
     )
 
 
@@ -62,6 +66,24 @@ def test_mirror_match_prefers_qualified_winner_to_keep_episode_unique() -> None:
     ) == (1, "frozen_live_teacher_score")
 
 
+def test_archetype_wide_accepts_noncanonical_dragapult_variant() -> None:
+    teachers = {"teacher": EliteTeacher(team_name="teacher", rank=5, score=1170.0)}
+    prefix = _prefix()
+    variant = ReplayPrefixRecord(
+        team_names=prefix.team_names,
+        module_version=prefix.module_version,
+        rewards=prefix.rewards,
+        winner_player_index=prefix.winner_player_index,
+        deck_sha256=("a" * 64, prefix.deck_sha256[1]),
+        deck_card_ids=prefix.deck_card_ids,
+    )
+    assert choose_dragapult_teacher(
+        variant,
+        policy=DragapultCorpusPolicy(archetype_wide=True),
+        elite_teachers=teachers,
+    ) == (0, "frozen_live_teacher_score")
+
+
 def test_wrong_module_or_wrong_deck_is_rejected() -> None:
     policy = DragapultCorpusPolicy()
     teachers = {"teacher": EliteTeacher(team_name="teacher", rank=1, score=1217.0)}
@@ -75,6 +97,7 @@ def test_wrong_module_or_wrong_deck_is_rejected() -> None:
         rewards=prefix.rewards,
         winner_player_index=prefix.winner_player_index,
         deck_sha256=("f" * 64, prefix.deck_sha256[1]),
+        deck_card_ids=(tuple([2] * 60), prefix.deck_card_ids[1]),
     )
     assert choose_dragapult_teacher(wrong, policy=policy, elite_teachers=teachers) is None
 

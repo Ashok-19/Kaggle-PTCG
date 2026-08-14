@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from ptcg_rl.bc.dragapult_corpus import (  # noqa: E402
     CURRENT_REPLAY_MODULE_VERSION,
     DOMINANT_DRAGAPULT_DECK_SHA256,
+    DRAGAPULT_EX_CARD_ID,
     DragapultCorpusPolicy,
     EliteTeacher,
     choose_dragapult_teacher,
@@ -97,6 +98,7 @@ def main() -> int:
     parser.add_argument("--module-version", default=CURRENT_REPLAY_MODULE_VERSION)
     parser.add_argument("--teacher-score-floor", type=float, default=1090.0)
     parser.add_argument("--winner-only", action="store_true")
+    parser.add_argument("--archetype-wide", action="store_true")
     parser.add_argument("--elite-teachers", type=Path)
     parser.add_argument("--split-seed", type=int, default=20260815)
     parser.add_argument("--minimum-selected", type=int, default=500)
@@ -115,6 +117,7 @@ def main() -> int:
         target_deck_sha256=args.target_deck_sha256,
         module_version=args.module_version,
         teacher_score_floor=args.teacher_score_floor,
+        archetype_wide=args.archetype_wide,
     )
     elite_teachers, elite_snapshot = load_elite_teachers(args.elite_teachers)
 
@@ -169,7 +172,11 @@ def main() -> int:
                     discovery_rejections[str(error).split(":")[0]] += 1
                     continue
                 module_counts[discovered.module_version] += 1
-                if policy.target_deck_sha256 in discovered.deck_sha256:
+                if (
+                    any(DRAGAPULT_EX_CARD_ID in deck for deck in discovered.deck_card_ids)
+                    if policy.archetype_wide
+                    else policy.target_deck_sha256 in discovered.deck_sha256
+                ):
                     target_deck_seen += 1
                 choice = choose_dragapult_teacher(
                     discovered,
@@ -240,7 +247,13 @@ def main() -> int:
                 if record.module_version != policy.module_version:
                     full_parse_rejections[f"module:{record.module_version}"] += 1
                     continue
-                if record.teacher_deck_sha256 != policy.target_deck_sha256:
+                full_prefix = scan_replay_prefix(raw[:PREFIX_BYTES])
+                if policy.archetype_wide:
+                    if DRAGAPULT_EX_CARD_ID not in full_prefix.deck_card_ids[teacher]:
+                        raise BCSourceError(
+                            f"full parser teacher is not Dragapult archetype for episode {entry.episode_id}"
+                        )
+                elif record.teacher_deck_sha256 != policy.target_deck_sha256:
                     raise BCSourceError(
                         f"full parser target deck differs for episode {entry.episode_id}"
                     )
@@ -262,6 +275,7 @@ def main() -> int:
     team_counts: Counter[str] = Counter()
     tier_counts: Counter[str] = Counter()
     opponent_decks: Counter[str] = Counter()
+    teacher_decks: Counter[str] = Counter()
     admission_counts: Counter[str] = Counter()
     per_day: Counter[str] = Counter()
     outcome_counts: Counter[str] = Counter()
@@ -282,7 +296,11 @@ def main() -> int:
                 "source_sum_score": quality.sum_score,
                 "teacher_sample_weight": sample_weight,
                 "teacher_quality_tier": tier,
-                "teacher_policy_source": "exact_dragapult_winning_player",
+                "teacher_policy_source": (
+                    "dragapult_archetype_player"
+                    if policy.archetype_wide
+                    else "exact_dragapult_player"
+                ),
                 "admission_reason": admission_reason,
                 "teacher_score_qualification_basis": "frozen_live_leaderboard_score",
                 "teacher_score_qualification_value": elite.score,
@@ -294,6 +312,7 @@ def main() -> int:
         team_counts[record.teacher_team_name] += 1
         tier_counts[tier] += 1
         opponent_decks[record.opponent_deck_sha256] += 1
+        teacher_decks[record.teacher_deck_sha256] += 1
         admission_counts[admission_reason] += 1
         per_day[record.date] += 1
         outcome_counts[record.teacher_result] += 1
@@ -307,6 +326,10 @@ def main() -> int:
         "selection": {
             "days": args.days,
             "target_deck_sha256": policy.target_deck_sha256,
+            "archetype_wide": policy.archetype_wide,
+            "required_archetype_card_id": (
+                DRAGAPULT_EX_CARD_ID if policy.archetype_wide else None
+            ),
             "required_module_version": policy.module_version,
             "winner_only_labels": args.winner_only,
             "teacher_outcome_used_for_admission": args.winner_only,
@@ -327,6 +350,7 @@ def main() -> int:
             "selected_raw_bytes": sum(int(row["bytes"]) for row in records),
             "split_counts": dict(sorted(split_counts.items())),
             "teacher_teams": len(team_counts),
+            "teacher_decks": len(teacher_decks),
             "opponent_decks": len(opponent_decks),
             "quality_tiers": dict(sorted(tier_counts.items())),
             "admission_counts": dict(sorted(admission_counts.items())),
@@ -391,6 +415,7 @@ def main() -> int:
         "bundle_bytes": args.bundle.stat().st_size,
         "summary": manifest["summary"],
         "top_teacher_teams": team_counts.most_common(24),
+        "top_teacher_decks": teacher_decks.most_common(24),
         "top_opponent_decks": opponent_decks.most_common(24),
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
