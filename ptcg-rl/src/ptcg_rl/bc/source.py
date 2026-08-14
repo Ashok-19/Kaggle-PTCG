@@ -139,12 +139,20 @@ def archive_inventory(path: Path) -> tuple[ReplayArchiveEntry, ...]:
     if not path.is_file():
         raise BCSourceError(f"replay archive does not exist: {path}")
     entries: list[ReplayArchiveEntry] = []
+    metadata_members: set[str] = set()
     with zipfile.ZipFile(path) as archive:
         for info in archive.infolist():
             if info.is_dir():
                 continue
             name = Path(info.filename).name
-            if name != info.filename or not name.endswith(".json"):
+            if name != info.filename:
+                raise BCSourceError(f"unexpected archive member path: {info.filename}")
+            if name == "manifest.csv":
+                if name in metadata_members:
+                    raise BCSourceError("daily archive contains duplicate manifest.csv")
+                metadata_members.add(name)
+                continue
+            if not name.endswith(".json"):
                 raise BCSourceError(f"unexpected archive member path: {info.filename}")
             stem = name.removesuffix(".json")
             if not stem.isdigit() or int(stem) <= 0:

@@ -107,6 +107,7 @@ def test_archive_catalog_selection_and_extraction(tmp_path: Path) -> None:
     archive = tmp_path / "daily.zip"
     bodies = {101: _replay(101, 0), 102: _replay(102, 1), 103: _replay(103, 0)}
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as handle:
+        handle.writestr("manifest.csv", "episode_id\n101\n102\n103\n")
         for episode_id, raw in bodies.items():
             handle.writestr(f"{episode_id}.json", raw)
     index = tmp_path / "manifest.csv"
