@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpu-cabt"
+version = "0.1.0"
+description = "Standalone exact-rule CUDA Pokemon TCG battle runtime"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy==2.0.2",
+  "cupy-cuda12x==14.1.1",
+  "nvidia-cuda-nvrtc-cu12==12.9.86",
+]
+
+[dependency-groups]
+dev = [
+  "pytest==8.4.1",
+  "ruff==0.12.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
