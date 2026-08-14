@@ -3,16 +3,24 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from dataclasses import replace
 from pathlib import Path
 from typing import Any, Sequence
 
 import torch
 
-from ptcg_rl.bc.materialized import MaterializedDecisionV1, MaterializedEpisodeV1, load_materialized_episode
-from ptcg_rl.bc.training import recurrent_sequence_batch_loss
-from ptcg_rl.g2.checkpoint import load_checkpoint_package
-from ptcg_rl.g3.checkpoint import load_training_checkpoint_model_state
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from ptcg_rl.bc.materialized import (  # noqa: E402
+    MaterializedDecisionV1,
+    MaterializedEpisodeV1,
+    load_materialized_episode,
+)
+from ptcg_rl.bc.training import recurrent_sequence_batch_loss  # noqa: E402
+from ptcg_rl.g2.checkpoint import load_checkpoint_package  # noqa: E402
+from ptcg_rl.g3.checkpoint import load_training_checkpoint_model_state  # noqa: E402
 
 
 class EventEntityAblationError(ValueError):
