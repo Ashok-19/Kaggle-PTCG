@@ -37,6 +37,32 @@ def _ablated_decision(decision: MaterializedDecisionV1) -> MaterializedDecisionV
     return replace(decision, projected=projected)
 
 
+def _gpu_feasible_decision(decision: MaterializedDecisionV1) -> MaterializedDecisionV1:
+    """Keep event identity equality but remove current-entity anchoring unavailable on GPU."""
+    linked = _ablated_decision(decision)
+    model = linked.projected.model
+    identity_map: dict[int, int] = {}
+    next_identity = 1
+    rows: list[tuple[int, ...]] = []
+    for values, missing in zip(model.event_identity_values, model.event_identity_missing, strict=True):
+        row: list[int] = []
+        for value, is_missing in zip(values, missing, strict=True):
+            if is_missing:
+                row.append(0)
+                continue
+            identity_value = int(value)
+            if identity_value not in identity_map:
+                identity_map[identity_value] = next_identity
+                next_identity += 1
+            row.append(identity_map[identity_value])
+        rows.append(tuple(row))
+    projected = replace(
+        linked.projected,
+        model=replace(model, event_identity_values=tuple(rows)),
+    )
+    return replace(linked, projected=projected)
+
+
 def _load_split(
     root: Path,
     *,
@@ -71,21 +97,27 @@ def _evaluate(
 ) -> dict[str, Any]:
     device = next(model.parameters()).device
     full_weighted = 0.0
-    ablated_weighted = 0.0
+    link_only_weighted = 0.0
+    gpu_feasible_weighted = 0.0
     policy_targets = 0
     recurrent_decisions = 0
     events = 0
     event_identity_slots = 0
     linked_event_identity_slots = 0
-    hidden_squared_error = 0.0
+    link_only_hidden_squared_error = 0.0
+    gpu_feasible_hidden_squared_error = 0.0
     hidden_values = 0
 
     model.eval()
     with torch.inference_mode():
         for group in _chunks(episodes, batch_size):
             full_sequences = [episode.decisions for episode in group]
-            ablated_sequences = [
+            link_only_sequences = [
                 tuple(_ablated_decision(decision) for decision in episode.decisions)
+                for episode in group
+            ]
+            gpu_feasible_sequences = [
+                tuple(_gpu_feasible_decision(decision) for decision in episode.decisions)
                 for episode in group
             ]
             for episode in group:
@@ -108,35 +140,53 @@ def _evaluate(
                     verify=False,
                     require_policy_target=True,
                 )
-                ablated = recurrent_sequence_batch_loss(
+                link_only = recurrent_sequence_batch_loss(
                     model,
-                    ablated_sequences,
+                    link_only_sequences,
                     verify=False,
                     require_policy_target=True,
                 )
-            if full.policy_targets != ablated.policy_targets:
-                raise EventEntityAblationError("full and ablated policy-target counts differ")
-            if full.recurrent_decisions != ablated.recurrent_decisions:
-                raise EventEntityAblationError("full and ablated recurrent-decision counts differ")
-            if full.loss is None or ablated.loss is None:
-                raise EventEntityAblationError("ablation group unexpectedly has no policy loss")
+                gpu_feasible = recurrent_sequence_batch_loss(
+                    model,
+                    gpu_feasible_sequences,
+                    verify=False,
+                    require_policy_target=True,
+                )
+            variants = (link_only, gpu_feasible)
+            if any(result.policy_targets != full.policy_targets for result in variants):
+                raise EventEntityAblationError("full and sensitivity policy-target counts differ")
+            if any(result.recurrent_decisions != full.recurrent_decisions for result in variants):
+                raise EventEntityAblationError("full and sensitivity recurrent-decision counts differ")
+            if full.loss is None or any(result.loss is None for result in variants):
+                raise EventEntityAblationError("sensitivity group unexpectedly has no policy loss")
             full_value = float(full.loss.float().cpu())
-            ablated_value = float(ablated.loss.float().cpu())
-            if not math.isfinite(full_value) or not math.isfinite(ablated_value):
-                raise EventEntityAblationError("ablation NLL is nonfinite")
+            link_only_value = float(link_only.loss.float().cpu())
+            gpu_feasible_value = float(gpu_feasible.loss.float().cpu())
+            values = (full_value, link_only_value, gpu_feasible_value)
+            if not all(math.isfinite(value) for value in values):
+                raise EventEntityAblationError("sensitivity NLL is nonfinite")
             policy_targets += full.policy_targets
             recurrent_decisions += full.recurrent_decisions
             full_weighted += full_value * full.policy_targets
-            ablated_weighted += ablated_value * ablated.policy_targets
-            hidden_delta = full.next_hidden.float() - ablated.next_hidden.float()
-            hidden_squared_error += float(hidden_delta.square().sum().cpu())
-            hidden_values += int(hidden_delta.numel())
+            link_only_weighted += link_only_value * link_only.policy_targets
+            gpu_feasible_weighted += gpu_feasible_value * gpu_feasible.policy_targets
+            link_delta = full.next_hidden.float() - link_only.next_hidden.float()
+            gpu_delta = full.next_hidden.float() - gpu_feasible.next_hidden.float()
+            link_only_hidden_squared_error += float(link_delta.square().sum().cpu())
+            gpu_feasible_hidden_squared_error += float(gpu_delta.square().sum().cpu())
+            hidden_values += int(link_delta.numel())
 
     full_nll = full_weighted / policy_targets
-    ablated_nll = ablated_weighted / policy_targets
-    delta = ablated_nll - full_nll
-    relative = delta / max(abs(full_nll), 1e-12)
-    hidden_rmse = math.sqrt(hidden_squared_error / max(hidden_values, 1))
+    link_only_nll = link_only_weighted / policy_targets
+    gpu_feasible_nll = gpu_feasible_weighted / policy_targets
+    link_only_delta = link_only_nll - full_nll
+    gpu_feasible_delta = gpu_feasible_nll - full_nll
+    link_only_relative = link_only_delta / max(abs(full_nll), 1e-12)
+    gpu_feasible_relative = gpu_feasible_delta / max(abs(full_nll), 1e-12)
+    link_only_hidden_rmse = math.sqrt(link_only_hidden_squared_error / max(hidden_values, 1))
+    gpu_feasible_hidden_rmse = math.sqrt(
+        gpu_feasible_hidden_squared_error / max(hidden_values, 1)
+    )
     return {
         "episodes": len(episodes),
         "policy_targets": policy_targets,
@@ -148,10 +198,14 @@ def _evaluate(
             linked_event_identity_slots / event_identity_slots if event_identity_slots else 0.0
         ),
         "full_validation_nll": full_nll,
-        "ablated_validation_nll": ablated_nll,
-        "nll_delta": delta,
-        "relative_nll_delta": relative,
-        "terminal_hidden_rmse": hidden_rmse,
+        "link_only_validation_nll": link_only_nll,
+        "link_only_nll_delta": link_only_delta,
+        "link_only_relative_nll_delta": link_only_relative,
+        "link_only_terminal_hidden_rmse": link_only_hidden_rmse,
+        "gpu_feasible_validation_nll": gpu_feasible_nll,
+        "gpu_feasible_nll_delta": gpu_feasible_delta,
+        "gpu_feasible_relative_nll_delta": gpu_feasible_relative,
+        "gpu_feasible_terminal_hidden_rmse": gpu_feasible_hidden_rmse,
     }
 
 
