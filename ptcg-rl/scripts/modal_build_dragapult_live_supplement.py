@@ -109,14 +109,54 @@ def _canonical_sha256(value: Any) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def _episode_metadata(api: Any, config: Mapping[str, Any]) -> tuple[list[dict[str, Any]], dict[int, list[dict[str, Any]]]]:
+class _RequestPacer:
+    def __init__(self, interval_seconds: float = 2.05) -> None:
+        self.interval_seconds = interval_seconds
+        self.last_started = 0.0
+
+    def wait(self) -> None:
+        now = time.monotonic()
+        delay = self.interval_seconds - (now - self.last_started)
+        if delay > 0:
+            time.sleep(delay)
+        self.last_started = time.monotonic()
+
+
+def _api_call(pacer: _RequestPacer, function: Any, *args: Any, **kwargs: Any) -> Any:
+    retryable = {429, 500, 502, 503, 504}
+    for attempt in range(4):
+        pacer.wait()
+        try:
+            return function(*args, **kwargs)
+        except Exception as error:
+            status = getattr(getattr(error, "response", None), "status_code", None)
+            if status not in retryable or attempt == 3:
+                raise
+            delay = 60.0 if status == 429 else 10.0 * (2**attempt)
+            print(
+                json.dumps(
+                    {
+                        "event": "kaggle_api_backoff",
+                        "status": status,
+                        "attempt": attempt + 1,
+                        "sleep_seconds": delay,
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            time.sleep(delay)
+    raise RuntimeError("unreachable API retry state")
+
+
+def _episode_metadata(api: Any, config: Mapping[str, Any], pacer: _RequestPacer) -> tuple[list[dict[str, Any]], dict[int, list[dict[str, Any]]]]:
     submissions: list[dict[str, Any]] = []
     by_episode: dict[int, list[dict[str, Any]]] = {}
     floor = float(config["teacher_score_floor"])
     for team in config["teams"]:
         team_id = int(team["team_id"])
         team_name = str(team["team_name"])
-        rows = api.competition_team_submissions(team_id) or []
+        rows = _api_call(pacer, api.competition_team_submissions, team_id) or []
         for row in rows:
             payload = row.to_dict() if hasattr(row, "to_dict") else row
             try:
@@ -127,7 +167,7 @@ def _episode_metadata(api: Any, config: Mapping[str, Any]) -> tuple[list[dict[st
             if score < floor:
                 continue
             completed: list[int] = []
-            for episode in api.competition_list_episodes(submission_id) or []:
+            for episode in _api_call(pacer, api.competition_list_episodes, submission_id) or []:
                 item = episode.to_dict() if hasattr(episode, "to_dict") else episode
                 if str(item.get("state")) != "COMPLETED" or str(item.get("type")) != "EPISODE_TYPE_PUBLIC":
                     continue
@@ -210,7 +250,8 @@ def build(force: bool = False) -> dict[str, Any]:
 
         api = KaggleApi()
         api.authenticate()
-        source_submissions, episode_sources = _episode_metadata(api, config)
+        pacer = _RequestPacer()
+        source_submissions, episode_sources = _episode_metadata(api, config, pacer)
         records: list[dict[str, Any]] = []
         rejections: Counter[str] = Counter()
         teacher_counts: Counter[str] = Counter()
@@ -221,7 +262,7 @@ def build(force: bool = False) -> dict[str, Any]:
         for position, episode_id in enumerate(unique_ids, 1):
             target = raw_root / f"episode-{episode_id}-replay.json"
             try:
-                api.competition_episode_replay(episode_id, path=str(raw_root), quiet=True)
+                _api_call(pacer, api.competition_episode_replay, episode_id, path=str(raw_root), quiet=True)
                 raw = target.read_bytes()
                 prefix_record = scan_replay_prefix(raw[:65536])
                 if prefix_record.module_version != policy.module_version:
