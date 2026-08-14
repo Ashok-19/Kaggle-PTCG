@@ -27,6 +27,134 @@ __device__ __forceinline__ gc_i32 target_player_count(
     return -1;
 }
 
+__device__ __forceinline__ void direct_count_append(
+    BattleRuntimeState& runtime,
+    gc_i32& count,
+    bool& contains_effect,
+    gc_u8 ref,
+    gc_u8 effect_ref,
+    bool track_effect
+) {
+    if (count >= kAreaRefCapacity) {
+        runtime.error_flags |= kRuntimeErrorTargetOverflow;
+        return;
+    }
+    if (track_effect && ref == effect_ref) contains_effect = true;
+    ++count;
+}
+
+__device__ __forceinline__ gc_i32 count_target_unfiltered(
+    const BattleCoreState& state,
+    BattleRuntimeState& runtime,
+    const RuleTarget& target,
+    const AreaRefState& effect_card,
+    gc_i32 effect_owner
+) {
+    if (target.area_count == 0) return 0;
+    const gc_u8 first_area = target.areas[0];
+    gc_i32 count = 0;
+    bool contains_effect = false;
+    const bool track_effect = (target.flags & 1u) != 0;
+
+    if (first_area == 15) {  // Me; target_list returns before exclude-self post-pass.
+        return not_moved(state, effect_card) ? 1 : 0;
+    }
+    if (first_area == 16) {  // Effected; condition_target_list uses output_is_runtime_target=false.
+        for (gc_i32 i = 0; i < (gc_i32)runtime.target_count; ++i)
+            direct_count_append(runtime, count, contains_effect, runtime.targets[i].card,
+                                effect_card.card, track_effect);
+    } else if (first_area == 17) {  // EffectedPreTarget
+        for (gc_i32 i = 0; i < (gc_i32)runtime.pre_target_count; ++i)
+            direct_count_append(runtime, count, contains_effect, runtime.pre_targets[i].card,
+                                effect_card.card, track_effect);
+    } else if (first_area == 18) {  // SelectedList
+        for (gc_i32 i = 0; i < (gc_i32)state.selected_list.count; ++i)
+            direct_count_append(runtime, count, contains_effect, state.selected_list.values[i],
+                                effect_card.card, track_effect);
+    } else if (first_area == 19) {  // TriggerSubject; early return in target_list.
+        const AreaRefState ref = trigger_area_ref(state.trigger_info.subject);
+        return not_moved(state, ref) ? 1 : 0;
+    } else if (first_area == 20) {  // TriggerObject; early return in target_list.
+        const AreaRefState ref = trigger_area_ref(state.trigger_info.object);
+        return not_moved(state, ref) ? 1 : 0;
+    } else if (first_area == 21) {  // Attach; early return in target_list.
+        if (effect_card.card == 0) return 0;
+        const RefPositionState pos = attached_card_position(state, state.all_card[effect_card.card]);
+        return pos.ref != 0 ? 1 : 0;
+    } else if (first_area == 22) {  // TurnPlay
+        for (gc_i32 i = 0; i < (gc_i32)runtime.turn_play_count; ++i)
+            direct_count_append(runtime, count, contains_effect, runtime.turn_play[i],
+                                effect_card.card, track_effect);
+    } else if (first_area == 23) {  // AttackPreMyTurn
+        if (effect_card.card != 0) {
+            const CardState& card = state.all_card[effect_card.card];
+            const gc_i32 turn_index = rule_active_player_index(state) == card.player_index ? 2 : 1;
+            const gc_u8 ref = state.turn_histories[turn_index].turn_attack_card;
+            if (ref != 0)
+                direct_count_append(runtime, count, contains_effect, ref,
+                                    effect_card.card, track_effect);
+        }
+    } else {
+        for (gc_i32 order = 0; order < 2; ++order) {
+            const gc_i32 player_index = order == 0 ? state.first_player : 1 - state.first_player;
+            if (!is_target_player(effect_owner, player_index, target.target_player)) continue;
+            const PlayerState& player = state.players[player_index];
+            for (gc_i32 ai = 0; ai < (gc_i32)target.area_count; ++ai) {
+                const gc_u8 area = target.areas[ai];
+                const gc_u8* values = nullptr;
+                gc_i32 n = 0;
+                if (area == 1) { values = player.deck.values; n = player.deck.count; }
+                else if (area == 2) { values = player.hand.values; n = player.hand.count; }
+                else if (area == 3) { values = player.trash.values; n = player.trash.count; }
+                else if (area == 4) { values = player.active.values; n = player.active.count; }
+                else if (area == 5) { values = player.bench.values; n = player.bench.count; }
+                else if (area == 6) { values = player.prize.values; n = player.prize.count; }
+                else if (area == 8) { values = player.energy.values; n = player.energy.count; }
+                else if (area == 9) { values = player.tool.values; n = player.tool.count; }
+                else if (area == 24) { values = player.temporary.values; n = player.temporary.count; }
+                if (values != nullptr) {
+                    if (!track_effect) {
+                        if (count + n > kAreaRefCapacity) {
+                            count = kAreaRefCapacity;
+                            runtime.error_flags |= kRuntimeErrorTargetOverflow;
+                        } else {
+                            count += n;
+                        }
+                    } else {
+                        for (gc_i32 i = 0; i < n; ++i)
+                            direct_count_append(runtime, count, contains_effect, values[i],
+                                                effect_card.card, true);
+                    }
+                    continue;
+                }
+                if (area == 7) {
+                    for (gc_i32 i = 0; i < (gc_i32)state.stadium.count; ++i) {
+                        const gc_u8 ref = state.stadium.values[i];
+                        if (state.all_card[ref].player_index == player_index)
+                            direct_count_append(runtime, count, contains_effect, ref,
+                                                effect_card.card, track_effect);
+                    }
+                } else if (area == 11) {
+                    direct_count_append(runtime, count, contains_effect,
+                                        (gc_u8)(1 + player_index), effect_card.card, track_effect);
+                } else if (area == 12) {
+                    for (gc_i32 i = 0; i < (gc_i32)state.looking.count; ++i) {
+                        const gc_u8 ref = state.looking.values[i];
+                        if (state.all_card[ref].player_index == player_index)
+                            direct_count_append(runtime, count, contains_effect, ref,
+                                                effect_card.card, track_effect);
+                    }
+                } else {
+                    runtime.error_flags |= kRuntimeErrorUnsupportedTransition;
+                    return count;
+                }
+            }
+        }
+    }
+    if (track_effect && contains_effect && count > 0) --count;
+    return count;
+}
+
 __device__ __noinline__ bool satisfy_condition(
     const BattleCoreState& state,
     BattleRuntimeState& runtime,
@@ -54,6 +182,12 @@ __device__ __noinline__ bool satisfy_condition(
             return bool_compare(found, comparator);
         }
         case 2:  // CountTarget
+            if (effect.target.condition_count == 0) {
+                runtime.scratch_target_count = (gc_u16)count_target_unfiltered(
+                    state, runtime, effect.target, effect_card, effect_owner
+                );
+                return compare_i32(runtime.scratch_target_count, effect.values[0], comparator);
+            }
             condition_target_list(state, runtime, rules, effect.target, effect_card, effect_owner);
             return compare_i32(runtime.scratch_target_count, effect.values[0], comparator);
         case 3: {  // CountTarget2
