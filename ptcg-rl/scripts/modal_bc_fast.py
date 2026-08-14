@@ -110,6 +110,59 @@ def _run_stream(command: list[str]) -> list[str]:
     return tail
 
 
+def _run_stream_with_gpu_telemetry(command: list[str]) -> tuple[list[str], dict[str, float]]:
+    telemetry_path = Path("/tmp/kptcg-gpu-telemetry.csv")
+    telemetry_path.unlink(missing_ok=True)
+    with telemetry_path.open("w", encoding="utf-8") as telemetry_handle:
+        sampler = subprocess.Popen(
+            [
+                "nvidia-smi",
+                "--query-gpu=utilization.gpu,memory.used,power.draw",
+                "--format=csv,noheader,nounits",
+                "--loop-ms=500",
+            ],
+            stdout=telemetry_handle,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        )
+        try:
+            tail = _run_stream(command)
+        finally:
+            sampler.terminate()
+            try:
+                sampler.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                sampler.kill()
+                sampler.wait()
+    utilization: list[float] = []
+    memory_mib: list[float] = []
+    power_watts: list[float] = []
+    if telemetry_path.is_file():
+        for line in telemetry_path.read_text(encoding="utf-8").splitlines():
+            fields = [field.strip() for field in line.split(",")]
+            if len(fields) != 3:
+                continue
+            try:
+                utilization.append(float(fields[0]))
+                memory_mib.append(float(fields[1]))
+                power_watts.append(float(fields[2]))
+            except ValueError:
+                continue
+    if not utilization:
+        raise RuntimeError("GPU telemetry produced no samples")
+    telemetry = {
+        "samples": float(len(utilization)),
+        "utilization_mean_percent": sum(utilization) / len(utilization),
+        "utilization_peak_percent": max(utilization),
+        "memory_mean_mib": sum(memory_mib) / len(memory_mib),
+        "memory_peak_mib": max(memory_mib),
+        "power_mean_watts": sum(power_watts) / len(power_watts),
+        "power_peak_watts": max(power_watts),
+    }
+    print(json.dumps({"event": "gpu_telemetry", **telemetry}, sort_keys=True), flush=True)
+    return tail, telemetry
+
+
 @app.function(
     cpu=16,
     memory=65536,
@@ -218,7 +271,7 @@ def benchmark(
         "1",
         "--bf16",
     ]
-    _run_stream(command)
+    _, telemetry = _run_stream_with_gpu_telemetry(command)
     report = json.loads((output_dir / "training-report.json").read_text(encoding="utf-8"))
     training_volume.commit()
     epoch = report["history"][1]["training"]
@@ -237,6 +290,7 @@ def benchmark(
         "host_peak_rss_kib": report["materialized"]["host_peak_rss_kib"],
         "materialized_load_seconds": report["materialized"]["load_seconds"],
         "gpu": report["gpu"],
+        "gpu_telemetry": telemetry,
     }
 
 
@@ -293,7 +347,7 @@ def train(
         "16",
         "--bf16",
     ]
-    _run_stream(command)
+    _, telemetry = _run_stream_with_gpu_telemetry(command)
     report = json.loads((output_dir / "training-report.json").read_text(encoding="utf-8"))
     training_volume.commit()
     return {
@@ -307,4 +361,5 @@ def train(
         "gpu": report["gpu"],
         "memory": report["memory"],
         "materialized": report["materialized"],
+        "gpu_telemetry": telemetry,
     }
