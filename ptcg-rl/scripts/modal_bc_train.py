@@ -7,7 +7,10 @@ from typing import Any
 
 import modal
 
-ROOT = Path(__file__).resolve().parents[2]
+if modal.is_local():
+    ROOT = Path(__file__).resolve().parents[2]
+else:
+    ROOT = Path("/workspace")
 PTCG_RL = ROOT / "ptcg-rl"
 BUNDLE_SHA256 = "4377b1e514f4dff4f453c1dedcbc4af4e81a3b038296408ba86348da5cfe2434"
 VOLUME_NAME = "kptcg-training"
