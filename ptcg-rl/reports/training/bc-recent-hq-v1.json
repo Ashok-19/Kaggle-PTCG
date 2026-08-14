@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "record_id": "bc-recent-hq-v1",
+  "status": "PASS_RECENT_HIGH_QUALITY_CORPUS_READY",
+  "source": {
+    "official_index": "kaggle/pokemon-tcg-ai-battle-episodes-index",
+    "days": ["2026-08-10", "2026-08-11", "2026-08-12", "2026-08-13"],
+    "required_module_version": "1.32.6",
+    "minimum_participant_score": 1100.0,
+    "candidate_per_day": 256,
+    "quota_per_day": 128,
+    "winning_team_cap": 32,
+    "winning_deck_cap": 40,
+    "winner_only_labels": true
+  },
+  "corpus": {
+    "bundle_path_local_cache": ".cache/bc-data/derived/bc-recent-hq-v1.zip",
+    "bundle_bytes": 65689243,
+    "bundle_sha256": "4377b1e514f4dff4f453c1dedcbc4af4e81a3b038296408ba86348da5cfe2434",
+    "manifest_sha256": "10818426608f9d86b889796e333a9bcebb1ff267d3c4eaf586839952a33f6ce8",
+    "raw_selected_bytes": 2305949138,
+    "episodes": 492,
+    "train_episodes": 399,
+    "validation_episodes": 60,
+    "test_episodes": 33,
+    "teacher_active_requests": 42369,
+    "winning_teams": 45,
+    "winning_decks": 41,
+    "opponent_decks": 38,
+    "minimum_selected_min_score": 1100.024549,
+    "mean_selected_min_score": 1171.6451815589428,
+    "per_day": {
+      "2026-08-10": 118,
+      "2026-08-11": 118,
+      "2026-08-12": 128,
+      "2026-08-13": 128
+    },
+    "rejected_candidate_episodes": 1
+  },
+  "policy": {
+    "episode_level_split": true,
+    "uniform_full_history_sampling": false,
+    "newest_day_cap_priority": true,
+    "raw_replay_bodies_tracked_in_git": false,
+    "historical_data_added": false,
+    "competence_claimed": false
+  }
+}
