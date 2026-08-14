@@ -69,8 +69,8 @@ training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
     volumes={"/data": training_volume},
 )
 def smoke(env_count: int = 16, seed: int = 20260814) -> dict[str, object]:
-    if env_count <= 0 or env_count > 64:
-        raise ValueError("PPO smoke env_count must stay within 1..64")
+    if env_count <= 0 or env_count > 512:
+        raise ValueError("PPO smoke env_count must stay within 1..512")
     output_dir = Path(f"/data/runs/ppo-smoke-v1-e{env_count}-s{seed}")
     output_dir.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
