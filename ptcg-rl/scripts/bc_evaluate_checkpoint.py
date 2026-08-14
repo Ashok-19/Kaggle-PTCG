@@ -28,8 +28,14 @@ from ptcg_rl.g1.environment import (  # noqa: E402
 from ptcg_rl.g1.models import SchemaMetadataV1  # noqa: E402
 from ptcg_rl.g1.native import NativeCABTTransport, load_deck  # noqa: E402
 from ptcg_rl.g1.rule_baseline import NativeRulePolicy  # noqa: E402
+from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
 from ptcg_rl.g2.checkpoint import load_checkpoint_package, state_dict_sha256  # noqa: E402
-from ptcg_rl.g3.checkpoint import restore_training_checkpoint  # noqa: E402
+from ptcg_rl.g2.network import PTCGPolicyV1  # noqa: E402
+from ptcg_rl.g3.checkpoint import (  # noqa: E402
+    load_training_checkpoint_model_state,
+    restore_training_checkpoint,
+)
+from bc_capacity_sweep import model_configs  # noqa: E402
 
 
 class BCEvaluationError(ValueError):
@@ -50,6 +56,7 @@ def _load_candidate(
     training_checkpoint_sha256: str | None,
     device: torch.device,
 ) -> tuple[Any, dict[str, Any]]:
+    """Load the legacy packaged architecture and restore its full training checkpoint."""
     loaded = load_checkpoint_package(initial_checkpoint, device=device)
     model = loaded.model
     optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
@@ -76,6 +83,42 @@ def _load_candidate(
         "model_state_sha256": state_sha,
         "architecture_sha256": model.architecture_sha256,
         "trainable_parameters": model.trainable_parameter_count,
+    }
+
+
+def _load_capacity_candidate(
+    *,
+    model_label: str,
+    card_table_path: Path,
+    training_checkpoint: Path,
+    training_checkpoint_sha256: str | None,
+    device: torch.device,
+) -> tuple[Any, dict[str, Any]]:
+    configs = model_configs()
+    if model_label not in configs:
+        raise BCEvaluationError(f"unsupported capacity model label: {model_label}")
+    card_table = load_card_table(card_table_path)
+    model = PTCGPolicyV1(card_table, configs[model_label]).to(device)
+    restored = load_training_checkpoint_model_state(
+        training_checkpoint,
+        model=model,
+        expected_sha256=training_checkpoint_sha256,
+    )
+    model.eval()
+    state_sha = state_dict_sha256(
+        {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
+    )
+    return model, {
+        "initial_package_sha256": None,
+        "capacity_model_label": model_label,
+        "training_checkpoint_sha256": restored.payload_sha256,
+        "training_checkpoint_bytes": restored.payload_bytes,
+        "training_counters": restored.counters,
+        "training_league": restored.league,
+        "model_state_sha256": state_sha,
+        "architecture_sha256": model.architecture_sha256,
+        "trainable_parameters": model.trainable_parameter_count,
+        "card_table_path": card_table_path.as_posix(),
     }
 
 
@@ -192,6 +235,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Evaluate a BC training checkpoint in native games")
     parser.add_argument("--training-checkpoint", type=Path, required=True)
     parser.add_argument("--training-checkpoint-sha256")
+    parser.add_argument("--model-label", choices=tuple(model_configs()))
+    parser.add_argument(
+        "--card-table",
+        type=Path,
+        default=ROOT / "private/g2/card-table-v1.json",
+    )
     parser.add_argument(
         "--initial-checkpoint",
         type=Path,
@@ -231,12 +280,21 @@ def main() -> int:
     if device.type == "cuda" and not torch.cuda.is_available():
         raise BCEvaluationError("CUDA requested but unavailable")
     torch.set_num_threads(min(2, max(1, torch.get_num_threads())))
-    model, model_record = _load_candidate(
-        args.initial_checkpoint,
-        args.training_checkpoint,
-        args.training_checkpoint_sha256,
-        device,
-    )
+    if args.model_label is None:
+        model, model_record = _load_candidate(
+            args.initial_checkpoint,
+            args.training_checkpoint,
+            args.training_checkpoint_sha256,
+            device,
+        )
+    else:
+        model, model_record = _load_capacity_candidate(
+            model_label=args.model_label,
+            card_table_path=args.card_table,
+            training_checkpoint=args.training_checkpoint,
+            training_checkpoint_sha256=args.training_checkpoint_sha256,
+            device=device,
+        )
     candidate_deck = load_deck(args.candidate_deck)
     baseline_root = ROOT / "private/baselines"
     opponent_directories = [baseline_root / name for name in args.opponents]
@@ -305,6 +363,7 @@ def main() -> int:
             "alternating_candidate_seat": True,
             "policy": "greedy_recurrent_no_fallback",
             "device": str(device),
+            "model_label": args.model_label,
         },
         "overall": _aggregate(games),
         "by_opponent": by_opponent,
