@@ -14,6 +14,7 @@ from ptcg_rl.g3.checkpoint import (
     CHECKPOINT_KIND,
     CHECKPOINT_SCHEMA_VERSION,
     TrainingCheckpointError,
+    load_training_checkpoint_model_state,
     restore_training_checkpoint,
     save_training_checkpoint,
 )
@@ -109,6 +110,46 @@ def test_checkpoint_restores_all_required_state_and_available_rngs(tmp_path: Pat
     assert random.random() == expected_random
     assert float(np.random.random()) == expected_numpy
     assert torch.equal(torch.rand(4), expected_torch)
+
+
+def test_model_only_warm_start_restores_weights_without_optimizer_or_rng(tmp_path: Path) -> None:
+    random.seed(101)
+    np.random.seed(202)
+    torch.manual_seed(303)
+    model, optimizer, scheduler, inputs = build_state()
+    expected_output = model(inputs).detach().clone()
+    checkpoint = tmp_path / "warm-start.pt"
+    receipt = save_training_checkpoint(
+        checkpoint,
+        model=model,
+        optimizer=optimizer,
+        scheduler=scheduler,
+        scaler=None,
+        counters={"epoch": 2, "optimizer_steps": 17},
+        league={"kind": "source-bc"},
+        rollout_boundary={"completed_epoch": 2},
+        include_cuda_rng=False,
+    )
+
+    target, target_optimizer, _, _ = build_state()
+    target_optimizer.state.clear()
+    optimizer_state_before = target_optimizer.state_dict()
+    rng_before = torch.get_rng_state().clone()
+    with torch.no_grad():
+        for parameter in target.parameters():
+            parameter.zero_()
+
+    loaded = load_training_checkpoint_model_state(
+        checkpoint,
+        model=target,
+        expected_sha256=receipt["payload_sha256"],
+    )
+    assert torch.equal(target(inputs), expected_output)
+    assert target_optimizer.state_dict() == optimizer_state_before
+    assert torch.equal(torch.get_rng_state(), rng_before)
+    assert loaded.counters == {"epoch": 2, "optimizer_steps": 17}
+    assert loaded.league == {"kind": "source-bc"}
+    assert loaded.restored_rng_states == ()
 
 
 def test_duplicate_checkpoint_builds_are_hash_stable_for_unchanged_state(tmp_path: Path) -> None:

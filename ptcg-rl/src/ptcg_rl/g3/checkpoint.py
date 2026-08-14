@@ -348,6 +348,40 @@ def _load_payload(path: Path, *, expected_sha256: str | None = None) -> tuple[di
     return _validate_payload(loaded), digest, len(raw)
 
 
+def load_training_checkpoint_model_state(
+    path: Path,
+    *,
+    model: nn.Module,
+    expected_sha256: str | None = None,
+) -> LoadedTrainingCheckpointV1:
+    """Load only model weights from a validated training checkpoint.
+
+    Optimizer, scheduler, scaler and RNG state are intentionally left untouched.
+    This is the warm-start path for a new training distribution or optimizer run.
+    """
+    payload, digest, size = _load_payload(path, expected_sha256=expected_sha256)
+    current_model = model.state_dict()
+    saved_model = payload["model_state"]
+    if set(current_model) != set(saved_model):
+        raise TrainingCheckpointError("checkpoint model keys differ from current model")
+    for name, tensor in current_model.items():
+        saved = saved_model[name]
+        if not isinstance(saved, Tensor) or saved.shape != tensor.shape or saved.dtype != tensor.dtype:
+            raise TrainingCheckpointError(f"checkpoint model tensor differs for {name}")
+    try:
+        model.load_state_dict(saved_model, strict=True)
+    except (KeyError, TypeError, ValueError, RuntimeError) as error:
+        raise TrainingCheckpointError(f"training checkpoint model cannot be restored: {error}") from error
+    return LoadedTrainingCheckpointV1(
+        counters=dict(payload["counters"]),
+        league=dict(payload["league"]),
+        rollout_boundary=dict(payload["rollout_boundary"]),
+        payload_sha256=digest,
+        payload_bytes=size,
+        restored_rng_states=(),
+    )
+
+
 def restore_training_checkpoint(
     path: Path,
     *,

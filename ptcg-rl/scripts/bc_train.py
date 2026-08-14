@@ -24,7 +24,10 @@ from ptcg_rl.bc.training import recurrent_sequence_batch_loss  # noqa: E402
 from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
 from ptcg_rl.g2.checkpoint import load_checkpoint_package, state_dict_sha256  # noqa: E402
 from ptcg_rl.g3.bc_canary import TeacherEpisodeV1, build_semantic_loader_plan  # noqa: E402
-from ptcg_rl.g3.checkpoint import save_training_checkpoint  # noqa: E402
+from ptcg_rl.g3.checkpoint import (  # noqa: E402
+    load_training_checkpoint_model_state,
+    save_training_checkpoint,
+)
 from ptcg_rl.g3.ppo import require_finite_gradients  # noqa: E402
 from ptcg_rl.replay.semantic_loader import SemanticReplayLoader  # noqa: E402
 
@@ -433,6 +436,8 @@ def main() -> int:
     parser.add_argument("--maximum-gradient-norm", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=20260814)
     parser.add_argument("--bf16", action="store_true")
+    parser.add_argument("--warm-start-training-checkpoint", type=Path)
+    parser.add_argument("--warm-start-training-checkpoint-sha256")
     parser.add_argument("--train-limit", type=int)
     parser.add_argument("--validation-limit", type=int)
     parser.add_argument("--maximum-train-batches", type=int)
@@ -447,6 +452,12 @@ def main() -> int:
         _positive(value, label)
     if args.learning_rate <= 0 or args.weight_decay < 0 or args.maximum_gradient_norm <= 0:
         raise BCTrainError("optimizer hyperparameters are invalid")
+    if (args.warm_start_training_checkpoint is None) != (
+        args.warm_start_training_checkpoint_sha256 is None
+    ):
+        raise BCTrainError(
+            "warm-start training checkpoint path and SHA-256 must be supplied together"
+        )
     for value, label in (
         (args.train_limit, "train-limit"),
         (args.validation_limit, "validation-limit"),
@@ -487,6 +498,16 @@ def main() -> int:
     card_table = load_card_table(args.card_table)
     loaded = load_checkpoint_package(args.checkpoint, device=device)
     model = loaded.model
+    base_package_state_sha = state_dict_sha256(
+        {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
+    )
+    warm_start = None
+    if args.warm_start_training_checkpoint is not None:
+        warm_start = load_training_checkpoint_model_state(
+            args.warm_start_training_checkpoint,
+            model=model,
+            expected_sha256=args.warm_start_training_checkpoint_sha256,
+        )
     initial_state_sha = state_dict_sha256(
         {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
     )
@@ -581,9 +602,12 @@ def main() -> int:
                 + int(training["policy_targets"]),
             },
             league={
-                "kind": "recent-high-quality-recurrent-bc",
+                "kind": str(manifest.get("record_id", "recurrent-bc")),
                 "production_eligible": False,
                 "bundle_sha256": sha256_file(args.bundle),
+                "warm_start_training_checkpoint_sha256": (
+                    None if warm_start is None else warm_start.payload_sha256
+                ),
             },
             rollout_boundary={"completed_epoch": epoch},
             include_cuda_rng=device.type == "cuda",
@@ -654,6 +678,20 @@ def main() -> int:
         },
         "model": {
             "checkpoint_sha256": loaded.package_sha256,
+            "base_package_state_sha256": base_package_state_sha,
+            "warm_start_training_checkpoint": (
+                None
+                if warm_start is None
+                else {
+                    "path": args.warm_start_training_checkpoint.name,
+                    "payload_sha256": warm_start.payload_sha256,
+                    "payload_bytes": warm_start.payload_bytes,
+                    "counters": warm_start.counters,
+                    "league": warm_start.league,
+                    "optimizer_state_restored": False,
+                    "rng_state_restored": False,
+                }
+            ),
             "trainable_parameters": int(model.trainable_parameter_count),
             "architecture_sha256": model.architecture_sha256,
             "initial_state_sha256": initial_state_sha,
@@ -676,6 +714,8 @@ def main() -> int:
             "hidden_carried_between_chunks": True,
             "forced_calls_advance_recurrence": True,
             "forced_calls_create_policy_loss": False,
+            "warm_start_model_only": warm_start is not None,
+            "warm_start_optimizer_reset": warm_start is not None,
         },
         "history": history,
         "best_epoch": int(best["epoch"]),
