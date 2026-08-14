@@ -180,8 +180,6 @@ def _choose_source(prefix: Any, sources: list[dict[str, Any]], policy: Dragapult
     volumes={"/data": training_volume},
 )
 def build(force: bool = False) -> dict[str, Any]:
-    from kaggle.api.kaggle_api_extended import KaggleApi
-
     started = time.perf_counter()
     config = _load_config()
     policy = DragapultCorpusPolicy(
@@ -208,6 +206,8 @@ def build(force: bool = False) -> dict[str, Any]:
 
     try:
         _install_client_auth()
+        from kaggle.api.kaggle_api_extended import KaggleApi
+
         api = KaggleApi()
         api.authenticate()
         source_submissions, episode_sources = _episode_metadata(api, config)
