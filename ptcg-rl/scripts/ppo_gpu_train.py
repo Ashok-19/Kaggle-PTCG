@@ -141,6 +141,73 @@ def _clone_actions(actions: BatchedCompoundActionV1) -> BatchedCompoundActionV1:
     )
 
 
+def _compact_batch_to_cpu(batch: TorchDecisionBatch) -> TorchDecisionBatch:
+    """Losslessly compact GPU-bridge observations for bounded rollout retention.
+
+    GPU-CABT bridge numeric fields are integer-valued public quantities represented
+    as float32. Float16 therefore preserves the current qualified ranges exactly,
+    while categorical/index tensors fit in signed int32. The learner restores the
+    model-facing dtypes before replay; probability replay is the fail-closed guard.
+    """
+    values: dict[str, Any] = {"batch_size": batch.batch_size}
+    for name, value in batch.__dict__.items():
+        if name == "batch_size":
+            continue
+        tensor = value.detach()
+        if tensor.dtype == torch.long:
+            tensor = tensor.to(dtype=torch.int32)
+        elif tensor.dtype == torch.float32:
+            if tensor.numel() and torch.any(torch.abs(tensor) > 2048):
+                raise PPOTrainError(
+                    f"cannot losslessly compact {name}: numeric value exceeds float16 exact-integer range"
+                )
+            if tensor.numel() and torch.any(tensor != tensor.round()):
+                raise PPOTrainError(
+                    f"cannot losslessly compact {name}: GPU bridge numeric field is fractional"
+                )
+            tensor = tensor.to(dtype=torch.float16)
+        values[name] = tensor.cpu()
+    return TorchDecisionBatch(**values)
+
+
+def _restore_batch_to_device(batch: TorchDecisionBatch, device: torch.device) -> TorchDecisionBatch:
+    values: dict[str, Any] = {"batch_size": batch.batch_size}
+    for name, value in batch.__dict__.items():
+        if name == "batch_size":
+            continue
+        tensor = value
+        if tensor.dtype == torch.int32:
+            tensor = tensor.to(device=device, dtype=torch.long)
+        elif tensor.dtype == torch.float16:
+            tensor = tensor.to(device=device, dtype=torch.float32)
+        else:
+            tensor = tensor.to(device=device)
+        values[name] = tensor
+    return TorchDecisionBatch(**values)
+
+
+def _compact_actions_to_cpu(actions: BatchedCompoundActionV1) -> BatchedCompoundActionV1:
+    return BatchedCompoundActionV1(
+        selected_indices=actions.selected_indices.detach().to(dtype=torch.int32).cpu(),
+        selected_lengths=actions.selected_lengths.detach().to(dtype=torch.int32).cpu(),
+        stopped=actions.stopped.detach().cpu(),
+        log_probabilities=actions.log_probabilities.detach().float().cpu(),
+        normalized_entropies=actions.normalized_entropies.detach().float().cpu(),
+    )
+
+
+def _restore_actions_to_device(
+    actions: BatchedCompoundActionV1, device: torch.device
+) -> BatchedCompoundActionV1:
+    return BatchedCompoundActionV1(
+        selected_indices=actions.selected_indices.to(device=device, dtype=torch.long),
+        selected_lengths=actions.selected_lengths.to(device=device, dtype=torch.long),
+        stopped=actions.stopped.to(device=device),
+        log_probabilities=actions.log_probabilities.to(device=device),
+        normalized_entropies=actions.normalized_entropies.to(device=device),
+    )
+
+
 def _apply_actions(
     *,
     response_present: Tensor,
@@ -346,12 +413,12 @@ def _collect_complete_rollout(
             steps.append(
                 LearnerStepV1(
                     boundary=boundary,
-                    batch=batch,
-                    env_indices=meta.env_indices.detach().clone(),
-                    actors=meta.actors.detach().clone(),
-                    minimum_counts=meta.minimum_counts.detach().clone(),
-                    maximum_counts=meta.maximum_counts.detach().clone(),
-                    actions=_clone_actions(actions),
+                    batch=_compact_batch_to_cpu(batch),
+                    env_indices=meta.env_indices.detach().to(dtype=torch.int32).cpu(),
+                    actors=meta.actors.detach().to(dtype=torch.int32).cpu(),
+                    minimum_counts=meta.minimum_counts.detach().to(dtype=torch.int32).cpu(),
+                    maximum_counts=meta.maximum_counts.detach().to(dtype=torch.int32).cpu(),
+                    actions=_compact_actions_to_cpu(actions),
                     flat_start=flat_offset,
                     flat_end=flat_offset + count,
                 )
@@ -387,6 +454,7 @@ def _replay_chunk(
     gradient: bool,
     bf16: bool,
 ) -> tuple[Tensor, Tensor, Tensor]:
+    device = hidden_snapshot.device
     hidden = hidden_snapshot.reshape(-1, model.config.public_hidden)
     log_probabilities: list[Tensor] = []
     values: list[Tensor] = []
@@ -395,18 +463,24 @@ def _replay_chunk(
     autocast = torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=bf16)
     with context, autocast:
         for step in steps:
-            owner = step.env_indices * 2 + step.actors
+            batch = _restore_batch_to_device(step.batch, device)
+            env_indices = step.env_indices.to(device=device, dtype=torch.long)
+            actors = step.actors.to(device=device, dtype=torch.long)
+            minimum_counts = step.minimum_counts.to(device=device, dtype=torch.long)
+            maximum_counts = step.maximum_counts.to(device=device, dtype=torch.long)
+            actions = _restore_actions_to_device(step.actions, device)
+            owner = env_indices * 2 + actors
             hidden_before = hidden.index_select(0, owner)
-            output = model(step.batch, hidden_before)
+            output = model(batch, hidden_before)
             replay_logp, replay_entropy = replay_compound_actions_batched(
                 model,
                 public_hidden=output.hidden,
                 option_embeddings=output.option_embeddings,
                 option_offsets=output.option_offsets,
-                available_mask=step.batch.option_available,
-                minimum_counts=step.minimum_counts,
-                maximum_counts=step.maximum_counts,
-                actions=step.actions,
+                available_mask=batch.option_available,
+                minimum_counts=minimum_counts,
+                maximum_counts=maximum_counts,
+                actions=actions,
             )
             log_probabilities.append(replay_logp.float())
             values.append(output.values.float())
