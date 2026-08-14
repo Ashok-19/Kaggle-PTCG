@@ -138,7 +138,7 @@ def _ensure_tar() -> dict[str, Any]:
 @app.function(
     cpu=16,
     memory=65536,
-    ephemeral_disk=131072,
+    ephemeral_disk=524288,
     timeout=2 * 60 * 60,
     volumes={"/data": training_volume},
 )
