@@ -108,12 +108,25 @@ class TorchDecisionBatch:
     global_numeric: Tensor
     global_numeric_missing: Tensor
 
-    def to(self, device: torch.device | str) -> TorchDecisionBatch:
+    def to(
+        self,
+        device: torch.device | str,
+        *,
+        non_blocking: bool = False,
+    ) -> TorchDecisionBatch:
         values: dict[str, Any] = {"batch_size": self.batch_size}
         for name, value in self.__dict__.items():
             if name == "batch_size":
                 continue
-            values[name] = value.to(device)
+            values[name] = value.to(device, non_blocking=non_blocking)
+        return TorchDecisionBatch(**values)
+
+    def pin_memory(self) -> TorchDecisionBatch:
+        values: dict[str, Any] = {"batch_size": self.batch_size}
+        for name, value in self.__dict__.items():
+            if name == "batch_size":
+                continue
+            values[name] = value.pin_memory()
         return TorchDecisionBatch(**values)
 
 

@@ -22,7 +22,12 @@ from ptcg_rl.bc.materialized import (  # noqa: E402
     MaterializedEpisodeV1,
     load_materialized_episode,
 )
-from ptcg_rl.bc.training import recurrent_sequence_batch_loss  # noqa: E402
+from ptcg_rl.bc.training import (  # noqa: E402
+    PackedRecurrentGroup,
+    pack_recurrent_group,
+    packed_recurrent_chunk_loss,
+    recurrent_sequence_batch_loss,
+)
 from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
 from ptcg_rl.g2.checkpoint import load_checkpoint_package, state_dict_sha256  # noqa: E402
 from ptcg_rl.g3.checkpoint import (  # noqa: E402
@@ -155,6 +160,174 @@ def batch_groups(
     episodes: Sequence[MaterializedEpisodeV1], batch_size: int
 ) -> list[list[MaterializedEpisodeV1]]:
     return [list(episodes[start : start + batch_size]) for start in range(0, len(episodes), batch_size)]
+
+
+def prepack_groups(
+    episodes: Sequence[MaterializedEpisodeV1],
+    *,
+    batch_size: int,
+    sequence_length: int,
+    seed: int,
+    pin_memory: bool,
+) -> tuple[PackedRecurrentGroup, ...]:
+    ordered = deterministic_order(episodes, seed, 0)
+    groups = batch_groups(ordered, batch_size)
+    packed: list[PackedRecurrentGroup] = []
+    for group in groups:
+        packed.append(
+            pack_recurrent_group(
+                tuple(episode.decisions for episode in group),
+                sequence_length=sequence_length,
+                pin_memory=pin_memory,
+            )
+        )
+    return tuple(packed)
+
+
+def train_epoch_packed(
+    model: Any,
+    optimizer: torch.optim.Optimizer,
+    scheduler: Any,
+    groups: Sequence[PackedRecurrentGroup],
+    *,
+    device: torch.device,
+    bf16: bool,
+    maximum_gradient_norm: float,
+    epoch: int,
+    maximum_groups: int | None,
+) -> dict[str, Any]:
+    model.train()
+    selected_groups = list(groups)
+    if maximum_groups is not None:
+        selected_groups = selected_groups[:maximum_groups]
+    if not selected_groups:
+        raise MaterializedBCTrainError("packed training epoch has no groups")
+    started = time.perf_counter()
+    policy_targets = 0
+    recurrent_decisions = 0
+    weighted_loss = 0.0
+    optimizer_steps = 0
+    gradient_norm_max = 0.0
+    forced_only_chunks = 0
+    episodes_used = 0
+
+    for group in selected_groups:
+        episodes_used += group.batch_size
+        hidden = model.initial_hidden(group.batch_size, device)
+        for chunk in group.chunks:
+            optimizer.zero_grad(set_to_none=True)
+            has_policy_target = chunk.policy_targets > 0
+            context = torch.enable_grad() if has_policy_target else torch.no_grad()
+            with context:
+                with torch.autocast(
+                    device_type=device.type,
+                    dtype=torch.bfloat16,
+                    enabled=bf16 and device.type == "cuda",
+                ):
+                    result = packed_recurrent_chunk_loss(
+                        model,
+                        chunk,
+                        hidden=hidden,
+                        non_blocking=device.type == "cuda",
+                    )
+            hidden = result.next_hidden.detach()
+            recurrent_decisions += result.recurrent_decisions
+            if result.loss is None:
+                forced_only_chunks += 1
+                continue
+            loss = result.loss
+            if not bool(torch.isfinite(loss).detach().cpu()):
+                raise MaterializedBCTrainError("packed training loss is nonfinite")
+            loss.backward()
+            gradient_norm = require_finite_gradients(tuple(model.parameters()))
+            gradient_norm_max = max(gradient_norm_max, float(gradient_norm))
+            torch.nn.utils.clip_grad_norm_(
+                model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
+            )
+            optimizer.step()
+            scheduler.step()
+            optimizer_steps += 1
+            policy_targets += result.policy_targets
+            weighted_loss += float(loss.detach().float().cpu()) * result.policy_targets
+
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+    elapsed = time.perf_counter() - started
+    if policy_targets <= 0 or optimizer_steps <= 0:
+        raise MaterializedBCTrainError("packed training epoch executed no policy targets")
+    return {
+        "epoch": epoch,
+        "episode_groups": len(selected_groups),
+        "episodes": episodes_used,
+        "optimizer_steps": optimizer_steps,
+        "policy_targets": policy_targets,
+        "recurrent_decisions": recurrent_decisions,
+        "forced_only_chunks": forced_only_chunks,
+        "mean_nll": weighted_loss / policy_targets,
+        "gradient_norm_max_pre_clip": gradient_norm_max,
+        "elapsed_seconds": elapsed,
+        "policy_targets_per_second": policy_targets / max(elapsed, 1e-9),
+        "recurrent_decisions_per_second": recurrent_decisions / max(elapsed, 1e-9),
+    }
+
+
+def validate_packed(
+    model: Any,
+    groups: Sequence[PackedRecurrentGroup],
+    *,
+    device: torch.device,
+    bf16: bool,
+    maximum_groups: int | None,
+) -> dict[str, Any]:
+    model.eval()
+    selected_groups = list(groups)
+    if maximum_groups is not None:
+        selected_groups = selected_groups[:maximum_groups]
+    if not selected_groups:
+        raise MaterializedBCTrainError("packed validation has no groups")
+    started = time.perf_counter()
+    policy_targets = 0
+    recurrent_decisions = 0
+    weighted_loss = 0.0
+    episodes_used = 0
+    with torch.inference_mode():
+        for group in selected_groups:
+            episodes_used += group.batch_size
+            hidden = model.initial_hidden(group.batch_size, device)
+            for chunk in group.chunks:
+                with torch.autocast(
+                    device_type=device.type,
+                    dtype=torch.bfloat16,
+                    enabled=bf16 and device.type == "cuda",
+                ):
+                    result = packed_recurrent_chunk_loss(
+                        model,
+                        chunk,
+                        hidden=hidden,
+                        non_blocking=device.type == "cuda",
+                    )
+                hidden = result.next_hidden
+                recurrent_decisions += result.recurrent_decisions
+                if result.loss is not None:
+                    value = float(result.loss.detach().float().cpu())
+                    if not math.isfinite(value):
+                        raise MaterializedBCTrainError("packed validation NLL is nonfinite")
+                    policy_targets += result.policy_targets
+                    weighted_loss += value * result.policy_targets
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+    elapsed = time.perf_counter() - started
+    if policy_targets <= 0:
+        raise MaterializedBCTrainError("packed validation produced no policy targets")
+    return {
+        "episode_groups": len(selected_groups),
+        "episodes": episodes_used,
+        "policy_targets": policy_targets,
+        "recurrent_decisions": recurrent_decisions,
+        "mean_nll": weighted_loss / policy_targets,
+        "elapsed_seconds": elapsed,
+        "policy_targets_per_second": policy_targets / max(elapsed, 1e-9),
+    }
 
 
 def train_epoch(
@@ -418,6 +591,26 @@ def main() -> int:
     if not train_episodes or not validation_episodes:
         raise MaterializedBCTrainError("materialized train/validation splits must both be nonempty")
 
+    prepack_started = time.perf_counter()
+    train_groups = prepack_groups(
+        train_episodes,
+        batch_size=args.batch_size,
+        sequence_length=args.sequence_length,
+        seed=args.seed,
+        pin_memory=device.type == "cuda",
+    )
+    validation_groups = prepack_groups(
+        validation_episodes,
+        batch_size=args.batch_size,
+        sequence_length=args.sequence_length,
+        seed=args.seed + 1,
+        pin_memory=device.type == "cuda",
+    )
+    prepack_elapsed = time.perf_counter() - prepack_started
+    train_episode_count = len(train_episodes)
+    validation_episode_count = len(validation_episodes)
+    del episodes, train_episodes, validation_episodes
+
     card_table = load_card_table(args.card_table)
     if manifest.get("card_data_sha256") != card_table.card_data_sha256:
         raise MaterializedBCTrainError("materialized card-data hash differs from trainer")
@@ -444,12 +637,10 @@ def main() -> int:
 
     started = time.perf_counter()
     args.output_dir.mkdir(parents=True, exist_ok=False)
-    baseline = validate(
+    baseline = validate_packed(
         model,
-        validation_episodes,
+        validation_groups,
         device=device,
-        batch_size=args.batch_size,
-        sequence_length=args.sequence_length,
         bf16=args.bf16,
         maximum_groups=args.maximum_validation_groups,
     )
@@ -462,6 +653,7 @@ def main() -> int:
                 "mean_nll": baseline["mean_nll"],
                 "targets_per_second": baseline["policy_targets_per_second"],
                 "materialized_load_seconds": load_elapsed,
+                "prepack_seconds": prepack_elapsed,
             },
             sort_keys=True,
         ),
@@ -473,28 +665,23 @@ def main() -> int:
     cumulative_optimizer_steps = 0
     cumulative_policy_targets = 0
     for epoch in range(1, args.epochs + 1):
-        training = train_epoch(
+        training = train_epoch_packed(
             model,
             optimizer,
             scheduler,
-            train_episodes,
+            train_groups,
             device=device,
-            batch_size=args.batch_size,
-            sequence_length=args.sequence_length,
             bf16=args.bf16,
             maximum_gradient_norm=args.maximum_gradient_norm,
-            seed=args.seed,
             epoch=epoch,
             maximum_groups=args.maximum_train_groups,
         )
         cumulative_optimizer_steps += int(training["optimizer_steps"])
         cumulative_policy_targets += int(training["policy_targets"])
-        validation = validate(
+        validation = validate_packed(
             model,
-            validation_episodes,
+            validation_groups,
             device=device,
-            batch_size=args.batch_size,
-            sequence_length=args.sequence_length,
             bf16=args.bf16,
             maximum_groups=args.maximum_validation_groups,
         )
@@ -573,11 +760,12 @@ def main() -> int:
         "materialized": {
             "record_id": manifest.get("record_id"),
             "manifest_sha256": manifest["manifest_sha256"],
-            "episodes_loaded": len(episodes),
-            "train_episodes_used": len(train_episodes),
-            "validation_episodes_used": len(validation_episodes),
+            "episodes_loaded": train_episode_count + validation_episode_count,
+            "train_episodes_used": train_episode_count,
+            "validation_episodes_used": validation_episode_count,
             "test_episode_bodies_read": 0,
             "load_seconds": load_elapsed,
+            "prepack_seconds": prepack_elapsed,
             "host_peak_rss_kib": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss),
         },
         "model": {
@@ -608,6 +796,9 @@ def main() -> int:
             "vectorized_compound_decoder": True,
             "replay_json_parsing_inside_epoch": False,
             "projected_features_reused_across_epochs": True,
+            "precollated_tensors_reused_across_epochs": True,
+            "pinned_host_batches": device.type == "cuda",
+            "nonblocking_h2d": device.type == "cuda",
             "truncated_bptt": True,
             "hidden_carried_between_chunks": True,
         },
