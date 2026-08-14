@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -12,7 +13,10 @@ if modal.is_local():
 else:
     ROOT = Path("/workspace")
 PTCG_RL = ROOT / "ptcg-rl"
-BUNDLE_SHA256 = "4377b1e514f4dff4f453c1dedcbc4af4e81a3b038296408ba86348da5cfe2434"
+BUNDLE_SHA256 = "da8e4b906523c98dfc47e4a39c51170a3c2cfb9ce8e5e764048a68a5d03e25cc"
+BUNDLE_PARTS = tuple(f"/data/inputs/bc-current-lucario-specialist-v1/part-{index:02d}" for index in range(6))
+WARM_START_PATH = "/data/inputs/bc-recent-hq-v1-r1-epoch-2.pt"
+WARM_START_SHA256 = "1d8ad47f1bd2942e4235d69320eba6261a22b2f1891844e7f82d15480b15befe"
 VOLUME_NAME = "kptcg-training"
 
 image = (
@@ -49,22 +53,65 @@ training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
     volumes={"/data": training_volume},
 )
 def run(
-    run_name: str = "bc-recent-hq-v1-r1",
-    epochs: int = 2,
+    run_name: str = "bc-current-lucario-specialist-v1-r1",
+    epochs: int = 4,
     batch_size: int = 32,
     sequence_length: int = 32,
-    learning_rate: float = 1e-4,
+    learning_rate: float = 5e-5,
 ) -> dict[str, Any]:
     output_dir = Path("/data/runs") / run_name
     if output_dir.exists():
         raise RuntimeError(f"training output already exists: {output_dir}")
+    bundle_path = Path("/tmp/bc-current-lucario-specialist-v1.zip")
+    digest = hashlib.sha256()
+    total_bytes = 0
+    with bundle_path.open("wb") as destination:
+        for part_name in BUNDLE_PARTS:
+            part = Path(part_name)
+            if not part.is_file():
+                raise RuntimeError(f"specialist bundle part is missing: {part}")
+            with part.open("rb") as source:
+                while True:
+                    chunk = source.read(8 * 1024 * 1024)
+                    if not chunk:
+                        break
+                    destination.write(chunk)
+                    digest.update(chunk)
+                    total_bytes += len(chunk)
+    if digest.hexdigest() != BUNDLE_SHA256:
+        raise RuntimeError(
+            f"reassembled specialist bundle SHA-256 differs: {digest.hexdigest()}"
+        )
+    warm_start = Path(WARM_START_PATH)
+    warm_manifest = warm_start.with_name(warm_start.name + ".manifest.json")
+    if not warm_start.is_file() or not warm_manifest.is_file():
+        raise RuntimeError("warm-start checkpoint payload or manifest is missing")
+    warm_digest = hashlib.sha256(warm_start.read_bytes()).hexdigest()
+    if warm_digest != WARM_START_SHA256:
+        raise RuntimeError(f"warm-start checkpoint SHA-256 differs: {warm_digest}")
+    print(
+        json.dumps(
+            {
+                "event": "specialist_input_preflight",
+                "bundle_bytes": total_bytes,
+                "bundle_sha256": digest.hexdigest(),
+                "warm_start_sha256": warm_digest,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/bc_train.py",
         "--bundle",
-        "/data/inputs/bc-recent-hq-v1.zip",
+        str(bundle_path),
         "--expected-bundle-sha256",
         BUNDLE_SHA256,
+        "--warm-start-training-checkpoint",
+        WARM_START_PATH,
+        "--warm-start-training-checkpoint-sha256",
+        WARM_START_SHA256,
         "--checkpoint",
         "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
         "--card-table",
