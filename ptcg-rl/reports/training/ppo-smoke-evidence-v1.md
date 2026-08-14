@@ -116,3 +116,41 @@ Do not interpret this as a simulator limitation: standalone GPU-CABT exceeds 1M 
 3. Add a frozen-opponent league smoke. Keep the BC initializer as the first historical opponent and avoid a continuously mutating live mirror as the sole opponent.
 4. Re-run probability replay, finite-gradient, KL/clip, legality and independent native evaluation gates.
 5. Only then present a full-run configuration for explicit approval.
+
+## Rollout-only BF16 scale probe
+
+After correctness was established, a rollout-only probe removed trajectory storage/backward so neural-in-loop collection throughput could be measured independently. It retained the real frozen BC policy, recurrent state, GPU policy bridge, legal compound sampling and GPU-CABT stepping.
+
+| Environments | Measured decisions/s | Peak Torch allocation | GPU-CABT runtime memory |
+|---:|---:|---:|---:|
+| 512 | 11,875 | 253 MB | 74 MB |
+| 2,048 | 42,008 | 943 MB | 296 MB |
+| 4,096 | 70,366 | 2.05 GB | 590 MB |
+| 8,192 | **107,836** | **4.12 GB** | **1.18 GB** |
+
+All four probes completed 64 selection boundaries with zero runtime/projection/nonfinite failures. At 8,192 environments, 7,750 environments were still active at boundary 64, so the measurement was not produced by a tiny surviving subset.
+
+8,192-env measured timing accumulators across the probe:
+
+- policy bridge: ~0.789 s
+- GPU-CABT engine step: ~1.434 s
+- model + compound action sampling: ~3.257 s
+- public projection: ~0.139 s
+
+The 8,192-env measured window processed 446,433 decisions in 4.140 s = **107,836 decisions/s**.
+
+At that observed collection rate, ignoring PPO/evaluation overhead:
+
+- 100M decisions: ~0.26 h
+- 500M: ~1.29 h
+- 1B: ~2.58 h
+- 2B: ~5.15 h
+- 3B: ~7.73 h
+
+This makes outcome-driven training materially feasible on one RTX PRO 6000. Production wall time will be higher because rollout persistence, GAE, recurrent PPO replay, checkpointing and independent evaluation must be included.
+
+## Smoke-phase conclusion
+
+The requested self-play PPO smoke phase is complete. BC works as an initializer; GPU-CABT + the recurrent neural policy can generate legal terminal self-play; exact PPO probability replay and GAE work; conservative PPO updates are numerically stable; and rollout throughput scales past 100k decisions/s.
+
+No full PPO run has been started. The next action is to present the league/fixed-horizon production configuration for explicit approval.
