@@ -385,7 +385,7 @@ def benchmark(
     timeout=3600,
     volumes={"/data": training_volume},
 )
-def ablate_event_entity_links(batch_size: int = 32) -> dict[str, Any]:
+def measure_event_entity_link_sensitivity(batch_size: int = 32) -> dict[str, Any]:
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
     materialized, stage_receipt = _stage_materialized_tar()
