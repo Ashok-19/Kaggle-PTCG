@@ -780,16 +780,31 @@ class PTCGPolicyV1(nn.Module):
         else:
             events = self.empty_event.new_empty((0, self.config.event_width))
 
-        summaries: list[Tensor] = []
-        for index in range(batch.batch_size):
-            start = int(batch.event_offsets[index])
-            end = int(batch.event_offsets[index + 1])
-            if end == start:
-                summaries.append(self.empty_event)
-            else:
-                _, hidden = self.event_gru(events[start:end].unsqueeze(0))
-                summaries.append(hidden[-1, 0])
-        return torch.stack(summaries)
+        lengths = batch.event_offsets[1:] - batch.event_offsets[:-1]
+        if not count:
+            return self.empty_event.unsqueeze(0).expand(batch.batch_size, -1)
+
+        maximum_length = int(lengths.max().item())
+        padded = events.new_zeros(
+            (batch.batch_size, maximum_length, self.config.event_width)
+        )
+        owner = torch.repeat_interleave(
+            torch.arange(batch.batch_size, device=events.device, dtype=torch.long),
+            lengths,
+        )
+        local = torch.arange(count, device=events.device, dtype=torch.long)
+        local = local - torch.repeat_interleave(batch.event_offsets[:-1], lengths)
+        padded[owner, local] = events
+        outputs, _ = self.event_gru(padded)
+        rows = torch.arange(batch.batch_size, device=events.device, dtype=torch.long)
+        final_indices = (lengths - 1).clamp_min(0)
+        summaries = outputs[rows, final_indices]
+        nonempty = (lengths > 0).unsqueeze(1)
+        return torch.where(
+            nonempty,
+            summaries,
+            self.empty_event.unsqueeze(0).expand_as(summaries),
+        )
 
     def _encode_global(self, batch: TorchDecisionBatch) -> Tensor:
         context_card = self.catalog.encode_card(

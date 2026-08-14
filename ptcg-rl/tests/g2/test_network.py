@@ -120,6 +120,39 @@ def test_forward_supports_zero_option_and_mixed_ragged_batches(tmp_path: Path) -
     assert torch.isfinite(mixed_output.values).all()
 
 
+def test_batched_event_gru_matches_per_decision_reference(tmp_path: Path) -> None:
+    policy = model(tmp_path).eval()
+    batch = collate_projected(
+        (card_decision(), number_decision(4)[2], card_decision(), zero_option_decision())
+    )
+    captured: list[torch.Tensor] = []
+
+    def capture_events(_module, _inputs, output):
+        captured.append(output.detach())
+
+    hook = policy.event_projection.register_forward_hook(capture_events)
+    try:
+        with torch.no_grad():
+            entities, _ = policy._encode_entities(batch)
+            observed = policy._encode_events(batch, entities)
+    finally:
+        hook.remove()
+    assert len(captured) == 1
+    events = captured[0]
+    expected = []
+    for index in range(batch.batch_size):
+        start = int(batch.event_offsets[index])
+        end = int(batch.event_offsets[index + 1])
+        if end == start:
+            expected.append(policy.empty_event)
+        else:
+            with torch.no_grad():
+                _, hidden = policy.event_gru(events[start:end].unsqueeze(0))
+            expected.append(hidden[-1, 0])
+    reference = torch.stack(expected)
+    assert torch.allclose(observed, reference, rtol=0, atol=1e-6)
+
+
 def test_option_permutation_is_equivariant_and_state_is_invariant(tmp_path: Path) -> None:
     policy = model(tmp_path).eval()
     observation, request, original = number_decision(5)
