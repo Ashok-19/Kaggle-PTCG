@@ -33,6 +33,7 @@ from ptcg_rl.g3.ppo import ppo_loss, require_finite_gradients
 from ptcg_rl.g3.production_ppo import (
     compute_complete_game_gae,
     meaningful_compound_policy_mask,
+    slice_torch_decision_batch_rows,
 )
 
 
@@ -206,6 +207,55 @@ def _restore_actions_to_device(
         log_probabilities=actions.log_probabilities.to(device=device),
         normalized_entropies=actions.normalized_entropies.to(device=device),
     )
+
+
+def _slice_actions_rows(
+    actions: BatchedCompoundActionV1, start: int, end: int
+) -> BatchedCompoundActionV1:
+    return BatchedCompoundActionV1(
+        selected_indices=actions.selected_indices[start:end],
+        selected_lengths=actions.selected_lengths[start:end],
+        stopped=actions.stopped[start:end],
+        log_probabilities=actions.log_probabilities[start:end],
+        normalized_entropies=actions.normalized_entropies[start:end],
+    )
+
+
+def _slice_step_rows(step: LearnerStepV1, start: int, end: int) -> LearnerStepV1:
+    return LearnerStepV1(
+        boundary=step.boundary,
+        batch=slice_torch_decision_batch_rows(step.batch, start, end),
+        env_indices=step.env_indices[start:end],
+        actors=step.actors[start:end],
+        minimum_counts=step.minimum_counts[start:end],
+        maximum_counts=step.maximum_counts[start:end],
+        actions=_slice_actions_rows(step.actions, start, end),
+        flat_start=step.flat_start + start,
+        flat_end=step.flat_start + end,
+    )
+
+
+def _lane_steps_and_indices(
+    steps: Sequence[LearnerStepV1],
+    *,
+    env_start: int,
+    env_end: int,
+) -> tuple[list[LearnerStepV1], Tensor]:
+    lane_steps: list[LearnerStepV1] = []
+    indices: list[Tensor] = []
+    for step in steps:
+        start_value = torch.tensor(env_start, dtype=step.env_indices.dtype)
+        end_value = torch.tensor(env_end, dtype=step.env_indices.dtype)
+        row_start = int(torch.searchsorted(step.env_indices, start_value, right=False).item())
+        row_end = int(torch.searchsorted(step.env_indices, end_value, right=False).item())
+        if row_end <= row_start:
+            continue
+        sliced = _slice_step_rows(step, row_start, row_end)
+        lane_steps.append(sliced)
+        indices.append(torch.arange(sliced.flat_start, sliced.flat_end, dtype=torch.long))
+    if not lane_steps:
+        return [], torch.empty(0, dtype=torch.long)
+    return lane_steps, torch.cat(indices)
 
 
 def _apply_actions(
@@ -518,6 +568,7 @@ def _ppo_update(
     advantages: Tensor,
     returns: Tensor,
     chunk_boundaries: int,
+    learner_lane_envs: int,
     clip_coefficient: float,
     value_clip_coefficient: float,
     value_coefficient: float,
@@ -538,6 +589,13 @@ def _ppo_update(
     ) / (advantage_std + 1e-8)
 
     chunks = _steps_by_chunk(rollout, chunk_boundaries)
+    env_count = int(next(iter(rollout.chunk_hidden_snapshots.values())).shape[0])
+    if learner_lane_envs <= 0 or learner_lane_envs > env_count:
+        raise PPOTrainError("learner lane env count must stay within 1..env_count")
+    lane_ranges = [
+        (start, min(env_count, start + learner_lane_envs))
+        for start in range(0, env_count, learner_lane_envs)
+    ]
     before = _parameter_snapshot(model)
     optimizer.zero_grad(set_to_none=True)
     model.train()
@@ -548,50 +606,63 @@ def _ppo_update(
     replayed_actions = 0
     started = time.perf_counter()
 
+    learner_minibatches = 0
     for chunk_index, steps in chunks:
         hidden_snapshot = rollout.chunk_hidden_snapshots[chunk_index]
-        new_logp, new_values, new_entropies = _replay_chunk(
-            model=model,
-            steps=steps,
-            hidden_snapshot=hidden_snapshot,
-            gradient=True,
-            bf16=bf16,
-        )
-        start = steps[0].flat_start
-        end = steps[-1].flat_end
-        old_logp = rollout.old_log_probabilities[start:end]
-        old_values = rollout.old_values[start:end]
-        chunk_mask = policy_mask[start:end]
-        chunk_valid = int(chunk_mask.sum().item())
-        if chunk_valid <= 0:
-            continue
-        logp_difference = torch.abs(new_logp.detach() - old_logp)
-        ratio_error = torch.abs(torch.exp(new_logp.detach() - old_logp) - 1.0)
-        replay_max_logp_error = max(replay_max_logp_error, float(logp_difference.max().item()))
-        replay_max_ratio_error = max(replay_max_ratio_error, float(ratio_error.max().item()))
-        replay_max_value_error = max(
-            replay_max_value_error,
-            float(torch.abs(new_values.detach() - old_values).max().item()),
-        )
-        replayed_actions += int(new_logp.numel())
-        loss = ppo_loss(
-            new_log_probabilities=new_logp,
-            old_log_probabilities=old_logp,
-            advantages=normalized_advantages[start:end],
-            new_values=new_values,
-            old_values=old_values,
-            returns=returns[start:end],
-            normalized_entropies=new_entropies,
-            policy_mask=chunk_mask,
-            clip_coefficient=clip_coefficient,
-            value_clip_coefficient=value_clip_coefficient,
-            value_coefficient=value_coefficient,
-            entropy_coefficient=entropy_coefficient,
-            normalize_advantages=False,
-        )
-        weight = chunk_valid / total_valid
-        (loss.total * weight).backward()
-        _add_weighted_loss(pre_metrics, loss, weight)
+        for env_start, env_end in lane_ranges:
+            lane_steps, cpu_indices = _lane_steps_and_indices(
+                steps, env_start=env_start, env_end=env_end
+            )
+            if not lane_steps:
+                continue
+            indices = cpu_indices.to(device=policy_mask.device)
+            new_logp, new_values, new_entropies = _replay_chunk(
+                model=model,
+                steps=lane_steps,
+                hidden_snapshot=hidden_snapshot,
+                gradient=True,
+                bf16=bf16,
+            )
+            old_logp = rollout.old_log_probabilities.index_select(0, indices)
+            old_values = rollout.old_values.index_select(0, indices)
+            lane_mask = policy_mask.index_select(0, indices)
+            lane_valid = int(lane_mask.sum().item())
+            if lane_valid <= 0:
+                continue
+            lane_advantages = normalized_advantages.index_select(0, indices)
+            lane_returns = returns.index_select(0, indices)
+            logp_difference = torch.abs(new_logp.detach() - old_logp)
+            ratio_error = torch.abs(torch.exp(new_logp.detach() - old_logp) - 1.0)
+            replay_max_logp_error = max(
+                replay_max_logp_error, float(logp_difference.max().item())
+            )
+            replay_max_ratio_error = max(
+                replay_max_ratio_error, float(ratio_error.max().item())
+            )
+            replay_max_value_error = max(
+                replay_max_value_error,
+                float(torch.abs(new_values.detach() - old_values).max().item()),
+            )
+            replayed_actions += int(new_logp.numel())
+            loss = ppo_loss(
+                new_log_probabilities=new_logp,
+                old_log_probabilities=old_logp,
+                advantages=lane_advantages,
+                new_values=new_values,
+                old_values=old_values,
+                returns=lane_returns,
+                normalized_entropies=new_entropies,
+                policy_mask=lane_mask,
+                clip_coefficient=clip_coefficient,
+                value_clip_coefficient=value_clip_coefficient,
+                value_coefficient=value_coefficient,
+                entropy_coefficient=entropy_coefficient,
+                normalize_advantages=False,
+            )
+            weight = lane_valid / total_valid
+            (loss.total * weight).backward()
+            _add_weighted_loss(pre_metrics, loss, weight)
+            learner_minibatches += 1
 
     gradient_norm = require_finite_gradients(tuple(model.parameters()))
     clip_grad_return = float(
@@ -609,36 +680,42 @@ def _ppo_update(
     post_values_all: list[Tensor] = []
     post_started = time.perf_counter()
     for chunk_index, steps in chunks:
-        new_logp, new_values, new_entropies = _replay_chunk(
-            model=model,
-            steps=steps,
-            hidden_snapshot=rollout.chunk_hidden_snapshots[chunk_index],
-            gradient=False,
-            bf16=bf16,
-        )
-        start = steps[0].flat_start
-        end = steps[-1].flat_end
-        chunk_mask = policy_mask[start:end]
-        chunk_valid = int(chunk_mask.sum().item())
-        if chunk_valid <= 0:
-            continue
-        loss = ppo_loss(
-            new_log_probabilities=new_logp,
-            old_log_probabilities=rollout.old_log_probabilities[start:end],
-            advantages=normalized_advantages[start:end],
-            new_values=new_values,
-            old_values=rollout.old_values[start:end],
-            returns=returns[start:end],
-            normalized_entropies=new_entropies,
-            policy_mask=chunk_mask,
-            clip_coefficient=clip_coefficient,
-            value_clip_coefficient=value_clip_coefficient,
-            value_coefficient=value_coefficient,
-            entropy_coefficient=entropy_coefficient,
-            normalize_advantages=False,
-        )
-        _add_weighted_loss(post_metrics, loss, chunk_valid / total_valid)
-        post_values_all.append(new_values.detach())
+        hidden_snapshot = rollout.chunk_hidden_snapshots[chunk_index]
+        for env_start, env_end in lane_ranges:
+            lane_steps, cpu_indices = _lane_steps_and_indices(
+                steps, env_start=env_start, env_end=env_end
+            )
+            if not lane_steps:
+                continue
+            indices = cpu_indices.to(device=policy_mask.device)
+            new_logp, new_values, new_entropies = _replay_chunk(
+                model=model,
+                steps=lane_steps,
+                hidden_snapshot=hidden_snapshot,
+                gradient=False,
+                bf16=bf16,
+            )
+            lane_mask = policy_mask.index_select(0, indices)
+            lane_valid = int(lane_mask.sum().item())
+            if lane_valid <= 0:
+                continue
+            loss = ppo_loss(
+                new_log_probabilities=new_logp,
+                old_log_probabilities=rollout.old_log_probabilities.index_select(0, indices),
+                advantages=normalized_advantages.index_select(0, indices),
+                new_values=new_values,
+                old_values=rollout.old_values.index_select(0, indices),
+                returns=returns.index_select(0, indices),
+                normalized_entropies=new_entropies,
+                policy_mask=lane_mask,
+                clip_coefficient=clip_coefficient,
+                value_clip_coefficient=value_clip_coefficient,
+                value_coefficient=value_coefficient,
+                entropy_coefficient=entropy_coefficient,
+                normalize_advantages=False,
+            )
+            _add_weighted_loss(post_metrics, loss, lane_valid / total_valid)
+            post_values_all.append(new_values.detach())
     post_replay_seconds = time.perf_counter() - post_started
     post_values = torch.cat(post_values_all)
 
@@ -651,6 +728,8 @@ def _ppo_update(
         "post_replay_seconds": post_replay_seconds,
         "chunk_count": len(chunks),
         "chunk_boundaries": chunk_boundaries,
+        "learner_lane_envs": learner_lane_envs,
+        "learner_minibatches": learner_minibatches,
         "pre_update": pre_metrics,
         "post_update": post_metrics,
         "probability_replay": {
@@ -698,6 +777,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("bounded trainer decision budget must stay within 1..30M")
     if args.chunk_boundaries < 16 or args.chunk_boundaries > 128:
         raise PPOTrainError("recurrent chunk boundaries must stay within 16..128")
+    if args.learner_lane_envs <= 0 or args.learner_lane_envs > args.env_count:
+        raise PPOTrainError("learner lane envs must stay within 1..env_count")
     if args.max_boundaries < args.chunk_boundaries:
         raise PPOTrainError("max boundaries must not be smaller than recurrent chunk size")
 
@@ -794,6 +875,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             advantages=gae.advantages,
             returns=gae.returns,
             chunk_boundaries=args.chunk_boundaries,
+            learner_lane_envs=args.learner_lane_envs,
             clip_coefficient=args.clip_coefficient,
             value_clip_coefficient=args.value_clip_coefficient,
             value_coefficient=args.value_coefficient,
@@ -935,6 +1017,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "env_count": args.env_count,
             "decision_budget_requested": args.decision_budget,
             "recurrent_chunk_boundaries": args.chunk_boundaries,
+            "learner_lane_envs": args.learner_lane_envs,
             "max_game_boundaries": args.max_boundaries,
             "historical_fraction": args.historical_fraction,
             "gamma": args.gamma,
@@ -1002,6 +1085,7 @@ def main() -> int:
     parser.add_argument("--env-count", type=int, default=8192)
     parser.add_argument("--decision-budget", type=int, required=True)
     parser.add_argument("--chunk-boundaries", type=int, default=64)
+    parser.add_argument("--learner-lane-envs", type=int, default=1024)
     parser.add_argument("--max-boundaries", type=int, default=3000)
     parser.add_argument("--historical-fraction", type=float, default=0.20)
     parser.add_argument("--seed", type=int, default=20260815)

@@ -7,6 +7,7 @@ from ptcg_rl.g3.ppo import compute_gae
 from ptcg_rl.g3.production_ppo import (
     compute_complete_game_gae,
     meaningful_compound_policy_mask,
+    slice_torch_decision_batch_rows,
 )
 
 
@@ -61,6 +62,56 @@ def test_meaningful_compound_policy_mask_distinguishes_ordered_forced_cases() ->
     # empty/0..0 and one mandatory option are forced. Two mandatory options have
     # two possible orders, while the final row has multiple available options.
     assert mask.tolist() == [False, False, True, True]
+
+
+def test_slice_torch_decision_batch_rows_remaps_nested_ragged_links() -> None:
+    batch = TorchDecisionBatch(
+        batch_size=3,
+        player_categorical=torch.arange(12).reshape(3, 2, 2),
+        player_categorical_missing=torch.zeros((3, 2, 2), dtype=torch.bool),
+        player_numeric=torch.arange(36, dtype=torch.float32).reshape(3, 2, 6),
+        player_numeric_missing=torch.zeros((3, 2, 6), dtype=torch.bool),
+        entity_categorical=torch.arange(5).reshape(5, 1),
+        entity_categorical_missing=torch.zeros((5, 1), dtype=torch.bool),
+        entity_numeric=torch.arange(5, dtype=torch.float32).reshape(5, 1),
+        entity_numeric_missing=torch.zeros((5, 1), dtype=torch.bool),
+        entity_parent_indices=torch.tensor([-1, 0, -1, -1, 3]),
+        entity_energy_values=torch.tensor([5, 7, 8, 9]),
+        entity_energy_offsets=torch.tensor([0, 1, 1, 2, 2, 4]),
+        entity_offsets=torch.tensor([0, 2, 3, 5]),
+        event_categorical=torch.tensor([[10], [20]]),
+        event_categorical_missing=torch.zeros((2, 1), dtype=torch.bool),
+        event_numeric=torch.tensor([[1.0], [2.0]]),
+        event_numeric_missing=torch.zeros((2, 1), dtype=torch.bool),
+        event_identity=torch.tensor([[1], [2]]),
+        event_identity_missing=torch.zeros((2, 1), dtype=torch.bool),
+        event_entity_indices=torch.tensor([[1, -1], [4, 3]]),
+        event_offsets=torch.tensor([0, 1, 1, 2]),
+        option_categorical=torch.arange(4).reshape(4, 1),
+        option_categorical_missing=torch.zeros((4, 1), dtype=torch.bool),
+        option_numeric=torch.arange(4, dtype=torch.float32).reshape(4, 1),
+        option_numeric_missing=torch.zeros((4, 1), dtype=torch.bool),
+        option_source_entity_indices=torch.tensor([0, 2, -1, 4]),
+        option_target_entity_indices=torch.tensor([1, -1, 2, 3]),
+        option_available=torch.ones(4, dtype=torch.bool),
+        option_offsets=torch.tensor([0, 1, 3, 4]),
+        global_categorical=torch.arange(6).reshape(3, 2),
+        global_categorical_missing=torch.zeros((3, 2), dtype=torch.bool),
+        global_numeric=torch.arange(6, dtype=torch.float32).reshape(3, 2),
+        global_numeric_missing=torch.zeros((3, 2), dtype=torch.bool),
+    )
+    sliced = slice_torch_decision_batch_rows(batch, 1, 3)
+    assert sliced.batch_size == 2
+    assert sliced.entity_offsets.tolist() == [0, 1, 3]
+    assert sliced.entity_parent_indices.tolist() == [-1, -1, 1]
+    assert sliced.entity_energy_values.tolist() == [7, 8, 9]
+    assert sliced.entity_energy_offsets.tolist() == [0, 1, 1, 3]
+    assert sliced.event_offsets.tolist() == [0, 0, 1]
+    assert sliced.event_entity_indices.tolist() == [[2, 1]]
+    assert sliced.option_offsets.tolist() == [0, 2, 3]
+    assert sliced.option_source_entity_indices.tolist() == [0, -1, 2]
+    assert sliced.option_target_entity_indices.tolist() == [-1, 0, 1]
+    assert torch.equal(sliced.global_categorical, batch.global_categorical[1:3])
 
 
 def test_complete_game_gae_matches_scalar_per_player_contract() -> None:

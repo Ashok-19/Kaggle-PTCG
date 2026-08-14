@@ -20,6 +20,75 @@ class CompleteGameGAEStatsV1:
     terminal_draws: int
 
 
+def slice_torch_decision_batch_rows(
+    batch: TorchDecisionBatch,
+    start: int,
+    end: int,
+) -> TorchDecisionBatch:
+    """Slice a contiguous decision-row range and remap all ragged entity links."""
+    if not isinstance(start, int) or not isinstance(end, int):
+        raise PPOContractError("decision batch slice bounds must be integers")
+    if start < 0 or end <= start or end > batch.batch_size:
+        raise PPOContractError("decision batch slice must be a nonempty in-range interval")
+
+    def scalar(value: Tensor) -> int:
+        return int(value.item())
+
+    entity_start = scalar(batch.entity_offsets[start])
+    entity_end = scalar(batch.entity_offsets[end])
+    event_start = scalar(batch.event_offsets[start])
+    event_end = scalar(batch.event_offsets[end])
+    option_start = scalar(batch.option_offsets[start])
+    option_end = scalar(batch.option_offsets[end])
+    energy_start = scalar(batch.entity_energy_offsets[entity_start])
+    energy_end = scalar(batch.entity_energy_offsets[entity_end])
+
+    def remap(values: Tensor) -> Tensor:
+        return torch.where(values >= 0, values - entity_start, values)
+
+    return TorchDecisionBatch(
+        batch_size=end - start,
+        player_categorical=batch.player_categorical[start:end],
+        player_categorical_missing=batch.player_categorical_missing[start:end],
+        player_numeric=batch.player_numeric[start:end],
+        player_numeric_missing=batch.player_numeric_missing[start:end],
+        entity_categorical=batch.entity_categorical[entity_start:entity_end],
+        entity_categorical_missing=batch.entity_categorical_missing[entity_start:entity_end],
+        entity_numeric=batch.entity_numeric[entity_start:entity_end],
+        entity_numeric_missing=batch.entity_numeric_missing[entity_start:entity_end],
+        entity_parent_indices=remap(batch.entity_parent_indices[entity_start:entity_end]),
+        entity_energy_values=batch.entity_energy_values[energy_start:energy_end],
+        entity_energy_offsets=(
+            batch.entity_energy_offsets[entity_start : entity_end + 1] - energy_start
+        ),
+        entity_offsets=batch.entity_offsets[start : end + 1] - entity_start,
+        event_categorical=batch.event_categorical[event_start:event_end],
+        event_categorical_missing=batch.event_categorical_missing[event_start:event_end],
+        event_numeric=batch.event_numeric[event_start:event_end],
+        event_numeric_missing=batch.event_numeric_missing[event_start:event_end],
+        event_identity=batch.event_identity[event_start:event_end],
+        event_identity_missing=batch.event_identity_missing[event_start:event_end],
+        event_entity_indices=remap(batch.event_entity_indices[event_start:event_end]),
+        event_offsets=batch.event_offsets[start : end + 1] - event_start,
+        option_categorical=batch.option_categorical[option_start:option_end],
+        option_categorical_missing=batch.option_categorical_missing[option_start:option_end],
+        option_numeric=batch.option_numeric[option_start:option_end],
+        option_numeric_missing=batch.option_numeric_missing[option_start:option_end],
+        option_source_entity_indices=remap(
+            batch.option_source_entity_indices[option_start:option_end]
+        ),
+        option_target_entity_indices=remap(
+            batch.option_target_entity_indices[option_start:option_end]
+        ),
+        option_available=batch.option_available[option_start:option_end],
+        option_offsets=batch.option_offsets[start : end + 1] - option_start,
+        global_categorical=batch.global_categorical[start:end],
+        global_categorical_missing=batch.global_categorical_missing[start:end],
+        global_numeric=batch.global_numeric[start:end],
+        global_numeric_missing=batch.global_numeric_missing[start:end],
+    )
+
+
 def meaningful_compound_policy_mask(
     batch: TorchDecisionBatch,
     *,

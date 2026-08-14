@@ -115,6 +115,7 @@ def train(
     source_commit: str,
     env_count: int = 8192,
     chunk_boundaries: int = 64,
+    learner_lane_envs: int = 1024,
     seed: int = 20260815,
     resume_relative: str = "",
     resume_sha256: str = "",
@@ -127,6 +128,8 @@ def train(
         raise ValueError("env_count must stay within 1..8192")
     if chunk_boundaries < 16 or chunk_boundaries > 128:
         raise ValueError("chunk boundaries must stay within 16..128")
+    if learner_lane_envs <= 0 or learner_lane_envs > env_count:
+        raise ValueError("learner lane envs must stay within 1..env_count")
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise ValueError("source commit must be an exact 40-character Git SHA")
     if bool(resume_relative) != bool(resume_sha256):
@@ -159,6 +162,8 @@ def train(
         str(decision_budget),
         "--chunk-boundaries",
         str(chunk_boundaries),
+        "--learner-lane-envs",
+        str(learner_lane_envs),
         "--seed",
         str(seed),
         "--historical-fraction",
@@ -246,6 +251,7 @@ def main(
     decision_budget: int,
     env_count: int = 8192,
     chunk_boundaries: int = 64,
+    learner_lane_envs: int = 1024,
     seed: int = 20260815,
     resume_relative: str = "",
     resume_sha256: str = "",
@@ -259,6 +265,7 @@ def main(
         source_commit=source_commit,
         env_count=env_count,
         chunk_boundaries=chunk_boundaries,
+        learner_lane_envs=learner_lane_envs,
         seed=seed,
         resume_relative=resume_relative,
         resume_sha256=resume_sha256,
