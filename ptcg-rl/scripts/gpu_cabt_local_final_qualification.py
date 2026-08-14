@@ -28,7 +28,7 @@ OPPONENTS = (
     ("abomasnow", Path(".chatgpt/tmp/aura-upgrade/arena-agents/mega-abomasnow-ex/deck.csv")),
     ("grim", Path(".chatgpt/tmp/grim-lana-current-eval-agents/grim-v15-control/deck.csv")),
 )
-DEFAULT_ENV_COUNTS = (384, 768, 1536, 3072, 4608, 6000)
+DEFAULT_ENV_COUNTS = (768, 1536, 3072, 6000, 10000, 12000)
 SELECTOR_SOURCE = r'''
 typedef unsigned char u8; typedef unsigned int u32; typedef unsigned long long u64; typedef int i32;
 extern "C" __global__ void first_min(
@@ -69,6 +69,21 @@ def matchups(decks: list[np.ndarray], count: int) -> np.ndarray:
 def pct(values: list[float]) -> dict[str, float]:
     a = np.asarray(values, dtype=np.float64)
     return {"p50": float(np.percentile(a, 50)), "p95": float(np.percentile(a, 95)), "p99": float(np.percentile(a, 99))}
+
+
+def apply_local_resource_limits(core_limit: int) -> list[int] | None:
+    if core_limit <= 0:
+        raise ValueError("core_limit must be positive")
+    os.environ.setdefault("OMP_NUM_THREADS", str(core_limit))
+    os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+    os.environ.setdefault("MKL_NUM_THREADS", "1")
+    os.environ.setdefault("NUMEXPR_NUM_THREADS", "1")
+    if not hasattr(os, "sched_getaffinity") or not hasattr(os, "sched_setaffinity"):
+        return None
+    allowed = sorted(os.sched_getaffinity(0))
+    selected = allowed[: min(core_limit, len(allowed))]
+    os.sched_setaffinity(0, set(selected))
+    return selected
 
 
 class SmiSampler:
@@ -180,8 +195,11 @@ def device_info(cp: Any) -> dict[str, Any]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(); ap.add_argument("--samples", type=int, default=1); ap.add_argument("--native-repeats", type=int, default=500); ap.add_argument("--stress-envs", type=int, default=6000); ap.add_argument("--stack-envs", type=int, default=768); ap.add_argument("--check-interval", type=int, default=16); ap.add_argument("--seed", type=int, default=20260814); ap.add_argument("--env-count", action="append", type=int); ap.add_argument("--output", type=Path, default=Path("reports/evaluations/gpu-cabt-final-local-qualification-v1.json")); args = ap.parse_args()
-    if min(args.samples, args.native_repeats, args.stress_envs, args.stack_envs, args.check_interval) <= 0: ap.error("positive values required")
+    ap = argparse.ArgumentParser(); ap.add_argument("--samples", type=int, default=1); ap.add_argument("--native-repeats", type=int, default=500); ap.add_argument("--stress-envs", type=int, default=6000); ap.add_argument("--stack-envs", type=int, default=768); ap.add_argument("--check-interval", type=int, default=16); ap.add_argument("--seed", type=int, default=20260814); ap.add_argument("--env-count", action="append", type=int); ap.add_argument("--cpu-core-limit", type=int, default=2); ap.add_argument("--max-envs", type=int, default=12000); ap.add_argument("--output", type=Path, default=Path("reports/evaluations/gpu-cabt-final-local-qualification-v1.json")); args = ap.parse_args()
+    if min(args.samples, args.native_repeats, args.stress_envs, args.stack_envs, args.check_interval, args.cpu_core_limit, args.max_envs) <= 0: ap.error("positive values required")
+    requested_env_counts = tuple(args.env_count) if args.env_count else DEFAULT_ENV_COUNTS
+    if args.stress_envs > args.max_envs or args.stack_envs > args.max_envs or any(n <= 0 or n > args.max_envs for n in requested_env_counts): ap.error("requested environment count exceeds the local safety ceiling")
+    cpu_affinity = apply_local_resource_limits(args.cpu_core_limit)
     configured_fast_compile = os.environ.get("GPU_CABT_NVRTC_FAST_COMPILE")
     if configured_fast_compile not in (None, "max"):
         raise RuntimeError("local final qualification requires GPU_CABT_NVRTC_FAST_COMPILE=max")
@@ -195,7 +213,7 @@ def main() -> None:
     stack = [gpu_point(cp, rules, selector, decks, env_count=args.stack_envs, stack_bytes=s, samples=1, seed=args.seed+s, check_interval=args.check_interval, telemetry=False) for s in (8192,16384)]
     stress = gpu_point(cp, rules, selector, decks, env_count=args.stress_envs, stack_bytes=16384, samples=1, seed=args.seed+7000000, check_interval=args.check_interval, telemetry=True)
     sweep = []
-    for n in (tuple(args.env_count) if args.env_count else DEFAULT_ENV_COUNTS):
+    for n in requested_env_counts:
         try: row = gpu_point(cp, rules, selector, decks, env_count=n, stack_bytes=16384, samples=args.samples, seed=args.seed+n*17, check_interval=args.check_interval, telemetry=True)
         except cp.cuda.memory.OutOfMemoryError as exc:
             row = {"status": "OOM_CAPACITY", "env_count": n, "stack_bytes": 16384, "error": str(exc)}; gc.collect(); cp.get_default_memory_pool().free_all_blocks()
@@ -205,7 +223,7 @@ def main() -> None:
     best_g = max(passed_points, key=lambda r: float(r["games_per_second"])); best_d = max(passed_points, key=lambda r: float(r["decisions_per_second"])); cpu_public = next(r for r in native["modes"] if r["mode"] == "public"); non_capacity = [r for r in sweep if r["status"] not in {"PASS","OOM_CAPACITY"}]
     stack_16k = next(r for r in stack if int(r["stack_bytes"]) == 16384)
     passed = stack_16k["status"] == "PASS" and stress["status"] == "PASS" and int(stress["env_count"]) >= 6000 and not non_capacity and int(cpu_public["failures"]) == 0
-    report = {"record_id":"gpu-cabt-final-local-qualification-v1","status":"PASS" if passed else "FAIL","source_head":head,"device":device_info(cp),"compile_mode":"nvrtc-fast-compile-max-conservative-local","cubin_build_seconds_excluded_from_throughput":build_s,"rule_extraction_seconds_excluded_from_throughput":rule_s,"abi":abi,"deck_families":names,"workload":{"matchup_cells":12,"policy":"first selectMin legal option indices at every decision boundary","gpu_public_path":"status + public events acknowledge + public policy projection + device first-min selection + GPU game step","cpu_public_path":"official BattleData + official ToJsonApi every decision/terminal boundary + first-min selection","timing_includes":"reset/shuffle/setup/gameplay/terminal; excludes compilation, rule extraction, persistent runtime allocation","native_rng_note":"native deployment-mode deviceRand=true uses system entropy; trajectories are not causally paired to GPU Philox games","gpu_check_interval_boundaries":args.check_interval},"native_single_process":native,"stack_sweep":stack,"stress":stress,"gpu_sweep":sweep,"best_gpu_games_per_second":{"env_count":int(best_g["env_count"]),"games_per_second":float(best_g["games_per_second"]),"decisions_per_second":float(best_g["decisions_per_second"])},"best_gpu_decisions_per_second":{"env_count":int(best_d["env_count"]),"games_per_second":float(best_d["games_per_second"]),"decisions_per_second":float(best_d["decisions_per_second"])},"cpu_vs_gpu_public_speedup":{"games_per_second":float(best_g["games_per_second"])/float(cpu_public["games_per_second"]),"decisions_per_second":float(best_d["decisions_per_second"])/float(cpu_public["decisions_per_second"]),"cpu_baseline":"single-process official native CABT with ToJsonApi"},"local_compile_safety":{"fully_optimized_nvrtc_attempt":"FORBIDDEN_ON_THIS_HOST_AFTER_CONFIRMED_OOM","observed_oom_anon_rss_bytes_approx":13665058816,"host_ram_gib_approx":15,"reason":"Kernel OOM killer terminated fully optimized NVRTC compile; fast-compile=max preserves engine semantics and yields a conservative local throughput measurement."},"completion_checks":{"production_stack_16k_pass":stack_16k["status"]=="PASS","stress_at_least_6000_games_pass":stress["status"]=="PASS" and int(stress["env_count"])>=6000,"native_public_zero_failures":int(cpu_public["failures"])==0,"gpu_sweep_no_non_capacity_failures":not non_capacity}}
+    report = {"record_id":"gpu-cabt-final-local-qualification-v1","status":"PASS" if passed else "FAIL","source_head":head,"device":device_info(cp),"compile_mode":"nvrtc-fast-compile-max-conservative-local","cubin_build_seconds_excluded_from_throughput":build_s,"rule_extraction_seconds_excluded_from_throughput":rule_s,"abi":abi,"deck_families":names,"workload":{"matchup_cells":12,"policy":"first selectMin legal option indices at every decision boundary","gpu_public_path":"status + public events acknowledge + public policy projection + device first-min selection + GPU game step","cpu_public_path":"official BattleData + official ToJsonApi every decision/terminal boundary + first-min selection","timing_includes":"reset/shuffle/setup/gameplay/terminal; excludes compilation, rule extraction, persistent runtime allocation","native_rng_note":"native deployment-mode deviceRand=true uses system entropy; trajectories are not causally paired to GPU Philox games","gpu_check_interval_boundaries":args.check_interval},"native_single_process":native,"stack_sweep":stack,"stress":stress,"gpu_sweep":sweep,"best_gpu_games_per_second":{"env_count":int(best_g["env_count"]),"games_per_second":float(best_g["games_per_second"]),"decisions_per_second":float(best_g["decisions_per_second"])},"best_gpu_decisions_per_second":{"env_count":int(best_d["env_count"]),"games_per_second":float(best_d["games_per_second"]),"decisions_per_second":float(best_d["decisions_per_second"])},"cpu_vs_gpu_public_speedup":{"games_per_second":float(best_g["games_per_second"])/float(cpu_public["games_per_second"]),"decisions_per_second":float(best_d["decisions_per_second"])/float(cpu_public["decisions_per_second"]),"cpu_baseline":"single-process official native CABT with ToJsonApi"},"local_compile_safety":{"fully_optimized_nvrtc_attempt":"FORBIDDEN_ON_THIS_HOST_AFTER_CONFIRMED_OOM","observed_oom_anon_rss_bytes_approx":13665058816,"host_ram_gib_approx":15,"reason":"Kernel OOM killer terminated fully optimized NVRTC compile; fast-compile=max preserves engine semantics and yields a conservative local throughput measurement."},"local_resource_limits":{"cpu_core_limit":args.cpu_core_limit,"cpu_affinity":cpu_affinity,"max_envs":args.max_envs,"default_env_counts":list(DEFAULT_ENV_COUNTS)},"completion_checks":{"production_stack_16k_pass":stack_16k["status"]=="PASS","stress_at_least_6000_games_pass":stress["status"]=="PASS" and int(stress["env_count"])>=6000,"native_public_zero_failures":int(cpu_public["failures"])==0,"gpu_sweep_no_non_capacity_failures":not non_capacity}}
     output = root / args.output; output.parent.mkdir(parents=True, exist_ok=True); output.write_text(json.dumps(report, indent=2, sort_keys=True)+"\n", encoding="utf-8")
     print(json.dumps({"status":report["status"],"output":args.output.as_posix(),"source_head":head,"best_gpu_games_per_second":report["best_gpu_games_per_second"],"best_gpu_decisions_per_second":report["best_gpu_decisions_per_second"],"cpu_vs_gpu_public_speedup":report["cpu_vs_gpu_public_speedup"],"stress_status":stress["status"],"stack_statuses":[r["status"] for r in stack]}, sort_keys=True))
     if not passed: raise SystemExit(1)
