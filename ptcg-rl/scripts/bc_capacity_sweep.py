@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import multiprocessing
 import os
 import pickle
 import random
@@ -12,6 +13,7 @@ import sys
 import tempfile
 import time
 from dataclasses import asdict, replace
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -277,6 +279,83 @@ def _validate_cached_episodes(
     return [observed[episode_id] for episode_id in sorted(observed)]
 
 
+def _load_episode_object_shard(
+    root_text: str,
+    records: list[dict[str, Any]],
+    shard_path_text: str,
+) -> dict[str, Any]:
+    root = Path(root_text)
+    shard_path = Path(shard_path_text)
+    episodes = load_all_episodes(root, records, 1)
+    with shard_path.open("wb") as handle:
+        pickle.dump(tuple(episodes), handle, protocol=pickle.HIGHEST_PROTOCOL)
+        handle.flush()
+        os.fsync(handle.fileno())
+    return {
+        "path": str(shard_path),
+        "episodes": len(episodes),
+        "bytes": shard_path.stat().st_size,
+    }
+
+
+def _parallel_load_materialized_episodes(
+    *,
+    root: Path,
+    records: Sequence[dict[str, Any]],
+    processes: int,
+    corpus_label: str,
+) -> list[MaterializedEpisodeV1]:
+    process_count = min(max(1, processes), 8, len(records))
+    if process_count == 1:
+        return load_all_episodes(root, records, 1)
+    chunks = [list(records[index::process_count]) for index in range(process_count)]
+    print(
+        json.dumps(
+            {
+                "event": "capacity_parallel_loader_start",
+                "corpus": corpus_label,
+                "processes": process_count,
+                "episodes": len(records),
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    started = time.perf_counter()
+    context = multiprocessing.get_context("spawn")
+    with tempfile.TemporaryDirectory(prefix=f"kptcg-{corpus_label}-objects-") as temporary:
+        temporary_root = Path(temporary)
+        jobs = [
+            (str(root), chunk, str(temporary_root / f"shard-{index:02d}.pkl"))
+            for index, chunk in enumerate(chunks)
+            if chunk
+        ]
+        with ProcessPoolExecutor(max_workers=process_count, mp_context=context) as pool:
+            futures = [pool.submit(_load_episode_object_shard, *job) for job in jobs]
+            receipts = [future.result() for future in futures]
+        episodes: list[MaterializedEpisodeV1] = []
+        for receipt in receipts:
+            with Path(str(receipt["path"])).open("rb") as handle:
+                shard = pickle.load(handle)
+            if not isinstance(shard, (list, tuple)):
+                raise CapacitySweepError("parallel loader shard is not an episode sequence")
+            episodes.extend(shard)
+    print(
+        json.dumps(
+            {
+                "event": "capacity_parallel_loader_complete",
+                "corpus": corpus_label,
+                "processes": process_count,
+                "episodes": len(episodes),
+                "elapsed_seconds": time.perf_counter() - started,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    return episodes
+
+
 def _load_or_build_object_cache(
     *,
     root: Path,
@@ -335,7 +414,12 @@ def _load_or_build_object_cache(
                 flush=True,
             )
 
-    episodes = load_all_episodes(root, records, workers)
+    episodes = _parallel_load_materialized_episodes(
+        root=root,
+        records=records,
+        processes=workers,
+        corpus_label=corpus_label,
+    )
     episodes = _validate_cached_episodes(episodes, records)
     if cache_path is None or meta_path is None:
         return episodes, "materialized"
