@@ -24,6 +24,8 @@ MATERIALIZED_TAR = "/data/materialized/bc-current-lucario-specialist-v1.tar"
 MATERIALIZED_TAR_SHA256 = "/data/materialized/bc-current-lucario-specialist-v1.tar.sha256"
 WARM_START_PATH = "/data/runs/bc-current-lucario-specialist-v1-r1/epoch-2.pt"
 WARM_START_SHA256 = "822fc1bf2312ff1d2bdab02a5ba24c5ab2b491f8a8b7ca89c80ad901c8d47f17"
+BC_SEED_PATH = "/data/runs/bc-current-lucario-fast-v2/epoch-1.pt"
+BC_SEED_SHA256 = "a6a136f2f0012b40ce67ea3eccbbf005ec0cd22d2670a02eeaf52843c6f29cc4"
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -40,6 +42,10 @@ image = (
     .add_local_file(
         PTCG_RL / "scripts/bc_train_materialized.py",
         remote_path="/workspace/ptcg-rl/scripts/bc_train_materialized.py",
+    )
+    .add_local_file(
+        PTCG_RL / "scripts/bc_event_entity_ablation.py",
+        remote_path="/workspace/ptcg-rl/scripts/bc_event_entity_ablation.py",
     )
     .add_local_file(
         PTCG_RL / "private/g2/card-table-v1.json",
@@ -370,6 +376,50 @@ def benchmark(
         "gpu_telemetry": telemetry,
         "materialized_stage": stage_receipt,
     }
+
+
+@app.function(
+    gpu="RTX-PRO-6000",
+    cpu=16,
+    memory=98304,
+    timeout=3600,
+    volumes={"/data": training_volume},
+)
+def ablate_event_entity_links(batch_size: int = 32) -> dict[str, Any]:
+    if batch_size <= 0:
+        raise ValueError("batch_size must be positive")
+    materialized, stage_receipt = _stage_materialized_tar()
+    seed = Path(BC_SEED_PATH)
+    seed_manifest = seed.with_name(seed.name + ".manifest.json")
+    if not seed.is_file() or not seed_manifest.is_file():
+        raise RuntimeError("frozen BC seed checkpoint or manifest is missing")
+    observed = _sha256_path(seed)
+    if observed != BC_SEED_SHA256:
+        raise RuntimeError(f"frozen BC seed SHA-256 differs: {observed}")
+    command = [
+        "python",
+        "/workspace/ptcg-rl/scripts/bc_event_entity_ablation.py",
+        "--materialized-dir",
+        str(materialized),
+        "--checkpoint",
+        "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "--training-checkpoint",
+        BC_SEED_PATH,
+        "--training-checkpoint-sha256",
+        BC_SEED_SHA256,
+        "--split",
+        "validation",
+        "--batch-size",
+        str(batch_size),
+        "--device",
+        "cuda",
+        "--bf16",
+    ]
+    output = subprocess.check_output(command, text=True)
+    print(output, end="", flush=True)
+    result = json.loads(output)
+    result["materialized_stage"] = stage_receipt
+    return result
 
 
 @app.function(
