@@ -95,8 +95,7 @@ def main() -> int:
         default=DOMINANT_DRAGAPULT_DECK_SHA256,
     )
     parser.add_argument("--module-version", default=CURRENT_REPLAY_MODULE_VERSION)
-    parser.add_argument("--base-min-score", type=float, default=1090.0)
-    parser.add_argument("--elite-rescue-min-score", type=float, default=1090.0)
+    parser.add_argument("--teacher-score-floor", type=float, default=1090.0)
     parser.add_argument("--elite-teachers", type=Path)
     parser.add_argument("--split-seed", type=int, default=20260815)
     parser.add_argument("--minimum-selected", type=int, default=500)
@@ -114,8 +113,7 @@ def main() -> int:
     policy = DragapultCorpusPolicy(
         target_deck_sha256=args.target_deck_sha256,
         module_version=args.module_version,
-        base_min_score=args.base_min_score,
-        elite_rescue_min_score=args.elite_rescue_min_score,
+        teacher_score_floor=args.teacher_score_floor,
     )
     elite_teachers, elite_snapshot = load_elite_teachers(args.elite_teachers)
 
@@ -128,7 +126,6 @@ def main() -> int:
     discovery_rejections: Counter[str] = Counter()
     seen_episode_ids: set[int] = set()
 
-    discovery_floor = min(policy.base_min_score, policy.elite_rescue_min_score)
     for day in args.days:
         archive_path = locate_archive(args.archive_root, day)
         archives[day] = archive_path
@@ -158,13 +155,10 @@ def main() -> int:
         target_deck_seen = 0
         selected = 0
         score_floor_selected = 0
-        rescue_selected = 0
         module_counts: Counter[str] = Counter()
         with zipfile.ZipFile(archive_path) as archive:
             for entry in entries:
                 score = quality_by_id[entry.episode_id]
-                if score.min_score < discovery_floor:
-                    continue
                 scanned += 1
                 try:
                     with archive.open(entry.name, "r") as source:
@@ -179,7 +173,6 @@ def main() -> int:
                     target_deck_seen += 1
                 choice = choose_dragapult_winner_teacher(
                     discovered,
-                    score,
                     policy=policy,
                     elite_teachers=elite_teachers,
                 )
@@ -190,8 +183,7 @@ def main() -> int:
                     (day, entry, score, teacher_player_index, admission_reason)
                 )
                 selected += 1
-                score_floor_selected += int(admission_reason == "score_floor")
-                rescue_selected += int(admission_reason == "live_top20_rescue")
+                score_floor_selected += 1
         source_reports.append(
             {
                 "date": day,
@@ -204,11 +196,10 @@ def main() -> int:
                 "missing_replay_episode_ids": missing_replay_ids[:32],
                 "uncompressed_replay_bytes": sum(item.bytes for item in entries),
                 "prefix_scanned": scanned,
-                "module_counts_at_discovery_floor": dict(sorted(module_counts.items())),
-                "target_deck_winner_seen_at_discovery_floor": target_deck_seen,
+                "module_counts_scanned": dict(sorted(module_counts.items())),
+                "target_deck_winner_seen": target_deck_seen,
                 "selected_before_full_parse": selected,
-                "selected_score_floor": score_floor_selected,
-                "selected_top20_rescue": rescue_selected,
+                "selected_teacher_score_floor": score_floor_selected,
             }
         )
 
@@ -278,8 +269,12 @@ def main() -> int:
     for quality, record, admission_reason in sorted(
         retained, key=lambda item: (item[1].date, item[1].episode_id)
     ):
-        tier, sample_weight = quality_tier(quality.min_score)
         elite = elite_teachers.get(record.teacher_team_name)
+        if elite is None or elite.score < policy.teacher_score_floor:
+            raise BCSourceError(
+                f"unqualified teacher reached retained corpus: {record.teacher_team_name}"
+            )
+        tier, sample_weight = quality_tier(elite.score)
         row = asdict(record)
         row.update(
             {
@@ -290,8 +285,10 @@ def main() -> int:
                 "teacher_quality_tier": tier,
                 "teacher_policy_source": "exact_dragapult_winning_player",
                 "admission_reason": admission_reason,
-                "live_leaderboard_rank": None if elite is None else elite.rank,
-                "live_leaderboard_score": None if elite is None else elite.score,
+                "teacher_score_qualification_basis": "frozen_live_leaderboard_score",
+                "teacher_score_qualification_value": elite.score,
+                "live_leaderboard_rank": elite.rank,
+                "live_leaderboard_score": elite.score,
             }
         )
         records.append(row)
@@ -312,8 +309,9 @@ def main() -> int:
             "target_deck_sha256": policy.target_deck_sha256,
             "required_module_version": policy.module_version,
             "winner_only_labels": True,
-            "base_min_score": policy.base_min_score,
-            "elite_rescue_min_score": policy.elite_rescue_min_score,
+            "teacher_score_floor": policy.teacher_score_floor,
+            "opponent_score_used_for_admission": False,
+            "match_min_score_used_for_admission": False,
             "elite_teacher_snapshot": elite_snapshot,
             "split_seed": args.split_seed,
             "minimum_selected": args.minimum_selected,
@@ -332,9 +330,10 @@ def main() -> int:
             "quality_tiers": dict(sorted(tier_counts.items())),
             "admission_counts": dict(sorted(admission_counts.items())),
             "per_day": dict(sorted(per_day.items())),
-            "minimum_selected_min_score": min(float(row["source_min_score"]) for row in records),
-            "mean_selected_min_score": sum(float(row["source_min_score"]) for row in records)
+            "minimum_teacher_score": min(float(row["teacher_score_qualification_value"]) for row in records),
+            "mean_teacher_score": sum(float(row["teacher_score_qualification_value"]) for row in records)
             / len(records),
+            "minimum_observed_match_min_score_diagnostic_only": min(float(row["source_min_score"]) for row in records),
             "largest_teacher_share": largest_teacher_count / len(records),
             "discovery_rejections": sum(discovery_rejections.values()),
             "full_parse_rejections": sum(full_parse_rejections.values()),

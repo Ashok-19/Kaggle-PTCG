@@ -7,19 +7,7 @@ from ptcg_rl.bc.dragapult_corpus import (
     choose_dragapult_winner_teacher,
     quality_tier,
 )
-from ptcg_rl.bc.source import ReplayPrefixRecord, ReplayQualityRecord
-
-
-def _quality(score: float) -> ReplayQualityRecord:
-    return ReplayQualityRecord(
-        episode_id=1,
-        create_time="2026-08-13T00:00:00Z",
-        avg_score=score + 10.0,
-        min_score=score,
-        sum_score=2.0 * score + 20.0,
-        agent_count=2,
-        size_bytes=1234,
-    )
+from ptcg_rl.bc.source import ReplayPrefixRecord
 
 
 def _prefix(*, winner: int = 0, team: str = "teacher", module: str = "1.32.6") -> ReplayPrefixRecord:
@@ -37,34 +25,37 @@ def _prefix(*, winner: int = 0, team: str = "teacher", module: str = "1.32.6") -
     )
 
 
-def test_score_floor_admits_exact_deck_winner() -> None:
+def test_qualified_teacher_exact_deck_winner_is_admitted() -> None:
+    teachers = {"teacher": EliteTeacher(team_name="teacher", rank=10, score=1153.3)}
     result = choose_dragapult_winner_teacher(
         _prefix(winner=1),
-        _quality(1090.0),
         policy=DragapultCorpusPolicy(),
-        elite_teachers={},
+        elite_teachers=teachers,
     )
-    assert result == (1, "score_floor")
+    assert result == (1, "frozen_live_teacher_score")
 
 
-def test_hard_1090_floor_has_no_top20_rescue_below_threshold() -> None:
-    elites = {"elite": EliteTeacher(team_name="elite", rank=3, score=1188.3)}
+def test_teacher_floor_is_1090_and_opponent_score_is_irrelevant() -> None:
     policy = DragapultCorpusPolicy()
     assert choose_dragapult_winner_teacher(
-        _prefix(team="elite"), _quality(1089.9), policy=policy, elite_teachers=elites
-    ) is None
+        _prefix(team="qualified"),
+        policy=policy,
+        elite_teachers={
+            "qualified": EliteTeacher(team_name="qualified", rank=20, score=1090.0)
+        },
+    ) == (0, "frozen_live_teacher_score")
     assert choose_dragapult_winner_teacher(
-        _prefix(team="ordinary"), _quality(1089.9), policy=policy, elite_teachers=elites
+        _prefix(team="weak"),
+        policy=policy,
+        elite_teachers={"weak": EliteTeacher(team_name="weak", rank=21, score=1089.9)},
     ) is None
-    assert choose_dragapult_winner_teacher(
-        _prefix(team="elite"), _quality(1090.0), policy=policy, elite_teachers=elites
-    ) == (0, "score_floor")
 
 
 def test_wrong_module_or_wrong_deck_is_rejected() -> None:
     policy = DragapultCorpusPolicy()
+    teachers = {"teacher": EliteTeacher(team_name="teacher", rank=1, score=1217.0)}
     assert choose_dragapult_winner_teacher(
-        _prefix(module="1.32.5"), _quality(1200.0), policy=policy, elite_teachers={}
+        _prefix(module="1.32.5"), policy=policy, elite_teachers=teachers
     ) is None
     prefix = _prefix()
     wrong = ReplayPrefixRecord(
@@ -75,13 +66,13 @@ def test_wrong_module_or_wrong_deck_is_rejected() -> None:
         deck_sha256=("f" * 64, prefix.deck_sha256[1]),
     )
     assert choose_dragapult_winner_teacher(
-        wrong, _quality(1200.0), policy=policy, elite_teachers={}
+        wrong, policy=policy, elite_teachers=teachers
     ) is None
 
 
-def test_quality_tiers_preserve_curriculum_signal() -> None:
+def test_teacher_score_tiers_preserve_curriculum_signal() -> None:
     assert quality_tier(1210.0) == ("elite_1200", 1.35)
     assert quality_tier(1160.0) == ("elite_1150", 1.25)
     assert quality_tier(1130.0) == ("elite_1120", 1.15)
     assert quality_tier(1090.0) == ("high_1090", 1.0)
-    assert quality_tier(1089.9) == ("below_production_floor", 0.0)
+    assert quality_tier(1089.9) == ("below_teacher_floor", 0.0)
