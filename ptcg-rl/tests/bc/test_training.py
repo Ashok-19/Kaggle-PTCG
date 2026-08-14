@@ -56,6 +56,62 @@ def test_batched_recurrent_loss_matches_sequential_semantics(tmp_path) -> None:
     assert observed.next_hidden.shape == (2, policy.config.public_hidden)
     assert torch.allclose(observed.loss, expected, atol=1e-6, rtol=1e-6)
 
+    fast = recurrent_sequence_batch_loss(policy, sequences, verify=False)
+    assert fast.policy_targets == observed.policy_targets
+    assert fast.recurrent_decisions == observed.recurrent_decisions
+    assert torch.allclose(fast.next_hidden, observed.next_hidden, atol=1e-6, rtol=1e-6)
+    assert torch.allclose(fast.loss, expected, atol=1e-6, rtol=1e-6)
+
+
+def test_vectorized_compound_decoder_matches_optional_stop_semantics(tmp_path) -> None:
+    from ptcg_rl.g1.semantic import semantic_snapshot
+    from ptcg_rl.g2.projection import project_decision
+    from ..g1_fixtures import raw_observation
+
+    raw = raw_observation(
+        options=[
+            {"type": 0, "number": 1},
+            {"type": 0, "number": 2},
+            {"type": 0, "number": 3},
+        ],
+        min_count=0,
+        max_count=2,
+    )
+    raw["select"].update({"type": 8, "context": 38, "minCount": 0, "maxCount": 2})
+    observation, request = semantic_snapshot(raw, "optional-stop", 0, "c" * 64)
+    assert request is not None and not request.has_only_one_outcome
+    projected = project_decision(observation, request)
+    chosen = 1
+    action = SemanticReplayActionV1(
+        schema_version=1,
+        submitted_original_indices=(chosen,),
+        chosen_semantic_fingerprints=(request.options[chosen].semantic_fingerprint,),
+        decoder_trace=(
+            f"OPTION:{request.options[chosen].semantic_fingerprint}",
+            "STOP",
+        ),
+        stopped_early=True,
+    )
+    decision = SemanticReplayDecisionV1(
+        schema_version=1,
+        episode_id="optional-stop",
+        internal_replay_id="optional-stop",
+        agent_index=0,
+        request_step_index=0,
+        action_step_index=1,
+        sequence_index=0,
+        observation=observation,
+        request=request,
+        projected=projected,
+        action=action,
+        reward=0.0,
+    )
+    policy = model(tmp_path).eval()
+    reference = recurrent_sequence_batch_loss(policy, ((decision,),), verify=True)
+    fast = recurrent_sequence_batch_loss(policy, ((decision,),), verify=False)
+    assert reference.policy_targets == fast.policy_targets == 1
+    assert torch.allclose(fast.loss, reference.loss, atol=1e-6, rtol=1e-6)
+
 
 def test_batched_recurrent_loss_can_advance_forced_only_sequence(tmp_path) -> None:
     from ptcg_rl.g1.semantic import semantic_snapshot
