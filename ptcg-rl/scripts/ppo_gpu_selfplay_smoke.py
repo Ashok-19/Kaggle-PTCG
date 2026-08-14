@@ -16,15 +16,16 @@ from gpu_cabt.device_runtime import GpuCabtRuntime
 from ptcg_rl.g2.checkpoint import load_checkpoint_package
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch
 from ptcg_rl.g3.checkpoint import load_training_checkpoint_model_state, save_training_checkpoint
+from ptcg_rl.g3.compound_batch import (
+    BatchedCompoundActionV1,
+    replay_compound_actions_batched,
+    sample_compound_actions_batched,
+)
 from ptcg_rl.g3.gpu_policy_bridge import GpuPolicyDecisionMetaV1, build_torch_policy_batch
 from ptcg_rl.g3.ppo import (
-    CompoundActionV1,
     compute_gae,
-    is_forced_compound_action,
     ppo_loss,
-    replay_compound_action,
     require_finite_gradients,
-    sample_compound_action,
     verify_probability_replay,
 )
 
@@ -39,7 +40,7 @@ class RolloutStepV1:
     hidden_before: Tensor
     env_indices: Tensor
     actors: Tensor
-    actions: tuple[CompoundActionV1, ...]
+    actions: BatchedCompoundActionV1
     old_log_probabilities: Tensor
     old_values: Tensor
     old_entropies: Tensor
@@ -82,48 +83,29 @@ def _terminal_reward(game_result: int, player: int) -> float:
     raise PPOSmokeError(f"unsupported GPU terminal result {game_result}")
 
 
-def _sample_actions(
-    model: PTCGPolicyV1,
-    output: Any,
+def _meaningful_policy_mask(
     batch: TorchDecisionBatch,
     meta: GpuPolicyDecisionMetaV1,
-    *,
-    generator: torch.Generator,
-) -> tuple[tuple[CompoundActionV1, ...], Tensor, Tensor, Tensor]:
-    actions: list[CompoundActionV1] = []
-    log_probabilities: list[Tensor] = []
-    entropies: list[Tensor] = []
-    policy_mask: list[bool] = []
-    for row in range(batch.batch_size):
-        start = int(output.option_offsets[row].item())
-        end = int(output.option_offsets[row + 1].item())
-        option_embeddings = output.option_embeddings[start:end]
-        available = batch.option_available[start:end]
-        minimum = int(meta.minimum_counts[row].item())
-        maximum = int(meta.maximum_counts[row].item())
-        available_count = int(available.sum().item())
-        action, replay = sample_compound_action(
-            initial_prefix=model.decoder_initial(output.hidden[row]),
-            option_embeddings=option_embeddings,
-            available_mask=available,
-            minimum_count=minimum,
-            maximum_count=maximum,
-            decoder_logits=model.decoder_logits,
-            decoder_advance=model.decoder_advance,
-            generator=generator,
-        )
-        actions.append(action)
-        log_probabilities.append(replay.log_probability.detach())
-        entropies.append(replay.normalized_entropy.detach())
-        policy_mask.append(
-            not is_forced_compound_action(available_count, minimum, maximum)
-        )
-    return (
-        tuple(actions),
-        torch.stack(log_probabilities),
-        torch.stack(entropies),
-        torch.tensor(policy_mask, dtype=torch.bool, device=batch.global_numeric.device),
+) -> Tensor:
+    lengths = batch.option_offsets[1:] - batch.option_offsets[:-1]
+    owner = torch.repeat_interleave(
+        torch.arange(batch.batch_size, dtype=torch.long, device=lengths.device),
+        lengths,
     )
+    available_counts = torch.zeros(
+        batch.batch_size, dtype=torch.long, device=lengths.device
+    )
+    if owner.numel():
+        available_counts.scatter_add_(0, owner, batch.option_available.to(torch.long))
+    effective_maximum = torch.minimum(meta.maximum_counts, available_counts)
+    if torch.any(meta.minimum_counts > effective_maximum):
+        raise PPOSmokeError("selection minimum exceeds legal option count")
+    # The only one-outcome ordered compound cases are: explicit zero-selection,
+    # or exactly one available option with a mandatory minimum of one.
+    forced = (effective_maximum == 0) | (
+        (available_counts == 1) & (meta.minimum_counts == 1)
+    )
+    return ~forced
 
 
 def _rollout(
@@ -190,13 +172,19 @@ def _rollout(
             output = model(batch, hidden_before)
             if not torch.isfinite(output.values).all() or not torch.isfinite(output.hidden).all():
                 raise PPOSmokeError("rollout policy emitted nonfinite value or hidden state")
-            actions, old_logp, entropies, policy_mask = _sample_actions(
+            actions = sample_compound_actions_batched(
                 model,
-                output,
-                batch,
-                meta,
+                public_hidden=output.hidden,
+                option_embeddings=output.option_embeddings,
+                option_offsets=output.option_offsets,
+                available_mask=batch.option_available,
+                minimum_counts=meta.minimum_counts,
+                maximum_counts=meta.maximum_counts,
                 generator=generator,
             )
+            old_logp = actions.log_probabilities
+            entropies = actions.normalized_entropies
+            policy_mask = _meaningful_policy_mask(batch, meta)
         hidden[meta.env_indices, meta.actors] = output.hidden.detach()
         steps.append(
             RolloutStepV1(
@@ -204,7 +192,13 @@ def _rollout(
                 hidden_before=hidden_before,
                 env_indices=meta.env_indices.detach().clone(),
                 actors=meta.actors.detach().clone(),
-                actions=actions,
+                actions=BatchedCompoundActionV1(
+                    selected_indices=actions.selected_indices.detach().clone(),
+                    selected_lengths=actions.selected_lengths.detach().clone(),
+                    stopped=actions.stopped.detach().clone(),
+                    log_probabilities=actions.log_probabilities.detach().clone(),
+                    normalized_entropies=actions.normalized_entropies.detach().clone(),
+                ),
                 old_log_probabilities=old_logp.detach().clone(),
                 old_values=output.values.detach().clone(),
                 old_entropies=entropies.detach().clone(),
@@ -222,15 +216,14 @@ def _rollout(
             device=device,
         )
         response_present[meta.env_indices] = 1
-        for row, action in enumerate(actions):
-            env = int(meta.env_indices[row].item())
-            selected_counts[env] = len(action.selected_indices)
-            if action.selected_indices:
-                selected_indices[env, : len(action.selected_indices)] = torch.tensor(
-                    action.selected_indices,
-                    dtype=torch.int32,
-                    device=device,
-                )
+        selected_counts[meta.env_indices] = actions.selected_lengths.to(torch.int32)
+        action_width = actions.selected_indices.shape[1]
+        if action_width:
+            selected_indices[meta.env_indices, :action_width] = torch.where(
+                actions.selected_indices >= 0,
+                actions.selected_indices,
+                torch.zeros_like(actions.selected_indices),
+            ).to(torch.int32)
         runtime.step(response_present, selected_counts, selected_indices)
         runtime.synchronize()
 
@@ -328,22 +321,19 @@ def _replay_rollout(
         for step in steps:
             output = model(step.batch, step.hidden_before)
             values.append(output.values)
-            for row, action in enumerate(step.actions):
-                start = int(output.option_offsets[row].item())
-                end = int(output.option_offsets[row + 1].item())
-                replay = replay_compound_action(
-                    initial_prefix=model.decoder_initial(output.hidden[row]),
-                    option_embeddings=output.option_embeddings[start:end],
-                    available_mask=step.batch.option_available[start:end],
-                    action=action,
-                    minimum_count=int(step.batch.global_numeric[row, 2].item()),
-                    maximum_count=int(step.batch.global_numeric[row, 3].item()),
-                    decoder_logits=model.decoder_logits,
-                    decoder_advance=model.decoder_advance,
-                )
-                log_probabilities.append(replay.log_probability)
-                entropies.append(replay.normalized_entropy)
-    return torch.stack(log_probabilities), torch.cat(values), torch.stack(entropies)
+            replay_logp, replay_entropy = replay_compound_actions_batched(
+                model,
+                public_hidden=output.hidden,
+                option_embeddings=output.option_embeddings,
+                option_offsets=output.option_offsets,
+                available_mask=step.batch.option_available,
+                minimum_counts=step.batch.global_numeric[:, 2].to(torch.long),
+                maximum_counts=step.batch.global_numeric[:, 3].to(torch.long),
+                actions=step.actions,
+            )
+            log_probabilities.append(replay_logp)
+            entropies.append(replay_entropy)
+    return torch.cat(log_probabilities), torch.cat(values), torch.cat(entropies)
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
