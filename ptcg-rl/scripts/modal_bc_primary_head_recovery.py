@@ -182,7 +182,10 @@ def _teacher_metrics(model: Any, episodes: list[Any], device: Any) -> dict[str, 
                 )
                 total += 1
                 matches += int(matched)
-                if decision.request.selection_type == 0:
+                selection_type = int(
+                    decision.projected.model.global_categorical_values[2]
+                )
+                if selection_type == 0:
                     main_total += 1
                     main_matches += int(matched)
                 if len(decision.request.options) >= 6:
