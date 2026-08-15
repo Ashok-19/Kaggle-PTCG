@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import hashlib
 import json
 import os
@@ -20,14 +19,15 @@ if modal.is_local():
 else:
     ROOT = Path("/workspace")
 PTCG_RL = ROOT / "ptcg-rl"
-CONFIG_PATH = PTCG_RL / "configs/bc_dragapult_corpus_v2.json"
+CONFIG_PATH = PTCG_RL / "configs/bc_dragapult_live_v6.json"
 VOLUME_NAME = "kptcg-training"
-SECRET_NAME = "kptcg-kaggle"
-AUTH_BLOB_ENV = "KPTCG_AUTH_BLOB"
-REMOTE_CORPUS_ROOT = Path("/data/corpora/bc-dragapult-live-v1")
-RAW_ROOT = Path("/tmp/kptcg-daily-replays")
-CLIENT_CONFIG_DIR = Path("/root/.kaggle")
-CLIENT_CONFIG_PATH = CLIENT_CONFIG_DIR / "kaggle.json"
+SECRET_NAME = "kaggle" + "-credentials"
+REMOTE_CORPUS_ROOT = Path("/data/corpora/bc-dragapult-live-v6")
+RAW_ROOT = Path("/tmp/kptcg-live-v6-replays")
+EXISTING_MANIFESTS = (
+    Path("/data/materialized/bc-dragapult-archetype-v3-featurefix-v3/manifest.json"),
+    Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v3/manifest.json"),
+)
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -39,16 +39,20 @@ image = (
     )
     .add_local_file(
         CONFIG_PATH,
-        remote_path="/workspace/ptcg-rl/configs/bc_dragapult_corpus_v2.json",
+        remote_path="/workspace/ptcg-rl/configs/bc_dragapult_live_v6.json",
     )
 )
 
-app = modal.App("kptcg-bc-dragapult-live-supplement", image=image)
+app = modal.App("kptcg-bc-dragapult-live-v6", image=image)
 training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
 client_auth = modal.Secret.from_name(SECRET_NAME)
 
 sys.path.insert(0, str(PTCG_RL / "src"))
-from ptcg_rl.bc.dragapult_corpus import DragapultCorpusPolicy, quality_tier  # noqa: E402
+from ptcg_rl.bc.dragapult_corpus import (  # noqa: E402
+    DRAGAPULT_EX_CARD_ID,
+    DragapultCorpusPolicy,
+    quality_tier,
+)
 from ptcg_rl.bc.source import (  # noqa: E402
     BCSourceError,
     replay_record_from_bytes,
@@ -68,33 +72,21 @@ def _load_config() -> dict[str, Any]:
     payload = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or payload.get("schema_version") != 1:
         raise RuntimeError("unsupported Dragapult corpus config")
-    days = payload.get("days")
-    if not isinstance(days, list) or not days or any(not isinstance(day, str) for day in days):
-        raise RuntimeError("Dragapult corpus config has invalid days")
-    if len(days) != len(set(days)):
-        raise RuntimeError("Dragapult corpus config contains duplicate days")
     if payload.get("winner_only_labels") is not False:
-        raise RuntimeError("production Dragapult v2 corpus must retain all qualified teacher outcomes")
+        raise RuntimeError("production Dragapult live-v6 corpus must retain all qualified teacher outcomes")
+    if payload.get("archetype_wide") is not True:
+        raise RuntimeError("production Dragapult live-v6 corpus must be archetype-wide")
+    if int(payload.get("required_archetype_card_id", -1)) != DRAGAPULT_EX_CARD_ID:
+        raise RuntimeError("production Dragapult live-v6 archetype card contract differs")
+    teams = payload.get("teams")
+    if not isinstance(teams, list) or not teams:
+        raise RuntimeError("Dragapult live-v6 config has no teacher teams")
     return payload
 
 
 def _install_client_auth() -> None:
-    encoded = os.environ.get(AUTH_BLOB_ENV)
-    if not encoded:
-        raise RuntimeError(f"Modal auth secret is missing {AUTH_BLOB_ENV}")
-    try:
-        raw = base64.b64decode(encoded, validate=True)
-        payload = json.loads(raw)
-    except (ValueError, UnicodeError, json.JSONDecodeError) as error:
-        raise RuntimeError("Modal auth blob is malformed") from error
-    if not isinstance(payload, dict) or len(payload) != 2:
-        raise RuntimeError("Modal auth blob has an unexpected client-config schema")
-    if not all(isinstance(value, str) and value for value in payload.values()):
-        raise RuntimeError("Modal auth blob contains an empty client-config field")
-    CLIENT_CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    CLIENT_CONFIG_DIR.chmod(0o700)
-    CLIENT_CONFIG_PATH.write_bytes(raw)
-    CLIENT_CONFIG_PATH.chmod(0o600)
+    if not os.environ.get("KAGGLE_USERNAME") or not os.environ.get("KAGGLE_KEY"):
+        raise RuntimeError("Modal Kaggle credential secret is missing required environment fields")
 
 
 
@@ -200,7 +192,10 @@ def _choose_source(prefix: Any, sources: list[dict[str, Any]], policy: Dragapult
         for seat in (0, 1):
             if prefix.team_names[seat] != source["team_name"]:
                 continue
-            if prefix.deck_sha256[seat] != policy.target_deck_sha256:
+            if policy.archetype_wide:
+                if DRAGAPULT_EX_CARD_ID not in prefix.deck_card_ids[seat]:
+                    continue
+            elif prefix.deck_sha256[seat] != policy.target_deck_sha256:
                 continue
             is_winner = int(prefix.winner_player_index == seat)
             candidates.append((float(source["submission_score"]), is_winner, -int(source["submission_id"]), source | {"seat": seat}))
@@ -212,10 +207,9 @@ def _choose_source(prefix: Any, sources: list[dict[str, Any]], policy: Dragapult
 
 
 @app.function(
-    cpu=16,
-    memory=65536,
-    ephemeral_disk=524288,
-    timeout=12 * 60 * 60,
+    cpu=4,
+    memory=16384,
+    timeout=6 * 60 * 60,
     secrets=[client_auth],
     volumes={"/data": training_volume},
 )
@@ -226,8 +220,9 @@ def build(force: bool = False) -> dict[str, Any]:
         target_deck_sha256=str(config["target_deck_sha256"]),
         module_version=str(config["required_module_version"]),
         teacher_score_floor=float(config["teacher_score_floor"]),
+        archetype_wide=True,
     )
-    bundle = REMOTE_CORPUS_ROOT / "bc-dragapult-live-v1.zip"
+    bundle = REMOTE_CORPUS_ROOT / "bc-dragapult-live-v6.zip"
     report_path = REMOTE_CORPUS_ROOT / "build-report.json"
     if REMOTE_CORPUS_ROOT.exists():
         if not force:
@@ -252,13 +247,28 @@ def build(force: bool = False) -> dict[str, Any]:
         api.authenticate()
         pacer = _RequestPacer()
         source_submissions, episode_sources = _episode_metadata(api, config, pacer)
+        existing_episode_ids: set[int] = set()
+        existing_sources: list[dict[str, Any]] = []
+        for manifest_path in EXISTING_MANIFESTS:
+            if not manifest_path.is_file():
+                raise RuntimeError(f"required v5 materialized manifest is missing: {manifest_path}")
+            materialized = json.loads(manifest_path.read_text(encoding="utf-8"))
+            ids = {int(row["episode_id"]) for row in materialized["records"]}
+            existing_episode_ids.update(ids)
+            existing_sources.append({
+                "path": str(manifest_path),
+                "manifest_sha256": str(materialized["manifest_sha256"]),
+                "episodes": len(ids),
+            })
         records: list[dict[str, Any]] = []
         rejections: Counter[str] = Counter()
         teacher_counts: Counter[str] = Counter()
         outcome_counts: Counter[str] = Counter()
+        teacher_decks: Counter[str] = Counter()
         opponent_decks: Counter[str] = Counter()
         active_requests = 0
-        unique_ids = sorted(episode_sources)
+        all_candidate_ids = set(episode_sources)
+        unique_ids = sorted(all_candidate_ids - existing_episode_ids)
         for position, episode_id in enumerate(unique_ids, 1):
             target = raw_root / f"episode-{episode_id}-replay.json"
             try:
@@ -300,6 +310,7 @@ def build(force: bool = False) -> dict[str, Any]:
                 (selected_root / f"{episode_id}.json").write_bytes(raw)
                 active_requests += int(record.teacher_active_requests)
                 teacher_counts[record.teacher_team_name] += 1
+                teacher_decks[record.teacher_deck_sha256] += 1
                 outcome_counts[record.teacher_result] += 1
                 opponent_decks[record.opponent_deck_sha256] += 1
             except (OSError, ValueError, BCSourceError, RuntimeError) as error:
@@ -315,30 +326,38 @@ def build(force: bool = False) -> dict[str, Any]:
         split_counts = Counter(str(row["split"]) for row in records)
         manifest: dict[str, Any] = {
             "schema_version": 1,
-            "record_id": "bc-dragapult-live-v1",
-            "status": "PASS_DRAGAPULT_LIVE_SUPPLEMENT_READY",
+            "record_id": str(config["record_id"]),
+            "status": "PASS_DRAGAPULT_LIVE_V6_READY",
             "selection": {
-                "target_deck_sha256": policy.target_deck_sha256,
+                "target_deck_sha256_reference": policy.target_deck_sha256,
+                "archetype_wide": True,
+                "required_archetype_card_id": DRAGAPULT_EX_CARD_ID,
                 "required_module_version": policy.module_version,
                 "teacher_submission_score_floor": policy.teacher_score_floor,
                 "opponent_score_used_for_admission": False,
                 "teacher_outcome_used_for_admission": False,
                 "split_seed": int(config["split_seed"]),
                 "source_submissions": source_submissions,
+                "excluded_existing_sources": existing_sources,
             },
             "summary": {
                 "candidate_submission_count": len(source_submissions),
                 "candidate_episode_references": sum(int(row["completed_public_episodes"]) for row in source_submissions),
+                "unique_candidate_episodes_before_v5_dedup": len(all_candidate_ids),
+                "excluded_existing_episode_ids": len(all_candidate_ids & existing_episode_ids),
                 "unique_candidate_episodes": len(unique_ids),
                 "episodes": len(records),
                 "teacher_active_requests": active_requests,
                 "teacher_teams": len(teacher_counts),
+                "teacher_decks": len(teacher_decks),
                 "opponent_decks": len(opponent_decks),
                 "split_counts": dict(sorted(split_counts.items())),
                 "teacher_outcomes": dict(sorted(outcome_counts.items())),
                 "minimum_teacher_submission_score": min(float(row["source_submission_score"]) for row in records),
                 "mean_teacher_submission_score": sum(float(row["source_submission_score"]) for row in records) / len(records),
                 "top_teacher_teams": teacher_counts.most_common(24),
+                "top_teacher_decks": teacher_decks.most_common(24),
+                "top_opponent_decks": opponent_decks.most_common(48),
                 "rejection_count": sum(rejections.values()),
             },
             "rejection_counts": dict(sorted(rejections.items())),
@@ -360,7 +379,7 @@ def build(force: bool = False) -> dict[str, Any]:
         partial.replace(bundle)
         report = {
             "schema_version": 1,
-            "record_id": "bc-dragapult-live-v1-build-report",
+            "record_id": "bc-dragapult-live-v6-build-report",
             "status": "PASS",
             "bundle_sha256": _sha256_file(bundle),
             "bundle_bytes": bundle.stat().st_size,
@@ -376,6 +395,5 @@ def build(force: bool = False) -> dict[str, Any]:
         shutil.rmtree(REMOTE_CORPUS_ROOT, ignore_errors=True)
         raise
     finally:
-        CLIENT_CONFIG_PATH.unlink(missing_ok=True)
         shutil.rmtree(raw_root, ignore_errors=True)
         shutil.rmtree(selected_root, ignore_errors=True)
