@@ -9,7 +9,9 @@ from pathlib import Path
 from typing import Any
 
 import modal
-import torch
+
+if not modal.is_local():
+    import torch
 
 if modal.is_local():
     ROOT = Path(__file__).resolve().parents[2]
