@@ -199,6 +199,105 @@ def _episode_metadata(api: Any, config: Mapping[str, Any], pacer: _RequestPacer)
     return submissions, by_episode
 
 
+def _probe_dragapult_submissions(
+    api: Any,
+    source_submissions: list[dict[str, Any]],
+    episode_sources: dict[int, list[dict[str, Any]]],
+    pacer: _RequestPacer,
+    raw_root: Path,
+    policy: DragapultCorpusPolicy,
+) -> tuple[list[dict[str, Any]], dict[int, list[dict[str, Any]]], dict[str, int]]:
+    episode_ids_by_submission: dict[int, list[int]] = {}
+    for episode_id, sources in episode_sources.items():
+        for source in sources:
+            episode_ids_by_submission.setdefault(int(source["submission_id"]), []).append(episode_id)
+
+    dragapult_submission_ids: set[int] = set()
+    probe_failures = 0
+    probed = 0
+    for position, submission in enumerate(source_submissions, 1):
+        submission_id = int(submission["submission_id"])
+        team_name = str(submission["team_name"])
+        episode_ids = sorted(episode_ids_by_submission.get(submission_id, ()), reverse=True)
+        probe_result: dict[str, Any] | None = None
+        for episode_id in episode_ids[:3]:
+            target = raw_root / f"episode-{episode_id}-replay.json"
+            target.unlink(missing_ok=True)
+            try:
+                _api_call(
+                    pacer,
+                    api.competition_episode_replay,
+                    episode_id,
+                    path=str(raw_root),
+                    quiet=True,
+                )
+                raw = target.read_bytes()
+                prefix = scan_replay_prefix(raw[:65536])
+                if prefix.module_version != policy.module_version:
+                    continue
+                seats = [seat for seat in (0, 1) if prefix.team_names[seat] == team_name]
+                if len(seats) != 1:
+                    continue
+                seat = seats[0]
+                is_dragapult = DRAGAPULT_EX_CARD_ID in prefix.deck_card_ids[seat]
+                probe_result = {
+                    "probe_episode_id": episode_id,
+                    "probe_teacher_deck_sha256": prefix.deck_sha256[seat],
+                    "probe_dragapult_archetype": is_dragapult,
+                }
+                if is_dragapult:
+                    dragapult_submission_ids.add(submission_id)
+                break
+            except (OSError, ValueError, BCSourceError, RuntimeError):
+                continue
+            finally:
+                target.unlink(missing_ok=True)
+        if probe_result is None:
+            probe_failures += 1
+            submission.update(
+                {
+                    "probe_episode_id": None,
+                    "probe_teacher_deck_sha256": None,
+                    "probe_dragapult_archetype": None,
+                }
+            )
+        else:
+            submission.update(probe_result)
+            probed += 1
+        print(
+            json.dumps(
+                {
+                    "event": "live_v6_submission_probe_progress",
+                    "submissions_processed": position,
+                    "submissions_total": len(source_submissions),
+                    "successfully_probed": probed,
+                    "dragapult_submissions": len(dragapult_submission_ids),
+                    "probe_failures": probe_failures,
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
+
+    filtered_sources: dict[int, list[dict[str, Any]]] = {}
+    for episode_id, sources in episode_sources.items():
+        retained = [
+            source
+            for source in sources
+            if int(source["submission_id"]) in dragapult_submission_ids
+        ]
+        if retained:
+            filtered_sources[episode_id] = retained
+    diagnostics = {
+        "qualified_submissions": len(source_submissions),
+        "successfully_probed_submissions": probed,
+        "probe_failures": probe_failures,
+        "dragapult_submissions": len(dragapult_submission_ids),
+        "episodes_after_submission_probe": len(filtered_sources),
+    }
+    return source_submissions, filtered_sources, diagnostics
+
+
 def _choose_source(prefix: Any, sources: list[dict[str, Any]], policy: DragapultCorpusPolicy) -> tuple[int, dict[str, Any]] | None:
     candidates: list[tuple[float, int, int, dict[str, Any]]] = []
     for source in sources:
@@ -260,6 +359,9 @@ def build(force: bool = False) -> dict[str, Any]:
         api.authenticate()
         pacer = _RequestPacer()
         source_submissions, episode_sources = _episode_metadata(api, config, pacer)
+        source_submissions, episode_sources, submission_probe = _probe_dragapult_submissions(
+            api, source_submissions, episode_sources, pacer, raw_root, policy
+        )
         existing_episode_ids: set[int] = set()
         existing_sources: list[dict[str, Any]] = []
         for manifest_path in EXISTING_MANIFESTS:
@@ -306,7 +408,7 @@ def build(force: bool = False) -> dict[str, Any]:
                     continue
                 chosen = _choose_source(prefix_record, episode_sources[episode_id], policy)
                 if chosen is None:
-                    rejections["not_exact_target_deck_for_qualified_submission"] += 1
+                    rejections["not_dragapult_archetype_for_probed_submission"] += 1
                     continue
                 teacher_seat, source = chosen
                 record = replay_record_from_bytes(
@@ -317,8 +419,10 @@ def build(force: bool = False) -> dict[str, Any]:
                     split_seed=int(config["split_seed"]),
                     teacher_player_index=teacher_seat,
                 )
-                if record.module_version != policy.module_version or record.teacher_deck_sha256 != policy.target_deck_sha256:
-                    raise RuntimeError(f"full replay contract drift for {episode_id}")
+                if record.module_version != policy.module_version:
+                    raise RuntimeError(f"full replay module contract drift for {episode_id}")
+                if DRAGAPULT_EX_CARD_ID not in prefix_record.deck_card_ids[teacher_seat]:
+                    raise RuntimeError(f"full replay teacher is not Dragapult archetype for {episode_id}")
                 tier, weight = quality_tier(float(source["submission_score"]))
                 row = asdict(record)
                 row.update(
@@ -364,10 +468,13 @@ def build(force: bool = False) -> dict[str, Any]:
                 "teacher_outcome_used_for_admission": False,
                 "split_seed": int(config["split_seed"]),
                 "source_submissions": source_submissions,
+                "submission_probe": submission_probe,
                 "excluded_existing_sources": existing_sources,
             },
             "summary": {
                 "candidate_submission_count": len(source_submissions),
+                "dragapult_submission_count": int(submission_probe["dragapult_submissions"]),
+                "submission_probe_failures": int(submission_probe["probe_failures"]),
                 "candidate_episode_references": sum(int(row["completed_public_episodes"]) for row in source_submissions),
                 "unique_candidate_episodes_before_v5_dedup": len(all_candidate_ids),
                 "excluded_existing_episode_ids": len(all_candidate_ids & existing_episode_ids),
