@@ -269,6 +269,7 @@ def _run_variant(
     card_table: Any,
     config: Any,
     device: torch.device,
+    epochs: int,
 ) -> dict[str, Any]:
     from bc_capacity_sweep import _build_model, _pack
     from bc_train_materialized import train_epoch_packed, validate_packed
@@ -292,7 +293,7 @@ def _run_variant(
     baseline_nll = validate_packed(model, groups, device=device, bf16=True, maximum_groups=None)
     baseline_metrics = _teacher_metrics(model, episodes, device)
     history: list[dict[str, Any]] = []
-    for epoch in range(1, EPOCHS + 1):
+    for epoch in range(1, epochs + 1):
         training = train_epoch_packed(
             model,
             optimizer,
@@ -305,7 +306,7 @@ def _run_variant(
             maximum_groups=None,
         )
         row: dict[str, Any] = {"epoch": epoch, "training": training}
-        if epoch in {1, 5, 10, EPOCHS}:
+        if epoch in {1, 5, 10, epochs}:
             row["same_subset_validation"] = validate_packed(
                 model,
                 groups,
@@ -361,18 +362,35 @@ def _run_variant(
     timeout=60 * 60,
     volumes={"/data": training_volume},
 )
-def run(code_commit: str) -> dict[str, Any]:
+def run(
+    code_commit: str,
+    subset_episodes: int = SUBSET_EPISODES,
+    epochs: int = EPOCHS,
+    batch_size: int = 8,
+    probe_tag: str = "baseline",
+) -> dict[str, Any]:
     from bc_capacity_sweep import _build_model, _pack, model_configs
     from ptcg_rl.g2.card_table import load_card_table
     from ptcg_rl.g2.models import MODEL_SCHEMA_VERSION, model_schema_sha256
 
     if re.fullmatch(r"[0-9a-f]{40}", code_commit) is None:
         raise RuntimeError("code_commit must be a full lowercase Git SHA")
-    if REPORT_PATH.is_file():
-        existing = json.loads(REPORT_PATH.read_text(encoding="utf-8"))
-        if existing.get("code_commit") == code_commit:
+    if subset_episodes <= 0 or epochs <= 0 or batch_size <= 0:
+        raise RuntimeError("subset_episodes, epochs, and batch_size must be positive")
+    if re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", probe_tag) is None:
+        raise RuntimeError("probe_tag must be a lowercase slug")
+    output_dir = OUTPUT_DIR if probe_tag == "baseline" else OUTPUT_DIR.with_name(f"{OUTPUT_DIR.name}-{probe_tag}")
+    report_path = output_dir / "report.json"
+    if report_path.is_file():
+        existing = json.loads(report_path.read_text(encoding="utf-8"))
+        if (
+            existing.get("code_commit") == code_commit
+            and existing.get("subset_episodes") == subset_episodes
+            and existing.get("epochs") == epochs
+            and existing.get("probe_batch_size") == batch_size
+        ):
             return {"status": "EXISTS", **existing}
-        raise RuntimeError("learning-probe report already exists for different source")
+        raise RuntimeError("learning-probe report already exists for different source/config")
     if not EXACT_CACHE.is_file() or not EXACT_MANIFEST.is_file():
         raise RuntimeError("exact-v2 cache or manifest is missing")
     manifest = json.loads(EXACT_MANIFEST.read_text(encoding="utf-8"))
@@ -387,8 +405,8 @@ def run(code_commit: str) -> dict[str, Any]:
         (episode for episode in all_episodes if episode.split == "train"),
         key=lambda episode: episode.episode_id,
     )
-    episodes = training[:SUBSET_EPISODES]
-    if len(episodes) != SUBSET_EPISODES:
+    episodes = training[:subset_episodes]
+    if len(episodes) != subset_episodes:
         raise RuntimeError("exact-v2 cache does not contain enough training episodes")
 
     device = torch.device("cuda")
@@ -404,7 +422,7 @@ def run(code_commit: str) -> dict[str, Any]:
     }
     audit_groups = _pack(
         episodes,
-        batch_size=8,
+        batch_size=min(batch_size, len(episodes)),
         sequence_length=SEQUENCE_LENGTH,
         seed=SEED,
         device=device,
@@ -413,23 +431,27 @@ def run(code_commit: str) -> dict[str, Any]:
     del initial_model, audit_groups
     torch.cuda.empty_cache()
 
-    variants = [
-        _run_variant(
-            variant=dict(variant),
-            initial_state=initial_state,
-            episodes=episodes,
-            card_table=card_table,
-            config=config,
-            device=device,
+    variants = []
+    for variant_template in VARIANTS:
+        variant = dict(variant_template)
+        variant["batch_size"] = batch_size
+        variants.append(
+            _run_variant(
+                variant=variant,
+                initial_state=initial_state,
+                episodes=episodes,
+                card_table=card_table,
+                config=config,
+                device=device,
+                epochs=epochs,
+            )
         )
-        for variant in VARIANTS
-    ]
     best_semantic = max(
         variants,
         key=lambda row: row["final_teacher_metrics"]["representation_equivalent_match_rate"],
     )
     report = {
-        "record_id": "bc-dragapult-3p7m-schema-v3-learning-probe-v1",
+        "record_id": f"bc-dragapult-3p7m-schema-v3-learning-probe-{probe_tag}",
         "status": "PASS_BC_3P7M_LEARNING_PROBE",
         "code_commit": code_commit,
         "model_label": MODEL_LABEL,
@@ -439,7 +461,9 @@ def run(code_commit: str) -> dict[str, Any]:
         "subset_episode_ids": [episode.episode_id for episode in episodes],
         "subset_episodes": len(episodes),
         "subset_policy_targets": sum(episode.policy_targets for episode in episodes),
-        "epochs": EPOCHS,
+        "epochs": epochs,
+        "probe_batch_size": batch_size,
+        "probe_tag": probe_tag,
         "sequence_length": SEQUENCE_LENGTH,
         "gradient_audit": gradient_audit,
         "variants": variants,
@@ -448,8 +472,8 @@ def run(code_commit: str) -> dict[str, Any]:
             "representation_equivalent_match_rate"
         ],
     }
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    REPORT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     training_volume.commit()
     print(json.dumps(report, indent=2, sort_keys=True), flush=True)
     return report
