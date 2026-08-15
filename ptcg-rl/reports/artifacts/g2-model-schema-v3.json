@@ -1,0 +1,348 @@
+{
+  "artifact_id": "g2-model-schema-v3",
+  "created_at_utc": "2026-08-15T10:16:41Z",
+  "descriptor": {
+    "features": {
+      "entity_categorical": [
+        "card_id",
+        "relative_owner",
+        "zone",
+        "role_position"
+      ],
+      "entity_numeric": [
+        "hp",
+        "max_hp",
+        "damage",
+        "appear_this_turn",
+        "attached_energy_count",
+        "attached_tool_count",
+        "evolution_depth",
+        "visible",
+        "status_poisoned",
+        "status_burned",
+        "status_asleep",
+        "status_paralyzed",
+        "status_confused"
+      ],
+      "event_categorical": [
+        "event_type",
+        "relative_player",
+        "has_basic_pokemon",
+        "card_id",
+        "from_area",
+        "to_area",
+        "card_id_active",
+        "card_id_bench",
+        "card_id_before",
+        "card_id_after",
+        "card_id_target",
+        "attack_id",
+        "put_damage_counter",
+        "is_recover",
+        "coin_head",
+        "result",
+        "reason"
+      ],
+      "event_identity": [
+        "serial",
+        "serial_active",
+        "serial_bench",
+        "serial_before",
+        "serial_after",
+        "serial_target"
+      ],
+      "event_numeric": [
+        "value"
+      ],
+      "global_categorical": [
+        "first_player_relative",
+        "terminal_result",
+        "selection_type",
+        "selection_context",
+        "request_ordered",
+        "context_card_id",
+        "effect_card_id",
+        "supporter_played",
+        "stadium_played",
+        "energy_attached",
+        "retreated"
+      ],
+      "global_numeric": [
+        "turn",
+        "turn_action_count",
+        "min_count",
+        "max_count",
+        "remain_damage_counter",
+        "remain_energy_cost",
+        "self_deck_count",
+        "self_hand_count",
+        "self_prize_count",
+        "opponent_deck_count",
+        "opponent_hand_count",
+        "opponent_prize_count"
+      ],
+      "option_categorical": [
+        "selection_type",
+        "selection_context",
+        "option_type",
+        "source_kind",
+        "target_kind",
+        "choice_role",
+        "area",
+        "in_play_area",
+        "relative_player",
+        "attack_id",
+        "card_id",
+        "special_condition_type"
+      ],
+      "option_numeric": [
+        "number",
+        "count"
+      ],
+      "player_categorical": [
+        "relative_player",
+        "hand_visible"
+      ],
+      "player_numeric": [
+        "bench_max",
+        "deck_count",
+        "hand_count",
+        "prize_count",
+        "visible_prize_count",
+        "facedown_active_count"
+      ]
+    },
+    "forbidden_actor_features": [
+      "entity_serial_magnitude",
+      "event_serial_magnitude",
+      "option_serial_magnitude",
+      "option_original_index",
+      "arbitrary_unordered_zone_position"
+    ],
+    "records": {
+      "ModelInputV1": [
+        {
+          "name": "schema_version",
+          "type": "int"
+        },
+        {
+          "name": "player_categorical_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "player_categorical_values",
+          "type": "tuple[tuple[int, ...], ...]"
+        },
+        {
+          "name": "player_categorical_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "player_numeric_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "player_numeric_values",
+          "type": "tuple[tuple[float, ...], ...]"
+        },
+        {
+          "name": "player_numeric_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "entity_categorical_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "entity_categorical_values",
+          "type": "tuple[tuple[int, ...], ...]"
+        },
+        {
+          "name": "entity_categorical_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "entity_numeric_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "entity_numeric_values",
+          "type": "tuple[tuple[float, ...], ...]"
+        },
+        {
+          "name": "entity_numeric_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "entity_parent_indices",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "entity_energy_values",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "entity_energy_offsets",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "event_categorical_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "event_categorical_values",
+          "type": "tuple[tuple[int, ...], ...]"
+        },
+        {
+          "name": "event_categorical_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "event_numeric_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "event_numeric_values",
+          "type": "tuple[tuple[float, ...], ...]"
+        },
+        {
+          "name": "event_numeric_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "event_identity_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "event_identity_values",
+          "type": "tuple[tuple[int, ...], ...]"
+        },
+        {
+          "name": "event_identity_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "event_entity_indices",
+          "type": "tuple[tuple[int, ...], ...]"
+        },
+        {
+          "name": "option_categorical_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "option_categorical_values",
+          "type": "tuple[tuple[int, ...], ...]"
+        },
+        {
+          "name": "option_categorical_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "option_numeric_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "option_numeric_values",
+          "type": "tuple[tuple[float, ...], ...]"
+        },
+        {
+          "name": "option_numeric_missing",
+          "type": "tuple[tuple[bool, ...], ...]"
+        },
+        {
+          "name": "option_source_entity_indices",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "option_target_entity_indices",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "option_available_mask",
+          "type": "tuple[bool, ...]"
+        },
+        {
+          "name": "global_categorical_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "global_categorical_values",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "global_categorical_missing",
+          "type": "tuple[bool, ...]"
+        },
+        {
+          "name": "global_numeric_names",
+          "type": "tuple[str, ...]"
+        },
+        {
+          "name": "global_numeric_values",
+          "type": "tuple[float, ...]"
+        },
+        {
+          "name": "global_numeric_missing",
+          "type": "tuple[bool, ...]"
+        }
+      ],
+      "OptionTransportMapV1": [
+        {
+          "name": "schema_version",
+          "type": "int"
+        },
+        {
+          "name": "request_id",
+          "type": "str"
+        },
+        {
+          "name": "original_indices",
+          "type": "tuple[int, ...]"
+        },
+        {
+          "name": "semantic_fingerprints",
+          "type": "tuple[str, ...]"
+        }
+      ],
+      "ProjectedDecisionV1": [
+        {
+          "name": "schema_version",
+          "type": "int"
+        },
+        {
+          "name": "model",
+          "type": "ModelInputV1"
+        },
+        {
+          "name": "transport",
+          "type": "OptionTransportMapV1"
+        }
+      ]
+    },
+    "schema_version": 3
+  },
+  "g1_contract_version": 2,
+  "gate_id": "G2",
+  "kind": "SCHEMA_CONTRACT",
+  "model_schema_sha256": "30066c174128f91a6b78eef3886021c97c6f0b57bd9c001afaef548f3d2081a4",
+  "model_schema_version": 3,
+  "producer": "ptcg-rl.g2.models",
+  "producer_version": "3",
+  "record_id": "artifact-g2-model-schema-v3",
+  "schema_version": 1,
+  "source_commit": "787a7f384975769bc6a490790ba0f88f85d0ee0c",
+  "source_path": "reports/artifacts/g2-model-schema-v3.json",
+  "status": "SUCCEEDED",
+  "title": "G2 model-facing feature schema v3",
+  "updated_at_utc": "2026-08-15T10:16:41Z",
+  "verification": {
+    "event_entity_gpu_parity": "PASS",
+    "event_identity_collision_scan": "0 collisions / 5999 sampled real decisions",
+    "event_identity_semantics": "first public occurrence; entity-order independent",
+    "focused_tests": "32 passed",
+    "option_permutation_equivariance": "PASS",
+    "semantic_role_positions": "PASS",
+    "serial_renumbering_invariance": "PASS",
+    "transport_mapping_separated": "PASS"
+  }
+}
