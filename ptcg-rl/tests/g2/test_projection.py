@@ -99,6 +99,27 @@ def test_only_semantic_active_and_bench_positions_enter_actor_features() -> None
     assert positions_by_zone[AREA["HAND"]] == [0, 0]
 
 
+def test_effective_energy_count_matches_native_energy_units_not_physical_cards() -> None:
+    raw = raw_observation()
+    active = pokemon(100, 10)
+    active["energies"] = [11, 11]
+    active["energyCards"] = [{"id": 15, "serial": 20, "playerIndex": 0}]
+    raw["current"]["players"][0]["active"] = [active]
+    observation, request = semantic_snapshot(raw, "special-energy", 0, CARD_HASH)
+    assert request is not None
+    active_entity = next(entity for entity in observation.entities if entity.zone == AREA["ACTIVE"])
+    assert active_entity.energy_types == (11, 11)
+    assert active_entity.attached_energy_count == 2
+    projected = project_decision(observation, request).model
+    count_index = projected.entity_numeric_names.index("attached_energy_count")
+    active_row = next(
+        index
+        for index, row in enumerate(projected.entity_categorical_values)
+        if row[projected.entity_categorical_names.index("zone")] == AREA["ACTIVE"]
+    )
+    assert projected.entity_numeric_values[active_row][count_index] == 2.0
+
+
 def test_model_schema_explicitly_excludes_transport_and_serial_magnitude() -> None:
     descriptor = model_schema_descriptor()
     feature_groups = descriptor["features"]

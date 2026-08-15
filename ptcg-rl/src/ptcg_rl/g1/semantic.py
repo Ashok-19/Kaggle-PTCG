@@ -352,7 +352,7 @@ def _visible_entities(
                     damage=max_hp - hp,
                     appear_this_turn=_boolean(pokemon["appearThisTurn"], "pokemon.appearThisTurn"),
                     energy_types=energy_types,
-                    attached_energy_count=len(pokemon["energyCards"]),
+                    attached_energy_count=len(energy_types),
                     attached_tool_count=len(pokemon["tools"]),
                     evolution_depth=len(pokemon["preEvolution"]),
                     statuses=status_values if zone == AREA["ACTIVE"] else (),
