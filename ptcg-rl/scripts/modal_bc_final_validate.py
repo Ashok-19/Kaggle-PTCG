@@ -170,8 +170,8 @@ def _validate_chunk(model: Any, episodes: list[Any], device: torch.device) -> di
                     greedy,
                     greedy_stopped,
                 )
-                selection_key = str(int(decision.request.selection_type))
-                option_count = len(decision.request.options)
+                selection_key = str(int(decision.projected.model.global_categorical_values[2]))
+                option_count = len(decision.projected.model.option_available_mask)
                 if option_count <= 2:
                     option_bucket = "2_or_less"
                 elif option_count <= 5:
