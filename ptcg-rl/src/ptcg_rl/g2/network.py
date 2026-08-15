@@ -19,7 +19,7 @@ from .models import (
 )
 
 CARD_STATIC_FEATURE_WIDTH = 7 + 12 + 13 + 13 + 4 + 16
-ENTITY_NONCARD_FEATURE_WIDTH = 4 + 16 + 8 + 64
+ENTITY_NONCARD_FEATURE_WIDTH = 4 + 16 + 8 + 64 + 16
 EVENT_FEATURE_WIDTH = (
     16
     + 4
@@ -35,7 +35,7 @@ EVENT_FEATURE_WIDTH = (
     + (6 * 8)
     + 2
 )
-GLOBAL_NONCARD_FEATURE_WIDTH = 4 + 4 + 16 + 16 + 4 + 64
+GLOBAL_NONCARD_FEATURE_WIDTH = 4 + 4 + 16 + 16 + 4 + 64 + (4 * 4)
 OPTION_NONENTITY_FEATURE_WIDTH = 16 + 16 + (7 * 8) + 4 + 16 + 16
 
 
@@ -458,6 +458,7 @@ class PTCGPolicyV1(nn.Module):
         self.event_type = SafeEmbedding(127, 16)
         self.result = SafeEmbedding(7, 4)
         self.reason = SafeEmbedding(255, 8)
+        self.energy_type = SafeEmbedding(11, 16)
 
         self.player_numeric = nn.Sequential(
             nn.Linear(2 * len(PLAYER_NUMERIC_NAMES), 32),
@@ -482,6 +483,9 @@ class PTCGPolicyV1(nn.Module):
             ),
             nn.GELU(),
             nn.LayerNorm(self.config.model_width),
+        )
+        self.entity_parent_projection = nn.Linear(
+            self.config.model_width, self.config.model_width, bias=False
         )
         layer = nn.TransformerEncoderLayer(
             d_model=self.config.model_width,
@@ -655,6 +659,35 @@ class PTCGPolicyV1(nn.Module):
         encoded = self.player_projection(torch.cat((categorical, numeric), dim=-1))
         return self.players_projection(encoded.reshape(batch.batch_size, -1))
 
+    def _encode_entity_energy_types(self, batch: TorchDecisionBatch) -> Tensor:
+        entity_count = int(batch.entity_categorical.shape[0])
+        result = self.entity_cls.new_zeros((entity_count, 16))
+        if entity_count == 0:
+            return result
+        if batch.entity_energy_offsets.shape != (entity_count + 1,):
+            raise ContractViolation("entity energy offsets differ from entity rows")
+        counts = batch.entity_energy_offsets[1:] - batch.entity_energy_offsets[:-1]
+        if int(counts.sum().item()) != int(batch.entity_energy_values.numel()):
+            raise ContractViolation("entity energy offsets do not consume all energy values")
+        if not batch.entity_energy_values.numel():
+            return result
+        owner = torch.repeat_interleave(
+            torch.arange(entity_count, dtype=torch.long, device=result.device), counts
+        )
+        encoded = self.energy_type(
+            batch.entity_energy_values,
+            torch.zeros_like(batch.entity_energy_values, dtype=torch.bool),
+        )
+        pooled = encoded.new_full((entity_count, encoded.shape[-1]), float("-inf"))
+        pooled.scatter_reduce_(
+            0,
+            owner.unsqueeze(1).expand_as(encoded),
+            encoded,
+            reduce="amax",
+            include_self=True,
+        )
+        return torch.where(torch.isfinite(pooled), pooled, torch.zeros_like(pooled))
+
     def _encode_entities(self, batch: TorchDecisionBatch) -> tuple[Tensor, Tensor]:
         if batch.entity_categorical.shape[0]:
             card = self.catalog.encode_card(
@@ -680,7 +713,13 @@ class PTCGPolicyV1(nn.Module):
             numeric = self.entity_numeric(
                 self._numeric(batch.entity_numeric, batch.entity_numeric_missing)
             )
-            raw = self.entity_projection(torch.cat((card, categorical, numeric), dim=-1))
+            energy = self._encode_entity_energy_types(batch)
+            raw = self.entity_projection(
+                torch.cat((card, categorical, numeric, energy), dim=-1)
+            )
+            raw = raw + self.entity_parent_projection(
+                self._gather_or_zero(raw, batch.entity_parent_indices)
+            )
         else:
             raw = self.entity_cls.new_empty((0, self.config.model_width))
 
@@ -842,6 +881,22 @@ class PTCGPolicyV1(nn.Module):
                 ),
                 context_card,
                 effect_card,
+                self.binary(
+                    batch.global_categorical[:, 7],
+                    batch.global_categorical_missing[:, 7],
+                ),
+                self.binary(
+                    batch.global_categorical[:, 8],
+                    batch.global_categorical_missing[:, 8],
+                ),
+                self.binary(
+                    batch.global_categorical[:, 9],
+                    batch.global_categorical_missing[:, 9],
+                ),
+                self.binary(
+                    batch.global_categorical[:, 10],
+                    batch.global_categorical_missing[:, 10],
+                ),
             ),
             dim=-1,
         )

@@ -21,6 +21,9 @@ def _projection_fixture():
     globals_[:, 11] = 2
     globals_[:, 16] = torch.tensor([0, 100, 0])
     globals_[:, 17] = torch.tensor([0, 0, 200])
+    globals_[:, 12:16] = torch.tensor(
+        [[1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 1]]
+    )
 
     players = torch.zeros((envs, 2, 12), dtype=torch.int32)
     players[:, 0, :7] = torch.tensor([40, 7, 4, 1, 3, 5, 0])
@@ -42,6 +45,7 @@ def _projection_fixture():
     entities[0, 3, :5] = torch.tensor([0, 1, 6, 2, 0])
     # Env 2: an attached energy. Deliberately use raw role 5; source lookup must
     # use public card id + parent role rather than the attachment list ordinal.
+    entities[2, 0, 16] = 1 << 6  # native energy-index presence: type 6
     entities[2, 2, :18] = torch.tensor(
         [6, 0, 8, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4]
     )
@@ -117,6 +121,9 @@ def test_gpu_bridge_maps_players_globals_entities_and_option_links() -> None:
     assert batch.global_categorical_missing[:, 1].all()  # ongoing state => terminal result missing
     assert batch.global_categorical_missing[:, 5].tolist() == [True, False, True]
     assert batch.global_categorical_missing[:, 6].tolist() == [True, True, False]
+    assert batch.global_categorical[:, 7:11].tolist() == [
+        [1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 1]
+    ]
 
     # Env0 entity rows occupy [0:4]. Bench raw role 3 becomes canonical position 2;
     # hidden prize card id/HP are missing but visibility/count/status fields are observed.
@@ -125,6 +132,9 @@ def test_gpu_bridge_maps_players_globals_entities_and_option_links() -> None:
     assert batch.entity_categorical_missing[3, 0]
     assert batch.entity_numeric_missing[3, :4].all()
     assert not batch.entity_numeric_missing[3, 4:].any()
+    assert batch.entity_parent_indices.tolist() == [-1, -1, -1, -1, -1, -1, -1, -1, 6]
+    assert batch.entity_energy_values.tolist() == [6]
+    assert batch.entity_energy_offsets.tolist() == [0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
 
     # Attack and retreat sources are active entities. Env2 ENERGY_CARD source is
     # the attached energy (flattened entity 8) and target is env2 active (6).

@@ -88,6 +88,10 @@ GLOBAL_CATEGORICAL_NAMES = (
     "request_ordered",
     "context_card_id",
     "effect_card_id",
+    "supporter_played",
+    "stadium_played",
+    "energy_attached",
+    "retreated",
 )
 GLOBAL_NUMERIC_NAMES = (
     "turn",

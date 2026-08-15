@@ -66,6 +66,29 @@ def card_decision():
     return project_decision(observation, request)
 
 
+def resource_decision(*, energy_types: list[int], tool_parent_serial: int = 10):
+    raw = raw_observation(options=[{"type": 15, "cardId": 1, "serial": 10}])
+    raw["select"].update({"type": 5, "context": 34, "minCount": 1, "maxCount": 1})
+    tool = {"id": 2, "serial": 21, "playerIndex": 0}
+    raw["current"]["players"][0]["active"] = [
+        {
+            "id": 1, "serial": 10, "playerIndex": 0, "hp": 50, "maxHp": 70,
+            "appearThisTurn": False, "energies": energy_types, "energyCards": [],
+            "tools": [tool] if tool_parent_serial == 10 else [], "preEvolution": [],
+        }
+    ]
+    raw["current"]["players"][0]["bench"] = [
+        {
+            "id": 1, "serial": 11, "playerIndex": 0, "hp": 70, "maxHp": 70,
+            "appearThisTurn": False, "energies": [], "energyCards": [],
+            "tools": [tool] if tool_parent_serial == 11 else [], "preEvolution": [],
+        }
+    ]
+    observation, request = semantic_snapshot(raw, "resource-decision", 0, CARD_HASH)
+    assert request is not None
+    return observation, request, project_decision(observation, request)
+
+
 def zero_option_decision():
     raw = raw_observation(options=[], min_count=0, max_count=0)
     raw["select"].update({"type": 8, "context": 38})
@@ -118,6 +141,52 @@ def test_forward_supports_zero_option_and_mixed_ragged_batches(tmp_path: Path) -
     assert mixed_output.option_offsets.tolist() == [0, 0, 1]
     assert torch.isfinite(mixed_output.option_logits).all()
     assert torch.isfinite(mixed_output.values).all()
+
+
+def test_turn_resource_flags_change_projected_state_and_policy_output(tmp_path: Path) -> None:
+    first_raw = raw_observation(options=[{"type": 0, "number": 0}, {"type": 0, "number": 1}])
+    first_raw["select"].update({"type": 8, "context": 38})
+    second_raw = raw_observation(options=[{"type": 0, "number": 0}, {"type": 0, "number": 1}])
+    second_raw["select"].update({"type": 8, "context": 38})
+    second_raw["current"].update({
+        "supporterPlayed": True, "stadiumPlayed": True,
+        "energyAttached": True, "retreated": True,
+    })
+    first_obs, first_req = semantic_snapshot(first_raw, "flags-a", 0, CARD_HASH)
+    second_obs, second_req = semantic_snapshot(second_raw, "flags-b", 0, CARD_HASH)
+    assert first_req is not None and second_req is not None
+    first = project_decision(first_obs, first_req)
+    second = project_decision(second_obs, second_req)
+    assert first.model.global_categorical_values[7:11] == (0, 0, 0, 0)
+    assert second.model.global_categorical_values[7:11] == (1, 1, 1, 1)
+    policy = model(tmp_path).eval()
+    with torch.no_grad():
+        a = policy(collate_projected((first,)))
+        b = policy(collate_projected((second,)))
+    assert not torch.equal(a.hidden, b.hidden)
+
+
+def test_energy_type_presence_changes_entity_and_policy_state(tmp_path: Path) -> None:
+    _, _, grass = resource_decision(energy_types=[1, 1])
+    _, _, darkness = resource_decision(energy_types=[7, 7])
+    policy = model(tmp_path).eval()
+    with torch.no_grad():
+        a = policy(collate_projected((grass,)))
+        b = policy(collate_projected((darkness,)))
+    assert not torch.equal(a.entity_embeddings, b.entity_embeddings)
+    assert not torch.equal(a.hidden, b.hidden)
+
+
+def test_attachment_parent_changes_entity_and_policy_state(tmp_path: Path) -> None:
+    _, _, active_parent = resource_decision(energy_types=[], tool_parent_serial=10)
+    _, _, bench_parent = resource_decision(energy_types=[], tool_parent_serial=11)
+    assert active_parent.model.entity_parent_indices != bench_parent.model.entity_parent_indices
+    policy = model(tmp_path).eval()
+    with torch.no_grad():
+        a = policy(collate_projected((active_parent,)))
+        b = policy(collate_projected((bench_parent,)))
+    assert not torch.equal(a.entity_embeddings, b.entity_embeddings)
+    assert not torch.equal(a.hidden, b.hidden)
 
 
 def test_batched_event_gru_matches_per_decision_reference(tmp_path: Path) -> None:

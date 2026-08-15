@@ -121,7 +121,7 @@ __device__ __forceinline__ gc_i32 policy_pre_evolution_count(
     return count;
 }
 
-__device__ __forceinline__ gc_i32 policy_energy_mask(
+__device__ __forceinline__ gc_i32 policy_energy_index_mask(
     const BattleCoreState& state,
     const RuleTableView& rules,
     const CardState& pokemon,
@@ -133,7 +133,10 @@ __device__ __forceinline__ gc_i32 policy_energy_mask(
     for (gc_i32 i = 0; i < (gc_i32)list.count; ++i) {
         const CardState& energy = state.all_card[list.values[i]];
         if (energy.attach_move_counter != pokemon.move_counter) continue;
-        mask |= get_energy_info(state, rules, energy, pokemon_ref).type;
+        const gc_i32 index = energy_type_index(
+            get_energy_info(state, rules, energy, pokemon_ref).type
+        );
+        if (index >= 0 && index < 12) mask |= (gc_u16)(1u << index);
     }
     return (gc_i32)mask;
 }
@@ -189,7 +192,7 @@ __device__ __forceinline__ void policy_emit_entity(
                     row[13] = active.burned ? 1 : 0;
                     row[14] = active.bad_status;
                 }
-                row[16] = policy_energy_mask(state, rules, card, ref);
+                row[16] = policy_energy_index_mask(state, rules, card, ref);
             }
         }
     }

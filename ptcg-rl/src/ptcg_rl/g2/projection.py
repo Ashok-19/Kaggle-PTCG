@@ -386,6 +386,10 @@ def project_decision(
             request.ordering == "ORDERED",
             request.context_card_id,
             request.effect_card_id,
+            observation.supporter_played,
+            observation.stadium_played,
+            observation.energy_attached,
+            observation.retreated,
         )
     )
     global_num, global_num_mask = _numeric_row(

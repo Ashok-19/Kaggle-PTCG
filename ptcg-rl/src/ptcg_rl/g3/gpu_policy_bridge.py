@@ -389,13 +389,39 @@ def build_torch_policy_batch(
     entity_numeric_missing = torch.zeros_like(entity_numeric, dtype=torch.bool)
     pokemon_public = entity_visible & ((entity_area == 4) | (entity_area == 5))
     entity_numeric_missing[:, :4] = ~pokemon_public.unsqueeze(1)
-    entity_parent_indices = torch.full(
-        (raw_entities.shape[0],), -1, dtype=torch.long, device=g.device
+    entity_position_keys = _position_key(
+        entity_owner,
+        raw_entities[:, 1].to(torch.long),
+        raw_entities[:, 2].to(torch.long),
+        raw_entities[:, 3].to(torch.long),
     )
-    entity_energy_values = torch.empty(0, dtype=torch.long, device=g.device)
-    entity_energy_offsets = torch.zeros(
-        raw_entities.shape[0] + 1, dtype=torch.long, device=g.device
+    parent_role = raw_entities[:, 15].to(torch.long)
+    attached_entity = torch.isin(
+        entity_area, torch.tensor((8, 9, 10), device=g.device)
+    ) & (parent_role > 0)
+    parent_area = torch.where(
+        parent_role == 1,
+        torch.full_like(parent_role, 4),
+        torch.full_like(parent_role, 5),
     )
+    parent_query = _position_key(
+        entity_owner,
+        raw_entities[:, 1].to(torch.long),
+        parent_area,
+        parent_role,
+    )
+    entity_parent_indices = _lookup_sorted(
+        entity_position_keys, parent_query, attached_entity
+    )
+
+    energy_index_mask = raw_entities[:, 16].to(torch.long)
+    energy_bits = torch.arange(12, dtype=torch.long, device=g.device)
+    energy_present = (
+        energy_index_mask.unsqueeze(1) & (1 << energy_bits).unsqueeze(0)
+    ) != 0
+    energy_coordinates = torch.nonzero(energy_present, as_tuple=False)
+    entity_energy_values = energy_coordinates[:, 1].to(torch.long)
+    entity_energy_offsets = _offsets(energy_present.sum(dim=1).to(torch.long))
 
     raw_options, option_offsets = _flatten_padded(option_rows, option_counts)
     option_owner = _flat_owner(option_counts)
@@ -433,12 +459,6 @@ def build_torch_policy_batch(
     target_kind = torch.zeros_like(option_type)
     target_kind[target_present] = _kind_from_area(target_area[target_present])
 
-    entity_position_keys = _position_key(
-        entity_owner,
-        raw_entities[:, 1].to(torch.long),
-        raw_entities[:, 2].to(torch.long),
-        raw_entities[:, 3].to(torch.long),
-    )
     attached = torch.isin(option_type, torch.tensor((4, 5, 6), device=g.device))
     source_entity_required = source_present & (source_kind == 1) & ~attached
     target_entity_required = target_present & (target_kind == 1)
@@ -527,7 +547,7 @@ def build_torch_policy_batch(
     first_player = g[:, 2]
     native_selection_type = g[:, 6] - 1
     native_selection_context = g[:, 7] - 1
-    global_categorical = torch.zeros((batch_size, 7), dtype=torch.long, device=g.device)
+    global_categorical = torch.zeros((batch_size, 11), dtype=torch.long, device=g.device)
     global_categorical_missing = torch.zeros_like(global_categorical, dtype=torch.bool)
     global_categorical[:, 0] = first_player
     global_categorical_missing[:, 0] = first_player < 0
@@ -540,6 +560,7 @@ def build_torch_policy_batch(
     global_categorical_missing[:, 5] = g[:, 16] <= 0
     global_categorical[:, 6] = g[:, 17]
     global_categorical_missing[:, 6] = g[:, 17] <= 0
+    global_categorical[:, 7:11] = g[:, 12:16]
 
     global_numeric = torch.stack(
         (
