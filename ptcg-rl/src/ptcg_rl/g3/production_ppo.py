@@ -20,6 +20,15 @@ class CompleteGameGAEStatsV1:
     terminal_draws: int
 
 
+@dataclass(frozen=True)
+class FixedHorizonGAEStatsV1:
+    trajectory_count: int
+    terminal_trajectories: int
+    truncated_trajectories: int
+    dropped_live_tail_nodes: int
+    trainable_nodes: int
+
+
 def slice_torch_decision_batch_rows(
     batch: TorchDecisionBatch,
     start: int,
@@ -231,3 +240,121 @@ def compute_complete_game_gae(
         terminal_draws=int((populated_rewards == 0).sum().item()),
     )
     return GAEResultV1(advantages=advantages, returns=returns), stats
+
+
+def compute_fixed_horizon_gae(
+    *,
+    owner_ids: Tensor,
+    values: Tensor,
+    final_results: Tensor,
+    env_count: int,
+    gamma: float = 1.0,
+    gae_lambda: float = 0.95,
+) -> tuple[GAEResultV1, Tensor, FixedHorizonGAEStatsV1]:
+    """Compute terminal/truncated GAE for one fixed-horizon recurrent rollout.
+
+    Each environment is allowed to finish at most one game inside the horizon.
+    Terminal player traces use the true terminal reward. For a live trace, the
+    final observed recurrent node is withheld from optimization and used only as
+    the bootstrap value for the preceding node. This yields an exact truncation
+    boundary without lookahead or fake terminal rewards.
+    """
+    if not isinstance(env_count, int) or isinstance(env_count, bool) or env_count <= 0:
+        raise PPOContractError("env_count must be a positive integer")
+    if owner_ids.ndim != 1 or owner_ids.dtype != torch.long:
+        raise PPOContractError("fixed-horizon owner ids must be a one-dimensional long tensor")
+    if values.ndim != 1 or values.shape != owner_ids.shape or values.numel() == 0:
+        raise PPOContractError("fixed-horizon values must be a nonempty vector matching owner ids")
+    if final_results.ndim != 1 or final_results.numel() != env_count:
+        raise PPOContractError("fixed-horizon results must contain one result per environment")
+    if not torch.isfinite(values).all():
+        raise PPOContractError("fixed-horizon values contain NaN or infinity")
+    if not (0.0 <= gamma <= 1.0) or not (0.0 <= gae_lambda <= 1.0):
+        raise PPOContractError("GAE gamma and lambda must be within [0, 1]")
+
+    owner_count = env_count * 2
+    if torch.any((owner_ids < 0) | (owner_ids >= owner_count)):
+        raise PPOContractError("fixed-horizon owner id is outside the environment/player range")
+    results = final_results.to(device=values.device, dtype=torch.long)
+    if torch.any((results < 0) | (results > 3)):
+        raise PPOContractError("fixed-horizon game result must be 0, 1, 2, or 3")
+
+    lengths = torch.bincount(owner_ids, minlength=owner_count)
+    order = torch.argsort(owner_ids, stable=True)
+    sorted_owners = owner_ids.index_select(0, order)
+    sorted_values = values.index_select(0, order)
+    starts = torch.cumsum(lengths, dim=0) - lengths
+    repeated_starts = torch.repeat_interleave(starts, lengths)
+    positions = torch.arange(values.numel(), device=values.device, dtype=torch.long) - repeated_starts
+    maximum_length = int(lengths.max().item())
+
+    owner_index = torch.arange(owner_count, device=values.device, dtype=torch.long)
+    owner_env = torch.div(owner_index, 2, rounding_mode="floor")
+    owner_player = owner_index.remainder(2)
+    owner_result = results.index_select(0, owner_env)
+    owner_terminal = owner_result != 0
+    effective_lengths = torch.where(
+        owner_terminal,
+        lengths,
+        torch.clamp(lengths - 1, min=0),
+    )
+    populated = effective_lengths > 0
+    if not torch.any(populated):
+        raise PPOContractError("fixed-horizon rollout contains no trainable recurrent trajectory")
+
+    padded_values = values.new_zeros((owner_count, maximum_length))
+    padded_values[sorted_owners, positions] = sorted_values
+    padded_advantages = torch.zeros_like(padded_values)
+
+    terminal_rewards = torch.where(
+        owner_result == 3,
+        torch.zeros(owner_count, device=values.device, dtype=values.dtype),
+        torch.where(
+            owner_result == owner_player + 1,
+            torch.ones(owner_count, device=values.device, dtype=values.dtype),
+            -torch.ones(owner_count, device=values.device, dtype=values.dtype),
+        ),
+    )
+    terminal_rewards = torch.where(owner_terminal, terminal_rewards, torch.zeros_like(terminal_rewards))
+
+    next_advantage = values.new_zeros((owner_count,))
+    for position in range(maximum_length - 1, -1, -1):
+        active = effective_lengths > position
+        continues = effective_lengths > position + 1
+        terminal_here = owner_terminal & active & ~continues
+        reward = torch.where(terminal_here, terminal_rewards, torch.zeros_like(terminal_rewards))
+        has_observed_next = lengths > position + 1
+        next_value = torch.where(
+            has_observed_next,
+            padded_values[:, min(position + 1, maximum_length - 1)],
+            torch.zeros_like(terminal_rewards),
+        )
+        bootstrap = torch.where(terminal_here, torch.zeros_like(next_value), next_value)
+        delta = reward + gamma * bootstrap - padded_values[:, position]
+        current = delta + gamma * gae_lambda * torch.where(
+            continues, next_advantage, torch.zeros_like(next_advantage)
+        )
+        current = torch.where(active, current, torch.zeros_like(current))
+        padded_advantages[:, position] = current
+        next_advantage = current
+
+    sorted_advantages = padded_advantages[sorted_owners, positions]
+    advantages = torch.zeros_like(values)
+    advantages.index_copy_(0, order, sorted_advantages)
+    sorted_train_mask = positions < effective_lengths.index_select(0, sorted_owners)
+    train_mask = torch.zeros(values.numel(), dtype=torch.bool, device=values.device)
+    train_mask.index_copy_(0, order, sorted_train_mask)
+    returns = torch.where(train_mask, advantages + values, values)
+    if not torch.isfinite(advantages).all() or not torch.isfinite(returns).all():
+        raise PPOContractError("fixed-horizon GAE produced a nonfinite result")
+
+    terminal_trajectories = int((populated & owner_terminal).sum().item())
+    truncated_trajectories = int((populated & ~owner_terminal).sum().item())
+    stats = FixedHorizonGAEStatsV1(
+        trajectory_count=int(populated.sum().item()),
+        terminal_trajectories=terminal_trajectories,
+        truncated_trajectories=truncated_trajectories,
+        dropped_live_tail_nodes=int(((lengths > 0) & ~owner_terminal).sum().item()),
+        trainable_nodes=int(train_mask.sum().item()),
+    )
+    return GAEResultV1(advantages=advantages, returns=returns), train_mask, stats

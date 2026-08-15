@@ -6,6 +6,7 @@ from ptcg_rl.g2.network import TorchDecisionBatch
 from ptcg_rl.g3.ppo import compute_gae
 from ptcg_rl.g3.production_ppo import (
     compute_complete_game_gae,
+    compute_fixed_horizon_gae,
     meaningful_compound_policy_mask,
     slice_torch_decision_batch_rows,
 )
@@ -165,3 +166,85 @@ def test_complete_game_gae_matches_scalar_per_player_contract() -> None:
     assert stats.terminal_wins == 2
     assert stats.terminal_losses == 2
     assert stats.terminal_draws == 0
+
+
+def test_fixed_horizon_gae_uses_terminal_rewards_and_live_bootstrap_tail() -> None:
+    owners = torch.tensor(
+        [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3], dtype=torch.long
+    )
+    values = torch.tensor(
+        [0.10, -0.10, 0.20, -0.20, 0.15, -0.15, 0.25, -0.25, 0.30, -0.30, 0.40, -0.40]
+    )
+    # env0 terminates with player 0 winning; env1 remains live at the horizon.
+    result, train_mask, stats = compute_fixed_horizon_gae(
+        owner_ids=owners,
+        values=values,
+        final_results=torch.tensor([1, 0], dtype=torch.long),
+        env_count=2,
+        gamma=1.0,
+        gae_lambda=0.95,
+    )
+
+    expected_advantages = torch.zeros_like(values)
+    expected_returns = values.clone()
+    expected_mask = torch.zeros(values.numel(), dtype=torch.bool)
+    for owner in range(4):
+        indices = torch.nonzero(owners == owner, as_tuple=False).squeeze(1)
+        owner_values = values.index_select(0, indices)
+        if owner < 2:
+            rewards = torch.zeros_like(owner_values)
+            rewards[-1] = 1.0 if owner == 0 else -1.0
+            bootstrap = torch.zeros_like(owner_values)
+            bootstrap[:-1] = owner_values[1:]
+            terminals = torch.tensor([False, False, True])
+            truncations = torch.zeros(3, dtype=torch.bool)
+            continues = torch.tensor([True, True, False])
+            used_indices = indices
+            used_values = owner_values
+        else:
+            # Withhold the final live node and use its value to bootstrap the
+            # preceding node at the artificial horizon boundary.
+            rewards = torch.zeros(2)
+            bootstrap = torch.tensor([owner_values[1], owner_values[2]])
+            terminals = torch.zeros(2, dtype=torch.bool)
+            truncations = torch.tensor([False, True])
+            continues = torch.tensor([True, False])
+            used_indices = indices[:2]
+            used_values = owner_values[:2]
+        scalar = compute_gae(
+            rewards=rewards,
+            values=used_values,
+            bootstrap_values=bootstrap,
+            terminals=terminals,
+            truncations=truncations,
+            trace_continues=continues,
+            gamma=1.0,
+            gae_lambda=0.95,
+        )
+        expected_advantages.index_copy_(0, used_indices, scalar.advantages)
+        expected_returns.index_copy_(0, used_indices, scalar.returns)
+        expected_mask[used_indices] = True
+
+    assert torch.equal(train_mask, expected_mask)
+    assert torch.allclose(result.advantages, expected_advantages, atol=1e-7, rtol=0)
+    assert torch.allclose(result.returns, expected_returns, atol=1e-7, rtol=0)
+    assert stats.trajectory_count == 4
+    assert stats.terminal_trajectories == 2
+    assert stats.truncated_trajectories == 2
+    assert stats.dropped_live_tail_nodes == 2
+    assert stats.trainable_nodes == 10
+
+
+def test_fixed_horizon_gae_drops_singleton_live_trace() -> None:
+    owners = torch.tensor([0, 1, 2, 0, 1], dtype=torch.long)
+    values = torch.tensor([0.1, -0.1, 0.5, 0.2, -0.2])
+    result, train_mask, stats = compute_fixed_horizon_gae(
+        owner_ids=owners,
+        values=values,
+        final_results=torch.tensor([1, 0], dtype=torch.long),
+        env_count=2,
+    )
+    singleton_index = int(torch.nonzero(owners == 2, as_tuple=False).item())
+    assert not bool(train_mask[singleton_index])
+    assert float(result.advantages[singleton_index]) == 0.0
+    assert stats.dropped_live_tail_nodes == 1
