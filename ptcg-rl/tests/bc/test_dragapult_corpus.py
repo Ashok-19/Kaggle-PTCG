@@ -107,4 +107,5 @@ def test_teacher_score_tiers_preserve_curriculum_signal() -> None:
     assert quality_tier(1160.0) == ("elite_1150", 1.25)
     assert quality_tier(1130.0) == ("elite_1120", 1.15)
     assert quality_tier(1090.0) == ("high_1090", 1.0)
-    assert quality_tier(1089.9) == ("below_teacher_floor", 0.0)
+    assert quality_tier(1050.0) == ("coverage_1050", 0.85)
+    assert quality_tier(1049.9) == ("below_teacher_floor", 0.0)

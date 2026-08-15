@@ -48,6 +48,8 @@ def quality_tier(teacher_score: float) -> tuple[str, float]:
         return "elite_1120", 1.15
     if teacher_score >= 1090.0:
         return "high_1090", 1.0
+    if teacher_score >= 1050.0:
+        return "coverage_1050", 0.85
     return "below_teacher_floor", 0.0
 
 
