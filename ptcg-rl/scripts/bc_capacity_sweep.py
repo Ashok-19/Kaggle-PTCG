@@ -629,6 +629,8 @@ def _train_stage(
     bf16: bool,
     maximum_gradient_norm: float,
     weight_decay: float,
+    early_stopping_patience: int | None = None,
+    early_stopping_min_delta: float = 0.0,
 ) -> dict[str, Any]:
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=learning_rate, weight_decay=weight_decay, fused=device.type == "cuda"
@@ -638,10 +640,35 @@ def _train_stage(
         model, validation_groups, device=device, bf16=bf16, maximum_groups=None
     )
     history: list[dict[str, Any]] = []
-    best_validation = float("inf")
-    best_epoch = 0
-    best_receipt: dict[str, Any] | None = None
     checkpoint_path = output_dir / f"{stage_name}-best.pt"
+    best_epoch = 0
+    stopped_early = False
+    epochs_without_improvement = 0
+    if early_stopping_patience is None:
+        best_validation = float("inf")
+        best_receipt: dict[str, Any] | None = None
+    else:
+        best_validation = float(baseline["mean_nll"])
+        best_receipt = save_training_checkpoint(
+            checkpoint_path,
+            model=model,
+            optimizer=optimizer,
+            scheduler=scheduler,
+            scaler=None,
+            counters={"stage_epoch": 0},
+            league={
+                "kind": "dragapult-bc-capacity-sweep-v1",
+                "model_label": model_label,
+                "model_config": asdict(model_config),
+                "stage": stage_name,
+                "materialized_manifest_sha256": materialized_manifest_sha256,
+                "minimum_teacher_score": minimum_teacher_score,
+                "early_stopping_patience": early_stopping_patience,
+                "early_stopping_min_delta": early_stopping_min_delta,
+            },
+            rollout_boundary={"completed_stage": stage_name, "completed_epoch": 0},
+            include_cuda_rng=device.type == "cuda",
+        )
     sampler = _start_gpu_sampler() if device.type == "cuda" else None
     try:
         for epoch in range(1, epochs + 1):
@@ -661,9 +688,11 @@ def _train_stage(
             )
             history.append({"epoch": epoch, "training": training, "validation": validation})
             validation_nll = float(validation["mean_nll"])
-            if validation_nll < best_validation:
+            improved = validation_nll < best_validation - early_stopping_min_delta
+            if improved:
                 best_validation = validation_nll
                 best_epoch = epoch
+                epochs_without_improvement = 0
                 best_receipt = save_training_checkpoint(
                     checkpoint_path,
                     model=model,
@@ -678,10 +707,14 @@ def _train_stage(
                         "stage": stage_name,
                         "materialized_manifest_sha256": materialized_manifest_sha256,
                         "minimum_teacher_score": minimum_teacher_score,
+                        "early_stopping_patience": early_stopping_patience,
+                        "early_stopping_min_delta": early_stopping_min_delta,
                     },
                     rollout_boundary={"completed_stage": stage_name, "completed_epoch": epoch},
                     include_cuda_rng=device.type == "cuda",
                 )
+            elif early_stopping_patience is not None:
+                epochs_without_improvement += 1
             print(
                 json.dumps(
                     {
@@ -691,12 +724,37 @@ def _train_stage(
                         "epoch": epoch,
                         "training_nll": training["mean_nll"],
                         "validation_nll": validation_nll,
+                        "best_validation_nll": best_validation,
+                        "meaningful_improvement": improved,
+                        "epochs_without_improvement": epochs_without_improvement,
                         "targets_per_second": training["policy_targets_per_second"],
                     },
                     sort_keys=True,
                 ),
                 flush=True,
             )
+            if (
+                early_stopping_patience is not None
+                and epochs_without_improvement >= early_stopping_patience
+            ):
+                stopped_early = True
+                print(
+                    json.dumps(
+                        {
+                            "event": "capacity_stage_early_stop",
+                            "model": model_label,
+                            "stage": stage_name,
+                            "epoch": epoch,
+                            "best_epoch": best_epoch,
+                            "best_validation_nll": best_validation,
+                            "patience": early_stopping_patience,
+                            "minimum_delta": early_stopping_min_delta,
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+                break
     finally:
         telemetry = _stop_gpu_sampler(*sampler) if sampler is not None else None
     if best_receipt is None:
@@ -710,6 +768,10 @@ def _train_stage(
         "stage": stage_name,
         "learning_rate": learning_rate,
         "epochs": epochs,
+        "epochs_ran": len(history),
+        "stopped_early": stopped_early,
+        "early_stopping_patience": early_stopping_patience,
+        "early_stopping_min_delta": early_stopping_min_delta,
         "minimum_teacher_score": minimum_teacher_score,
         "baseline_validation_mean_nll": baseline["mean_nll"],
         "best_validation_mean_nll": best_validation,
@@ -780,6 +842,8 @@ def main() -> int:
     parser.add_argument("--stage-b-epochs", type=int, default=2)
     parser.add_argument("--stage-c-epochs", type=int, default=3)
     parser.add_argument("--stage-d-epochs", type=int, default=2)
+    parser.add_argument("--stage-d-early-stopping-patience", type=int)
+    parser.add_argument("--stage-d-early-stopping-min-delta", type=float, default=0.0)
     parser.add_argument("--seed", type=int, default=20260815)
     parser.add_argument("--loader-workers", type=int, default=16)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
@@ -836,6 +900,11 @@ def main() -> int:
     ):
         if value <= 0:
             raise CapacitySweepError(f"{label} must be positive")
+
+    if args.stage_d_early_stopping_patience is not None and args.stage_d_early_stopping_patience <= 0:
+        raise CapacitySweepError("stage D early-stopping patience must be positive")
+    if args.stage_d_early_stopping_min_delta < 0:
+        raise CapacitySweepError("stage D early-stopping minimum delta must be nonnegative")
 
     device = torch.device(args.device)
     if device.type == "cuda" and not torch.cuda.is_available():
@@ -1222,6 +1291,16 @@ def main() -> int:
                 bf16=args.bf16,
                 maximum_gradient_norm=args.maximum_gradient_norm,
                 weight_decay=args.weight_decay,
+                early_stopping_patience=(
+                    args.stage_d_early_stopping_patience
+                    if stage_name == "stage-d-exact-1150"
+                    else None
+                ),
+                early_stopping_min_delta=(
+                    args.stage_d_early_stopping_min_delta
+                    if stage_name == "stage-d-exact-1150"
+                    else 0.0
+                ),
             )
             stage_reports.append(stage_report)
             del train_groups, validation_groups
