@@ -38,7 +38,6 @@ from ptcg_rl.g3.checkpoint import (  # noqa: E402
     load_training_checkpoint_model_state,
     save_training_checkpoint,
 )
-from ptcg_rl.g3.ppo import require_finite_gradients  # noqa: E402
 
 
 class MaterializedBCTrainError(ValueError):
@@ -276,8 +275,10 @@ def train_epoch_packed(
             if not bool(torch.isfinite(loss).detach().cpu()):
                 raise MaterializedBCTrainError("packed training loss is nonfinite")
             loss.backward()
-            gradient_norm = require_finite_gradients(tuple(model.parameters()))
-            gradient_norm_value = float(gradient_norm)
+            gradient_norm = torch.nn.utils.clip_grad_norm_(
+                model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
+            )
+            gradient_norm_value = float(gradient_norm.detach().cpu())
             gradient_norm_max = max(gradient_norm_max, gradient_norm_value)
             gradient_norm_min = min(gradient_norm_min, gradient_norm_value)
             gradient_norm_sum += gradient_norm_value
@@ -288,9 +289,6 @@ def train_epoch_packed(
             gradient_clip_steps += int(gradient_norm_value > maximum_gradient_norm)
             gradient_clip_scale_sum += clip_scale
             gradient_clip_scale_min = min(gradient_clip_scale_min, clip_scale)
-            torch.nn.utils.clip_grad_norm_(
-                model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
-            )
             optimizer.step()
             scheduler.step()
             optimizer_steps += 1
@@ -465,8 +463,10 @@ def train_epoch(
             if not bool(torch.isfinite(loss).detach().cpu()):
                 raise MaterializedBCTrainError("materialized training loss is nonfinite")
             loss.backward()
-            gradient_norm = require_finite_gradients(tuple(model.parameters()))
-            gradient_norm_value = float(gradient_norm)
+            gradient_norm = torch.nn.utils.clip_grad_norm_(
+                model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
+            )
+            gradient_norm_value = float(gradient_norm.detach().cpu())
             gradient_norm_max = max(gradient_norm_max, gradient_norm_value)
             gradient_norm_min = min(gradient_norm_min, gradient_norm_value)
             gradient_norm_sum += gradient_norm_value
@@ -477,9 +477,6 @@ def train_epoch(
             gradient_clip_steps += int(gradient_norm_value > maximum_gradient_norm)
             gradient_clip_scale_sum += clip_scale
             gradient_clip_scale_min = min(gradient_clip_scale_min, clip_scale)
-            torch.nn.utils.clip_grad_norm_(
-                model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
-            )
             optimizer.step()
             scheduler.step()
             optimizer_steps += 1
