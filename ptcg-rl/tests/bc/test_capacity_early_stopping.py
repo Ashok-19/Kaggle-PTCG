@@ -16,6 +16,42 @@ SWEEP = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(SWEEP)
 
 
+def test_batch_candidates_expand_through_small_learning_batches() -> None:
+    assert SWEEP._expanded_batch_candidates((256,)) == (
+        256,
+        128,
+        64,
+        32,
+        16,
+        8,
+        4,
+        2,
+        1,
+    )
+
+
+def test_update_density_estimate_needs_no_tensor_packing() -> None:
+    episodes = tuple(
+        SimpleNamespace(
+            episode_id=index + 1,
+            decisions=tuple(
+                SimpleNamespace(request=SimpleNamespace(has_only_one_outcome=False))
+                for _ in range(5)
+            ),
+        )
+        for index in range(4)
+    )
+    targets, steps, targets_per_step = SWEEP._estimated_optimizer_update_density(
+        episodes,
+        batch_size=2,
+        sequence_length=2,
+        seed=17,
+    )
+    assert targets == 20
+    assert steps == 6
+    assert targets_per_step == 20 / 6
+
+
 def test_stage_early_stopping_keeps_incoming_baseline(monkeypatch, tmp_path) -> None:
     model = torch.nn.Linear(1, 1)
     validation_nlls = iter((1.0, 1.01, 1.02, 1.03))

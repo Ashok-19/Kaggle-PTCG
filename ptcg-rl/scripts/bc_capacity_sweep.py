@@ -25,6 +25,8 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from bc_train_materialized import (  # noqa: E402
+    batch_groups,
+    deterministic_order,
     load_all_episodes,
     load_materialized_manifest,
     prepack_mega_groups,
@@ -784,6 +786,51 @@ def _train_stage(
     }
 
 
+def _expanded_batch_candidates(values: Sequence[int]) -> tuple[int, ...]:
+    """Expand requested batch sizes through their halving fallbacks, largest first."""
+    candidates: set[int] = set()
+    for requested in values:
+        value = int(requested)
+        if value <= 0:
+            raise CapacitySweepError("batch-size candidates must be positive")
+        while value >= 1:
+            candidates.add(value)
+            if value == 1:
+                break
+            value = max(1, value // 2)
+    return tuple(sorted(candidates, reverse=True))
+
+
+def _estimated_optimizer_update_density(
+    episodes: Sequence[MaterializedEpisodeV1],
+    *,
+    batch_size: int,
+    sequence_length: int,
+    seed: int,
+) -> tuple[int, int, float]:
+    """Compute exact packed update density without collating tensors or touching the GPU."""
+    if batch_size <= 0 or sequence_length <= 0 or not episodes:
+        raise CapacitySweepError("update-density estimate requires positive sizes and episodes")
+    ordered = deterministic_order(episodes, seed, 0)
+    groups = batch_groups(ordered, min(batch_size, len(ordered)))
+    policy_targets = 0
+    optimizer_steps = 0
+    for group in groups:
+        maximum_length = max(len(episode.decisions) for episode in group)
+        for start in range(0, maximum_length, sequence_length):
+            stop = start + sequence_length
+            chunk_targets = sum(
+                not decision.request.has_only_one_outcome
+                for episode in group
+                for decision in episode.decisions[start:stop]
+            )
+            policy_targets += int(chunk_targets)
+            optimizer_steps += int(chunk_targets > 0)
+    if policy_targets <= 0 or optimizer_steps <= 0:
+        raise CapacitySweepError("estimated training groups contain no optimizer updates")
+    return policy_targets, optimizer_steps, policy_targets / optimizer_steps
+
+
 def _optimizer_update_density(
     groups: Sequence[PackedRecurrentGroup],
 ) -> tuple[int, int, float]:
@@ -926,7 +973,9 @@ def main() -> int:
         assert args.resume_checkpoint is not None
         if not args.resume_checkpoint.is_file():
             raise CapacitySweepError("resume checkpoint is missing")
-    batch_candidates = _parse_csv_ints(args.batch_size_candidates, "batch-size candidates")
+    batch_candidates = _expanded_batch_candidates(
+        _parse_csv_ints(args.batch_size_candidates, "batch-size candidates")
+    )
     lr_candidates = _parse_csv_floats(args.learning_rate_candidates, "learning-rate candidates")
     for value, label in (
         (args.sequence_length, "sequence length"),
@@ -1128,6 +1177,32 @@ def main() -> int:
             speed_train = archetype_train[: min(args.speed_train_limit, len(archetype_train))]
             speed_validation = archetype_validation[: min(args.speed_validation_limit, len(archetype_validation))]
             for batch_size in batch_candidates:
+                effective_batch_size = min(batch_size, len(speed_train))
+                _, estimated_optimizer_steps, estimated_targets_per_step = (
+                    _estimated_optimizer_update_density(
+                        speed_train,
+                        batch_size=effective_batch_size,
+                        sequence_length=args.sequence_length,
+                        seed=args.seed,
+                    )
+                )
+                if estimated_targets_per_step > args.maximum_targets_per_optimizer_step:
+                    row = {
+                        "batch_size": effective_batch_size,
+                        "sequence_length": args.sequence_length,
+                        "status": "SKIP_UPDATE_DENSITY",
+                        "optimizer_steps": estimated_optimizer_steps,
+                        "targets_per_optimizer_step": estimated_targets_per_step,
+                    }
+                    speed_rows.append(row)
+                    print(
+                        json.dumps(
+                            {"event": "capacity_speed_smoke", "model": label, **row},
+                            sort_keys=True,
+                        ),
+                        flush=True,
+                    )
+                    continue
                 train_groups: tuple[PackedRecurrentGroup, ...] | None = None
                 validation_groups: tuple[PackedRecurrentGroup, ...] | None = None
                 try:
