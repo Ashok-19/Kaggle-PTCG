@@ -31,7 +31,7 @@ from ptcg_rl.g3.compound_batch import (
     sample_compound_actions_batched,
 )
 from ptcg_rl.g3.gpu_policy_bridge import build_torch_policy_batch
-from ptcg_rl.g3.ppo import ppo_loss, require_finite_gradients
+from ptcg_rl.g3.ppo import ppo_loss, require_finite_gradients, sampled_reference_kl
 from ptcg_rl.g3.production_ppo import (
     compute_complete_game_gae,
     meaningful_compound_policy_mask,
@@ -543,6 +543,51 @@ def _replay_chunk(
     return torch.cat(log_probabilities), torch.cat(values), torch.cat(entropies)
 
 
+def _replay_reference_log_probabilities(
+    *,
+    model: PTCGPolicyV1,
+    rollout: RolloutV1,
+    env_count: int,
+    bf16: bool,
+) -> tuple[Tensor, float]:
+    device = next(model.parameters()).device
+    hidden = model.initial_hidden(env_count * 2, device)
+    reference_logp = torch.full_like(rollout.old_log_probabilities, float("nan"))
+    started = time.perf_counter()
+    model.eval()
+    with torch.inference_mode(), torch.autocast(
+        device_type="cuda", dtype=torch.bfloat16, enabled=bf16
+    ):
+        for step in rollout.steps:
+            batch = _restore_batch_to_device(step.batch, device)
+            env_indices = step.env_indices.to(device=device, dtype=torch.long)
+            actors = step.actors.to(device=device, dtype=torch.long)
+            minimum_counts = step.minimum_counts.to(device=device, dtype=torch.long)
+            maximum_counts = step.maximum_counts.to(device=device, dtype=torch.long)
+            actions = _restore_actions_to_device(step.actions, device)
+            owner = env_indices * 2 + actors
+            hidden_before = hidden.index_select(0, owner)
+            output = model(batch, hidden_before)
+            replay_logp, _ = replay_compound_actions_batched(
+                model,
+                public_hidden=output.hidden,
+                primary_option_logits=output.option_logits,
+                option_embeddings=output.option_embeddings,
+                option_offsets=output.option_offsets,
+                available_mask=batch.option_available,
+                minimum_counts=minimum_counts,
+                maximum_counts=maximum_counts,
+                actions=actions,
+            )
+            reference_logp[step.flat_start : step.flat_end] = replay_logp.float()
+            hidden = hidden.index_copy(0, owner, output.hidden.to(hidden.dtype))
+    torch.cuda.synchronize(device)
+    elapsed = time.perf_counter() - started
+    if not torch.isfinite(reference_logp).all():
+        raise PPOTrainError("frozen-v7 replay did not cover every learner recurrent node")
+    return reference_logp, elapsed
+
+
 def _weighted_metrics_accumulator() -> dict[str, float]:
     return {
         "total_loss": 0.0,
@@ -551,6 +596,7 @@ def _weighted_metrics_accumulator() -> dict[str, float]:
         "entropy": 0.0,
         "approximate_kl": 0.0,
         "clip_fraction": 0.0,
+        "reference_kl": 0.0,
     }
 
 
@@ -562,16 +608,20 @@ def _add_weighted_loss(
     value_weight: float,
     value_coefficient: float,
     entropy_coefficient: float,
+    reference_kl: Tensor,
+    reference_kl_coefficient: float,
 ) -> None:
     target["policy_loss"] += float(loss.policy.detach().item()) * policy_weight
     target["value_loss"] += float(loss.value.detach().item()) * value_weight
     target["entropy"] += float(loss.entropy.detach().item()) * policy_weight
     target["approximate_kl"] += float(loss.approximate_kl.detach().item()) * policy_weight
     target["clip_fraction"] += float(loss.clip_fraction.detach().item()) * policy_weight
+    target["reference_kl"] += float(reference_kl.detach().item()) * policy_weight
     target["total_loss"] = (
         target["policy_loss"]
         + value_coefficient * target["value_loss"]
         - entropy_coefficient * target["entropy"]
+        + reference_kl_coefficient * target["reference_kl"]
     )
 
 
@@ -598,12 +648,14 @@ def _ppo_update(
     rollout: RolloutV1,
     advantages: Tensor,
     returns: Tensor,
+    reference_log_probabilities: Tensor,
     chunk_boundaries: int,
     learner_lane_envs: int,
     clip_coefficient: float,
     value_clip_coefficient: float,
     value_coefficient: float,
     entropy_coefficient: float,
+    reference_kl_coefficient: float,
     max_gradient_norm: float,
     bf16: bool,
 ) -> dict[str, Any]:
@@ -614,6 +666,10 @@ def _ppo_update(
     total_value_nodes = int(rollout.old_values.numel())
     if total_value_nodes <= 0:
         raise PPOTrainError("rollout contains no learner recurrent value nodes")
+    if reference_log_probabilities.shape != rollout.old_log_probabilities.shape:
+        raise PPOTrainError("frozen-v7 reference log probabilities differ from rollout shape")
+    if reference_kl_coefficient < 0 or not math.isfinite(reference_kl_coefficient):
+        raise PPOTrainError("reference KL coefficient must be finite and nonnegative")
     selected_advantages = advantages[policy_mask]
     advantage_mean = selected_advantages.mean()
     advantage_std = selected_advantages.std(unbiased=False)
@@ -665,6 +721,7 @@ def _ppo_update(
             lane_value_nodes = int(lane_value_mask.sum().item())
             lane_advantages = normalized_advantages.index_select(0, indices)
             lane_returns = returns.index_select(0, indices)
+            lane_reference_logp = reference_log_probabilities.index_select(0, indices)
             logp_difference = torch.abs(new_logp.detach() - old_logp)
             ratio_error = torch.abs(torch.exp(new_logp.detach() - old_logp) - 1.0)
             replay_max_logp_error = max(
@@ -694,12 +751,19 @@ def _ppo_update(
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
             )
+            reference_kl = sampled_reference_kl(
+                new_log_probabilities=new_logp,
+                old_log_probabilities=old_logp,
+                reference_log_probabilities=lane_reference_logp,
+                policy_mask=lane_mask,
+            )
             policy_weight = lane_valid / total_valid
             value_weight = lane_value_nodes / total_value_nodes
             weighted_total = (
                 loss.policy * policy_weight
                 + value_coefficient * loss.value * value_weight
                 - entropy_coefficient * loss.entropy * policy_weight
+                + reference_kl_coefficient * reference_kl * policy_weight
             )
             weighted_total.backward()
             _add_weighted_loss(
@@ -709,6 +773,8 @@ def _ppo_update(
                 value_weight=value_weight,
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
+                reference_kl=reference_kl,
+                reference_kl_coefficient=reference_kl_coefficient,
             )
             learner_minibatches += 1
 
@@ -747,9 +813,11 @@ def _ppo_update(
             lane_valid = int(lane_mask.sum().item())
             lane_value_mask = torch.ones_like(lane_mask)
             lane_value_nodes = int(lane_value_mask.sum().item())
+            old_logp = rollout.old_log_probabilities.index_select(0, indices)
+            lane_reference_logp = reference_log_probabilities.index_select(0, indices)
             loss = ppo_loss(
                 new_log_probabilities=new_logp,
-                old_log_probabilities=rollout.old_log_probabilities.index_select(0, indices),
+                old_log_probabilities=old_logp,
                 advantages=normalized_advantages.index_select(0, indices),
                 new_values=new_values,
                 old_values=rollout.old_values.index_select(0, indices),
@@ -763,6 +831,12 @@ def _ppo_update(
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
             )
+            reference_kl = sampled_reference_kl(
+                new_log_probabilities=new_logp,
+                old_log_probabilities=old_logp,
+                reference_log_probabilities=lane_reference_logp,
+                policy_mask=lane_mask,
+            )
             _add_weighted_loss(
                 post_metrics,
                 loss,
@@ -770,6 +844,8 @@ def _ppo_update(
                 value_weight=lane_value_nodes / total_value_nodes,
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
+                reference_kl=reference_kl,
+                reference_kl_coefficient=reference_kl_coefficient,
             )
             post_values.index_copy_(0, indices, new_values.detach())
     post_replay_seconds = time.perf_counter() - post_started
@@ -784,6 +860,7 @@ def _ppo_update(
         "learner_recurrent_samples_per_second": int(rollout.old_values.numel()) / max(update_seconds, 1e-9),
         "update_seconds": update_seconds,
         "post_replay_seconds": post_replay_seconds,
+        "reference_kl_coefficient": reference_kl_coefficient,
         "chunk_count": len(chunks),
         "chunk_boundaries": chunk_boundaries,
         "learner_lane_envs": learner_lane_envs,
@@ -917,6 +994,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             max_boundaries=args.max_boundaries,
             bf16=args.bf16,
         )
+        reference_logp, reference_replay_seconds = _replay_reference_log_probabilities(
+            model=historical_model,
+            rollout=rollout,
+            env_count=args.env_count,
+            bf16=args.bf16,
+        )
         gae_started = time.perf_counter()
         gae, gae_stats = compute_complete_game_gae(
             owner_ids=rollout.owner_ids,
@@ -935,16 +1018,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             rollout=rollout,
             advantages=gae.advantages,
             returns=gae.returns,
+            reference_log_probabilities=reference_logp,
             chunk_boundaries=args.chunk_boundaries,
             learner_lane_envs=args.learner_lane_envs,
             clip_coefficient=args.clip_coefficient,
             value_clip_coefficient=args.value_clip_coefficient,
             value_coefficient=args.value_coefficient,
             entropy_coefficient=args.entropy_coefficient,
+            reference_kl_coefficient=args.reference_kl_coefficient,
             max_gradient_norm=args.max_gradient_norm,
             bf16=args.bf16,
         )
         actor_decisions = int(rollout.metrics["actor_recurrent_decisions"])
+        update["reference_replay_seconds"] = reference_replay_seconds
         learner_decisions = int(rollout.metrics["learner_recurrent_decisions"])
         meaningful_targets = int(rollout.metrics["meaningful_policy_targets"])
         total_actor_decisions += actor_decisions
@@ -1053,8 +1139,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     total_rollout_seconds = sum(float(item["rollout"]["rollout_seconds"]) for item in updates)
     total_update_seconds = sum(float(item["learner"]["update_seconds"]) for item in updates)
     total_post_replay_seconds = sum(float(item["learner"]["post_replay_seconds"]) for item in updates)
+    total_reference_replay_seconds = sum(
+        float(item["learner"]["reference_replay_seconds"]) for item in updates
+    )
     total_gae_seconds = sum(float(item["gae"]["seconds"]) for item in updates)
-    measured_work_seconds = total_rollout_seconds + total_update_seconds + total_post_replay_seconds + total_gae_seconds
+    measured_work_seconds = (
+        total_rollout_seconds
+        + total_reference_replay_seconds
+        + total_update_seconds
+        + total_post_replay_seconds
+        + total_gae_seconds
+    )
 
     report: dict[str, Any] = {
         "schema_version": 1,
@@ -1088,6 +1183,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "value_clip_coefficient": args.value_clip_coefficient,
             "value_coefficient": args.value_coefficient,
             "entropy_coefficient": args.entropy_coefficient,
+            "reference_kl_coefficient": args.reference_kl_coefficient,
             "learning_rate": args.learning_rate,
             "max_gradient_norm": args.max_gradient_norm,
             "ppo_epochs_per_rollout": 1,
@@ -1106,8 +1202,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "rollout_seconds": total_rollout_seconds,
             "update_seconds": total_update_seconds,
             "post_update_replay_seconds": total_post_replay_seconds,
+            "reference_replay_seconds": total_reference_replay_seconds,
             "gae_seconds": total_gae_seconds,
             "actor_duty_cycle": total_rollout_seconds / max(measured_work_seconds, 1e-9),
+            "reference_replay_duty_cycle": total_reference_replay_seconds / max(measured_work_seconds, 1e-9),
             "learner_duty_cycle": total_update_seconds / max(measured_work_seconds, 1e-9),
             "post_replay_duty_cycle": total_post_replay_seconds / max(measured_work_seconds, 1e-9),
             "gae_duty_cycle": total_gae_seconds / max(measured_work_seconds, 1e-9),
@@ -1161,6 +1259,7 @@ def main() -> int:
     parser.add_argument("--value-clip-coefficient", type=float, default=0.2)
     parser.add_argument("--value-coefficient", type=float, default=0.5)
     parser.add_argument("--entropy-coefficient", type=float, default=0.01)
+    parser.add_argument("--reference-kl-coefficient", type=float, default=0.0)
     parser.add_argument("--learning-rate", type=float, default=3e-5)
     parser.add_argument("--max-gradient-norm", type=float, default=1.0)
     parser.add_argument("--resume-checkpoint", type=Path)
