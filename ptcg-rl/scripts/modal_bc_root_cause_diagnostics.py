@@ -18,6 +18,9 @@ if modal.is_local():
 else:
     ROOT = Path("/workspace")
 PTCG_RL = ROOT / "ptcg-rl"
+if not modal.is_local():
+    sys.path.insert(0, str(PTCG_RL / "src"))
+    sys.path.insert(0, str(PTCG_RL / "scripts"))
 VOLUME_NAME = "kptcg-training"
 EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2.pkl")
 INCUMBENT_CHECKPOINT = Path(
