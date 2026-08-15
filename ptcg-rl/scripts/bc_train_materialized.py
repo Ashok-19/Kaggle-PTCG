@@ -231,14 +231,18 @@ def train_epoch_packed(
     started = time.perf_counter()
     policy_targets = 0
     recurrent_decisions = 0
-    weighted_loss = 0.0
+    metric_dtype = torch.float64
+    weighted_loss = torch.zeros((), dtype=metric_dtype, device=device)
     optimizer_steps = 0
-    gradient_norm_max = 0.0
-    gradient_norm_min = float("inf")
-    gradient_norm_sum = 0.0
-    gradient_clip_steps = 0
-    gradient_clip_scale_sum = 0.0
-    gradient_clip_scale_min = 1.0
+    gradient_norm_max = torch.zeros((), dtype=metric_dtype, device=device)
+    gradient_norm_min = torch.full((), float("inf"), dtype=metric_dtype, device=device)
+    gradient_norm_sum = torch.zeros((), dtype=metric_dtype, device=device)
+    gradient_clip_steps = torch.zeros((), dtype=metric_dtype, device=device)
+    gradient_clip_scale_sum = torch.zeros((), dtype=metric_dtype, device=device)
+    gradient_clip_scale_min = torch.ones((), dtype=metric_dtype, device=device)
+    maximum_gradient_norm_metric = torch.tensor(
+        maximum_gradient_norm, dtype=metric_dtype, device=device
+    )
     forced_only_chunks = 0
     episodes_used = 0
 
@@ -278,28 +282,37 @@ def train_epoch_packed(
             gradient_norm = torch.nn.utils.clip_grad_norm_(
                 model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
             )
-            gradient_norm_value = float(gradient_norm.detach().cpu())
-            gradient_norm_max = max(gradient_norm_max, gradient_norm_value)
-            gradient_norm_min = min(gradient_norm_min, gradient_norm_value)
-            gradient_norm_sum += gradient_norm_value
-            clip_scale = min(
-                1.0,
-                maximum_gradient_norm / max(gradient_norm_value, 1e-12),
+            gradient_norm_metric = gradient_norm.detach().to(dtype=metric_dtype)
+            gradient_norm_max = torch.maximum(gradient_norm_max, gradient_norm_metric)
+            gradient_norm_min = torch.minimum(gradient_norm_min, gradient_norm_metric)
+            gradient_norm_sum = gradient_norm_sum + gradient_norm_metric
+            clip_scale = torch.minimum(
+                torch.ones_like(gradient_norm_metric),
+                maximum_gradient_norm_metric / gradient_norm_metric.clamp_min(1e-12),
             )
-            gradient_clip_steps += int(gradient_norm_value > maximum_gradient_norm)
-            gradient_clip_scale_sum += clip_scale
-            gradient_clip_scale_min = min(gradient_clip_scale_min, clip_scale)
+            gradient_clip_steps = gradient_clip_steps + (
+                gradient_norm_metric > maximum_gradient_norm_metric
+            ).to(metric_dtype)
+            gradient_clip_scale_sum = gradient_clip_scale_sum + clip_scale
+            gradient_clip_scale_min = torch.minimum(gradient_clip_scale_min, clip_scale)
             optimizer.step()
             scheduler.step()
             optimizer_steps += 1
             policy_targets += result.policy_targets
-            weighted_loss += float(loss.detach().float().cpu()) * result.policy_targets
+            weighted_loss = weighted_loss + loss.detach().to(metric_dtype) * result.policy_targets
 
     if device.type == "cuda":
         torch.cuda.synchronize(device)
     elapsed = time.perf_counter() - started
     if policy_targets <= 0 or optimizer_steps <= 0:
         raise MaterializedBCTrainError("packed training epoch executed no policy targets")
+    weighted_loss_value = float(weighted_loss.detach().cpu())
+    gradient_norm_max_value = float(gradient_norm_max.detach().cpu())
+    gradient_norm_min_value = float(gradient_norm_min.detach().cpu())
+    gradient_norm_sum_value = float(gradient_norm_sum.detach().cpu())
+    gradient_clip_steps_value = float(gradient_clip_steps.detach().cpu())
+    gradient_clip_scale_sum_value = float(gradient_clip_scale_sum.detach().cpu())
+    gradient_clip_scale_min_value = float(gradient_clip_scale_min.detach().cpu())
     return {
         "epoch": epoch,
         "episode_groups": len(selected_groups),
@@ -308,13 +321,13 @@ def train_epoch_packed(
         "policy_targets": policy_targets,
         "recurrent_decisions": recurrent_decisions,
         "forced_only_chunks": forced_only_chunks,
-        "mean_nll": weighted_loss / policy_targets,
-        "gradient_norm_max_pre_clip": gradient_norm_max,
-        "gradient_norm_min_pre_clip": gradient_norm_min,
-        "gradient_norm_mean_pre_clip": gradient_norm_sum / optimizer_steps,
-        "gradient_clip_fraction": gradient_clip_steps / optimizer_steps,
-        "gradient_clip_scale_mean": gradient_clip_scale_sum / optimizer_steps,
-        "gradient_clip_scale_min": gradient_clip_scale_min,
+        "mean_nll": weighted_loss_value / policy_targets,
+        "gradient_norm_max_pre_clip": gradient_norm_max_value,
+        "gradient_norm_min_pre_clip": gradient_norm_min_value,
+        "gradient_norm_mean_pre_clip": gradient_norm_sum_value / optimizer_steps,
+        "gradient_clip_fraction": gradient_clip_steps_value / optimizer_steps,
+        "gradient_clip_scale_mean": gradient_clip_scale_sum_value / optimizer_steps,
+        "gradient_clip_scale_min": gradient_clip_scale_min_value,
         "policy_targets_per_optimizer_step": policy_targets / optimizer_steps,
         "elapsed_seconds": elapsed,
         "policy_targets_per_second": policy_targets / max(elapsed, 1e-9),
