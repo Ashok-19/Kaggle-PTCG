@@ -128,6 +128,7 @@ def _stream_child_with_heartbeat(
         raise RuntimeError("production PPO child stdout is unavailable")
     tail: list[str] = []
     last_output = time.monotonic()
+    last_heartbeat = last_output
     while True:
         ready, _, _ = select.select([process.stdout], [], [], heartbeat_seconds)
         if ready:
@@ -148,18 +149,24 @@ def _stream_child_with_heartbeat(
                     tail.pop(0)
             return return_code, tail
         now = time.monotonic()
-        print(
-            json.dumps(
-                {
-                    "event": "modal_ppo_heartbeat",
-                    "run_id": run_id,
-                    "child_pid": process.pid,
-                    "seconds_since_child_output": round(now - last_output, 3),
-                },
-                sort_keys=True,
-            ),
-            flush=True,
-        )
+        if now - last_heartbeat >= heartbeat_seconds:
+            print(
+                json.dumps(
+                    {
+                        "event": "modal_ppo_heartbeat",
+                        "run_id": run_id,
+                        "child_pid": process.pid,
+                        "seconds_since_child_output": round(now - last_output, 3),
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            last_heartbeat = now
+        if ready:
+            # A readable pipe can briefly report EOF before process.poll() observes
+            # child exit. Avoid a tight CPU/log loop during that teardown race.
+            time.sleep(min(heartbeat_seconds, 0.25))
 
 
 @app.function(
@@ -174,7 +181,7 @@ def train(
     env_count: int = 8192,
     rollout_horizon: int = 64,
     chunk_boundaries: int = 64,
-    learner_lane_envs: int = 1024,
+    learner_lane_envs: int = 512,
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
@@ -348,7 +355,7 @@ def main(
     env_count: int = 8192,
     rollout_horizon: int = 64,
     chunk_boundaries: int = 64,
-    learner_lane_envs: int = 1024,
+    learner_lane_envs: int = 512,
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,

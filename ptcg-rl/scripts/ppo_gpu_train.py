@@ -1487,6 +1487,26 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if bc_anchor_groups
             else None
         )
+        print(
+            json.dumps(
+                {
+                    "event": "ppo_learner_start",
+                    "update": update_number,
+                    "horizon": actor_state.horizon_index,
+                    "actor_decisions": int(rollout.metrics["actor_recurrent_decisions"]),
+                    "learner_decisions": int(rollout.metrics["learner_recurrent_decisions"]),
+                    "meaningful_policy_targets": int(rollout.metrics["meaningful_policy_targets"]),
+                    "rollout_seconds": float(rollout.metrics["rollout_seconds"]),
+                    "actor_dps": float(rollout.metrics["actor_decisions_per_second"]),
+                    "reference_replay_seconds": reference_replay_seconds,
+                    "learner_lane_envs": args.learner_lane_envs,
+                    "cuda_allocated_bytes": int(torch.cuda.memory_allocated(device)),
+                    "cuda_reserved_bytes": int(torch.cuda.memory_reserved(device)),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
         update = _ppo_update(
             model=model,
             optimizer=optimizer,
