@@ -886,6 +886,7 @@ def main() -> int:
     parser.add_argument("--maximum-gradient-norm", type=float, default=1.0)
     parser.add_argument("--maximum-targets-per-optimizer-step", type=float, default=512.0)
     parser.add_argument("--bf16", action="store_true")
+    parser.add_argument("--speed-only", action="store_true")
     args = parser.parse_args()
 
     configs = model_configs()
@@ -900,6 +901,10 @@ def main() -> int:
         args.resume_learning_rate,
     )
     resume_enabled = any(value is not None for value in resume_values)
+    if args.speed_only and resume_enabled:
+        raise CapacitySweepError("speed-only mode cannot be combined with resume arguments")
+    if args.speed_only and len(labels) != 1:
+        raise CapacitySweepError("speed-only mode requires exactly one model label")
     if resume_enabled and not all(value is not None for value in resume_values):
         raise CapacitySweepError("resume arguments must be supplied together")
     stage_names = (
@@ -1190,6 +1195,21 @@ def main() -> int:
                     key=lambda row: float(row["targets_per_optimizer_step"]),
                 )
             chosen_batch_size = int(chosen_speed["batch_size"])
+            if args.speed_only:
+                print(
+                    json.dumps(
+                        {
+                            "event": "capacity_speed_only_complete",
+                            "model": label,
+                            "chosen_batch_size": chosen_batch_size,
+                            "maximum_targets_per_optimizer_step": args.maximum_targets_per_optimizer_step,
+                            "speed_rows": speed_rows,
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+                return 0
 
             lr_train = archetype_train[: min(args.lr_train_limit, len(archetype_train))]
             lr_validation = archetype_validation[: min(args.lr_validation_limit, len(archetype_validation))]
