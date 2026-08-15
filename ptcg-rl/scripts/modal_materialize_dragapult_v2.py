@@ -18,9 +18,9 @@ VOLUME_NAME = "kptcg-training"
 BUNDLE_SOURCE = Path("/data/corpora/bc-dragapult-hq-v2/bc-dragapult-hq-v2.zip")
 BUNDLE_SHA256 = "1161268653eeb1e70432539e8c25d2f971d876ee0b1c365ab843130f5d3d4c3b"
 LOCAL_BUNDLE = Path("/tmp/bc-dragapult-hq-v2.zip")
-MATERIALIZED_DIR = Path("/data/materialized/bc-dragapult-hq-v2")
-MATERIALIZED_TAR = Path("/data/materialized/bc-dragapult-hq-v2.tar")
-MATERIALIZED_TAR_SHA256 = Path("/data/materialized/bc-dragapult-hq-v2.tar.sha256")
+MATERIALIZED_DIR = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1")
+MATERIALIZED_TAR = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1.tar")
+MATERIALIZED_TAR_SHA256 = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1.tar.sha256")
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -39,7 +39,7 @@ image = (
     )
 )
 
-app = modal.App("kptcg-bc-dragapult-materialize-v2", image=image)
+app = modal.App("kptcg-bc-dragapult-hq-featurefix-v1", image=image)
 training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
 
 
@@ -180,7 +180,7 @@ def materialize(force: bool = False) -> dict[str, Any]:
             "--workers",
             "16",
             "--record-id",
-            "bc-dragapult-hq-v2-materialized-v1",
+            "bc-dragapult-hq-v2-featurefix-v1",
         ]
         _run_stream(command)
         manifest = json.loads(

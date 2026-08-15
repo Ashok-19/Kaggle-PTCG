@@ -25,9 +25,9 @@ if not modal.is_local():
     sys.path.insert(0, str(PTCG_RL / "scripts"))
 
 VOLUME_NAME = "kptcg-training"
-EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2.pkl")
-EXACT_MANIFEST = Path("/data/materialized/bc-dragapult-hq-v2/manifest.json")
-OUTPUT_DIR = Path("/data/runs/bc-dragapult-3p7m-learning-probe-v1")
+EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2-featurefix-v1.pkl")
+EXACT_MANIFEST = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1/manifest.json")
+OUTPUT_DIR = Path("/data/runs/bc-dragapult-3p7m-featurefix-learning-probe-v1")
 REPORT_PATH = OUTPUT_DIR / "report.json"
 MODEL_LABEL = "3.7m"
 SCORING_CONTRACT = "corrected-primary-head-first-choice"
@@ -441,11 +441,11 @@ def run(code_commit: str) -> dict[str, Any]:
         key=lambda row: row["final_teacher_metrics"]["representation_equivalent_match_rate"],
     )
     report = {
-        "record_id": "bc-dragapult-3p7m-learning-probe-v1",
+        "record_id": "bc-dragapult-3p7m-featurefix-learning-probe-v1",
         "status": "PASS_BC_3P7M_LEARNING_PROBE",
         "code_commit": code_commit,
         "model_label": MODEL_LABEL,
-        "trainable_parameters": 3_699_398,
+        "trainable_parameters": 3_770_278,
         "scoring_contract": SCORING_CONTRACT,
         "exact_manifest_sha256": _sha256(EXACT_MANIFEST),
         "subset_episode_ids": [episode.episode_id for episode in episodes],

@@ -887,6 +887,7 @@ def main() -> int:
     parser.add_argument("--maximum-targets-per-optimizer-step", type=float, default=512.0)
     parser.add_argument("--bf16", action="store_true")
     parser.add_argument("--speed-only", action="store_true")
+    parser.add_argument("--cache-only", action="store_true")
     args = parser.parse_args()
 
     configs = model_configs()
@@ -1055,6 +1056,22 @@ def main() -> int:
     for manifest in (archetype_manifest, exact_manifest):
         if manifest.get("card_data_sha256") != card_table.card_data_sha256:
             raise CapacitySweepError("materialized card-data hash differs from trainer card table")
+
+    if args.cache_only:
+        print(
+            json.dumps(
+                {
+                    "event": "capacity_cache_only_complete",
+                    "archetype_episodes": len(archetype_episodes),
+                    "exact_episodes": len(exact_episodes),
+                    "archetype_cache": str(args.archetype_object_cache) if args.archetype_object_cache else None,
+                    "exact_cache": str(args.exact_object_cache) if args.exact_object_cache else None,
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
+        return 0
 
     # Verify the frozen scale ladder exactly before spending GPU time.
     parameter_counts: dict[str, int] = {}

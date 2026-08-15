@@ -16,11 +16,11 @@ else:
 PTCG_RL = ROOT / "ptcg-rl"
 VOLUME_NAME = "kptcg-training"
 
-ARCHETYPE_DIR = Path("/data/materialized/bc-dragapult-archetype-v3")
-EXACT_DIR = Path("/data/materialized/bc-dragapult-hq-v2")
-ARCHETYPE_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-archetype-v3.pkl")
-EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2.pkl")
-OUTPUT_ROOT = Path("/data/runs/bc-dragapult-final-v2-update-density")
+ARCHETYPE_DIR = Path("/data/materialized/bc-dragapult-archetype-v3-featurefix-v1")
+EXACT_DIR = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1")
+ARCHETYPE_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-archetype-v3-featurefix-v1.pkl")
+EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2-featurefix-v1.pkl")
+OUTPUT_ROOT = Path("/data/runs/bc-dragapult-final-v3-featurefix-update-density")
 
 SUPPORTED_MODELS = {"970k", "1.4m", "1.8m", "2.9m", "3.7m", "5.0m"}
 
