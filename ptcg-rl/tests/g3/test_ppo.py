@@ -17,6 +17,7 @@ from ptcg_rl.g3.ppo import (
     compute_gae,
     is_forced_compound_action,
     ppo_loss,
+    sampled_reference_kl,
     replay_compound_action,
     sample_compound_action,
     require_finite_gradients,
@@ -372,6 +373,43 @@ def test_ppo_value_mask_trains_forced_recurrent_nodes_without_actor_gradient() -
     result.total.backward()
     assert new_logp.grad is not None and new_logp.grad[1] == 0
     assert new_values.grad is not None and new_values.grad[1] != 0
+
+
+def test_sampled_reference_kl_uses_only_meaningful_policy_rows() -> None:
+    value = sampled_reference_kl(
+        new_log_probabilities=torch.tensor([math.log(0.6), math.log(0.4), 100.0]),
+        old_log_probabilities=torch.tensor([math.log(0.5), math.log(0.5), -100.0]),
+        reference_log_probabilities=torch.tensor([math.log(0.7), math.log(0.3), 0.0]),
+        policy_mask=torch.tensor([True, True, False]),
+    )
+    expected = torch.tensor(
+        0.5
+        * (
+            (0.6 / 0.5) * math.log(0.6 / 0.7)
+            + (0.4 / 0.5) * math.log(0.4 / 0.3)
+        )
+    )
+    assert torch.allclose(value, expected, atol=1e-7, rtol=0)
+
+
+def test_sampled_reference_kl_rejects_unstable_importance_ratio() -> None:
+    with pytest.raises(PPOContractError, match="importance ratio is unstable"):
+        sampled_reference_kl(
+            new_log_probabilities=torch.tensor([21.0]),
+            old_log_probabilities=torch.tensor([0.0]),
+            reference_log_probabilities=torch.tensor([0.0]),
+            policy_mask=torch.tensor([True]),
+        )
+
+
+def test_sampled_reference_kl_is_zero_for_value_only_rows() -> None:
+    value = sampled_reference_kl(
+        new_log_probabilities=torch.zeros(2),
+        old_log_probabilities=torch.zeros(2),
+        reference_log_probabilities=torch.ones(2),
+        policy_mask=torch.tensor([False, False]),
+    )
+    assert float(value) == 0.0
 
 
 def test_ppo_loss_supports_value_only_forced_minibatch() -> None:

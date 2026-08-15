@@ -584,6 +584,50 @@ class PPOLossV1:
     valid_value_nodes: int
 
 
+def sampled_reference_kl(
+    *,
+    new_log_probabilities: Tensor,
+    old_log_probabilities: Tensor,
+    reference_log_probabilities: Tensor,
+    policy_mask: Tensor,
+) -> Tensor:
+    new_log_probabilities = _require_vector(new_log_probabilities, "new log probabilities")
+    old_log_probabilities = _require_vector(old_log_probabilities, "old log probabilities")
+    reference_log_probabilities = _require_vector(
+        reference_log_probabilities, "reference log probabilities"
+    )
+    policy_mask = _require_vector(policy_mask, "policy mask")
+    if not (
+        new_log_probabilities.shape
+        == old_log_probabilities.shape
+        == reference_log_probabilities.shape
+        == policy_mask.shape
+    ):
+        raise PPOContractError("reference KL tensors must have matching shapes")
+    if policy_mask.dtype != torch.bool:
+        raise PPOContractError("reference KL policy mask must be boolean")
+    if not torch.any(policy_mask):
+        return new_log_probabilities.new_zeros(())
+    for name, value in {
+        "new_log_probabilities": new_log_probabilities,
+        "old_log_probabilities": old_log_probabilities,
+        "reference_log_probabilities": reference_log_probabilities,
+    }.items():
+        if not torch.isfinite(value).all():
+            raise PPOContractError(f"{name} contains NaN or infinity")
+    new_selected = new_log_probabilities[policy_mask]
+    old_selected = old_log_probabilities[policy_mask]
+    reference_selected = reference_log_probabilities[policy_mask]
+    log_importance_ratio = new_selected - old_selected
+    if torch.any(log_importance_ratio > 20.0):
+        raise PPOContractError("sampled reference KL importance ratio is unstable")
+    importance_ratio = torch.exp(log_importance_ratio)
+    estimate = (importance_ratio * (new_selected - reference_selected)).mean()
+    if not torch.isfinite(estimate):
+        raise PPOContractError("sampled reference KL is nonfinite")
+    return estimate
+
+
 def ppo_loss(
     *,
     new_log_probabilities: Tensor,
