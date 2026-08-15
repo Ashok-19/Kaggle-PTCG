@@ -22,6 +22,7 @@ OFFICIAL = ROOT / "pokemon-tcg-ai-battle/ptcg_engine/ptcgProgram 22"
 VOLUME_NAME = "kptcg-training"
 MODEL_LABEL = "3.7m"
 V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-selected.pt"
+V5_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v5-schema-v3-fused-update-density/3.7m/3.7m/stage-d-exact-1150-best.pt"
 LIVE_BC_ROOT = "/data/materialized/bc-dragapult-live-v6-featurefix-v3"
 EXACT_BC_ROOT = "/data/materialized/bc-dragapult-hq-v2-featurefix-v3"
 MAX_BOUNDED_DECISIONS = 30_000_000
@@ -177,6 +178,8 @@ def train(
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
+    frozen_v7_fraction: float = 0.30,
+    frozen_v5_fraction: float = 0.30,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     seed: int = 20260815,
@@ -199,6 +202,12 @@ def train(
         raise ValueError("reference_kl_coefficient must be nonnegative")
     if bc_anchor_coefficient < 0.0:
         raise ValueError("bc_anchor_coefficient must be nonnegative")
+    if not (0.0 <= frozen_v7_fraction <= 1.0):
+        raise ValueError("frozen_v7_fraction must stay within [0, 1]")
+    if not (0.0 <= frozen_v5_fraction <= 1.0):
+        raise ValueError("frozen_v5_fraction must stay within [0, 1]")
+    if frozen_v7_fraction + frozen_v5_fraction > 1.0:
+        raise ValueError("frozen league fractions must sum to <= 1")
     if heartbeat_seconds <= 0.0 or heartbeat_seconds > 60.0:
         raise ValueError("heartbeat_seconds must stay within (0, 60]")
     if checkpoint_every_updates <= 0:
@@ -221,6 +230,8 @@ def train(
         MODEL_LABEL,
         "--bc-checkpoint",
         str(Path("/data") / V7_CHECKPOINT_RELATIVE),
+        "--v5-checkpoint",
+        str(Path("/data") / V5_CHECKPOINT_RELATIVE),
         "--deck",
         "/workspace/inputs/dragapult-ex.csv",
         "--output-dir",
@@ -243,8 +254,10 @@ def train(
         str(checkpoint_every_updates),
         "--seed",
         str(seed),
-        "--historical-fraction",
-        "0.20",
+        "--frozen-v7-fraction",
+        str(frozen_v7_fraction),
+        "--frozen-v5-fraction",
+        str(frozen_v5_fraction),
         "--gamma",
         "1.0",
         "--gae-lambda",
@@ -339,6 +352,8 @@ def main(
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
+    frozen_v7_fraction: float = 0.30,
+    frozen_v5_fraction: float = 0.30,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     seed: int = 20260815,
@@ -357,6 +372,8 @@ def main(
         learning_rate=learning_rate,
         reference_kl_coefficient=reference_kl_coefficient,
         bc_anchor_coefficient=bc_anchor_coefficient,
+        frozen_v7_fraction=frozen_v7_fraction,
+        frozen_v5_fraction=frozen_v5_fraction,
         heartbeat_seconds=heartbeat_seconds,
         checkpoint_every_updates=checkpoint_every_updates,
         seed=seed,
