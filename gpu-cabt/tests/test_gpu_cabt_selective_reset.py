@@ -51,6 +51,7 @@ def test_cuda_source_exports_bridge_raw_entity_reference_column() -> None:
     source = build_cuda_source()
     assert "kPolicyEntityWidth = 19" in source
     assert "row[18] = visible ? (gc_i32)ref : 0;" in source
+    assert "|| option.type == kOptionEnergy) row[17] = (gc_i32)src;" in source
 
 
 def test_reset_selected_passes_full_decks_and_device_mask_to_kernel() -> None:
