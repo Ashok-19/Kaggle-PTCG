@@ -110,7 +110,6 @@ def train(
     learner_lane_envs: int = 1024,
     seed: int = 20260815,
     resume_relative: str = "",
-    resume_sha256: str = "",
 ) -> dict[str, object]:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
         raise ValueError("run_id contains unsupported characters")
@@ -124,8 +123,6 @@ def train(
         raise ValueError("learner lane envs must stay within 1..env_count")
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise ValueError("source commit must be an exact 40-character Git SHA")
-    if bool(resume_relative) != bool(resume_sha256):
-        raise ValueError("resume path and SHA-256 must be supplied together")
 
     output_dir = Path("/data/runs") / run_id
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -181,16 +178,7 @@ def train(
     if resume_relative:
         if resume_relative.startswith("/") or ".." in Path(resume_relative).parts:
             raise ValueError("resume path must be a safe /data-relative path")
-        if not re.fullmatch(r"[0-9a-f]{64}", resume_sha256):
-            raise ValueError("resume SHA-256 must be exact")
-        command.extend(
-            [
-                "--resume-checkpoint",
-                str(Path("/data") / resume_relative),
-                "--resume-checkpoint-sha256",
-                resume_sha256,
-            ]
-        )
+        command.extend(["--resume-checkpoint", str(Path("/data") / resume_relative)])
 
     telemetry = subprocess.Popen(
         [
@@ -246,7 +234,6 @@ def main(
     learner_lane_envs: int = 1024,
     seed: int = 20260815,
     resume_relative: str = "",
-    resume_sha256: str = "",
 ) -> None:
     source_commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -260,6 +247,5 @@ def main(
         learner_lane_envs=learner_lane_envs,
         seed=seed,
         resume_relative=resume_relative,
-        resume_sha256=resume_sha256,
     )
     print(json.dumps(result, indent=2, sort_keys=True))

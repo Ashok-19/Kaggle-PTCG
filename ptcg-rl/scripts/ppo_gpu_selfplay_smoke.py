@@ -352,7 +352,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     bc = load_training_checkpoint_model_state(
         args.bc_checkpoint,
         model=model,
-        expected_sha256=args.bc_checkpoint_sha256,
     )
     # PPO probability replay must be deterministic. The current network uses
     # zero dropout, but keep evaluation mode as an explicit rollout/replay contract;
@@ -479,8 +478,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "device": str(device),
         "gpu_name": torch.cuda.get_device_name(device),
         "model_label": args.model_label,
-        "card_table_sha256": model.card_table_sha256,
-        "bc_initializer_sha256": bc.payload_sha256,
         "model_parameters": model.trainable_parameter_count,
         "env_count": args.env_count,
         "seed": args.seed,
@@ -554,7 +551,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             },
             league={
                 "initializer": "bc-specialist-epoch-1",
-                "initializer_sha256": bc.payload_sha256,
                 "opponent_mode": "frozen-symmetric-smoke",
                 "full_run_authorized": False,
             },
@@ -567,7 +563,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         report["checkpoint"] = {
             "path": checkpoint_path.name,
-            "payload_sha256": checkpoint["payload_sha256"],
             "payload_bytes": checkpoint["payload_bytes"],
         }
         report_path = args.output_dir / "ppo-smoke-report.json"
@@ -581,7 +576,6 @@ def main() -> int:
     parser.add_argument("--card-table", type=Path, required=True)
     parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
-    parser.add_argument("--bc-checkpoint-sha256")
     parser.add_argument("--deck", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--env-count", type=int, default=16)

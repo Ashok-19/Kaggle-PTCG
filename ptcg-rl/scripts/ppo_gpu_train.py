@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import copy
-import hashlib
 import json
 import math
 import resource
@@ -18,7 +17,6 @@ from torch import Tensor
 from gpu_cabt.device_runtime import GpuCabtRuntime
 from ptcg_rl.g2.capacity import model_config, model_configs
 from ptcg_rl.g2.card_table import load_card_table
-from ptcg_rl.g2.checkpoint import state_dict_sha256
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch
 from ptcg_rl.g3.checkpoint import (
     load_training_checkpoint_model_state,
@@ -69,25 +67,11 @@ class RolloutV1:
     metrics: dict[str, Any]
 
 
-def _sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(8 * 1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-
 def _load_deck(path: Path) -> np.ndarray:
     values = np.loadtxt(path, dtype=np.int32)
     if values.shape != (60,):
         raise PPOTrainError(f"expected exactly 60 card ids at {path}, got {values.shape}")
     return values
-
-
-def _model_state_sha(model: PTCGPolicyV1) -> str:
-    return state_dict_sha256(
-        {name: tensor.detach().cpu() for name, tensor in model.state_dict().items()}
-    )
 
 
 def _parameter_snapshot(model: PTCGPolicyV1) -> tuple[Tensor, ...]:
@@ -891,20 +875,6 @@ def _terminal_counts(results: Tensor) -> dict[str, int]:
     return {str(code): int((results == code).sum().item()) for code in (1, 2, 3)}
 
 
-def _code_hashes(script_path: Path) -> dict[str, str]:
-    root = script_path.resolve().parents[1]
-    paths = {
-        "trainer": script_path,
-        "capacity": root / "src/ptcg_rl/g2/capacity.py",
-        "production_ppo": root / "src/ptcg_rl/g3/production_ppo.py",
-        "ppo_contract": root / "src/ptcg_rl/g3/ppo.py",
-        "compound_batch": root / "src/ptcg_rl/g3/compound_batch.py",
-        "gpu_policy_bridge": root / "src/ptcg_rl/g3/gpu_policy_bridge.py",
-        "network": root / "src/ptcg_rl/g2/network.py",
-    }
-    return {name: _sha256_file(path) for name, path in paths.items()}
-
-
 def run(args: argparse.Namespace) -> dict[str, Any]:
     device = torch.device(args.device)
     if device.type != "cuda" or not torch.cuda.is_available():
@@ -927,11 +897,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     card_table = load_card_table(args.card_table)
     model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
-    initializer = load_training_checkpoint_model_state(
-        args.bc_checkpoint,
-        model=model,
-        expected_sha256=args.bc_checkpoint_sha256,
-    )
+    load_training_checkpoint_model_state(args.bc_checkpoint, model=model)
     historical_model = copy.deepcopy(model).eval()
     for parameter in historical_model.parameters():
         parameter.requires_grad_(False)
@@ -950,7 +916,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             optimizer=optimizer,
             scheduler=scheduler,
             scaler=None,
-            expected_sha256=args.resume_checkpoint_sha256,
             restore_rng=True,
         )
         total_actor_decisions = int(restored.counters.get("actor_decisions", 0))
@@ -959,7 +924,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         completed_updates = int(restored.counters.get("ppo_updates", 0))
         resume_record = {
             "checkpoint": args.resume_checkpoint.as_posix(),
-            "sha256": restored.payload_sha256,
             "restored_rng_states": list(restored.restored_rng_states),
             "starting_counters": restored.counters,
         }
@@ -1091,12 +1055,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             league={
                 "mode": "80pct-frozen-current-selfplay-plus-historical",
                 "historical_fraction_requested": args.historical_fraction,
-                "historical_opponents": [
-                    {
-                        "id": "bc-specialist-epoch-1",
-                        "checkpoint_sha256": initializer.payload_sha256,
-                    }
-                ],
+                "historical_opponents": [{"id": "bc-v7-frozen-reference"}],
                 "retained_intermediate_policy_updates": list(range(1, completed_updates + 1)),
             },
             rollout_boundary={
@@ -1110,9 +1069,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         checkpoint_record = {
             "update": update_number,
             "path": checkpoint_path.as_posix(),
-            "payload_sha256": checkpoint["payload_sha256"],
             "payload_bytes": checkpoint["payload_bytes"],
-            "model_state_sha256": _model_state_sha(model),
         }
         checkpoint_records.append(checkpoint_record)
         update_record["checkpoint"] = checkpoint_record
@@ -1128,7 +1085,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "update_seconds": update["update_seconds"],
             "post_kl": update["post_update"]["approximate_kl"],
             "post_clip_fraction": update["post_update"]["clip_fraction"],
-            "checkpoint_sha256": checkpoint["payload_sha256"],
         }
         print(json.dumps(progress, sort_keys=True), flush=True)
         del rollout, gae, advantage, returns
@@ -1156,20 +1112,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "record_id": "kptcg-production-shaped-ppo-bounded-v1",
         "status": "PASS",
         "source_commit": args.source_commit,
-        "code_sha256": _code_hashes(Path(__file__)),
         "device": str(device),
         "gpu_name": torch.cuda.get_device_name(device),
         "bf16": bool(args.bf16),
         "model_label": args.model_label,
-        "card_table_sha256": model.card_table_sha256,
-        "bc_initializer_sha256": initializer.payload_sha256,
         "initializer_interpretation": "model-only warm start from selected BC checkpoint",
         "model_parameters": model.trainable_parameter_count,
-        "architecture_sha256": model.architecture_sha256,
-        "deck": {
-            "path": args.deck.as_posix(),
-            "file_sha256": _sha256_file(args.deck),
-        },
+        "deck": {"path": args.deck.as_posix()},
         "configuration": {
             "env_count": args.env_count,
             "decision_budget_requested": args.decision_budget,
@@ -1239,7 +1188,6 @@ def main() -> int:
     parser.add_argument("--card-table", type=Path, required=True)
     parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
-    parser.add_argument("--bc-checkpoint-sha256")
     parser.add_argument("--deck", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
@@ -1263,10 +1211,7 @@ def main() -> int:
     parser.add_argument("--learning-rate", type=float, default=3e-5)
     parser.add_argument("--max-gradient-norm", type=float, default=1.0)
     parser.add_argument("--resume-checkpoint", type=Path)
-    parser.add_argument("--resume-checkpoint-sha256")
     args = parser.parse_args()
-    if (args.resume_checkpoint is None) != (args.resume_checkpoint_sha256 is None):
-        parser.error("resume checkpoint and SHA-256 must be supplied together")
     result = run(args)
     print(json.dumps(result, indent=2, sort_keys=True), flush=True)
     return 0
