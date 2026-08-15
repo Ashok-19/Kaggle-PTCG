@@ -218,7 +218,7 @@ def _project_events(
     identity_masks = []
     entity_rows = []
     identity_tokens = {serial: entity_index + 1 for serial, entity_index in serial_to_entity.items()}
-    next_identity = len(identity_tokens) + 1
+    next_identity = max(identity_tokens.values(), default=0) + 1
 
     def identity(serial: int | bool | None) -> tuple[int, bool, int]:
         nonlocal next_identity

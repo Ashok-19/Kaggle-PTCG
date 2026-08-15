@@ -5,7 +5,7 @@ from dataclasses import replace
 from ptcg_rl.g1.actions import permute_request
 from ptcg_rl.g1.semantic import AREA, semantic_snapshot
 from ptcg_rl.g2.models import model_schema_descriptor, model_schema_sha256
-from ptcg_rl.g2.projection import project_decision, reorder_option_features
+from ptcg_rl.g2.projection import _project_events, project_decision, reorder_option_features
 from ..g1_fixtures import raw_observation
 
 CARD_HASH = "c" * 64
@@ -118,6 +118,18 @@ def test_effective_energy_count_matches_native_energy_units_not_physical_cards()
         if row[projected.entity_categorical_names.index("zone")] == AREA["ACTIVE"]
     )
     assert projected.entity_numeric_values[active_row][count_index] == 2.0
+
+
+def test_event_only_identity_starts_after_max_current_entity_token() -> None:
+    raw = raw_observation()
+    raw["logs"] = [{"type": 10, "playerIndex": 0, "cardId": 55, "serial": 99}]
+    observation, request = semantic_snapshot(raw, "event-token-gap", 0, CARD_HASH)
+    assert request is not None
+    # Simulate visible current entity tokens 1 and 3 with a hidden row gap at index1.
+    projected = _project_events(observation, 0, {10: 0, 20: 2})
+    identity_rows = projected[4]
+    assert identity_rows[0][0] == 4
+    assert identity_rows[0][0] not in {1, 3}
 
 
 def test_model_schema_explicitly_excludes_transport_and_serial_magnitude() -> None:

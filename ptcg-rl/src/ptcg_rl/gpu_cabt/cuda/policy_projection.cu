@@ -2,7 +2,7 @@ namespace gpu_cabt {
 
 static constexpr gc_i32 kPolicyGlobalWidth = 24;
 static constexpr gc_i32 kPolicyPlayerWidth = 12;
-static constexpr gc_i32 kPolicyEntityWidth = 18;
+static constexpr gc_i32 kPolicyEntityWidth = 19;
 static constexpr gc_i32 kPolicyEntityCapacity = kAllCardCapacity;
 static constexpr gc_i32 kPolicyOptionWidth = 20;
 static constexpr gc_i32 kPolicyOptionCapacity = kOptionCapacity;
@@ -171,6 +171,8 @@ __device__ __forceinline__ void policy_emit_entity(
     row[3] = policy_role(area, zone_index);
     row[4] = visible ? 1 : 0;
     row[15] = parent_role;
+    // Bridge-only transport identity. Raw ref magnitude never enters model features.
+    row[18] = visible ? (gc_i32)ref : 0;
     if (visible) {
         row[0] = card.card_id;
         const RuleCardMaster* master = rule_card(rules, card.card_id);

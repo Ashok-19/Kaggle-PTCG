@@ -29,7 +29,7 @@ def _projection_fixture():
     players[:, 0, :7] = torch.tensor([40, 7, 4, 1, 3, 5, 0])
     players[:, 1, :7] = torch.tensor([35, 5, 3, 0, 2, 5, 0])
 
-    entities = torch.zeros((envs, 8, 18), dtype=torch.int32)
+    entities = torch.zeros((envs, 8, 19), dtype=torch.int32)
     entity_counts = torch.tensor([4, 2, 3], dtype=torch.int32)
     for env in range(envs):
         entities[env, 0, :15] = torch.tensor(
@@ -38,10 +38,17 @@ def _projection_fixture():
         entities[env, 1, :15] = torch.tensor(
             [200 + env, 1, 4, 1, 1, 180, 180, 0, 0, 0, 0, 0, 0, 0, 0]
         )
+    entities[0, 0, 18] = 20
+    entities[0, 1, 18] = 30
+    entities[1, 0, 18] = 40
+    entities[1, 1, 18] = 41
+    entities[2, 0, 18] = 31
+    entities[2, 1, 18] = 32
     # Env 0: bench + hidden prize slot exercise canonical role/missing conversion.
     entities[0, 2, :15] = torch.tensor(
         [300, 0, 5, 3, 1, 100, 120, 20, 1, 0, 0, 0, 0, 0, 0]
     )
+    entities[0, 2, 18] = 9
     entities[0, 3, :5] = torch.tensor([0, 1, 6, 2, 0])
     # Env 2: an attached energy. Deliberately use raw role 5; source lookup must
     # use public card id + parent role rather than the attachment list ordinal.
@@ -49,6 +56,7 @@ def _projection_fixture():
     entities[2, 2, :18] = torch.tensor(
         [6, 0, 8, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4]
     )
+    entities[2, 2, 18] = 10
 
     options = torch.zeros((envs, 4, 20), dtype=torch.int32)
     option_counts = torch.ones(envs, dtype=torch.int32)
@@ -146,26 +154,33 @@ def test_gpu_bridge_maps_players_globals_entities_and_option_links() -> None:
     assert not batch.option_categorical_missing[0, 9]
 
 
-def test_gpu_bridge_preserves_public_event_semantics_with_event_only_identity_ids() -> None:
+def test_gpu_bridge_matches_cpu_current_entity_seeded_event_identities_and_links() -> None:
     projection, events, status = _projection_fixture()
     batch, _ = build_torch_policy_batch(projection, events, status)
 
     assert batch.event_offsets.tolist() == [0, 3, 3, 4]
-    # DRAW: actor-relative player 0, card55, compact serial id1.
+    # DRAW serial9 matches env0 bench entity row2 => local identity token3.
     assert batch.event_categorical[0, 0].item() == 4
     assert batch.event_categorical[0, 1].item() == 0
     assert batch.event_categorical[0, 3].item() == 55
-    assert batch.event_identity[0, 0].item() == 1
-    # ATTACH: opponent relative player1, serial10 id2, target serial20 id3.
+    assert batch.event_identity[0, 0].item() == 3
+    # ATTACH serial10 is event-only => token4; target serial20 is current entity0 => token1.
     assert batch.event_categorical[1, 1].item() == 1
     assert batch.event_categorical[1, 10].item() == 100
-    assert batch.event_identity[1, 0].item() == 2
-    assert batch.event_identity[1, 5].item() == 3
-    # PLAY reuses public serial9 and therefore identity id1.
-    assert batch.event_identity[2, 0].item() == 1
+    assert batch.event_identity[1, 0].item() == 4
+    assert batch.event_identity[1, 5].item() == 1
+    # PLAY reuses public serial9 and therefore current-entity token3.
+    assert batch.event_identity[2, 0].item() == 3
     # HP_CHANGE value and putDamageCounter are mapped separately.
     assert batch.event_numeric[3, 0].item() == -40
     assert batch.event_categorical[3, 12].item() == 1
     assert not batch.event_numeric_missing[3, 0]
-    # Qualified GPU-feasible approximation deliberately removes event->current entity links.
-    assert torch.all(batch.event_entity_indices == -1)
+    # Current-entity references are restored exactly; event-only serial10 stays unlinked.
+    expected_links = torch.full((4, 6), -1, dtype=torch.long)
+    expected_links[0, 0] = 2
+    expected_links[1, 5] = 0
+    expected_links[2, 0] = 2
+    expected_links[3, 0] = 6
+    assert torch.equal(batch.event_entity_indices.cpu(), expected_links)
+    # Env2 HP_CHANGE serial31 is env2 entity0 => local identity token1.
+    assert batch.event_identity[3, 0].item() == 1

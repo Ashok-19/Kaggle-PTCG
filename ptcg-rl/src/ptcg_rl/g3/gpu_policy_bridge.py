@@ -117,57 +117,131 @@ def _kind_from_area(area: Tensor) -> Tensor:
     )
 
 
-def _compact_event_identities(raw_values: Tensor, missing: Tensor, owner: Tensor) -> Tensor:
-    """Assign event-only identity ids by first public occurrence within each decision."""
+def _map_event_identities(
+    raw_values: Tensor,
+    missing: Tensor,
+    owner: Tensor,
+    entity_raw_refs: Tensor,
+    entity_offsets: Tensor,
+) -> tuple[Tensor, Tensor]:
+    """Mirror CPU event identity seeding and event->current-entity links on GPU.
+
+    Current visible entity refs receive their local entity-index token + 1.
+    Event-only refs are numbered by first public occurrence after the maximum
+    current-entity token. Raw ref magnitude is transport-only and never reaches
+    the neural feature tensors.
+    """
     if raw_values.ndim != 2 or missing.shape != raw_values.shape or owner.ndim != 1:
         raise GpuPolicyBridgeError("event identity tensors have incompatible shapes")
     if raw_values.shape[0] != owner.numel():
         raise GpuPolicyBridgeError("event identity owner mapping differs")
-    result = torch.zeros_like(raw_values, dtype=torch.long)
+    if entity_raw_refs.ndim != 1 or entity_offsets.ndim != 1:
+        raise GpuPolicyBridgeError("entity identity transport tensors have incompatible shapes")
+    batch_size = int(entity_offsets.numel()) - 1
+    if batch_size < 0 or entity_offsets.shape != (batch_size + 1,):
+        raise GpuPolicyBridgeError("entity offsets have the wrong shape")
+    if int(entity_offsets[-1].item()) != int(entity_raw_refs.numel()):
+        raise GpuPolicyBridgeError("entity offsets do not consume all raw refs")
+
+    identities = torch.zeros_like(raw_values, dtype=torch.long)
+    entity_indices = torch.full_like(raw_values, -1, dtype=torch.long)
     if raw_values.numel() == 0:
-        return result
-    slot_owner = owner.unsqueeze(1).expand(-1, raw_values.shape[1]).reshape(-1)
-    slot_values = raw_values.to(torch.long).reshape(-1)
-    slot_missing = missing.reshape(-1)
-    valid = ~slot_missing
+        return identities, entity_indices
+
+    flat_owner = owner.unsqueeze(1).expand(-1, raw_values.shape[1]).reshape(-1)
+    flat_values = raw_values.to(torch.long).reshape(-1)
+    flat_missing = missing.reshape(-1)
+    valid = ~flat_missing
     if not torch.any(valid):
-        return result
-    valid_owner = slot_owner[valid]
-    valid_values = slot_values[valid]
+        return identities, entity_indices
+    valid_positions = torch.nonzero(valid, as_tuple=False).squeeze(1)
+    valid_owner = flat_owner[valid]
+    valid_values = flat_values[valid]
     if torch.any(valid_values <= 0):
         raise GpuPolicyBridgeError("public event serial identity must be positive")
-    composite = (valid_owner << 32) | valid_values
-    unique_keys, inverse = torch.unique(composite, sorted=True, return_inverse=True)
-    positions = torch.arange(composite.numel(), dtype=torch.long, device=composite.device)
-    first = torch.full(
-        (unique_keys.numel(),),
-        torch.iinfo(torch.long).max,
-        dtype=torch.long,
-        device=composite.device,
-    )
-    first.scatter_reduce_(0, inverse, positions, reduce="amin", include_self=True)
-    unique_owner = unique_keys >> 32
-    order_key = unique_owner * (composite.numel() + 1) + first
-    order = torch.argsort(order_key)
-    owner_sorted = unique_owner[order]
-    sorted_positions = torch.arange(order.numel(), dtype=torch.long, device=order.device)
-    starts = torch.ones(order.numel(), dtype=torch.bool, device=order.device)
-    if order.numel() > 1:
-        starts[1:] = owner_sorted[1:] != owner_sorted[:-1]
-    start_positions = torch.where(starts, sorted_positions, torch.zeros_like(sorted_positions))
-    start_positions = torch.cummax(start_positions, dim=0).values
-    ranks_sorted = sorted_positions - start_positions + 1
-    ranks_by_unique = torch.empty_like(ranks_sorted)
-    ranks_by_unique[order] = ranks_sorted
-    flattened = result.reshape(-1)
-    flattened[valid] = ranks_by_unique[inverse]
-    return result
 
+    entity_counts = entity_offsets[1:] - entity_offsets[:-1]
+    entity_owner = torch.repeat_interleave(
+        torch.arange(batch_size, dtype=torch.long, device=entity_raw_refs.device),
+        entity_counts,
+    )
+    entity_starts = torch.repeat_interleave(entity_offsets[:-1], entity_counts)
+    entity_local = torch.arange(
+        entity_raw_refs.numel(), dtype=torch.long, device=entity_raw_refs.device
+    ) - entity_starts
+    current = entity_raw_refs > 0
+    current_keys = (entity_owner[current] << 32) | entity_raw_refs[current].to(torch.long)
+    current_indices = torch.nonzero(current, as_tuple=False).squeeze(1)
+    if current_keys.numel() > 1:
+        sorted_current, _ = torch.sort(current_keys)
+        if torch.any(sorted_current[1:] == sorted_current[:-1]):
+            raise GpuPolicyBridgeError("visible entity raw ref is not unique within a decision")
+
+    query_keys = (valid_owner << 32) | valid_values
+    matched_indices = torch.full_like(valid_values, -1)
+    if current_keys.numel():
+        sorted_keys, order = torch.sort(current_keys)
+        positions = torch.searchsorted(sorted_keys, query_keys)
+        clamped = positions.clamp_max(sorted_keys.numel() - 1)
+        matched = (positions < sorted_keys.numel()) & (sorted_keys[clamped] == query_keys)
+        matched_indices[matched] = current_indices[order[clamped[matched]]]
+    else:
+        matched = torch.zeros_like(valid_values, dtype=torch.bool)
+
+    flat_entity_indices = entity_indices.reshape(-1)
+    flat_entity_indices[valid_positions] = matched_indices
+    flat_identities = identities.reshape(-1)
+    if torch.any(matched):
+        local = matched_indices[matched] - entity_offsets[valid_owner[matched]]
+        flat_identities[valid_positions[matched]] = local + 1
+
+    # CPU starts event-only identities after the maximum token assigned to a
+    # visible current entity, not after raw entity count (hidden slots can gap).
+    base = torch.zeros(batch_size, dtype=torch.long, device=entity_raw_refs.device)
+    if torch.any(current):
+        current_tokens = entity_local[current] + 1
+        base.scatter_reduce_(
+            0, entity_owner[current], current_tokens, reduce="amax", include_self=True
+        )
+
+    unmatched = ~matched
+    if torch.any(unmatched):
+        unmatched_owner = valid_owner[unmatched]
+        unmatched_values = valid_values[unmatched]
+        unmatched_positions = valid_positions[unmatched]
+        composite = (unmatched_owner << 32) | unmatched_values
+        unique_keys, inverse = torch.unique(composite, sorted=True, return_inverse=True)
+        first = torch.full(
+            (unique_keys.numel(),),
+            torch.iinfo(torch.long).max,
+            dtype=torch.long,
+            device=composite.device,
+        )
+        first.scatter_reduce_(0, inverse, unmatched_positions, reduce="amin", include_self=True)
+        unique_owner = unique_keys >> 32
+        order_key = unique_owner * (raw_values.numel() + 1) + first
+        order = torch.argsort(order_key)
+        owner_sorted = unique_owner[order]
+        sorted_positions = torch.arange(order.numel(), dtype=torch.long, device=order.device)
+        starts = torch.ones(order.numel(), dtype=torch.bool, device=order.device)
+        if order.numel() > 1:
+            starts[1:] = owner_sorted[1:] != owner_sorted[:-1]
+        start_positions = torch.where(starts, sorted_positions, torch.zeros_like(sorted_positions))
+        start_positions = torch.cummax(start_positions, dim=0).values
+        ranks_sorted = sorted_positions - start_positions + 1
+        ranks_by_unique = torch.empty_like(ranks_sorted)
+        ranks_by_unique[order] = ranks_sorted
+        flat_identities[unmatched_positions] = (
+            base[unmatched_owner] + ranks_by_unique[inverse]
+        )
+    return identities, entity_indices
 
 def _map_events(
     event_rows: Tensor,
     event_counts: Tensor,
     actors: Tensor,
+    entity_raw_refs: Tensor,
+    entity_offsets: Tensor,
 ) -> tuple[Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor]:
     events, event_offsets = _flatten_padded(event_rows, event_counts)
     owner = _flat_owner(event_counts)
@@ -267,7 +341,9 @@ def _map_events(
     set_identity(4, move_attached, 6)
     set_identity(5, targeted, 4)
 
-    identities = _compact_event_identities(identity_raw, identity_missing, owner)
+    identities, entity_indices = _map_event_identities(
+        identity_raw, identity_missing, owner, entity_raw_refs, entity_offsets
+    )
     return (
         categorical,
         categorical_missing,
@@ -330,7 +406,7 @@ def build_torch_policy_batch(
         raise GpuPolicyBridgeError("policy bridge received a terminal environment")
     if torch.any((actors < 0) | (actors > 1)):
         raise GpuPolicyBridgeError("policy bridge received an invalid acting player")
-    if g.shape[1] < 23 or players.shape[1:] != (2, 12) or entity_rows.shape[2] < 18 or option_rows.shape[2] < 20:
+    if g.shape[1] < 23 or players.shape[1:] != (2, 12) or entity_rows.shape[2] < 19 or option_rows.shape[2] < 20:
         raise GpuPolicyBridgeError("GPU policy ABI widths differ from the qualified contract")
 
     batch_size = int(env_indices.numel())
@@ -356,6 +432,11 @@ def build_torch_policy_batch(
     raw_entities, entity_offsets = _flatten_padded(entity_rows, entity_counts)
     entity_owner = _flat_owner(entity_counts)
     entity_visible = raw_entities[:, 4] != 0
+    entity_raw_refs = raw_entities[:, 18].to(torch.long)
+    if torch.any(entity_visible & (entity_raw_refs <= 0)):
+        raise GpuPolicyBridgeError("visible GPU entity is missing bridge-only raw ref")
+    if torch.any((~entity_visible) & (entity_raw_refs != 0)):
+        raise GpuPolicyBridgeError("hidden GPU entity exposes a bridge-only raw ref")
     entity_area = raw_entities[:, 2].to(torch.long)
     entity_role = torch.where(
         entity_area == 4,
@@ -542,7 +623,9 @@ def build_torch_policy_batch(
         event_identity_missing,
         event_entity_indices,
         event_offsets,
-    ) = _map_events(event_rows, event_counts, actors)
+    ) = _map_events(
+        event_rows, event_counts, actors, entity_raw_refs, entity_offsets
+    )
 
     first_player = g[:, 2]
     native_selection_type = g[:, 6] - 1
