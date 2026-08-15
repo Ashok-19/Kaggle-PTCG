@@ -112,6 +112,17 @@ def _flatten_recurrent_parameters(model: PTCGPolicyV1) -> None:
     model.event_gru.flatten_parameters()
 
 
+def _zero_untrained_bc_value_output(model: PTCGPolicyV1) -> None:
+    """Zero only the critic output layer; actor logits are structurally untouched."""
+    output = model.value_head[-1]
+    if not isinstance(output, torch.nn.Linear):
+        raise PPOTrainError("value head output layer is not linear")
+    with torch.no_grad():
+        output.weight.zero_()
+        if output.bias is not None:
+            output.bias.zero_()
+
+
 def _host_peak_rss_bytes() -> int:
     # Linux reports ru_maxrss in KiB.
     return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss) * 1024
@@ -1295,6 +1306,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
     if args.checkpoint_every_updates <= 0:
         raise PPOTrainError("checkpoint cadence must be a positive update count")
+    if args.max_initial_signal_horizons <= 0:
+        raise PPOTrainError("max initial signal horizons must be positive")
     for value, label in (
         (args.frozen_v7_fraction, "frozen-v7 fraction"),
         (args.frozen_v5_fraction, "frozen-v5 fraction"),
@@ -1326,6 +1339,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     frozen_v7_model = copy.deepcopy(model).eval()
     for parameter in frozen_v7_model.parameters():
         parameter.requires_grad_(False)
+    if not args.preserve_initial_value_head:
+        _zero_untrained_bc_value_output(model)
     frozen_v5_model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     if args.v5_checkpoint is not None:
         load_training_checkpoint_model_state(args.v5_checkpoint, model=frozen_v5_model)
@@ -1368,6 +1383,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     total_meaningful_targets = 0
     completed_updates = 0
     model.eval()
+    initial_signal_wait_horizons = 0
+    model.eval()
 
     deck = _load_deck(args.deck)
     decks = np.broadcast_to(deck, (args.env_count, 2, 60)).copy()
@@ -1393,9 +1410,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     checkpoint_records: list[dict[str, Any]] = []
     run_started = time.perf_counter()
 
-    while total_learner_decisions - run_start_learner_decisions < args.decision_budget:
+    while (
+        total_learner_decisions - run_start_learner_decisions < args.decision_budget
+        or completed_updates == 0
+    ):
         update_number = completed_updates + 1
-        rollout_seed = args.seed + update_number * 1_000_003
+        rollout_seed = args.seed + (actor_state.horizon_index + 1) * 1_000_003
         # Gradient replay must use train mode for cuDNN recurrence. With dropout=0,
         # sample in the same mode under inference_mode so old-policy replay is exact.
         model.train()
@@ -1433,6 +1453,35 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         torch.cuda.synchronize(device)
         gae_seconds = time.perf_counter() - gae_started
+        if completed_updates == 0 and gae_stats.terminal_trajectories == 0:
+            actor_decisions = int(rollout.metrics["actor_recurrent_decisions"])
+            learner_decisions = int(rollout.metrics["learner_recurrent_decisions"])
+            meaningful_targets = int(rollout.metrics["meaningful_policy_targets"])
+            total_actor_decisions += actor_decisions
+            total_learner_decisions += learner_decisions
+            total_meaningful_targets += meaningful_targets
+            initial_signal_wait_horizons += 1
+            print(
+                json.dumps(
+                    {
+                        "event": "ppo_initial_terminal_signal_wait",
+                        "horizon": actor_state.horizon_index,
+                        "wait_horizons": initial_signal_wait_horizons,
+                        "actor_decisions": total_actor_decisions,
+                        "learner_decisions": total_learner_decisions,
+                        "reason": "zero-output BC critic and no terminal trajectory; actor remains frozen",
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            if initial_signal_wait_horizons >= args.max_initial_signal_horizons:
+                raise PPOTrainError(
+                    "no terminal learner trajectory observed during initial critic signal wait"
+                )
+            del rollout, gae, value_mask, reference_logp
+            torch.cuda.empty_cache()
+            continue
         bc_anchor_group = (
             bc_anchor_groups[(update_number - 1) % len(bc_anchor_groups)]
             if bc_anchor_groups
@@ -1648,6 +1697,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "learning_rate": args.learning_rate,
             "max_gradient_norm": args.max_gradient_norm,
             "ppo_epochs_per_rollout": 1,
+            "critic_initialization": (
+                "preserved_from_initializer"
+                if args.preserve_initial_value_head
+                else "zero_output_layer_from_untrained_bc_head"
+            ),
+            "max_initial_signal_horizons": args.max_initial_signal_horizons,
+            "initial_signal_wait_horizons": initial_signal_wait_horizons,
             "reward": "terminal-only +1/-1, draw 0",
             "rollout_policy": "fixed-horizon recurrent actor with GPU selective terminal recycling",
             "recurrent_replay": "chunk-start hidden snapshot plus in-chunk recurrent unroll",
@@ -1743,6 +1799,8 @@ def main() -> int:
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
     parser.add_argument("--learning-rate", type=float, default=1e-6)
     parser.add_argument("--max-gradient-norm", type=float, default=1.0)
+    parser.add_argument("--preserve-initial-value-head", action="store_true")
+    parser.add_argument("--max-initial-signal-horizons", type=int, default=16)
     args = parser.parse_args()
     result = run(args)
     print(json.dumps(result, indent=2, sort_keys=True), flush=True)
