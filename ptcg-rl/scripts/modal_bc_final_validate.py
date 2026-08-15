@@ -48,6 +48,10 @@ image = (
         remote_path="/workspace/ptcg-rl/scripts/bc_capacity_sweep.py",
     )
     .add_local_file(
+        PTCG_RL / "scripts/bc_train_materialized.py",
+        remote_path="/workspace/ptcg-rl/scripts/bc_train_materialized.py",
+    )
+    .add_local_file(
         PTCG_RL / "private/g2/card-table-v1.json",
         remote_path="/workspace/ptcg-rl/private/g2/card-table-v1.json",
     )
