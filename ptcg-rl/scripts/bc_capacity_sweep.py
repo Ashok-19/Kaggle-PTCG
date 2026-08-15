@@ -27,14 +27,14 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from bc_train_materialized import (  # noqa: E402
     load_all_episodes,
     load_materialized_manifest,
-    prepack_groups,
+    prepack_mega_groups,
     train_epoch_packed,
     validate_packed,
 )
 from ptcg_rl.bc.materialized import MaterializedEpisodeV1  # noqa: E402
 from ptcg_rl.bc.training import (  # noqa: E402
-    PackedRecurrentGroup,
-    packed_recurrent_group_to_device,
+    PackedMegaRecurrentGroup as PackedRecurrentGroup,
+    packed_mega_recurrent_group_to_device,
 )
 from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
 from ptcg_rl.g2.network import PTCGPolicyV1, PolicyConfigV1  # noqa: E402
@@ -472,7 +472,7 @@ def _pack(
     seed: int,
     device: torch.device,
 ) -> tuple[PackedRecurrentGroup, ...]:
-    groups = prepack_groups(
+    groups = prepack_mega_groups(
         episodes,
         batch_size=batch_size,
         sequence_length=sequence_length,
@@ -481,7 +481,7 @@ def _pack(
     )
     if device.type == "cuda":
         groups = tuple(
-            packed_recurrent_group_to_device(group, device, non_blocking=True) for group in groups
+            packed_mega_recurrent_group_to_device(group, device, non_blocking=True) for group in groups
         )
         torch.cuda.synchronize(device)
     return groups

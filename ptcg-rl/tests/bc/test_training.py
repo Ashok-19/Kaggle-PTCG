@@ -3,7 +3,9 @@ from __future__ import annotations
 import torch
 
 from ptcg_rl.bc.training import (
+    pack_mega_recurrent_group,
     pack_recurrent_group,
+    packed_mega_recurrent_chunk_loss,
     packed_recurrent_chunk_loss,
     recurrent_sequence_batch_loss,
 )
@@ -138,6 +140,42 @@ def test_packed_recurrent_chunk_matches_unpacked_sequence_loss(tmp_path) -> None
     assert observed.recurrent_decisions == reference.recurrent_decisions
     assert torch.allclose(observed.next_hidden, reference.next_hidden, atol=1e-6, rtol=1e-6)
     assert torch.allclose(observed.loss, reference.loss, atol=1e-6, rtol=1e-6)
+
+
+def test_mega_packed_recurrent_chunk_matches_reference_path(tmp_path) -> None:
+    torch.manual_seed(19)
+    policy = model(tmp_path).eval()
+    sequences = (
+        (_decision(0, 1), _decision(1, 2), _decision(2, 3)),
+        (_decision(0, 4), _decision(1, 0)),
+    )
+    reference = pack_recurrent_group(sequences, sequence_length=8)
+    mega = pack_mega_recurrent_group(sequences, sequence_length=8)
+    assert len(reference.chunks) == len(mega.chunks) == 1
+    assert mega.policy_targets == reference.policy_targets == 5
+    assert mega.recurrent_decisions == reference.recurrent_decisions == 5
+    assert [int(active.numel()) for active in mega.chunks[0].active_indices] == [2, 2, 1]
+    assert mega.chunks[0].batch.batch_size == 5
+
+    hidden = policy.initial_hidden(len(sequences), "cpu")
+    reference_result = packed_recurrent_chunk_loss(
+        policy,
+        reference.chunks[0],
+        hidden=hidden,
+        non_blocking=False,
+    )
+    mega_result = packed_mega_recurrent_chunk_loss(
+        policy,
+        mega.chunks[0],
+        hidden=hidden,
+        non_blocking=False,
+    )
+    assert mega_result.policy_targets == reference_result.policy_targets
+    assert mega_result.recurrent_decisions == reference_result.recurrent_decisions
+    assert torch.allclose(
+        mega_result.next_hidden, reference_result.next_hidden, atol=2e-5, rtol=1e-6
+    )
+    assert torch.allclose(mega_result.loss, reference_result.loss, atol=1e-6, rtol=1e-6)
 
 
 def test_batched_recurrent_loss_can_advance_forced_only_sequence(tmp_path) -> None:

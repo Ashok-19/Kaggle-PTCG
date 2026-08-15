@@ -970,6 +970,54 @@ class PTCGPolicyV1(nn.Module):
             torch.cat((categorical, source, target, numeric), dim=-1)
         )
 
+    def encode_policy_inputs(
+        self,
+        batch: TorchDecisionBatch,
+    ) -> tuple[Tensor, Tensor, Tensor]:
+        """Encode one or many independent public decisions before recurrent state update.
+
+        These encoders do not depend on the incoming public hidden state. Keeping this
+        boundary explicit lets BC training batch many recurrent timesteps through the
+        expensive entity/event/option encoders while preserving the sequential GRU
+        state transition exactly.
+        """
+        players = self._encode_players(batch)
+        entities, entity_pool = self._encode_entities(batch)
+        events = self._encode_events(batch, entities)
+        global_features = self._encode_global(batch)
+        state_input = self.state_projection(
+            torch.cat((entity_pool, players, events, global_features), dim=-1)
+        )
+        options = self._encode_options(batch, entities)
+        return state_input, entities, options
+
+    def policy_option_logits(
+        self,
+        batch: TorchDecisionBatch,
+        public_hidden: Tensor,
+        option_embeddings: Tensor,
+    ) -> Tensor:
+        """Score flattened legal options for already-updated public hidden states."""
+        if public_hidden.shape != (batch.batch_size, self.config.public_hidden):
+            raise ContractViolation("policy hidden state shape differs from batch and config")
+        repeated_state = torch.repeat_interleave(
+            self.policy_state(public_hidden),
+            batch.option_offsets[1:] - batch.option_offsets[:-1],
+            dim=0,
+        )
+        if not option_embeddings.shape[0]:
+            return option_embeddings.new_empty((0,))
+        if repeated_state.shape != option_embeddings.shape:
+            raise ContractViolation("policy state-option embedding shapes differ")
+        dot = (repeated_state * option_embeddings).sum(dim=-1) / math.sqrt(
+            self.config.option_width
+        )
+        interaction = self.policy_interaction(
+            torch.cat((repeated_state, option_embeddings), dim=-1)
+        ).squeeze(-1)
+        logits = dot + interaction
+        return logits.masked_fill(~batch.option_available, float("-inf"))
+
     def forward(
         self,
         batch: TorchDecisionBatch,
@@ -979,31 +1027,9 @@ class PTCGPolicyV1(nn.Module):
             hidden = self.initial_hidden(batch.batch_size, batch.global_numeric.device)
         if hidden.shape != (batch.batch_size, self.config.public_hidden):
             raise ContractViolation("public hidden state shape differs from batch and config")
-        players = self._encode_players(batch)
-        entities, entity_pool = self._encode_entities(batch)
-        events = self._encode_events(batch, entities)
-        global_features = self._encode_global(batch)
-        state_input = self.state_projection(
-            torch.cat((entity_pool, players, events, global_features), dim=-1)
-        )
+        state_input, entities, options = self.encode_policy_inputs(batch)
         new_hidden = self.public_gru(state_input, hidden)
-        options = self._encode_options(batch, entities)
-        repeated_state = torch.repeat_interleave(
-            self.policy_state(new_hidden),
-            batch.option_offsets[1:] - batch.option_offsets[:-1],
-            dim=0,
-        )
-        if options.shape[0]:
-            dot = (repeated_state * options).sum(dim=-1) / math.sqrt(
-                self.config.option_width
-            )
-            interaction = self.policy_interaction(
-                torch.cat((repeated_state, options), dim=-1)
-            ).squeeze(-1)
-            logits = dot + interaction
-            logits = logits.masked_fill(~batch.option_available, float("-inf"))
-        else:
-            logits = options.new_empty((0,))
+        logits = self.policy_option_logits(batch, new_hidden, options)
         return PolicyOutputV1(
             option_logits=logits,
             values=self.value_head(new_hidden).squeeze(-1),

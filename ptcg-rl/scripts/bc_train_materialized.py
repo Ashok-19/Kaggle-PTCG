@@ -23,10 +23,13 @@ from ptcg_rl.bc.materialized import (  # noqa: E402
     load_materialized_episode,
 )
 from ptcg_rl.bc.training import (  # noqa: E402
+    PackedMegaRecurrentGroup,
     PackedRecurrentGroup,
+    pack_mega_recurrent_group,
     pack_recurrent_group,
+    packed_mega_recurrent_chunk_loss,
+    packed_mega_recurrent_group_to_device,
     packed_recurrent_chunk_loss,
-    packed_recurrent_group_to_device,
     recurrent_sequence_batch_loss,
 )
 from ptcg_rl.g2.card_table import load_card_table  # noqa: E402
@@ -185,11 +188,34 @@ def prepack_groups(
     return tuple(packed)
 
 
+def prepack_mega_groups(
+    episodes: Sequence[MaterializedEpisodeV1],
+    *,
+    batch_size: int,
+    sequence_length: int,
+    seed: int,
+    pin_memory: bool,
+) -> tuple[PackedMegaRecurrentGroup, ...]:
+    """Prepack the same deterministic episode groups into fused time-major chunks."""
+    ordered = deterministic_order(episodes, seed, 0)
+    groups = batch_groups(ordered, batch_size)
+    packed: list[PackedMegaRecurrentGroup] = []
+    for group in groups:
+        packed.append(
+            pack_mega_recurrent_group(
+                tuple(episode.decisions for episode in group),
+                sequence_length=sequence_length,
+                pin_memory=pin_memory,
+            )
+        )
+    return tuple(packed)
+
+
 def train_epoch_packed(
     model: Any,
     optimizer: torch.optim.Optimizer,
     scheduler: Any,
-    groups: Sequence[PackedRecurrentGroup],
+    groups: Sequence[PackedRecurrentGroup | PackedMegaRecurrentGroup],
     *,
     device: torch.device,
     bf16: bool,
@@ -220,6 +246,11 @@ def train_epoch_packed(
     for group in selected_groups:
         episodes_used += group.batch_size
         hidden = model.initial_hidden(group.batch_size, device)
+        chunk_loss = (
+            packed_mega_recurrent_chunk_loss
+            if isinstance(group, PackedMegaRecurrentGroup)
+            else packed_recurrent_chunk_loss
+        )
         for chunk in group.chunks:
             optimizer.zero_grad(set_to_none=True)
             has_policy_target = chunk.policy_targets > 0
@@ -230,7 +261,7 @@ def train_epoch_packed(
                     dtype=torch.bfloat16,
                     enabled=bf16 and device.type == "cuda",
                 ):
-                    result = packed_recurrent_chunk_loss(
+                    result = chunk_loss(
                         model,
                         chunk,
                         hidden=hidden,
@@ -295,7 +326,7 @@ def train_epoch_packed(
 
 def validate_packed(
     model: Any,
-    groups: Sequence[PackedRecurrentGroup],
+    groups: Sequence[PackedRecurrentGroup | PackedMegaRecurrentGroup],
     *,
     device: torch.device,
     bf16: bool,
@@ -316,13 +347,18 @@ def validate_packed(
         for group in selected_groups:
             episodes_used += group.batch_size
             hidden = model.initial_hidden(group.batch_size, device)
+            chunk_loss = (
+                packed_mega_recurrent_chunk_loss
+                if isinstance(group, PackedMegaRecurrentGroup)
+                else packed_recurrent_chunk_loss
+            )
             for chunk in group.chunks:
                 with torch.autocast(
                     device_type=device.type,
                     dtype=torch.bfloat16,
                     enabled=bf16 and device.type == "cuda",
                 ):
-                    result = packed_recurrent_chunk_loss(
+                    result = chunk_loss(
                         model,
                         chunk,
                         hidden=hidden,
@@ -657,14 +693,14 @@ def main() -> int:
         raise MaterializedBCTrainError("materialized train/validation splits must both be nonempty")
 
     prepack_started = time.perf_counter()
-    train_groups = prepack_groups(
+    train_groups = prepack_mega_groups(
         train_episodes,
         batch_size=args.batch_size,
         sequence_length=args.sequence_length,
         seed=args.seed,
         pin_memory=device.type == "cuda",
     )
-    validation_groups = prepack_groups(
+    validation_groups = prepack_mega_groups(
         validation_episodes,
         batch_size=args.batch_size,
         sequence_length=args.sequence_length,
@@ -677,11 +713,11 @@ def main() -> int:
     gpu_resident_packed = device.type == "cuda"
     if gpu_resident_packed:
         train_groups = tuple(
-            packed_recurrent_group_to_device(group, device, non_blocking=True)
+            packed_mega_recurrent_group_to_device(group, device, non_blocking=True)
             for group in train_groups
         )
         validation_groups = tuple(
-            packed_recurrent_group_to_device(group, device, non_blocking=True)
+            packed_mega_recurrent_group_to_device(group, device, non_blocking=True)
             for group in validation_groups
         )
         torch.cuda.synchronize(device)

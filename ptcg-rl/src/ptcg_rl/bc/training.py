@@ -341,6 +341,52 @@ class PackedRecurrentGroup:
     recurrent_decisions: int
 
 
+@dataclass(frozen=True)
+class PackedMegaRecurrentChunk:
+    """One optimizer chunk with all hidden-independent decisions collated time-major."""
+
+    active_indices: tuple[Tensor, ...]
+    batch: TorchDecisionBatch
+    supervision: PackedActionSupervision
+    policy_targets: int
+    recurrent_decisions: int
+
+
+@dataclass(frozen=True)
+class PackedMegaRecurrentGroup:
+    batch_size: int
+    chunks: tuple[PackedMegaRecurrentChunk, ...]
+    policy_targets: int
+    recurrent_decisions: int
+
+
+def packed_mega_recurrent_group_to_device(
+    group: PackedMegaRecurrentGroup,
+    device: torch.device | str,
+    *,
+    non_blocking: bool = False,
+) -> PackedMegaRecurrentGroup:
+    """Move a mega-packed recurrent group to one device exactly once."""
+    chunks = tuple(
+        PackedMegaRecurrentChunk(
+            active_indices=tuple(
+                active.to(device, non_blocking=non_blocking) for active in chunk.active_indices
+            ),
+            batch=chunk.batch.to(device, non_blocking=non_blocking),
+            supervision=chunk.supervision.to(device, non_blocking=non_blocking),
+            policy_targets=chunk.policy_targets,
+            recurrent_decisions=chunk.recurrent_decisions,
+        )
+        for chunk in group.chunks
+    )
+    return PackedMegaRecurrentGroup(
+        batch_size=group.batch_size,
+        chunks=chunks,
+        policy_targets=group.policy_targets,
+        recurrent_decisions=group.recurrent_decisions,
+    )
+
+
 def packed_recurrent_group_to_device(
     group: PackedRecurrentGroup,
     device: torch.device | str,
@@ -502,6 +548,67 @@ def pack_recurrent_group(
     )
 
 
+def pack_mega_recurrent_group(
+    sequences: Sequence[Sequence[SemanticReplayDecisionV1]],
+    *,
+    sequence_length: int,
+    pin_memory: bool = False,
+) -> PackedMegaRecurrentGroup:
+    """Pack each optimizer chunk into one time-major decision batch.
+
+    The recurrent dependency is retained as a tuple of active trajectory indices per
+    timestep. Everything independent of the incoming public hidden state is collated
+    once across the whole chunk so the GPU can encode it at high occupancy.
+    """
+    if sequence_length <= 0 or not sequences or any(not sequence for sequence in sequences):
+        raise BCTrainingError(
+            "mega-packed recurrent group requires nonempty sequences and positive length"
+        )
+    maximum_length = max(len(sequence) for sequence in sequences)
+    chunks: list[PackedMegaRecurrentChunk] = []
+    total_targets = 0
+    total_decisions = 0
+    for start in range(0, maximum_length, sequence_length):
+        stop = min(start + sequence_length, maximum_length)
+        active_steps: list[Tensor] = []
+        flattened: list[SemanticReplayDecisionV1] = []
+        for time_index in range(start, stop):
+            active = [
+                index for index, sequence in enumerate(sequences) if time_index < len(sequence)
+            ]
+            if not active:
+                continue
+            flattened.extend(sequences[index][time_index] for index in active)
+            active_tensor = torch.tensor(active, dtype=torch.long)
+            active_steps.append(active_tensor.pin_memory() if pin_memory else active_tensor)
+        if not flattened:
+            continue
+        batch = collate_projected(tuple(decision.projected for decision in flattened))
+        if pin_memory:
+            batch = batch.pin_memory()
+        supervision = _pack_action_supervision(flattened, pin_memory=pin_memory)
+        recurrent_decisions = len(flattened)
+        chunks.append(
+            PackedMegaRecurrentChunk(
+                active_indices=tuple(active_steps),
+                batch=batch,
+                supervision=supervision,
+                policy_targets=supervision.policy_targets,
+                recurrent_decisions=recurrent_decisions,
+            )
+        )
+        total_targets += supervision.policy_targets
+        total_decisions += recurrent_decisions
+    if not chunks:
+        raise BCTrainingError("mega-packed recurrent group produced no chunks")
+    return PackedMegaRecurrentGroup(
+        batch_size=len(sequences),
+        chunks=tuple(chunks),
+        policy_targets=total_targets,
+        recurrent_decisions=total_decisions,
+    )
+
+
 def _packed_vectorized_compound_nll(
     model: PTCGPolicyV1,
     output_hidden: Tensor,
@@ -587,6 +694,69 @@ def _packed_vectorized_compound_nll(
             available[finished_rows] = False
 
     return -total_log_probability[supervision.policy_mask].mean()
+
+
+def packed_mega_recurrent_chunk_loss(
+    model: PTCGPolicyV1,
+    chunk: PackedMegaRecurrentChunk,
+    *,
+    hidden: Tensor,
+    non_blocking: bool = True,
+) -> RecurrentBatchLoss:
+    """Evaluate one recurrent optimizer chunk with hidden-independent encoding fused."""
+    if hidden.ndim != 2 or hidden.shape[1] != model.config.public_hidden:
+        raise BCTrainingError("mega-packed recurrent hidden shape differs from model")
+    device = hidden.device
+    if chunk.batch.global_numeric.device == device:
+        batch = chunk.batch
+        supervision = chunk.supervision
+        active_steps = chunk.active_indices
+    else:
+        batch = chunk.batch.to(device, non_blocking=non_blocking)
+        supervision = chunk.supervision.to(device, non_blocking=non_blocking)
+        active_steps = tuple(
+            active.to(device, non_blocking=non_blocking) for active in chunk.active_indices
+        )
+
+    state_input, _entities, option_embeddings = model.encode_policy_inputs(batch)
+    states = hidden
+    output_hidden_rows: list[Tensor] = []
+    row = 0
+    for active in active_steps:
+        step_rows = int(active.shape[0])
+        if step_rows <= 0:
+            raise BCTrainingError("mega-packed recurrent timestep has no active rows")
+        stop = row + step_rows
+        if stop > batch.batch_size:
+            raise BCTrainingError("mega-packed recurrent timestep exceeds collated batch")
+        prior = states.index_select(0, active)
+        current = model.public_gru(state_input[row:stop], prior)
+        if states.dtype != current.dtype:
+            states = states.to(dtype=current.dtype)
+        states = states.index_copy(0, active, current)
+        output_hidden_rows.append(current)
+        row = stop
+    if row != batch.batch_size or row != chunk.recurrent_decisions:
+        raise BCTrainingError("mega-packed recurrent row accounting differs")
+    output_hidden = torch.cat(output_hidden_rows, dim=0)
+    primary_option_logits = model.policy_option_logits(
+        batch, output_hidden, option_embeddings
+    )
+    loss = _packed_vectorized_compound_nll(
+        model,
+        output_hidden,
+        primary_option_logits,
+        option_embeddings,
+        supervision,
+    )
+    if supervision.policy_targets != chunk.policy_targets:
+        raise BCTrainingError("mega-packed recurrent policy-target accounting differs")
+    return RecurrentBatchLoss(
+        loss=loss,
+        next_hidden=states,
+        policy_targets=supervision.policy_targets,
+        recurrent_decisions=chunk.recurrent_decisions,
+    )
 
 
 def packed_recurrent_chunk_loss(
