@@ -121,7 +121,7 @@ def _run_stream(command: list[str]) -> None:
 
 
 @app.function(
-    gpu="RTX-PRO-6000",
+    gpu="T4",
     cpu=16,
     memory=98304,
     ephemeral_disk=524288,
