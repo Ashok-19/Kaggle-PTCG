@@ -39,7 +39,7 @@ def _model_digest(model: Any) -> bytes:
 
 
 def _label(decision: Any) -> tuple[tuple[int, ...], bool]:
-    transport = decision.projected.transport.original_option_indices
+    transport = decision.projected.transport.original_indices
     original_to_model = {int(original): index for index, original in enumerate(transport)}
     selected = tuple(
         original_to_model[int(original)] for original in decision.action.submitted_original_indices
