@@ -102,7 +102,7 @@ def _canonical_sha256(value: Any) -> str:
 
 
 class _RequestPacer:
-    def __init__(self, interval_seconds: float = 2.05) -> None:
+    def __init__(self, interval_seconds: float = 0.75) -> None:
         self.interval_seconds = interval_seconds
         self.last_started = 0.0
 
@@ -145,7 +145,7 @@ def _episode_metadata(api: Any, config: Mapping[str, Any], pacer: _RequestPacer)
     submissions: list[dict[str, Any]] = []
     by_episode: dict[int, list[dict[str, Any]]] = {}
     floor = float(config["teacher_score_floor"])
-    for team in config["teams"]:
+    for team_position, team in enumerate(config["teams"], 1):
         team_id = int(team["team_id"])
         team_name = str(team["team_name"])
         rows = _api_call(pacer, api.competition_team_submissions, team_id) or []
@@ -182,6 +182,19 @@ def _episode_metadata(api: Any, config: Mapping[str, Any], pacer: _RequestPacer)
                     "completed_public_episodes": len(completed),
                 }
             )
+        print(
+            json.dumps(
+                {
+                    "event": "live_v6_metadata_progress",
+                    "teams_processed": team_position,
+                    "teams_total": len(config["teams"]),
+                    "qualified_submissions": len(submissions),
+                    "unique_episode_refs": len(by_episode),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
     submissions.sort(key=lambda row: (-float(row["submission_score"]), int(row["submission_id"])))
     return submissions, by_episode
 
@@ -269,6 +282,19 @@ def build(force: bool = False) -> dict[str, Any]:
         active_requests = 0
         all_candidate_ids = set(episode_sources)
         unique_ids = sorted(all_candidate_ids - existing_episode_ids)
+        print(
+            json.dumps(
+                {
+                    "event": "live_v6_discovery_complete",
+                    "candidate_before_dedup": len(all_candidate_ids),
+                    "excluded_v5": len(all_candidate_ids & existing_episode_ids),
+                    "candidate_after_dedup": len(unique_ids),
+                    "qualified_submissions": len(source_submissions),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
         for position, episode_id in enumerate(unique_ids, 1):
             target = raw_root / f"episode-{episode_id}-replay.json"
             try:
@@ -317,7 +343,7 @@ def build(force: bool = False) -> dict[str, Any]:
                 rejections[type(error).__name__ + ":" + str(error).split(":")[0][:80]] += 1
             finally:
                 target.unlink(missing_ok=True)
-            if position % 100 == 0:
+            if position % 25 == 0 or position == len(unique_ids):
                 print(json.dumps({"event":"live_scan_progress","processed":position,"total":len(unique_ids),"selected":len(records)},sort_keys=True),flush=True)
 
         if not records:
