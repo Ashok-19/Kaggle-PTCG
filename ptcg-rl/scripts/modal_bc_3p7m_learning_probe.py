@@ -25,9 +25,9 @@ if not modal.is_local():
     sys.path.insert(0, str(PTCG_RL / "scripts"))
 
 VOLUME_NAME = "kptcg-training"
-EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2-featurefix-v1.pkl")
-EXACT_MANIFEST = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1/manifest.json")
-OUTPUT_DIR = Path("/data/runs/bc-dragapult-3p7m-featurefix-learning-probe-v1")
+EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2-featurefix-v3.pkl")
+EXACT_MANIFEST = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v3/manifest.json")
+OUTPUT_DIR = Path("/data/runs/bc-dragapult-3p7m-schema-v3-learning-probe-v1")
 REPORT_PATH = OUTPUT_DIR / "report.json"
 MODEL_LABEL = "3.7m"
 SCORING_CONTRACT = "corrected-primary-head-first-choice"
@@ -38,28 +38,10 @@ SEQUENCE_LENGTH = 32
 
 VARIANTS = (
     {
-        "label": "large64-lr2p5e5-clip1",
-        "batch_size": 64,
-        "learning_rate": 2.5e-5,
-        "maximum_gradient_norm": 1.0,
-    },
-    {
         "label": "small8-lr2p5e5-clip1",
         "batch_size": 8,
         "learning_rate": 2.5e-5,
         "maximum_gradient_norm": 1.0,
-    },
-    {
-        "label": "small8-lr2p5e5-clip100",
-        "batch_size": 8,
-        "learning_rate": 2.5e-5,
-        "maximum_gradient_norm": 100.0,
-    },
-    {
-        "label": "small8-lr2p5e4-clip100",
-        "batch_size": 8,
-        "learning_rate": 2.5e-4,
-        "maximum_gradient_norm": 100.0,
     },
 )
 
@@ -441,7 +423,7 @@ def run(code_commit: str) -> dict[str, Any]:
         key=lambda row: row["final_teacher_metrics"]["representation_equivalent_match_rate"],
     )
     report = {
-        "record_id": "bc-dragapult-3p7m-featurefix-learning-probe-v1",
+        "record_id": "bc-dragapult-3p7m-schema-v3-learning-probe-v1",
         "status": "PASS_BC_3P7M_LEARNING_PROBE",
         "code_commit": code_commit,
         "model_label": MODEL_LABEL,

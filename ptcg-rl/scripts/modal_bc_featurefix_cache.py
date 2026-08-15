@@ -13,11 +13,11 @@ else:
     ROOT = Path("/workspace")
 PTCG_RL = ROOT / "ptcg-rl"
 VOLUME_NAME = "kptcg-training"
-ARCHETYPE_DIR = Path("/data/materialized/bc-dragapult-archetype-v3-featurefix-v1")
-EXACT_DIR = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v1")
+ARCHETYPE_DIR = Path("/data/materialized/bc-dragapult-archetype-v3-featurefix-v3")
+EXACT_DIR = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v3")
 CACHE_ROOT = Path("/data/cache/materialized-episode-objects-v1")
-ARCHETYPE_CACHE = CACHE_ROOT / "bc-dragapult-archetype-v3-featurefix-v1.pkl"
-EXACT_CACHE = CACHE_ROOT / "bc-dragapult-hq-v2-featurefix-v1.pkl"
+ARCHETYPE_CACHE = CACHE_ROOT / "bc-dragapult-archetype-v3-featurefix-v3.pkl"
+EXACT_CACHE = CACHE_ROOT / "bc-dragapult-hq-v2-featurefix-v3.pkl"
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -40,7 +40,7 @@ image = (
     )
 )
 
-app = modal.App("kptcg-bc-featurefix-object-cache", image=image)
+app = modal.App("kptcg-bc-schema-v3-object-cache", image=image)
 training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
 
 
