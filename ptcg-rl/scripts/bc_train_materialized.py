@@ -209,6 +209,11 @@ def train_epoch_packed(
     weighted_loss = 0.0
     optimizer_steps = 0
     gradient_norm_max = 0.0
+    gradient_norm_min = float("inf")
+    gradient_norm_sum = 0.0
+    gradient_clip_steps = 0
+    gradient_clip_scale_sum = 0.0
+    gradient_clip_scale_min = 1.0
     forced_only_chunks = 0
     episodes_used = 0
 
@@ -241,7 +246,17 @@ def train_epoch_packed(
                 raise MaterializedBCTrainError("packed training loss is nonfinite")
             loss.backward()
             gradient_norm = require_finite_gradients(tuple(model.parameters()))
-            gradient_norm_max = max(gradient_norm_max, float(gradient_norm))
+            gradient_norm_value = float(gradient_norm)
+            gradient_norm_max = max(gradient_norm_max, gradient_norm_value)
+            gradient_norm_min = min(gradient_norm_min, gradient_norm_value)
+            gradient_norm_sum += gradient_norm_value
+            clip_scale = min(
+                1.0,
+                maximum_gradient_norm / max(gradient_norm_value, 1e-12),
+            )
+            gradient_clip_steps += int(gradient_norm_value > maximum_gradient_norm)
+            gradient_clip_scale_sum += clip_scale
+            gradient_clip_scale_min = min(gradient_clip_scale_min, clip_scale)
             torch.nn.utils.clip_grad_norm_(
                 model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
             )
@@ -266,6 +281,12 @@ def train_epoch_packed(
         "forced_only_chunks": forced_only_chunks,
         "mean_nll": weighted_loss / policy_targets,
         "gradient_norm_max_pre_clip": gradient_norm_max,
+        "gradient_norm_min_pre_clip": gradient_norm_min,
+        "gradient_norm_mean_pre_clip": gradient_norm_sum / optimizer_steps,
+        "gradient_clip_fraction": gradient_clip_steps / optimizer_steps,
+        "gradient_clip_scale_mean": gradient_clip_scale_sum / optimizer_steps,
+        "gradient_clip_scale_min": gradient_clip_scale_min,
+        "policy_targets_per_optimizer_step": policy_targets / optimizer_steps,
         "elapsed_seconds": elapsed,
         "policy_targets_per_second": policy_targets / max(elapsed, 1e-9),
         "recurrent_decisions_per_second": recurrent_decisions / max(elapsed, 1e-9),
@@ -360,6 +381,11 @@ def train_epoch(
     weighted_loss = 0.0
     optimizer_steps = 0
     gradient_norm_max = 0.0
+    gradient_norm_min = float("inf")
+    gradient_norm_sum = 0.0
+    gradient_clip_steps = 0
+    gradient_clip_scale_sum = 0.0
+    gradient_clip_scale_min = 1.0
     forced_only_chunks = 0
     episodes_used = 0
 
@@ -404,7 +430,17 @@ def train_epoch(
                 raise MaterializedBCTrainError("materialized training loss is nonfinite")
             loss.backward()
             gradient_norm = require_finite_gradients(tuple(model.parameters()))
-            gradient_norm_max = max(gradient_norm_max, float(gradient_norm))
+            gradient_norm_value = float(gradient_norm)
+            gradient_norm_max = max(gradient_norm_max, gradient_norm_value)
+            gradient_norm_min = min(gradient_norm_min, gradient_norm_value)
+            gradient_norm_sum += gradient_norm_value
+            clip_scale = min(
+                1.0,
+                maximum_gradient_norm / max(gradient_norm_value, 1e-12),
+            )
+            gradient_clip_steps += int(gradient_norm_value > maximum_gradient_norm)
+            gradient_clip_scale_sum += clip_scale
+            gradient_clip_scale_min = min(gradient_clip_scale_min, clip_scale)
             torch.nn.utils.clip_grad_norm_(
                 model.parameters(), maximum_gradient_norm, error_if_nonfinite=True
             )
@@ -429,6 +465,12 @@ def train_epoch(
         "forced_only_chunks": forced_only_chunks,
         "mean_nll": weighted_loss / policy_targets,
         "gradient_norm_max_pre_clip": gradient_norm_max,
+        "gradient_norm_min_pre_clip": gradient_norm_min,
+        "gradient_norm_mean_pre_clip": gradient_norm_sum / optimizer_steps,
+        "gradient_clip_fraction": gradient_clip_steps / optimizer_steps,
+        "gradient_clip_scale_mean": gradient_clip_scale_sum / optimizer_steps,
+        "gradient_clip_scale_min": gradient_clip_scale_min,
+        "policy_targets_per_optimizer_step": policy_targets / optimizer_steps,
         "elapsed_seconds": elapsed,
         "policy_targets_per_second": policy_targets / max(elapsed, 1e-9),
         "recurrent_decisions_per_second": recurrent_decisions / max(elapsed, 1e-9),
