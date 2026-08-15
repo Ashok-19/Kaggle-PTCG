@@ -39,12 +39,12 @@ def _model_digest(model: Any) -> bytes:
 
 
 def _label(decision: Any) -> tuple[tuple[int, ...], bool]:
-    transport = decision.projected.transport.original_indices
-    original_to_model = {int(original): index for index, original in enumerate(transport)}
-    selected = tuple(
-        original_to_model[int(original)] for original in decision.action.submitted_original_indices
+    # Materialized model option rows preserve original request order; transport
+    # metadata is intentionally omitted from the persistent object cache.
+    return (
+        tuple(int(index) for index in decision.action.submitted_original_indices),
+        bool(decision.action.stopped_early),
     )
-    return selected, bool(decision.action.stopped_early)
 
 
 def _summarize(groups: dict[bytes, Counter[Any]], total_targets: int) -> dict[str, Any]:
