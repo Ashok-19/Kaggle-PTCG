@@ -16,9 +16,9 @@ else:
 PTCG_RL = ROOT / "ptcg-rl"
 GPU_CABT = ROOT / "gpu-cabt"
 OFFICIAL = ROOT / "pokemon-tcg-ai-battle/ptcg_engine/ptcgProgram 22"
-LOCAL_CACHE = ROOT / ".cache/bc-training-runs"
-BC_CHECKPOINT_SHA256 = "a6a136f2f0012b40ce67ea3eccbbf005ec0cd22d2670a02eeaf52843c6f29cc4"
 VOLUME_NAME = "kptcg-training"
+MODEL_LABEL = "3.7m"
+V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-selected.pt"
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -40,20 +40,12 @@ image = (
         remote_path="/workspace/ptcg-rl/scripts/ppo_gpu_rollout_scale.py",
     )
     .add_local_file(
-        PTCG_RL / "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
-        remote_path="/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        PTCG_RL / "private/g2/card-table-v1.json",
+        remote_path="/workspace/ptcg-rl/private/g2/card-table-v1.json",
     )
     .add_local_file(
-        LOCAL_CACHE / "bc-current-lucario-fast-v2-files/epoch-1.pt",
-        remote_path="/workspace/inputs/bc/epoch-1.pt",
-    )
-    .add_local_file(
-        LOCAL_CACHE / "bc-current-lucario-fast-v2-files/epoch-1.pt.manifest.json",
-        remote_path="/workspace/inputs/bc/epoch-1.pt.manifest.json",
-    )
-    .add_local_file(
-        LOCAL_CACHE / "current-majkel-luca-lucario-deck.csv",
-        remote_path="/workspace/inputs/current-lucario.csv",
+        PTCG_RL / "private/baselines/dragapult-ex/deck.csv",
+        remote_path="/workspace/inputs/dragapult-ex.csv",
     )
     .add_local_dir(GPU_CABT / "src", remote_path="/workspace/gpu-cabt/src")
     .add_local_file(
@@ -84,14 +76,14 @@ def smoke(env_count: int = 16, seed: int = 20260814) -> dict[str, object]:
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/ppo_gpu_selfplay_smoke.py",
-        "--checkpoint-package",
-        "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "--card-table",
+        "/workspace/ptcg-rl/private/g2/card-table-v1.json",
+        "--model-label",
+        MODEL_LABEL,
         "--bc-checkpoint",
-        "/workspace/inputs/bc/epoch-1.pt",
-        "--bc-checkpoint-sha256",
-        BC_CHECKPOINT_SHA256,
+        str(Path("/data") / V7_CHECKPOINT_RELATIVE),
         "--deck",
-        "/workspace/inputs/current-lucario.csv",
+        "/workspace/inputs/dragapult-ex.csv",
         "--output-dir",
         str(output_dir),
         "--env-count",
@@ -147,7 +139,11 @@ def smoke(env_count: int = 16, seed: int = 20260814) -> dict[str, object]:
     return report
 
 
-@app.function(gpu="RTX-PRO-6000", timeout=20 * 60)
+@app.function(
+    gpu="RTX-PRO-6000",
+    timeout=20 * 60,
+    volumes={"/data": training_volume},
+)
 def scale(env_count: int = 2048, boundaries: int = 64, seed: int = 20260814, bf16: bool = True) -> dict[str, object]:
     if env_count <= 0 or env_count > 8192:
         raise ValueError("rollout scale env_count must stay within 1..8192")
@@ -160,14 +156,14 @@ def scale(env_count: int = 2048, boundaries: int = 64, seed: int = 20260814, bf1
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/ppo_gpu_rollout_scale.py",
-        "--checkpoint-package",
-        "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "--card-table",
+        "/workspace/ptcg-rl/private/g2/card-table-v1.json",
+        "--model-label",
+        MODEL_LABEL,
         "--bc-checkpoint",
-        "/workspace/inputs/bc/epoch-1.pt",
-        "--bc-checkpoint-sha256",
-        BC_CHECKPOINT_SHA256,
+        str(Path("/data") / V7_CHECKPOINT_RELATIVE),
         "--deck",
-        "/workspace/inputs/current-lucario.csv",
+        "/workspace/inputs/dragapult-ex.csv",
         "--env-count",
         str(env_count),
         "--boundaries",

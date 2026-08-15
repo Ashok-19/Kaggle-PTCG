@@ -17,9 +17,9 @@ else:
 PTCG_RL = ROOT / "ptcg-rl"
 GPU_CABT = ROOT / "gpu-cabt"
 OFFICIAL = ROOT / "pokemon-tcg-ai-battle/ptcg_engine/ptcgProgram 22"
-LOCAL_CACHE = ROOT / ".cache/bc-training-runs"
-BC_CHECKPOINT_SHA256 = "a6a136f2f0012b40ce67ea3eccbbf005ec0cd22d2670a02eeaf52843c6f29cc4"
 VOLUME_NAME = "kptcg-training"
+MODEL_LABEL = "3.7m"
+V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-selected.pt"
 MAX_BOUNDED_DECISIONS = 30_000_000
 
 image = (
@@ -38,20 +38,12 @@ image = (
         remote_path="/workspace/ptcg-rl/scripts/ppo_gpu_train.py",
     )
     .add_local_file(
-        PTCG_RL / "private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
-        remote_path="/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        PTCG_RL / "private/g2/card-table-v1.json",
+        remote_path="/workspace/ptcg-rl/private/g2/card-table-v1.json",
     )
     .add_local_file(
-        LOCAL_CACHE / "bc-current-lucario-fast-v2-files/epoch-1.pt",
-        remote_path="/workspace/inputs/bc/epoch-1.pt",
-    )
-    .add_local_file(
-        LOCAL_CACHE / "bc-current-lucario-fast-v2-files/epoch-1.pt.manifest.json",
-        remote_path="/workspace/inputs/bc/epoch-1.pt.manifest.json",
-    )
-    .add_local_file(
-        LOCAL_CACHE / "current-majkel-luca-lucario-deck.csv",
-        remote_path="/workspace/inputs/current-lucario.csv",
+        PTCG_RL / "private/baselines/dragapult-ex/deck.csv",
+        remote_path="/workspace/inputs/dragapult-ex.csv",
     )
     .add_local_dir(GPU_CABT / "src", remote_path="/workspace/gpu-cabt/src")
     .add_local_file(
@@ -144,14 +136,14 @@ def train(
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/ppo_gpu_train.py",
-        "--checkpoint-package",
-        "/workspace/ptcg-rl/private/g2/checkpoint-v1/g2-policy-checkpoint-v1.zip",
+        "--card-table",
+        "/workspace/ptcg-rl/private/g2/card-table-v1.json",
+        "--model-label",
+        MODEL_LABEL,
         "--bc-checkpoint",
-        "/workspace/inputs/bc/epoch-1.pt",
-        "--bc-checkpoint-sha256",
-        BC_CHECKPOINT_SHA256,
+        str(Path("/data") / V7_CHECKPOINT_RELATIVE),
         "--deck",
-        "/workspace/inputs/current-lucario.csv",
+        "/workspace/inputs/dragapult-ex.csv",
         "--output-dir",
         str(output_dir),
         "--source-commit",

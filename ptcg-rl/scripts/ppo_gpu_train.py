@@ -16,7 +16,9 @@ import torch
 from torch import Tensor
 
 from gpu_cabt.device_runtime import GpuCabtRuntime
-from ptcg_rl.g2.checkpoint import load_checkpoint_package, state_dict_sha256
+from ptcg_rl.g2.capacity import model_config, model_configs
+from ptcg_rl.g2.card_table import load_card_table
+from ptcg_rl.g2.checkpoint import state_dict_sha256
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch
 from ptcg_rl.g3.checkpoint import (
     load_training_checkpoint_model_state,
@@ -760,6 +762,7 @@ def _code_hashes(script_path: Path) -> dict[str, str]:
     root = script_path.resolve().parents[1]
     paths = {
         "trainer": script_path,
+        "capacity": root / "src/ptcg_rl/g2/capacity.py",
         "production_ppo": root / "src/ptcg_rl/g3/production_ppo.py",
         "ppo_contract": root / "src/ptcg_rl/g3/ppo.py",
         "compound_batch": root / "src/ptcg_rl/g3/compound_batch.py",
@@ -789,8 +792,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     np.random.seed(args.seed & 0xFFFFFFFF)
     torch.cuda.reset_peak_memory_stats(device)
 
-    loaded = load_checkpoint_package(args.checkpoint_package, device=device)
-    model = loaded.model
+    card_table = load_card_table(args.card_table)
+    model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     initializer = load_training_checkpoint_model_state(
         args.bc_checkpoint,
         model=model,
@@ -1006,9 +1009,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "device": str(device),
         "gpu_name": torch.cuda.get_device_name(device),
         "bf16": bool(args.bf16),
-        "model_package_sha256": loaded.package_sha256,
+        "model_label": args.model_label,
+        "card_table_sha256": model.card_table_sha256,
         "bc_initializer_sha256": initializer.payload_sha256,
-        "initializer_interpretation": "frozen specialist epoch-1 satisfies requested one-epoch BC warmup",
+        "initializer_interpretation": "model-only warm start from selected BC checkpoint",
         "model_parameters": model.trainable_parameter_count,
         "architecture_sha256": model.architecture_sha256,
         "deck": {
@@ -1078,9 +1082,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Bounded production-shaped recurrent PPO trainer")
-    parser.add_argument("--checkpoint-package", type=Path, required=True)
+    parser.add_argument("--card-table", type=Path, required=True)
+    parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
-    parser.add_argument("--bc-checkpoint-sha256", required=True)
+    parser.add_argument("--bc-checkpoint-sha256")
     parser.add_argument("--deck", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)

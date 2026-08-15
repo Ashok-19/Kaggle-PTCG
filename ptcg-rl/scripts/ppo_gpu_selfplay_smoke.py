@@ -13,7 +13,8 @@ import torch
 from torch import Tensor
 
 from gpu_cabt.device_runtime import GpuCabtRuntime
-from ptcg_rl.g2.checkpoint import load_checkpoint_package
+from ptcg_rl.g2.capacity import model_config, model_configs
+from ptcg_rl.g2.card_table import load_card_table
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch
 from ptcg_rl.g3.checkpoint import load_training_checkpoint_model_state, save_training_checkpoint
 from ptcg_rl.g3.compound_batch import (
@@ -346,8 +347,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     torch.cuda.manual_seed_all(args.seed)
     np.random.seed(args.seed & 0xFFFFFFFF)
 
-    loaded = load_checkpoint_package(args.checkpoint_package, device=device)
-    model = loaded.model
+    card_table = load_card_table(args.card_table)
+    model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     bc = load_training_checkpoint_model_state(
         args.bc_checkpoint,
         model=model,
@@ -477,7 +478,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "status": "PASS",
         "device": str(device),
         "gpu_name": torch.cuda.get_device_name(device),
-        "model_package_sha256": loaded.package_sha256,
+        "model_label": args.model_label,
+        "card_table_sha256": model.card_table_sha256,
         "bc_initializer_sha256": bc.payload_sha256,
         "model_parameters": model.trainable_parameter_count,
         "env_count": args.env_count,
@@ -576,9 +578,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--checkpoint-package", type=Path, required=True)
+    parser.add_argument("--card-table", type=Path, required=True)
+    parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
-    parser.add_argument("--bc-checkpoint-sha256", required=True)
+    parser.add_argument("--bc-checkpoint-sha256")
     parser.add_argument("--deck", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--env-count", type=int, default=16)
