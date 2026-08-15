@@ -4,7 +4,7 @@
   "competition": "pokemon-tcg-ai-battle",
   "captured_at_utc": "2026-08-15T18:44:00+00:00",
   "target_deck_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
-  "required_module_version": "1.32.6",
+  "required_module_version": "1.32.7",
   "winner_only_labels": false,
   "teacher_score_floor": 1050.0,
   "split_seed": 20260815,
