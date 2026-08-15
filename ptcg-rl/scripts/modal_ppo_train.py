@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import os
 import re
+import select
 import subprocess
+import time
 from pathlib import Path
 
 import modal
@@ -21,6 +23,23 @@ VOLUME_NAME = "kptcg-training"
 MODEL_LABEL = "3.7m"
 V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-selected.pt"
 MAX_BOUNDED_DECISIONS = 30_000_000
+REQUIRED_MODAL_PROFILE = "ashokraja863801"
+
+
+def _require_modal_profile() -> None:
+    if not modal.is_local():
+        return
+    active = subprocess.check_output(
+        ["modal", "profile", "current"], text=True
+    ).strip()
+    if active != REQUIRED_MODAL_PROFILE:
+        raise RuntimeError(
+            f"refusing Modal operation under profile {active!r}; "
+            f"required profile is {REQUIRED_MODAL_PROFILE!r}"
+        )
+
+
+_require_modal_profile()
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -96,6 +115,50 @@ def _telemetry_summary(raw: str) -> dict[str, object]:
     }
 
 
+def _stream_child_with_heartbeat(
+    process: subprocess.Popen[str],
+    *,
+    heartbeat_seconds: float,
+    run_id: str,
+) -> tuple[int, list[str]]:
+    if process.stdout is None:
+        raise RuntimeError("production PPO child stdout is unavailable")
+    tail: list[str] = []
+    last_output = time.monotonic()
+    while True:
+        ready, _, _ = select.select([process.stdout], [], [], heartbeat_seconds)
+        if ready:
+            line = process.stdout.readline()
+            if line:
+                print(line, end="", flush=True)
+                tail.append(line.rstrip())
+                if len(tail) > 120:
+                    tail.pop(0)
+                last_output = time.monotonic()
+                continue
+        return_code = process.poll()
+        if return_code is not None:
+            for line in process.stdout:
+                print(line, end="", flush=True)
+                tail.append(line.rstrip())
+                if len(tail) > 120:
+                    tail.pop(0)
+            return return_code, tail
+        now = time.monotonic()
+        print(
+            json.dumps(
+                {
+                    "event": "modal_ppo_heartbeat",
+                    "run_id": run_id,
+                    "child_pid": process.pid,
+                    "seconds_since_child_output": round(now - last_output, 3),
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
+
+
 @app.function(
     gpu="RTX-PRO-6000",
     timeout=90 * 60,
@@ -106,10 +169,14 @@ def train(
     decision_budget: int,
     source_commit: str,
     env_count: int = 8192,
+    rollout_horizon: int = 64,
     chunk_boundaries: int = 64,
     learner_lane_envs: int = 1024,
+    learning_rate: float = 1e-6,
+    reference_kl_coefficient: float = 0.0,
+    heartbeat_seconds: float = 10.0,
+    checkpoint_every_updates: int = 10,
     seed: int = 20260815,
-    resume_relative: str = "",
 ) -> dict[str, object]:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
         raise ValueError("run_id contains unsupported characters")
@@ -117,10 +184,20 @@ def train(
         raise ValueError("decision budget must remain within the bounded 1..30M envelope")
     if env_count <= 0 or env_count > 8192:
         raise ValueError("env_count must stay within 1..8192")
+    if rollout_horizon < 16 or rollout_horizon > 256:
+        raise ValueError("rollout_horizon must stay within 16..256")
     if chunk_boundaries < 16 or chunk_boundaries > 128:
         raise ValueError("chunk boundaries must stay within 16..128")
     if learner_lane_envs <= 0 or learner_lane_envs > env_count:
         raise ValueError("learner lane envs must stay within 1..env_count")
+    if not (0.0 < learning_rate <= 1e-3):
+        raise ValueError("learning_rate must stay within (0, 1e-3]")
+    if reference_kl_coefficient < 0.0:
+        raise ValueError("reference_kl_coefficient must be nonnegative")
+    if heartbeat_seconds <= 0.0 or heartbeat_seconds > 60.0:
+        raise ValueError("heartbeat_seconds must stay within (0, 60]")
+    if checkpoint_every_updates <= 0:
+        raise ValueError("checkpoint_every_updates must be positive")
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise ValueError("source commit must be an exact 40-character Git SHA")
 
@@ -149,16 +226,22 @@ def train(
         str(env_count),
         "--decision-budget",
         str(decision_budget),
+        "--rollout-horizon",
+        str(rollout_horizon),
         "--chunk-boundaries",
         str(chunk_boundaries),
         "--learner-lane-envs",
         str(learner_lane_envs),
+        "--heartbeat-seconds",
+        str(heartbeat_seconds),
+        "--checkpoint-every-updates",
+        str(checkpoint_every_updates),
         "--seed",
         str(seed),
         "--historical-fraction",
         "0.20",
         "--gamma",
-        "0.999",
+        "1.0",
         "--gae-lambda",
         "0.95",
         "--clip-coefficient",
@@ -170,15 +253,12 @@ def train(
         "--entropy-coefficient",
         "0.01",
         "--learning-rate",
-        "0.00003",
+        str(learning_rate),
+        "--reference-kl-coefficient",
+        str(reference_kl_coefficient),
         "--max-gradient-norm",
         "1.0",
-        "--bf16",
     ]
-    if resume_relative:
-        if resume_relative.startswith("/") or ".." in Path(resume_relative).parts:
-            raise ValueError("resume path must be a safe /data-relative path")
-        command.extend(["--resume-checkpoint", str(Path("/data") / resume_relative)])
 
     telemetry = subprocess.Popen(
         [
@@ -199,16 +279,28 @@ def train(
         text=True,
         bufsize=1,
     )
-    assert process.stdout is not None
-    tail: list[str] = []
-    for line in process.stdout:
-        print(line, end="", flush=True)
-        tail.append(line.rstrip())
-        if len(tail) > 120:
-            tail.pop(0)
-    return_code = process.wait()
-    telemetry.terminate()
-    telemetry_output, _ = telemetry.communicate(timeout=5)
+    telemetry_output = ""
+    try:
+        return_code, tail = _stream_child_with_heartbeat(
+            process,
+            heartbeat_seconds=heartbeat_seconds,
+            run_id=run_id,
+        )
+    finally:
+        if process.poll() is None:
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+        if telemetry.poll() is None:
+            telemetry.terminate()
+        try:
+            telemetry_output, _ = telemetry.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            telemetry.kill()
+            telemetry_output, _ = telemetry.communicate(timeout=5)
     if return_code != 0:
         raise RuntimeError(
             f"production PPO trainer exited {return_code}; tail=" + "\n".join(tail[-40:])
@@ -230,10 +322,14 @@ def main(
     run_id: str,
     decision_budget: int,
     env_count: int = 8192,
+    rollout_horizon: int = 64,
     chunk_boundaries: int = 64,
     learner_lane_envs: int = 1024,
+    learning_rate: float = 1e-6,
+    reference_kl_coefficient: float = 0.0,
+    heartbeat_seconds: float = 10.0,
+    checkpoint_every_updates: int = 10,
     seed: int = 20260815,
-    resume_relative: str = "",
 ) -> None:
     source_commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -243,9 +339,13 @@ def main(
         decision_budget=decision_budget,
         source_commit=source_commit,
         env_count=env_count,
+        rollout_horizon=rollout_horizon,
         chunk_boundaries=chunk_boundaries,
         learner_lane_envs=learner_lane_envs,
+        learning_rate=learning_rate,
+        reference_kl_coefficient=reference_kl_coefficient,
+        heartbeat_seconds=heartbeat_seconds,
+        checkpoint_every_updates=checkpoint_every_updates,
         seed=seed,
-        resume_relative=resume_relative,
     )
     print(json.dumps(result, indent=2, sort_keys=True))

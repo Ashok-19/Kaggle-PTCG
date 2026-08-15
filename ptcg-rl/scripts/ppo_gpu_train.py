@@ -20,7 +20,6 @@ from ptcg_rl.g2.card_table import load_card_table
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch
 from ptcg_rl.g3.checkpoint import (
     load_training_checkpoint_model_state,
-    restore_training_checkpoint,
     save_training_checkpoint,
 )
 from ptcg_rl.g3.compound_batch import (
@@ -1048,6 +1047,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     device = torch.device(args.device)
     if device.type != "cuda" or not torch.cuda.is_available():
         raise PPOTrainError("production PPO trainer requires CUDA")
+    if args.bf16:
+        raise PPOTrainError(
+            "BF16 production PPO is disabled until old-policy probability replay is exact"
+        )
     if args.env_count <= 0 or args.env_count > 8192:
         raise PPOTrainError("env_count must stay within the qualified 1..8192 range")
     if args.decision_budget <= 0 or args.decision_budget > 30_000_000:
@@ -1060,6 +1063,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("learner lane envs must stay within 1..env_count")
     if args.rollout_horizon < args.chunk_boundaries:
         raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
+    if args.checkpoint_every_updates <= 0:
+        raise PPOTrainError("checkpoint cadence must be a positive update count")
 
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -1081,25 +1086,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     total_learner_decisions = 0
     total_meaningful_targets = 0
     completed_updates = 0
-    resume_record: dict[str, Any] | None = None
-    if args.resume_checkpoint is not None:
-        restored = restore_training_checkpoint(
-            args.resume_checkpoint,
-            model=model,
-            optimizer=optimizer,
-            scheduler=scheduler,
-            scaler=None,
-            restore_rng=True,
-        )
-        total_actor_decisions = int(restored.counters.get("actor_decisions", 0))
-        total_learner_decisions = int(restored.counters.get("learner_decisions", 0))
-        total_meaningful_targets = int(restored.counters.get("meaningful_policy_targets", 0))
-        completed_updates = int(restored.counters.get("ppo_updates", 0))
-        resume_record = {
-            "checkpoint": args.resume_checkpoint.as_posix(),
-            "restored_rng_states": list(restored.restored_rng_states),
-            "starting_counters": restored.counters,
-        }
     model.eval()
 
     deck = _load_deck(args.deck)
@@ -1234,42 +1220,56 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         }
         updates.append(update_record)
 
-        checkpoint_path = output_dir / f"ppo-update-{update_number:04d}.pt"
-        checkpoint = save_training_checkpoint(
-            checkpoint_path,
-            model=model,
-            optimizer=optimizer,
-            scheduler=scheduler,
-            scaler=None,
-            counters={
-                "ppo_updates": completed_updates,
-                "actor_decisions": total_actor_decisions,
-                "learner_decisions": total_learner_decisions,
-                "meaningful_policy_targets": total_meaningful_targets,
-            },
-            league={
-                "mode": "80pct-frozen-current-selfplay-plus-historical",
-                "historical_fraction_requested": args.historical_fraction,
-                "historical_opponents": [{"id": "bc-v7-frozen-reference"}],
-                "retained_intermediate_policy_updates": list(range(1, completed_updates + 1)),
-            },
-            rollout_boundary={
-                "horizon_index": actor_state.horizon_index,
-                "terminal_counts": rollout_record["terminal_counts"],
-                "rollout_seed": rollout_seed,
-                "rollout_horizon": args.rollout_horizon,
-                "chunk_boundaries": args.chunk_boundaries,
-                "actor_state_persisted": False,
-            },
-            include_cuda_rng=True,
+        run_complete = (
+            total_learner_decisions - run_start_learner_decisions >= args.decision_budget
         )
-        checkpoint_record = {
-            "update": update_number,
-            "path": checkpoint_path.as_posix(),
-            "payload_bytes": checkpoint["payload_bytes"],
-        }
-        checkpoint_records.append(checkpoint_record)
-        update_record["checkpoint"] = checkpoint_record
+        checkpoint_due = (
+            update_number % args.checkpoint_every_updates == 0 or run_complete
+        )
+        checkpoint_seconds = 0.0
+        if checkpoint_due:
+            checkpoint_started = time.perf_counter()
+            checkpoint_path = output_dir / f"ppo-update-{update_number:04d}.pt"
+            checkpoint = save_training_checkpoint(
+                checkpoint_path,
+                model=model,
+                optimizer=optimizer,
+                scheduler=scheduler,
+                scaler=None,
+                counters={
+                    "ppo_updates": completed_updates,
+                    "actor_decisions": total_actor_decisions,
+                    "learner_decisions": total_learner_decisions,
+                    "meaningful_policy_targets": total_meaningful_targets,
+                },
+                league={
+                    "mode": "current-selfplay-plus-frozen-v7",
+                    "historical_fraction_requested": args.historical_fraction,
+                    "historical_opponents": [{"id": "bc-v7-frozen-reference"}],
+                },
+                rollout_boundary={
+                    "horizon_index": actor_state.horizon_index,
+                    "terminal_counts": rollout_record["terminal_counts"],
+                    "rollout_seed": rollout_seed,
+                    "rollout_horizon": args.rollout_horizon,
+                    "chunk_boundaries": args.chunk_boundaries,
+                    "actor_state_persisted": False,
+                    "exact_resume_supported": False,
+                },
+                include_cuda_rng=True,
+            )
+            checkpoint_seconds = time.perf_counter() - checkpoint_started
+            checkpoint_record = {
+                "update": update_number,
+                "path": checkpoint_path.as_posix(),
+                "payload_bytes": checkpoint["payload_bytes"],
+                "write_seconds": checkpoint_seconds,
+                "model_only_continuation_safe": True,
+                "exact_resume_safe": False,
+            }
+            checkpoint_records.append(checkpoint_record)
+            update_record["checkpoint"] = checkpoint_record
+        update_record["checkpoint_seconds"] = checkpoint_seconds
 
         progress = {
             "event": "ppo_update_complete",
@@ -1283,6 +1283,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "update_seconds": update["update_seconds"],
             "post_kl": update["post_update"]["approximate_kl"],
             "post_clip_fraction": update["post_update"]["clip_fraction"],
+            "checkpoint_seconds": checkpoint_seconds,
         }
         print(json.dumps(progress, sort_keys=True), flush=True)
         del rollout, gae, advantage, returns, value_mask, train_policy_mask, reference_logp
@@ -1298,12 +1299,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         float(item["learner"]["reference_replay_seconds"]) for item in updates
     )
     total_gae_seconds = sum(float(item["gae"]["seconds"]) for item in updates)
+    total_checkpoint_seconds = sum(float(item["checkpoint_seconds"]) for item in updates)
     measured_work_seconds = (
         total_rollout_seconds
         + total_reference_replay_seconds
         + total_update_seconds
         + total_post_replay_seconds
         + total_gae_seconds
+        + total_checkpoint_seconds
     )
 
     report: dict[str, Any] = {
@@ -1325,6 +1328,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "recurrent_chunk_boundaries": args.chunk_boundaries,
             "learner_lane_envs": args.learner_lane_envs,
             "heartbeat_seconds": args.heartbeat_seconds,
+            "checkpoint_every_updates": args.checkpoint_every_updates,
             "historical_fraction": args.historical_fraction,
             "gamma": args.gamma,
             "gae_lambda": args.gae_lambda,
@@ -1343,7 +1347,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "rollout_policy": "fixed-horizon recurrent actor with GPU selective terminal recycling",
             "recurrent_replay": "chunk-start hidden snapshot plus in-chunk recurrent unroll",
         },
-        "resume": resume_record,
+        "resume": {
+            "exact_resume_supported": False,
+            "reason": "GPU-CABT environment, actor hidden, reference hidden, and league assignment are not persisted",
+        },
         "runtime_init_seconds": runtime_init_seconds,
         "run": {
             "updates": len(updates),
@@ -1358,11 +1365,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "post_update_replay_seconds": total_post_replay_seconds,
             "reference_replay_seconds": total_reference_replay_seconds,
             "gae_seconds": total_gae_seconds,
+            "checkpoint_seconds": total_checkpoint_seconds,
             "actor_duty_cycle": total_rollout_seconds / max(measured_work_seconds, 1e-9),
             "reference_replay_duty_cycle": total_reference_replay_seconds / max(measured_work_seconds, 1e-9),
             "learner_duty_cycle": total_update_seconds / max(measured_work_seconds, 1e-9),
             "post_replay_duty_cycle": total_post_replay_seconds / max(measured_work_seconds, 1e-9),
             "gae_duty_cycle": total_gae_seconds / max(measured_work_seconds, 1e-9),
+            "checkpoint_duty_cycle": total_checkpoint_seconds / max(measured_work_seconds, 1e-9),
         },
         "cumulative": {
             "ppo_updates": completed_updates,
@@ -1402,6 +1411,7 @@ def main() -> int:
     parser.add_argument("--chunk-boundaries", type=int, default=64)
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
     parser.add_argument("--heartbeat-seconds", type=float, default=10.0)
+    parser.add_argument("--checkpoint-every-updates", type=int, default=10)
     parser.add_argument("--historical-fraction", type=float, default=0.20)
     parser.add_argument("--seed", type=int, default=20260815)
     parser.add_argument("--stack-bytes", type=int, default=16 * 1024)
@@ -1417,9 +1427,8 @@ def main() -> int:
     parser.add_argument("--replay-tolerance", type=float, default=1e-5)
     parser.add_argument("--maximum-post-kl", type=float, default=0.03)
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
-    parser.add_argument("--learning-rate", type=float, default=3e-5)
+    parser.add_argument("--learning-rate", type=float, default=1e-6)
     parser.add_argument("--max-gradient-norm", type=float, default=1.0)
-    parser.add_argument("--resume-checkpoint", type=Path)
     args = parser.parse_args()
     result = run(args)
     print(json.dumps(result, indent=2, sort_keys=True), flush=True)
