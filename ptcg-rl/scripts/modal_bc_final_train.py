@@ -230,6 +230,8 @@ def run(
         "0.0001",
         "--maximum-gradient-norm",
         "1.0",
+        "--maximum-targets-per-optimizer-step",
+        "512",
         "--bf16",
     ]
     _run_stream(command)

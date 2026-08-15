@@ -784,6 +784,20 @@ def _train_stage(
     }
 
 
+def _optimizer_update_density(
+    groups: Sequence[PackedRecurrentGroup],
+) -> tuple[int, int, float]:
+    policy_targets = sum(int(group.policy_targets) for group in groups)
+    optimizer_steps = sum(
+        int(chunk.policy_targets > 0)
+        for group in groups
+        for chunk in group.chunks
+    )
+    if policy_targets <= 0 or optimizer_steps <= 0:
+        raise CapacitySweepError("packed training groups contain no optimizer updates")
+    return policy_targets, optimizer_steps, policy_targets / optimizer_steps
+
+
 def _pack_with_fallback(
     episodes: Sequence[MaterializedEpisodeV1],
     *,
@@ -791,22 +805,44 @@ def _pack_with_fallback(
     sequence_length: int,
     seed: int,
     device: torch.device,
+    maximum_targets_per_optimizer_step: float | None = None,
 ) -> tuple[tuple[PackedRecurrentGroup, ...], int]:
-    candidates = []
-    for value in (preferred_batch_size, 512, 256, 128):
-        if value > 0 and value not in candidates:
+    if preferred_batch_size <= 0:
+        raise CapacitySweepError("preferred batch size must be positive")
+    if (
+        maximum_targets_per_optimizer_step is not None
+        and maximum_targets_per_optimizer_step <= 0
+    ):
+        raise CapacitySweepError("maximum targets per optimizer step must be positive")
+
+    candidates: list[int] = []
+    value = min(preferred_batch_size, len(episodes))
+    while value >= 1:
+        if value not in candidates:
             candidates.append(value)
+        if value == 1:
+            break
+        value = max(1, value // 2)
+
     last_error: Exception | None = None
     for batch_size in candidates:
         try:
             groups = _pack(
                 episodes,
-                batch_size=min(batch_size, len(episodes)),
+                batch_size=batch_size,
                 sequence_length=sequence_length,
                 seed=seed,
                 device=device,
             )
-            return groups, min(batch_size, len(episodes))
+            if maximum_targets_per_optimizer_step is None:
+                return groups, batch_size
+            _, _, targets_per_step = _optimizer_update_density(groups)
+            if targets_per_step <= maximum_targets_per_optimizer_step or batch_size == 1:
+                return groups, batch_size
+            del groups
+            gc.collect()
+            if device.type == "cuda":
+                torch.cuda.empty_cache()
         except torch.cuda.OutOfMemoryError as error:
             last_error = error
             gc.collect()
@@ -848,6 +884,7 @@ def main() -> int:
     parser.add_argument("--loader-workers", type=int, default=16)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--maximum-gradient-norm", type=float, default=1.0)
+    parser.add_argument("--maximum-targets-per-optimizer-step", type=float, default=512.0)
     parser.add_argument("--bf16", action="store_true")
     args = parser.parse_args()
 
@@ -903,6 +940,8 @@ def main() -> int:
 
     if args.stage_d_early_stopping_patience is not None and args.stage_d_early_stopping_patience <= 0:
         raise CapacitySweepError("stage D early-stopping patience must be positive")
+    if args.maximum_targets_per_optimizer_step <= 0:
+        raise CapacitySweepError("maximum targets per optimizer step must be positive")
     if args.stage_d_early_stopping_min_delta < 0:
         raise CapacitySweepError("stage D early-stopping minimum delta must be nonnegative")
 
@@ -1101,6 +1140,11 @@ def main() -> int:
                         "sequence_length": args.sequence_length,
                         "status": "PASS",
                         "targets_per_second": smoke["training"]["policy_targets_per_second"],
+                        "optimizer_steps": smoke["training"]["optimizer_steps"],
+                        "targets_per_optimizer_step": (
+                            smoke["training"]["policy_targets"]
+                            / smoke["training"]["optimizer_steps"]
+                        ),
                         "training_mean_nll": smoke["training"]["mean_nll"],
                         "validation_mean_nll": smoke["validation"]["mean_nll"],
                         "gradient_norm_max_pre_clip": smoke["training"]["gradient_norm_max_pre_clip"],
@@ -1129,7 +1173,22 @@ def main() -> int:
             passing_speed = [row for row in speed_rows if row["status"] == "PASS"]
             if not passing_speed:
                 raise CapacitySweepError(f"{label} has no viable batch-size smoke")
-            chosen_speed = max(passing_speed, key=lambda row: float(row["targets_per_second"]))
+            learning_viable_speed = [
+                row
+                for row in passing_speed
+                if float(row["targets_per_optimizer_step"])
+                <= args.maximum_targets_per_optimizer_step
+            ]
+            if learning_viable_speed:
+                chosen_speed = max(
+                    learning_viable_speed,
+                    key=lambda row: float(row["targets_per_second"]),
+                )
+            else:
+                chosen_speed = min(
+                    passing_speed,
+                    key=lambda row: float(row["targets_per_optimizer_step"]),
+                )
             chosen_batch_size = int(chosen_speed["batch_size"])
 
             lr_train = archetype_train[: min(args.lr_train_limit, len(archetype_train))]
@@ -1140,6 +1199,7 @@ def main() -> int:
                 sequence_length=args.sequence_length,
                 seed=args.seed,
                 device=device,
+                maximum_targets_per_optimizer_step=args.maximum_targets_per_optimizer_step,
             )
             lr_validation_groups, _ = _pack_with_fallback(
                 lr_validation,
@@ -1249,6 +1309,7 @@ def main() -> int:
         ]
         stage_reports: list[dict[str, Any]] = []
         effective_batch_sizes: dict[str, int] = {}
+        effective_stage_update_density: dict[str, dict[str, float | int]] = {}
         for stage_index, (
             stage_name,
             stage_train,
@@ -1266,6 +1327,7 @@ def main() -> int:
                 sequence_length=args.sequence_length,
                 seed=args.seed + stage_index * 10,
                 device=device,
+                maximum_targets_per_optimizer_step=args.maximum_targets_per_optimizer_step,
             )
             validation_groups, _ = _pack_with_fallback(
                 stage_validation,
@@ -1275,6 +1337,27 @@ def main() -> int:
                 device=device,
             )
             effective_batch_sizes[stage_name] = effective_batch
+            stage_targets, stage_optimizer_steps, stage_targets_per_step = _optimizer_update_density(
+                train_groups
+            )
+            effective_stage_update_density[stage_name] = {
+                "policy_targets": stage_targets,
+                "optimizer_steps_per_epoch": stage_optimizer_steps,
+                "targets_per_optimizer_step": stage_targets_per_step,
+            }
+            print(
+                json.dumps(
+                    {
+                        "event": "capacity_stage_update_density",
+                        "model": label,
+                        "stage": stage_name,
+                        "effective_batch_size": effective_batch,
+                        **effective_stage_update_density[stage_name],
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
             stage_report = _train_stage(
                 model=model,
                 model_label=label,
@@ -1320,6 +1403,8 @@ def main() -> int:
             "learning_rate_smoke": lr_rows,
             "resumed_checkpoint": resumed_checkpoint,
             "effective_stage_batch_sizes": effective_batch_sizes,
+            "effective_stage_update_density": effective_stage_update_density,
+            "maximum_targets_per_optimizer_step": args.maximum_targets_per_optimizer_step,
             "stages": stage_reports,
             "final_checkpoint_path": final_stage["checkpoint_path"],
             "final_checkpoint_sha256": final_stage["checkpoint_sha256"],
