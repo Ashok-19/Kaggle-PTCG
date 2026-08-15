@@ -571,6 +571,7 @@ def _collect_fixed_horizon_rollout(
     frozen_v5_fraction: float,
     rollout_horizon: int,
     chunk_boundaries: int,
+    learner_lane_envs: int,
     bf16: bool,
     heartbeat_seconds: float = 10.0,
 ) -> RolloutV1:
@@ -614,6 +615,7 @@ def _collect_fixed_horizon_rollout(
     boundaries_executed = 0
     started = time.perf_counter()
     last_heartbeat = started
+    learner_inference_groups = 0
 
     autocast = lambda: torch.autocast(  # noqa: E731
         device_type='cuda', dtype=torch.bfloat16, enabled=bf16
@@ -739,7 +741,13 @@ def _collect_fixed_horizon_rollout(
             )
             flat_offset += count
 
-        run_group(learner_envs, model, policy_id=POLICY_LEARNER)
+        for env_start in range(0, runtime.env_count, learner_lane_envs):
+            env_end = min(runtime.env_count, env_start + learner_lane_envs)
+            lane_mask = (learner_envs >= env_start) & (learner_envs < env_end)
+            lane_envs = learner_envs[lane_mask]
+            if lane_envs.numel():
+                run_group(lane_envs, model, policy_id=POLICY_LEARNER)
+                learner_inference_groups += 1
         run_group(frozen_v7_envs, frozen_v7_model, policy_id=POLICY_FROZEN_V7)
         run_group(frozen_v5_envs, frozen_v5_model, policy_id=POLICY_FROZEN_V5)
         actor_decisions += active_count
@@ -802,6 +810,8 @@ def _collect_fixed_horizon_rollout(
             'meaningful_policy_targets': meaningful_targets,
             'actor_decisions_per_second': actor_decisions / max(elapsed, 1e-9),
             'learner_decisions_per_second': learner_decisions / max(elapsed, 1e-9),
+            'learner_inference_groups': learner_inference_groups,
+            'learner_inference_lane_envs': learner_lane_envs,
             'active_first': runtime.env_count,
             'active_last': active_last,
             'terminal_envs': terminal_envs,
@@ -1432,6 +1442,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             rollout_horizon=args.rollout_horizon,
             chunk_boundaries=args.chunk_boundaries,
             bf16=args.bf16,
+            learner_lane_envs=args.learner_lane_envs,
             heartbeat_seconds=args.heartbeat_seconds,
         )
         reference_logp, reference_hidden, reference_replay_seconds = (
@@ -1453,7 +1464,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         torch.cuda.synchronize(device)
         gae_seconds = time.perf_counter() - gae_started
-        if completed_updates == 0 and gae_stats.terminal_trajectories == 0:
+        if (
+            completed_updates == 0
+            and not args.preserve_initial_value_head
+            and gae_stats.terminal_trajectories == 0
+        ):
             actor_decisions = int(rollout.metrics["actor_recurrent_decisions"])
             learner_decisions = int(rollout.metrics["learner_recurrent_decisions"])
             meaningful_targets = int(rollout.metrics["meaningful_policy_targets"])
