@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import pickle
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -104,6 +105,7 @@ def _summarize(groups: dict[bytes, Counter[Any]], total_targets: int) -> dict[st
     volumes={"/data": training_volume},
 )
 def run() -> dict[str, Any]:
+    sys.path.insert(0, "/workspace/ptcg-rl/src")
     from ptcg_rl.g2.models import MODEL_SCHEMA_VERSION, model_schema_sha256
 
     if not EXACT_CACHE.is_file() or not EXACT_MANIFEST.is_file():
