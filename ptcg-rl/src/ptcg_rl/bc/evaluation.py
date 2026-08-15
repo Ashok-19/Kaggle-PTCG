@@ -85,13 +85,22 @@ class GreedyRecurrentNeuralPolicyV1:
             available = batch.option_available[start:end].clone()
             prefix = self.model.decoder_initial(output.hidden[0])
             builder = CompoundActionBuilder(request)
+            first_subchoice = True
             while not builder.complete:
-                logits = self.model.decoder_logits(
-                    prefix,
-                    option_embeddings,
-                    available,
-                    builder.can_stop,
-                )
+                if first_subchoice:
+                    logits = self.model.decoder_first_logits(
+                        prefix,
+                        output.option_logits[start:end],
+                        available,
+                        builder.can_stop,
+                    )
+                else:
+                    logits = self.model.decoder_logits(
+                        prefix,
+                        option_embeddings,
+                        available,
+                        builder.can_stop,
+                    )
                 if torch.isnan(logits).any() or torch.isposinf(logits).any():
                     raise ContractViolation("neural policy decoder emitted invalid logits")
                 choice = int(torch.argmax(logits).item())
@@ -103,6 +112,7 @@ class GreedyRecurrentNeuralPolicyV1:
                     builder.choose(choice)
                     available[choice] = False
                     prefix = self.model.decoder_advance(prefix, option_embeddings[choice])
+                first_subchoice = False
             action = validate_compound_action(request, builder.build())
             hidden_after = output.hidden[0].detach().clone()
             if hidden_after.shape != (self.model.config.public_hidden,) or not torch.isfinite(

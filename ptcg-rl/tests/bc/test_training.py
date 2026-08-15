@@ -178,3 +178,19 @@ def test_batched_recurrent_loss_can_advance_forced_only_sequence(tmp_path) -> No
     assert result.loss is None
     assert result.policy_targets == 0
     assert result.recurrent_decisions == 1
+
+
+def test_bc_first_choice_trains_nonlinear_policy_interaction(tmp_path) -> None:
+    torch.manual_seed(23)
+    policy = model(tmp_path).train()
+    decision = _decision(0, 2)
+    result = recurrent_sequence_batch_loss(policy, ((decision,),), verify=False)
+    assert result.loss is not None
+    result.loss.backward()
+
+    state_grad = policy.policy_state.weight.grad
+    interaction_grad = policy.policy_interaction[0].weight.grad
+    assert state_grad is not None and torch.isfinite(state_grad).all()
+    assert interaction_grad is not None and torch.isfinite(interaction_grad).all()
+    assert float(state_grad.abs().sum()) > 0.0
+    assert float(interaction_grad.abs().sum()) > 0.0

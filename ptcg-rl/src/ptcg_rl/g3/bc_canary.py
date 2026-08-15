@@ -16,6 +16,8 @@ import numpy as np
 import torch
 from torch import Tensor
 
+from ptcg_rl.bc.training import bc_compound_action_log_probability
+
 from ptcg_rl.g2.checkpoint import load_checkpoint_package, state_dict_sha256
 from ptcg_rl.g2.network import PTCGPolicyV1, collate_projected
 from ptcg_rl.g3.checkpoint import (
@@ -23,10 +25,8 @@ from ptcg_rl.g3.checkpoint import (
     save_training_checkpoint,
 )
 from ptcg_rl.g3.ppo import (
-    CompoundActionV1,
     LocalExecutionLimitsV1,
     apply_local_execution_limits,
-    replay_compound_action,
     require_finite_gradients,
     validate_local_workload,
 )
@@ -435,17 +435,17 @@ def _action_nll(
         if selected or not forced:
             raise BCCanaryContractError("zero-option request is not the unique forced empty outcome")
     else:
-        replay = replay_compound_action(
-            initial_prefix=model.decoder_initial(output.hidden[0]),
+        replay_logp = bc_compound_action_log_probability(
+            model,
+            output_hidden=output.hidden[0],
+            primary_option_logits=output.option_logits[:option_count],
             option_embeddings=options,
             available_mask=available,
-            action=CompoundActionV1(selected_indices=selected, stopped=stopped),
+            selected_indices=selected,
+            stopped=stopped,
             minimum_count=decision.request.min_count,
             maximum_count=decision.request.max_count,
-            decoder_logits=model.decoder_logits,
-            decoder_advance=model.decoder_advance,
         )
-        replay_logp = replay.log_probability
         if not torch.isfinite(replay_logp):
             raise BCCanaryContractError("compound BC log-probability is nonfinite")
     loss = None if forced else (-replay_logp if replay_logp is not None else None)

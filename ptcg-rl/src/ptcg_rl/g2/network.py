@@ -962,6 +962,35 @@ class PTCGPolicyV1(nn.Module):
     def decoder_initial(self, public_hidden: Tensor) -> Tensor:
         return torch.tanh(self.selection_initial(public_hidden))
 
+    def decoder_first_logits(
+        self,
+        prefix_hidden: Tensor,
+        primary_option_logits: Tensor,
+        available_mask: Tensor,
+        stop_available: Tensor | bool,
+    ) -> Tensor:
+        """Score the first compound subchoice with the dedicated policy head.
+
+        The forward pass already computes nonlinear state-option interaction logits.
+        BC and inference use those logits for the first option choice, while the
+        autoregressive selection GRU remains responsible for later subchoices.
+        """
+        if prefix_hidden.ndim != 1 or prefix_hidden.shape[0] != self.config.selection_hidden:
+            raise ContractViolation("decoder prefix hidden state has the wrong shape")
+        if primary_option_logits.ndim != 1:
+            raise ContractViolation("primary option logits must be one-dimensional")
+        if available_mask.shape != primary_option_logits.shape:
+            raise ContractViolation("primary option mask differs from logits")
+        option_logits = primary_option_logits.masked_fill(~available_mask, float("-inf"))
+        stop_logit = (self.stop_embedding * prefix_hidden).sum() / math.sqrt(
+            self.config.selection_hidden
+        )
+        stop_tensor = torch.as_tensor(
+            stop_available, dtype=torch.bool, device=primary_option_logits.device
+        )
+        stop_logit = stop_logit.masked_fill(~stop_tensor, float("-inf"))
+        return torch.cat((option_logits, stop_logit.reshape(1)))
+
     def decoder_logits(
         self,
         prefix_hidden: Tensor,

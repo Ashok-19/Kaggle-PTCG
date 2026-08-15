@@ -7,7 +7,6 @@ import torch
 from torch import Tensor
 
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch, collate_projected
-from ptcg_rl.g3.ppo import CompoundActionV1, replay_compound_action
 from ptcg_rl.replay.semantic_loader import SemanticReplayDecisionV1
 
 
@@ -23,9 +22,89 @@ class RecurrentBatchLoss:
     recurrent_decisions: int
 
 
+def bc_compound_action_log_probability(
+    model: PTCGPolicyV1,
+    *,
+    output_hidden: Tensor,
+    primary_option_logits: Tensor,
+    option_embeddings: Tensor,
+    available_mask: Tensor,
+    selected_indices: Sequence[int],
+    stopped: bool,
+    minimum_count: int,
+    maximum_count: int,
+) -> Tensor:
+    """Replay one teacher compound action under the BC first-choice contract."""
+    option_count = int(option_embeddings.shape[0])
+    if primary_option_logits.shape != (option_count,):
+        raise BCTrainingError("primary option logits differ from scalar BC options")
+    if available_mask.shape != (option_count,) or available_mask.dtype != torch.bool:
+        raise BCTrainingError("scalar BC available mask differs from options")
+    available = available_mask.clone()
+    effective_maximum = min(maximum_count, int(available.sum().item()))
+    selected = tuple(int(index) for index in selected_indices)
+    if len(selected) > effective_maximum or len(selected) != len(set(selected)):
+        raise BCTrainingError("scalar BC teacher selection violates request bounds")
+
+    prefix = model.decoder_initial(output_hidden)
+    log_probabilities: list[Tensor] = []
+    for subchoice_index, choice in enumerate(selected):
+        if choice < 0 or choice >= option_count or not bool(available[choice]):
+            raise BCTrainingError("scalar BC teacher selected an unavailable option")
+        stop_available = subchoice_index >= minimum_count
+        logits = (
+            model.decoder_first_logits(
+                prefix, primary_option_logits, available, stop_available
+            )
+            if subchoice_index == 0
+            else model.decoder_logits(prefix, option_embeddings, available, stop_available)
+        )
+        distribution_mask = torch.cat(
+            (
+                available,
+                torch.tensor([stop_available], dtype=torch.bool, device=available.device),
+            )
+        )
+        log_probabilities.append(
+            torch.log_softmax(logits.masked_fill(~distribution_mask, float("-inf")), dim=0)[
+                choice
+            ]
+        )
+        prefix = model.decoder_advance(prefix, option_embeddings[choice])
+        available[choice] = False
+
+    if stopped:
+        subchoice_index = len(selected)
+        stop_available = subchoice_index >= minimum_count
+        if not stop_available:
+            raise BCTrainingError("scalar BC teacher stopped before minimum count")
+        logits = (
+            model.decoder_first_logits(
+                prefix, primary_option_logits, available, stop_available
+            )
+            if subchoice_index == 0
+            else model.decoder_logits(prefix, option_embeddings, available, stop_available)
+        )
+        distribution_mask = torch.cat(
+            (available, torch.ones(1, dtype=torch.bool, device=available.device))
+        )
+        log_probabilities.append(
+            torch.log_softmax(logits.masked_fill(~distribution_mask, float("-inf")), dim=0)[
+                option_count
+            ]
+        )
+    elif len(selected) != effective_maximum:
+        raise BCTrainingError("scalar BC compound action ended without STOP or maximum count")
+
+    if not log_probabilities:
+        raise BCTrainingError("scalar BC compound action contains no policy subchoice")
+    return torch.stack(log_probabilities).sum()
+
+
 def _vectorized_compound_nll(
     model: PTCGPolicyV1,
     output_hidden: Tensor,
+    primary_option_logits: Tensor,
     option_embeddings: Tensor,
     option_offsets: Tensor,
     option_available: Tensor,
@@ -67,6 +146,12 @@ def _vectorized_compound_nll(
         (count, maximum_options, option_embeddings.shape[1])
     )
     padded_options[owner, local] = option_embeddings
+    if primary_option_logits.shape != (option_embeddings.shape[0],):
+        raise BCTrainingError("primary option logits differ from option embeddings")
+    padded_primary_logits = primary_option_logits.new_full(
+        (count, maximum_options), float("-inf")
+    )
+    padded_primary_logits[owner, local] = primary_option_logits
     available = torch.zeros((count, maximum_options), dtype=torch.bool, device=device)
     available[owner, local] = option_available
 
@@ -123,8 +208,11 @@ def _vectorized_compound_nll(
         if not bool(active.any().item()):
             continue
 
-        option_logits = (option_state * prefix.unsqueeze(1)).sum(dim=-1) / scale
-        option_logits = option_logits.masked_fill(~available, float("-inf"))
+        if subchoice_index == 0:
+            option_logits = padded_primary_logits.masked_fill(~available, float("-inf"))
+        else:
+            option_logits = (option_state * prefix.unsqueeze(1)).sum(dim=-1) / scale
+            option_logits = option_logits.masked_fill(~available, float("-inf"))
         stop_available = minimum_counts <= subchoice_index
         stop_logits = (model.stop_embedding.unsqueeze(0) * prefix).sum(dim=-1) / scale
         stop_logits = stop_logits.masked_fill(~stop_available, float("-inf"))
@@ -417,6 +505,7 @@ def pack_recurrent_group(
 def _packed_vectorized_compound_nll(
     model: PTCGPolicyV1,
     output_hidden: Tensor,
+    primary_option_logits: Tensor,
     option_embeddings: Tensor,
     supervision: PackedActionSupervision,
 ) -> Tensor | None:
@@ -434,6 +523,12 @@ def _packed_vectorized_compound_nll(
         (count, supervision.maximum_options, option_embeddings.shape[1])
     )
     padded_options[supervision.option_owner, supervision.option_local] = option_embeddings
+    if primary_option_logits.shape != (option_embeddings.shape[0],):
+        raise BCTrainingError("packed primary option logits differ from embeddings")
+    padded_primary_logits = primary_option_logits.new_full(
+        (count, supervision.maximum_options), float("-inf")
+    )
+    padded_primary_logits[supervision.option_owner, supervision.option_local] = primary_option_logits
     available = supervision.available_padded.clone()
     prefix = model.decoder_initial(output_hidden)
     option_state = model.selection_option(padded_options)
@@ -451,8 +546,11 @@ def _packed_vectorized_compound_nll(
             & (supervision.selected_lengths == subchoice_index)
         )
         active = select_mask | stop_mask
-        option_logits = (option_state * prefix.unsqueeze(1)).sum(dim=-1) / scale
-        option_logits = option_logits.masked_fill(~available, float("-inf"))
+        if subchoice_index == 0:
+            option_logits = padded_primary_logits.masked_fill(~available, float("-inf"))
+        else:
+            option_logits = (option_state * prefix.unsqueeze(1)).sum(dim=-1) / scale
+            option_logits = option_logits.masked_fill(~available, float("-inf"))
         stop_available = supervision.minimum_counts <= subchoice_index
         stop_logits = (model.stop_embedding.unsqueeze(0) * prefix).sum(dim=-1) / scale
         stop_logits = stop_logits.masked_fill(~stop_available, float("-inf"))
@@ -522,6 +620,7 @@ def packed_recurrent_chunk_loss(
         loss = _packed_vectorized_compound_nll(
             model,
             output.hidden,
+            output.option_logits,
             output.option_embeddings,
             supervision,
         )
@@ -612,27 +711,26 @@ def recurrent_sequence_batch_loss(
                     if selected or not forced:
                         raise BCTrainingError("zero-option request is not the unique forced empty outcome")
                     continue
-                replay = replay_compound_action(
-                    initial_prefix=model.decoder_initial(output.hidden[local_index]),
+                replay_log_probability = bc_compound_action_log_probability(
+                    model,
+                    output_hidden=output.hidden[local_index],
+                    primary_option_logits=output.option_logits[option_start:option_end],
                     option_embeddings=output.option_embeddings[option_start:option_end],
                     available_mask=available,
-                    action=CompoundActionV1(
-                        selected_indices=selected,
-                        stopped=bool(decision.action.stopped_early),
-                    ),
+                    selected_indices=selected,
+                    stopped=bool(decision.action.stopped_early),
                     minimum_count=decision.request.min_count,
                     maximum_count=decision.request.max_count,
-                    decoder_logits=model.decoder_logits,
-                    decoder_advance=model.decoder_advance,
                 )
                 if not forced:
-                    losses.append(-replay.log_probability)
+                    losses.append(-replay_log_probability)
             if option_cursor != int(output.option_embeddings.shape[0]):
                 raise BCTrainingError("batched option slicing did not consume all option embeddings")
         else:
             vectorized_loss, vectorized_targets = _vectorized_compound_nll(
                 model,
                 output.hidden,
+                output.option_logits,
                 output.option_embeddings,
                 batch.option_offsets,
                 batch.option_available,
