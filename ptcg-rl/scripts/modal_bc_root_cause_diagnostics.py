@@ -147,8 +147,8 @@ def _diagnose(
 ) -> dict[str, Any]:
     sys.path.insert(0, "/workspace/ptcg-rl/src")
     from ptcg_rl.bc.training import replay_compound_action
-    from ptcg_rl.g1.models import CompoundActionV1
     from ptcg_rl.g2.network import collate_projected
+    from ptcg_rl.g3.ppo import CompoundActionV1
 
     hidden_states = model.initial_hidden(len(episodes), device)
     total_nll = 0.0
