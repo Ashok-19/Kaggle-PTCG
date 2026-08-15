@@ -154,23 +154,23 @@ def test_gpu_bridge_maps_players_globals_entities_and_option_links() -> None:
     assert not batch.option_categorical_missing[0, 9]
 
 
-def test_gpu_bridge_matches_cpu_current_entity_seeded_event_identities_and_links() -> None:
+def test_gpu_bridge_matches_cpu_first_occurrence_event_identities_and_exact_links() -> None:
     projection, events, status = _projection_fixture()
     batch, _ = build_torch_policy_batch(projection, events, status)
 
     assert batch.event_offsets.tolist() == [0, 3, 3, 4]
-    # DRAW serial9 matches env0 bench entity row2 => local identity token3.
+    # DRAW serial9 is the first public identity => token1, independent of entity row.
     assert batch.event_categorical[0, 0].item() == 4
     assert batch.event_categorical[0, 1].item() == 0
     assert batch.event_categorical[0, 3].item() == 55
-    assert batch.event_identity[0, 0].item() == 3
-    # ATTACH serial10 is event-only => token4; target serial20 is current entity0 => token1.
+    assert batch.event_identity[0, 0].item() == 1
+    # ATTACH serial10 is second identity; target serial20 is third, regardless of entity rows.
     assert batch.event_categorical[1, 1].item() == 1
     assert batch.event_categorical[1, 10].item() == 100
-    assert batch.event_identity[1, 0].item() == 4
-    assert batch.event_identity[1, 5].item() == 1
-    # PLAY reuses public serial9 and therefore current-entity token3.
-    assert batch.event_identity[2, 0].item() == 3
+    assert batch.event_identity[1, 0].item() == 2
+    assert batch.event_identity[1, 5].item() == 3
+    # PLAY reuses serial9 and therefore first-occurrence token1.
+    assert batch.event_identity[2, 0].item() == 1
     # HP_CHANGE value and putDamageCounter are mapped separately.
     assert batch.event_numeric[3, 0].item() == -40
     assert batch.event_categorical[3, 12].item() == 1

@@ -16,6 +16,7 @@ from ptcg_rl.g2.models import (
     EVENT_NUMERIC_NAMES,
     GLOBAL_CATEGORICAL_NAMES,
     GLOBAL_NUMERIC_NAMES,
+    MODEL_SCHEMA_VERSION,
     OPTION_CATEGORICAL_NAMES,
     OPTION_NUMERIC_NAMES,
     PLAYER_CATEGORICAL_NAMES,
@@ -103,7 +104,7 @@ def _require_sha256(value: Any, label: str) -> str:
 
 
 def _model_payload(model: ModelInputV1) -> dict[str, Any]:
-    if model.schema_version != 1:
+    if model.schema_version != MODEL_SCHEMA_VERSION:
         raise MaterializedBCError("unsupported model-input schema version")
     expected_names = {
         "player_categorical_names": PLAYER_CATEGORICAL_NAMES,
@@ -132,7 +133,7 @@ def _model_from_payload(value: Any) -> ModelInputV1:
     if not isinstance(value, Mapping):
         raise MaterializedBCError("materialized model payload must be an object")
     return ModelInputV1(
-        schema_version=1,
+        schema_version=MODEL_SCHEMA_VERSION,
         player_categorical_names=PLAYER_CATEGORICAL_NAMES,
         player_numeric_names=PLAYER_NUMERIC_NAMES,
         entity_categorical_names=ENTITY_CATEGORICAL_NAMES,
@@ -198,10 +199,10 @@ def _decision_from_payload(value: Any) -> MaterializedDecisionV1:
         raise MaterializedBCError("materialized selected indices contain duplicates")
     model = _model_from_payload(value["model"])
     projected = ProjectedDecisionV1(
-        schema_version=1,
+        schema_version=MODEL_SCHEMA_VERSION,
         model=model,
         transport=OptionTransportMapV1(
-            schema_version=1,
+            schema_version=MODEL_SCHEMA_VERSION,
             request_id="materialized",
             original_indices=(),
             semantic_fingerprints=(),

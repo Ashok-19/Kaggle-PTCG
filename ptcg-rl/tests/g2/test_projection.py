@@ -120,16 +120,20 @@ def test_effective_energy_count_matches_native_energy_units_not_physical_cards()
     assert projected.entity_numeric_values[active_row][count_index] == 2.0
 
 
-def test_event_only_identity_starts_after_max_current_entity_token() -> None:
+def test_event_identity_is_first_occurrence_and_independent_of_entity_row_index() -> None:
     raw = raw_observation()
-    raw["logs"] = [{"type": 10, "playerIndex": 0, "cardId": 55, "serial": 99}]
-    observation, request = semantic_snapshot(raw, "event-token-gap", 0, CARD_HASH)
+    raw["logs"] = [
+        {"type": 10, "playerIndex": 0, "cardId": 55, "serial": 99},
+        {"type": 10, "playerIndex": 0, "cardId": 56, "serial": 20},
+        {"type": 10, "playerIndex": 0, "cardId": 55, "serial": 99},
+    ]
+    observation, request = semantic_snapshot(raw, "event-token-order", 0, CARD_HASH)
     assert request is not None
-    # Simulate visible current entity tokens 1 and 3 with a hidden row gap at index1.
     projected = _project_events(observation, 0, {10: 0, 20: 2})
     identity_rows = projected[4]
-    assert identity_rows[0][0] == 4
-    assert identity_rows[0][0] not in {1, 3}
+    entity_rows = projected[6]
+    assert [row[0] for row in identity_rows] == [1, 2, 1]
+    assert [row[0] for row in entity_rows] == [-1, 2, -1]
 
 
 def test_model_schema_explicitly_excludes_transport_and_serial_magnitude() -> None:

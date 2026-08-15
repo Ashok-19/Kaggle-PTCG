@@ -5,7 +5,7 @@ from typing import Any
 
 from ptcg_rl.g1.models import stable_hash
 
-MODEL_SCHEMA_VERSION = 2
+MODEL_SCHEMA_VERSION = 3
 
 PLAYER_CATEGORICAL_NAMES = ("relative_player", "hand_visible")
 PLAYER_NUMERIC_NAMES = (
