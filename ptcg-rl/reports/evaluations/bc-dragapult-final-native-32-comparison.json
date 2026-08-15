@@ -1,0 +1,94 @@
+{
+  "record_id": "bc-dragapult-final-native-32-comparison-v1",
+  "schema_version": 1,
+  "status": "PASS_EVALUATION_COMPLETED_NO_CHALLENGER_PROMOTION",
+  "candidate_deck": {
+    "path": "private/evaluation/dragapult-bc-canonical/deck.csv",
+    "file_sha256": "730515d5b8e9d6f7b9a87c160cd87b43c95535c917688d2b15f46d82fc054485",
+    "multiset_sha256": "89e6155f25310ee695c0761c85d3ae8e44f376456ff0539231820f8e803f2d5e",
+    "provenance_episode_id": 92474495,
+    "provenance_archive": ".cache/bc-data/daily/2026-08-13/archive/pokemon-tcg-ai-battle-episodes-2026-08-13.zip",
+    "provenance_note": "Recovered from an exact-v2 source replay and verified with the repository canonical deck-multiset hash algorithm."
+  },
+  "engine": {
+    "library_sha256": "feafd4046b2f688bdb33a4972c139b78e13e243ab5707ece52c43cf39a34b887",
+    "card_data_sha256": "a0ea63cf7adcb65d35436ce0eb390de6e2e35654a7c67c065a45f4abaa00f373"
+  },
+  "configuration": {
+    "games_per_opponent": 8,
+    "total_games_per_checkpoint": 32,
+    "alternating_candidate_seat": true,
+    "opponents": [
+      "mega-lucario-ex",
+      "dragapult-ex",
+      "iono",
+      "mega-abomasnow-ex"
+    ],
+    "policy": "greedy_recurrent_no_fallback",
+    "device": "cpu",
+    "paired_game_ids": true
+  },
+  "incumbent": {
+    "checkpoint_sha256": "dec8a1a212bf8183f603042dc858eae3223d2fb0b27cb512fb60294bf098b145",
+    "validation_nll": 1.0532460389871248,
+    "wins": 10,
+    "losses": 22,
+    "games": 32,
+    "win_rate": 0.3125,
+    "candidate_score_normal_approx_95": [0.14933140027724737, 0.47566859972275266],
+    "invalid_selections": 0,
+    "fallback_actions": 0,
+    "failures": 0,
+    "engine_requests": 6123,
+    "by_opponent": {
+      "mega-lucario-ex": {"wins": 2, "losses": 6},
+      "dragapult-ex": {"wins": 3, "losses": 5},
+      "iono": {"wins": 3, "losses": 5},
+      "mega-abomasnow-ex": {"wins": 2, "losses": 6}
+    },
+    "by_candidate_seat": {
+      "seat_0": {"wins": 6, "games": 16},
+      "seat_1": {"wins": 4, "games": 16}
+    },
+    "by_move_order": {
+      "candidate_first": {"wins": 7, "games": 20},
+      "candidate_second": {"wins": 3, "games": 12}
+    }
+  },
+  "early_stop_challenger": {
+    "checkpoint_sha256": "7cb163dbe2e2b1fd63d59cc52b1eee896fd4e23954b3c6f8893da15c9440b4f4",
+    "validation_nll": 1.0443540057373362,
+    "continuation_best_epoch": 7,
+    "continuation_stopped_after_epoch": 10,
+    "early_stopping_patience": 3,
+    "early_stopping_min_delta": 0.00025,
+    "wins": 8,
+    "losses": 24,
+    "games": 32,
+    "win_rate": 0.25,
+    "candidate_score_normal_approx_95": [0.0975681008746275, 0.40243189912537247],
+    "invalid_selections": 0,
+    "fallback_actions": 0,
+    "failures": 0,
+    "engine_requests": 6521,
+    "by_opponent": {
+      "mega-lucario-ex": {"wins": 2, "losses": 6},
+      "dragapult-ex": {"wins": 2, "losses": 6},
+      "iono": {"wins": 3, "losses": 5},
+      "mega-abomasnow-ex": {"wins": 1, "losses": 7}
+    }
+  },
+  "paired_outcome_comparison": {
+    "both_loss": 16,
+    "both_win": 2,
+    "incumbent_win_challenger_loss": 8,
+    "incumbent_loss_challenger_win": 6,
+    "net_challenger_wins": -2,
+    "flipped_games": 14
+  },
+  "decision": {
+    "promote_early_stop_challenger": false,
+    "incumbent_remains_reference": true,
+    "reason": "The challenger improves held-out BC NLL but does not improve the paired 32-game native benchmark. The sample remains noisy, so neither checkpoint is claimed strong enough for submission from this evidence alone. Lower NLL is not sufficient as the promotion criterion."
+  }
+}
