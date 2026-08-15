@@ -121,6 +121,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             actions = sample_compound_actions_batched(
                 model,
                 public_hidden=output.hidden,
+                primary_option_logits=output.option_logits,
                 option_embeddings=output.option_embeddings,
                 option_offsets=output.option_offsets,
                 available_mask=batch.option_available,

@@ -65,6 +65,35 @@ def _pad_options(
     return padded, available, lengths
 
 
+def _pad_primary_option_logits(
+    primary_option_logits: Tensor,
+    option_offsets: Tensor,
+) -> Tensor:
+    if primary_option_logits.ndim != 1:
+        raise BatchedCompoundError("primary option logits must be one-dimensional")
+    offsets = option_offsets.to(device=primary_option_logits.device, dtype=torch.long)
+    if offsets.ndim != 1 or offsets.numel() < 2:
+        raise BatchedCompoundError("option offsets must contain one boundary per batch row")
+    if int(offsets[0].item()) != 0 or int(offsets[-1].item()) != primary_option_logits.numel():
+        raise BatchedCompoundError("primary option logits differ from option offsets")
+    lengths = offsets[1:] - offsets[:-1]
+    if torch.any(lengths < 0):
+        raise BatchedCompoundError("option offsets are not monotonic")
+    batch_size = int(lengths.numel())
+    maximum_options = int(lengths.max().item()) if lengths.numel() else 0
+    padded = primary_option_logits.new_zeros((batch_size, maximum_options))
+    if primary_option_logits.numel():
+        owner = torch.repeat_interleave(
+            torch.arange(batch_size, dtype=torch.long, device=primary_option_logits.device),
+            lengths,
+        )
+        local = torch.arange(
+            primary_option_logits.numel(), dtype=torch.long, device=primary_option_logits.device
+        ) - torch.repeat_interleave(offsets[:-1], lengths)
+        padded[owner, local] = primary_option_logits
+    return padded
+
+
 def _distribution_stats(logits: Tensor, legal: Tensor) -> tuple[Tensor, Tensor, Tensor]:
     if logits.ndim != 2 or legal.shape != logits.shape or legal.dtype != torch.bool:
         raise BatchedCompoundError("batched distribution logits/mask differ")
@@ -90,13 +119,20 @@ def _decoder_logits(
     model: Any,
     prefix: Tensor,
     option_state: Tensor,
+    primary_option_logits: Tensor,
     available: Tensor,
     stop_available: Tensor,
     *,
     active: Tensor,
+    first_subchoice: bool,
 ) -> tuple[Tensor, Tensor]:
     scale = math.sqrt(float(model.config.selection_hidden))
-    option_logits = (option_state * prefix.unsqueeze(1)).sum(dim=-1) / scale
+    if first_subchoice:
+        if primary_option_logits.shape != available.shape:
+            raise BatchedCompoundError("padded primary option logits differ from available mask")
+        option_logits = primary_option_logits
+    else:
+        option_logits = (option_state * prefix.unsqueeze(1)).sum(dim=-1) / scale
     option_logits = option_logits.masked_fill(~available, float("-inf"))
     stop_logits = (model.stop_embedding.unsqueeze(0) * prefix).sum(dim=-1) / scale
     stop_logits = stop_logits.masked_fill(~stop_available, float("-inf"))
@@ -115,6 +151,7 @@ def sample_compound_actions_batched(
     model: Any,
     *,
     public_hidden: Tensor,
+    primary_option_logits: Tensor,
     option_embeddings: Tensor,
     option_offsets: Tensor,
     available_mask: Tensor,
@@ -127,6 +164,7 @@ def sample_compound_actions_batched(
     padded_options, available, _ = _pad_options(
         option_embeddings, option_offsets, available_mask
     )
+    padded_primary_logits = _pad_primary_option_logits(primary_option_logits, option_offsets)
     batch_size = public_hidden.shape[0]
     minimum = minimum_counts.to(device=public_hidden.device, dtype=torch.long)
     maximum = maximum_counts.to(device=public_hidden.device, dtype=torch.long)
@@ -156,16 +194,18 @@ def sample_compound_actions_batched(
     maximum_subchoices = max(1, int(effective_maximum.max().item()))
     rows = torch.arange(batch_size, dtype=torch.long, device=public_hidden.device)
 
-    for _ in range(maximum_subchoices):
+    for subchoice in range(maximum_subchoices):
         active = ~finished
         stop_available = selected_lengths >= minimum
         logits, legal = _decoder_logits(
             model,
             prefix,
             option_state,
+            padded_primary_logits,
             available,
             stop_available,
             active=active,
+            first_subchoice=subchoice == 0,
         )
         log_probabilities, normalized_entropy, _ = _distribution_stats(logits, legal)
         probabilities = torch.softmax(logits, dim=1)
@@ -217,6 +257,7 @@ def replay_compound_actions_batched(
     model: Any,
     *,
     public_hidden: Tensor,
+    primary_option_logits: Tensor,
     option_embeddings: Tensor,
     option_offsets: Tensor,
     available_mask: Tensor,
@@ -227,6 +268,7 @@ def replay_compound_actions_batched(
     padded_options, available, _ = _pad_options(
         option_embeddings, option_offsets, available_mask
     )
+    padded_primary_logits = _pad_primary_option_logits(primary_option_logits, option_offsets)
     batch_size = public_hidden.shape[0]
     if actions.selected_lengths.shape != (batch_size,) or actions.stopped.shape != (batch_size,):
         raise BatchedCompoundError("batched action metadata differs from replay batch")
@@ -258,9 +300,11 @@ def replay_compound_actions_batched(
             model,
             prefix,
             option_state,
+            padded_primary_logits,
             available,
             stop_available,
             active=active,
+            first_subchoice=subchoice == 0,
         )
         log_probabilities, normalized_entropy, _ = _distribution_stats(logits, legal)
         if subchoice < actions.selected_indices.shape[1]:

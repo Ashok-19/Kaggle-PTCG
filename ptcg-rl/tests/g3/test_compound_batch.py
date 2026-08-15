@@ -6,6 +6,7 @@ from types import SimpleNamespace
 import torch
 
 from ptcg_rl.g3.compound_batch import (
+    BatchedCompoundActionV1,
     replay_compound_actions_batched,
     sample_compound_actions_batched,
 )
@@ -28,6 +29,33 @@ class TinyDecoder:
     @staticmethod
     def selection_gru(chosen: torch.Tensor, prefix: torch.Tensor) -> torch.Tensor:
         return torch.tanh(prefix + 0.3 * chosen)
+
+    @staticmethod
+    def primary_logits(
+        public_hidden: torch.Tensor,
+        options: torch.Tensor,
+        offsets: torch.Tensor,
+    ) -> torch.Tensor:
+        prefix = torch.tanh(public_hidden)
+        values: list[torch.Tensor] = []
+        for row in range(public_hidden.shape[0]):
+            start = int(offsets[row])
+            end = int(offsets[row + 1])
+            values.append((options[start:end] * prefix[row]).sum(dim=-1) / math.sqrt(3.0))
+        return torch.cat(values) if values else options.new_empty((0,))
+
+    def decoder_first_logits(
+        self,
+        prefix: torch.Tensor,
+        primary_option_logits: torch.Tensor,
+        available: torch.Tensor,
+        stop_available: torch.Tensor | bool,
+    ) -> torch.Tensor:
+        option_logits = primary_option_logits.masked_fill(~available, float("-inf"))
+        stop_logit = (self.stop_embedding * prefix).sum() / math.sqrt(3.0)
+        stop_mask = torch.as_tensor(stop_available, dtype=torch.bool)
+        stop_logit = stop_logit.masked_fill(~stop_mask, float("-inf"))
+        return torch.cat((option_logits, stop_logit.reshape(1)))
 
     def decoder_logits(
         self,
@@ -67,10 +95,12 @@ def test_batched_compound_sampler_replays_exactly_and_matches_scalar_contract() 
     minimum = torch.tensor([1, 0, 0], dtype=torch.long)
     maximum = torch.tensor([2, 1, 0], dtype=torch.long)
     generator = torch.Generator().manual_seed(20260814)
+    primary_logits = model.primary_logits(public_hidden, options, offsets)
 
     sampled = sample_compound_actions_batched(
         model,
         public_hidden=public_hidden,
+        primary_option_logits=primary_logits,
         option_embeddings=options,
         option_offsets=offsets,
         available_mask=available,
@@ -81,6 +111,7 @@ def test_batched_compound_sampler_replays_exactly_and_matches_scalar_contract() 
     replayed_logp, replayed_entropy = replay_compound_actions_batched(
         model,
         public_hidden=public_hidden,
+        primary_option_logits=primary_logits,
         option_embeddings=options,
         option_offsets=offsets,
         available_mask=available,
@@ -113,6 +144,91 @@ def test_batched_compound_sampler_replays_exactly_and_matches_scalar_contract() 
         assert torch.allclose(sampled.normalized_entropies[row], scalar.normalized_entropy, atol=1e-7, rtol=0)
 
 
+def test_batched_replay_uses_primary_policy_logits_for_first_subchoice() -> None:
+    model = TinyDecoder()
+    public_hidden = torch.tensor([[0.2, -0.1, 0.3]])
+    options = torch.tensor([[0.1, 0.7, -0.4], [0.9, -0.2, 0.1]])
+    offsets = torch.tensor([0, 2], dtype=torch.long)
+    available = torch.tensor([True, True])
+    primary_logits = torch.tensor([4.0, -4.0])
+    actions = BatchedCompoundActionV1(
+        selected_indices=torch.tensor([[0, -1]], dtype=torch.long),
+        selected_lengths=torch.tensor([1], dtype=torch.long),
+        stopped=torch.tensor([False]),
+        log_probabilities=torch.zeros(1),
+        normalized_entropies=torch.zeros(1),
+    )
+
+    replayed_logp, _ = replay_compound_actions_batched(
+        model,
+        public_hidden=public_hidden,
+        primary_option_logits=primary_logits,
+        option_embeddings=options,
+        option_offsets=offsets,
+        available_mask=available,
+        minimum_counts=torch.tensor([1]),
+        maximum_counts=torch.tensor([1]),
+        actions=actions,
+    )
+    scalar_first = model.decoder_first_logits(
+        model.decoder_initial(public_hidden[0]),
+        primary_logits,
+        available,
+        False,
+    )
+    expected = torch.log_softmax(scalar_first, dim=0)[0]
+    generic_first = model.decoder_logits(
+        model.decoder_initial(public_hidden[0]),
+        options,
+        available,
+        False,
+    )
+    generic = torch.log_softmax(generic_first, dim=0)[0]
+
+    assert torch.allclose(replayed_logp[0], expected, atol=1e-7, rtol=0)
+    assert not torch.allclose(replayed_logp[0], generic, atol=1e-4, rtol=0)
+
+
+def test_batched_replay_matches_real_g2_first_choice_policy_head(tmp_path) -> None:
+    from ptcg_rl.g2.network import PTCGPolicyV1, collate_projected
+    from tests.g2.test_card_table import build_fixture
+    from tests.g2.test_network import number_decision
+
+    model = PTCGPolicyV1(build_fixture(tmp_path / "cards.csv")).eval()
+    decision = number_decision(3)[2]
+    batch = collate_projected((decision,))
+    output = model(batch)
+    action = BatchedCompoundActionV1(
+        selected_indices=torch.tensor([[0, -1, -1]], dtype=torch.long),
+        selected_lengths=torch.tensor([1], dtype=torch.long),
+        stopped=torch.tensor([False]),
+        log_probabilities=torch.zeros(1),
+        normalized_entropies=torch.zeros(1),
+    )
+
+    replayed_logp, _ = replay_compound_actions_batched(
+        model,
+        public_hidden=output.hidden,
+        primary_option_logits=output.option_logits,
+        option_embeddings=output.option_embeddings,
+        option_offsets=output.option_offsets,
+        available_mask=batch.option_available,
+        minimum_counts=torch.tensor([1]),
+        maximum_counts=torch.tensor([1]),
+        actions=action,
+    )
+    prefix = model.decoder_initial(output.hidden[0])
+    scalar_first = model.decoder_first_logits(
+        prefix,
+        output.option_logits,
+        batch.option_available,
+        False,
+    )
+    expected = torch.log_softmax(scalar_first, dim=0)[0]
+
+    assert torch.allclose(replayed_logp[0], expected, atol=1e-7, rtol=0)
+
+
 def test_batched_compound_sampler_respects_bounds_and_no_duplicate_choices() -> None:
     model = TinyDecoder()
     hidden = torch.zeros((8, 3))
@@ -124,6 +240,7 @@ def test_batched_compound_sampler_respects_bounds_and_no_duplicate_choices() -> 
     actions = sample_compound_actions_batched(
         model,
         public_hidden=hidden,
+        primary_option_logits=model.primary_logits(hidden, options, offsets),
         option_embeddings=options,
         option_offsets=offsets,
         available_mask=available,
