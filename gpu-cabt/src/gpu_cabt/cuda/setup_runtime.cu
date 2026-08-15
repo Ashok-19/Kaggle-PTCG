@@ -836,3 +836,23 @@ extern "C" __global__ void gpu_cabt_game_reset(
         state, runtime, decks + (gc_i64)env_index * 2 * gpu_cabt::kDeckSize,
         seed, stream_base + (gc_u64)env_index);
 }
+
+extern "C" __global__ void gpu_cabt_game_reset_selected(
+    unsigned char* raw_states,
+    unsigned char* raw_runtimes,
+    const gc_i32* decks,
+    const gc_u8* reset_mask,
+    gc_u64 seed,
+    gc_u64 stream_base,
+    gc_i32 env_count
+) {
+    const gc_i32 env_index = (gc_i32)(blockDim.x * blockIdx.x + threadIdx.x);
+    if (env_index >= env_count || reset_mask[env_index] == 0) return;
+    auto& state = *reinterpret_cast<gpu_cabt::BattleCoreState*>(
+        raw_states + (gc_i64)env_index * (gc_i32)sizeof(gpu_cabt::BattleCoreState));
+    auto& runtime = *reinterpret_cast<gpu_cabt::BattleRuntimeState*>(
+        raw_runtimes + (gc_i64)env_index * (gc_i32)sizeof(gpu_cabt::BattleRuntimeState));
+    gpu_cabt::reset_game_full(
+        state, runtime, decks + (gc_i64)env_index * 2 * gpu_cabt::kDeckSize,
+        seed, stream_base + (gc_u64)env_index);
+}

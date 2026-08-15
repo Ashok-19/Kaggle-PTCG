@@ -15,8 +15,8 @@ from .source import build_cuda_source as build_canonical_cuda_source
 
 _KERNEL_NAMES = (
     "gpu_cabt_runtime_info", "gpu_cabt_runtime_status", "gpu_cabt_game_reset",
-    "gpu_cabt_post_setup_begin", "gpu_cabt_game_step", "gpu_cabt_project_policy",
-    "gpu_cabt_project_events",
+    "gpu_cabt_game_reset_selected", "gpu_cabt_post_setup_begin", "gpu_cabt_game_step",
+    "gpu_cabt_project_policy", "gpu_cabt_project_events",
 )
 
 
@@ -222,6 +222,28 @@ class GpuCabtRuntime:
         self._kernels["gpu_cabt_game_reset"](
             (self.blocks,), (self.threads,),
             (self.states, self.runtimes, deck_array, np.uint64(seed),
+             np.uint64(stream_base), np.int32(self.env_count)),
+        )
+
+    def reset_selected(
+        self,
+        decks: Any,
+        reset_mask: Any,
+        *,
+        seed: int,
+        stream_base: int = 0,
+    ) -> None:
+        """Reset only environments whose byte mask is nonzero, entirely on device."""
+        deck_array = self._as_device(decks, dtype=self.cp.int32)
+        expected = (self.env_count, 2, self.abi.deck_size)
+        if tuple(deck_array.shape) != expected:
+            raise ValueError(f"decks shape must be {expected}, got {tuple(deck_array.shape)}")
+        mask = self._as_device(reset_mask, dtype=self.cp.uint8)
+        if tuple(mask.shape) != (self.env_count,):
+            raise ValueError("reset_mask must have shape (env_count,)")
+        self._kernels["gpu_cabt_game_reset_selected"](
+            (self.blocks,), (self.threads,),
+            (self.states, self.runtimes, deck_array, mask, np.uint64(seed),
              np.uint64(stream_base), np.int32(self.env_count)),
         )
 
