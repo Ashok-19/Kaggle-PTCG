@@ -364,6 +364,7 @@ def _run_variant(
 def run(code_commit: str) -> dict[str, Any]:
     from bc_capacity_sweep import _build_model, _pack, model_configs
     from ptcg_rl.g2.card_table import load_card_table
+    from ptcg_rl.g2.models import MODEL_SCHEMA_VERSION, model_schema_sha256
 
     if re.fullmatch(r"[0-9a-f]{40}", code_commit) is None:
         raise RuntimeError("code_commit must be a full lowercase Git SHA")
@@ -374,6 +375,11 @@ def run(code_commit: str) -> dict[str, Any]:
         raise RuntimeError("learning-probe report already exists for different source")
     if not EXACT_CACHE.is_file() or not EXACT_MANIFEST.is_file():
         raise RuntimeError("exact-v2 cache or manifest is missing")
+    manifest = json.loads(EXACT_MANIFEST.read_text(encoding="utf-8"))
+    if MODEL_SCHEMA_VERSION != 3:
+        raise RuntimeError(f"learning probe requires model schema v3, observed {MODEL_SCHEMA_VERSION}")
+    if manifest.get("model_schema_sha256") != model_schema_sha256():
+        raise RuntimeError("exact-v2 manifest model schema differs from current learner schema")
 
     with EXACT_CACHE.open("rb") as handle:
         all_episodes = pickle.load(handle)
