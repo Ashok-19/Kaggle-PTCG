@@ -1,5 +1,9 @@
 .env
 .venv/
+.venv-cuda/
+scratch/cuda-venv/
+scratch/cuda-venv-copy/
+scratch/nvidia_cudnn_*.whl*
 dashboard/frontend/node_modules/
 dashboard/frontend/test-results/
 dashboard/frontend/playwright-report/
