@@ -934,6 +934,7 @@ def main() -> int:
     parser.add_argument("--maximum-targets-per-optimizer-step", type=float, default=512.0)
     parser.add_argument("--bf16", action="store_true")
     parser.add_argument("--speed-only", action="store_true")
+    parser.add_argument("--speed-stop-after-first-pass", action="store_true")
     parser.add_argument("--cache-only", action="store_true")
     args = parser.parse_args()
 
@@ -1267,6 +1268,8 @@ def main() -> int:
                     json.dumps({"event": "capacity_speed_smoke", "model": label, **row}, sort_keys=True),
                     flush=True,
                 )
+                if args.speed_stop_after_first_pass and row["status"] == "PASS":
+                    break
             passing_speed = [row for row in speed_rows if row["status"] == "PASS"]
             if not passing_speed:
                 raise CapacitySweepError(f"{label} has no viable batch-size smoke")

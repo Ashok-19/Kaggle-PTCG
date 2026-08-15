@@ -233,6 +233,7 @@ def run(
         "--maximum-targets-per-optimizer-step",
         "512",
         "--bf16",
+        "--speed-stop-after-first-pass",
     ]
     _run_stream(command)
     if not report_path.is_file():
