@@ -132,6 +132,8 @@ def _validate_chunk(model: Any, episodes: list[Any], device: torch.device) -> di
     total = 0
     main_exact = 0
     main_total = 0
+    by_selection_type: dict[str, dict[str, int]] = {}
+    by_option_count: dict[str, dict[str, int]] = {}
     first_deviation: list[int | None] = [None] * len(episodes)
     maximum_length = max(len(episode.decisions) for episode in episodes)
     model.eval()
@@ -168,6 +170,27 @@ def _validate_chunk(model: Any, episodes: list[Any], device: torch.device) -> di
                     greedy,
                     greedy_stopped,
                 )
+                selection_key = str(int(decision.request.selection_type))
+                option_count = len(decision.request.options)
+                if option_count <= 2:
+                    option_bucket = "2_or_less"
+                elif option_count <= 5:
+                    option_bucket = "3_to_5"
+                elif option_count <= 9:
+                    option_bucket = "6_to_9"
+                else:
+                    option_bucket = "10_plus"
+                for stats, key in (
+                    (by_selection_type, selection_key),
+                    (by_option_count, option_bucket),
+                ):
+                    row_stats = stats.setdefault(
+                        key,
+                        {"targets": 0, "exact": 0, "equivalent": 0},
+                    )
+                    row_stats["targets"] += 1
+                    row_stats["exact"] += int(exact_match)
+                    row_stats["equivalent"] += int(equivalent_match)
                 total += 1
                 exact += int(exact_match)
                 equivalent += int(equivalent_match)
@@ -182,6 +205,8 @@ def _validate_chunk(model: Any, episodes: list[Any], device: torch.device) -> di
         "representation_equivalent_matches": equivalent,
         "main_targets": main_total,
         "main_exact_matches": main_exact,
+        "by_selection_type": by_selection_type,
+        "by_option_count": by_option_count,
         "first_deviation": first_deviation,
     }
 
@@ -244,12 +269,27 @@ def validate() -> dict[str, Any]:
         "main_targets": 0,
         "main_exact_matches": 0,
     }
+    by_selection_type: dict[str, dict[str, int]] = {}
+    by_option_count: dict[str, dict[str, int]] = {}
+
+    def merge_breakdown(
+        destination: dict[str, dict[str, int]], source: dict[str, dict[str, int]]
+    ) -> None:
+        for key, values in source.items():
+            target = destination.setdefault(
+                key,
+                {"targets": 0, "exact": 0, "equivalent": 0},
+            )
+            for metric in ("targets", "exact", "equivalent"):
+                target[metric] += int(values[metric])
     deviations: list[int | None] = []
     for start in range(0, len(episodes), CHUNK_EPISODES):
         chunk = episodes[start : start + CHUNK_EPISODES]
         result = _validate_chunk(model, chunk, device)
         for key in totals:
             totals[key] += int(result[key])
+        merge_breakdown(by_selection_type, result["by_selection_type"])
+        merge_breakdown(by_option_count, result["by_option_count"])
         deviations.extend(result["first_deviation"])
         print(
             json.dumps(
@@ -290,6 +330,39 @@ def validate() -> dict[str, Any]:
                 totals["representation_equivalent_matches"] / totals["policy_targets"]
             ),
             "main_exact_match_rate": totals["main_exact_matches"] / totals["main_targets"],
+            "by_selection_type": {
+                key: {
+                    **values,
+                    "exact_match_rate": values["exact"] / values["targets"],
+                    "representation_equivalent_match_rate": (
+                        values["equivalent"] / values["targets"]
+                    ),
+                }
+                for key, values in sorted(by_selection_type.items(), key=lambda item: int(item[0]))
+            },
+            "selection_type_names": {
+                "0": "MAIN",
+                "1": "CARD",
+                "2": "ATTACHED_CARD",
+                "3": "CARD_OR_ATTACHED_CARD",
+                "4": "ENERGY",
+                "5": "SKILL",
+                "6": "ATTACK",
+                "7": "EVOLVE",
+                "8": "COUNT",
+                "9": "YES_NO",
+                "10": "SPECIAL_CONDITION",
+            },
+            "by_option_count": {
+                key: {
+                    **values,
+                    "exact_match_rate": values["exact"] / values["targets"],
+                    "representation_equivalent_match_rate": (
+                        values["equivalent"] / values["targets"]
+                    ),
+                }
+                for key, values in sorted(by_option_count.items())
+            },
             "first_deviation_median": (
                 statistics.median(finite_deviations) if finite_deviations else None
             ),
