@@ -90,7 +90,7 @@ def _run_command(command: list[str]) -> None:
     gpu="RTX-PRO-6000",
     cpu=16,
     memory=98304,
-    ephemeral_disk=65536,
+    ephemeral_disk=524288,
     timeout=60 * 60,
     volumes={"/data": training_volume},
 )
