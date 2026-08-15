@@ -47,6 +47,12 @@ def test_cuda_source_exports_selective_reset_kernel() -> None:
     assert 'extern "C" __global__ void gpu_cabt_game_reset_selected' in source
 
 
+def test_cuda_source_exports_bridge_raw_entity_reference_column() -> None:
+    source = build_cuda_source()
+    assert "kPolicyEntityWidth = 19" in source
+    assert "row[18] = visible ? (gc_i32)ref : 0;" in source
+
+
 def test_reset_selected_passes_full_decks_and_device_mask_to_kernel() -> None:
     runtime, kernel = _runtime()
     decks = np.zeros((4, 2, 60), dtype=np.int32)
