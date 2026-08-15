@@ -31,7 +31,7 @@ from ptcg_rl.g3.compound_batch import (
 from ptcg_rl.g3.gpu_policy_bridge import build_torch_policy_batch
 from ptcg_rl.g3.ppo import ppo_loss, require_finite_gradients, sampled_reference_kl
 from ptcg_rl.g3.production_ppo import (
-    compute_complete_game_gae,
+    compute_fixed_horizon_gae,
     meaningful_compound_policy_mask,
     slice_torch_decision_batch_rows,
 )
@@ -39,6 +39,14 @@ from ptcg_rl.g3.production_ppo import (
 
 class PPOTrainError(RuntimeError):
     pass
+
+
+@dataclass
+class ActorStateV1:
+    hidden: Tensor
+    reference_hidden: Tensor
+    assignment: Tensor
+    horizon_index: int = 0
 
 
 @dataclass(frozen=True)
@@ -65,6 +73,7 @@ class RolloutV1:
     policy_mask: Tensor
     final_results: Tensor
     metrics: dict[str, Any]
+    reference_hidden_snapshot: Tensor
 
 
 def _load_deck(path: Path) -> np.ndarray:
@@ -86,6 +95,10 @@ def _parameter_delta_l2(model: PTCGPolicyV1, before: Sequence[Tensor]) -> float:
     if not math.isfinite(result):
         raise PPOTrainError("parameter delta is nonfinite")
     return result
+
+
+def _flatten_recurrent_parameters(model: PTCGPolicyV1) -> None:
+    model.event_gru.flatten_parameters()
 
 
 def _host_peak_rss_bytes() -> int:
@@ -116,6 +129,86 @@ def _league_assignment(
         "historical_seat_0": int(np.sum(historical & (historical_seats == 0))),
         "historical_seat_1": int(np.sum(historical & (historical_seats == 1))),
     }
+
+
+def _league_metrics_from_assignment(assignment: Tensor) -> dict[str, Any]:
+    if assignment.ndim != 2 or assignment.shape[1] != 2 or assignment.dtype != torch.bool:
+        raise PPOTrainError("league assignment must be a boolean [env, 2] tensor")
+    historical_seat_0 = ~assignment[:, 0]
+    historical_seat_1 = ~assignment[:, 1]
+    historical_envs = historical_seat_0 | historical_seat_1
+    if torch.any(historical_seat_0 & historical_seat_1):
+        raise PPOTrainError("league assignment cannot freeze both seats in one environment")
+    return {
+        "current_selfplay_envs": int((~historical_envs).sum().item()),
+        "historical_bc_envs": int(historical_envs.sum().item()),
+        "historical_fraction_realized": float(historical_envs.float().mean().item()),
+        "historical_seat_0": int(historical_seat_0.sum().item()),
+        "historical_seat_1": int(historical_seat_1.sum().item()),
+    }
+
+
+def _initialize_actor_state(
+    *,
+    model: PTCGPolicyV1,
+    runtime: GpuCabtRuntime,
+    decks: Any,
+    seed: int,
+    historical_fraction: float,
+) -> ActorStateV1:
+    device = next(model.parameters()).device
+    assignment, _ = _league_assignment(
+        runtime.env_count,
+        historical_fraction=historical_fraction,
+        seed=seed,
+        device=device,
+    )
+    runtime.reset(decks, seed=seed, stream_base=0)
+    runtime.synchronize()
+    hidden = model.initial_hidden(runtime.env_count * 2, device).reshape(
+        runtime.env_count, 2, model.config.public_hidden
+    )
+    return ActorStateV1(
+        hidden=hidden,
+        reference_hidden=hidden.detach().clone(),
+        assignment=assignment,
+    )
+
+
+def _recycle_terminal_envs(
+    *,
+    actor_state: ActorStateV1,
+    runtime: GpuCabtRuntime,
+    decks: Any,
+    seed: int,
+    historical_fraction: float,
+) -> int:
+    if actor_state.horizon_index == 0:
+        return 0
+    raw_status = runtime.status()
+    runtime.synchronize()
+    status = raw_status.torch(torch)
+    terminal = status.game_results != 0
+    count = int(terminal.sum().item())
+    if count == 0:
+        return 0
+    fresh_assignment, _ = _league_assignment(
+        runtime.env_count,
+        historical_fraction=historical_fraction,
+        seed=seed,
+        device=actor_state.assignment.device,
+    )
+    runtime.reset_selected(
+        decks,
+        terminal.to(dtype=torch.uint8),
+        seed=seed,
+        stream_base=actor_state.horizon_index * runtime.env_count,
+    )
+    actor_state.hidden[terminal] = 0
+    actor_state.reference_hidden[terminal] = 0
+    actor_state.assignment[terminal] = fresh_assignment[terminal]
+    runtime.synchronize()
+    return count
 
 
 def _clone_actions(actions: BatchedCompoundActionV1) -> BatchedCompoundActionV1:
@@ -264,30 +357,32 @@ def _apply_actions(
         ).to(torch.int32)
 
 
-def _collect_complete_rollout(
+def _collect_fixed_horizon_rollout(
     *,
     model: PTCGPolicyV1,
     historical_model: PTCGPolicyV1,
+    actor_state: ActorStateV1,
     runtime: GpuCabtRuntime,
-    decks: np.ndarray,
+    decks: Any,
     seed: int,
     historical_fraction: float,
+    rollout_horizon: int,
     chunk_boundaries: int,
-    max_boundaries: int,
     bf16: bool,
+    heartbeat_seconds: float = 10.0,
 ) -> RolloutV1:
     device = next(model.parameters()).device
-    assignment, league_metrics = _league_assignment(
-        runtime.env_count,
-        historical_fraction=historical_fraction,
+    recycled_envs = _recycle_terminal_envs(
+        actor_state=actor_state,
+        runtime=runtime,
+        decks=decks,
         seed=seed,
-        device=device,
+        historical_fraction=historical_fraction,
     )
-    runtime.reset(decks, seed=seed)
-    runtime.synchronize()
-    hidden = model.initial_hidden(runtime.env_count * 2, device).reshape(
-        runtime.env_count, 2, model.config.public_hidden
-    )
+    hidden = actor_state.hidden
+    assignment = actor_state.assignment
+    reference_hidden_snapshot = actor_state.reference_hidden.detach().clone()
+    league_metrics = _league_metrics_from_assignment(assignment)
     generator = torch.Generator(device=device).manual_seed(seed ^ 0x5A17C0DE)
     response_present = torch.zeros(runtime.env_count, dtype=torch.uint8, device=device)
     selected_counts = torch.zeros(runtime.env_count, dtype=torch.int32, device=device)
@@ -307,70 +402,36 @@ def _collect_complete_rollout(
     learner_decisions = 0
     historical_decisions = 0
     meaningful_targets = 0
-    active_first = 0
-    active_last = 0
     projection_seconds = 0.0
     bridge_seconds = 0.0
     model_seconds = 0.0
     engine_seconds = 0.0
+    boundaries_executed = 0
     started = time.perf_counter()
+    last_heartbeat = started
 
     autocast = lambda: torch.autocast(  # noqa: E731
-        device_type="cuda", dtype=torch.bfloat16, enabled=bf16
+        device_type='cuda', dtype=torch.bfloat16, enabled=bf16
     )
 
-    for boundary in range(max_boundaries):
+    for boundary in range(rollout_horizon):
         raw_status = runtime.status()
         runtime.synchronize()
         status = raw_status.torch(torch)
         errors = status.error_flags.to(torch.long)
         if torch.any(errors != 0):
             bad = torch.nonzero(errors != 0, as_tuple=False).squeeze(1).cpu().tolist()[:16]
-            raise PPOTrainError(f"GPU-CABT runtime error before boundary {boundary}: {bad}")
+            raise PPOTrainError(f'GPU-CABT runtime error before boundary {boundary}: {bad}')
         active = status.game_results == 0
         active_indices = torch.nonzero(active, as_tuple=False).squeeze(1).to(torch.long)
         active_count = int(active_indices.numel())
-        if boundary == 0:
-            active_first = active_count
-        active_last = active_count
         if active_count == 0:
-            elapsed = time.perf_counter() - started
-            final_results = status.game_results.to(torch.long).clone()
-            if not owners:
-                raise PPOTrainError("complete-game rollout produced no learner decisions")
-            return RolloutV1(
-                steps=steps,
-                chunk_hidden_snapshots=chunk_snapshots,
-                owner_ids=torch.cat(owners),
-                old_log_probabilities=torch.cat(old_logps),
-                old_values=torch.cat(old_values),
-                old_entropies=torch.cat(old_entropies),
-                policy_mask=torch.cat(policy_masks),
-                final_results=final_results,
-                metrics={
-                    "boundaries": boundary,
-                    "rollout_seconds": elapsed,
-                    "actor_recurrent_decisions": actor_decisions,
-                    "learner_recurrent_decisions": learner_decisions,
-                    "historical_recurrent_decisions": historical_decisions,
-                    "meaningful_policy_targets": meaningful_targets,
-                    "actor_decisions_per_second": actor_decisions / max(elapsed, 1e-9),
-                    "learner_decisions_per_second": learner_decisions / max(elapsed, 1e-9),
-                    "active_first": active_first,
-                    "active_last": active_last,
-                    "terminal_envs": runtime.env_count,
-                    "league": league_metrics,
-                    "timing_accumulators_seconds": {
-                        "projection": projection_seconds,
-                        "bridge": bridge_seconds,
-                        "model_and_compound": model_seconds,
-                        "engine_step": engine_seconds,
-                    },
-                },
-            )
+            break
         if torch.any(active & (status.select_types == 0)):
             bad = torch.nonzero(active & (status.select_types == 0), as_tuple=False).squeeze(1)
-            raise PPOTrainError(f"active environment has no selection boundary: {bad[:16].cpu().tolist()}")
+            raise PPOTrainError(
+                f'active environment has no selection boundary: {bad[:16].cpu().tolist()}'
+            )
         if boundary % chunk_boundaries == 0:
             chunk_snapshots[boundary // chunk_boundaries] = hidden.detach().clone()
 
@@ -419,9 +480,9 @@ def _collect_complete_rollout(
             runtime.synchronize()
             model_seconds += time.perf_counter() - model_started
             if not torch.isfinite(output.values).all() or not torch.isfinite(output.hidden).all():
-                raise PPOTrainError("rollout policy emitted a nonfinite value or hidden state")
+                raise PPOTrainError('rollout policy emitted a nonfinite value or hidden state')
             if not torch.isfinite(actions.log_probabilities).all():
-                raise PPOTrainError("rollout compound sampler emitted a nonfinite log probability")
+                raise PPOTrainError('rollout compound sampler emitted a nonfinite log probability')
             hidden[meta.env_indices, meta.actors] = output.hidden.to(hidden.dtype)
             _apply_actions(
                 response_present=response_present,
@@ -470,11 +531,73 @@ def _collect_complete_rollout(
         runtime.step(response_present, selected_counts, selected_indices)
         runtime.synchronize()
         engine_seconds += time.perf_counter() - engine_started
+        boundaries_executed = boundary + 1
 
-    raise PPOTrainError(
-        f"complete-game rollout did not terminate within {max_boundaries} selection boundaries"
+        now = time.perf_counter()
+        if heartbeat_seconds > 0 and now - last_heartbeat >= heartbeat_seconds:
+            print(
+                json.dumps(
+                    {
+                        'event': 'ppo_rollout_heartbeat',
+                        'horizon': actor_state.horizon_index,
+                        'boundary': boundary + 1,
+                        'rollout_horizon': rollout_horizon,
+                        'active_envs': active_count,
+                        'actor_decisions': actor_decisions,
+                        'actor_dps': actor_decisions / max(now - started, 1e-9),
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            last_heartbeat = now
+
+    raw_final_status = runtime.status()
+    runtime.synchronize()
+    final_status = raw_final_status.torch(torch)
+    final_errors = final_status.error_flags.to(torch.long)
+    if torch.any(final_errors != 0):
+        bad = torch.nonzero(final_errors != 0, as_tuple=False).squeeze(1).cpu().tolist()[:16]
+        raise PPOTrainError(f'GPU-CABT runtime error at horizon end: {bad}')
+    final_results = final_status.game_results.to(torch.long).clone()
+    active_last = int((final_results == 0).sum().item())
+    terminal_envs = runtime.env_count - active_last
+    elapsed = time.perf_counter() - started
+    actor_state.horizon_index += 1
+    if not owners:
+        raise PPOTrainError('fixed-horizon rollout produced no learner decisions')
+    return RolloutV1(
+        steps=steps,
+        chunk_hidden_snapshots=chunk_snapshots,
+        owner_ids=torch.cat(owners),
+        old_log_probabilities=torch.cat(old_logps),
+        old_values=torch.cat(old_values),
+        old_entropies=torch.cat(old_entropies),
+        policy_mask=torch.cat(policy_masks),
+        final_results=final_results,
+        metrics={
+            'boundaries': boundaries_executed,
+            'rollout_seconds': elapsed,
+            'actor_recurrent_decisions': actor_decisions,
+            'learner_recurrent_decisions': learner_decisions,
+            'historical_recurrent_decisions': historical_decisions,
+            'meaningful_policy_targets': meaningful_targets,
+            'actor_decisions_per_second': actor_decisions / max(elapsed, 1e-9),
+            'learner_decisions_per_second': learner_decisions / max(elapsed, 1e-9),
+            'active_first': runtime.env_count,
+            'active_last': active_last,
+            'terminal_envs': terminal_envs,
+            'recycled_envs': recycled_envs,
+            'league': league_metrics,
+            'timing_accumulators_seconds': {
+                'projection': projection_seconds,
+                'bridge': bridge_seconds,
+                'model_and_compound': model_seconds,
+                'engine_step': engine_seconds,
+            },
+        },
+        reference_hidden_snapshot=reference_hidden_snapshot,
     )
-
 
 def _steps_by_chunk(rollout: RolloutV1, chunk_boundaries: int) -> list[tuple[int, list[LearnerStepV1]]]:
     grouped: dict[int, list[LearnerStepV1]] = {}
@@ -531,11 +654,10 @@ def _replay_reference_log_probabilities(
     *,
     model: PTCGPolicyV1,
     rollout: RolloutV1,
-    env_count: int,
     bf16: bool,
-) -> tuple[Tensor, float]:
+) -> tuple[Tensor, Tensor, float]:
     device = next(model.parameters()).device
-    hidden = model.initial_hidden(env_count * 2, device)
+    hidden = rollout.reference_hidden_snapshot.reshape(-1, model.config.public_hidden).clone()
     reference_logp = torch.full_like(rollout.old_log_probabilities, float("nan"))
     started = time.perf_counter()
     model.eval()
@@ -569,7 +691,11 @@ def _replay_reference_log_probabilities(
     elapsed = time.perf_counter() - started
     if not torch.isfinite(reference_logp).all():
         raise PPOTrainError("frozen-v7 replay did not cover every learner recurrent node")
-    return reference_logp, elapsed
+    return (
+        reference_logp,
+        hidden.reshape_as(rollout.reference_hidden_snapshot),
+        elapsed,
+    )
 
 
 def _weighted_metrics_accumulator() -> dict[str, float]:
@@ -632,6 +758,7 @@ def _ppo_update(
     rollout: RolloutV1,
     advantages: Tensor,
     returns: Tensor,
+    value_mask: Tensor,
     reference_log_probabilities: Tensor,
     chunk_boundaries: int,
     learner_lane_envs: int,
@@ -641,19 +768,30 @@ def _ppo_update(
     entropy_coefficient: float,
     reference_kl_coefficient: float,
     max_gradient_norm: float,
+    replay_tolerance: float,
+    maximum_post_kl: float,
+    maximum_clip_fraction: float,
     bf16: bool,
 ) -> dict[str, Any]:
-    policy_mask = rollout.policy_mask
+    if value_mask.shape != rollout.old_values.shape or value_mask.dtype != torch.bool:
+        raise PPOTrainError("fixed-horizon value mask must be boolean and match rollout rows")
+    policy_mask = rollout.policy_mask & value_mask
     total_valid = int(policy_mask.sum().item())
     if total_valid <= 0:
         raise PPOTrainError("rollout contains no meaningful learner actions")
-    total_value_nodes = int(rollout.old_values.numel())
+    total_value_nodes = int(value_mask.sum().item())
     if total_value_nodes <= 0:
         raise PPOTrainError("rollout contains no learner recurrent value nodes")
     if reference_log_probabilities.shape != rollout.old_log_probabilities.shape:
         raise PPOTrainError("frozen-v7 reference log probabilities differ from rollout shape")
     if reference_kl_coefficient < 0 or not math.isfinite(reference_kl_coefficient):
         raise PPOTrainError("reference KL coefficient must be finite and nonnegative")
+    if replay_tolerance < 0 or not math.isfinite(replay_tolerance):
+        raise PPOTrainError("replay tolerance must be finite and nonnegative")
+    if maximum_post_kl <= 0 or not math.isfinite(maximum_post_kl):
+        raise PPOTrainError("maximum post-update KL must be finite and positive")
+    if not (0 < maximum_clip_fraction <= 1) or not math.isfinite(maximum_clip_fraction):
+        raise PPOTrainError("maximum clip fraction must be within (0, 1]")
     selected_advantages = advantages[policy_mask]
     advantage_mean = selected_advantages.mean()
     advantage_std = selected_advantages.std(unbiased=False)
@@ -701,7 +839,7 @@ def _ppo_update(
             old_values = rollout.old_values.index_select(0, indices)
             lane_mask = policy_mask.index_select(0, indices)
             lane_valid = int(lane_mask.sum().item())
-            lane_value_mask = torch.ones_like(lane_mask)
+            lane_value_mask = value_mask.index_select(0, indices)
             lane_value_nodes = int(lane_value_mask.sum().item())
             lane_advantages = normalized_advantages.index_select(0, indices)
             lane_returns = returns.index_select(0, indices)
@@ -719,6 +857,8 @@ def _ppo_update(
                 float(torch.abs(new_values.detach() - old_values).max().item()),
             )
             replayed_actions += int(new_logp.numel())
+            if lane_value_nodes <= 0:
+                continue
             loss = ppo_loss(
                 new_log_probabilities=new_logp,
                 old_log_probabilities=old_logp,
@@ -762,6 +902,18 @@ def _ppo_update(
             )
             learner_minibatches += 1
 
+    if replay_max_logp_error > replay_tolerance or replay_max_ratio_error > replay_tolerance:
+        raise PPOTrainError(
+            "old-policy probability replay mismatch: "
+            f"logp={replay_max_logp_error} ratio={replay_max_ratio_error} "
+            f"tolerance={replay_tolerance}"
+        )
+    if replay_max_value_error > replay_tolerance:
+        raise PPOTrainError(
+            "old critic replay mismatch: "
+            f"value={replay_max_value_error} tolerance={replay_tolerance}"
+        )
+
     gradient_norm = require_finite_gradients(tuple(model.parameters()))
     clip_grad_return = float(
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_gradient_norm).item()
@@ -773,7 +925,9 @@ def _ppo_update(
     if parameter_delta <= 0:
         raise PPOTrainError("PPO optimizer step did not change model parameters")
 
-    model.eval()
+    # Keep the same deterministic train-mode kernels used by rollout and gradient replay.
+    # PTCGPolicyV1 has zero dropout, so module mode changes numerics but not stochasticity.
+    model.train()
     post_metrics = _weighted_metrics_accumulator()
     post_values = torch.full_like(rollout.old_values, float("nan"))
     post_started = time.perf_counter()
@@ -795,8 +949,11 @@ def _ppo_update(
             )
             lane_mask = policy_mask.index_select(0, indices)
             lane_valid = int(lane_mask.sum().item())
-            lane_value_mask = torch.ones_like(lane_mask)
+            lane_value_mask = value_mask.index_select(0, indices)
             lane_value_nodes = int(lane_value_mask.sum().item())
+            post_values.index_copy_(0, indices, new_values.detach())
+            if lane_value_nodes <= 0:
+                continue
             old_logp = rollout.old_log_probabilities.index_select(0, indices)
             lane_reference_logp = reference_log_probabilities.index_select(0, indices)
             loss = ppo_loss(
@@ -831,10 +988,18 @@ def _ppo_update(
                 reference_kl=reference_kl,
                 reference_kl_coefficient=reference_kl_coefficient,
             )
-            post_values.index_copy_(0, indices, new_values.detach())
     post_replay_seconds = time.perf_counter() - post_started
-    if not torch.isfinite(post_values).all():
-        raise PPOTrainError("post-update critic replay did not cover every learner recurrent node")
+    if not torch.isfinite(post_values[value_mask]).all():
+        raise PPOTrainError("post-update critic replay did not cover every trainable value node")
+    if post_metrics["approximate_kl"] > maximum_post_kl:
+        raise PPOTrainError(
+            f"post-update PPO KL {post_metrics['approximate_kl']} exceeds {maximum_post_kl}"
+        )
+    if post_metrics["clip_fraction"] > maximum_clip_fraction:
+        raise PPOTrainError(
+            f"post-update clip fraction {post_metrics['clip_fraction']} exceeds {maximum_clip_fraction}"
+        )
+    model.eval()
 
     return {
         "learner_samples": total_valid,
@@ -862,17 +1027,21 @@ def _ppo_update(
         "parameter_delta_l2": parameter_delta,
         "advantage_normalization_mean": float(advantage_mean.item()),
         "advantage_normalization_std": float(advantage_std.item()),
-        "old_value_explained_variance": _explained_variance(rollout.old_values, returns),
-        "post_value_explained_variance": _explained_variance(post_values, returns),
-        "post_value_mean": float(post_values.mean().item()),
-        "post_value_std": float(post_values.std(unbiased=False).item()),
-        "post_value_min": float(post_values.min().item()),
-        "post_value_max": float(post_values.max().item()),
+        "old_value_explained_variance": _explained_variance(
+            rollout.old_values[value_mask], returns[value_mask]
+        ),
+        "post_value_explained_variance": _explained_variance(
+            post_values[value_mask], returns[value_mask]
+        ),
+        "post_value_mean": float(post_values[value_mask].mean().item()),
+        "post_value_std": float(post_values[value_mask].std(unbiased=False).item()),
+        "post_value_min": float(post_values[value_mask].min().item()),
+        "post_value_max": float(post_values[value_mask].max().item()),
     }
 
 
 def _terminal_counts(results: Tensor) -> dict[str, int]:
-    return {str(code): int((results == code).sum().item()) for code in (1, 2, 3)}
+    return {str(code): int((results == code).sum().item()) for code in (0, 1, 2, 3)}
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
@@ -885,10 +1054,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("bounded trainer decision budget must stay within 1..30M")
     if args.chunk_boundaries < 16 or args.chunk_boundaries > 128:
         raise PPOTrainError("recurrent chunk boundaries must stay within 16..128")
+    if args.rollout_horizon < 16 or args.rollout_horizon > 256:
+        raise PPOTrainError("rollout horizon must stay within 16..256")
     if args.learner_lane_envs <= 0 or args.learner_lane_envs > args.env_count:
         raise PPOTrainError("learner lane envs must stay within 1..env_count")
-    if args.max_boundaries < args.chunk_boundaries:
-        raise PPOTrainError("max boundaries must not be smaller than recurrent chunk size")
+    if args.rollout_horizon < args.chunk_boundaries:
+        raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
 
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -901,6 +1072,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     historical_model = copy.deepcopy(model).eval()
     for parameter in historical_model.parameters():
         parameter.requires_grad_(False)
+    _flatten_recurrent_parameters(model)
+    _flatten_recurrent_parameters(historical_model)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.0)
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda _: 1.0)
@@ -934,38 +1107,53 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     runtime_started = time.perf_counter()
     runtime = GpuCabtRuntime(args.env_count, stack_size_bytes=args.stack_bytes)
     runtime.synchronize()
+    decks_device = runtime.cp.asarray(decks)
+    actor_state = _initialize_actor_state(
+        model=model,
+        runtime=runtime,
+        decks=decks_device,
+        seed=args.seed,
+        historical_fraction=args.historical_fraction,
+    )
     runtime_init_seconds = time.perf_counter() - runtime_started
     output_dir: Path = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
 
     run_start_actor_decisions = total_actor_decisions
+    run_start_learner_decisions = total_learner_decisions
     updates: list[dict[str, Any]] = []
     checkpoint_records: list[dict[str, Any]] = []
     run_started = time.perf_counter()
 
-    while total_actor_decisions - run_start_actor_decisions < args.decision_budget:
+    while total_learner_decisions - run_start_learner_decisions < args.decision_budget:
         update_number = completed_updates + 1
         rollout_seed = args.seed + update_number * 1_000_003
-        model.eval()
-        rollout = _collect_complete_rollout(
+        # Gradient replay must use train mode for cuDNN recurrence. With dropout=0,
+        # sample in the same mode under inference_mode so old-policy replay is exact.
+        model.train()
+        rollout = _collect_fixed_horizon_rollout(
             model=model,
             historical_model=historical_model,
+            actor_state=actor_state,
             runtime=runtime,
-            decks=decks,
+            decks=decks_device,
             seed=rollout_seed,
             historical_fraction=args.historical_fraction,
+            rollout_horizon=args.rollout_horizon,
             chunk_boundaries=args.chunk_boundaries,
-            max_boundaries=args.max_boundaries,
             bf16=args.bf16,
+            heartbeat_seconds=args.heartbeat_seconds,
         )
-        reference_logp, reference_replay_seconds = _replay_reference_log_probabilities(
-            model=historical_model,
-            rollout=rollout,
-            env_count=args.env_count,
-            bf16=args.bf16,
+        reference_logp, reference_hidden, reference_replay_seconds = (
+            _replay_reference_log_probabilities(
+                model=historical_model,
+                rollout=rollout,
+                bf16=args.bf16,
+            )
         )
+        actor_state.reference_hidden.copy_(reference_hidden)
         gae_started = time.perf_counter()
-        gae, gae_stats = compute_complete_game_gae(
+        gae, value_mask, gae_stats = compute_fixed_horizon_gae(
             owner_ids=rollout.owner_ids,
             values=rollout.old_values,
             final_results=rollout.final_results,
@@ -982,6 +1170,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             rollout=rollout,
             advantages=gae.advantages,
             returns=gae.returns,
+            value_mask=value_mask,
             reference_log_probabilities=reference_logp,
             chunk_boundaries=args.chunk_boundaries,
             learner_lane_envs=args.learner_lane_envs,
@@ -991,6 +1180,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             entropy_coefficient=args.entropy_coefficient,
             reference_kl_coefficient=args.reference_kl_coefficient,
             max_gradient_norm=args.max_gradient_norm,
+            replay_tolerance=args.replay_tolerance,
+            maximum_post_kl=args.maximum_post_kl,
+            maximum_clip_fraction=args.maximum_clip_fraction,
             bf16=args.bf16,
         )
         actor_decisions = int(rollout.metrics["actor_recurrent_decisions"])
@@ -1002,17 +1194,20 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         total_meaningful_targets += meaningful_targets
         completed_updates = update_number
 
-        advantage = gae.advantages
-        returns = gae.returns
+        advantage = gae.advantages[value_mask]
+        returns = gae.returns[value_mask]
+        train_policy_mask = rollout.policy_mask & value_mask
         rollout_record = {
             **rollout.metrics,
             "terminal_counts": _terminal_counts(rollout.final_results),
             "runtime_memory_bytes": runtime.memory_bytes(),
-            "old_value_mean": float(rollout.old_values.mean().item()),
-            "old_value_std": float(rollout.old_values.std(unbiased=False).item()),
-            "old_value_min": float(rollout.old_values.min().item()),
-            "old_value_max": float(rollout.old_values.max().item()),
-            "old_entropy_mean": float(rollout.old_entropies[rollout.policy_mask].mean().item()),
+            "old_value_mean": float(rollout.old_values[value_mask].mean().item()),
+            "old_value_std": float(rollout.old_values[value_mask].std(unbiased=False).item()),
+            "old_value_min": float(rollout.old_values[value_mask].min().item()),
+            "old_value_max": float(rollout.old_values[value_mask].max().item()),
+            "old_entropy_mean": float(rollout.old_entropies[train_policy_mask].mean().item()),
+            "trainable_recurrent_nodes": int(value_mask.sum().item()),
+            "trainable_policy_targets": int(train_policy_mask.sum().item()),
         }
         update_record = {
             "update": update_number,
@@ -1059,10 +1254,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "retained_intermediate_policy_updates": list(range(1, completed_updates + 1)),
             },
             rollout_boundary={
-                "complete_games": args.env_count,
+                "horizon_index": actor_state.horizon_index,
                 "terminal_counts": rollout_record["terminal_counts"],
                 "rollout_seed": rollout_seed,
+                "rollout_horizon": args.rollout_horizon,
                 "chunk_boundaries": args.chunk_boundaries,
+                "actor_state_persisted": False,
             },
             include_cuda_rng=True,
         )
@@ -1079,6 +1276,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "update": update_number,
             "actor_decisions": total_actor_decisions,
             "run_actor_decisions": total_actor_decisions - run_start_actor_decisions,
+            "run_learner_decisions": total_learner_decisions - run_start_learner_decisions,
             "actor_dps": rollout_record["actor_decisions_per_second"],
             "learner_samples_per_second": update["learner_samples_per_second"],
             "rollout_seconds": rollout_record["rollout_seconds"],
@@ -1087,11 +1285,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "post_clip_fraction": update["post_update"]["clip_fraction"],
         }
         print(json.dumps(progress, sort_keys=True), flush=True)
-        del rollout, gae, advantage, returns
+        del rollout, gae, advantage, returns, value_mask, train_policy_mask, reference_logp
         torch.cuda.empty_cache()
 
     run_seconds = time.perf_counter() - run_started
     run_actor_decisions = total_actor_decisions - run_start_actor_decisions
+    run_learner_decisions = total_learner_decisions - run_start_learner_decisions
     total_rollout_seconds = sum(float(item["rollout"]["rollout_seconds"]) for item in updates)
     total_update_seconds = sum(float(item["learner"]["update_seconds"]) for item in updates)
     total_post_replay_seconds = sum(float(item["learner"]["post_replay_seconds"]) for item in updates)
@@ -1121,10 +1320,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "deck": {"path": args.deck.as_posix()},
         "configuration": {
             "env_count": args.env_count,
-            "decision_budget_requested": args.decision_budget,
+            "learner_decision_budget_requested": args.decision_budget,
+            "rollout_horizon": args.rollout_horizon,
             "recurrent_chunk_boundaries": args.chunk_boundaries,
             "learner_lane_envs": args.learner_lane_envs,
-            "max_game_boundaries": args.max_boundaries,
+            "heartbeat_seconds": args.heartbeat_seconds,
             "historical_fraction": args.historical_fraction,
             "gamma": args.gamma,
             "gae_lambda": args.gae_lambda,
@@ -1133,11 +1333,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "value_coefficient": args.value_coefficient,
             "entropy_coefficient": args.entropy_coefficient,
             "reference_kl_coefficient": args.reference_kl_coefficient,
+            "replay_tolerance": args.replay_tolerance,
+            "maximum_post_kl": args.maximum_post_kl,
+            "maximum_clip_fraction": args.maximum_clip_fraction,
             "learning_rate": args.learning_rate,
             "max_gradient_norm": args.max_gradient_norm,
             "ppo_epochs_per_rollout": 1,
             "reward": "terminal-only +1/-1, draw 0",
-            "rollout_policy": "frozen for each complete-game rollout",
+            "rollout_policy": "fixed-horizon recurrent actor with GPU selective terminal recycling",
             "recurrent_replay": "chunk-start hidden snapshot plus in-chunk recurrent unroll",
         },
         "resume": resume_record,
@@ -1145,9 +1348,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "run": {
             "updates": len(updates),
             "actor_decisions": run_actor_decisions,
-            "actor_decisions_requested": args.decision_budget,
+            "learner_decisions": run_learner_decisions,
+            "learner_decisions_requested": args.decision_budget,
             "wall_seconds": run_seconds,
             "end_to_end_actor_decisions_per_second": run_actor_decisions / max(run_seconds, 1e-9),
+            "end_to_end_learner_decisions_per_second": run_learner_decisions / max(run_seconds, 1e-9),
             "rollout_seconds": total_rollout_seconds,
             "update_seconds": total_update_seconds,
             "post_update_replay_seconds": total_post_replay_seconds,
@@ -1193,21 +1398,25 @@ def main() -> int:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--env-count", type=int, default=8192)
     parser.add_argument("--decision-budget", type=int, required=True)
+    parser.add_argument("--rollout-horizon", type=int, default=64)
     parser.add_argument("--chunk-boundaries", type=int, default=64)
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
-    parser.add_argument("--max-boundaries", type=int, default=3000)
+    parser.add_argument("--heartbeat-seconds", type=float, default=10.0)
     parser.add_argument("--historical-fraction", type=float, default=0.20)
     parser.add_argument("--seed", type=int, default=20260815)
     parser.add_argument("--stack-bytes", type=int, default=16 * 1024)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--bf16", action="store_true")
-    parser.add_argument("--gamma", type=float, default=0.999)
+    parser.add_argument("--gamma", type=float, default=1.0)
     parser.add_argument("--gae-lambda", type=float, default=0.95)
     parser.add_argument("--clip-coefficient", type=float, default=0.2)
     parser.add_argument("--value-clip-coefficient", type=float, default=0.2)
     parser.add_argument("--value-coefficient", type=float, default=0.5)
     parser.add_argument("--entropy-coefficient", type=float, default=0.01)
     parser.add_argument("--reference-kl-coefficient", type=float, default=0.0)
+    parser.add_argument("--replay-tolerance", type=float, default=1e-5)
+    parser.add_argument("--maximum-post-kl", type=float, default=0.03)
+    parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
     parser.add_argument("--learning-rate", type=float, default=3e-5)
     parser.add_argument("--max-gradient-norm", type=float, default=1.0)
     parser.add_argument("--resume-checkpoint", type=Path)
