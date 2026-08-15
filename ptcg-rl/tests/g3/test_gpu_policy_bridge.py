@@ -30,7 +30,7 @@ def _projection_fixture():
     players[:, 1, :7] = torch.tensor([35, 5, 3, 0, 2, 5, 0])
 
     entities = torch.zeros((envs, 8, 19), dtype=torch.int32)
-    entity_counts = torch.tensor([4, 2, 3], dtype=torch.int32)
+    entity_counts = torch.tensor([4, 2, 4], dtype=torch.int32)
     for env in range(envs):
         entities[env, 0, :15] = torch.tensor(
             [100 + env, 0, 4, 1, 1, 220, 220, 0, 0, 1, 0, 0, 0, 0, 0]
@@ -57,6 +57,11 @@ def _projection_fixture():
         [6, 0, 8, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4]
     )
     entities[2, 2, 18] = 10
+    # Same card id and same parent as row2, but a distinct physical attachment/ref.
+    entities[2, 3, :18] = torch.tensor(
+        [6, 0, 8, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4]
+    )
+    entities[2, 3, 18] = 12
 
     options = torch.zeros((envs, 4, 20), dtype=torch.int32)
     option_counts = torch.ones(envs, dtype=torch.int32)
@@ -82,6 +87,7 @@ def _projection_fixture():
     options[2, 0, 3:7] = torch.tensor([4, 0, 0, 0])
     options[2, 0, 8] = 6
     options[2, 0, 9] = 102
+    options[2, 0, 17] = 12  # exact second duplicate attachment, bridge-only
     options[2, 0, 10:16] = torch.tensor([8, 1, 0, 4, 1, 0])
     options[2, 0, 19] = 1
 
@@ -140,13 +146,13 @@ def test_gpu_bridge_maps_players_globals_entities_and_option_links() -> None:
     assert batch.entity_categorical_missing[3, 0]
     assert batch.entity_numeric_missing[3, :4].all()
     assert not batch.entity_numeric_missing[3, 4:].any()
-    assert batch.entity_parent_indices.tolist() == [-1, -1, -1, -1, -1, -1, -1, -1, 6]
+    assert batch.entity_parent_indices.tolist() == [-1, -1, -1, -1, -1, -1, -1, -1, 6, 6]
     assert batch.entity_energy_values.tolist() == [6]
-    assert batch.entity_energy_offsets.tolist() == [0, 0, 0, 0, 0, 0, 0, 1, 1, 1]
+    assert batch.entity_energy_offsets.tolist() == [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
 
     # Attack and retreat sources are active entities. Env2 ENERGY_CARD source is
-    # the attached energy (flattened entity 8) and target is env2 active (6).
-    assert batch.option_source_entity_indices.tolist() == [0, 4, 8]
+    # the exact second duplicate attached energy (flattened entity 9) and target is env2 active (6).
+    assert batch.option_source_entity_indices.tolist() == [0, 4, 9]
     assert batch.option_target_entity_indices.tolist() == [-1, -1, 6]
     assert batch.option_categorical[:, 3].tolist() == [1, 1, 1]
     assert batch.option_categorical[:, 4].tolist() == [0, 0, 1]

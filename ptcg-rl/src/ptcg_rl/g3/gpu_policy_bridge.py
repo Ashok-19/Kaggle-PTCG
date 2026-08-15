@@ -520,23 +520,12 @@ def build_torch_policy_batch(
     )
 
     if torch.any(attached):
-        entity_attachment_keys = _attachment_key(
-            entity_owner,
-            raw_entities[:, 1].to(torch.long),
-            raw_entities[:, 2].to(torch.long),
-            raw_entities[:, 0].to(torch.long),
-            raw_entities[:, 15].to(torch.long),
-        )
-        attached_query = _attachment_key(
-            option_owner,
-            source_relative,
-            source_area,
-            raw_options[:, 8].to(torch.long),
-            target_role,
-        )
-        attached_indices = _lookup_sorted(
-            entity_attachment_keys, attached_query, attached
-        )
+        exact_source_ref = raw_options[:, 17].to(torch.long)
+        if torch.any(attached & (exact_source_ref <= 0)):
+            raise GpuPolicyBridgeError("attached option is missing exact bridge-only source ref")
+        entity_ref_keys = (entity_owner.to(torch.long) << 32) | entity_raw_refs
+        attached_query = (option_owner.to(torch.long) << 32) | exact_source_ref
+        attached_indices = _lookup_sorted(entity_ref_keys, attached_query, attached)
         option_source_indices = torch.where(attached, attached_indices, option_source_indices)
 
     option_categorical = torch.zeros((raw_options.shape[0], 12), dtype=torch.long, device=g.device)

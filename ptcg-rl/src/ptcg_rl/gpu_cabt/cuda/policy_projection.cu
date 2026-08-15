@@ -409,6 +409,8 @@ __device__ __forceinline__ void policy_emit_options(
         row[14] = policy_role(dst_area, dst_index);
         row[15] = policy_relative_player(dst_player, actor);
         row[16] = option.type == kOptionAttack ? option.param0 : 0;
+        // Bridge-only exact source identity. Raw ref magnitude never enters model features.
+        if (src && policy_card_visible(state, actor, src)) row[17] = (gc_i32)src;
         if (option.type == kOptionNumber || option.type == kOptionSpecialCondition) row[18] = option.param0;
         else if (option.type == kOptionEnergy) row[18] = option.param4;
         row[19] = 1;
