@@ -20,7 +20,7 @@ ARCHETYPE_DIR = Path("/data/materialized/bc-dragapult-archetype-v3-featurefix-v3
 EXACT_DIR = Path("/data/materialized/bc-dragapult-hq-v2-featurefix-v3")
 ARCHETYPE_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-archetype-v3-featurefix-v3.pkl")
 EXACT_CACHE = Path("/data/cache/materialized-episode-objects-v1/bc-dragapult-hq-v2-featurefix-v3.pkl")
-OUTPUT_ROOT = Path("/data/runs/bc-dragapult-final-v4-schema-v3-update-density")
+OUTPUT_ROOT = Path("/data/runs/bc-dragapult-final-v5-schema-v3-fused-update-density")
 
 SUPPORTED_MODELS = {"970k", "1.4m", "1.8m", "2.9m", "3.7m", "5.0m"}
 
@@ -46,7 +46,7 @@ image = (
 )
 
 app = modal.App("kptcg-bc-dragapult-final-train", image=image)
-training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
+training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=False)
 
 
 def _sha256_file(path: Path) -> str:
@@ -122,9 +122,8 @@ def _run_stream(command: list[str]) -> None:
 
 @app.function(
     gpu="T4",
-    cpu=16,
-    memory=98304,
-    ephemeral_disk=524288,
+    cpu=8,
+    memory=32768,
     timeout=8 * 60 * 60,
     volumes={"/data": training_volume},
 )
