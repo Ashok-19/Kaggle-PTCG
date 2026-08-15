@@ -14,6 +14,13 @@ import numpy as np
 import torch
 from torch import Tensor
 
+from ptcg_rl.bc.materialized import MaterializedEpisodeV1, load_materialized_episode
+from ptcg_rl.bc.training import (
+    PackedMegaRecurrentGroup,
+    pack_mega_recurrent_group,
+    packed_mega_recurrent_chunk_loss,
+)
+
 from gpu_cabt.device_runtime import GpuCabtRuntime
 from ptcg_rl.g2.capacity import model_config, model_configs
 from ptcg_rl.g2.card_table import load_card_table
@@ -103,6 +110,159 @@ def _flatten_recurrent_parameters(model: PTCGPolicyV1) -> None:
 def _host_peak_rss_bytes() -> int:
     # Linux reports ru_maxrss in KiB.
     return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss) * 1024
+
+
+def _balanced_rehearsal_records(root: Path, limit: int) -> list[dict[str, Any]]:
+    if limit <= 0:
+        raise PPOTrainError("BC anchor episode limit must be positive")
+    manifest_path = root / "manifest.json"
+    if not manifest_path.is_file():
+        raise PPOTrainError(f"BC anchor manifest is missing: {manifest_path}")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise PPOTrainError(f"cannot read BC anchor manifest {manifest_path}: {error}") from error
+    records = manifest.get("records")
+    if not isinstance(records, list):
+        raise PPOTrainError(f"BC anchor manifest has no record list: {manifest_path}")
+    buckets: dict[str, list[dict[str, Any]]] = {}
+    for value in records:
+        if not isinstance(value, dict) or value.get("split") != "train":
+            continue
+        team = str(value.get("teacher_team_name") or "")
+        if not team:
+            continue
+        buckets.setdefault(team, []).append(value)
+    if not buckets:
+        raise PPOTrainError(f"BC anchor manifest has no training records: {manifest_path}")
+    for values in buckets.values():
+        values.sort(
+            key=lambda record: (
+                -float(record.get("teacher_score_qualification_value") or 0.0),
+                int(record["episode_id"]),
+            )
+        )
+    selected: list[dict[str, Any]] = []
+    teams = sorted(buckets)
+    while len(selected) < limit:
+        advanced = False
+        for team in teams:
+            values = buckets[team]
+            if not values:
+                continue
+            selected.append(values.pop(0))
+            advanced = True
+            if len(selected) >= limit:
+                break
+        if not advanced:
+            break
+    if not selected:
+        raise PPOTrainError(f"BC anchor selection is empty: {manifest_path}")
+    return selected
+
+
+def _load_bc_anchor_groups(
+    *,
+    roots: Sequence[Path],
+    episodes_per_corpus: int,
+    batch_size: int,
+    sequence_length: int,
+) -> tuple[tuple[PackedMegaRecurrentGroup, ...], dict[str, Any]]:
+    if not roots:
+        raise PPOTrainError("BC anchor requires at least one materialized corpus root")
+    if batch_size <= 0 or sequence_length <= 0:
+        raise PPOTrainError("BC anchor batch size and sequence length must be positive")
+    selected_by_root: list[list[MaterializedEpisodeV1]] = []
+    source_records: list[dict[str, Any]] = []
+    for root in roots:
+        records = _balanced_rehearsal_records(root, episodes_per_corpus)
+        episodes: list[MaterializedEpisodeV1] = []
+        for record in records:
+            path = root / str(record["path"])
+            episode = load_materialized_episode(path)
+            if episode.split != "train" or episode.episode_id != int(record["episode_id"]):
+                raise PPOTrainError(f"BC anchor episode identity differs: {path}")
+            episodes.append(episode)
+        selected_by_root.append(episodes)
+        source_records.append(
+            {
+                "root": str(root),
+                "episodes": len(episodes),
+                "teacher_teams": len({episode.teacher_team_name for episode in episodes}),
+                "policy_targets": sum(episode.policy_targets for episode in episodes),
+            }
+        )
+    interleaved: list[MaterializedEpisodeV1] = []
+    maximum = max(len(episodes) for episodes in selected_by_root)
+    for index in range(maximum):
+        for episodes in selected_by_root:
+            if index < len(episodes):
+                interleaved.append(episodes[index])
+    groups: list[PackedMegaRecurrentGroup] = []
+    for start in range(0, len(interleaved), batch_size):
+        batch = interleaved[start : start + batch_size]
+        groups.append(
+            pack_mega_recurrent_group(
+                tuple(episode.decisions for episode in batch),
+                sequence_length=sequence_length,
+                pin_memory=True,
+            )
+        )
+    if not groups:
+        raise PPOTrainError("BC anchor packing produced no groups")
+    return tuple(groups), {
+        "sources": source_records,
+        "groups": len(groups),
+        "episodes": len(interleaved),
+        "policy_targets": sum(group.policy_targets for group in groups),
+        "batch_size": batch_size,
+        "sequence_length": sequence_length,
+    }
+
+
+def _backward_bc_anchor(
+    *,
+    model: PTCGPolicyV1,
+    group: PackedMegaRecurrentGroup,
+    coefficient: float,
+) -> dict[str, Any]:
+    if coefficient <= 0 or not math.isfinite(coefficient):
+        raise PPOTrainError("BC anchor coefficient must be finite and positive")
+    device = next(model.parameters()).device
+    hidden = model.initial_hidden(group.batch_size, device)
+    weighted_loss = 0.0
+    policy_targets = 0
+    recurrent_decisions = 0
+    started = time.perf_counter()
+    for chunk in group.chunks:
+        result = packed_mega_recurrent_chunk_loss(
+            model,
+            chunk,
+            hidden=hidden,
+            non_blocking=device.type == "cuda",
+        )
+        hidden = result.next_hidden.detach()
+        recurrent_decisions += result.recurrent_decisions
+        if result.loss is None:
+            continue
+        weight = result.policy_targets / group.policy_targets
+        (coefficient * result.loss * weight).backward()
+        weighted_loss += float(result.loss.detach().item()) * result.policy_targets
+        policy_targets += result.policy_targets
+    if policy_targets != group.policy_targets or policy_targets <= 0:
+        raise PPOTrainError("BC anchor target accounting differs from packed group")
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+    elapsed = time.perf_counter() - started
+    return {
+        "coefficient": coefficient,
+        "episodes": group.batch_size,
+        "policy_targets": policy_targets,
+        "recurrent_decisions": recurrent_decisions,
+        "mean_nll": weighted_loss / policy_targets,
+        "seconds": elapsed,
+        "policy_targets_per_second": policy_targets / max(elapsed, 1e-9),
+    }
 
 
 def _league_assignment(
@@ -766,6 +926,8 @@ def _ppo_update(
     value_coefficient: float,
     entropy_coefficient: float,
     reference_kl_coefficient: float,
+    bc_anchor_group: PackedMegaRecurrentGroup | None,
+    bc_anchor_coefficient: float,
     max_gradient_norm: float,
     replay_tolerance: float,
     maximum_post_kl: float,
@@ -785,6 +947,10 @@ def _ppo_update(
         raise PPOTrainError("frozen-v7 reference log probabilities differ from rollout shape")
     if reference_kl_coefficient < 0 or not math.isfinite(reference_kl_coefficient):
         raise PPOTrainError("reference KL coefficient must be finite and nonnegative")
+    if bc_anchor_coefficient < 0 or not math.isfinite(bc_anchor_coefficient):
+        raise PPOTrainError("BC anchor coefficient must be finite and nonnegative")
+    if (bc_anchor_group is None) != (bc_anchor_coefficient == 0.0):
+        raise PPOTrainError("BC anchor group/coefficient enablement differs")
     if replay_tolerance < 0 or not math.isfinite(replay_tolerance):
         raise PPOTrainError("replay tolerance must be finite and nonnegative")
     if maximum_post_kl <= 0 or not math.isfinite(maximum_post_kl):
@@ -913,6 +1079,21 @@ def _ppo_update(
             f"value={replay_max_value_error} tolerance={replay_tolerance}"
         )
 
+    bc_anchor_metrics: dict[str, Any] = {
+        "enabled": False,
+        "coefficient": bc_anchor_coefficient,
+        "seconds": 0.0,
+    }
+    if bc_anchor_group is not None:
+        bc_anchor_metrics = {
+            "enabled": True,
+            **_backward_bc_anchor(
+                model=model,
+                group=bc_anchor_group,
+                coefficient=bc_anchor_coefficient,
+            ),
+        }
+
     gradient_norm = require_finite_gradients(tuple(model.parameters()))
     clip_grad_return = float(
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_gradient_norm).item()
@@ -1009,6 +1190,7 @@ def _ppo_update(
         "update_seconds": update_seconds,
         "post_replay_seconds": post_replay_seconds,
         "reference_kl_coefficient": reference_kl_coefficient,
+        "bc_anchor": bc_anchor_metrics,
         "chunk_count": len(chunks),
         "chunk_boundaries": chunk_boundaries,
         "learner_lane_envs": learner_lane_envs,
@@ -1065,6 +1247,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
     if args.checkpoint_every_updates <= 0:
         raise PPOTrainError("checkpoint cadence must be a positive update count")
+    if args.bc_anchor_coefficient < 0 or not math.isfinite(args.bc_anchor_coefficient):
+        raise PPOTrainError("BC anchor coefficient must be finite and nonnegative")
+    if args.bc_anchor_coefficient > 0:
+        if args.bc_anchor_live_root is None or args.bc_anchor_exact_root is None:
+            raise PPOTrainError("enabled BC anchor requires live and exact materialized roots")
+        if args.bc_anchor_episodes_per_corpus <= 0:
+            raise PPOTrainError("BC anchor episodes per corpus must be positive")
+        if args.bc_anchor_batch_size <= 0 or args.bc_anchor_sequence_length <= 0:
+            raise PPOTrainError("BC anchor batch size/sequence length must be positive")
 
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -1079,6 +1270,29 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         parameter.requires_grad_(False)
     _flatten_recurrent_parameters(model)
     _flatten_recurrent_parameters(historical_model)
+
+    bc_anchor_load_started = time.perf_counter()
+    bc_anchor_groups: tuple[PackedMegaRecurrentGroup, ...] = ()
+    bc_anchor_setup: dict[str, Any] = {
+        "enabled": False,
+        "coefficient": args.bc_anchor_coefficient,
+        "load_seconds": 0.0,
+    }
+    if args.bc_anchor_coefficient > 0:
+        assert args.bc_anchor_live_root is not None
+        assert args.bc_anchor_exact_root is not None
+        bc_anchor_groups, bc_anchor_details = _load_bc_anchor_groups(
+            roots=(args.bc_anchor_live_root, args.bc_anchor_exact_root),
+            episodes_per_corpus=args.bc_anchor_episodes_per_corpus,
+            batch_size=args.bc_anchor_batch_size,
+            sequence_length=args.bc_anchor_sequence_length,
+        )
+        bc_anchor_setup = {
+            "enabled": True,
+            "coefficient": args.bc_anchor_coefficient,
+            **bc_anchor_details,
+            "load_seconds": time.perf_counter() - bc_anchor_load_started,
+        }
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.0)
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda _: 1.0)
@@ -1149,6 +1363,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         torch.cuda.synchronize(device)
         gae_seconds = time.perf_counter() - gae_started
+        bc_anchor_group = (
+            bc_anchor_groups[(update_number - 1) % len(bc_anchor_groups)]
+            if bc_anchor_groups
+            else None
+        )
         update = _ppo_update(
             model=model,
             optimizer=optimizer,
@@ -1165,6 +1384,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             value_coefficient=args.value_coefficient,
             entropy_coefficient=args.entropy_coefficient,
             reference_kl_coefficient=args.reference_kl_coefficient,
+            bc_anchor_group=bc_anchor_group,
+            bc_anchor_coefficient=args.bc_anchor_coefficient,
             max_gradient_norm=args.max_gradient_norm,
             replay_tolerance=args.replay_tolerance,
             maximum_post_kl=args.maximum_post_kl,
@@ -1283,6 +1504,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "update_seconds": update["update_seconds"],
             "post_kl": update["post_update"]["approximate_kl"],
             "post_clip_fraction": update["post_update"]["clip_fraction"],
+            "bc_anchor_nll": (
+                update["bc_anchor"].get("mean_nll")
+                if update["bc_anchor"].get("enabled")
+                else None
+            ),
             "checkpoint_seconds": checkpoint_seconds,
         }
         print(json.dumps(progress, sort_keys=True), flush=True)
@@ -1337,6 +1563,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "value_coefficient": args.value_coefficient,
             "entropy_coefficient": args.entropy_coefficient,
             "reference_kl_coefficient": args.reference_kl_coefficient,
+            "bc_anchor_coefficient": args.bc_anchor_coefficient,
+            "bc_anchor_episodes_per_corpus": args.bc_anchor_episodes_per_corpus,
+            "bc_anchor_batch_size": args.bc_anchor_batch_size,
+            "bc_anchor_sequence_length": args.bc_anchor_sequence_length,
             "replay_tolerance": args.replay_tolerance,
             "maximum_post_kl": args.maximum_post_kl,
             "maximum_clip_fraction": args.maximum_clip_fraction,
@@ -1347,6 +1577,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "rollout_policy": "fixed-horizon recurrent actor with GPU selective terminal recycling",
             "recurrent_replay": "chunk-start hidden snapshot plus in-chunk recurrent unroll",
         },
+        "bc_anchor_setup": bc_anchor_setup,
         "resume": {
             "exact_resume_supported": False,
             "reason": "GPU-CABT environment, actor hidden, reference hidden, and league assignment are not persisted",
@@ -1424,6 +1655,12 @@ def main() -> int:
     parser.add_argument("--value-coefficient", type=float, default=0.5)
     parser.add_argument("--entropy-coefficient", type=float, default=0.01)
     parser.add_argument("--reference-kl-coefficient", type=float, default=0.0)
+    parser.add_argument("--bc-anchor-coefficient", type=float, default=0.0)
+    parser.add_argument("--bc-anchor-live-root", type=Path)
+    parser.add_argument("--bc-anchor-exact-root", type=Path)
+    parser.add_argument("--bc-anchor-episodes-per-corpus", type=int, default=8)
+    parser.add_argument("--bc-anchor-batch-size", type=int, default=8)
+    parser.add_argument("--bc-anchor-sequence-length", type=int, default=32)
     parser.add_argument("--replay-tolerance", type=float, default=1e-5)
     parser.add_argument("--maximum-post-kl", type=float, default=0.03)
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)

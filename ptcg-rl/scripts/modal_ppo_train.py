@@ -22,6 +22,8 @@ OFFICIAL = ROOT / "pokemon-tcg-ai-battle/ptcg_engine/ptcgProgram 22"
 VOLUME_NAME = "kptcg-training"
 MODEL_LABEL = "3.7m"
 V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-selected.pt"
+LIVE_BC_ROOT = "/data/materialized/bc-dragapult-live-v6-featurefix-v3"
+EXACT_BC_ROOT = "/data/materialized/bc-dragapult-hq-v2-featurefix-v3"
 MAX_BOUNDED_DECISIONS = 30_000_000
 REQUIRED_MODAL_PROFILE = "ashokraja863801"
 
@@ -174,6 +176,7 @@ def train(
     learner_lane_envs: int = 1024,
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
+    bc_anchor_coefficient: float = 0.0,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     seed: int = 20260815,
@@ -194,6 +197,8 @@ def train(
         raise ValueError("learning_rate must stay within (0, 1e-3]")
     if reference_kl_coefficient < 0.0:
         raise ValueError("reference_kl_coefficient must be nonnegative")
+    if bc_anchor_coefficient < 0.0:
+        raise ValueError("bc_anchor_coefficient must be nonnegative")
     if heartbeat_seconds <= 0.0 or heartbeat_seconds > 60.0:
         raise ValueError("heartbeat_seconds must stay within (0, 60]")
     if checkpoint_every_updates <= 0:
@@ -256,6 +261,12 @@ def train(
         str(learning_rate),
         "--reference-kl-coefficient",
         str(reference_kl_coefficient),
+        "--bc-anchor-coefficient",
+        str(bc_anchor_coefficient),
+        "--bc-anchor-live-root",
+        LIVE_BC_ROOT,
+        "--bc-anchor-exact-root",
+        EXACT_BC_ROOT,
         "--max-gradient-norm",
         "1.0",
     ]
@@ -327,6 +338,7 @@ def main(
     learner_lane_envs: int = 1024,
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
+    bc_anchor_coefficient: float = 0.0,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     seed: int = 20260815,
@@ -344,6 +356,7 @@ def main(
         learner_lane_envs=learner_lane_envs,
         learning_rate=learning_rate,
         reference_kl_coefficient=reference_kl_coefficient,
+        bc_anchor_coefficient=bc_anchor_coefficient,
         heartbeat_seconds=heartbeat_seconds,
         checkpoint_every_updates=checkpoint_every_updates,
         seed=seed,
