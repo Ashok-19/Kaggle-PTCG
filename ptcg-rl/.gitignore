@@ -44,6 +44,7 @@ htmlcov/
 .chatgpt/tmp/
 .chatgpt/*.local.md
 .chatgpt/handoffs/*.local.md
+.chatgpt/handoffs/archive/
 .chatgpt/codex-runs/
 .chatgpt/operations/
 .chatgpt/workspace-locks/
