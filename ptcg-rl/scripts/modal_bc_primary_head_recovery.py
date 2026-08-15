@@ -188,7 +188,10 @@ def _teacher_metrics(model: Any, episodes: list[Any], device: Any) -> dict[str, 
                 if selection_type == 0:
                     main_total += 1
                     main_matches += int(matched)
-                if len(decision.request.options) >= 6:
+                option_count = len(
+                    decision.projected.model.option_available_mask
+                )
+                if option_count >= 6:
                     hard_total += 1
                     hard_matches += int(matched)
                 if not matched and first_deviation[episode_index] is None:
