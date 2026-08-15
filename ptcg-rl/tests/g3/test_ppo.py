@@ -351,6 +351,55 @@ def test_ppo_loss_matches_clipped_policy_and_value_definitions_and_masks_forced_
     assert new_values.grad is not None and new_values.grad[2] == 0
 
 
+def test_ppo_value_mask_trains_forced_recurrent_nodes_without_actor_gradient() -> None:
+    new_logp = torch.zeros(2, requires_grad=True)
+    new_values = torch.tensor([0.0, 1.0], requires_grad=True)
+    result = ppo_loss(
+        new_log_probabilities=new_logp,
+        old_log_probabilities=torch.zeros(2),
+        advantages=torch.tensor([1.0, 100.0]),
+        new_values=new_values,
+        old_values=torch.zeros(2),
+        returns=torch.zeros(2),
+        normalized_entropies=torch.zeros(2),
+        policy_mask=torch.tensor([True, False]),
+        value_mask=torch.tensor([True, True]),
+        normalize_advantages=False,
+    )
+    assert result.valid_actions == 1
+    assert result.valid_value_nodes == 2
+    assert torch.allclose(result.value, torch.tensor(0.25))
+    result.total.backward()
+    assert new_logp.grad is not None and new_logp.grad[1] == 0
+    assert new_values.grad is not None and new_values.grad[1] != 0
+
+
+def test_ppo_loss_supports_value_only_forced_minibatch() -> None:
+    new_logp = torch.zeros(2, requires_grad=True)
+    new_values = torch.tensor([0.5, -0.5], requires_grad=True)
+    result = ppo_loss(
+        new_log_probabilities=new_logp,
+        old_log_probabilities=torch.zeros(2),
+        advantages=torch.tensor([100.0, -100.0]),
+        new_values=new_values,
+        old_values=torch.zeros(2),
+        returns=torch.zeros(2),
+        normalized_entropies=torch.ones(2),
+        policy_mask=torch.tensor([False, False]),
+        value_mask=torch.tensor([True, True]),
+        normalize_advantages=False,
+    )
+    assert result.valid_actions == 0
+    assert result.valid_value_nodes == 2
+    assert float(result.policy) == 0.0
+    assert float(result.entropy) == 0.0
+    assert float(result.approximate_kl) == 0.0
+    assert float(result.clip_fraction) == 0.0
+    result.total.backward()
+    assert new_logp.grad is None
+    assert new_values.grad is not None and torch.any(new_values.grad != 0)
+
+
 def test_ppo_loss_and_gradient_checks_fail_closed() -> None:
     base = torch.zeros(2)
     kwargs = dict(

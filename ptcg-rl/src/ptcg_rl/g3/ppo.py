@@ -581,6 +581,7 @@ class PPOLossV1:
     approximate_kl: Tensor
     clip_fraction: Tensor
     valid_actions: int
+    valid_value_nodes: int
 
 
 def ppo_loss(
@@ -593,6 +594,7 @@ def ppo_loss(
     returns: Tensor,
     normalized_entropies: Tensor,
     policy_mask: Tensor,
+    value_mask: Tensor | None = None,
     clip_coefficient: float = 0.2,
     value_clip_coefficient: float = 0.2,
     value_coefficient: float = 0.5,
@@ -609,15 +611,21 @@ def ppo_loss(
         "normalized_entropies": _require_vector(normalized_entropies, "normalized entropies"),
         "policy_mask": _require_vector(policy_mask, "policy mask"),
     }
+    if value_mask is None:
+        value_mask = policy_mask
+    tensors["value_mask"] = _require_vector(value_mask, "value mask")
     shape = new_log_probabilities.shape
     if any(value.shape != shape for value in tensors.values()):
         raise PPOContractError("PPO loss tensors must have matching shapes")
     if policy_mask.dtype != torch.bool:
         raise PPOContractError("PPO policy mask must be boolean")
-    if not torch.any(policy_mask):
-        raise PPOContractError("PPO batch contains no valid learner-controlled actions")
+    if value_mask.dtype != torch.bool:
+        raise PPOContractError("PPO value mask must be boolean")
+    has_policy_actions = bool(torch.any(policy_mask))
+    if not torch.any(value_mask):
+        raise PPOContractError("PPO batch contains no valid critic nodes")
     for name, value in tensors.items():
-        if name == "policy_mask":
+        if name in {"policy_mask", "value_mask"}:
             continue
         if not torch.isfinite(value).all():
             raise PPOContractError(f"{name} contains NaN or infinity")
@@ -630,21 +638,30 @@ def ppo_loss(
         if not math.isfinite(value) or value < 0:
             raise PPOContractError(f"{name} must be finite and nonnegative")
 
-    selected_advantages = advantages[policy_mask]
-    if normalize_advantages:
-        standard_deviation = selected_advantages.std(unbiased=False)
-        selected_advantages = (selected_advantages - selected_advantages.mean()) / (
-            standard_deviation + 1e-8
-        )
-    log_ratio = new_log_probabilities[policy_mask] - old_log_probabilities[policy_mask]
-    ratio = torch.exp(log_ratio)
-    unclipped = ratio * selected_advantages
-    clipped = torch.clamp(ratio, 1.0 - clip_coefficient, 1.0 + clip_coefficient) * selected_advantages
-    policy = -torch.minimum(unclipped, clipped).mean()
+    if has_policy_actions:
+        selected_advantages = advantages[policy_mask]
+        if normalize_advantages:
+            standard_deviation = selected_advantages.std(unbiased=False)
+            selected_advantages = (selected_advantages - selected_advantages.mean()) / (
+                standard_deviation + 1e-8
+            )
+        log_ratio = new_log_probabilities[policy_mask] - old_log_probabilities[policy_mask]
+        ratio = torch.exp(log_ratio)
+        unclipped = ratio * selected_advantages
+        clipped = torch.clamp(ratio, 1.0 - clip_coefficient, 1.0 + clip_coefficient) * selected_advantages
+        policy = -torch.minimum(unclipped, clipped).mean()
+        entropy = normalized_entropies[policy_mask].mean()
+        approximate_kl = ((ratio - 1.0) - log_ratio).mean()
+        clip_fraction = (torch.abs(ratio - 1.0) > clip_coefficient).float().mean()
+    else:
+        policy = new_values.new_zeros(())
+        entropy = new_values.new_zeros(())
+        approximate_kl = new_values.new_zeros(())
+        clip_fraction = new_values.new_zeros(())
 
-    selected_new_values = new_values[policy_mask]
-    selected_old_values = old_values[policy_mask]
-    selected_returns = returns[policy_mask]
+    selected_new_values = new_values[value_mask]
+    selected_old_values = old_values[value_mask]
+    selected_returns = returns[value_mask]
     clipped_values = selected_old_values + torch.clamp(
         selected_new_values - selected_old_values,
         -value_clip_coefficient,
@@ -653,9 +670,6 @@ def ppo_loss(
     value_unclipped = (selected_new_values - selected_returns).square()
     value_clipped = (clipped_values - selected_returns).square()
     value = 0.5 * torch.maximum(value_unclipped, value_clipped).mean()
-    entropy = normalized_entropies[policy_mask].mean()
-    approximate_kl = ((ratio - 1.0) - log_ratio).mean()
-    clip_fraction = (torch.abs(ratio - 1.0) > clip_coefficient).float().mean()
     total = policy + value_coefficient * value - entropy_coefficient * entropy
     for name, value_tensor in {
         "total": total,
@@ -675,6 +689,7 @@ def ppo_loss(
         approximate_kl=approximate_kl,
         clip_fraction=clip_fraction,
         valid_actions=int(policy_mask.sum().item()),
+        valid_value_nodes=int(value_mask.sum().item()),
     )
 
 

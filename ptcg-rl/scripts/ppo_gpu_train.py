@@ -554,13 +554,40 @@ def _weighted_metrics_accumulator() -> dict[str, float]:
     }
 
 
-def _add_weighted_loss(target: dict[str, float], loss: Any, weight: float) -> None:
-    target["total_loss"] += float(loss.total.detach().item()) * weight
-    target["policy_loss"] += float(loss.policy.detach().item()) * weight
-    target["value_loss"] += float(loss.value.detach().item()) * weight
-    target["entropy"] += float(loss.entropy.detach().item()) * weight
-    target["approximate_kl"] += float(loss.approximate_kl.detach().item()) * weight
-    target["clip_fraction"] += float(loss.clip_fraction.detach().item()) * weight
+def _add_weighted_loss(
+    target: dict[str, float],
+    loss: Any,
+    *,
+    policy_weight: float,
+    value_weight: float,
+    value_coefficient: float,
+    entropy_coefficient: float,
+) -> None:
+    target["policy_loss"] += float(loss.policy.detach().item()) * policy_weight
+    target["value_loss"] += float(loss.value.detach().item()) * value_weight
+    target["entropy"] += float(loss.entropy.detach().item()) * policy_weight
+    target["approximate_kl"] += float(loss.approximate_kl.detach().item()) * policy_weight
+    target["clip_fraction"] += float(loss.clip_fraction.detach().item()) * policy_weight
+    target["total_loss"] = (
+        target["policy_loss"]
+        + value_coefficient * target["value_loss"]
+        - entropy_coefficient * target["entropy"]
+    )
+
+
+def _explained_variance(values: Tensor, targets: Tensor) -> float:
+    if values.shape != targets.shape or values.numel() == 0:
+        raise PPOTrainError("explained-variance tensors must be nonempty and shape-matched")
+    target_variance = targets.float().var(unbiased=False)
+    if not torch.isfinite(target_variance):
+        raise PPOTrainError("explained-variance target variance is nonfinite")
+    if float(target_variance.item()) <= 1e-12:
+        return 0.0
+    residual_variance = (targets.float() - values.float()).var(unbiased=False)
+    value = 1.0 - float((residual_variance / target_variance).item())
+    if not math.isfinite(value):
+        raise PPOTrainError("explained variance is nonfinite")
+    return value
 
 
 def _ppo_update(
@@ -584,6 +611,9 @@ def _ppo_update(
     total_valid = int(policy_mask.sum().item())
     if total_valid <= 0:
         raise PPOTrainError("rollout contains no meaningful learner actions")
+    total_value_nodes = int(rollout.old_values.numel())
+    if total_value_nodes <= 0:
+        raise PPOTrainError("rollout contains no learner recurrent value nodes")
     selected_advantages = advantages[policy_mask]
     advantage_mean = selected_advantages.mean()
     advantage_std = selected_advantages.std(unbiased=False)
@@ -631,8 +661,8 @@ def _ppo_update(
             old_values = rollout.old_values.index_select(0, indices)
             lane_mask = policy_mask.index_select(0, indices)
             lane_valid = int(lane_mask.sum().item())
-            if lane_valid <= 0:
-                continue
+            lane_value_mask = torch.ones_like(lane_mask)
+            lane_value_nodes = int(lane_value_mask.sum().item())
             lane_advantages = normalized_advantages.index_select(0, indices)
             lane_returns = returns.index_select(0, indices)
             logp_difference = torch.abs(new_logp.detach() - old_logp)
@@ -657,15 +687,29 @@ def _ppo_update(
                 returns=lane_returns,
                 normalized_entropies=new_entropies,
                 policy_mask=lane_mask,
+                value_mask=lane_value_mask,
                 clip_coefficient=clip_coefficient,
                 value_clip_coefficient=value_clip_coefficient,
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
             )
-            weight = lane_valid / total_valid
-            (loss.total * weight).backward()
-            _add_weighted_loss(pre_metrics, loss, weight)
+            policy_weight = lane_valid / total_valid
+            value_weight = lane_value_nodes / total_value_nodes
+            weighted_total = (
+                loss.policy * policy_weight
+                + value_coefficient * loss.value * value_weight
+                - entropy_coefficient * loss.entropy * policy_weight
+            )
+            weighted_total.backward()
+            _add_weighted_loss(
+                pre_metrics,
+                loss,
+                policy_weight=policy_weight,
+                value_weight=value_weight,
+                value_coefficient=value_coefficient,
+                entropy_coefficient=entropy_coefficient,
+            )
             learner_minibatches += 1
 
     gradient_norm = require_finite_gradients(tuple(model.parameters()))
@@ -681,7 +725,7 @@ def _ppo_update(
 
     model.eval()
     post_metrics = _weighted_metrics_accumulator()
-    post_values_all: list[Tensor] = []
+    post_values = torch.full_like(rollout.old_values, float("nan"))
     post_started = time.perf_counter()
     for chunk_index, steps in chunks:
         hidden_snapshot = rollout.chunk_hidden_snapshots[chunk_index]
@@ -701,8 +745,8 @@ def _ppo_update(
             )
             lane_mask = policy_mask.index_select(0, indices)
             lane_valid = int(lane_mask.sum().item())
-            if lane_valid <= 0:
-                continue
+            lane_value_mask = torch.ones_like(lane_mask)
+            lane_value_nodes = int(lane_value_mask.sum().item())
             loss = ppo_loss(
                 new_log_probabilities=new_logp,
                 old_log_probabilities=rollout.old_log_probabilities.index_select(0, indices),
@@ -712,20 +756,30 @@ def _ppo_update(
                 returns=returns.index_select(0, indices),
                 normalized_entropies=new_entropies,
                 policy_mask=lane_mask,
+                value_mask=lane_value_mask,
                 clip_coefficient=clip_coefficient,
                 value_clip_coefficient=value_clip_coefficient,
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
             )
-            _add_weighted_loss(post_metrics, loss, lane_valid / total_valid)
-            post_values_all.append(new_values.detach())
+            _add_weighted_loss(
+                post_metrics,
+                loss,
+                policy_weight=lane_valid / total_valid,
+                value_weight=lane_value_nodes / total_value_nodes,
+                value_coefficient=value_coefficient,
+                entropy_coefficient=entropy_coefficient,
+            )
+            post_values.index_copy_(0, indices, new_values.detach())
     post_replay_seconds = time.perf_counter() - post_started
-    post_values = torch.cat(post_values_all)
+    if not torch.isfinite(post_values).all():
+        raise PPOTrainError("post-update critic replay did not cover every learner recurrent node")
 
     return {
         "learner_samples": total_valid,
         "learner_recurrent_samples": int(rollout.old_values.numel()),
+        "critic_samples": total_value_nodes,
         "learner_samples_per_second": total_valid / max(update_seconds, 1e-9),
         "learner_recurrent_samples_per_second": int(rollout.old_values.numel()) / max(update_seconds, 1e-9),
         "update_seconds": update_seconds,
@@ -747,6 +801,8 @@ def _ppo_update(
         "parameter_delta_l2": parameter_delta,
         "advantage_normalization_mean": float(advantage_mean.item()),
         "advantage_normalization_std": float(advantage_std.item()),
+        "old_value_explained_variance": _explained_variance(rollout.old_values, returns),
+        "post_value_explained_variance": _explained_variance(post_values, returns),
         "post_value_mean": float(post_values.mean().item()),
         "post_value_std": float(post_values.std(unbiased=False).item()),
         "post_value_min": float(post_values.min().item()),
