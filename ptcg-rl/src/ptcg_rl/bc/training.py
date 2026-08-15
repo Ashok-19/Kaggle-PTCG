@@ -343,9 +343,12 @@ class PackedRecurrentGroup:
 
 @dataclass(frozen=True)
 class PackedMegaRecurrentChunk:
-    """One optimizer chunk with all hidden-independent decisions collated time-major."""
+    """One optimizer chunk with hidden-independent encoding and packed GRU metadata."""
 
     active_indices: tuple[Tensor, ...]
+    gru_trajectory_indices: Tensor
+    gru_batch_sizes: Tensor
+    gru_packed_row_indices: Tensor
     batch: TorchDecisionBatch
     supervision: PackedActionSupervision
     policy_targets: int
@@ -371,6 +374,15 @@ def packed_mega_recurrent_group_to_device(
         PackedMegaRecurrentChunk(
             active_indices=tuple(
                 active.to(device, non_blocking=non_blocking) for active in chunk.active_indices
+            ),
+            gru_trajectory_indices=chunk.gru_trajectory_indices.to(
+                device, non_blocking=non_blocking
+            ),
+            # Packed-sequence batch sizes are intentionally kept on CPU, matching
+            # torch.nn.GRU's PackedSequence dispatch contract.
+            gru_batch_sizes=chunk.gru_batch_sizes,
+            gru_packed_row_indices=chunk.gru_packed_row_indices.to(
+                device, non_blocking=non_blocking
             ),
             batch=chunk.batch.to(device, non_blocking=non_blocking),
             supervision=chunk.supervision.to(device, non_blocking=non_blocking),
@@ -548,6 +560,52 @@ def pack_recurrent_group(
     )
 
 
+def _packed_public_gru_metadata(
+    active_steps: Sequence[Tensor],
+    *,
+    pin_memory: bool,
+) -> tuple[Tensor, Tensor, Tensor]:
+    """Build PackedSequence-compatible trajectory and row order for one chunk."""
+    if not active_steps:
+        raise BCTrainingError("packed public GRU metadata requires active timesteps")
+    active_lists = [tuple(int(value) for value in active.tolist()) for active in active_steps]
+    first = active_lists[0]
+    if not first:
+        raise BCTrainingError("packed public GRU metadata has an empty first timestep")
+    trajectory_lengths = {trajectory: 0 for trajectory in first}
+    for active in active_lists:
+        for trajectory in active:
+            if trajectory not in trajectory_lengths:
+                raise BCTrainingError("recurrent trajectory becomes active after chunk start")
+            trajectory_lengths[trajectory] += 1
+    sorted_trajectories = tuple(
+        sorted(first, key=lambda trajectory: (-trajectory_lengths[trajectory], trajectory))
+    )
+    batch_sizes: list[int] = []
+    packed_rows: list[int] = []
+    row_base = 0
+    for time_index, active in enumerate(active_lists):
+        positions = {trajectory: row_base + local for local, trajectory in enumerate(active)}
+        expected = tuple(
+            trajectory
+            for trajectory in sorted_trajectories
+            if trajectory_lengths[trajectory] > time_index
+        )
+        if len(expected) != len(active) or set(expected) != set(active):
+            raise BCTrainingError("recurrent active trajectories are not prefix-contiguous")
+        batch_sizes.append(len(expected))
+        packed_rows.extend(positions[trajectory] for trajectory in expected)
+        row_base += len(active)
+    trajectory_tensor = torch.tensor(sorted_trajectories, dtype=torch.long)
+    packed_rows_tensor = torch.tensor(packed_rows, dtype=torch.long)
+    if pin_memory:
+        trajectory_tensor = trajectory_tensor.pin_memory()
+        packed_rows_tensor = packed_rows_tensor.pin_memory()
+    # torch.nn.GRU keeps PackedSequence.batch_sizes on CPU even for CUDA inputs.
+    batch_sizes_tensor = torch.tensor(batch_sizes, dtype=torch.long)
+    return trajectory_tensor, batch_sizes_tensor, packed_rows_tensor
+
+
 def pack_mega_recurrent_group(
     sequences: Sequence[Sequence[SemanticReplayDecisionV1]],
     *,
@@ -588,9 +646,17 @@ def pack_mega_recurrent_group(
             batch = batch.pin_memory()
         supervision = _pack_action_supervision(flattened, pin_memory=pin_memory)
         recurrent_decisions = len(flattened)
+        gru_trajectories, gru_batch_sizes, gru_packed_rows = _packed_public_gru_metadata(
+            active_steps, pin_memory=pin_memory
+        )
+        if int(gru_packed_rows.shape[0]) != recurrent_decisions:
+            raise BCTrainingError("packed public GRU row count differs from recurrent decisions")
         chunks.append(
             PackedMegaRecurrentChunk(
                 active_indices=tuple(active_steps),
+                gru_trajectory_indices=gru_trajectories,
+                gru_batch_sizes=gru_batch_sizes,
+                gru_packed_row_indices=gru_packed_rows,
                 batch=batch,
                 supervision=supervision,
                 policy_targets=supervision.policy_targets,
@@ -710,35 +776,45 @@ def packed_mega_recurrent_chunk_loss(
     if chunk.batch.global_numeric.device == device:
         batch = chunk.batch
         supervision = chunk.supervision
-        active_steps = chunk.active_indices
+        gru_trajectories = chunk.gru_trajectory_indices
+        gru_packed_rows = chunk.gru_packed_row_indices
     else:
         batch = chunk.batch.to(device, non_blocking=non_blocking)
         supervision = chunk.supervision.to(device, non_blocking=non_blocking)
-        active_steps = tuple(
-            active.to(device, non_blocking=non_blocking) for active in chunk.active_indices
+        gru_trajectories = chunk.gru_trajectory_indices.to(
+            device, non_blocking=non_blocking
+        )
+        gru_packed_rows = chunk.gru_packed_row_indices.to(
+            device, non_blocking=non_blocking
         )
 
     state_input, _entities, option_embeddings = model.encode_policy_inputs(batch)
+    if int(gru_packed_rows.shape[0]) != batch.batch_size:
+        raise BCTrainingError("packed public GRU row mapping differs from collated batch")
+    if int(gru_trajectories.shape[0]) <= 0:
+        raise BCTrainingError("packed public GRU has no active trajectories")
+    packed_state_input = state_input.index_select(0, gru_packed_rows)
+    packed_initial_hidden = hidden.index_select(0, gru_trajectories).unsqueeze(0)
+    cell = model.public_gru
+    packed_hidden, final_hidden = torch._VF.gru(
+        packed_state_input,
+        chunk.gru_batch_sizes,
+        packed_initial_hidden,
+        (cell.weight_ih, cell.weight_hh, cell.bias_ih, cell.bias_hh),
+        True,
+        1,
+        0.0,
+        model.training,
+        False,
+    )
+    output_hidden = packed_hidden.new_empty(
+        (chunk.recurrent_decisions, packed_hidden.shape[-1])
+    )
+    output_hidden = output_hidden.index_copy(0, gru_packed_rows, packed_hidden)
     states = hidden
-    output_hidden_rows: list[Tensor] = []
-    row = 0
-    for active in active_steps:
-        step_rows = int(active.shape[0])
-        if step_rows <= 0:
-            raise BCTrainingError("mega-packed recurrent timestep has no active rows")
-        stop = row + step_rows
-        if stop > batch.batch_size:
-            raise BCTrainingError("mega-packed recurrent timestep exceeds collated batch")
-        prior = states.index_select(0, active)
-        current = model.public_gru(state_input[row:stop], prior)
-        if states.dtype != current.dtype:
-            states = states.to(dtype=current.dtype)
-        states = states.index_copy(0, active, current)
-        output_hidden_rows.append(current)
-        row = stop
-    if row != batch.batch_size or row != chunk.recurrent_decisions:
-        raise BCTrainingError("mega-packed recurrent row accounting differs")
-    output_hidden = torch.cat(output_hidden_rows, dim=0)
+    if states.dtype != final_hidden.dtype:
+        states = states.to(dtype=final_hidden.dtype)
+    states = states.index_copy(0, gru_trajectories, final_hidden[0])
     primary_option_logits = model.policy_option_logits(
         batch, output_hidden, option_embeddings
     )
