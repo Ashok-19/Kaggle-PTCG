@@ -227,6 +227,7 @@ def _exact_resume_configuration(
         "learner_lane_envs": args.learner_lane_envs,
         "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
         "freeze_observation_encoder": args.freeze_observation_encoder,
+        "checkpoint_entity_transformer": args.checkpoint_entity_transformer,
         "frozen_reference_fraction": args.frozen_reference_fraction,
         "rollout_storage": args.rollout_storage,
         "frozen_v7_fraction": args.frozen_v7_fraction,
@@ -1953,6 +1954,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     card_table = load_card_table(args.card_table)
     model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
+    model.checkpoint_entity_transformer = args.checkpoint_entity_transformer
     load_training_checkpoint_model_state(args.bc_checkpoint, model=model)
     # Keep the frozen reference anchored to the selected BC initializer even when
     # the trainable policy is warm-started from a prior RL checkpoint under a new
@@ -2631,6 +2633,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "heartbeat_seconds": args.heartbeat_seconds,
             "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
             "freeze_observation_encoder": args.freeze_observation_encoder,
+            "checkpoint_entity_transformer": args.checkpoint_entity_transformer,
             "rollout_storage": args.rollout_storage,
             "checkpoint_every_updates": args.checkpoint_every_updates,
             "frozen_reference_fraction": args.frozen_reference_fraction,
@@ -2749,6 +2752,7 @@ def main() -> int:
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
     parser.add_argument("--optimizer-lanes-per-update", type=int, default=0)
     parser.add_argument("--freeze-observation-encoder", action="store_true")
+    parser.add_argument("--checkpoint-entity-transformer", action="store_true")
     parser.add_argument(
         "--rollout-storage",
         choices=("cpu-compact", "cuda-compact"),

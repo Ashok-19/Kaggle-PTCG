@@ -7,6 +7,7 @@ from typing import Any, Iterable, Sequence
 
 import torch
 from torch import Tensor, nn
+from torch.utils.checkpoint import checkpoint
 
 from ptcg_rl.g1.models import ContractViolation, stable_hash
 
@@ -485,6 +486,7 @@ class PTCGPolicyV1(nn.Module):
         self.config = config or PolicyConfigV1()
         self.card_table_sha256 = table.table_sha256
         self.catalog = StaticCatalogEncoder(table, self.config)
+        self.checkpoint_entity_transformer = False
 
         self.player_relative = SafeEmbedding(2, 4)
         self.binary = SafeEmbedding(1, 4)
@@ -788,7 +790,21 @@ class PTCGPolicyV1(nn.Module):
         else:
             owner = torch.empty(0, dtype=torch.long, device=raw.device)
             local = torch.empty(0, dtype=torch.long, device=raw.device)
-        transformed = self.entity_transformer(padded, src_key_padding_mask=padding)
+        if (
+            self.checkpoint_entity_transformer
+            and self.training
+            and torch.is_grad_enabled()
+        ):
+            transformed = checkpoint(
+                lambda values, mask: self.entity_transformer(
+                    values, src_key_padding_mask=mask
+                ),
+                padded,
+                padding,
+                use_reentrant=False,
+            )
+        else:
+            transformed = self.entity_transformer(padded, src_key_padding_mask=padding)
         pooled = transformed[:, 0]
         entities = transformed[owner, local + 1] if raw.shape[0] else raw
         return entities, pooled
