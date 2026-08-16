@@ -190,6 +190,7 @@ def train(
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     resume_checkpoint_relative: str = "",
+    bf16: bool = False,
     seed: int = 20260815,
 ) -> dict[str, object]:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
@@ -301,6 +302,8 @@ def train(
     ]
     if resume_checkpoint is not None:
         command.extend(["--resume-checkpoint", str(resume_checkpoint)])
+    if bf16:
+        command.append("--bf16")
 
     telemetry = subprocess.Popen(
         [
@@ -375,6 +378,7 @@ def main(
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     resume_checkpoint_relative: str = "",
+    bf16: bool = False,
     seed: int = 20260815,
 ) -> None:
     source_commit = subprocess.check_output(
@@ -396,6 +400,7 @@ def main(
         heartbeat_seconds=heartbeat_seconds,
         checkpoint_every_updates=checkpoint_every_updates,
         resume_checkpoint_relative=resume_checkpoint_relative,
+        bf16=bf16,
         seed=seed,
     )
     print(json.dumps(result, indent=2, sort_keys=True))

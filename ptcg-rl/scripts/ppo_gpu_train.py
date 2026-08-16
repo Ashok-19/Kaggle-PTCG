@@ -1522,10 +1522,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     device = torch.device(args.device)
     if device.type != "cuda" or not torch.cuda.is_available():
         raise PPOTrainError("production PPO trainer requires CUDA")
-    if args.bf16:
-        raise PPOTrainError(
-            "BF16 production PPO is disabled until old-policy probability replay is exact"
-        )
     if args.env_count <= 0 or args.env_count > 8192:
         raise PPOTrainError("env_count must stay within the qualified 1..8192 range")
     if args.decision_budget <= 0 or args.decision_budget > 30_000_000:
