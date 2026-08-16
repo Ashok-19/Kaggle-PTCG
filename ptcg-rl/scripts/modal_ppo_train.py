@@ -27,7 +27,7 @@ V5_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v5-schema-v3-fused-update-dens
 LIVE_BC_ROOT = "/data/materialized/bc-dragapult-live-v6-featurefix-v3"
 EXACT_BC_ROOT = "/data/materialized/bc-dragapult-hq-v2-featurefix-v3"
 MAX_BOUNDED_DECISIONS = 50_000_000
-REQUIRED_MODAL_PROFILE = "ashokraja863801"
+REQUIRED_MODAL_PROFILE = os.environ.get("KPTCG_REQUIRED_MODAL_PROFILE", "ashokraja863801")
 
 
 def _require_modal_profile() -> None:
