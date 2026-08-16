@@ -644,6 +644,7 @@ def ppo_loss(
     value_coefficient: float = 0.5,
     entropy_coefficient: float = 0.01,
     normalize_advantages: bool = True,
+    validated_fast_path: bool = False,
 ) -> PPOLossV1:
     tensors = {
         "new_log_probabilities": _require_vector(new_log_probabilities, "new log probabilities"),
@@ -665,14 +666,17 @@ def ppo_loss(
         raise PPOContractError("PPO policy mask must be boolean")
     if value_mask.dtype != torch.bool:
         raise PPOContractError("PPO value mask must be boolean")
-    has_policy_actions = bool(torch.any(policy_mask))
-    if not torch.any(value_mask):
-        raise PPOContractError("PPO batch contains no valid critic nodes")
-    for name, value in tensors.items():
-        if name in {"policy_mask", "value_mask"}:
-            continue
-        if not torch.isfinite(value).all():
-            raise PPOContractError(f"{name} contains NaN or infinity")
+    if validated_fast_path:
+        has_policy_actions = True
+    else:
+        has_policy_actions = bool(torch.any(policy_mask))
+        if not torch.any(value_mask):
+            raise PPOContractError("PPO batch contains no valid critic nodes")
+        for name, value in tensors.items():
+            if name in {"policy_mask", "value_mask"}:
+                continue
+            if not torch.isfinite(value).all():
+                raise PPOContractError(f"{name} contains NaN or infinity")
     for name, value in {
         "clip_coefficient": clip_coefficient,
         "value_clip_coefficient": value_clip_coefficient,
@@ -715,16 +719,17 @@ def ppo_loss(
     value_clipped = (clipped_values - selected_returns).square()
     value = 0.5 * torch.maximum(value_unclipped, value_clipped).mean()
     total = policy + value_coefficient * value - entropy_coefficient * entropy
-    for name, value_tensor in {
-        "total": total,
-        "policy": policy,
-        "value": value,
-        "entropy": entropy,
-        "approximate_kl": approximate_kl,
-        "clip_fraction": clip_fraction,
-    }.items():
-        if not torch.isfinite(value_tensor):
-            raise PPOContractError(f"PPO {name} is nonfinite")
+    if not validated_fast_path:
+        for name, value_tensor in {
+            "total": total,
+            "policy": policy,
+            "value": value,
+            "entropy": entropy,
+            "approximate_kl": approximate_kl,
+            "clip_fraction": clip_fraction,
+        }.items():
+            if not torch.isfinite(value_tensor):
+                raise PPOContractError(f"PPO {name} is nonfinite")
     return PPOLossV1(
         total=total,
         policy=policy,
@@ -732,8 +737,8 @@ def ppo_loss(
         entropy=entropy,
         approximate_kl=approximate_kl,
         clip_fraction=clip_fraction,
-        valid_actions=int(policy_mask.sum().item()),
-        valid_value_nodes=int(value_mask.sum().item()),
+        valid_actions=(-1 if validated_fast_path else int(policy_mask.sum().item())),
+        valid_value_nodes=(-1 if validated_fast_path else int(value_mask.sum().item())),
     )
 
 

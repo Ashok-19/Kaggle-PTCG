@@ -103,6 +103,7 @@ def meaningful_compound_policy_mask(
     *,
     minimum_counts: Tensor,
     maximum_counts: Tensor,
+    validated_fast_path: bool = False,
 ) -> Tensor:
     """Return rows whose ordered compound selection has more than one legal outcome."""
     if minimum_counts.shape != (batch.batch_size,) or maximum_counts.shape != (batch.batch_size,):
@@ -120,10 +121,11 @@ def meaningful_compound_policy_mask(
     minimum = minimum_counts.to(device=lengths.device, dtype=torch.long)
     maximum = maximum_counts.to(device=lengths.device, dtype=torch.long)
     effective_maximum = torch.minimum(maximum, available_counts)
-    if torch.any(minimum < 0) or torch.any(maximum < minimum):
-        raise PPOContractError("selection bounds are invalid")
-    if torch.any(minimum > effective_maximum):
-        raise PPOContractError("selection minimum exceeds available option count")
+    if not validated_fast_path:
+        if torch.any(minimum < 0) or torch.any(maximum < minimum):
+            raise PPOContractError("selection bounds are invalid")
+        if torch.any(minimum > effective_maximum):
+            raise PPOContractError("selection minimum exceeds available option count")
     # There is exactly one ordered compound outcome only for an explicit empty
     # selection or one mandatory available option. With two mandatory options,
     # order alone creates two distinct PPO outcomes.

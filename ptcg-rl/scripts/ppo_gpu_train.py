@@ -1002,10 +1002,11 @@ def _collect_fixed_horizon_rollout(
                 )
             runtime.synchronize()
             model_seconds += time.perf_counter() - model_started
-            if not torch.isfinite(output.values).all() or not torch.isfinite(output.hidden).all():
-                raise PPOTrainError('rollout policy emitted a nonfinite value or hidden state')
-            if not torch.isfinite(actions.log_probabilities).all():
-                raise PPOTrainError('rollout compound sampler emitted a nonfinite log probability')
+            if not _FAST_VALIDATED_GPU_PATH:
+                if not torch.isfinite(output.values).all() or not torch.isfinite(output.hidden).all():
+                    raise PPOTrainError('rollout policy emitted a nonfinite value or hidden state')
+                if not torch.isfinite(actions.log_probabilities).all():
+                    raise PPOTrainError('rollout compound sampler emitted a nonfinite log probability')
             hidden[meta.env_indices, meta.actors] = output.hidden.to(hidden.dtype)
             _apply_actions(
                 response_present=response_present,
@@ -1030,10 +1031,10 @@ def _collect_fixed_horizon_rollout(
                 batch,
                 minimum_counts=meta.minimum_counts,
                 maximum_counts=meta.maximum_counts,
+                validated_fast_path=_FAST_VALIDATED_GPU_PATH,
             )
             count = batch.batch_size
             learner_decisions += count
-            meaningful_targets += int(policy_mask.sum().item())
             owners.append((meta.env_indices * 2 + meta.actors).detach().clone())
             old_logps.append(actions.log_probabilities.detach().float().clone())
             old_values.append(output.values.detach().float().clone())
@@ -1093,6 +1094,9 @@ def _collect_fixed_horizon_rollout(
 
     for cached_policy in (model, frozen_reference_model, frozen_v7_model, frozen_v5_model):
         cached_policy.catalog.clear_encoded_cache()
+
+    if policy_masks:
+        meaningful_targets = int(torch.cat(policy_masks).sum().item())
 
     raw_final_status = runtime.status()
     runtime.synchronize()
@@ -1355,41 +1359,50 @@ def _critic_calibration_update(
     }
 
 
-def _weighted_metrics_accumulator() -> dict[str, float]:
+def _weighted_metrics_accumulator(device: torch.device) -> dict[str, Tensor]:
     return {
-        "total_loss": 0.0,
-        "policy_loss": 0.0,
-        "value_loss": 0.0,
-        "entropy": 0.0,
-        "approximate_kl": 0.0,
-        "clip_fraction": 0.0,
-        "reference_kl": 0.0,
+        name: torch.zeros((), dtype=torch.float32, device=device)
+        for name in (
+            "total_loss",
+            "policy_loss",
+            "value_loss",
+            "entropy",
+            "approximate_kl",
+            "clip_fraction",
+            "reference_kl",
+        )
     }
 
 
 def _add_weighted_loss(
-    target: dict[str, float],
+    target: dict[str, Tensor],
     loss: Any,
     *,
-    policy_weight: float,
-    value_weight: float,
+    policy_weight: Tensor | float,
+    value_weight: Tensor | float,
     value_coefficient: float,
     entropy_coefficient: float,
     reference_kl: Tensor,
     reference_kl_coefficient: float,
 ) -> None:
-    target["policy_loss"] += float(loss.policy.detach().item()) * policy_weight
-    target["value_loss"] += float(loss.value.detach().item()) * value_weight
-    target["entropy"] += float(loss.entropy.detach().item()) * policy_weight
-    target["approximate_kl"] += float(loss.approximate_kl.detach().item()) * policy_weight
-    target["clip_fraction"] += float(loss.clip_fraction.detach().item()) * policy_weight
-    target["reference_kl"] += float(reference_kl.detach().item()) * policy_weight
+    target["policy_loss"] += loss.policy.detach().float() * policy_weight
+    target["value_loss"] += loss.value.detach().float() * value_weight
+    target["entropy"] += loss.entropy.detach().float() * policy_weight
+    target["approximate_kl"] += loss.approximate_kl.detach().float() * policy_weight
+    target["clip_fraction"] += loss.clip_fraction.detach().float() * policy_weight
+    target["reference_kl"] += reference_kl.detach().float() * policy_weight
     target["total_loss"] = (
         target["policy_loss"]
         + value_coefficient * target["value_loss"]
         - entropy_coefficient * target["entropy"]
         + reference_kl_coefficient * target["reference_kl"]
     )
+
+
+def _materialize_weighted_metrics(target: dict[str, Tensor]) -> dict[str, float]:
+    names = tuple(target)
+    values = torch.stack([target[name] for name in names]).detach().cpu().tolist()
+    return {name: float(value) for name, value in zip(names, values, strict=True)}
 
 
 def _explained_variance(values: Tensor, targets: Tensor) -> float:
@@ -1500,10 +1513,10 @@ def _ppo_update(
     before = _parameter_snapshot(model)
     optimizer.zero_grad(set_to_none=True)
     model.train()
-    pre_metrics = _weighted_metrics_accumulator()
-    replay_max_logp_error = 0.0
-    replay_max_ratio_error = 0.0
-    replay_max_value_error = 0.0
+    pre_metrics_device = _weighted_metrics_accumulator(policy_mask.device)
+    replay_max_logp_error_device = torch.zeros((), device=policy_mask.device)
+    replay_max_ratio_error_device = torch.zeros((), device=policy_mask.device)
+    replay_max_value_error_device = torch.zeros((), device=policy_mask.device)
     replayed_actions = 0
     started = time.perf_counter()
 
@@ -1528,27 +1541,33 @@ def _ppo_update(
             old_logp = rollout.old_log_probabilities.index_select(0, indices)
             old_values = rollout.old_values.index_select(0, indices)
             lane_mask = policy_mask.index_select(0, indices)
-            lane_valid = int(lane_mask.sum().item())
             lane_value_mask = value_mask.index_select(0, indices)
-            lane_value_nodes = int(lane_value_mask.sum().item())
+            if _FAST_VALIDATED_GPU_PATH:
+                policy_weight = lane_mask.float().sum() / total_valid
+                value_weight = lane_value_mask.float().sum() / total_value_nodes
+            else:
+                lane_valid = int(lane_mask.sum().item())
+                lane_value_nodes = int(lane_value_mask.sum().item())
+                if lane_value_nodes <= 0:
+                    continue
+                policy_weight = lane_valid / total_valid
+                value_weight = lane_value_nodes / total_value_nodes
             lane_advantages = normalized_advantages.index_select(0, indices)
             lane_returns = returns.index_select(0, indices)
             lane_reference_logp = reference_log_probabilities.index_select(0, indices)
             logp_difference = torch.abs(new_logp.detach() - old_logp)
             ratio_error = torch.abs(torch.exp(new_logp.detach() - old_logp) - 1.0)
-            replay_max_logp_error = max(
-                replay_max_logp_error, float(logp_difference.max().item())
+            replay_max_logp_error_device = torch.maximum(
+                replay_max_logp_error_device, logp_difference.max()
             )
-            replay_max_ratio_error = max(
-                replay_max_ratio_error, float(ratio_error.max().item())
+            replay_max_ratio_error_device = torch.maximum(
+                replay_max_ratio_error_device, ratio_error.max()
             )
-            replay_max_value_error = max(
-                replay_max_value_error,
-                float(torch.abs(new_values.detach() - old_values).max().item()),
+            replay_max_value_error_device = torch.maximum(
+                replay_max_value_error_device,
+                torch.abs(new_values.detach() - old_values).max(),
             )
             replayed_actions += int(new_logp.numel())
-            if lane_value_nodes <= 0:
-                continue
             loss = ppo_loss(
                 new_log_probabilities=new_logp,
                 old_log_probabilities=old_logp,
@@ -1564,6 +1583,7 @@ def _ppo_update(
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
+                validated_fast_path=_FAST_VALIDATED_GPU_PATH,
             )
             reference_kl = (
                 sampled_reference_kl(
@@ -1575,8 +1595,6 @@ def _ppo_update(
                 if reference_kl_coefficient > 0.0
                 else new_logp.new_zeros(())
             )
-            policy_weight = lane_valid / total_valid
-            value_weight = lane_value_nodes / total_value_nodes
             weighted_total = (
                 loss.policy * policy_weight
                 + value_coefficient * loss.value * value_weight
@@ -1585,7 +1603,7 @@ def _ppo_update(
             )
             weighted_total.backward()
             _add_weighted_loss(
-                pre_metrics,
+                pre_metrics_device,
                 loss,
                 policy_weight=policy_weight,
                 value_weight=value_weight,
@@ -1595,6 +1613,18 @@ def _ppo_update(
                 reference_kl_coefficient=reference_kl_coefficient,
             )
             learner_minibatches += 1
+
+    replay_max_logp_error, replay_max_ratio_error, replay_max_value_error = (
+        float(value)
+        for value in torch.stack(
+            (
+                replay_max_logp_error_device,
+                replay_max_ratio_error_device,
+                replay_max_value_error_device,
+            )
+        ).detach().cpu().tolist()
+    )
+    pre_metrics = _materialize_weighted_metrics(pre_metrics_device)
 
     if replay_max_logp_error > replay_tolerance or replay_max_ratio_error > replay_tolerance:
         raise PPOTrainError(
@@ -1623,10 +1653,13 @@ def _ppo_update(
             ),
         }
 
-    gradient_norm = require_finite_gradients(tuple(model.parameters()))
-    clip_grad_return = float(
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_gradient_norm).item()
+    clip_grad = torch.nn.utils.clip_grad_norm_(
+        model.parameters(),
+        max_gradient_norm,
+        error_if_nonfinite=True,
     )
+    gradient_norm = float(clip_grad.item())
+    clip_grad_return = gradient_norm
     optimizer.step()
     scheduler.step()
     update_seconds = time.perf_counter() - started
@@ -1668,7 +1701,7 @@ def _ppo_update(
     validation_value_nodes = int(validation_value_mask.sum().item())
     if validation_valid <= 0 or validation_value_nodes <= 0:
         raise PPOTrainError("post-update validation selected no trainable policy/value samples")
-    post_metrics = _weighted_metrics_accumulator()
+    post_metrics_device = _weighted_metrics_accumulator(policy_mask.device)
     post_values = torch.full_like(rollout.old_values, float("nan"))
     post_value_mask = torch.zeros_like(value_mask)
     post_value_mask.index_fill_(0, validation_indices, True)
@@ -1692,12 +1725,18 @@ def _ppo_update(
                 compute_entropy=entropy_coefficient > 0.0,
             )
             lane_mask = policy_mask.index_select(0, indices)
-            lane_valid = int(lane_mask.sum().item())
             lane_value_mask = value_mask.index_select(0, indices)
-            lane_value_nodes = int(lane_value_mask.sum().item())
+            if _FAST_VALIDATED_GPU_PATH:
+                post_policy_weight = lane_mask.float().sum() / validation_valid
+                post_value_weight = lane_value_mask.float().sum() / validation_value_nodes
+            else:
+                lane_valid = int(lane_mask.sum().item())
+                lane_value_nodes = int(lane_value_mask.sum().item())
+                if lane_value_nodes <= 0:
+                    continue
+                post_policy_weight = lane_valid / validation_valid
+                post_value_weight = lane_value_nodes / validation_value_nodes
             post_values.index_copy_(0, indices, new_values.detach())
-            if lane_value_nodes <= 0:
-                continue
             old_logp = rollout.old_log_probabilities.index_select(0, indices)
             lane_reference_logp = reference_log_probabilities.index_select(0, indices)
             loss = ppo_loss(
@@ -1715,6 +1754,7 @@ def _ppo_update(
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
+                validated_fast_path=_FAST_VALIDATED_GPU_PATH,
             )
             reference_kl = (
                 sampled_reference_kl(
@@ -1727,15 +1767,16 @@ def _ppo_update(
                 else new_logp.new_zeros(())
             )
             _add_weighted_loss(
-                post_metrics,
+                post_metrics_device,
                 loss,
-                policy_weight=lane_valid / validation_valid,
-                value_weight=lane_value_nodes / validation_value_nodes,
+                policy_weight=post_policy_weight,
+                value_weight=post_value_weight,
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
                 reference_kl=reference_kl,
                 reference_kl_coefficient=reference_kl_coefficient,
             )
+    post_metrics = _materialize_weighted_metrics(post_metrics_device)
     post_replay_seconds = time.perf_counter() - post_started
     if not torch.isfinite(post_values[post_value_mask]).all():
         raise PPOTrainError("post-update critic validation did not cover every selected value node")
