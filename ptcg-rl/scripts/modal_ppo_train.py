@@ -186,8 +186,9 @@ def train(
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
-    frozen_v7_fraction: float = 0.30,
-    frozen_v5_fraction: float = 0.30,
+    frozen_reference_fraction: float = 0.30,
+    frozen_v7_fraction: float = 0.15,
+    frozen_v5_fraction: float = 0.15,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     post_validation_lanes: int = 1,
@@ -213,11 +214,13 @@ def train(
         raise ValueError("reference_kl_coefficient must be nonnegative")
     if bc_anchor_coefficient < 0.0:
         raise ValueError("bc_anchor_coefficient must be nonnegative")
+    if not (0.0 <= frozen_reference_fraction <= 1.0):
+        raise ValueError("frozen_reference_fraction must stay within [0, 1]")
     if not (0.0 <= frozen_v7_fraction <= 1.0):
         raise ValueError("frozen_v7_fraction must stay within [0, 1]")
     if not (0.0 <= frozen_v5_fraction <= 1.0):
         raise ValueError("frozen_v5_fraction must stay within [0, 1]")
-    if frozen_v7_fraction + frozen_v5_fraction > 1.0:
+    if frozen_reference_fraction + frozen_v7_fraction + frozen_v5_fraction > 1.0:
         raise ValueError("frozen league fractions must sum to <= 1")
     if heartbeat_seconds <= 0.0 or heartbeat_seconds > 60.0:
         raise ValueError("heartbeat_seconds must stay within (0, 60]")
@@ -279,6 +282,8 @@ def train(
         str(post_validation_lanes),
         "--seed",
         str(seed),
+        "--frozen-reference-fraction",
+        str(frozen_reference_fraction),
         "--frozen-v7-fraction",
         str(frozen_v7_fraction),
         "--frozen-v5-fraction",
@@ -381,8 +386,9 @@ def main(
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
-    frozen_v7_fraction: float = 0.30,
-    frozen_v5_fraction: float = 0.30,
+    frozen_reference_fraction: float = 0.30,
+    frozen_v7_fraction: float = 0.15,
+    frozen_v5_fraction: float = 0.15,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
     post_validation_lanes: int = 1,
@@ -404,6 +410,7 @@ def main(
         learning_rate=learning_rate,
         reference_kl_coefficient=reference_kl_coefficient,
         bc_anchor_coefficient=bc_anchor_coefficient,
+        frozen_reference_fraction=frozen_reference_fraction,
         frozen_v7_fraction=frozen_v7_fraction,
         frozen_v5_fraction=frozen_v5_fraction,
         heartbeat_seconds=heartbeat_seconds,

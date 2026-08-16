@@ -50,8 +50,9 @@ class PPOTrainError(RuntimeError):
 
 
 POLICY_LEARNER = 0
-POLICY_FROZEN_V7 = 1
-POLICY_FROZEN_V5 = 2
+POLICY_FROZEN_REFERENCE = 1
+POLICY_FROZEN_V7 = 2
+POLICY_FROZEN_V5 = 3
 
 ACTOR_SNAPSHOT_SCHEMA_VERSION = 1
 ACTOR_SNAPSHOT_KIND = "KPTCG_G3_GPU_ACTOR_SNAPSHOT"
@@ -161,6 +162,7 @@ def _exact_resume_configuration(
         "rollout_horizon": args.rollout_horizon,
         "chunk_boundaries": args.chunk_boundaries,
         "learner_lane_envs": args.learner_lane_envs,
+        "frozen_reference_fraction": args.frozen_reference_fraction,
         "frozen_v7_fraction": args.frozen_v7_fraction,
         "frozen_v5_fraction": args.frozen_v5_fraction,
         "seed": args.seed,
@@ -512,38 +514,47 @@ def _backward_bc_anchor(
 def _league_assignment(
     env_count: int,
     *,
+    frozen_reference_fraction: float,
     frozen_v7_fraction: float,
     frozen_v5_fraction: float,
     seed: int,
     device: torch.device,
 ) -> tuple[Tensor, dict[str, Any]]:
     for value, label in (
+        (frozen_reference_fraction, "frozen-reference fraction"),
         (frozen_v7_fraction, "frozen-v7 fraction"),
         (frozen_v5_fraction, "frozen-v5 fraction"),
     ):
         if not (0.0 <= value <= 1.0) or not math.isfinite(value):
             raise PPOTrainError(f"{label} must be finite and within [0, 1]")
-    if frozen_v7_fraction + frozen_v5_fraction > 1.0:
-        raise PPOTrainError("frozen-v7 and frozen-v5 league fractions must sum to <= 1")
+    frozen_total = frozen_reference_fraction + frozen_v7_fraction + frozen_v5_fraction
+    if frozen_total > 1.0:
+        raise PPOTrainError("frozen league fractions must sum to <= 1")
     rng = np.random.default_rng(seed ^ 0x6C6561677565)
     draw = rng.random(env_count)
-    v7_env = draw < frozen_v7_fraction
-    v5_env = (draw >= frozen_v7_fraction) & (
-        draw < frozen_v7_fraction + frozen_v5_fraction
+    reference_env = draw < frozen_reference_fraction
+    v7_env = (draw >= frozen_reference_fraction) & (
+        draw < frozen_reference_fraction + frozen_v7_fraction
     )
-    frozen_env = v7_env | v5_env
+    v5_env = (draw >= frozen_reference_fraction + frozen_v7_fraction) & (draw < frozen_total)
+    frozen_env = reference_env | v7_env | v5_env
     frozen_seats = rng.integers(0, 2, size=env_count, dtype=np.int64)
     assignment = np.full((env_count, 2), POLICY_LEARNER, dtype=np.int8)
+    reference_rows = np.nonzero(reference_env)[0]
     v7_rows = np.nonzero(v7_env)[0]
     v5_rows = np.nonzero(v5_env)[0]
+    assignment[reference_rows, frozen_seats[reference_rows]] = POLICY_FROZEN_REFERENCE
     assignment[v7_rows, frozen_seats[v7_rows]] = POLICY_FROZEN_V7
     assignment[v5_rows, frozen_seats[v5_rows]] = POLICY_FROZEN_V5
     tensor = torch.from_numpy(assignment).to(device=device)
     return tensor, {
         "current_selfplay_envs": int((~frozen_env).sum()),
+        "frozen_reference_envs": int(reference_env.sum()),
         "frozen_v7_envs": int(v7_env.sum()),
         "frozen_v5_envs": int(v5_env.sum()),
         "frozen_fraction_realized": float(frozen_env.mean()),
+        "frozen_reference_seat_0": int(np.sum(reference_env & (frozen_seats == 0))),
+        "frozen_reference_seat_1": int(np.sum(reference_env & (frozen_seats == 1))),
         "frozen_v7_seat_0": int(np.sum(v7_env & (frozen_seats == 0))),
         "frozen_v7_seat_1": int(np.sum(v7_env & (frozen_seats == 1))),
         "frozen_v5_seat_0": int(np.sum(v5_env & (frozen_seats == 0))),
@@ -563,9 +574,12 @@ def _league_metrics_from_assignment(assignment: Tensor) -> dict[str, Any]:
     frozen_env = frozen_0 | frozen_1
     return {
         "current_selfplay_envs": int((~frozen_env).sum().item()),
+        "frozen_reference_envs": int(torch.any(assignment == POLICY_FROZEN_REFERENCE, dim=1).sum().item()),
         "frozen_v7_envs": int(torch.any(assignment == POLICY_FROZEN_V7, dim=1).sum().item()),
         "frozen_v5_envs": int(torch.any(assignment == POLICY_FROZEN_V5, dim=1).sum().item()),
         "frozen_fraction_realized": float(frozen_env.float().mean().item()),
+        "frozen_reference_seat_0": int((assignment[:, 0] == POLICY_FROZEN_REFERENCE).sum().item()),
+        "frozen_reference_seat_1": int((assignment[:, 1] == POLICY_FROZEN_REFERENCE).sum().item()),
         "frozen_v7_seat_0": int((assignment[:, 0] == POLICY_FROZEN_V7).sum().item()),
         "frozen_v7_seat_1": int((assignment[:, 1] == POLICY_FROZEN_V7).sum().item()),
         "frozen_v5_seat_0": int((assignment[:, 0] == POLICY_FROZEN_V5).sum().item()),
@@ -579,12 +593,14 @@ def _initialize_actor_state(
     runtime: GpuCabtRuntime,
     decks: Any,
     seed: int,
+    frozen_reference_fraction: float,
     frozen_v7_fraction: float,
     frozen_v5_fraction: float,
 ) -> ActorStateV1:
     device = next(model.parameters()).device
     assignment, _ = _league_assignment(
         runtime.env_count,
+        frozen_reference_fraction=frozen_reference_fraction,
         frozen_v7_fraction=frozen_v7_fraction,
         frozen_v5_fraction=frozen_v5_fraction,
         seed=seed,
@@ -608,6 +624,7 @@ def _recycle_terminal_envs(
     runtime: GpuCabtRuntime,
     decks: Any,
     seed: int,
+    frozen_reference_fraction: float,
     frozen_v7_fraction: float,
     frozen_v5_fraction: float,
 ) -> int:
@@ -622,6 +639,7 @@ def _recycle_terminal_envs(
         return 0
     fresh_assignment, _ = _league_assignment(
         runtime.env_count,
+        frozen_reference_fraction=frozen_reference_fraction,
         frozen_v7_fraction=frozen_v7_fraction,
         frozen_v5_fraction=frozen_v5_fraction,
         seed=seed,
@@ -789,12 +807,14 @@ def _apply_actions(
 def _collect_fixed_horizon_rollout(
     *,
     model: PTCGPolicyV1,
+    frozen_reference_model: PTCGPolicyV1,
     frozen_v7_model: PTCGPolicyV1,
     frozen_v5_model: PTCGPolicyV1,
     actor_state: ActorStateV1,
     runtime: GpuCabtRuntime,
     decks: Any,
     seed: int,
+    frozen_reference_fraction: float,
     frozen_v7_fraction: float,
     frozen_v5_fraction: float,
     rollout_horizon: int,
@@ -809,6 +829,7 @@ def _collect_fixed_horizon_rollout(
         runtime=runtime,
         decks=decks,
         seed=seed,
+        frozen_reference_fraction=frozen_reference_fraction,
         frozen_v7_fraction=frozen_v7_fraction,
         frozen_v5_fraction=frozen_v5_fraction,
     )
@@ -833,6 +854,7 @@ def _collect_fixed_horizon_rollout(
     flat_offset = 0
     actor_decisions = 0
     learner_decisions = 0
+    frozen_reference_decisions = 0
     frozen_v7_decisions = 0
     frozen_v5_decisions = 0
     meaningful_targets = 0
@@ -881,6 +903,7 @@ def _collect_fixed_horizon_rollout(
         active_actors = status.select_players.index_select(0, active_indices).to(torch.long)
         active_policy_ids = assignment[active_indices, active_actors]
         learner_envs = active_indices[active_policy_ids == POLICY_LEARNER]
+        frozen_reference_envs = active_indices[active_policy_ids == POLICY_FROZEN_REFERENCE]
         frozen_v7_envs = active_indices[active_policy_ids == POLICY_FROZEN_V7]
         frozen_v5_envs = active_indices[active_policy_ids == POLICY_FROZEN_V5]
 
@@ -895,7 +918,7 @@ def _collect_fixed_horizon_rollout(
             policy_id: int,
         ) -> None:
             nonlocal flat_offset, bridge_seconds, model_seconds
-            nonlocal learner_decisions, frozen_v7_decisions, frozen_v5_decisions, meaningful_targets
+            nonlocal learner_decisions, frozen_reference_decisions, frozen_v7_decisions, frozen_v5_decisions, meaningful_targets
             if env_indices.numel() == 0:
                 return
             bridge_started = time.perf_counter()
@@ -932,6 +955,9 @@ def _collect_fixed_horizon_rollout(
                 env_indices=meta.env_indices,
                 actions=actions,
             )
+            if policy_id == POLICY_FROZEN_REFERENCE:
+                frozen_reference_decisions += batch.batch_size
+                return
             if policy_id == POLICY_FROZEN_V7:
                 frozen_v7_decisions += batch.batch_size
                 return
@@ -976,6 +1002,7 @@ def _collect_fixed_horizon_rollout(
             if lane_envs.numel():
                 run_group(lane_envs, model, policy_id=POLICY_LEARNER)
                 learner_inference_groups += 1
+        run_group(frozen_reference_envs, frozen_reference_model, policy_id=POLICY_FROZEN_REFERENCE)
         run_group(frozen_v7_envs, frozen_v7_model, policy_id=POLICY_FROZEN_V7)
         run_group(frozen_v5_envs, frozen_v5_model, policy_id=POLICY_FROZEN_V5)
         actor_decisions += active_count
@@ -1033,6 +1060,7 @@ def _collect_fixed_horizon_rollout(
             'rollout_seconds': elapsed,
             'actor_recurrent_decisions': actor_decisions,
             'learner_recurrent_decisions': learner_decisions,
+            'frozen_reference_recurrent_decisions': frozen_reference_decisions,
             'frozen_v7_recurrent_decisions': frozen_v7_decisions,
             'frozen_v5_recurrent_decisions': frozen_v5_decisions,
             'meaningful_policy_targets': meaningful_targets,
@@ -1590,13 +1618,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.max_initial_signal_horizons <= 0:
         raise PPOTrainError("max initial signal horizons must be positive")
     for value, label in (
+        (args.frozen_reference_fraction, "frozen-reference fraction"),
         (args.frozen_v7_fraction, "frozen-v7 fraction"),
         (args.frozen_v5_fraction, "frozen-v5 fraction"),
     ):
         if not (0.0 <= value <= 1.0) or not math.isfinite(value):
             raise PPOTrainError(f"{label} must be finite and within [0, 1]")
-    if args.frozen_v7_fraction + args.frozen_v5_fraction > 1.0:
-        raise PPOTrainError("frozen-v7 and frozen-v5 fractions must sum to <= 1")
+    if args.frozen_reference_fraction + args.frozen_v7_fraction + args.frozen_v5_fraction > 1.0:
+        raise PPOTrainError("frozen league fractions must sum to <= 1")
     if args.frozen_v7_fraction > 0 and args.v7_checkpoint is None:
         raise PPOTrainError("positive frozen-v7 fraction requires --v7-checkpoint")
     if args.frozen_v5_fraction > 0 and args.v5_checkpoint is None:
@@ -1744,6 +1773,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             runtime=runtime,
             decks=decks_device,
             seed=args.seed,
+            frozen_reference_fraction=args.frozen_reference_fraction,
             frozen_v7_fraction=args.frozen_v7_fraction,
             frozen_v5_fraction=args.frozen_v5_fraction,
         )
@@ -1773,12 +1803,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         model.train()
         rollout = _collect_fixed_horizon_rollout(
             model=model,
+            frozen_reference_model=frozen_reference_model,
             frozen_v7_model=frozen_v7_model,
             frozen_v5_model=frozen_v5_model,
             actor_state=actor_state,
             runtime=runtime,
             decks=decks_device,
             seed=rollout_seed,
+            frozen_reference_fraction=args.frozen_reference_fraction,
             frozen_v7_fraction=args.frozen_v7_fraction,
             frozen_v5_fraction=args.frozen_v5_fraction,
             rollout_horizon=args.rollout_horizon,
@@ -1975,11 +2007,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "initial_signal_wait_horizons": initial_signal_wait_horizons,
                 },
                 league={
-                    "mode": "current-selfplay-plus-frozen-v7-v5",
+                    "mode": "current-selfplay-plus-frozen-reference-v7-v5",
+                    "frozen_reference_fraction_requested": args.frozen_reference_fraction,
                     "frozen_v7_fraction_requested": args.frozen_v7_fraction,
                     "frozen_v5_fraction_requested": args.frozen_v5_fraction,
                     "reference_policy": {"id": "frozen-initializer-reference"},
                     "historical_opponents": [
+                        {"id": "frozen-initializer-opponent"},
                         {"id": "bc-v7-frozen-opponent"},
                         {"id": "bc-v5-frozen-opponent"},
                     ],
@@ -2092,6 +2126,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "learner_lane_envs": args.learner_lane_envs,
             "heartbeat_seconds": args.heartbeat_seconds,
             "checkpoint_every_updates": args.checkpoint_every_updates,
+            "frozen_reference_fraction": args.frozen_reference_fraction,
             "frozen_v7_fraction": args.frozen_v7_fraction,
             "frozen_v5_fraction": args.frozen_v5_fraction,
             "gamma": args.gamma,
@@ -2193,8 +2228,9 @@ def main() -> int:
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
     parser.add_argument("--heartbeat-seconds", type=float, default=10.0)
     parser.add_argument("--checkpoint-every-updates", type=int, default=10)
-    parser.add_argument("--frozen-v7-fraction", type=float, default=0.30)
-    parser.add_argument("--frozen-v5-fraction", type=float, default=0.30)
+    parser.add_argument("--frozen-reference-fraction", type=float, default=0.30)
+    parser.add_argument("--frozen-v7-fraction", type=float, default=0.15)
+    parser.add_argument("--frozen-v5-fraction", type=float, default=0.15)
     parser.add_argument("--seed", type=int, default=20260815)
     parser.add_argument("--stack-bytes", type=int, default=16 * 1024)
     parser.add_argument("--device", default="cuda")
