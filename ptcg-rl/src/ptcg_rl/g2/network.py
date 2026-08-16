@@ -487,6 +487,7 @@ class PTCGPolicyV1(nn.Module):
         self.card_table_sha256 = table.table_sha256
         self.catalog = StaticCatalogEncoder(table, self.config)
         self.checkpoint_entity_transformer = False
+        self.checkpoint_entity_transformer_first_layer_only = False
 
         self.player_relative = SafeEmbedding(2, 4)
         self.binary = SafeEmbedding(1, 4)
@@ -795,14 +796,37 @@ class PTCGPolicyV1(nn.Module):
             and self.training
             and torch.is_grad_enabled()
         ):
-            transformed = checkpoint(
-                lambda values, mask: self.entity_transformer(
-                    values, src_key_padding_mask=mask
-                ),
-                padded,
-                padding,
-                use_reentrant=False,
-            )
+            if self.checkpoint_entity_transformer_first_layer_only:
+                transformed = padded
+                for layer_index, layer in enumerate(self.entity_transformer.layers):
+                    if layer_index == 0:
+                        transformed = checkpoint(
+                            lambda values, mask, current_layer=layer: current_layer(
+                                values,
+                                src_key_padding_mask=mask,
+                                is_causal=False,
+                            ),
+                            transformed,
+                            padding,
+                            use_reentrant=False,
+                        )
+                    else:
+                        transformed = layer(
+                            transformed,
+                            src_key_padding_mask=padding,
+                            is_causal=False,
+                        )
+                if self.entity_transformer.norm is not None:
+                    transformed = self.entity_transformer.norm(transformed)
+            else:
+                transformed = checkpoint(
+                    lambda values, mask: self.entity_transformer(
+                        values, src_key_padding_mask=mask
+                    ),
+                    padded,
+                    padding,
+                    use_reentrant=False,
+                )
         else:
             transformed = self.entity_transformer(padded, src_key_padding_mask=padding)
         pooled = transformed[:, 0]

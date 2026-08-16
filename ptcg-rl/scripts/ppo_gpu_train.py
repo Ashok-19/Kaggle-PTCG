@@ -228,6 +228,7 @@ def _exact_resume_configuration(
         "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
         "freeze_observation_encoder": args.freeze_observation_encoder,
         "checkpoint_entity_transformer": args.checkpoint_entity_transformer,
+        "checkpoint_entity_transformer_first_layer_only": args.checkpoint_entity_transformer_first_layer_only,
         "frozen_reference_fraction": args.frozen_reference_fraction,
         "rollout_storage": args.rollout_storage,
         "frozen_v7_fraction": args.frozen_v7_fraction,
@@ -1955,6 +1956,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     card_table = load_card_table(args.card_table)
     model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     model.checkpoint_entity_transformer = args.checkpoint_entity_transformer
+    model.checkpoint_entity_transformer_first_layer_only = (
+        args.checkpoint_entity_transformer_first_layer_only
+    )
     load_training_checkpoint_model_state(args.bc_checkpoint, model=model)
     # Keep the frozen reference anchored to the selected BC initializer even when
     # the trainable policy is warm-started from a prior RL checkpoint under a new
@@ -2634,6 +2638,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
             "freeze_observation_encoder": args.freeze_observation_encoder,
             "checkpoint_entity_transformer": args.checkpoint_entity_transformer,
+            "checkpoint_entity_transformer_first_layer_only": args.checkpoint_entity_transformer_first_layer_only,
             "rollout_storage": args.rollout_storage,
             "checkpoint_every_updates": args.checkpoint_every_updates,
             "frozen_reference_fraction": args.frozen_reference_fraction,
@@ -2753,6 +2758,9 @@ def main() -> int:
     parser.add_argument("--optimizer-lanes-per-update", type=int, default=0)
     parser.add_argument("--freeze-observation-encoder", action="store_true")
     parser.add_argument("--checkpoint-entity-transformer", action="store_true")
+    parser.add_argument(
+        "--checkpoint-entity-transformer-first-layer-only", action="store_true"
+    )
     parser.add_argument(
         "--rollout-storage",
         choices=("cpu-compact", "cuda-compact"),
