@@ -49,6 +49,9 @@ class PPOTrainError(RuntimeError):
     pass
 
 
+_FAST_VALIDATED_GPU_PATH = os.environ.get("KPTCG_FAST_VALIDATED_GPU_PATH") == "1"
+
+
 POLICY_LEARNER = 0
 POLICY_FROZEN_REFERENCE = 1
 POLICY_FROZEN_V7 = 2
@@ -187,6 +190,7 @@ def _exact_resume_configuration(
         "chunk_boundaries": args.chunk_boundaries,
         "learner_lane_envs": args.learner_lane_envs,
         "frozen_reference_fraction": args.frozen_reference_fraction,
+        "rollout_storage": args.rollout_storage,
         "frozen_v7_fraction": args.frozen_v7_fraction,
         "frozen_v5_fraction": args.frozen_v5_fraction,
         "seed": args.seed,
@@ -698,14 +702,14 @@ def _clone_actions(actions: BatchedCompoundActionV1) -> BatchedCompoundActionV1:
     )
 
 
-def _compact_batch_to_cpu(batch: TorchDecisionBatch) -> TorchDecisionBatch:
-    """Losslessly compact GPU-bridge observations for bounded rollout retention.
-
-    GPU-CABT bridge numeric fields are integer-valued public quantities represented
-    as float32. Float16 therefore preserves the current qualified ranges exactly,
-    while categorical/index tensors fit in signed int32. The learner restores the
-    model-facing dtypes before replay; probability replay is the fail-closed guard.
-    """
+def _compact_batch_for_rollout(
+    batch: TorchDecisionBatch,
+    *,
+    storage: str,
+) -> TorchDecisionBatch:
+    """Losslessly compact rollout observations on CPU or CUDA."""
+    if storage not in {"cpu-compact", "cuda-compact"}:
+        raise PPOTrainError(f"unsupported rollout storage {storage!r}")
     values: dict[str, Any] = {"batch_size": batch.batch_size}
     for name, value in batch.__dict__.items():
         if name == "batch_size":
@@ -714,16 +718,19 @@ def _compact_batch_to_cpu(batch: TorchDecisionBatch) -> TorchDecisionBatch:
         if tensor.dtype == torch.long:
             tensor = tensor.to(dtype=torch.int32)
         elif tensor.dtype == torch.float32:
-            if tensor.numel() and torch.any(torch.abs(tensor) > 2048):
-                raise PPOTrainError(
-                    f"cannot losslessly compact {name}: numeric value exceeds float16 exact-integer range"
-                )
-            if tensor.numel() and torch.any(tensor != tensor.round()):
-                raise PPOTrainError(
-                    f"cannot losslessly compact {name}: GPU bridge numeric field is fractional"
-                )
+            if not _FAST_VALIDATED_GPU_PATH:
+                if tensor.numel() and torch.any(torch.abs(tensor) > 2048):
+                    raise PPOTrainError(
+                        f"cannot losslessly compact {name}: numeric value exceeds float16 exact-integer range"
+                    )
+                if tensor.numel() and torch.any(tensor != tensor.round()):
+                    raise PPOTrainError(
+                        f"cannot losslessly compact {name}: GPU bridge numeric field is fractional"
+                    )
             tensor = tensor.to(dtype=torch.float16)
-        values[name] = tensor.cpu()
+        if storage == "cpu-compact":
+            tensor = tensor.cpu()
+        values[name] = tensor
     return TorchDecisionBatch(**values)
 
 
@@ -743,13 +750,20 @@ def _restore_batch_to_device(batch: TorchDecisionBatch, device: torch.device) ->
     return TorchDecisionBatch(**values)
 
 
-def _compact_actions_to_cpu(actions: BatchedCompoundActionV1) -> BatchedCompoundActionV1:
+def _compact_actions_for_rollout(
+    actions: BatchedCompoundActionV1,
+    *,
+    storage: str,
+) -> BatchedCompoundActionV1:
+    if storage not in {"cpu-compact", "cuda-compact"}:
+        raise PPOTrainError(f"unsupported rollout storage {storage!r}")
+    device = torch.device("cpu") if storage == "cpu-compact" else actions.selected_lengths.device
     return BatchedCompoundActionV1(
-        selected_indices=actions.selected_indices.detach().to(dtype=torch.int32).cpu(),
-        selected_lengths=actions.selected_lengths.detach().to(dtype=torch.int32).cpu(),
-        stopped=actions.stopped.detach().cpu(),
-        log_probabilities=actions.log_probabilities.detach().float().cpu(),
-        normalized_entropies=actions.normalized_entropies.detach().float().cpu(),
+        selected_indices=actions.selected_indices.detach().to(device=device, dtype=torch.int32),
+        selected_lengths=actions.selected_lengths.detach().to(device=device, dtype=torch.int32),
+        stopped=actions.stopped.detach().to(device=device),
+        log_probabilities=actions.log_probabilities.detach().to(device=device, dtype=torch.float32),
+        normalized_entropies=actions.normalized_entropies.detach().to(device=device, dtype=torch.float32),
     )
 
 
@@ -801,6 +815,15 @@ def _lane_steps_and_indices(
     indices: list[Tensor] = []
     for step in steps:
         start_value = torch.tensor(env_start, dtype=step.env_indices.dtype)
+        if step.env_indices.numel():
+            first_env = int(step.env_indices[0].item())
+            last_env = int(step.env_indices[-1].item())
+            if first_env >= env_start and last_env < env_end:
+                lane_steps.append(step)
+                indices.append(torch.arange(step.flat_start, step.flat_end, dtype=torch.long))
+                continue
+            if last_env < env_start or first_env >= env_end:
+                continue
         end_value = torch.tensor(env_end, dtype=step.env_indices.dtype)
         row_start = int(torch.searchsorted(step.env_indices, start_value, right=False).item())
         row_end = int(torch.searchsorted(step.env_indices, end_value, right=False).item())
@@ -851,6 +874,7 @@ def _collect_fixed_horizon_rollout(
     chunk_boundaries: int,
     learner_lane_envs: int,
     bf16: bool,
+    rollout_storage: str,
     heartbeat_seconds: float = 10.0,
 ) -> RolloutV1:
     device = next(model.parameters()).device
@@ -900,6 +924,10 @@ def _collect_fixed_horizon_rollout(
     autocast = lambda: torch.autocast(  # noqa: E731
         device_type='cuda', dtype=torch.bfloat16, enabled=bf16
     )
+
+    with torch.inference_mode(), autocast():
+        for cached_policy in (model, frozen_reference_model, frozen_v7_model, frozen_v5_model):
+            cached_policy.catalog.prepare_encoded_cache()
 
     for boundary in range(rollout_horizon):
         raw_status = runtime.status()
@@ -1013,12 +1041,12 @@ def _collect_fixed_horizon_rollout(
             steps.append(
                 LearnerStepV1(
                     boundary=boundary,
-                    batch=_compact_batch_to_cpu(batch),
+                    batch=_compact_batch_for_rollout(batch, storage=rollout_storage),
                     env_indices=meta.env_indices.detach().to(dtype=torch.int32).cpu(),
                     actors=meta.actors.detach().to(dtype=torch.int32).cpu(),
                     minimum_counts=meta.minimum_counts.detach().to(dtype=torch.int32).cpu(),
                     maximum_counts=meta.maximum_counts.detach().to(dtype=torch.int32).cpu(),
-                    actions=_compact_actions_to_cpu(actions),
+                    actions=_compact_actions_for_rollout(actions, storage=rollout_storage),
                     flat_start=flat_offset,
                     flat_end=flat_offset + count,
                 )
@@ -1061,6 +1089,9 @@ def _collect_fixed_horizon_rollout(
                 flush=True,
             )
             last_heartbeat = now
+
+    for cached_policy in (model, frozen_reference_model, frozen_v7_model, frozen_v5_model):
+        cached_policy.catalog.clear_encoded_cache()
 
     raw_final_status = runtime.status()
     runtime.synchronize()
@@ -1127,6 +1158,7 @@ def _replay_chunk(
     hidden_snapshot: Tensor,
     gradient: bool,
     bf16: bool,
+    compute_entropy: bool,
 ) -> tuple[Tensor, Tensor, Tensor]:
     device = hidden_snapshot.device
     hidden = hidden_snapshot.reshape(-1, model.config.public_hidden)
@@ -1136,6 +1168,7 @@ def _replay_chunk(
     context = torch.enable_grad() if gradient else torch.inference_mode()
     autocast = torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=bf16)
     with context, autocast:
+        model.catalog.prepare_encoded_cache()
         for step in steps:
             batch = _restore_batch_to_device(step.batch, device)
             env_indices = step.env_indices.to(device=device, dtype=torch.long)
@@ -1161,11 +1194,13 @@ def _replay_chunk(
                 minimum_counts=minimum_counts,
                 maximum_counts=maximum_counts,
                 actions=actions,
+                compute_entropy=compute_entropy,
             )
             log_probabilities.append(replay_logp.float())
             values.append(replay_values.float())
             entropies.append(replay_entropy.float())
             hidden = hidden.index_copy(0, owner, output.hidden.to(hidden.dtype))
+        model.catalog.clear_encoded_cache()
     return torch.cat(log_probabilities), torch.cat(values), torch.cat(entropies)
 
 
@@ -1183,6 +1218,7 @@ def _replay_reference_log_probabilities(
     with torch.inference_mode(), torch.autocast(
         device_type="cuda", dtype=torch.bfloat16, enabled=bf16
     ):
+        model.catalog.prepare_encoded_cache()
         for step in rollout.steps:
             batch = _restore_batch_to_device(step.batch, device)
             env_indices = step.env_indices.to(device=device, dtype=torch.long)
@@ -1203,9 +1239,11 @@ def _replay_reference_log_probabilities(
                 minimum_counts=minimum_counts,
                 maximum_counts=maximum_counts,
                 actions=actions,
+                compute_entropy=False,
             )
             reference_logp[step.flat_start : step.flat_end] = replay_logp.float()
             hidden = hidden.index_copy(0, owner, output.hidden.to(hidden.dtype))
+        model.catalog.clear_encoded_cache()
     torch.cuda.synchronize(device)
     elapsed = time.perf_counter() - started
     if not torch.isfinite(reference_logp).all():
@@ -1286,6 +1324,7 @@ def _critic_calibration_update(
                 hidden_snapshot=hidden_snapshot,
                 gradient=True,
                 bf16=bf16,
+                compute_entropy=False,
             )
             lane_targets = targets.index_select(0, indices)
             loss = 0.5 * (values[lane_terminal] - lane_targets[lane_terminal]).square().mean()
@@ -1462,6 +1501,7 @@ def _ppo_update(
                 hidden_snapshot=hidden_snapshot,
                 gradient=True,
                 bf16=bf16,
+                compute_entropy=entropy_coefficient > 0.0,
             )
             old_logp = rollout.old_log_probabilities.index_select(0, indices)
             old_values = rollout.old_values.index_select(0, indices)
@@ -1503,11 +1543,15 @@ def _ppo_update(
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
             )
-            reference_kl = sampled_reference_kl(
-                new_log_probabilities=new_logp,
-                old_log_probabilities=old_logp,
-                reference_log_probabilities=lane_reference_logp,
-                policy_mask=lane_mask,
+            reference_kl = (
+                sampled_reference_kl(
+                    new_log_probabilities=new_logp,
+                    old_log_probabilities=old_logp,
+                    reference_log_probabilities=lane_reference_logp,
+                    policy_mask=lane_mask,
+                )
+                if reference_kl_coefficient > 0.0
+                else new_logp.new_zeros(())
             )
             policy_weight = lane_valid / total_valid
             value_weight = lane_value_nodes / total_value_nodes
@@ -1621,6 +1665,7 @@ def _ppo_update(
                 hidden_snapshot=hidden_snapshot,
                 gradient=False,
                 bf16=bf16,
+                compute_entropy=entropy_coefficient > 0.0,
             )
             lane_mask = policy_mask.index_select(0, indices)
             lane_valid = int(lane_mask.sum().item())
@@ -1647,11 +1692,15 @@ def _ppo_update(
                 entropy_coefficient=entropy_coefficient,
                 normalize_advantages=False,
             )
-            reference_kl = sampled_reference_kl(
-                new_log_probabilities=new_logp,
-                old_log_probabilities=old_logp,
-                reference_log_probabilities=lane_reference_logp,
-                policy_mask=lane_mask,
+            reference_kl = (
+                sampled_reference_kl(
+                    new_log_probabilities=new_logp,
+                    old_log_probabilities=old_logp,
+                    reference_log_probabilities=lane_reference_logp,
+                    policy_mask=lane_mask,
+                )
+                if reference_kl_coefficient > 0.0
+                else new_logp.new_zeros(())
             )
             _add_weighted_loss(
                 post_metrics,
@@ -2000,6 +2049,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 chunk_boundaries=args.chunk_boundaries,
                 bf16=args.bf16,
                 learner_lane_envs=args.learner_lane_envs,
+                rollout_storage=args.rollout_storage,
                 heartbeat_seconds=args.heartbeat_seconds,
             )
             # The value head does not feed recurrent hidden or action logits, so the
@@ -2096,6 +2146,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             chunk_boundaries=args.chunk_boundaries,
             bf16=args.bf16,
             learner_lane_envs=args.learner_lane_envs,
+            rollout_storage=args.rollout_storage,
             heartbeat_seconds=args.heartbeat_seconds,
         )
         gae_started = time.perf_counter()
@@ -2146,14 +2197,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "completed-game Monte Carlo returns differ from exact terminal outcomes: "
                     f"{maximum_return_error}"
                 )
-        reference_logp, reference_hidden, reference_replay_seconds = (
-            _replay_reference_log_probabilities(
-                model=frozen_reference_model,
-                rollout=rollout,
-                bf16=args.bf16,
+        if args.reference_kl_coefficient > 0.0:
+            reference_logp, reference_hidden, reference_replay_seconds = (
+                _replay_reference_log_probabilities(
+                    model=frozen_reference_model,
+                    rollout=rollout,
+                    bf16=args.bf16,
+                )
             )
-        )
-        actor_state.reference_hidden.copy_(reference_hidden)
+            actor_state.reference_hidden.copy_(reference_hidden)
+        else:
+            reference_logp = rollout.old_log_probabilities.detach()
+            reference_replay_seconds = 0.0
+            actor_state.reference_hidden.copy_(actor_state.hidden)
         if (
             completed_updates == 0
             and args.resume_checkpoint is None
@@ -2451,6 +2507,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "recurrent_chunk_boundaries": args.chunk_boundaries,
             "learner_lane_envs": args.learner_lane_envs,
             "heartbeat_seconds": args.heartbeat_seconds,
+            "rollout_storage": args.rollout_storage,
             "checkpoint_every_updates": args.checkpoint_every_updates,
             "frozen_reference_fraction": args.frozen_reference_fraction,
             "frozen_v7_fraction": args.frozen_v7_fraction,
@@ -2566,6 +2623,11 @@ def main() -> int:
     parser.add_argument("--rollout-horizon", type=int, default=64)
     parser.add_argument("--chunk-boundaries", type=int, default=64)
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
+    parser.add_argument(
+        "--rollout-storage",
+        choices=("cpu-compact", "cuda-compact"),
+        default="cpu-compact",
+    )
     parser.add_argument("--heartbeat-seconds", type=float, default=10.0)
     parser.add_argument("--checkpoint-every-updates", type=int, default=10)
     parser.add_argument("--frozen-reference-fraction", type=float, default=0.30)

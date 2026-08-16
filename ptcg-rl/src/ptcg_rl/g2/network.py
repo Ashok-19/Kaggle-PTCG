@@ -390,6 +390,8 @@ class StaticCatalogEncoder(nn.Module):
             nn.GELU(),
             nn.LayerNorm(config.model_width),
         )
+        self._encoded_attack_cache: Tensor | None = None
+        self._encoded_card_cache: Tensor | None = None
 
     def normalize_card_ids(self, values: Tensor, missing: Tensor | None = None) -> Tensor:
         valid = (values >= 1) & (values < self.unknown_card_id)
@@ -405,8 +407,7 @@ class StaticCatalogEncoder(nn.Module):
             indices = torch.where(missing, torch.zeros_like(indices), indices)
         return indices
 
-    def encode_attack(self, attack_ids: Tensor, missing: Tensor | None = None) -> Tensor:
-        indices = self.normalize_attack_ids(attack_ids, missing)
+    def _encode_attack_indices(self, indices: Tensor) -> Tensor:
         return torch.cat(
             (
                 self.attack_id_embedding(indices),
@@ -415,8 +416,13 @@ class StaticCatalogEncoder(nn.Module):
             dim=-1,
         )
 
-    def encode_card(self, card_ids: Tensor, missing: Tensor | None = None) -> Tensor:
-        indices = self.normalize_card_ids(card_ids, missing)
+    def encode_attack(self, attack_ids: Tensor, missing: Tensor | None = None) -> Tensor:
+        indices = self.normalize_attack_ids(attack_ids, missing)
+        if self._encoded_attack_cache is not None:
+            return self._encoded_attack_cache[indices]
+        return self._encode_attack_indices(indices)
+
+    def _encode_card_indices(self, indices: Tensor) -> Tensor:
         attack_ids = self.card_attacks[indices]
         attack_mask = self.card_attack_mask[indices]
         if attack_ids.shape[-1]:
@@ -439,6 +445,38 @@ class StaticCatalogEncoder(nn.Module):
                 dim=-1,
             )
         )
+
+    def encode_card(self, card_ids: Tensor, missing: Tensor | None = None) -> Tensor:
+        indices = self.normalize_card_ids(card_ids, missing)
+        if self._encoded_card_cache is not None:
+            return self._encoded_card_cache[indices]
+        return self._encode_card_indices(indices)
+
+    def prepare_encoded_cache(self) -> None:
+        """Encode every static catalog row once for a block of policy forwards.
+
+        The cache remains differentiable when prepared with gradients enabled, so
+        a recurrent replay minibatch can share the catalog graph across all of its
+        timesteps without freezing catalog parameters.
+        """
+        if self._encoded_attack_cache is not None or self._encoded_card_cache is not None:
+            raise RuntimeError("static catalog encoded cache is already prepared")
+        attack_indices = torch.arange(
+            self.unknown_attack_id + 1,
+            dtype=torch.long,
+            device=self.attack_static.device,
+        )
+        self._encoded_attack_cache = self._encode_attack_indices(attack_indices)
+        card_indices = torch.arange(
+            self.unknown_card_id + 1,
+            dtype=torch.long,
+            device=self.card_static.device,
+        )
+        self._encoded_card_cache = self._encode_card_indices(card_indices)
+
+    def clear_encoded_cache(self) -> None:
+        self._encoded_card_cache = None
+        self._encoded_attack_cache = None
 
 
 class PTCGPolicyV1(nn.Module):

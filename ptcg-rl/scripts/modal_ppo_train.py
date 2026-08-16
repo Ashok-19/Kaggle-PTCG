@@ -172,6 +172,8 @@ def _stream_child_with_heartbeat(
 
 @app.function(
     gpu="RTX-PRO-6000",
+    cpu=32.0,
+    memory=131072,
     timeout=90 * 60,
     volumes={"/data": training_volume},
 )
@@ -183,10 +185,11 @@ def train(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
+    rollout_storage: str = "cuda-compact",
     learning_rate: float = 2e-7,
     critic_learning_rate: float = 3e-4,
     entropy_coefficient: float = 0.0,
-    reference_kl_coefficient: float = 0.1,
+    reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.002,
     frozen_reference_fraction: float = 0.30,
     frozen_v7_fraction: float = 0.15,
@@ -267,6 +270,10 @@ def train(
     env["PYTHONPATH"] = "/workspace/ptcg-rl/src:/workspace/gpu-cabt/src"
     env["GPU_CABT_OFFICIAL_DIR"] = "/workspace/official-engine"
     env["GPU_CABT_NVRTC_FAST_COMPILE"] = "max"
+    env["KPTCG_FAST_VALIDATED_GPU_PATH"] = "1"
+    env["PYTORCH_ALLOC_CONF"] = "expandable_segments:True"
+    env["OMP_NUM_THREADS"] = "32"
+    env["MKL_NUM_THREADS"] = "32"
     command = [
         "python",
         "/workspace/ptcg-rl/scripts/ppo_gpu_train.py",
@@ -296,6 +303,8 @@ def train(
         str(chunk_boundaries),
         "--learner-lane-envs",
         str(learner_lane_envs),
+        "--rollout-storage",
+        rollout_storage,
         "--heartbeat-seconds",
         str(heartbeat_seconds),
         "--checkpoint-every-updates",
@@ -413,10 +422,11 @@ def main(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
+    rollout_storage: str = "cuda-compact",
     learning_rate: float = 2e-7,
     critic_learning_rate: float = 3e-4,
     entropy_coefficient: float = 0.0,
-    reference_kl_coefficient: float = 0.1,
+    reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.002,
     frozen_reference_fraction: float = 0.30,
     frozen_v7_fraction: float = 0.15,
@@ -441,6 +451,7 @@ def main(
         chunk_boundaries=chunk_boundaries,
         learner_lane_envs=learner_lane_envs,
         learning_rate=learning_rate,
+        rollout_storage=rollout_storage,
         critic_learning_rate=critic_learning_rate,
         entropy_coefficient=entropy_coefficient,
         reference_kl_coefficient=reference_kl_coefficient,
