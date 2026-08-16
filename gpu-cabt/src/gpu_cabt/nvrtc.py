@@ -34,9 +34,11 @@ def _find_nvrtc_library(cupy_module: ModuleType) -> Path:
         package_root / "nvidia/cuda_nvrtc/lib",
         package_root / "nvidia/cu13/lib",
     )
-    candidates = sorted(
-        path for root in candidate_roots for path in root.glob("libnvrtc.so*")
-    )
+    candidates: list[Path] = []
+    for root in candidate_roots:
+        candidates = sorted(root.glob("libnvrtc.so*"))
+        if candidates:
+            break
     if not candidates:
         raise FileNotFoundError(
             "NVRTC library not found next to CuPy; install the isolated cuda-toolkit[nvrtc] runtime"
