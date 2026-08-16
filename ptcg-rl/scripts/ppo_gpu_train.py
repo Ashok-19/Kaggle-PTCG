@@ -115,6 +115,25 @@ def _parameter_delta_l2(model: PTCGPolicyV1, before: Sequence[Tensor]) -> float:
     return result
 
 
+def _parameter_delta_partitions(
+    model: PTCGPolicyV1, before: Sequence[Tensor]
+) -> tuple[float, float]:
+    critic_ids = {id(parameter) for parameter in model.value_head.parameters()}
+    actor_squared = 0.0
+    critic_squared = 0.0
+    for parameter, reference in zip(model.parameters(), before, strict=True):
+        squared = float((parameter.detach().float() - reference.float()).square().sum().item())
+        if id(parameter) in critic_ids:
+            critic_squared += squared
+        else:
+            actor_squared += squared
+    actor_delta = math.sqrt(actor_squared)
+    critic_delta = math.sqrt(critic_squared)
+    if not math.isfinite(actor_delta) or not math.isfinite(critic_delta):
+        raise PPOTrainError("partitioned parameter delta is nonfinite")
+    return actor_delta, critic_delta
+
+
 def _flatten_recurrent_parameters(model: PTCGPolicyV1) -> None:
     model.event_gru.flatten_parameters()
 
@@ -193,6 +212,7 @@ def _exact_resume_configuration(
         "maximum_post_kl": args.maximum_post_kl,
         "maximum_clip_fraction": args.maximum_clip_fraction,
         "learning_rate": args.learning_rate,
+        "critic_learning_rate": args.critic_learning_rate,
         "max_gradient_norm": args.max_gradient_norm,
     }
 
@@ -1121,6 +1141,11 @@ def _replay_chunk(
             owner = env_indices * 2 + actors
             hidden_before = hidden.index_select(0, owner)
             output = model(batch, hidden_before)
+            replay_values = (
+                model.value_head(output.hidden.detach()).squeeze(-1)
+                if gradient
+                else output.values
+            )
             replay_logp, replay_entropy = replay_compound_actions_batched(
                 model,
                 public_hidden=output.hidden,
@@ -1133,7 +1158,7 @@ def _replay_chunk(
                 actions=actions,
             )
             log_probabilities.append(replay_logp.float())
-            values.append(output.values.float())
+            values.append(replay_values.float())
             entropies.append(replay_entropy.float())
             hidden = hidden.index_copy(0, owner, output.hidden.to(hidden.dtype))
     return torch.cat(log_probabilities), torch.cat(values), torch.cat(entropies)
@@ -1535,6 +1560,7 @@ def _ppo_update(
     scheduler.step()
     update_seconds = time.perf_counter() - started
     parameter_delta = _parameter_delta_l2(model, before)
+    actor_parameter_delta, critic_parameter_delta = _parameter_delta_partitions(model, before)
     if parameter_delta <= 0:
         raise PPOTrainError("PPO optimizer step did not change model parameters")
 
@@ -1679,6 +1705,8 @@ def _ppo_update(
         "gradient_norm": gradient_norm,
         "clip_grad_norm_return": clip_grad_return,
         "parameter_delta_l2": parameter_delta,
+        "actor_parameter_delta_l2": actor_parameter_delta,
+        "critic_parameter_delta_l2": critic_parameter_delta,
         "advantage_normalization_mean": float(advantage_mean.item()),
         "advantage_normalization_std": float(advantage_std.item()),
         "old_value_explained_variance": _explained_variance(
@@ -1810,8 +1838,21 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "load_seconds": time.perf_counter() - bc_anchor_load_started,
         }
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.0)
-    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda _: 1.0)
+    critic_parameter_ids = {id(parameter) for parameter in model.value_head.parameters()}
+    actor_parameters = [
+        parameter for parameter in model.parameters() if id(parameter) not in critic_parameter_ids
+    ]
+    critic_parameters = list(model.value_head.parameters())
+    optimizer = torch.optim.AdamW(
+        [
+            {"params": actor_parameters, "lr": args.learning_rate},
+            {"params": critic_parameters, "lr": args.critic_learning_rate},
+        ],
+        weight_decay=0.0,
+    )
+    scheduler = torch.optim.lr_scheduler.LambdaLR(
+        optimizer, lr_lambda=[lambda _: 1.0, lambda _: 1.0]
+    )
     total_actor_decisions = 0
     total_learner_decisions = 0
     total_meaningful_targets = 0
@@ -2412,6 +2453,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "maximum_post_kl": args.maximum_post_kl,
             "maximum_clip_fraction": args.maximum_clip_fraction,
             "learning_rate": args.learning_rate,
+            "critic_learning_rate": args.critic_learning_rate,
+            "critic_gradient_into_actor_trunk": False,
             "max_gradient_norm": args.max_gradient_norm,
             "ppo_epochs_per_rollout": 1,
             "critic_initialization": (
@@ -2525,7 +2568,8 @@ def main() -> int:
     parser.add_argument("--minimum-terminal-actor-trajectories", type=int, default=512)
     parser.add_argument("--maximum-post-kl", type=float, default=0.03)
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
-    parser.add_argument("--learning-rate", type=float, default=1e-6)
+    parser.add_argument("--learning-rate", type=float, default=1e-8)
+    parser.add_argument("--critic-learning-rate", type=float, default=3e-4)
     parser.add_argument("--max-gradient-norm", type=float, default=1.0)
     parser.add_argument("--preserve-initial-value-head", action="store_true")
     parser.add_argument("--max-initial-signal-horizons", type=int, default=16)

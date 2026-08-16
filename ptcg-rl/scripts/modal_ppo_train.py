@@ -183,7 +183,8 @@ def train(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    learning_rate: float = 5e-7,
+    learning_rate: float = 1e-8,
+    critic_learning_rate: float = 3e-4,
     entropy_coefficient: float = 0.0,
     reference_kl_coefficient: float = 1.0,
     bc_anchor_coefficient: float = 0.002,
@@ -211,6 +212,8 @@ def train(
         raise ValueError("learner lane envs must stay within 1..env_count")
     if not (0.0 < learning_rate <= 1e-3):
         raise ValueError("learning_rate must stay within (0, 1e-3]")
+    if not (0.0 < critic_learning_rate <= 0.1):
+        raise ValueError("critic_learning_rate must stay within (0, 0.1]")
     if entropy_coefficient < 0.0:
         raise ValueError("entropy_coefficient must be nonnegative")
     if reference_kl_coefficient < 0.0:
@@ -310,6 +313,8 @@ def train(
         str(entropy_coefficient),
         "--learning-rate",
         str(learning_rate),
+        "--critic-learning-rate",
+        str(critic_learning_rate),
         "--reference-kl-coefficient",
         str(reference_kl_coefficient),
         "--bc-anchor-coefficient",
@@ -391,7 +396,8 @@ def main(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    learning_rate: float = 5e-7,
+    learning_rate: float = 1e-8,
+    critic_learning_rate: float = 3e-4,
     entropy_coefficient: float = 0.0,
     reference_kl_coefficient: float = 1.0,
     bc_anchor_coefficient: float = 0.002,
@@ -417,6 +423,7 @@ def main(
         chunk_boundaries=chunk_boundaries,
         learner_lane_envs=learner_lane_envs,
         learning_rate=learning_rate,
+        critic_learning_rate=critic_learning_rate,
         entropy_coefficient=entropy_coefficient,
         reference_kl_coefficient=reference_kl_coefficient,
         bc_anchor_coefficient=bc_anchor_coefficient,
