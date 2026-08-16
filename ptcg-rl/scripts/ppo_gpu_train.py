@@ -188,6 +188,8 @@ def _exact_resume_configuration(
         "critic_calibration_terminal_trajectories": args.critic_calibration_terminal_trajectories,
         "critic_calibration_max_horizons": args.critic_calibration_max_horizons,
         "critic_calibration_learning_rate": args.critic_calibration_learning_rate,
+        "completed_trajectories_only": args.completed_trajectories_only,
+        "minimum_terminal_actor_trajectories": args.minimum_terminal_actor_trajectories,
         "maximum_post_kl": args.maximum_post_kl,
         "maximum_clip_fraction": args.maximum_clip_fraction,
         "learning_rate": args.learning_rate,
@@ -1724,6 +1726,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("critic calibration max horizons must be positive")
     if not (0.0 < args.critic_calibration_learning_rate <= 0.1):
         raise PPOTrainError("critic calibration learning rate must stay within (0, 0.1]")
+    if args.minimum_terminal_actor_trajectories <= 0:
+        raise PPOTrainError("minimum terminal actor trajectories must be positive")
     for value, label in (
         (args.frozen_reference_fraction, "frozen-reference fraction"),
         (args.frozen_v7_fraction, "frozen-v7 fraction"),
@@ -2003,6 +2007,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         _flatten_recurrent_parameters(model)
         model.eval()
 
+    terminal_outcome_wait_horizons = 0
+
     run_start_actor_decisions = total_actor_decisions
     run_start_learner_decisions = total_learner_decisions
     updates: list[dict[str, Any]] = []
@@ -2036,14 +2042,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             learner_lane_envs=args.learner_lane_envs,
             heartbeat_seconds=args.heartbeat_seconds,
         )
-        reference_logp, reference_hidden, reference_replay_seconds = (
-            _replay_reference_log_probabilities(
-                model=frozen_reference_model,
-                rollout=rollout,
-                bf16=args.bf16,
-            )
-        )
-        actor_state.reference_hidden.copy_(reference_hidden)
         gae_started = time.perf_counter()
         gae, value_mask, gae_stats = compute_fixed_horizon_gae(
             owner_ids=rollout.owner_ids,
@@ -2055,6 +2053,51 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         torch.cuda.synchronize(device)
         gae_seconds = time.perf_counter() - gae_started
+        terminal_targets, terminal_node_mask, terminal_actor_trajectories = (
+            _terminal_outcome_targets(rollout)
+        )
+        if args.completed_trajectories_only:
+            value_mask = value_mask & terminal_node_mask
+            if terminal_actor_trajectories < args.minimum_terminal_actor_trajectories:
+                # No policy/trunk parameter has changed, so the frozen initializer and
+                # learner recurrent states remain identical. Keep reference recurrence
+                # aligned without paying for a redundant full frozen-model replay.
+                actor_state.reference_hidden.copy_(actor_state.hidden)
+                terminal_outcome_wait_horizons += 1
+                print(
+                    json.dumps(
+                        {
+                            "event": "ppo_terminal_outcome_wait",
+                            "horizon": actor_state.horizon_index,
+                            "terminal_actor_trajectories": terminal_actor_trajectories,
+                            "minimum_terminal_actor_trajectories": args.minimum_terminal_actor_trajectories,
+                            "wait_horizons": terminal_outcome_wait_horizons,
+                            "reason": "completed-game-only PPO requires a sufficiently large exact-outcome batch",
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+                del rollout, gae, value_mask, terminal_targets, terminal_node_mask
+                continue
+            if not torch.any(value_mask):
+                raise PPOTrainError("completed-game-only PPO selected no trainable recurrent nodes")
+            maximum_return_error = float(
+                torch.abs(gae.returns[value_mask] - terminal_targets[value_mask]).max().item()
+            )
+            if maximum_return_error > 1e-5:
+                raise PPOTrainError(
+                    "completed-game Monte Carlo returns differ from exact terminal outcomes: "
+                    f"{maximum_return_error}"
+                )
+        reference_logp, reference_hidden, reference_replay_seconds = (
+            _replay_reference_log_probabilities(
+                model=frozen_reference_model,
+                rollout=rollout,
+                bf16=args.bf16,
+            )
+        )
+        actor_state.reference_hidden.copy_(reference_hidden)
         if (
             completed_updates == 0
             and args.resume_checkpoint is None
@@ -2363,6 +2406,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "critic_calibration_terminal_trajectories": args.critic_calibration_terminal_trajectories,
             "critic_calibration_max_horizons": args.critic_calibration_max_horizons,
             "critic_calibration_learning_rate": args.critic_calibration_learning_rate,
+            "completed_trajectories_only": args.completed_trajectories_only,
+            "minimum_terminal_actor_trajectories": args.minimum_terminal_actor_trajectories,
+            "terminal_outcome_wait_horizons": terminal_outcome_wait_horizons,
             "maximum_post_kl": args.maximum_post_kl,
             "maximum_clip_fraction": args.maximum_clip_fraction,
             "learning_rate": args.learning_rate,
@@ -2475,6 +2521,8 @@ def main() -> int:
     parser.add_argument("--critic-calibration-terminal-trajectories", type=int, default=2048)
     parser.add_argument("--critic-calibration-max-horizons", type=int, default=8)
     parser.add_argument("--critic-calibration-learning-rate", type=float, default=3e-4)
+    parser.add_argument("--completed-trajectories-only", action="store_true")
+    parser.add_argument("--minimum-terminal-actor-trajectories", type=int, default=512)
     parser.add_argument("--maximum-post-kl", type=float, default=0.03)
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
     parser.add_argument("--learning-rate", type=float, default=1e-6)
