@@ -181,8 +181,8 @@ def train(
     source_commit: str,
     env_count: int = 8192,
     rollout_horizon: int = 64,
-    chunk_boundaries: int = 64,
-    learner_lane_envs: int = 512,
+    chunk_boundaries: int = 16,
+    learner_lane_envs: int = 2048,
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
@@ -190,8 +190,9 @@ def train(
     frozen_v5_fraction: float = 0.30,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
+    post_validation_lanes: int = 1,
     resume_checkpoint_relative: str = "",
-    bf16: bool = False,
+    bf16: bool = True,
     seed: int = 20260815,
 ) -> dict[str, object]:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
@@ -222,6 +223,8 @@ def train(
         raise ValueError("heartbeat_seconds must stay within (0, 60]")
     if checkpoint_every_updates <= 0:
         raise ValueError("checkpoint_every_updates must be positive")
+    if post_validation_lanes <= 0:
+        raise ValueError("post_validation_lanes must be positive")
     resume_checkpoint: Path | None = None
     if resume_checkpoint_relative:
         relative = Path(resume_checkpoint_relative)
@@ -272,6 +275,8 @@ def train(
         str(heartbeat_seconds),
         "--checkpoint-every-updates",
         str(checkpoint_every_updates),
+        "--post-validation-lanes",
+        str(post_validation_lanes),
         "--seed",
         str(seed),
         "--frozen-v7-fraction",
@@ -371,8 +376,8 @@ def main(
     decision_budget: int,
     env_count: int = 8192,
     rollout_horizon: int = 64,
-    chunk_boundaries: int = 64,
-    learner_lane_envs: int = 512,
+    chunk_boundaries: int = 16,
+    learner_lane_envs: int = 2048,
     learning_rate: float = 1e-6,
     reference_kl_coefficient: float = 0.0,
     bc_anchor_coefficient: float = 0.0,
@@ -380,8 +385,9 @@ def main(
     frozen_v5_fraction: float = 0.30,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
+    post_validation_lanes: int = 1,
     resume_checkpoint_relative: str = "",
-    bf16: bool = False,
+    bf16: bool = True,
     seed: int = 20260815,
 ) -> None:
     source_commit = subprocess.check_output(
@@ -402,6 +408,7 @@ def main(
         frozen_v5_fraction=frozen_v5_fraction,
         heartbeat_seconds=heartbeat_seconds,
         checkpoint_every_updates=checkpoint_every_updates,
+        post_validation_lanes=post_validation_lanes,
         resume_checkpoint_relative=resume_checkpoint_relative,
         bf16=bf16,
         seed=seed,

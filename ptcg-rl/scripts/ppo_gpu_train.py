@@ -182,6 +182,7 @@ def _exact_resume_configuration(
             args.bc_anchor_exact_root.as_posix() if args.bc_anchor_exact_root is not None else None
         ),
         "replay_tolerance": args.replay_tolerance,
+        "post_validation_lanes": args.post_validation_lanes,
         "maximum_post_kl": args.maximum_post_kl,
         "maximum_clip_fraction": args.maximum_clip_fraction,
         "learning_rate": args.learning_rate,
@@ -1228,6 +1229,9 @@ def _ppo_update(
     replay_tolerance: float,
     maximum_post_kl: float,
     maximum_clip_fraction: float,
+    full_post_replay: bool,
+    post_validation_lanes: int,
+    post_validation_lane_offset: int,
     bf16: bool,
 ) -> dict[str, Any]:
     if value_mask.shape != rollout.old_values.shape or value_mask.dtype != torch.bool:
@@ -1253,6 +1257,8 @@ def _ppo_update(
         raise PPOTrainError("maximum post-update KL must be finite and positive")
     if not (0 < maximum_clip_fraction <= 1) or not math.isfinite(maximum_clip_fraction):
         raise PPOTrainError("maximum clip fraction must be within (0, 1]")
+    if post_validation_lanes <= 0:
+        raise PPOTrainError("post-validation lane count must be positive")
     selected_advantages = advantages[policy_mask]
     advantage_mean = selected_advantages.mean()
     advantage_std = selected_advantages.std(unbiased=False)
@@ -1403,13 +1409,44 @@ def _ppo_update(
 
     # Keep the same deterministic train-mode kernels used by rollout and gradient replay.
     # PTCGPolicyV1 has zero dropout, so module mode changes numerics but not stochasticity.
+    # Exact old-policy replay above always covers every learner sample. Post-step safety
+    # replay can rotate over a lane subset on ordinary updates, but checkpoint/final
+    # updates must validate the full rollout.
     model.train()
+    if full_post_replay or post_validation_lanes >= len(lane_ranges):
+        post_lane_ranges = lane_ranges
+    else:
+        lane_count = min(post_validation_lanes, len(lane_ranges))
+        start = post_validation_lane_offset % len(lane_ranges)
+        post_lane_ranges = [
+            lane_ranges[(start + index) % len(lane_ranges)] for index in range(lane_count)
+        ]
+    validation_cpu_indices: list[Tensor] = []
+    for _chunk_index, validation_steps in chunks:
+        for env_start, env_end in post_lane_ranges:
+            _lane_steps, cpu_indices = _lane_steps_and_indices(
+                validation_steps, env_start=env_start, env_end=env_end
+            )
+            if cpu_indices.numel():
+                validation_cpu_indices.append(cpu_indices)
+    if not validation_cpu_indices:
+        raise PPOTrainError("post-update validation selected no learner samples")
+    validation_indices = torch.cat(validation_cpu_indices).to(device=policy_mask.device)
+    validation_policy_mask = policy_mask.index_select(0, validation_indices)
+    validation_value_mask = value_mask.index_select(0, validation_indices)
+    validation_valid = int(validation_policy_mask.sum().item())
+    validation_value_nodes = int(validation_value_mask.sum().item())
+    if validation_valid <= 0 or validation_value_nodes <= 0:
+        raise PPOTrainError("post-update validation selected no trainable policy/value samples")
     post_metrics = _weighted_metrics_accumulator()
     post_values = torch.full_like(rollout.old_values, float("nan"))
+    post_value_mask = torch.zeros_like(value_mask)
+    post_value_mask.index_fill_(0, validation_indices, True)
+    post_value_mask &= value_mask
     post_started = time.perf_counter()
     for chunk_index, steps in chunks:
         hidden_snapshot = rollout.chunk_hidden_snapshots[chunk_index]
-        for env_start, env_end in lane_ranges:
+        for env_start, env_end in post_lane_ranges:
             lane_steps, cpu_indices = _lane_steps_and_indices(
                 steps, env_start=env_start, env_end=env_end
             )
@@ -1457,16 +1494,16 @@ def _ppo_update(
             _add_weighted_loss(
                 post_metrics,
                 loss,
-                policy_weight=lane_valid / total_valid,
-                value_weight=lane_value_nodes / total_value_nodes,
+                policy_weight=lane_valid / validation_valid,
+                value_weight=lane_value_nodes / validation_value_nodes,
                 value_coefficient=value_coefficient,
                 entropy_coefficient=entropy_coefficient,
                 reference_kl=reference_kl,
                 reference_kl_coefficient=reference_kl_coefficient,
             )
     post_replay_seconds = time.perf_counter() - post_started
-    if not torch.isfinite(post_values[value_mask]).all():
-        raise PPOTrainError("post-update critic replay did not cover every trainable value node")
+    if not torch.isfinite(post_values[post_value_mask]).all():
+        raise PPOTrainError("post-update critic validation did not cover every selected value node")
     if post_metrics["approximate_kl"] > maximum_post_kl:
         raise PPOTrainError(
             f"post-update PPO KL {post_metrics['approximate_kl']} exceeds {maximum_post_kl}"
@@ -1493,6 +1530,15 @@ def _ppo_update(
         "learner_minibatches": learner_minibatches,
         "pre_update": pre_metrics,
         "post_update": post_metrics,
+        "post_validation": {
+            "full": bool(full_post_replay or len(post_lane_ranges) == len(lane_ranges)),
+            "lane_count": len(post_lane_ranges),
+            "total_lane_count": len(lane_ranges),
+            "policy_samples": validation_valid,
+            "value_samples": validation_value_nodes,
+            "policy_fraction": validation_valid / total_valid,
+            "value_fraction": validation_value_nodes / total_value_nodes,
+        },
         "probability_replay": {
             "checked_actions": replayed_actions,
             "max_log_probability_absolute_error": replay_max_logp_error,
@@ -1508,12 +1554,12 @@ def _ppo_update(
             rollout.old_values[value_mask], returns[value_mask]
         ),
         "post_value_explained_variance": _explained_variance(
-            post_values[value_mask], returns[value_mask]
+            post_values[post_value_mask], returns[post_value_mask]
         ),
-        "post_value_mean": float(post_values[value_mask].mean().item()),
-        "post_value_std": float(post_values[value_mask].std(unbiased=False).item()),
-        "post_value_min": float(post_values[value_mask].min().item()),
-        "post_value_max": float(post_values[value_mask].max().item()),
+        "post_value_mean": float(post_values[post_value_mask].mean().item()),
+        "post_value_std": float(post_values[post_value_mask].std(unbiased=False).item()),
+        "post_value_min": float(post_values[post_value_mask].min().item()),
+        "post_value_max": float(post_values[post_value_mask].max().item()),
     }
 
 
@@ -1539,6 +1585,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
     if args.checkpoint_every_updates <= 0:
         raise PPOTrainError("checkpoint cadence must be a positive update count")
+    if args.post_validation_lanes <= 0:
+        raise PPOTrainError("post-validation lane count must be positive")
     if args.max_initial_signal_horizons <= 0:
         raise PPOTrainError("max initial signal horizons must be positive")
     for value, label in (
@@ -1817,6 +1865,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             ),
             flush=True,
         )
+        projected_run_learner_decisions = (
+            total_learner_decisions
+            - run_start_learner_decisions
+            + int(rollout.metrics["learner_recurrent_decisions"])
+        )
+        full_post_replay = (
+            update_number % args.checkpoint_every_updates == 0
+            or projected_run_learner_decisions >= args.decision_budget
+        )
+        lane_count = math.ceil(args.env_count / args.learner_lane_envs)
         update = _ppo_update(
             model=model,
             optimizer=optimizer,
@@ -1839,6 +1897,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             replay_tolerance=args.replay_tolerance,
             maximum_post_kl=args.maximum_post_kl,
             maximum_clip_fraction=args.maximum_clip_fraction,
+            full_post_replay=full_post_replay,
+            post_validation_lanes=args.post_validation_lanes,
+            post_validation_lane_offset=(update_number - 1) % lane_count,
             bf16=args.bf16,
         )
         actor_decisions = int(rollout.metrics["actor_recurrent_decisions"])
@@ -1977,7 +2038,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         }
         print(json.dumps(progress, sort_keys=True), flush=True)
         del rollout, gae, advantage, returns, value_mask, train_policy_mask, reference_logp
-        torch.cuda.empty_cache()
 
     run_seconds = time.perf_counter() - run_started
     run_actor_decisions = total_actor_decisions - run_start_actor_decisions
@@ -2046,6 +2106,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "bc_anchor_batch_size": args.bc_anchor_batch_size,
             "bc_anchor_sequence_length": args.bc_anchor_sequence_length,
             "replay_tolerance": args.replay_tolerance,
+            "post_validation_lanes": args.post_validation_lanes,
             "maximum_post_kl": args.maximum_post_kl,
             "maximum_clip_fraction": args.maximum_clip_fraction,
             "learning_rate": args.learning_rate,
@@ -2152,6 +2213,7 @@ def main() -> int:
     parser.add_argument("--bc-anchor-batch-size", type=int, default=8)
     parser.add_argument("--bc-anchor-sequence-length", type=int, default=32)
     parser.add_argument("--replay-tolerance", type=float, default=1e-5)
+    parser.add_argument("--post-validation-lanes", type=int, default=1)
     parser.add_argument("--maximum-post-kl", type=float, default=0.03)
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
     parser.add_argument("--learning-rate", type=float, default=1e-6)
