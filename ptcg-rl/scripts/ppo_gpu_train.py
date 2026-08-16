@@ -1897,8 +1897,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("production PPO trainer requires CUDA")
     if args.env_count <= 0 or args.env_count > 8192:
         raise PPOTrainError("env_count must stay within the qualified 1..8192 range")
-    if args.decision_budget <= 0 or args.decision_budget > 30_000_000:
-        raise PPOTrainError("bounded trainer decision budget must stay within 1..30M")
+    if args.decision_budget <= 0 or args.decision_budget > 50_000_000:
+        raise PPOTrainError("bounded trainer decision budget must stay within 1..50M")
     if args.chunk_boundaries < 16 or args.chunk_boundaries > 128:
         raise PPOTrainError("recurrent chunk boundaries must stay within 16..128")
     if args.rollout_horizon < 16 or args.rollout_horizon > 256:
