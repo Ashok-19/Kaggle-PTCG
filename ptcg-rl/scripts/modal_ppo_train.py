@@ -183,9 +183,10 @@ def train(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    learning_rate: float = 1e-6,
-    reference_kl_coefficient: float = 0.0,
-    bc_anchor_coefficient: float = 0.0,
+    learning_rate: float = 5e-7,
+    entropy_coefficient: float = 0.0,
+    reference_kl_coefficient: float = 1.0,
+    bc_anchor_coefficient: float = 0.002,
     frozen_reference_fraction: float = 0.30,
     frozen_v7_fraction: float = 0.15,
     frozen_v5_fraction: float = 0.15,
@@ -210,6 +211,8 @@ def train(
         raise ValueError("learner lane envs must stay within 1..env_count")
     if not (0.0 < learning_rate <= 1e-3):
         raise ValueError("learning_rate must stay within (0, 1e-3]")
+    if entropy_coefficient < 0.0:
+        raise ValueError("entropy_coefficient must be nonnegative")
     if reference_kl_coefficient < 0.0:
         raise ValueError("reference_kl_coefficient must be nonnegative")
     if bc_anchor_coefficient < 0.0:
@@ -299,7 +302,7 @@ def train(
         "--value-coefficient",
         "0.5",
         "--entropy-coefficient",
-        "0.01",
+        str(entropy_coefficient),
         "--learning-rate",
         str(learning_rate),
         "--reference-kl-coefficient",
@@ -383,9 +386,10 @@ def main(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    learning_rate: float = 1e-6,
-    reference_kl_coefficient: float = 0.0,
-    bc_anchor_coefficient: float = 0.0,
+    learning_rate: float = 5e-7,
+    entropy_coefficient: float = 0.0,
+    reference_kl_coefficient: float = 1.0,
+    bc_anchor_coefficient: float = 0.002,
     frozen_reference_fraction: float = 0.30,
     frozen_v7_fraction: float = 0.15,
     frozen_v5_fraction: float = 0.15,
@@ -408,6 +412,7 @@ def main(
         chunk_boundaries=chunk_boundaries,
         learner_lane_envs=learner_lane_envs,
         learning_rate=learning_rate,
+        entropy_coefficient=entropy_coefficient,
         reference_kl_coefficient=reference_kl_coefficient,
         bc_anchor_coefficient=bc_anchor_coefficient,
         frozen_reference_fraction=frozen_reference_fraction,
