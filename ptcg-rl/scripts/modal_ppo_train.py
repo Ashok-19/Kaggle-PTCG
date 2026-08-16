@@ -21,6 +21,7 @@ GPU_CABT = ROOT / "gpu-cabt"
 OFFICIAL = ROOT / "pokemon-tcg-ai-battle/ptcg_engine/ptcgProgram 22"
 VOLUME_NAME = "kptcg-training"
 MODEL_LABEL = "3.7m"
+V6_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v6-live-continue/3.7m/final-selected.pt"
 V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-selected.pt"
 V5_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v5-schema-v3-fused-update-density/3.7m/3.7m/stage-d-exact-1150-best.pt"
 LIVE_BC_ROOT = "/data/materialized/bc-dragapult-live-v6-featurefix-v3"
@@ -246,6 +247,8 @@ def train(
         "--model-label",
         MODEL_LABEL,
         "--bc-checkpoint",
+        str(Path("/data") / V6_CHECKPOINT_RELATIVE),
+        "--v7-checkpoint",
         str(Path("/data") / V7_CHECKPOINT_RELATIVE),
         "--v5-checkpoint",
         str(Path("/data") / V5_CHECKPOINT_RELATIVE),

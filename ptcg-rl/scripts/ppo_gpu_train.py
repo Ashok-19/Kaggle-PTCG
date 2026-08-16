@@ -147,9 +147,12 @@ def _exact_resume_configuration(
         "source_commit": args.source_commit,
         "model_label": args.model_label,
         "card_table_path": args.card_table.as_posix(),
-        "v7_checkpoint_path": args.bc_checkpoint.as_posix(),
+        "initializer_checkpoint_path": args.bc_checkpoint.as_posix(),
+        "v7_checkpoint_path": (
+            args.v7_checkpoint.as_posix() if args.v7_checkpoint is not None else None
+        ),
         "v5_checkpoint_path": (
-            args.v5_checkpoint.as_posix() if args.v5_checkpoint is not None else args.bc_checkpoint.as_posix()
+            args.v5_checkpoint.as_posix() if args.v5_checkpoint is not None else None
         ),
         "deck_path": args.deck.as_posix(),
         "engine_abi": asdict(runtime.abi),
@@ -1142,7 +1145,7 @@ def _replay_reference_log_probabilities(
     torch.cuda.synchronize(device)
     elapsed = time.perf_counter() - started
     if not torch.isfinite(reference_logp).all():
-        raise PPOTrainError("frozen-v7 replay did not cover every learner recurrent node")
+        raise PPOTrainError("frozen reference replay did not cover every learner recurrent node")
     return (
         reference_logp,
         hidden.reshape_as(rollout.reference_hidden_snapshot),
@@ -1237,7 +1240,7 @@ def _ppo_update(
     if total_value_nodes <= 0:
         raise PPOTrainError("rollout contains no learner recurrent value nodes")
     if reference_log_probabilities.shape != rollout.old_log_probabilities.shape:
-        raise PPOTrainError("frozen-v7 reference log probabilities differ from rollout shape")
+        raise PPOTrainError("frozen reference log probabilities differ from rollout shape")
     if reference_kl_coefficient < 0 or not math.isfinite(reference_kl_coefficient):
         raise PPOTrainError("reference KL coefficient must be finite and nonnegative")
     if bc_anchor_coefficient < 0 or not math.isfinite(bc_anchor_coefficient):
@@ -1546,6 +1549,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             raise PPOTrainError(f"{label} must be finite and within [0, 1]")
     if args.frozen_v7_fraction + args.frozen_v5_fraction > 1.0:
         raise PPOTrainError("frozen-v7 and frozen-v5 fractions must sum to <= 1")
+    if args.frozen_v7_fraction > 0 and args.v7_checkpoint is None:
+        raise PPOTrainError("positive frozen-v7 fraction requires --v7-checkpoint")
     if args.frozen_v5_fraction > 0 and args.v5_checkpoint is None:
         raise PPOTrainError("positive frozen-v5 fraction requires --v5-checkpoint")
     if args.bc_anchor_coefficient < 0 or not math.isfinite(args.bc_anchor_coefficient):
@@ -1566,20 +1571,31 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     card_table = load_card_table(args.card_table)
     model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     load_training_checkpoint_model_state(args.bc_checkpoint, model=model)
-    frozen_v7_model = copy.deepcopy(model).eval()
-    for parameter in frozen_v7_model.parameters():
+    frozen_reference_model = copy.deepcopy(model).eval()
+    for parameter in frozen_reference_model.parameters():
         parameter.requires_grad_(False)
     if args.resume_checkpoint is None and not args.preserve_initial_value_head:
         _zero_untrained_bc_value_output(model)
+
+    frozen_v7_model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
+    if args.v7_checkpoint is not None:
+        load_training_checkpoint_model_state(args.v7_checkpoint, model=frozen_v7_model)
+    else:
+        frozen_v7_model.load_state_dict(frozen_reference_model.state_dict(), strict=True)
+    frozen_v7_model.eval()
+    for parameter in frozen_v7_model.parameters():
+        parameter.requires_grad_(False)
+
     frozen_v5_model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     if args.v5_checkpoint is not None:
         load_training_checkpoint_model_state(args.v5_checkpoint, model=frozen_v5_model)
     else:
-        frozen_v5_model.load_state_dict(frozen_v7_model.state_dict(), strict=True)
+        frozen_v5_model.load_state_dict(frozen_reference_model.state_dict(), strict=True)
     frozen_v5_model.eval()
     for parameter in frozen_v5_model.parameters():
         parameter.requires_grad_(False)
     _flatten_recurrent_parameters(model)
+    _flatten_recurrent_parameters(frozen_reference_model)
     _flatten_recurrent_parameters(frozen_v7_model)
     _flatten_recurrent_parameters(frozen_v5_model)
 
@@ -1684,6 +1700,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             frozen_v5_fraction=args.frozen_v5_fraction,
         )
     _flatten_recurrent_parameters(model)
+    _flatten_recurrent_parameters(frozen_reference_model)
     _flatten_recurrent_parameters(frozen_v7_model)
     _flatten_recurrent_parameters(frozen_v5_model)
     model.eval()
@@ -1724,7 +1741,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         )
         reference_logp, reference_hidden, reference_replay_seconds = (
             _replay_reference_log_probabilities(
-                model=frozen_v7_model,
+                model=frozen_reference_model,
                 rollout=rollout,
                 bf16=args.bf16,
             )
@@ -1900,8 +1917,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "mode": "current-selfplay-plus-frozen-v7-v5",
                     "frozen_v7_fraction_requested": args.frozen_v7_fraction,
                     "frozen_v5_fraction_requested": args.frozen_v5_fraction,
+                    "reference_policy": {"id": "frozen-initializer-reference"},
                     "historical_opponents": [
-                        {"id": "bc-v7-frozen-reference"},
+                        {"id": "bc-v7-frozen-opponent"},
                         {"id": "bc-v5-frozen-opponent"},
                     ],
                 },
@@ -1995,6 +2013,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if args.resume_checkpoint is not None
             else "model-only warm start from selected BC checkpoint"
         ),
+        "policy_checkpoints": {
+            "initializer_and_reference": args.bc_checkpoint.as_posix(),
+            "frozen_v7_opponent": (
+                args.v7_checkpoint.as_posix() if args.v7_checkpoint is not None else None
+            ),
+            "frozen_v5_opponent": (
+                args.v5_checkpoint.as_posix() if args.v5_checkpoint is not None else None
+            ),
+        },
         "model_parameters": model.trainable_parameter_count,
         "deck": {"path": args.deck.as_posix()},
         "configuration": {
@@ -2093,6 +2120,7 @@ def main() -> int:
     parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
     parser.add_argument("--resume-checkpoint", type=Path)
+    parser.add_argument("--v7-checkpoint", type=Path)
     parser.add_argument("--v5-checkpoint", type=Path)
     parser.add_argument("--deck", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
