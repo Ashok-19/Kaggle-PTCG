@@ -225,7 +225,6 @@ def _exact_resume_configuration(
         "rollout_horizon": args.rollout_horizon,
         "chunk_boundaries": args.chunk_boundaries,
         "learner_lane_envs": args.learner_lane_envs,
-        "rollout_inference_lane_envs": args.rollout_inference_lane_envs,
         "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
         "freeze_observation_encoder": args.freeze_observation_encoder,
         "frozen_reference_fraction": args.frozen_reference_fraction,
@@ -911,7 +910,7 @@ def _collect_fixed_horizon_rollout(
     frozen_v5_fraction: float,
     rollout_horizon: int,
     chunk_boundaries: int,
-    rollout_inference_lane_envs: int,
+    learner_lane_envs: int,
     bf16: bool,
     rollout_storage: str,
     heartbeat_seconds: float = 10.0,
@@ -1093,8 +1092,8 @@ def _collect_fixed_horizon_rollout(
             )
             flat_offset += count
 
-        for env_start in range(0, runtime.env_count, rollout_inference_lane_envs):
-            env_end = min(runtime.env_count, env_start + rollout_inference_lane_envs)
+        for env_start in range(0, runtime.env_count, learner_lane_envs):
+            env_end = min(runtime.env_count, env_start + learner_lane_envs)
             lane_mask = (learner_envs >= env_start) & (learner_envs < env_end)
             lane_envs = learner_envs[lane_mask]
             if lane_envs.numel():
@@ -1171,7 +1170,7 @@ def _collect_fixed_horizon_rollout(
             'actor_decisions_per_second': actor_decisions / max(elapsed, 1e-9),
             'learner_decisions_per_second': learner_decisions / max(elapsed, 1e-9),
             'learner_inference_groups': learner_inference_groups,
-            'learner_inference_lane_envs': rollout_inference_lane_envs,
+            'learner_inference_lane_envs': learner_lane_envs,
             'active_first': runtime.env_count,
             'active_last': active_last,
             'terminal_envs': terminal_envs,
@@ -1906,10 +1905,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("rollout horizon must stay within 16..256")
     if args.learner_lane_envs <= 0 or args.learner_lane_envs > args.env_count:
         raise PPOTrainError("learner lane envs must stay within 1..env_count")
-    if args.rollout_inference_lane_envs <= 0:
-        args.rollout_inference_lane_envs = args.learner_lane_envs
-    if args.rollout_inference_lane_envs > args.env_count:
-        raise PPOTrainError("rollout inference lane envs must stay within 1..env_count")
     if args.optimizer_lanes_per_update < 0:
         raise PPOTrainError("optimizer lanes per update must be nonnegative")
     if args.rollout_horizon < args.chunk_boundaries:
@@ -2172,7 +2167,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 rollout_horizon=args.rollout_horizon,
                 chunk_boundaries=args.chunk_boundaries,
                 bf16=args.bf16,
-                rollout_inference_lane_envs=args.rollout_inference_lane_envs,
+                learner_lane_envs=args.learner_lane_envs,
                 rollout_storage=args.rollout_storage,
                 heartbeat_seconds=args.heartbeat_seconds,
             )
@@ -2269,7 +2264,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             rollout_horizon=args.rollout_horizon,
             chunk_boundaries=args.chunk_boundaries,
             bf16=args.bf16,
-            rollout_inference_lane_envs=args.rollout_inference_lane_envs,
+            learner_lane_envs=args.learner_lane_envs,
             rollout_storage=args.rollout_storage,
             heartbeat_seconds=args.heartbeat_seconds,
         )
@@ -2633,7 +2628,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "rollout_horizon": args.rollout_horizon,
             "recurrent_chunk_boundaries": args.chunk_boundaries,
             "learner_lane_envs": args.learner_lane_envs,
-            "rollout_inference_lane_envs": args.rollout_inference_lane_envs,
             "heartbeat_seconds": args.heartbeat_seconds,
             "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
             "freeze_observation_encoder": args.freeze_observation_encoder,
@@ -2753,7 +2747,6 @@ def main() -> int:
     parser.add_argument("--rollout-horizon", type=int, default=64)
     parser.add_argument("--chunk-boundaries", type=int, default=64)
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
-    parser.add_argument("--rollout-inference-lane-envs", type=int, default=0)
     parser.add_argument("--optimizer-lanes-per-update", type=int, default=0)
     parser.add_argument("--freeze-observation-encoder", action="store_true")
     parser.add_argument(

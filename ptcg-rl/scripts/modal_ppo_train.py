@@ -185,7 +185,6 @@ def train(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    rollout_inference_lane_envs: int = 0,
     optimizer_lanes_per_update: int = 1,
     freeze_observation_encoder: bool = True,
     rollout_storage: str = "cuda-compact",
@@ -217,8 +216,6 @@ def train(
         raise ValueError("chunk boundaries must stay within 16..128")
     if learner_lane_envs <= 0 or learner_lane_envs > env_count:
         raise ValueError("learner lane envs must stay within 1..env_count")
-    if rollout_inference_lane_envs < 0 or rollout_inference_lane_envs > env_count:
-        raise ValueError("rollout inference lane envs must stay within 0..env_count")
     if optimizer_lanes_per_update < 0:
         raise ValueError("optimizer_lanes_per_update must be nonnegative")
     if not (0.0 < learning_rate <= 1e-3):
@@ -310,8 +307,6 @@ def train(
         str(chunk_boundaries),
         "--learner-lane-envs",
         str(learner_lane_envs),
-        "--rollout-inference-lane-envs",
-        str(rollout_inference_lane_envs),
         "--optimizer-lanes-per-update",
         str(optimizer_lanes_per_update),
         *( ["--freeze-observation-encoder"] if freeze_observation_encoder else [] ),
@@ -434,7 +429,6 @@ def main(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    rollout_inference_lane_envs: int = 0,
     optimizer_lanes_per_update: int = 1,
     freeze_observation_encoder: bool = True,
     rollout_storage: str = "cuda-compact",
@@ -465,7 +459,6 @@ def main(
         rollout_horizon=rollout_horizon,
         chunk_boundaries=chunk_boundaries,
         learner_lane_envs=learner_lane_envs,
-        rollout_inference_lane_envs=rollout_inference_lane_envs,
         learning_rate=learning_rate,
         optimizer_lanes_per_update=optimizer_lanes_per_update,
         freeze_observation_encoder=freeze_observation_encoder,
