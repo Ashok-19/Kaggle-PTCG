@@ -76,7 +76,7 @@ image = (
     .add_local_dir(OFFICIAL, remote_path="/workspace/official-engine")
 )
 
-app = modal.App("kptcg-ppo-train", image=image)
+app = modal.App(os.environ.get("KPTCG_MODAL_APP_NAME", "kptcg-ppo-train"), image=image)
 training_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
 
 
