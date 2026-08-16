@@ -168,6 +168,11 @@ def _exact_resume_configuration(
         "model_label": args.model_label,
         "card_table_path": args.card_table.as_posix(),
         "initializer_checkpoint_path": args.bc_checkpoint.as_posix(),
+        "policy_warmstart_checkpoint_path": (
+            args.policy_warmstart_checkpoint.as_posix()
+            if args.policy_warmstart_checkpoint is not None
+            else None
+        ),
         "v7_checkpoint_path": (
             args.v7_checkpoint.as_posix() if args.v7_checkpoint is not None else None
         ),
@@ -1787,10 +1792,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     card_table = load_card_table(args.card_table)
     model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     load_training_checkpoint_model_state(args.bc_checkpoint, model=model)
+    # Keep the frozen reference anchored to the selected BC initializer even when
+    # the trainable policy is warm-started from a prior RL checkpoint under a new
+    # PPO regime. Exact resumes restore the full trainable state later below.
     frozen_reference_model = copy.deepcopy(model).eval()
     for parameter in frozen_reference_model.parameters():
         parameter.requires_grad_(False)
-    if args.resume_checkpoint is None and not args.preserve_initial_value_head:
+    if args.resume_checkpoint is None and args.policy_warmstart_checkpoint is not None:
+        load_training_checkpoint_model_state(args.policy_warmstart_checkpoint, model=model)
+    if (
+        args.resume_checkpoint is None
+        and args.policy_warmstart_checkpoint is None
+        and not args.preserve_initial_value_head
+    ):
         _zero_untrained_bc_value_output(model)
 
     frozen_v7_model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
@@ -1949,6 +1963,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     }
     if (
         args.resume_checkpoint is None
+        and args.policy_warmstart_checkpoint is None
         and not args.preserve_initial_value_head
         and args.critic_calibration_terminal_trajectories > 0
     ):
@@ -2407,10 +2422,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "initializer_interpretation": (
             "exact full-state resume from PPO checkpoint"
             if args.resume_checkpoint is not None
-            else "model-only warm start from selected BC checkpoint"
+            else (
+                "model-only warm start from prior PPO checkpoint with fresh optimizer/actor state"
+                if args.policy_warmstart_checkpoint is not None
+                else "model-only warm start from selected BC checkpoint"
+            )
         ),
         "policy_checkpoints": {
             "initializer_and_reference": args.bc_checkpoint.as_posix(),
+            "trainable_policy_warmstart": (
+                args.policy_warmstart_checkpoint.as_posix()
+                if args.policy_warmstart_checkpoint is not None
+                else None
+            ),
             "frozen_v7_opponent": (
                 args.v7_checkpoint.as_posix() if args.v7_checkpoint is not None else None
             ),
@@ -2461,9 +2485,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "restored_from_rl_checkpoint"
                 if args.resume_checkpoint is not None
                 else (
-                    "preserved_from_initializer"
-                    if args.preserve_initial_value_head
-                    else "zero_output_layer_from_untrained_bc_head"
+                    "restored_from_policy_warmstart"
+                    if args.policy_warmstart_checkpoint is not None
+                    else (
+                        "preserved_from_initializer"
+                        if args.preserve_initial_value_head
+                        else "zero_output_layer_from_untrained_bc_head"
+                    )
                 )
             ),
             "max_initial_signal_horizons": args.max_initial_signal_horizons,
@@ -2527,6 +2555,7 @@ def main() -> int:
     parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
     parser.add_argument("--resume-checkpoint", type=Path)
+    parser.add_argument("--policy-warmstart-checkpoint", type=Path)
     parser.add_argument("--v7-checkpoint", type=Path)
     parser.add_argument("--v5-checkpoint", type=Path)
     parser.add_argument("--deck", type=Path, required=True)

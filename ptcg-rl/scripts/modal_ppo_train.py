@@ -183,10 +183,10 @@ def train(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    learning_rate: float = 1e-8,
+    learning_rate: float = 2e-7,
     critic_learning_rate: float = 3e-4,
     entropy_coefficient: float = 0.0,
-    reference_kl_coefficient: float = 1.0,
+    reference_kl_coefficient: float = 0.1,
     bc_anchor_coefficient: float = 0.002,
     frozen_reference_fraction: float = 0.30,
     frozen_v7_fraction: float = 0.15,
@@ -195,8 +195,9 @@ def train(
     checkpoint_every_updates: int = 10,
     post_validation_lanes: int = 1,
     resume_checkpoint_relative: str = "",
+    policy_warmstart_checkpoint_relative: str = "",
     bf16: bool = True,
-    seed: int = 20260815,
+    seed: int = 20260816,
 ) -> dict[str, object]:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
         raise ValueError("run_id contains unsupported characters")
@@ -242,12 +243,27 @@ def train(
         if relative.parts[0] != "runs" or relative.suffix != ".pt":
             raise ValueError("resume checkpoint must point to a .pt file under /data/runs")
         resume_checkpoint = Path("/data") / relative
+    policy_warmstart_checkpoint: Path | None = None
+    if policy_warmstart_checkpoint_relative:
+        relative = Path(policy_warmstart_checkpoint_relative)
+        if relative.is_absolute() or ".." in relative.parts or not relative.parts:
+            raise ValueError("policy warm-start checkpoint must be a safe /data-relative path")
+        if relative.parts[0] != "runs" or relative.suffix != ".pt":
+            raise ValueError("policy warm-start checkpoint must point to a .pt file under /data/runs")
+        policy_warmstart_checkpoint = Path("/data") / relative
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise ValueError("source commit must be an exact 40-character Git SHA")
 
     output_dir = Path("/data/runs") / run_id
     output_dir.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
+    cuda_library_paths = (
+        "/usr/local/lib/python3.11/site-packages/nvidia/cu13/lib",
+        "/usr/local/lib/python3.11/site-packages/nvidia/cuda_nvrtc/lib",
+    )
+    env["LD_LIBRARY_PATH"] = ":".join(
+        (*cuda_library_paths, env.get("LD_LIBRARY_PATH", ""))
+    ).rstrip(":")
     env["PYTHONPATH"] = "/workspace/ptcg-rl/src:/workspace/gpu-cabt/src"
     env["GPU_CABT_OFFICIAL_DIR"] = "/workspace/official-engine"
     env["GPU_CABT_NVRTC_FAST_COMPILE"] = "max"
@@ -297,10 +313,7 @@ def train(
         "--gamma",
         "1.0",
         "--gae-lambda",
-        "1.0",
-        "--completed-trajectories-only",
-        "--minimum-terminal-actor-trajectories",
-        "512",
+        "0.95",
         "--critic-calibration-terminal-trajectories",
         "0",
         "--clip-coefficient",
@@ -328,6 +341,10 @@ def train(
     ]
     if resume_checkpoint is not None:
         command.extend(["--resume-checkpoint", str(resume_checkpoint)])
+    if policy_warmstart_checkpoint is not None:
+        command.extend(
+            ["--policy-warmstart-checkpoint", str(policy_warmstart_checkpoint)]
+        )
     if bf16:
         command.append("--bf16")
 
@@ -396,10 +413,10 @@ def main(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
-    learning_rate: float = 1e-8,
+    learning_rate: float = 2e-7,
     critic_learning_rate: float = 3e-4,
     entropy_coefficient: float = 0.0,
-    reference_kl_coefficient: float = 1.0,
+    reference_kl_coefficient: float = 0.1,
     bc_anchor_coefficient: float = 0.002,
     frozen_reference_fraction: float = 0.30,
     frozen_v7_fraction: float = 0.15,
@@ -408,8 +425,9 @@ def main(
     checkpoint_every_updates: int = 10,
     post_validation_lanes: int = 1,
     resume_checkpoint_relative: str = "",
+    policy_warmstart_checkpoint_relative: str = "",
     bf16: bool = True,
-    seed: int = 20260815,
+    seed: int = 20260816,
 ) -> None:
     source_commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
@@ -434,6 +452,7 @@ def main(
         checkpoint_every_updates=checkpoint_every_updates,
         post_validation_lanes=post_validation_lanes,
         resume_checkpoint_relative=resume_checkpoint_relative,
+        policy_warmstart_checkpoint_relative=policy_warmstart_checkpoint_relative,
         bf16=bf16,
         seed=seed,
     )
