@@ -137,6 +137,42 @@ def _parameter_delta_partitions(
     return actor_delta, critic_delta
 
 
+def _configure_trainable_policy(
+    model: PTCGPolicyV1,
+    *,
+    freeze_observation_encoder: bool,
+) -> dict[str, int]:
+    trainable_prefixes = (
+        "state_projection.",
+        "public_gru.",
+        "policy_state.",
+        "policy_interaction.",
+        "value_head.",
+        "selection_initial.",
+        "selection_option.",
+        "selection_gru.",
+    )
+    trainable_parameters = 0
+    frozen_parameters = 0
+    for name, parameter in model.named_parameters():
+        trainable = (
+            not freeze_observation_encoder
+            or name == "stop_embedding"
+            or name.startswith(trainable_prefixes)
+        )
+        parameter.requires_grad_(trainable)
+        if trainable:
+            trainable_parameters += parameter.numel()
+        else:
+            frozen_parameters += parameter.numel()
+    if trainable_parameters <= 0:
+        raise PPOTrainError("PPO trainable parameter set is empty")
+    return {
+        "trainable_parameters": trainable_parameters,
+        "frozen_parameters": frozen_parameters,
+    }
+
+
 def _flatten_recurrent_parameters(model: PTCGPolicyV1) -> None:
     model.event_gru.flatten_parameters()
 
@@ -190,6 +226,7 @@ def _exact_resume_configuration(
         "chunk_boundaries": args.chunk_boundaries,
         "learner_lane_envs": args.learner_lane_envs,
         "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
+        "freeze_observation_encoder": args.freeze_observation_encoder,
         "frozen_reference_fraction": args.frozen_reference_fraction,
         "rollout_storage": args.rollout_storage,
         "frozen_v7_fraction": args.frozen_v7_fraction,
@@ -1977,9 +2014,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "load_seconds": time.perf_counter() - bc_anchor_load_started,
         }
 
+    trainable_policy = _configure_trainable_policy(
+        model,
+        freeze_observation_encoder=args.freeze_observation_encoder,
+    )
     critic_parameter_ids = {id(parameter) for parameter in model.value_head.parameters()}
     actor_parameters = [
-        parameter for parameter in model.parameters() if id(parameter) not in critic_parameter_ids
+        parameter
+        for parameter in model.parameters()
+        if parameter.requires_grad and id(parameter) not in critic_parameter_ids
     ]
     critic_parameters = list(model.value_head.parameters())
     optimizer = torch.optim.AdamW(
@@ -2577,6 +2620,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             ),
         },
         "model_parameters": model.trainable_parameter_count,
+        "optimizer_parameter_partition": trainable_policy,
         "deck": {"path": args.deck.as_posix()},
         "configuration": {
             "env_count": args.env_count,
@@ -2586,6 +2630,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "learner_lane_envs": args.learner_lane_envs,
             "heartbeat_seconds": args.heartbeat_seconds,
             "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
+            "freeze_observation_encoder": args.freeze_observation_encoder,
             "rollout_storage": args.rollout_storage,
             "checkpoint_every_updates": args.checkpoint_every_updates,
             "frozen_reference_fraction": args.frozen_reference_fraction,
@@ -2703,6 +2748,7 @@ def main() -> int:
     parser.add_argument("--chunk-boundaries", type=int, default=64)
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
     parser.add_argument("--optimizer-lanes-per-update", type=int, default=0)
+    parser.add_argument("--freeze-observation-encoder", action="store_true")
     parser.add_argument(
         "--rollout-storage",
         choices=("cpu-compact", "cuda-compact"),
