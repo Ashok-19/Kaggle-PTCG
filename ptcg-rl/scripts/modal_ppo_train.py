@@ -189,6 +189,7 @@ def train(
     frozen_v5_fraction: float = 0.30,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
+    resume_checkpoint_relative: str = "",
     seed: int = 20260815,
 ) -> dict[str, object]:
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
@@ -219,6 +220,14 @@ def train(
         raise ValueError("heartbeat_seconds must stay within (0, 60]")
     if checkpoint_every_updates <= 0:
         raise ValueError("checkpoint_every_updates must be positive")
+    resume_checkpoint: Path | None = None
+    if resume_checkpoint_relative:
+        relative = Path(resume_checkpoint_relative)
+        if relative.is_absolute() or ".." in relative.parts or not relative.parts:
+            raise ValueError("resume checkpoint must be a safe /data-relative path")
+        if relative.parts[0] != "runs" or relative.suffix != ".pt":
+            raise ValueError("resume checkpoint must point to a .pt file under /data/runs")
+        resume_checkpoint = Path("/data") / relative
     if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
         raise ValueError("source commit must be an exact 40-character Git SHA")
 
@@ -290,6 +299,8 @@ def train(
         "--max-gradient-norm",
         "1.0",
     ]
+    if resume_checkpoint is not None:
+        command.extend(["--resume-checkpoint", str(resume_checkpoint)])
 
     telemetry = subprocess.Popen(
         [
@@ -363,6 +374,7 @@ def main(
     frozen_v5_fraction: float = 0.30,
     heartbeat_seconds: float = 10.0,
     checkpoint_every_updates: int = 10,
+    resume_checkpoint_relative: str = "",
     seed: int = 20260815,
 ) -> None:
     source_commit = subprocess.check_output(
@@ -383,6 +395,7 @@ def main(
         frozen_v5_fraction=frozen_v5_fraction,
         heartbeat_seconds=heartbeat_seconds,
         checkpoint_every_updates=checkpoint_every_updates,
+        resume_checkpoint_relative=resume_checkpoint_relative,
         seed=seed,
     )
     print(json.dumps(result, indent=2, sort_keys=True))

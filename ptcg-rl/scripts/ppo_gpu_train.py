@@ -4,6 +4,7 @@ import argparse
 import copy
 import json
 import math
+import os
 import resource
 import time
 from dataclasses import asdict, dataclass
@@ -27,6 +28,7 @@ from ptcg_rl.g2.card_table import load_card_table
 from ptcg_rl.g2.network import PTCGPolicyV1, TorchDecisionBatch
 from ptcg_rl.g3.checkpoint import (
     load_training_checkpoint_model_state,
+    restore_training_checkpoint,
     save_training_checkpoint,
 )
 from ptcg_rl.g3.compound_batch import (
@@ -50,6 +52,10 @@ class PPOTrainError(RuntimeError):
 POLICY_LEARNER = 0
 POLICY_FROZEN_V7 = 1
 POLICY_FROZEN_V5 = 2
+
+ACTOR_SNAPSHOT_SCHEMA_VERSION = 1
+ACTOR_SNAPSHOT_KIND = "KPTCG_G3_GPU_ACTOR_SNAPSHOT"
+MAX_ACTOR_SNAPSHOT_BYTES = 1024 * 1024 * 1024
 
 
 @dataclass
@@ -126,6 +132,224 @@ def _zero_untrained_bc_value_output(model: PTCGPolicyV1) -> None:
 def _host_peak_rss_bytes() -> int:
     # Linux reports ru_maxrss in KiB.
     return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss) * 1024
+
+
+def _actor_snapshot_path(checkpoint_path: Path) -> Path:
+    return checkpoint_path.with_name(checkpoint_path.name + ".actor-state.pt")
+
+
+def _exact_resume_configuration(
+    *,
+    args: argparse.Namespace,
+    runtime: GpuCabtRuntime,
+) -> dict[str, Any]:
+    return {
+        "source_commit": args.source_commit,
+        "model_label": args.model_label,
+        "card_table_path": args.card_table.as_posix(),
+        "v7_checkpoint_path": args.bc_checkpoint.as_posix(),
+        "v5_checkpoint_path": (
+            args.v5_checkpoint.as_posix() if args.v5_checkpoint is not None else args.bc_checkpoint.as_posix()
+        ),
+        "deck_path": args.deck.as_posix(),
+        "engine_abi": asdict(runtime.abi),
+        "env_count": args.env_count,
+        "stack_bytes": args.stack_bytes,
+        "rollout_horizon": args.rollout_horizon,
+        "chunk_boundaries": args.chunk_boundaries,
+        "learner_lane_envs": args.learner_lane_envs,
+        "frozen_v7_fraction": args.frozen_v7_fraction,
+        "frozen_v5_fraction": args.frozen_v5_fraction,
+        "seed": args.seed,
+        "gamma": args.gamma,
+        "gae_lambda": args.gae_lambda,
+        "clip_coefficient": args.clip_coefficient,
+        "value_clip_coefficient": args.value_clip_coefficient,
+        "value_coefficient": args.value_coefficient,
+        "entropy_coefficient": args.entropy_coefficient,
+        "reference_kl_coefficient": args.reference_kl_coefficient,
+        "bc_anchor_coefficient": args.bc_anchor_coefficient,
+        "bc_anchor_episodes_per_corpus": args.bc_anchor_episodes_per_corpus,
+        "bc_anchor_batch_size": args.bc_anchor_batch_size,
+        "bc_anchor_sequence_length": args.bc_anchor_sequence_length,
+        "bc_anchor_live_root": (
+            args.bc_anchor_live_root.as_posix() if args.bc_anchor_live_root is not None else None
+        ),
+        "bc_anchor_exact_root": (
+            args.bc_anchor_exact_root.as_posix() if args.bc_anchor_exact_root is not None else None
+        ),
+        "replay_tolerance": args.replay_tolerance,
+        "maximum_post_kl": args.maximum_post_kl,
+        "maximum_clip_fraction": args.maximum_clip_fraction,
+        "learning_rate": args.learning_rate,
+        "max_gradient_norm": args.max_gradient_norm,
+    }
+
+
+def _save_exact_actor_snapshot(
+    *,
+    checkpoint_path: Path,
+    actor_state: ActorStateV1,
+    runtime: GpuCabtRuntime,
+    configuration: dict[str, Any],
+) -> dict[str, Any]:
+    runtime.synchronize()
+    snapshot_path = _actor_snapshot_path(checkpoint_path)
+    payload = {
+        "schema_version": ACTOR_SNAPSHOT_SCHEMA_VERSION,
+        "kind": ACTOR_SNAPSHOT_KIND,
+        "checkpoint_path": checkpoint_path.name,
+        "configuration": configuration,
+        "actor_state": {
+            "hidden": actor_state.hidden.detach().to(device="cpu", dtype=torch.float32).contiguous(),
+            "reference_hidden": actor_state.reference_hidden.detach()
+            .to(device="cpu", dtype=torch.float32)
+            .contiguous(),
+            "assignment": actor_state.assignment.detach().to(device="cpu", dtype=torch.int8).contiguous(),
+            "horizon_index": int(actor_state.horizon_index),
+        },
+        "engine": {
+            "states": torch.from_numpy(runtime.states.get()).clone(),
+            "runtimes": torch.from_numpy(runtime.runtimes.get()).clone(),
+        },
+    }
+    snapshot_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = snapshot_path.with_name(snapshot_path.name + ".partial")
+    size = 0
+    try:
+        torch.save(payload, temporary)
+        size = temporary.stat().st_size
+        if size <= 0 or size > MAX_ACTOR_SNAPSHOT_BYTES:
+            raise PPOTrainError(
+                f"actor snapshot size {size} is outside 1..{MAX_ACTOR_SNAPSHOT_BYTES} bytes"
+            )
+        with temporary.open("rb") as handle:
+            os.fsync(handle.fileno())
+        os.replace(temporary, snapshot_path)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return {"path": snapshot_path.as_posix(), "payload_bytes": size}
+
+
+def _restore_exact_actor_snapshot(
+    *,
+    checkpoint_path: Path,
+    checkpoint_rollout_boundary: dict[str, Any],
+    model: PTCGPolicyV1,
+    runtime: GpuCabtRuntime,
+    configuration: dict[str, Any],
+) -> tuple[ActorStateV1, dict[str, Any]]:
+    snapshot_path = _actor_snapshot_path(checkpoint_path)
+    try:
+        size = snapshot_path.stat().st_size
+    except OSError as error:
+        raise PPOTrainError(f"actor snapshot is missing: {error}") from error
+    if size <= 0 or size > MAX_ACTOR_SNAPSHOT_BYTES:
+        raise PPOTrainError("actor snapshot size is outside the supported bound")
+    try:
+        payload = torch.load(snapshot_path, map_location="cpu", weights_only=True)
+    except Exception as error:
+        raise PPOTrainError(f"restricted actor snapshot load failed: {error}") from error
+    if not isinstance(payload, dict) or set(payload) != {
+        "schema_version",
+        "kind",
+        "checkpoint_path",
+        "configuration",
+        "actor_state",
+        "engine",
+    }:
+        raise PPOTrainError("actor snapshot payload keys differ")
+    if payload["schema_version"] != ACTOR_SNAPSHOT_SCHEMA_VERSION or payload["kind"] != ACTOR_SNAPSHOT_KIND:
+        raise PPOTrainError("actor snapshot identity differs")
+    if payload["checkpoint_path"] != checkpoint_path.name:
+        raise PPOTrainError("actor snapshot is not linked to the requested training checkpoint")
+    if payload["configuration"] != configuration:
+        raise PPOTrainError("exact-resume configuration differs from the actor snapshot")
+    expected_sidecar = checkpoint_rollout_boundary.get("actor_state_sidecar")
+    if (
+        checkpoint_rollout_boundary.get("actor_state_persisted") is not True
+        or checkpoint_rollout_boundary.get("exact_resume_supported") is not True
+        or expected_sidecar != snapshot_path.name
+    ):
+        raise PPOTrainError("training checkpoint does not declare an exact actor-state sidecar")
+    actor = payload["actor_state"]
+    engine = payload["engine"]
+    if not isinstance(actor, dict) or set(actor) != {
+        "hidden",
+        "reference_hidden",
+        "assignment",
+        "horizon_index",
+    }:
+        raise PPOTrainError("actor snapshot recurrent state keys differ")
+    if not isinstance(engine, dict) or set(engine) != {"states", "runtimes"}:
+        raise PPOTrainError("actor snapshot engine keys differ")
+    hidden = actor["hidden"]
+    reference_hidden = actor["reference_hidden"]
+    assignment = actor["assignment"]
+    horizon_index = actor["horizon_index"]
+    expected_hidden_shape = (runtime.env_count, 2, model.config.public_hidden)
+    if (
+        not isinstance(hidden, Tensor)
+        or hidden.dtype != torch.float32
+        or tuple(hidden.shape) != expected_hidden_shape
+        or not torch.isfinite(hidden).all()
+    ):
+        raise PPOTrainError("actor snapshot hidden state differs")
+    if (
+        not isinstance(reference_hidden, Tensor)
+        or reference_hidden.dtype != torch.float32
+        or tuple(reference_hidden.shape) != expected_hidden_shape
+        or not torch.isfinite(reference_hidden).all()
+    ):
+        raise PPOTrainError("actor snapshot reference hidden state differs")
+    if (
+        not isinstance(assignment, Tensor)
+        or assignment.dtype != torch.int8
+        or tuple(assignment.shape) != (runtime.env_count, 2)
+    ):
+        raise PPOTrainError("actor snapshot league assignment differs")
+    if torch.any((assignment < POLICY_LEARNER) | (assignment > POLICY_FROZEN_V5)):
+        raise PPOTrainError("actor snapshot contains an unknown policy id")
+    _league_metrics_from_assignment(assignment)
+    if not isinstance(horizon_index, int) or isinstance(horizon_index, bool) or horizon_index <= 0:
+        raise PPOTrainError("actor snapshot horizon index must be a positive integer")
+    if horizon_index != checkpoint_rollout_boundary.get("horizon_index"):
+        raise PPOTrainError("actor snapshot horizon index differs from training checkpoint")
+    raw_states = engine["states"]
+    raw_runtimes = engine["runtimes"]
+    if (
+        not isinstance(raw_states, Tensor)
+        or raw_states.dtype != torch.uint8
+        or raw_states.ndim != 1
+        or raw_states.numel() != runtime.states.size
+    ):
+        raise PPOTrainError("actor snapshot GPU-CABT core-state bytes differ")
+    if (
+        not isinstance(raw_runtimes, Tensor)
+        or raw_runtimes.dtype != torch.uint8
+        or raw_runtimes.ndim != 1
+        or raw_runtimes.numel() != runtime.runtimes.size
+    ):
+        raise PPOTrainError("actor snapshot GPU-CABT runtime bytes differ")
+    runtime.states.set(raw_states.contiguous().numpy())
+    runtime.runtimes.set(raw_runtimes.contiguous().numpy())
+    runtime.synchronize()
+    status = runtime.status().torch(torch)
+    runtime.synchronize()
+    if torch.any(status.error_flags != 0):
+        raise PPOTrainError("restored GPU-CABT state contains runtime error flags")
+    device = next(model.parameters()).device
+    restored = ActorStateV1(
+        hidden=hidden.to(device=device),
+        reference_hidden=reference_hidden.to(device=device),
+        assignment=assignment.to(device=device),
+        horizon_index=horizon_index,
+    )
+    return restored, {
+        "path": snapshot_path.as_posix(),
+        "payload_bytes": size,
+        "horizon_index": horizon_index,
+    }
 
 
 def _balanced_rehearsal_records(root: Path, limit: int) -> list[dict[str, Any]]:
@@ -1349,7 +1573,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     frozen_v7_model = copy.deepcopy(model).eval()
     for parameter in frozen_v7_model.parameters():
         parameter.requires_grad_(False)
-    if not args.preserve_initial_value_head:
+    if args.resume_checkpoint is None and not args.preserve_initial_value_head:
         _zero_untrained_bc_value_output(model)
     frozen_v5_model = PTCGPolicyV1(card_table, model_config(args.model_label)).to(device)
     if args.v5_checkpoint is not None:
@@ -1392,9 +1616,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     total_learner_decisions = 0
     total_meaningful_targets = 0
     completed_updates = 0
-    model.eval()
     initial_signal_wait_horizons = 0
-    model.eval()
 
     deck = _load_deck(args.deck)
     decks = np.broadcast_to(deck, (args.env_count, 2, 60)).copy()
@@ -1402,14 +1624,73 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     runtime = GpuCabtRuntime(args.env_count, stack_size_bytes=args.stack_bytes)
     runtime.synchronize()
     decks_device = runtime.cp.asarray(decks)
-    actor_state = _initialize_actor_state(
-        model=model,
-        runtime=runtime,
-        decks=decks_device,
-        seed=args.seed,
-        frozen_v7_fraction=args.frozen_v7_fraction,
-        frozen_v5_fraction=args.frozen_v5_fraction,
-    )
+    resume_configuration = _exact_resume_configuration(args=args, runtime=runtime)
+    resume_record: dict[str, Any] = {
+        "exact_resume_supported": True,
+        "resumed": False,
+        "checkpoint": None,
+        "actor_snapshot": None,
+    }
+    if args.resume_checkpoint is not None:
+        loaded_resume = restore_training_checkpoint(
+            args.resume_checkpoint,
+            model=model,
+            optimizer=optimizer,
+            scheduler=scheduler,
+            scaler=None,
+            restore_rng=True,
+        )
+        required_counters = {
+            "ppo_updates",
+            "actor_decisions",
+            "learner_decisions",
+            "meaningful_policy_targets",
+            "initial_signal_wait_horizons",
+        }
+        if set(loaded_resume.counters) != required_counters:
+            raise PPOTrainError("resume checkpoint counters differ from the exact production set")
+        counters = loaded_resume.counters
+        if any(
+            not isinstance(counters[name], int)
+            or isinstance(counters[name], bool)
+            or counters[name] < 0
+            for name in required_counters
+        ):
+            raise PPOTrainError("resume checkpoint counters must be nonnegative integers")
+        completed_updates = int(counters["ppo_updates"])
+        total_actor_decisions = int(counters["actor_decisions"])
+        total_learner_decisions = int(counters["learner_decisions"])
+        total_meaningful_targets = int(counters["meaningful_policy_targets"])
+        initial_signal_wait_horizons = int(counters["initial_signal_wait_horizons"])
+        if completed_updates <= 0:
+            raise PPOTrainError("exact resume requires at least one completed PPO update")
+        actor_state, actor_snapshot_record = _restore_exact_actor_snapshot(
+            checkpoint_path=args.resume_checkpoint,
+            checkpoint_rollout_boundary=loaded_resume.rollout_boundary,
+            model=model,
+            runtime=runtime,
+            configuration=resume_configuration,
+        )
+        resume_record = {
+            "exact_resume_supported": True,
+            "resumed": True,
+            "checkpoint": args.resume_checkpoint.as_posix(),
+            "restored_rng_states": list(loaded_resume.restored_rng_states),
+            "actor_snapshot": actor_snapshot_record,
+        }
+    else:
+        actor_state = _initialize_actor_state(
+            model=model,
+            runtime=runtime,
+            decks=decks_device,
+            seed=args.seed,
+            frozen_v7_fraction=args.frozen_v7_fraction,
+            frozen_v5_fraction=args.frozen_v5_fraction,
+        )
+    _flatten_recurrent_parameters(model)
+    _flatten_recurrent_parameters(frozen_v7_model)
+    _flatten_recurrent_parameters(frozen_v5_model)
+    model.eval()
     runtime_init_seconds = time.perf_counter() - runtime_started
     output_dir: Path = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1466,6 +1747,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         gae_seconds = time.perf_counter() - gae_started
         if (
             completed_updates == 0
+            and args.resume_checkpoint is None
             and not args.preserve_initial_value_head
             and gae_stats.terminal_trajectories == 0
         ):
@@ -1616,6 +1898,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "actor_decisions": total_actor_decisions,
                     "learner_decisions": total_learner_decisions,
                     "meaningful_policy_targets": total_meaningful_targets,
+                    "initial_signal_wait_horizons": initial_signal_wait_horizons,
                 },
                 league={
                     "mode": "current-selfplay-plus-frozen-v7-v5",
@@ -1632,19 +1915,28 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     "rollout_seed": rollout_seed,
                     "rollout_horizon": args.rollout_horizon,
                     "chunk_boundaries": args.chunk_boundaries,
-                    "actor_state_persisted": False,
-                    "exact_resume_supported": False,
+                    "actor_state_persisted": True,
+                    "actor_state_sidecar": _actor_snapshot_path(checkpoint_path).name,
+                    "exact_resume_supported": True,
                 },
                 include_cuda_rng=True,
+            )
+            actor_snapshot = _save_exact_actor_snapshot(
+                checkpoint_path=checkpoint_path,
+                actor_state=actor_state,
+                runtime=runtime,
+                configuration=resume_configuration,
             )
             checkpoint_seconds = time.perf_counter() - checkpoint_started
             checkpoint_record = {
                 "update": update_number,
                 "path": checkpoint_path.as_posix(),
                 "payload_bytes": checkpoint["payload_bytes"],
+                "actor_state_path": actor_snapshot["path"],
+                "actor_state_payload_bytes": actor_snapshot["payload_bytes"],
                 "write_seconds": checkpoint_seconds,
                 "model_only_continuation_safe": True,
-                "exact_resume_safe": False,
+                "exact_resume_safe": True,
             }
             checkpoint_records.append(checkpoint_record)
             update_record["checkpoint"] = checkpoint_record
@@ -1702,7 +1994,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "gpu_name": torch.cuda.get_device_name(device),
         "bf16": bool(args.bf16),
         "model_label": args.model_label,
-        "initializer_interpretation": "model-only warm start from selected BC checkpoint",
+        "initializer_interpretation": (
+            "exact full-state resume from PPO checkpoint"
+            if args.resume_checkpoint is not None
+            else "model-only warm start from selected BC checkpoint"
+        ),
         "model_parameters": model.trainable_parameter_count,
         "deck": {"path": args.deck.as_posix()},
         "configuration": {
@@ -1733,9 +2029,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "max_gradient_norm": args.max_gradient_norm,
             "ppo_epochs_per_rollout": 1,
             "critic_initialization": (
-                "preserved_from_initializer"
-                if args.preserve_initial_value_head
-                else "zero_output_layer_from_untrained_bc_head"
+                "restored_from_rl_checkpoint"
+                if args.resume_checkpoint is not None
+                else (
+                    "preserved_from_initializer"
+                    if args.preserve_initial_value_head
+                    else "zero_output_layer_from_untrained_bc_head"
+                )
             ),
             "max_initial_signal_horizons": args.max_initial_signal_horizons,
             "initial_signal_wait_horizons": initial_signal_wait_horizons,
@@ -1744,10 +2044,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "recurrent_replay": "chunk-start hidden snapshot plus in-chunk recurrent unroll",
         },
         "bc_anchor_setup": bc_anchor_setup,
-        "resume": {
-            "exact_resume_supported": False,
-            "reason": "GPU-CABT environment, actor hidden, reference hidden, and league assignment are not persisted",
-        },
+        "resume": resume_record,
         "runtime_init_seconds": runtime_init_seconds,
         "run": {
             "updates": len(updates),
@@ -1799,6 +2096,7 @@ def main() -> int:
     parser.add_argument("--card-table", type=Path, required=True)
     parser.add_argument("--model-label", default="3.7m", choices=tuple(model_configs()))
     parser.add_argument("--bc-checkpoint", type=Path, required=True)
+    parser.add_argument("--resume-checkpoint", type=Path)
     parser.add_argument("--v5-checkpoint", type=Path)
     parser.add_argument("--deck", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
