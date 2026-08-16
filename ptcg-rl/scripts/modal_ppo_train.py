@@ -187,6 +187,8 @@ def train(
     learner_lane_envs: int = 2048,
     optimizer_lanes_per_update: int = 1,
     freeze_observation_encoder: bool = True,
+    partial_unfreeze_observation: bool = False,
+    observation_learning_rate: float = 5e-8,
     checkpoint_entity_transformer: bool = False,
     checkpoint_entity_transformer_first_layer_only: bool = False,
     rollout_storage: str = "cuda-compact",
@@ -220,6 +222,12 @@ def train(
         raise ValueError("learner lane envs must stay within 1..env_count")
     if optimizer_lanes_per_update < 0:
         raise ValueError("optimizer_lanes_per_update must be nonnegative")
+    if freeze_observation_encoder and partial_unfreeze_observation:
+        raise ValueError(
+            "freeze_observation_encoder and partial_unfreeze_observation are mutually exclusive"
+        )
+    if not (0.0 < observation_learning_rate <= 1e-3):
+        raise ValueError("observation_learning_rate must stay within (0, 1e-3]")
     if not (0.0 < learning_rate <= 1e-3):
         raise ValueError("learning_rate must stay within (0, 1e-3]")
     if not (0.0 < critic_learning_rate <= 0.1):
@@ -312,6 +320,9 @@ def train(
         "--optimizer-lanes-per-update",
         str(optimizer_lanes_per_update),
         *( ["--freeze-observation-encoder"] if freeze_observation_encoder else [] ),
+        *( ["--partial-unfreeze-observation"] if partial_unfreeze_observation else [] ),
+        "--observation-learning-rate",
+        str(observation_learning_rate),
         *( ["--checkpoint-entity-transformer"] if checkpoint_entity_transformer else [] ),
         *( ["--checkpoint-entity-transformer-first-layer-only"] if checkpoint_entity_transformer_first_layer_only else [] ),
         "--rollout-storage",
@@ -435,6 +446,8 @@ def main(
     learner_lane_envs: int = 2048,
     optimizer_lanes_per_update: int = 1,
     freeze_observation_encoder: bool = True,
+    partial_unfreeze_observation: bool = False,
+    observation_learning_rate: float = 5e-8,
     checkpoint_entity_transformer: bool = False,
     checkpoint_entity_transformer_first_layer_only: bool = False,
     rollout_storage: str = "cuda-compact",
@@ -468,6 +481,8 @@ def main(
         learning_rate=learning_rate,
         optimizer_lanes_per_update=optimizer_lanes_per_update,
         freeze_observation_encoder=freeze_observation_encoder,
+        partial_unfreeze_observation=partial_unfreeze_observation,
+        observation_learning_rate=observation_learning_rate,
         checkpoint_entity_transformer=checkpoint_entity_transformer,
         checkpoint_entity_transformer_first_layer_only=checkpoint_entity_transformer_first_layer_only,
         rollout_storage=rollout_storage,

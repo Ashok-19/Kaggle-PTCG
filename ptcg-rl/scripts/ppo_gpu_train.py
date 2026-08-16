@@ -137,32 +137,66 @@ def _parameter_delta_partitions(
     return actor_delta, critic_delta
 
 
+PPO_HEAD_TRAINABLE_PREFIXES = (
+    "state_projection.",
+    "public_gru.",
+    "policy_state.",
+    "policy_interaction.",
+    "value_head.",
+    "selection_initial.",
+    "selection_option.",
+    "selection_gru.",
+)
+
+PARTIAL_OBSERVATION_TRAINABLE_PREFIXES = (
+    "entity_transformer.layers.1.",
+    "entity_parent_projection.",
+    "event_card_roles.",
+    "event_attack.",
+    "event_entity_reference.",
+    "event_projection.",
+    "event_gru.",
+    "players_projection.",
+    "global_projection.",
+    "option_attack.",
+    "option_projection.",
+)
+
+
 def _configure_trainable_policy(
     model: PTCGPolicyV1,
     *,
     freeze_observation_encoder: bool,
+    partial_unfreeze_observation: bool,
 ) -> dict[str, int]:
-    trainable_prefixes = (
-        "state_projection.",
-        "public_gru.",
-        "policy_state.",
-        "policy_interaction.",
-        "value_head.",
-        "selection_initial.",
-        "selection_option.",
-        "selection_gru.",
-    )
+    if freeze_observation_encoder and partial_unfreeze_observation:
+        raise PPOTrainError(
+            "partial observation unfreeze and frozen observation encoder are mutually exclusive"
+        )
     trainable_parameters = 0
     frozen_parameters = 0
+    observation_parameters = 0
     for name, parameter in model.named_parameters():
+        head_trainable = name == "stop_embedding" or name.startswith(
+            PPO_HEAD_TRAINABLE_PREFIXES
+        )
+        partial_observation_trainable = name.startswith(
+            PARTIAL_OBSERVATION_TRAINABLE_PREFIXES
+        )
         trainable = (
-            not freeze_observation_encoder
-            or name == "stop_embedding"
-            or name.startswith(trainable_prefixes)
+            head_trainable
+            if freeze_observation_encoder
+            else (
+                head_trainable or partial_observation_trainable
+                if partial_unfreeze_observation
+                else True
+            )
         )
         parameter.requires_grad_(trainable)
         if trainable:
             trainable_parameters += parameter.numel()
+            if not head_trainable:
+                observation_parameters += parameter.numel()
         else:
             frozen_parameters += parameter.numel()
     if trainable_parameters <= 0:
@@ -170,6 +204,7 @@ def _configure_trainable_policy(
     return {
         "trainable_parameters": trainable_parameters,
         "frozen_parameters": frozen_parameters,
+        "observation_parameters": observation_parameters,
     }
 
 
@@ -227,6 +262,8 @@ def _exact_resume_configuration(
         "learner_lane_envs": args.learner_lane_envs,
         "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
         "freeze_observation_encoder": args.freeze_observation_encoder,
+        "partial_unfreeze_observation": args.partial_unfreeze_observation,
+        "observation_learning_rate": args.observation_learning_rate,
         "checkpoint_entity_transformer": args.checkpoint_entity_transformer,
         "checkpoint_entity_transformer_first_layer_only": args.checkpoint_entity_transformer_first_layer_only,
         "frozen_reference_fraction": args.frozen_reference_fraction,
@@ -1909,6 +1946,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("learner lane envs must stay within 1..env_count")
     if args.optimizer_lanes_per_update < 0:
         raise PPOTrainError("optimizer lanes per update must be nonnegative")
+    if args.freeze_observation_encoder and args.partial_unfreeze_observation:
+        raise PPOTrainError(
+            "freeze observation encoder and partial observation unfreeze are mutually exclusive"
+        )
+    if not (0.0 < args.observation_learning_rate <= 1e-3):
+        raise PPOTrainError("observation learning rate must stay within (0, 1e-3]")
     if args.rollout_horizon < args.chunk_boundaries:
         raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
     if args.checkpoint_every_updates <= 0:
@@ -2023,23 +2066,42 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     trainable_policy = _configure_trainable_policy(
         model,
         freeze_observation_encoder=args.freeze_observation_encoder,
+        partial_unfreeze_observation=args.partial_unfreeze_observation,
     )
     critic_parameter_ids = {id(parameter) for parameter in model.value_head.parameters()}
+    observation_parameter_ids = {
+        id(parameter)
+        for name, parameter in model.named_parameters()
+        if parameter.requires_grad
+        and id(parameter) not in critic_parameter_ids
+        and not (
+            name == "stop_embedding" or name.startswith(PPO_HEAD_TRAINABLE_PREFIXES)
+        )
+    }
     actor_parameters = [
         parameter
         for parameter in model.parameters()
-        if parameter.requires_grad and id(parameter) not in critic_parameter_ids
+        if parameter.requires_grad
+        and id(parameter) not in critic_parameter_ids
+        and id(parameter) not in observation_parameter_ids
+    ]
+    observation_parameters = [
+        parameter
+        for parameter in model.parameters()
+        if id(parameter) in observation_parameter_ids
     ]
     critic_parameters = list(model.value_head.parameters())
-    optimizer = torch.optim.AdamW(
-        [
-            {"params": actor_parameters, "lr": args.learning_rate},
-            {"params": critic_parameters, "lr": args.critic_learning_rate},
-        ],
-        weight_decay=0.0,
+    optimizer_groups = [{"params": actor_parameters, "lr": args.learning_rate}]
+    if observation_parameters:
+        optimizer_groups.append(
+            {"params": observation_parameters, "lr": args.observation_learning_rate}
+        )
+    optimizer_groups.append(
+        {"params": critic_parameters, "lr": args.critic_learning_rate}
     )
+    optimizer = torch.optim.AdamW(optimizer_groups, weight_decay=0.0)
     scheduler = torch.optim.lr_scheduler.LambdaLR(
-        optimizer, lr_lambda=[lambda _: 1.0, lambda _: 1.0]
+        optimizer, lr_lambda=[lambda _: 1.0 for _ in optimizer.param_groups]
     )
     total_actor_decisions = 0
     total_learner_decisions = 0
@@ -2637,6 +2699,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "heartbeat_seconds": args.heartbeat_seconds,
             "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
             "freeze_observation_encoder": args.freeze_observation_encoder,
+            "partial_unfreeze_observation": args.partial_unfreeze_observation,
+            "observation_learning_rate": args.observation_learning_rate,
             "checkpoint_entity_transformer": args.checkpoint_entity_transformer,
             "checkpoint_entity_transformer_first_layer_only": args.checkpoint_entity_transformer_first_layer_only,
             "rollout_storage": args.rollout_storage,
@@ -2757,6 +2821,8 @@ def main() -> int:
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
     parser.add_argument("--optimizer-lanes-per-update", type=int, default=0)
     parser.add_argument("--freeze-observation-encoder", action="store_true")
+    parser.add_argument("--partial-unfreeze-observation", action="store_true")
+    parser.add_argument("--observation-learning-rate", type=float, default=5e-8)
     parser.add_argument("--checkpoint-entity-transformer", action="store_true")
     parser.add_argument(
         "--checkpoint-entity-transformer-first-layer-only", action="store_true"
