@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass
 from typing import Any
 
@@ -10,6 +11,9 @@ from torch import Tensor
 
 class BatchedCompoundError(ValueError):
     """Raised when batched compound-action tensors violate decoder contracts."""
+
+
+_FAST_VALIDATED_GPU_PATH = os.environ.get("KPTCG_FAST_VALIDATED_GPU_PATH") == "1"
 
 
 @dataclass(frozen=True)
@@ -39,10 +43,13 @@ def _pad_options(
     if available_mask.numel() != option_embeddings.shape[0]:
         raise BatchedCompoundError("available mask differs from flattened option embeddings")
     offsets = option_offsets.to(torch.long)
-    if int(offsets[0].item()) != 0 or int(offsets[-1].item()) != option_embeddings.shape[0]:
+    if not _FAST_VALIDATED_GPU_PATH and (
+        int(offsets[0].item()) != 0
+        or int(offsets[-1].item()) != option_embeddings.shape[0]
+    ):
         raise BatchedCompoundError("option offsets do not span the flattened option table")
     lengths = offsets[1:] - offsets[:-1]
-    if torch.any(lengths < 0):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(lengths < 0):
         raise BatchedCompoundError("option offsets are not monotonic")
     batch_size = int(lengths.numel())
     maximum_options = int(lengths.max().item()) if lengths.numel() else 0
@@ -74,10 +81,13 @@ def _pad_primary_option_logits(
     offsets = option_offsets.to(device=primary_option_logits.device, dtype=torch.long)
     if offsets.ndim != 1 or offsets.numel() < 2:
         raise BatchedCompoundError("option offsets must contain one boundary per batch row")
-    if int(offsets[0].item()) != 0 or int(offsets[-1].item()) != primary_option_logits.numel():
+    if not _FAST_VALIDATED_GPU_PATH and (
+        int(offsets[0].item()) != 0
+        or int(offsets[-1].item()) != primary_option_logits.numel()
+    ):
         raise BatchedCompoundError("primary option logits differ from option offsets")
     lengths = offsets[1:] - offsets[:-1]
-    if torch.any(lengths < 0):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(lengths < 0):
         raise BatchedCompoundError("option offsets are not monotonic")
     batch_size = int(lengths.numel())
     maximum_options = int(lengths.max().item()) if lengths.numel() else 0
@@ -94,24 +104,34 @@ def _pad_primary_option_logits(
     return padded
 
 
-def _distribution_stats(logits: Tensor, legal: Tensor) -> tuple[Tensor, Tensor, Tensor]:
+def _distribution_stats(
+    logits: Tensor,
+    legal: Tensor,
+    *,
+    compute_entropy: bool = True,
+) -> tuple[Tensor, Tensor, Tensor]:
     if logits.ndim != 2 or legal.shape != logits.shape or legal.dtype != torch.bool:
         raise BatchedCompoundError("batched distribution logits/mask differ")
-    if torch.any(~legal.any(dim=1)):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(~legal.any(dim=1)):
         raise BatchedCompoundError("batched compound distribution has an empty row")
-    if torch.isnan(logits).any() or torch.isposinf(logits).any():
+    if not _FAST_VALIDATED_GPU_PATH and (
+        torch.isnan(logits).any() or torch.isposinf(logits).any()
+    ):
         raise BatchedCompoundError("batched compound logits contain NaN or positive infinity")
     masked = logits.masked_fill(~legal, float("-inf"))
     log_probabilities = torch.log_softmax(masked, dim=1)
-    probabilities = torch.exp(log_probabilities).masked_fill(~legal, 0.0)
-    safe_logs = torch.where(legal, log_probabilities, torch.zeros_like(log_probabilities))
-    entropy = -(probabilities * safe_logs).sum(dim=1)
     legal_count = legal.sum(dim=1)
-    normalized_entropy = torch.where(
-        legal_count > 1,
-        entropy / torch.log(legal_count.to(entropy.dtype).clamp_min(2)),
-        torch.zeros_like(entropy),
-    )
+    if compute_entropy:
+        probabilities = torch.exp(log_probabilities).masked_fill(~legal, 0.0)
+        safe_logs = torch.where(legal, log_probabilities, torch.zeros_like(log_probabilities))
+        entropy = -(probabilities * safe_logs).sum(dim=1)
+        normalized_entropy = torch.where(
+            legal_count > 1,
+            entropy / torch.log(legal_count.to(entropy.dtype).clamp_min(2)),
+            torch.zeros_like(entropy),
+        )
+    else:
+        normalized_entropy = logits.new_zeros((logits.shape[0],))
     return log_probabilities, normalized_entropy, legal_count
 
 
@@ -172,10 +192,11 @@ def sample_compound_actions_batched(
         raise BatchedCompoundError("selection bounds differ from batch size")
     available_count = available.sum(dim=1)
     effective_maximum = torch.minimum(maximum, available_count)
-    if torch.any(minimum < 0) or torch.any(maximum < minimum):
-        raise BatchedCompoundError("selection bounds are invalid")
-    if torch.any(minimum > effective_maximum):
-        raise BatchedCompoundError("minimum selection count exceeds available options")
+    if not _FAST_VALIDATED_GPU_PATH:
+        if torch.any(minimum < 0) or torch.any(maximum < minimum):
+            raise BatchedCompoundError("selection bounds are invalid")
+        if torch.any(minimum > effective_maximum):
+            raise BatchedCompoundError("minimum selection count exceeds available options")
 
     prefix = model.decoder_initial(public_hidden)
     if prefix.ndim != 2 or prefix.shape[0] != batch_size:
@@ -208,7 +229,7 @@ def sample_compound_actions_batched(
             first_subchoice=subchoice == 0,
         )
         log_probabilities, normalized_entropy, _ = _distribution_stats(logits, legal)
-        probabilities = torch.softmax(logits, dim=1)
+        probabilities = torch.exp(log_probabilities)
         choice = torch.multinomial(probabilities, 1, generator=generator).squeeze(1)
         chosen_log_probability = log_probabilities[rows, choice]
         total_log_probability = total_log_probability + torch.where(
@@ -237,10 +258,11 @@ def sample_compound_actions_batched(
 
         finished |= stop_now | (selected_lengths >= effective_maximum)
 
-    if torch.any(~finished):
-        raise BatchedCompoundError("batched compound sampler did not terminate")
-    if torch.any(subchoice_count <= 0):
-        raise BatchedCompoundError("batched compound sampler produced an empty action")
+    if not _FAST_VALIDATED_GPU_PATH:
+        if torch.any(~finished):
+            raise BatchedCompoundError("batched compound sampler did not terminate")
+        if torch.any(subchoice_count <= 0):
+            raise BatchedCompoundError("batched compound sampler produced an empty action")
     normalized_entropies = entropy_sum / subchoice_count.to(entropy_sum.dtype)
     if not torch.isfinite(total_log_probability).all() or not torch.isfinite(normalized_entropies).all():
         raise BatchedCompoundError("batched compound sampler produced nonfinite statistics")
@@ -264,6 +286,7 @@ def replay_compound_actions_batched(
     minimum_counts: Tensor,
     maximum_counts: Tensor,
     actions: BatchedCompoundActionV1,
+    compute_entropy: bool = True,
 ) -> tuple[Tensor, Tensor]:
     padded_options, available, _ = _pad_options(
         option_embeddings, option_offsets, available_mask
@@ -306,7 +329,9 @@ def replay_compound_actions_batched(
             active=active,
             first_subchoice=subchoice == 0,
         )
-        log_probabilities, normalized_entropy, _ = _distribution_stats(logits, legal)
+        log_probabilities, normalized_entropy, _ = _distribution_stats(
+            logits, legal, compute_entropy=compute_entropy
+        )
         if subchoice < actions.selected_indices.shape[1]:
             selected = actions.selected_indices[:, subchoice].clamp_min(0)
         else:
@@ -316,7 +341,9 @@ def replay_compound_actions_batched(
             selected,
             torch.full_like(selected, maximum_options),
         )
-        if torch.any(select_now & (selected >= maximum_options)):
+        if not _FAST_VALIDATED_GPU_PATH and torch.any(
+            select_now & (selected >= maximum_options)
+        ):
             raise BatchedCompoundError("replayed selected option is outside the padded option table")
         chosen_log_probability = log_probabilities[rows, chosen]
         total_log_probability = total_log_probability + torch.where(
@@ -330,7 +357,9 @@ def replay_compound_actions_batched(
         selecting_rows = torch.nonzero(select_now, as_tuple=False).squeeze(1)
         if selecting_rows.numel():
             selecting_options = selected[selecting_rows]
-            if torch.any(~available[selecting_rows, selecting_options]):
+            if not _FAST_VALIDATED_GPU_PATH and torch.any(
+                ~available[selecting_rows, selecting_options]
+            ):
                 raise BatchedCompoundError("replayed action selects an unavailable or duplicate option")
             chosen_embeddings = padded_options[selecting_rows, selecting_options]
             updated_prefix = model.selection_gru(
@@ -339,7 +368,7 @@ def replay_compound_actions_batched(
             prefix = prefix.index_copy(0, selecting_rows, updated_prefix)
             available[selecting_rows, selecting_options] = False
 
-    if torch.any(subchoice_count <= 0):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(subchoice_count <= 0):
         raise BatchedCompoundError("batched replay produced an empty action")
     normalized_entropies = entropy_sum / subchoice_count.to(entropy_sum.dtype)
     if not torch.isfinite(total_log_probability).all() or not torch.isfinite(normalized_entropies).all():

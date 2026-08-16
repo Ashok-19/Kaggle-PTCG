@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import asdict, dataclass
 from typing import Any, Iterable, Sequence
 
@@ -37,6 +38,8 @@ EVENT_FEATURE_WIDTH = (
 )
 GLOBAL_NONCARD_FEATURE_WIDTH = 4 + 4 + 16 + 16 + 4 + 64 + (4 * 4)
 OPTION_NONENTITY_FEATURE_WIDTH = 16 + 16 + (7 * 8) + 4 + 16 + 16
+
+_FAST_VALIDATED_GPU_PATH = os.environ.get("KPTCG_FAST_VALIDATED_GPU_PATH") == "1"
 
 
 @dataclass(frozen=True)
@@ -667,7 +670,9 @@ class PTCGPolicyV1(nn.Module):
         if batch.entity_energy_offsets.shape != (entity_count + 1,):
             raise ContractViolation("entity energy offsets differ from entity rows")
         counts = batch.entity_energy_offsets[1:] - batch.entity_energy_offsets[:-1]
-        if int(counts.sum().item()) != int(batch.entity_energy_values.numel()):
+        if not _FAST_VALIDATED_GPU_PATH and int(counts.sum().item()) != int(
+            batch.entity_energy_values.numel()
+        ):
             raise ContractViolation("entity energy offsets do not consume all energy values")
         if not batch.entity_energy_values.numel():
             return result

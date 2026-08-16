@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from typing import Any
 
 import torch
@@ -11,6 +12,9 @@ from ptcg_rl.g2.network import TorchDecisionBatch
 
 class GpuPolicyBridgeError(ValueError):
     """Raised when a GPU-CABT public projection cannot be mapped safely."""
+
+
+_FAST_VALIDATED_GPU_PATH = os.environ.get("KPTCG_FAST_VALIDATED_GPU_PATH") == "1"
 
 
 @dataclass(frozen=True)
@@ -58,7 +62,9 @@ def _flatten_padded(rows: Tensor, counts: Tensor) -> tuple[Tensor, Tensor]:
     if rows.ndim < 2 or rows.shape[0] != counts.numel():
         raise GpuPolicyBridgeError("padded projection shape differs from counts")
     capacity = rows.shape[1]
-    if torch.any(counts < 0) or torch.any(counts > capacity):
+    if not _FAST_VALIDATED_GPU_PATH and (
+        torch.any(counts < 0) or torch.any(counts > capacity)
+    ):
         raise GpuPolicyBridgeError("projection count exceeds padded capacity")
     mask = torch.arange(capacity, device=rows.device).unsqueeze(0) < counts.unsqueeze(1)
     return rows[mask], _offsets(counts)
@@ -90,15 +96,17 @@ def _lookup_sorted(entity_keys: Tensor, query_keys: Tensor, required: Tensor) ->
     if query_keys.shape != required.shape or required.dtype != torch.bool:
         raise GpuPolicyBridgeError("entity lookup query mask differs")
     result = torch.full(query_keys.shape, -1, dtype=torch.long, device=query_keys.device)
-    if entity_keys.numel() == 0 or query_keys.numel() == 0 or not torch.any(required):
-        if torch.any(required):
+    if entity_keys.numel() == 0 or query_keys.numel() == 0:
+        if not _FAST_VALIDATED_GPU_PATH and torch.any(required):
             raise GpuPolicyBridgeError("required entity reference has no visible candidates")
+        return result
+    if not _FAST_VALIDATED_GPU_PATH and not torch.any(required):
         return result
     sorted_keys, permutation = torch.sort(entity_keys)
     positions = torch.searchsorted(sorted_keys, query_keys)
     clamped = positions.clamp_max(max(sorted_keys.numel() - 1, 0))
     matched = (positions < sorted_keys.numel()) & (sorted_keys[clamped] == query_keys)
-    if torch.any(required & ~matched):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(required & ~matched):
         raise GpuPolicyBridgeError("required option entity reference is absent from public entities")
     selected = permutation[clamped]
     return torch.where(required & matched, selected, result)
@@ -137,7 +145,10 @@ def _map_event_identities(
     if entity_raw_refs.ndim != 1 or entity_offsets.ndim != 1:
         raise GpuPolicyBridgeError("entity identity transport tensors have incompatible shapes")
     batch_size = int(entity_offsets.numel()) - 1
-    if batch_size < 0 or int(entity_offsets[-1].item()) != int(entity_raw_refs.numel()):
+    if batch_size < 0 or (
+        not _FAST_VALIDATED_GPU_PATH
+        and int(entity_offsets[-1].item()) != int(entity_raw_refs.numel())
+    ):
         raise GpuPolicyBridgeError("entity offsets do not consume all raw refs")
 
     identities = torch.zeros_like(raw_values, dtype=torch.long)
@@ -153,7 +164,7 @@ def _map_event_identities(
     valid_positions = torch.nonzero(valid, as_tuple=False).squeeze(1)
     valid_owner = flat_owner[valid]
     valid_values = flat_values[valid]
-    if torch.any(valid_values <= 0):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(valid_values <= 0):
         raise GpuPolicyBridgeError("public event serial identity must be positive")
 
     # First-public-occurrence compaction, exactly matching CPU row-major event/slot order.
@@ -191,7 +202,9 @@ def _map_event_identities(
     current_indices = torch.nonzero(current, as_tuple=False).squeeze(1)
     if current_keys.numel() > 1:
         sorted_current, _ = torch.sort(current_keys)
-        if torch.any(sorted_current[1:] == sorted_current[:-1]):
+        if not _FAST_VALIDATED_GPU_PATH and torch.any(
+            sorted_current[1:] == sorted_current[:-1]
+        ):
             raise GpuPolicyBridgeError("visible entity raw ref is not unique within a decision")
     if current_keys.numel():
         sorted_keys, current_order = torch.sort(current_keys)
@@ -233,7 +246,7 @@ def _map_events(
         )
 
     event_type = events[:, 0].to(torch.long)
-    if torch.any((event_type < 0) | (event_type > 23)):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any((event_type < 0) | (event_type > 23)):
         raise GpuPolicyBridgeError("GPU public event type is outside the native contract")
     categorical[:, 0] = event_type
     categorical_missing[:, 0] = False
@@ -241,7 +254,9 @@ def _map_events(
     has_player = event_type != 23
     player_value = events[:, 2].to(torch.long)
     event_actor = actors.index_select(0, owner).to(torch.long)
-    if torch.any(has_player & ((player_value < 0) | (player_value > 1))):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any(
+        has_player & ((player_value < 0) | (player_value > 1))
+    ):
         raise GpuPolicyBridgeError("GPU public event contains an invalid player reference")
     categorical[:, 1] = torch.where(player_value == event_actor, 0, 1)
     categorical_missing[:, 1] = ~has_player
@@ -367,12 +382,13 @@ def build_torch_policy_batch(
     actors = actors_all.index_select(0, env_indices).to(torch.long)
     game_results = game_results_all.index_select(0, env_indices).to(torch.long)
 
-    if torch.any(projection_status != 0) or torch.any(event_status != 0):
-        raise GpuPolicyBridgeError("GPU public projection status is nonzero")
-    if torch.any(game_results != 0):
-        raise GpuPolicyBridgeError("policy bridge received a terminal environment")
-    if torch.any((actors < 0) | (actors > 1)):
-        raise GpuPolicyBridgeError("policy bridge received an invalid acting player")
+    if not _FAST_VALIDATED_GPU_PATH:
+        if torch.any(projection_status != 0) or torch.any(event_status != 0):
+            raise GpuPolicyBridgeError("GPU public projection status is nonzero")
+        if torch.any(game_results != 0):
+            raise GpuPolicyBridgeError("policy bridge received a terminal environment")
+        if torch.any((actors < 0) | (actors > 1)):
+            raise GpuPolicyBridgeError("policy bridge received an invalid acting player")
     if g.shape[1] < 23 or players.shape[1:] != (2, 12) or entity_rows.shape[2] < 19 or option_rows.shape[2] < 20:
         raise GpuPolicyBridgeError("GPU policy ABI widths differ from the qualified contract")
 
@@ -400,10 +416,11 @@ def build_torch_policy_batch(
     entity_owner = _flat_owner(entity_counts)
     entity_visible = raw_entities[:, 4] != 0
     entity_raw_refs = raw_entities[:, 18].to(torch.long)
-    if torch.any(entity_visible & (entity_raw_refs <= 0)):
-        raise GpuPolicyBridgeError("visible GPU entity is missing bridge-only raw ref")
-    if torch.any((~entity_visible) & (entity_raw_refs != 0)):
-        raise GpuPolicyBridgeError("hidden GPU entity exposes a bridge-only raw ref")
+    if not _FAST_VALIDATED_GPU_PATH:
+        if torch.any(entity_visible & (entity_raw_refs <= 0)):
+            raise GpuPolicyBridgeError("visible GPU entity is missing bridge-only raw ref")
+        if torch.any((~entity_visible) & (entity_raw_refs != 0)):
+            raise GpuPolicyBridgeError("hidden GPU entity exposes a bridge-only raw ref")
     entity_area = raw_entities[:, 2].to(torch.long)
     entity_role = torch.where(
         entity_area == 4,
@@ -476,7 +493,7 @@ def build_torch_policy_batch(
     option_type = raw_options[:, 0].to(torch.long)
     selection_type = raw_options[:, 1].to(torch.long) - 1
     selection_context = raw_options[:, 2].to(torch.long) - 1
-    if torch.any((option_type < 0) | (option_type > 16)):
+    if not _FAST_VALIDATED_GPU_PATH and torch.any((option_type < 0) | (option_type > 16)):
         raise GpuPolicyBridgeError("GPU option type is outside the native contract")
 
     source_area = raw_options[:, 10].to(torch.long).clone()
@@ -521,7 +538,7 @@ def build_torch_policy_batch(
 
     if torch.any(attached):
         exact_source_ref = raw_options[:, 17].to(torch.long)
-        if torch.any(attached & (exact_source_ref <= 0)):
+        if not _FAST_VALIDATED_GPU_PATH and torch.any(attached & (exact_source_ref <= 0)):
             raise GpuPolicyBridgeError("attached option is missing exact bridge-only source ref")
         entity_ref_keys = (entity_owner.to(torch.long) << 32) | entity_raw_refs
         attached_query = (option_owner.to(torch.long) << 32) | exact_source_ref
@@ -662,8 +679,11 @@ def build_torch_policy_batch(
         maximum_counts=g[:, 9].to(torch.long),
         option_counts=option_counts,
     )
-    if torch.any(meta.minimum_counts < 0) or torch.any(meta.maximum_counts < meta.minimum_counts):
-        raise GpuPolicyBridgeError("GPU selection bounds are invalid")
-    if torch.any(meta.maximum_counts > meta.option_counts):
-        raise GpuPolicyBridgeError("GPU selection maximum exceeds legal options")
+    if not _FAST_VALIDATED_GPU_PATH:
+        if torch.any(meta.minimum_counts < 0) or torch.any(
+            meta.maximum_counts < meta.minimum_counts
+        ):
+            raise GpuPolicyBridgeError("GPU selection bounds are invalid")
+        if torch.any(meta.maximum_counts > meta.option_counts):
+            raise GpuPolicyBridgeError("GPU selection maximum exceeds legal options")
     return batch, meta
