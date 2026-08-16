@@ -185,6 +185,9 @@ def _exact_resume_configuration(
         ),
         "replay_tolerance": args.replay_tolerance,
         "post_validation_lanes": args.post_validation_lanes,
+        "critic_calibration_terminal_trajectories": args.critic_calibration_terminal_trajectories,
+        "critic_calibration_max_horizons": args.critic_calibration_max_horizons,
+        "critic_calibration_learning_rate": args.critic_calibration_learning_rate,
         "maximum_post_kl": args.maximum_post_kl,
         "maximum_clip_fraction": args.maximum_clip_fraction,
         "learning_rate": args.learning_rate,
@@ -1182,6 +1185,104 @@ def _replay_reference_log_probabilities(
     )
 
 
+def _terminal_outcome_targets(rollout: RolloutV1) -> tuple[Tensor, Tensor, int]:
+    owner_envs = torch.div(rollout.owner_ids, 2, rounding_mode="floor")
+    owner_players = rollout.owner_ids.remainder(2)
+    results = rollout.final_results.index_select(0, owner_envs)
+    if torch.any((results < 0) | (results > 3)):
+        raise PPOTrainError("terminal-outcome calibration saw an invalid game result")
+    terminal_mask = results != 0
+    targets = torch.where(
+        results == 3,
+        torch.zeros_like(rollout.old_values),
+        torch.where(
+            results == owner_players + 1,
+            torch.ones_like(rollout.old_values),
+            -torch.ones_like(rollout.old_values),
+        ),
+    )
+    terminal_trajectories = int(torch.unique(rollout.owner_ids[terminal_mask]).numel())
+    return targets, terminal_mask, terminal_trajectories
+
+
+def _critic_calibration_update(
+    *,
+    model: PTCGPolicyV1,
+    optimizer: torch.optim.Optimizer,
+    rollout: RolloutV1,
+    chunk_boundaries: int,
+    learner_lane_envs: int,
+    max_gradient_norm: float,
+    bf16: bool,
+) -> dict[str, Any]:
+    targets, terminal_mask, terminal_trajectories = _terminal_outcome_targets(rollout)
+    terminal_nodes = int(terminal_mask.sum().item())
+    if terminal_nodes == 0:
+        return {
+            "updated": False,
+            "terminal_trajectories": 0,
+            "terminal_nodes": 0,
+            "loss": None,
+            "gradient_norm": None,
+        }
+    chunks = _steps_by_chunk(rollout, chunk_boundaries)
+    lane_ranges = [
+        (start, min(start + learner_lane_envs, rollout.final_results.numel()))
+        for start in range(0, rollout.final_results.numel(), learner_lane_envs)
+    ]
+    optimizer.zero_grad(set_to_none=True)
+    weighted_loss = 0.0
+    replayed_terminal_nodes = 0
+    started = time.perf_counter()
+    model.train()
+    for chunk_index, steps in chunks:
+        hidden_snapshot = rollout.chunk_hidden_snapshots[chunk_index]
+        for env_start, env_end in lane_ranges:
+            lane_steps, cpu_indices = _lane_steps_and_indices(
+                steps, env_start=env_start, env_end=env_end
+            )
+            if not lane_steps:
+                continue
+            indices = cpu_indices.to(device=rollout.old_values.device)
+            lane_terminal = terminal_mask.index_select(0, indices)
+            lane_nodes = int(lane_terminal.sum().item())
+            if lane_nodes == 0:
+                continue
+            _, values, _ = _replay_chunk(
+                model=model,
+                steps=lane_steps,
+                hidden_snapshot=hidden_snapshot,
+                gradient=True,
+                bf16=bf16,
+            )
+            lane_targets = targets.index_select(0, indices)
+            loss = 0.5 * (values[lane_terminal] - lane_targets[lane_terminal]).square().mean()
+            weight = lane_nodes / terminal_nodes
+            (loss * weight).backward()
+            weighted_loss += float(loss.detach().item()) * weight
+            replayed_terminal_nodes += lane_nodes
+    if replayed_terminal_nodes != terminal_nodes:
+        raise PPOTrainError(
+            f"critic calibration replay covered {replayed_terminal_nodes} / {terminal_nodes} terminal nodes"
+        )
+    require_finite_gradients(model.value_head.parameters())
+    gradient_norm_sq = 0.0
+    for parameter in model.value_head.parameters():
+        if parameter.grad is not None:
+            gradient_norm_sq += float(parameter.grad.detach().float().square().sum().item())
+    gradient_norm = math.sqrt(gradient_norm_sq)
+    torch.nn.utils.clip_grad_norm_(model.value_head.parameters(), max_gradient_norm)
+    optimizer.step()
+    return {
+        "updated": True,
+        "terminal_trajectories": terminal_trajectories,
+        "terminal_nodes": terminal_nodes,
+        "loss": weighted_loss,
+        "gradient_norm": gradient_norm,
+        "seconds": time.perf_counter() - started,
+    }
+
+
 def _weighted_metrics_accumulator() -> dict[str, float]:
     return {
         "total_loss": 0.0,
@@ -1617,6 +1718,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("post-validation lane count must be positive")
     if args.max_initial_signal_horizons <= 0:
         raise PPOTrainError("max initial signal horizons must be positive")
+    if args.critic_calibration_terminal_trajectories < 0:
+        raise PPOTrainError("critic calibration terminal-trajectory target must be nonnegative")
+    if args.critic_calibration_max_horizons <= 0:
+        raise PPOTrainError("critic calibration max horizons must be positive")
+    if not (0.0 < args.critic_calibration_learning_rate <= 0.1):
+        raise PPOTrainError("critic calibration learning rate must stay within (0, 0.1]")
     for value, label in (
         (args.frozen_reference_fraction, "frozen-reference fraction"),
         (args.frozen_v7_fraction, "frozen-v7 fraction"),
@@ -1786,6 +1893,116 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     output_dir: Path = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    critic_calibration: dict[str, Any] = {
+        "enabled": False,
+        "target_terminal_trajectories": args.critic_calibration_terminal_trajectories,
+        "completed_terminal_trajectories": 0,
+        "horizons": [],
+        "actor_decisions": 0,
+        "learner_decisions": 0,
+        "seconds": 0.0,
+    }
+    if (
+        args.resume_checkpoint is None
+        and not args.preserve_initial_value_head
+        and args.critic_calibration_terminal_trajectories > 0
+    ):
+        calibration_started = time.perf_counter()
+        for parameter in model.parameters():
+            parameter.requires_grad_(False)
+        for parameter in model.value_head.parameters():
+            parameter.requires_grad_(True)
+        calibration_optimizer = torch.optim.AdamW(
+            model.value_head.parameters(),
+            lr=args.critic_calibration_learning_rate,
+            weight_decay=0.0,
+        )
+        completed_terminal_trajectories = 0
+        calibration_horizons: list[dict[str, Any]] = []
+        calibration_actor_decisions = 0
+        calibration_learner_decisions = 0
+        for calibration_index in range(args.critic_calibration_max_horizons):
+            rollout_seed = args.seed + (actor_state.horizon_index + 1) * 1_000_003
+            model.train()
+            calibration_rollout = _collect_fixed_horizon_rollout(
+                model=model,
+                frozen_reference_model=frozen_reference_model,
+                frozen_v7_model=frozen_v7_model,
+                frozen_v5_model=frozen_v5_model,
+                actor_state=actor_state,
+                runtime=runtime,
+                decks=decks_device,
+                seed=rollout_seed,
+                frozen_reference_fraction=args.frozen_reference_fraction,
+                frozen_v7_fraction=args.frozen_v7_fraction,
+                frozen_v5_fraction=args.frozen_v5_fraction,
+                rollout_horizon=args.rollout_horizon,
+                chunk_boundaries=args.chunk_boundaries,
+                bf16=args.bf16,
+                learner_lane_envs=args.learner_lane_envs,
+                heartbeat_seconds=args.heartbeat_seconds,
+            )
+            # The value head does not feed recurrent hidden or action logits, so the
+            # trainable policy remains exactly the frozen initializer during calibration.
+            actor_state.reference_hidden.copy_(actor_state.hidden)
+            calibration_update = _critic_calibration_update(
+                model=model,
+                optimizer=calibration_optimizer,
+                rollout=calibration_rollout,
+                chunk_boundaries=args.chunk_boundaries,
+                learner_lane_envs=args.learner_lane_envs,
+                max_gradient_norm=args.max_gradient_norm,
+                bf16=args.bf16,
+            )
+            completed_terminal_trajectories += int(
+                calibration_update["terminal_trajectories"]
+            )
+            calibration_actor_decisions += int(
+                calibration_rollout.metrics["actor_recurrent_decisions"]
+            )
+            calibration_learner_decisions += int(
+                calibration_rollout.metrics["learner_recurrent_decisions"]
+            )
+            calibration_record = {
+                "horizon": calibration_index + 1,
+                "terminal_trajectories": calibration_update["terminal_trajectories"],
+                "terminal_nodes": calibration_update["terminal_nodes"],
+                "loss": calibration_update["loss"],
+                "gradient_norm": calibration_update["gradient_norm"],
+                "update_seconds": calibration_update.get("seconds", 0.0),
+                "rollout_seconds": calibration_rollout.metrics["rollout_seconds"],
+                "cumulative_terminal_trajectories": completed_terminal_trajectories,
+            }
+            calibration_horizons.append(calibration_record)
+            print(
+                json.dumps(
+                    {"event": "ppo_critic_calibration", **calibration_record},
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+            del calibration_rollout
+            if completed_terminal_trajectories >= args.critic_calibration_terminal_trajectories:
+                break
+        for parameter in model.parameters():
+            parameter.requires_grad_(True)
+        if completed_terminal_trajectories < args.critic_calibration_terminal_trajectories:
+            raise PPOTrainError(
+                "critic calibration did not reach the required completed learner trajectories"
+            )
+        critic_calibration = {
+            "enabled": True,
+            "target_terminal_trajectories": args.critic_calibration_terminal_trajectories,
+            "completed_terminal_trajectories": completed_terminal_trajectories,
+            "horizons": calibration_horizons,
+            "actor_decisions": calibration_actor_decisions,
+            "learner_decisions": calibration_learner_decisions,
+            "seconds": time.perf_counter() - calibration_started,
+            "learning_rate": args.critic_calibration_learning_rate,
+        }
+        _flatten_recurrent_parameters(model)
+        model.eval()
+
     run_start_actor_decisions = total_actor_decisions
     run_start_learner_decisions = total_learner_decisions
     updates: list[dict[str, Any]] = []
@@ -1842,6 +2059,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             completed_updates == 0
             and args.resume_checkpoint is None
             and not args.preserve_initial_value_head
+            and args.critic_calibration_terminal_trajectories == 0
             and gae_stats.terminal_trajectories == 0
         ):
             actor_decisions = int(rollout.metrics["actor_recurrent_decisions"])
@@ -2142,6 +2360,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "bc_anchor_sequence_length": args.bc_anchor_sequence_length,
             "replay_tolerance": args.replay_tolerance,
             "post_validation_lanes": args.post_validation_lanes,
+            "critic_calibration_terminal_trajectories": args.critic_calibration_terminal_trajectories,
+            "critic_calibration_max_horizons": args.critic_calibration_max_horizons,
+            "critic_calibration_learning_rate": args.critic_calibration_learning_rate,
             "maximum_post_kl": args.maximum_post_kl,
             "maximum_clip_fraction": args.maximum_clip_fraction,
             "learning_rate": args.learning_rate,
@@ -2163,6 +2384,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "recurrent_replay": "chunk-start hidden snapshot plus in-chunk recurrent unroll",
         },
         "bc_anchor_setup": bc_anchor_setup,
+        "critic_calibration": critic_calibration,
         "resume": resume_record,
         "runtime_init_seconds": runtime_init_seconds,
         "run": {
@@ -2250,6 +2472,9 @@ def main() -> int:
     parser.add_argument("--bc-anchor-sequence-length", type=int, default=32)
     parser.add_argument("--replay-tolerance", type=float, default=1e-5)
     parser.add_argument("--post-validation-lanes", type=int, default=1)
+    parser.add_argument("--critic-calibration-terminal-trajectories", type=int, default=2048)
+    parser.add_argument("--critic-calibration-max-horizons", type=int, default=8)
+    parser.add_argument("--critic-calibration-learning-rate", type=float, default=3e-4)
     parser.add_argument("--maximum-post-kl", type=float, default=0.03)
     parser.add_argument("--maximum-clip-fraction", type=float, default=0.30)
     parser.add_argument("--learning-rate", type=float, default=1e-6)
