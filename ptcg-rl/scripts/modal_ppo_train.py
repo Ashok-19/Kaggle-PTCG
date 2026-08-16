@@ -26,7 +26,7 @@ V7_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v7-live-rehearsal/3.7m/final-s
 V5_CHECKPOINT_RELATIVE = "runs/bc-dragapult-final-v5-schema-v3-fused-update-density/3.7m/3.7m/stage-d-exact-1150-best.pt"
 LIVE_BC_ROOT = "/data/materialized/bc-dragapult-live-v6-featurefix-v3"
 EXACT_BC_ROOT = "/data/materialized/bc-dragapult-hq-v2-featurefix-v3"
-MAX_BOUNDED_DECISIONS = 30_000_000
+MAX_BOUNDED_DECISIONS = 50_000_000
 REQUIRED_MODAL_PROFILE = "ashokraja863801"
 
 
@@ -207,7 +207,7 @@ def train(
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", run_id):
         raise ValueError("run_id contains unsupported characters")
     if decision_budget <= 0 or decision_budget > MAX_BOUNDED_DECISIONS:
-        raise ValueError("decision budget must remain within the bounded 1..30M envelope")
+        raise ValueError("decision budget must remain within the bounded 1..50M envelope")
     if env_count <= 0 or env_count > 8192:
         raise ValueError("env_count must stay within 1..8192")
     if rollout_horizon < 16 or rollout_horizon > 256:
