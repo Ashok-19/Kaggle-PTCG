@@ -185,6 +185,7 @@ def train(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
+    optimizer_lanes_per_update: int = 1,
     rollout_storage: str = "cuda-compact",
     learning_rate: float = 2e-7,
     critic_learning_rate: float = 3e-4,
@@ -214,6 +215,8 @@ def train(
         raise ValueError("chunk boundaries must stay within 16..128")
     if learner_lane_envs <= 0 or learner_lane_envs > env_count:
         raise ValueError("learner lane envs must stay within 1..env_count")
+    if optimizer_lanes_per_update < 0:
+        raise ValueError("optimizer_lanes_per_update must be nonnegative")
     if not (0.0 < learning_rate <= 1e-3):
         raise ValueError("learning_rate must stay within (0, 1e-3]")
     if not (0.0 < critic_learning_rate <= 0.1):
@@ -303,6 +306,8 @@ def train(
         str(chunk_boundaries),
         "--learner-lane-envs",
         str(learner_lane_envs),
+        "--optimizer-lanes-per-update",
+        str(optimizer_lanes_per_update),
         "--rollout-storage",
         rollout_storage,
         "--heartbeat-seconds",
@@ -422,6 +427,7 @@ def main(
     rollout_horizon: int = 64,
     chunk_boundaries: int = 16,
     learner_lane_envs: int = 2048,
+    optimizer_lanes_per_update: int = 1,
     rollout_storage: str = "cuda-compact",
     learning_rate: float = 2e-7,
     critic_learning_rate: float = 3e-4,
@@ -451,6 +457,7 @@ def main(
         chunk_boundaries=chunk_boundaries,
         learner_lane_envs=learner_lane_envs,
         learning_rate=learning_rate,
+        optimizer_lanes_per_update=optimizer_lanes_per_update,
         rollout_storage=rollout_storage,
         critic_learning_rate=critic_learning_rate,
         entropy_coefficient=entropy_coefficient,

@@ -189,6 +189,7 @@ def _exact_resume_configuration(
         "rollout_horizon": args.rollout_horizon,
         "chunk_boundaries": args.chunk_boundaries,
         "learner_lane_envs": args.learner_lane_envs,
+        "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
         "frozen_reference_fraction": args.frozen_reference_fraction,
         "rollout_storage": args.rollout_storage,
         "frozen_v7_fraction": args.frozen_v7_fraction,
@@ -1419,6 +1420,8 @@ def _ppo_update(
     chunk_boundaries: int,
     learner_lane_envs: int,
     clip_coefficient: float,
+    optimizer_lanes_per_update: int,
+    optimizer_lane_offset: int,
     value_clip_coefficient: float,
     value_coefficient: float,
     entropy_coefficient: float,
@@ -1436,12 +1439,12 @@ def _ppo_update(
 ) -> dict[str, Any]:
     if value_mask.shape != rollout.old_values.shape or value_mask.dtype != torch.bool:
         raise PPOTrainError("fixed-horizon value mask must be boolean and match rollout rows")
-    policy_mask = rollout.policy_mask & value_mask
-    total_valid = int(policy_mask.sum().item())
-    if total_valid <= 0:
+    full_policy_mask = rollout.policy_mask & value_mask
+    full_valid = int(full_policy_mask.sum().item())
+    if full_valid <= 0:
         raise PPOTrainError("rollout contains no meaningful learner actions")
-    total_value_nodes = int(value_mask.sum().item())
-    if total_value_nodes <= 0:
+    full_value_nodes = int(value_mask.sum().item())
+    if full_value_nodes <= 0:
         raise PPOTrainError("rollout contains no learner recurrent value nodes")
     if reference_log_probabilities.shape != rollout.old_log_probabilities.shape:
         raise PPOTrainError("frozen reference log probabilities differ from rollout shape")
@@ -1459,14 +1462,6 @@ def _ppo_update(
         raise PPOTrainError("maximum clip fraction must be within (0, 1]")
     if post_validation_lanes <= 0:
         raise PPOTrainError("post-validation lane count must be positive")
-    selected_advantages = advantages[policy_mask]
-    advantage_mean = selected_advantages.mean()
-    advantage_std = selected_advantages.std(unbiased=False)
-    normalized_advantages = advantages.clone()
-    normalized_advantages[policy_mask] = (
-        selected_advantages - advantage_mean
-    ) / (advantage_std + 1e-8)
-
     chunks = _steps_by_chunk(rollout, chunk_boundaries)
     env_count = int(next(iter(rollout.chunk_hidden_snapshots.values())).shape[0])
     if learner_lane_envs <= 0 or learner_lane_envs > env_count:
@@ -1475,6 +1470,33 @@ def _ppo_update(
         (start, min(env_count, start + learner_lane_envs))
         for start in range(0, env_count, learner_lane_envs)
     ]
+    if optimizer_lanes_per_update < 0:
+        raise PPOTrainError("optimizer lane count must be nonnegative")
+    if optimizer_lanes_per_update == 0 or optimizer_lanes_per_update >= len(lane_ranges):
+        optimizer_lane_ranges = lane_ranges
+    else:
+        start_lane = optimizer_lane_offset % len(lane_ranges)
+        optimizer_lane_ranges = [
+            lane_ranges[(start_lane + index) % len(lane_ranges)]
+            for index in range(optimizer_lanes_per_update)
+        ]
+    owner_envs = torch.div(rollout.owner_ids, 2, rounding_mode="floor")
+    optimizer_row_mask = torch.zeros_like(value_mask)
+    for env_start, env_end in optimizer_lane_ranges:
+        optimizer_row_mask |= (owner_envs >= env_start) & (owner_envs < env_end)
+    value_mask = value_mask & optimizer_row_mask
+    policy_mask = rollout.policy_mask & value_mask
+    total_valid = int(policy_mask.sum().item())
+    total_value_nodes = int(value_mask.sum().item())
+    if total_valid <= 0 or total_value_nodes <= 0:
+        raise PPOTrainError("selected optimizer lanes contain no trainable PPO samples")
+    selected_advantages = advantages[policy_mask]
+    advantage_mean = selected_advantages.mean()
+    advantage_std = selected_advantages.std(unbiased=False)
+    normalized_advantages = advantages.clone()
+    normalized_advantages[policy_mask] = (
+        selected_advantages - advantage_mean
+    ) / (advantage_std + 1e-8)
     before = _parameter_snapshot(model)
     optimizer.zero_grad(set_to_none=True)
     model.train()
@@ -1488,7 +1510,7 @@ def _ppo_update(
     learner_minibatches = 0
     for chunk_index, steps in chunks:
         hidden_snapshot = rollout.chunk_hidden_snapshots[chunk_index]
-        for env_start, env_end in lane_ranges:
+        for env_start, env_end in optimizer_lane_ranges:
             lane_steps, cpu_indices = _lane_steps_and_indices(
                 steps, env_start=env_start, env_end=env_end
             )
@@ -1619,7 +1641,9 @@ def _ppo_update(
     # replay can rotate over a lane subset on ordinary updates, but checkpoint/final
     # updates must validate the full rollout.
     model.train()
-    if full_post_replay or post_validation_lanes >= len(lane_ranges):
+    if len(optimizer_lane_ranges) < len(lane_ranges):
+        post_lane_ranges = optimizer_lane_ranges[:post_validation_lanes]
+    elif full_post_replay or post_validation_lanes >= len(lane_ranges):
         post_lane_ranges = lane_ranges
     else:
         lane_count = min(post_validation_lanes, len(lane_ranges))
@@ -1727,10 +1751,16 @@ def _ppo_update(
 
     return {
         "learner_samples": total_valid,
-        "learner_recurrent_samples": int(rollout.old_values.numel()),
+        "learner_recurrent_samples": replayed_actions,
         "critic_samples": total_value_nodes,
+        "rollout_policy_samples": full_valid,
+        "rollout_value_samples": full_value_nodes,
+        "optimizer_lane_count": len(optimizer_lane_ranges),
+        "total_lane_count": len(lane_ranges),
+        "policy_sample_fraction": total_valid / full_valid,
+        "value_sample_fraction": total_value_nodes / full_value_nodes,
         "learner_samples_per_second": total_valid / max(update_seconds, 1e-9),
-        "learner_recurrent_samples_per_second": int(rollout.old_values.numel()) / max(update_seconds, 1e-9),
+        "learner_recurrent_samples_per_second": replayed_actions / max(update_seconds, 1e-9),
         "update_seconds": update_seconds,
         "post_replay_seconds": post_replay_seconds,
         "reference_kl_coefficient": reference_kl_coefficient,
@@ -1742,7 +1772,10 @@ def _ppo_update(
         "pre_update": pre_metrics,
         "post_update": post_metrics,
         "post_validation": {
-            "full": bool(full_post_replay or len(post_lane_ranges) == len(lane_ranges)),
+            "full": bool(
+                len(optimizer_lane_ranges) == len(lane_ranges)
+                and (full_post_replay or len(post_lane_ranges) == len(lane_ranges))
+            ),
             "lane_count": len(post_lane_ranges),
             "total_lane_count": len(lane_ranges),
             "policy_samples": validation_valid,
@@ -1794,6 +1827,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise PPOTrainError("rollout horizon must stay within 16..256")
     if args.learner_lane_envs <= 0 or args.learner_lane_envs > args.env_count:
         raise PPOTrainError("learner lane envs must stay within 1..env_count")
+    if args.optimizer_lanes_per_update < 0:
+        raise PPOTrainError("optimizer lanes per update must be nonnegative")
     if args.rollout_horizon < args.chunk_boundaries:
         raise PPOTrainError("rollout horizon must not be smaller than recurrent chunk size")
     if args.checkpoint_every_updates <= 0:
@@ -2292,6 +2327,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             chunk_boundaries=args.chunk_boundaries,
             learner_lane_envs=args.learner_lane_envs,
             clip_coefficient=args.clip_coefficient,
+            optimizer_lanes_per_update=args.optimizer_lanes_per_update,
+            optimizer_lane_offset=update_number - 1,
             value_clip_coefficient=args.value_clip_coefficient,
             value_coefficient=args.value_coefficient,
             entropy_coefficient=args.entropy_coefficient,
@@ -2507,6 +2544,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "recurrent_chunk_boundaries": args.chunk_boundaries,
             "learner_lane_envs": args.learner_lane_envs,
             "heartbeat_seconds": args.heartbeat_seconds,
+            "optimizer_lanes_per_update": args.optimizer_lanes_per_update,
             "rollout_storage": args.rollout_storage,
             "checkpoint_every_updates": args.checkpoint_every_updates,
             "frozen_reference_fraction": args.frozen_reference_fraction,
@@ -2623,6 +2661,7 @@ def main() -> int:
     parser.add_argument("--rollout-horizon", type=int, default=64)
     parser.add_argument("--chunk-boundaries", type=int, default=64)
     parser.add_argument("--learner-lane-envs", type=int, default=1024)
+    parser.add_argument("--optimizer-lanes-per-update", type=int, default=0)
     parser.add_argument(
         "--rollout-storage",
         choices=("cpu-compact", "cuda-compact"),
